@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Atmel Studio Solution File, Format Version 11.00
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "SDK_Probe_ATxmega", "SDK_Probe_ATxmega\SDK_Probe_ATxmega.cproj", "{3354DF6A-BD4E-408F-8EC3-1F8C4AD3F1AE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|AVR = Debug|AVR
+		Release|AVR = Release|AVR
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3354DF6A-BD4E-408F-8EC3-1F8C4AD3F1AE}.Debug|AVR.ActiveCfg = Debug|AVR
+		{3354DF6A-BD4E-408F-8EC3-1F8C4AD3F1AE}.Debug|AVR.Build.0 = Debug|AVR
+		{3354DF6A-BD4E-408F-8EC3-1F8C4AD3F1AE}.Release|AVR.ActiveCfg = Release|AVR
+		{3354DF6A-BD4E-408F-8EC3-1F8C4AD3F1AE}.Release|AVR.Build.0 = Release|AVR
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
