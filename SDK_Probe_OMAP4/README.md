@@ -1,6 +1,6 @@
 The mSDK for OMAP4 is at beginning because the TI has no support for standalone applications.
 
-I succesfuly ported only the PIO's, UART's and TWI's drivers from Sitara AM335x starterware, to run a compiled programs I recomand to use a linux uBoot to setup the clock's and other necessary modules after the lauch the user program.
+I succesfuly ported only the PIO's, UART's and TWI's drivers from Sitara AM335x starterware, to run a compiled programs I recomand to use a linux uBoot to setup the clock's and other necessary modules before the lauch the user program.
 
 This demo application is made to initialize:
 - All six GPIO controllers.
