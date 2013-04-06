@@ -20,7 +20,7 @@ void _mcspi_close(new_mcspi *McspiStruct)
 	//spi_disable(McspiStruct);
 }
 /*#####################################################*/
-bool _mcspi_transfer(Mcspi_t *McspiStruct, unsigned int NumOfBytesSend, unsigned int NumOfBytesReceive)
+bool _mcspi_transfer(Mcspi_t *McspiStruct)
 {
 	/*McspiStruct->numOfBytes = NumOfBytesSend + NumOfBytesReceive;
 	unsigned char response = SPI_MasterInterruptTransceivePacket(McspiStruct);
