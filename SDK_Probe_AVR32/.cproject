@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?fileVersion 4.0.0?><cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
+<?fileVersion 4.0.0?>
+
+<cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
 <storageModule moduleId="org.eclipse.cdt.core.settings">
 <cconfiguration id="avr32.managedbuild.config.gnu.exe.debug.445714677">
 <storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="avr32.managedbuild.config.gnu.exe.debug.445714677" moduleId="org.eclipse.cdt.core.settings" name="Debug">
@@ -13,7 +15,7 @@
 </extensions>
 </storageModule>
 <storageModule moduleId="cdtBuildSystem" version="4.0.0">
-<configuration artifactName="SDK_Probe_AVR32" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug,org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe" cleanCommand="rm -rf" description="AVR32 Standalone debug configuration" errorParsers="org.eclipse.cdt.core.GCCErrorParser;org.eclipse.cdt.core.GASErrorParser;org.eclipse.cdt.core.GLDErrorParser" id="avr32.managedbuild.config.gnu.exe.debug.445714677" name="Debug" parent="avr32.managedbuild.config.gnu.exe.debug" postannouncebuildStep="" postbuildStep="avr32-objcopy -O binary C:/SDK_Probe_AVR32/Debug/SDK_Probe_AVR32.elf C:/SDK_Probe_AVR32/Debug/SDK_Probe_AVR32.bin" preannouncebuildStep="" prebuildStep="">
+<configuration artifactName="SDK_Probe_AVR32" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug,org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe" cleanCommand="rm -rf" description="AVR32 Standalone debug configuration" errorParsers="org.eclipse.cdt.core.GCCErrorParser;org.eclipse.cdt.core.GASErrorParser;org.eclipse.cdt.core.GLDErrorParser" id="avr32.managedbuild.config.gnu.exe.debug.445714677" name="Debug" parent="avr32.managedbuild.config.gnu.exe.debug" postannouncebuildStep="" postbuildStep="avr32-objcopy -O binary C:\Users\XxXxXxXx\Documents\GitHub\mSdk\SDK_Probe_AVR32/Debug/SDK_Probe_AVR32.elf C:\Users\XxXxXxXx\Documents\GitHub\mSdk\SDK_Probe_AVR32/Debug/SDK_Probe_AVR32.bin" preannouncebuildStep="" prebuildStep="">
 <folderInfo id="avr32.managedbuild.config.gnu.exe.debug.445714677." name="/" resourcePath="">
 <toolChain errorParsers="" id="avr32.managedbuild.toolchain.gnu.exe.debug.839311370" name="32-bit AVR/GNU C/C++ Toolchain" superClass="avr32.managedbuild.toolchain.gnu.exe.debug">
 <targetPlatform binaryParser="com.atmel.avr.toolchain.avr32gcc.elf32-avr32" id="avr32.managedbuild.target.gnu.platform.exe.debug.1797703207" name="%PlatformName.Dbg" superClass="avr32.managedbuild.target.gnu.platform.exe.debug"/>
@@ -30,12 +32,14 @@
 <option id="gnu.c.compiler.option.debugging.level.509927379" name="Debug Level" superClass="gnu.c.compiler.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
 <option id="avr32.c.compiler.option.mcu.1154507791" name="Microcontroller Unit" superClass="avr32.c.compiler.option.mcu" value="-mpart=ap7000" valueType="string"/>
 <option id="gnu.c.compiler.option.include.paths.1089537827" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
-<listOptionValue builtIn="false" value="&quot;C:\SDK\lib&quot;"/>
-<listOptionValue builtIn="false" value="&quot;C:\SDK\platform\ap7000&quot;"/>
-<listOptionValue builtIn="false" value="&quot;C:\SDK\platform\ap7000\board&quot;"/>
+<listOptionValue builtIn="false" value="&quot;C:\Users\XxXxXxXx\Documents\GitHub\mSdk\SDK\lib&quot;"/>
+<listOptionValue builtIn="false" value="&quot;C:\Users\XxXxXxXx\Documents\GitHub\mSdk\SDK\mpeg12&quot;"/>
+<listOptionValue builtIn="false" value="&quot;C:\Users\XxXxXxXx\Documents\GitHub\mSdk\SDK\platform\ap7000&quot;"/>
+<listOptionValue builtIn="false" value="&quot;C:\Users\XxXxXxXx\Documents\GitHub\mSdk\SDK\board\ap7000\NGW100&quot;"/>
 </option>
 <option id="gnu.c.compiler.option.preprocessor.def.symbols.921914079" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" valueType="definedSymbols">
 <listOptionValue builtIn="false" value="Board=NGW100"/>
+<listOptionValue builtIn="false" value="HEADER_INCLUDE_C_FILES"/>
 <listOptionValue builtIn="false" value="AVR32"/>
 </option>
 <option id="avr32.c.compiler.option.flashvault.1220679579" name="Enable FlashVault support" superClass="avr32.c.compiler.option.flashvault" value="false" valueType="boolean"/>
@@ -47,13 +51,13 @@
 </tool>
 <tool command="avr32-gcc" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG}${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" errorParsers="org.eclipse.cdt.core.GLDErrorParser" id="avr32.managedbuild.tool.gnu.c.linker.exe.debug.598527735" name="32-bit AVR/GNU C Linker" superClass="avr32.managedbuild.tool.gnu.c.linker.exe.debug">
 <option id="avr32.c.linker.option.mcu.1143768310" name="Microcontroller Unit" superClass="avr32.c.linker.option.mcu" value="-mpart=ap7000" valueType="string"/>
-<option id="gnu.c.link.option.paths.765691554" name="Library search path (-L)" superClass="gnu.c.link.option.paths" valueType="libPaths"/>
+<option id="gnu.c.link.option.paths.765691554" name="Library search path (-L)" superClass="gnu.c.link.option.paths"/>
 <option id="gnu.c.link.option.other.861548548" name="Other options (-Xlinker [option])" superClass="gnu.c.link.option.other" valueType="stringList">
-<listOptionValue builtIn="false" value="-T&quot;C:\SDK\platform\ap7000\nlao\linker.lds&quot;"/>
+<listOptionValue builtIn="false" value="-T&quot;C:\Users\XxXxXxXx\Documents\GitHub\mSdk\SDK\platform\ap7000\nlao\linker.lds&quot;"/>
 </option>
 <option id="avr32.c.linker.option.mfast-float.1123044644" name="Enable fast floating-point library" superClass="avr32.c.linker.option.mfast-float" value="false" valueType="boolean"/>
 <option id="avr32.c.linker.option.ffast-math.984273024" name="Enable fast math" superClass="avr32.c.linker.option.ffast-math" value="false" valueType="boolean"/>
-<option id="gnu.c.link.option.libs.848445854" name="Libraries (-l)" superClass="gnu.c.link.option.libs" valueType="libs"/>
+<option id="gnu.c.link.option.libs.848445854" name="Libraries (-l)" superClass="gnu.c.link.option.libs"/>
 <option id="avr32.c.linker.option.rodata-writable.1889218862" name="Put read-only data in writable data section" superClass="avr32.c.linker.option.rodata-writable" value="false" valueType="boolean"/>
 <inputType id="cdt.managedbuild.tool.gnu.c.linker.input.339869067" superClass="cdt.managedbuild.tool.gnu.c.linker.input">
 <additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
@@ -67,7 +71,7 @@
 <option id="avr32.both.asm.option.debugging.level.1431140344" name="Debug Level" superClass="avr32.both.asm.option.debugging.level" value="avr32.both.asm.debugging.level.max" valueType="enumerated"/>
 <option id="avr32.both.asm.option.mcu.1829879497" name="Microcontroller Unit" superClass="avr32.both.asm.option.mcu" value="-mpart=ap7000" valueType="string"/>
 <option id="gnu.both.asm.option.include.paths.1148529417" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
-<listOptionValue builtIn="false" value="&quot;C:\SDK\platform\ap7000\driver&quot;"/>
+<listOptionValue builtIn="false" value="&quot;C:\Users\XxXxXxXx\Documents\GitHub\mSdk\SDK\platform\ap7000\driver&quot;"/>
 </option>
 </tool>
 <tool command="avr32-gcc -x assembler-with-cpp -c" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG}${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" errorParsers="org.eclipse.cdt.core.GASErrorParser" id="avr32.managedbuild.tool.gnu.preprocessor.exe.debug.1627878931" name="32-bit AVR/GNU Preprocessing Assembler" superClass="avr32.managedbuild.tool.gnu.preprocessor.exe.debug">

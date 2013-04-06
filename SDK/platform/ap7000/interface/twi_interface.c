@@ -49,6 +49,7 @@ bool _SetupI2CReception(new_twi* TwiStruct, unsigned int TransmitBytes, unsigned
 	switch(TransmitBytes)
 	{
 	case 0:
+		packet_received.addr = 0;
 		break;
 	case 1:
 		packet_received.addr = TwiStruct->TxBuff[0];

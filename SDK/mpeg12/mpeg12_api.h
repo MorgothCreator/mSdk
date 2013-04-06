@@ -13,7 +13,7 @@
 #include "include/mpeg2.h"
 #include "include/mpeg2convert.h"
 #include "api/timer_api.h"
-#include "../controls_definition.h"
+#include "lib/gfx/controls_definition.h"
 #include "lib/fs/fat.h"
 #include "api/uart_api.h"
 //#include "../../../api/Rtc_api.h"
@@ -43,6 +43,8 @@ int mpeg_instance_init(mpeg_struct_t *Mpeg_Struct, FileInfo_t *mpgfile);
 unsigned int mpeg_idle(mpeg_struct_t *Mpeg_Struct, new_screen* ScreenBuff, FileInfo_t *mpgfile);
 void mpeg_free(mpeg_struct_t *Mpeg_Struct);
 
-//#include "mpeg12_api.c"
+#ifdef HEADER_INCLUDE_C_FILES
+#include "mpeg12_api.c"
+#endif
 
 #endif /* MPEG_API_H_ */

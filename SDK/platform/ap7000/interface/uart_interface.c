@@ -49,12 +49,12 @@ bool _uart_close(Uart_t *UartSettings)
 	return true;
 }
 /*#####################################################*/
-void UARTBaudSetRate(Uart_t* UartSettings, unsigned long BaudRate)
+void _UARTBaudSetRate(Uart_t* UartSettings, unsigned long BaudRate)
 {
 	//uart_set_baud_rate(UartSettings->BaseAddr, BaudRate);
 }
 /*#####################################################*/
-void  UARTCharPut(unsigned int BaseAddr, char b)
+void  _UARTCharPut(unsigned int BaseAddr, char b)
 {
     volatile  avr32_usart_t  *usart;
     usart  = &AVR32_USART1;
@@ -70,7 +70,7 @@ void  UARTCharPut(unsigned int BaseAddr, char b)
 }
 
 
-unsigned char UARTCharGet(unsigned int BaseAddr)
+unsigned char _UARTCharGet(unsigned int BaseAddr)
 {
     volatile  avr32_usart_t  *usart;
     unsigned char      b;
@@ -82,18 +82,18 @@ unsigned char UARTCharGet(unsigned int BaseAddr)
     return (b);
 }
 
-void  UARTCharPutNonBlocking(unsigned int BaseAddr, char b)
+void  _UARTCharPutNonBlocking(unsigned int BaseAddr, char b)
 {
 
 }
 
 
-signed char UARTCharGetNonBlocking(unsigned int BaseAddr)
+signed char _UARTCharGetNonBlocking(unsigned int BaseAddr)
 {
 	return -1;
 }
 
-char UARTRxErrorGet(unsigned int BaseAddr)
+char _UARTRxErrorGet(unsigned int BaseAddr)
 {
 	return 0;
 }

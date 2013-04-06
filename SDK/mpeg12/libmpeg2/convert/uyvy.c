@@ -99,7 +99,7 @@ static void uyvy_copy (void * const _id, uint8_t * const * src,
     } while (i);
 }
 
-int mpeg2convert_uyvy (int stage, void * _id, const mpeg2_sequence_t * seq,
+/*int mpeg2convert_uyvy (int stage, void * _id, const mpeg2_sequence_t * seq,
 		       int stride, uint32_t accel, void * arg,
 		       mpeg2_convert_init_t * result)
 {
@@ -120,4 +120,4 @@ int mpeg2convert_uyvy (int stage, void * _id, const mpeg2_sequence_t * seq,
     }
 
     return 0;
-}
+}*/

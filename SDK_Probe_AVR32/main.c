@@ -17,7 +17,7 @@ tCheckBox *check = NULL;
 #define UseMpeg12
 
 #ifdef UseMpeg12
-#include "lib/gfx/mpeg12/mpeg12_api.h"
+#include "mpeg12_api.h"
 mpeg_struct_t *MpegStruct;
 #endif
 

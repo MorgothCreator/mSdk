@@ -76,15 +76,15 @@ void _lcd_disable()
     //RasterDisable(SOC_LCDC_0_REGS);
 }
 //#######################################################################################
-void screen_backlight_on(tDisplay *pDisplay)
+void _screen_backlight_on(tDisplay *pDisplay)
 {
 }
 //#######################################################################################
-void screen_backlight_off(tDisplay *pDisplay)
+void _screen_backlight_off(tDisplay *pDisplay)
 {
 }
 //#######################################################################################
-void box_cache_clean(tDisplay *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len)
+void _box_cache_clean(tDisplay *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len)
 {
 	/*signed int x_end = x_start + x_len ,y_end = y_start + y_len;
 	if(x_start >= pDisplay->sClipRegion.sXMax || y_start >= pDisplay->sClipRegion.sYMax || x_end < pDisplay->sClipRegion.sXMin || y_end < pDisplay->sClipRegion.sYMin) return;
@@ -105,7 +105,7 @@ void box_cache_clean(tDisplay *pDisplay, signed int x_start, signed int y_start,
 	}*/
 }
 //#######################################################################################
-void put_rectangle(tDisplay *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len, bool fill, unsigned int color)
+void _put_rectangle(tDisplay *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len, bool fill, unsigned int color)
 {
 	signed int x_end = x_start + x_len ,y_end = y_start + y_len;
 	if(x_start >= pDisplay->sClipRegion.sXMax || y_start >= pDisplay->sClipRegion.sYMax || x_end < pDisplay->sClipRegion.sXMin || y_end < pDisplay->sClipRegion.sYMin) return;
@@ -181,7 +181,7 @@ void put_rectangle(tDisplay *pDisplay, signed int x_start, signed int y_start, s
 	return;
 }
 //#######################################################################################
-void put_pixel(tDisplay *pDisplay, signed int X, signed int Y, unsigned int color)
+void _put_pixel(tDisplay *pDisplay, signed int X, signed int Y, unsigned int color)
 {
 	if(X >= pDisplay->sClipRegion.sXMin && Y >= pDisplay->sClipRegion.sYMin && X < pDisplay->sClipRegion.sXMax && Y < pDisplay->sClipRegion.sYMax)
 	{
@@ -192,7 +192,7 @@ void put_pixel(tDisplay *pDisplay, signed int X, signed int Y, unsigned int colo
 	}
 }
 //#######################################################################################
-void screen_put_rgb_array_16(void *_pDisplay, unsigned short *rgb_buffer, unsigned int x1, unsigned int y1,unsigned int width, unsigned int height)
+void _screen_put_rgb_array_16(void *_pDisplay, unsigned short *rgb_buffer, unsigned int x1, unsigned int y1,unsigned int width, unsigned int height)
 {
 	tDisplay *pDisplay = (tDisplay *)_pDisplay;
 	///Write rgb array to video memory
@@ -220,7 +220,7 @@ void screen_put_rgb_array_16(void *_pDisplay, unsigned short *rgb_buffer, unsign
 	//lcd.dblbuf = dblbuf;
 }
 //#######################################################################################
-void screen_put_rgb_array_24(void *_pDisplay, unsigned char *rgb_buffer, unsigned long x1, unsigned long y1,unsigned long width, unsigned long height)
+void _screen_put_rgb_array_24(void *_pDisplay, unsigned char *rgb_buffer, unsigned long x1, unsigned long y1,unsigned long width, unsigned long height)
 {
 	tDisplay *pDisplay = (tDisplay *)_pDisplay;
 	unsigned char *Buff = rgb_buffer;
@@ -245,7 +245,7 @@ void screen_put_rgb_array_24(void *_pDisplay, unsigned char *rgb_buffer, unsigne
 	}
 }
 //#######################################################################################
-void screen_put_rgb_array_32(void *_pDisplay, unsigned char *rgb_buffer, unsigned int x1, unsigned int y1,unsigned int width, unsigned int height)
+void _screen_put_rgb_array_32(void *_pDisplay, unsigned char *rgb_buffer, unsigned int x1, unsigned int y1,unsigned int width, unsigned int height)
 {
 	tDisplay *pDisplay = (tDisplay *)_pDisplay;
 	int   y;
@@ -267,7 +267,7 @@ void screen_put_rgb_array_32(void *_pDisplay, unsigned char *rgb_buffer, unsigne
 	}
 }
 //#######################################################################################
-void screen_put_horizontal_line(tDisplay *pDisplay, signed int X1, signed int X2, signed int Y, unsigned char width, unsigned int color)
+void _screen_put_horizontal_line(tDisplay *pDisplay, signed int X1, signed int X2, signed int Y, unsigned char width, unsigned int color)
 {
 
 	int X1_Tmp = X1, X2_Tmp = X1 + X2;
@@ -291,7 +291,7 @@ void screen_put_horizontal_line(tDisplay *pDisplay, signed int X1, signed int X2
 	}
 }
 //#######################################################################################
-void screen_put_vertical_line(tDisplay *pDisplay, signed int Y1, signed int Y2, signed int X, unsigned char width, unsigned int color)
+void _screen_put_vertical_line(tDisplay *pDisplay, signed int Y1, signed int Y2, signed int X, unsigned char width, unsigned int color)
 {
 
 	int Y1_Tmp = Y1, Y2_Tmp = Y1 + Y2;

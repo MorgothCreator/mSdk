@@ -119,7 +119,7 @@ static int pgm_setup (vo_instance_t * _instance, unsigned int width,
     return 0;
 }
 
-static vo_instance_t * internal_open (void draw (vo_instance_t *,
+/*static vo_instance_t * internal_open (void draw (vo_instance_t *,
 						 uint8_t * const *, void *),
 				      void writer (pgm_instance_t *,
 						   uint8_t *, size_t))
@@ -142,7 +142,7 @@ static vo_instance_t * internal_open (void draw (vo_instance_t *,
     instance->file = stdout;
 
     return (vo_instance_t *) instance;
-}
+}*/
 
 vo_instance_t * vo_pgm_open (void)
 {

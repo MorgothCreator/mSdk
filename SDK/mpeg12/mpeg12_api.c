@@ -7,7 +7,8 @@
 
 #include <stdbool.h>
 
-/*#include "libmpeg2/convert/rgb.c"
+#ifdef HEADER_INCLUDE_C_FILES
+#include "libmpeg2/convert/rgb.c"
 #include "libmpeg2/convert/rgb_mmx.c"
 #include "libmpeg2/convert/rgb_vis.c"
 #include "libmpeg2/convert/uyvy.c"
@@ -35,7 +36,8 @@
 #include "libvo/video_out_null.c"
 #include "libvo/video_out_pgm.c"
 #include "libvo/video_out_sdl.c"
-#include "libvo/video_out_x11.c"*/
+#include "libvo/video_out_x11.c"
+#endif
 
 
 ////#include "src/corrupt_mpeg2.c"
