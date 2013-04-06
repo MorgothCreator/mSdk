@@ -46,9 +46,9 @@
 								<option id="com.ti.ccstudio.buildDefinitions.TMS470_5.0.compilerID.OPT_FOR_SPEED.619936988" name="Optimize for speed (--opt_for_speed, -mf)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_5.0.compilerID.OPT_FOR_SPEED" value="com.ti.ccstudio.buildDefinitions.TMS470_5.0.compilerID.OPT_FOR_SPEED.2" valueType="enumerated"/>
 								<option id="com.ti.ccstudio.buildDefinitions.TMS470_5.0.compilerID.DEBUGGING_MODEL.124941389" name="Debugging model" superClass="com.ti.ccstudio.buildDefinitions.TMS470_5.0.compilerID.DEBUGGING_MODEL" value="com.ti.ccstudio.buildDefinitions.TMS470_5.0.compilerID.DEBUGGING_MODEL.SYMDEBUG__DWARF" valueType="enumerated"/>
 								<option id="com.ti.ccstudio.buildDefinitions.TMS470_5.0.compilerID.INCLUDE_PATH.1652511912" name="Add dir to #include search path (--include_path, -I)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_5.0.compilerID.INCLUDE_PATH" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;C:\Users\XxXxXxXx\Documents\GitHub\mSdk\SDK\board\am335x\devkit8600&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\Users\XxXxXxXx\Documents\GitHub\mSdk\SDK\platform\am33&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\Users\XxXxXxXx\Documents\GitHub\mSdk\SDK\lib&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\GitHub\mSdk\SDK\board\am335x\devkit8600&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\GitHub\mSdk\SDK\platform\am33&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\GitHub\mSdk\SDK\lib&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${CG_TOOL_ROOT}/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}}&quot;"/>
 								</option>
@@ -75,8 +75,8 @@
 								<option id="com.ti.ccstudio.buildDefinitions.TMS470_5.0.linkerID.MAP_FILE.1500829446" name="Input and output sections listed into &lt;file&gt; (--map_file, -m)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_5.0.linkerID.MAP_FILE" value="&quot;${ProjName}.map&quot;" valueType="string"/>
 								<option id="com.ti.ccstudio.buildDefinitions.TMS470_5.0.linkerID.SEARCH_PATH.339686128" name="Add &lt;dir&gt; to library search path (--search_path, -i)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_5.0.linkerID.SEARCH_PATH" valueType="stringList">
 									<listOptionValue builtIn="false" value="&quot;${CG_TOOL_ROOT}/lib&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\Users\XxXxXxXx\Documents\GitHub\mSdk\SDK\platform\am33\lib&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\Users\XxXxXxXx\Documents\GitHub\mSdk\SDK\board\am335x\devkit8600&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\GitHub\mSdk\SDK\platform\am33\lib&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\GitHub\mSdk\SDK\board\am335x\devkit8600&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${CG_TOOL_ROOT}/include&quot;"/>
 								</option>
 								<option id="com.ti.ccstudio.buildDefinitions.TMS470_5.0.linkerID.DISPLAY_ERROR_NUMBER.1563394542" name="Emit diagnostic identifier numbers (--display_error_number)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_5.0.linkerID.DISPLAY_ERROR_NUMBER" value="true" valueType="boolean"/>

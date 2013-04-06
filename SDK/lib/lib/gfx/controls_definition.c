@@ -182,7 +182,14 @@ void put_circle(tDisplay *pDisplay, signed int x, signed int y, signed int _radi
    a = 0;
    b = radius;
    P = 1 - radius;
-   signed int Tmp1, Tmp2, Tmp3, Tmp4, Tmp5, Tmp6, Tmp7, Tmp8;
+   signed int Tmp1; 
+   signed int Tmp2; 
+   signed int Tmp3; 
+   signed int Tmp4; 
+   signed int Tmp5; 
+   signed int Tmp6; 
+   signed int Tmp7; 
+   signed int Tmp8;
    signed int _Tmp5 = 5, _Tmp7 = 0;
 
    do
@@ -1060,7 +1067,7 @@ signed int put_string(tDisplay *pDisplay, tFont *pFont, char *pcString, signed i
         }
         else if(*pcString == '\n')
         {
-        	lY += pFont->ucHeight;
+        	lY += read_data_byte(pFont->ucHeight);
         	pucData = 0;
             pcString++;
         }
