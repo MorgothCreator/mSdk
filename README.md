@@ -33,5 +33,4 @@ At this moment is supported the next platforms:
 
   Discovery Board.
 
-At this moment several tests are provided for AM335x (BeagleBone REV A5, DevKit8600), ATxmega, OMAP4, AVR32AP.
   
