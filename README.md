@@ -32,5 +32,7 @@ At this moment is supported the next platforms:
 6) STM32F4xx (ODeV).
 
   Discovery Board.
+  
+I added the settings for all example projects to help beginners to understand how it work, is necessary to clone mSdk into "C:\GitHub\" directory.
 
   
