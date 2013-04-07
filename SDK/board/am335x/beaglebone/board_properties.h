@@ -12,8 +12,8 @@
 
 #define board_type_beaglebone
 
-#define USE_FFT_TABLES
-#define USE_FFT_BUFFERS	double
+
+#define USE_FONT_CMSS14B
 /*#####################################################*/
 #define ASCII_NUM_IDX                      (48u)
 #define START_ADDR_DDR                     (0x80000000)

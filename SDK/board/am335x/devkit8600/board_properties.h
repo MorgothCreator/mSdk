@@ -26,11 +26,7 @@
 
 #define board_type_devkit8600
 
-#define USE_FFT_TABLES
-#define USE_FFT_BUFFERS	double
-
-#define USE_SELECTED_FONTS
-#define USE_G_SFONT_CMSS_14B
+#define USE_FONT_CMSS14B
 //#define USE_TWI1_ON_UART1
 //#define USE_TWI1_ON_UART2
 /*#####################################################*/

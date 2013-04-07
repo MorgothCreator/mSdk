@@ -67,11 +67,7 @@
 
 
 
-//-l am335x/drivers/drivers.lib
 -l am335x/system_config/system.lib
-//-l am335x/beaglebone/platform/platform.lib
-/*-l am335x/evmskAM335x/platform/platform.lib*/
-//-l utils/utils.lib
 
 /* SPECIFY THE SYSTEM MEMORY MAP */
 
@@ -86,9 +82,8 @@ SECTIONS
 {
     .init    : {
                  system.lib<init.obj> (.text)
-               } load > 0x80000000
+               } load > DDR_MEM
 
-    //.init    : load > DDR_MEM
     .text    : load > DDR_MEM              /* CODE                          */
     .data    : load > DDR_MEM              /* INITIALIZED GLOBAL AND STATIC VARIABLES */
     .bss     : load > DDR_MEM              /* UNINITIALIZED OR ZERO INITIALIZED */

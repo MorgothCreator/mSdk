@@ -170,9 +170,9 @@ vo_instance_t * vo_pgmpipe_open (void)
     w += f (x, y, z) + in; w = ((w << s) | (w >> (32 - s))) + x;	\
 } while (0)
 
-static void md5_transform (uint32_t * hash, uint32_t const * in)
+static void md5_transform (unsigned int * hash, unsigned int const * in)
 {
-    uint32_t a, b, c, d;
+    unsigned int a, b, c, d;
 
     a = hash[0];
     b = hash[1];
@@ -253,13 +253,13 @@ static void md5_transform (uint32_t * hash, uint32_t const * in)
     hash[3] += d;
 }
 
-static inline uint32_t swap (uint32_t x) 
+static inline unsigned int swap (unsigned int x)
 {
     return (((x & 0xff) << 24) | ((x & 0xff00) << 8) |
 	    ((x & 0xff0000) >> 8) | ((x & 0xff000000) >> 24));
 }
 
-static inline void little_endian (uint32_t * buf, unsigned int words)
+static inline void little_endian (unsigned int * buf, unsigned int words)
 {
 #ifdef WORDS_BIGENDIAN
     while (words--)
@@ -291,7 +291,7 @@ static void md5_writer (pgm_instance_t * instance, uint8_t * ptr, size_t size)
 	little_endian (instance->md5_block, 16);
 	md5_transform (instance->md5_hash, instance->md5_block);
 #else
-	md5_transform (instance->md5_hash, (uint32_t *)ptr);
+	md5_transform (instance->md5_hash, (unsigned int *)ptr);
 #endif
 	ptr += 64;
 	size -= 64;

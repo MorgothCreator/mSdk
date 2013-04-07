@@ -127,7 +127,7 @@ static void MC_avg_o_16_c (uint8_t * dest, const uint8_t * ref,
     do {
     	unsigned char cnt = 16;
     	uint8_t *_dest	= dest;
-    	uint8_t *_ref	= ref;
+    	const uint8_t *_ref	= ref;
     	do
     	{
     		*_dest = (*_ref++ + *_dest + 1) >>1;
@@ -143,7 +143,7 @@ static void MC_avg_o_8_c (uint8_t * dest, const uint8_t * ref,
     do {
     	unsigned char cnt = 8;
     	uint8_t *_dest	= dest;
-    	uint8_t *_ref	= ref;
+    	const uint8_t *_ref	= ref;
     	do
     	{
     		*_dest = (*_ref++ + *_dest + 1) >>1;
@@ -160,8 +160,8 @@ static void MC_put_x_16_c (uint8_t * dest, const uint8_t * ref,
     do {
     	unsigned char cnt = 16;
     	uint8_t *_dest	= dest;
-    	uint8_t *_ref	= ref;
-    	uint8_t *_ref1	= ref+1;
+    	const uint8_t *_ref	= ref;
+    	const uint8_t *_ref1	= ref+1;
     	do
     	{
     		*_dest = (*_ref++ + *_ref1++ + 1) >>1;
@@ -177,8 +177,8 @@ static void MC_put_x_8_c (uint8_t * dest, const uint8_t * ref,
     do {
 		unsigned char cnt = 8;
 		uint8_t *_dest	= dest;
-		uint8_t *_ref	= ref;
-		uint8_t *_ref1	= ref+1;
+		const uint8_t *_ref	= ref;
+		const uint8_t *_ref1	= ref+1;
 		do
 		{
 			*_dest = (*_ref++ + *_ref1++ + 1) >>1;
@@ -196,8 +196,8 @@ static void MC_avg_x_16_c (uint8_t * dest, const uint8_t * ref,
     	unsigned char cnt = 16;
     	uint8_t *_dest	= dest;
     	uint8_t *_dest1	= dest+1;
-    	uint8_t *_ref	= ref;
-    	uint8_t *_ref1	= ref+1;
+    	const uint8_t *_ref	= ref;
+    	const uint8_t *_ref1	= ref+1;
     	do
     	{
     		*_dest++ = (((((*_ref++ + *_ref1++ +1)>>1))+ *_dest1++)>>1);
@@ -215,8 +215,8 @@ static void MC_avg_x_8_c (uint8_t * dest, const uint8_t * ref,
     	unsigned char cnt = 8;
     	uint8_t *_dest	= dest;
     	uint8_t *_dest1	= dest+1;
-    	uint8_t *_ref	= ref;
-    	uint8_t *_ref1	= ref+1;
+    	const uint8_t *_ref	= ref;
+    	const uint8_t *_ref1	= ref+1;
     	do
     	{
     		*_dest++ = (((((*_ref++ + *_ref1++ +1)>>1))+ *_dest1++)>>1);
@@ -232,8 +232,8 @@ static void MC_put_y_16_c (uint8_t * dest, const uint8_t * ref,
     do {
     	unsigned char cnt = 16;
     	uint8_t *_dest	= dest;
-    	uint8_t *_ref	= ref;
-    	uint8_t *_ref1	= ref+stride;
+    	const uint8_t *_ref	= ref;
+    	const uint8_t *_ref1	= ref+stride;
     	do
     	{
         	*_dest++ = ((*_ref++ + *_ref1++)>>1);
@@ -249,8 +249,8 @@ static void MC_put_y_8_c (uint8_t * dest, const uint8_t * ref,
     do {
     	unsigned char cnt = 8;
     	uint8_t *_dest	= dest;
-    	uint8_t *_ref	= ref;
-    	uint8_t *_ref1	= ref+stride;
+    	const uint8_t *_ref	= ref;
+    	const uint8_t *_ref1	= ref+stride;
     	do
     	{
         	*_dest++ = ((*_ref++ + *_ref1++)>>1);
@@ -266,8 +266,8 @@ static void MC_avg_y_16_c (uint8_t * dest, const uint8_t * ref,
     do {
     	unsigned char cnt = 16;
     	uint8_t *_dest	= dest;
-    	uint8_t *_ref	= ref;
-    	uint8_t *_ref1	= ref+stride;
+    	const uint8_t *_ref	= ref;
+    	const uint8_t *_ref1	= ref+stride;
     	do
     	{
         	*_dest = (((((*_ref++ +*_ref1++ +1)>>1))+*_dest +1)>>1);
@@ -284,8 +284,8 @@ static void MC_avg_y_8_c (uint8_t * dest, const uint8_t * ref,
     do {
     	unsigned char cnt = 8;
     	uint8_t *_dest	= dest;
-    	uint8_t *_ref	= ref;
-    	uint8_t *_ref1	= ref+stride;
+    	const uint8_t *_ref	= ref;
+    	const uint8_t *_ref1	= ref+stride;
     	do
     	{
         	*_dest = (((((*_ref++ +*_ref1++ +1)>>1))+*_dest +1)>>1);
@@ -302,10 +302,10 @@ static void MC_put_xy_16_c (uint8_t * dest, const uint8_t * ref,
     do {
     	unsigned char cnt = 16;
     	uint8_t *_dest	= dest;
-    	uint8_t *_ref	= ref;
-    	uint8_t *_ref1	= ref+1;
-    	uint8_t *_ref2	= ref+stride;
-    	uint8_t *_ref3	= ref+stride+1;
+    	const uint8_t *_ref	= ref;
+    	const uint8_t *_ref1	= ref+1;
+    	const uint8_t *_ref2	= ref+stride;
+    	const uint8_t *_ref3	= ref+stride+1;
     	do
     	{
         	*_dest++ = (((*_ref++ +*_ref1++ +*_ref2++ +*_ref3++ +2)>>2));
@@ -321,10 +321,10 @@ static void MC_put_xy_8_c (uint8_t * dest, const uint8_t * ref,
     do {
     	unsigned char cnt = 8;
     	uint8_t *_dest	= dest;
-    	uint8_t *_ref	= ref;
-    	uint8_t *_ref1	= ref+1;
-    	uint8_t *_ref2	= ref+stride;
-    	uint8_t *_ref3	= ref+stride+1;
+    	const uint8_t *_ref	= ref;
+    	const uint8_t *_ref1	= ref+1;
+    	const uint8_t *_ref2	= ref+stride;
+    	const uint8_t *_ref3	= ref+stride+1;
     	do
     	{
         	*_dest++ = (((*_ref++ +*_ref1++ +*_ref2++ +*_ref3++ +2)>>2));
@@ -341,10 +341,10 @@ static void MC_avg_xy_16_c (uint8_t * dest, const uint8_t * ref,
     	unsigned char cnt = 16;
     	uint8_t *_dest	= dest;
     	uint8_t *_dest1	= dest + 1;
-    	uint8_t *_ref	= ref;
-    	uint8_t *_ref1	= ref+1;
-    	uint8_t *_ref2	= ref+stride;
-    	uint8_t *_ref3	= ref+stride+1;
+    	const uint8_t *_ref	= ref;
+    	const uint8_t *_ref1	= ref+1;
+    	const uint8_t *_ref2	= ref+stride;
+    	const uint8_t *_ref3	= ref+stride+1;
     	do
     	{
         	*_dest++ = (((((*_ref++ +*_ref1++ +*_ref2++ +*_ref3++ +2)>>2))+*_dest1++)>>1);
@@ -361,10 +361,10 @@ static void MC_avg_xy_8_c (uint8_t * dest, const uint8_t * ref,
     	unsigned char cnt = 8;
     	uint8_t *_dest	= dest;
     	uint8_t *_dest1	= dest + 1;
-    	uint8_t *_ref	= ref;
-    	uint8_t *_ref1	= ref+1;
-    	uint8_t *_ref2	= ref+stride;
-    	uint8_t *_ref3	= ref+stride+1;
+    	const uint8_t *_ref	= ref;
+    	const uint8_t *_ref1	= ref+1;
+    	const uint8_t *_ref2	= ref+stride;
+    	const uint8_t *_ref3	= ref+stride+1;
     	do
     	{
         	*_dest++ = (((((*_ref++ +*_ref1++ +*_ref2++ +*_ref3++ +2)>>2))+*_dest1++)>>1);
