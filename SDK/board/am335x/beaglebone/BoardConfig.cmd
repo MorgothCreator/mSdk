@@ -82,7 +82,7 @@ SECTIONS
 {
     .init    : {
                  system.lib<init.obj> (.text)
-               } load > DDR_MEM
+               } load > 0x80000000
 
     .text    : load > DDR_MEM              /* CODE                          */
     .data    : load > DDR_MEM              /* INITIALIZED GLOBAL AND STATIC VARIABLES */

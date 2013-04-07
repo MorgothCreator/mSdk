@@ -64,7 +64,7 @@ unsigned int UARTRxGetError(Uart_t* UartSettings)
 void UARTBaudRateSet(Uart_t* UartSettings, unsigned long BaudRate)
 {
 	if(!UartSettings) return;
-	return _UARTBaudSetRate(UartSettings->BaseAddr, BaudRate);
+	_UARTBaudSetRate(UartSettings->BaseAddr, BaudRate);
 }
 /*#####################################################*/
 /**

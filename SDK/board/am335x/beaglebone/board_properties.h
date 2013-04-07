@@ -12,7 +12,6 @@
 
 #define board_type_beaglebone
 
-
 #define USE_FONT_CMSS14B
 /*#####################################################*/
 #define ASCII_NUM_IDX                      (48u)

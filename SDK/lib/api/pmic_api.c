@@ -32,36 +32,36 @@
 /*#####################################################*/
 void pmic_setup(new_twi* TwiStruct)
 {
-#ifdef pmic_config
-	pmic_config(TwiStruct);
+#if defined(USE_TPS65217) || defined(USE_TPS65910A)
+	_pmic_config(TwiStruct);
 #endif
 }
 /*#####################################################*/
 void pmic_read(new_twi* TwiStruct,unsigned char regOffset, unsigned char* dest)
 {
-#ifdef pmic_config
-	pmic_reg_read(TwiStruct, regOffset, dest);
+#if defined(USE_TPS65217) || defined(USE_TPS65910A)
+	_pmic_reg_read(TwiStruct, regOffset, dest);
 #endif
 }
 /*#####################################################*/
 void pmic_write(new_twi* TwiStruct,unsigned char port_level, unsigned char regOffset,unsigned char dest_val, unsigned char mask)
 {
-#ifdef pmic_config
-	pmic_reg_write(TwiStruct, port_level, regOffset, dest_val, mask);
+#if defined(USE_TPS65217) || defined(USE_TPS65910A)
+	_pmic_reg_write(TwiStruct, port_level, regOffset, dest_val, mask);
 #endif
 }
 /*#####################################################*/
 void pmic_backlight_enable(new_twi* TwiStruct)
 {
-#ifdef pmic_config
-	pmic_wled_enable(TwiStruct);
+#if defined(USE_TPS65217) || defined(USE_TPS65910A)
+	_pmic_wled_enable(TwiStruct);
 #endif
 }
 /*#####################################################*/
 void pmic_backlight_level(new_twi* TwiStruct, unsigned char level)
 {
-#ifdef pmic_config
-	pmic_wled_level(TwiStruct, level);
+#if defined(USE_TPS65217) || defined(USE_TPS65910A)
+	_pmic_wled_level(TwiStruct, level);
 #endif
 }
 /*#####################################################*/

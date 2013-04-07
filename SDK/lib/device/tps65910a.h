@@ -27,13 +27,13 @@
 
 #ifdef USE_TPS65910A
 /*#####################################################*/
-void pmic_reg_read(new_twi* TwiStruct,unsigned char regOffset, unsigned char* dest);
-void pmic_reg_write(new_twi* TwiStruct,unsigned char port_level, unsigned char regOffset,
+void _pmic_reg_read(new_twi* TwiStruct,unsigned char regOffset, unsigned char* dest);
+void _pmic_reg_write(new_twi* TwiStruct,unsigned char port_level, unsigned char regOffset,
                         unsigned char dest_val, unsigned char mask);
 void pmic_voltage_update(new_twi* TwiStruct,unsigned char dc_cntrl_reg, unsigned char volt_sel);
-void pmic_config(new_twi* TwiStruct);
-void pmic_wled_enable(new_twi* TwiStruct);
-void pmic_wled_level(new_twi* TwiStruct, unsigned char level);
+void _pmic_config(new_twi* TwiStruct);
+void _pmic_wled_enable(new_twi* TwiStruct);
+void _pmic_wled_level(new_twi* TwiStruct, unsigned char level);
 /*#####################################################*/
 #ifdef HEADER_INCLUDE_C_FILES
 #include "tps65910a.c"

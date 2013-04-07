@@ -891,16 +891,6 @@
 			<locationURI>PARENT-2-PROJECT_LOC/SDK/platform/am33/sys/gpio_definition.h</locationURI>
 		</link>
 		<link>
-			<name>am33/sys/init.asm</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/SDK/platform/am33/sys/init.asm</locationURI>
-		</link>
-		<link>
-			<name>am33/sys/init.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/SDK/platform/am33/sys/init.h</locationURI>
-		</link>
-		<link>
 			<name>am33/sys/mcspi_definition.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/SDK/platform/am33/sys/mcspi_definition.h</locationURI>

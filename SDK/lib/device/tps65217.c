@@ -27,7 +27,7 @@
 #include "include/hw/hw_tps65217.h"
 #include "include/hw/hw_types.h"
 /*#####################################################*/
-void pmic_config(new_twi* TwiStruct)
+void _pmic_config(new_twi* TwiStruct)
 {
     if(!TwiStruct) return;
 	unsigned char pmic_status = 0;
@@ -35,20 +35,20 @@ void pmic_config(new_twi* TwiStruct)
     /* Configure PMIC slave address */
     I2CMasterSlaveAddrSet(TwiStruct->BaseAddr, PMIC_TPS65217_I2C_SLAVE_ADDR);
 
-    pmic_reg_read(TwiStruct, STATUS, &pmic_status);
+    _pmic_reg_read(TwiStruct, STATUS, &pmic_status);
 
     /* Increase USB current limit to 1300mA */
-    pmic_reg_write(TwiStruct, PROT_LEVEL_NONE, POWER_PATH, USB_INPUT_CUR_LIMIT_1300MA,
+    _pmic_reg_write(TwiStruct, PROT_LEVEL_NONE, POWER_PATH, USB_INPUT_CUR_LIMIT_1300MA,
                        USB_INPUT_CUR_LIMIT_MASK);
 
     /* Set DCDC2 (MPU) voltage to 1.275V */
     pmic_voltage_update(TwiStruct, DEFDCDC2, DCDC_VOLT_SEL_1275MV);
 
     /* Set LDO3, LDO4 output voltage to 3.3V */
-    pmic_reg_write(TwiStruct, PROT_LEVEL_2, DEFLS1, LDO_VOLTAGE_OUT_3_3, LDO_MASK);
+    _pmic_reg_write(TwiStruct, PROT_LEVEL_2, DEFLS1, LDO_VOLTAGE_OUT_3_3, LDO_MASK);
 
 
-    pmic_reg_write(TwiStruct, PROT_LEVEL_2, DEFLS2, LDO_VOLTAGE_OUT_3_3, LDO_MASK);
+    _pmic_reg_write(TwiStruct, PROT_LEVEL_2, DEFLS2, LDO_VOLTAGE_OUT_3_3, LDO_MASK);
 }
 /*#####################################################*/
 /**
@@ -56,7 +56,7 @@ void pmic_config(new_twi* TwiStruct)
  * @regOffset:          Source register address
  * @src_val:          Address of destination variable
  */
-void pmic_reg_read(new_twi* TwiStruct,unsigned char regOffset, unsigned char* dest)
+void _pmic_reg_read(new_twi* TwiStruct,unsigned char regOffset, unsigned char* dest)
 {
     if(!TwiStruct) return;
     /* Configure PMIC slave address */
@@ -84,7 +84,7 @@ void pmic_reg_read(new_twi* TwiStruct,unsigned char regOffset, unsigned char* de
  *
  *  @return:            None.
  */
-void pmic_reg_write(new_twi* TwiStruct,unsigned char port_level, unsigned char regOffset,
+void _pmic_reg_write(new_twi* TwiStruct,unsigned char port_level, unsigned char regOffset,
                         unsigned char dest_val, unsigned char mask)
 {
     if(!TwiStruct) return;
@@ -154,24 +154,24 @@ void pmic_voltage_update(new_twi* TwiStruct,unsigned char dc_cntrl_reg, unsigned
 {
     if(!TwiStruct) return;
     /* set voltage level */
-	pmic_reg_write(TwiStruct, PROT_LEVEL_2, dc_cntrl_reg, volt_sel, MASK_ALL_BITS);
+	_pmic_reg_write(TwiStruct, PROT_LEVEL_2, dc_cntrl_reg, volt_sel, MASK_ALL_BITS);
 
     /* set GO bit to initiate voltage transition */
-	pmic_reg_write(TwiStruct, PROT_LEVEL_2, DEFSLEW, DCDC_GO, DCDC_GO);
+	_pmic_reg_write(TwiStruct, PROT_LEVEL_2, DEFSLEW, DCDC_GO, DCDC_GO);
 }
 /*#####################################################*/
-void pmic_wled_enable(new_twi* TwiStruct)
+void _pmic_wled_enable(new_twi* TwiStruct)
 {
     if(!TwiStruct) return;
-	pmic_reg_write(TwiStruct, PROT_LEVEL_NONE, WLEDCTRL1, WLED_CURENT_SYNK_ENABLE_BITMASK | WLED_PWM_DIMMING_FREQ_200, 0xFF );
-	pmic_reg_write(TwiStruct, PROT_LEVEL_NONE, WLEDCTRL2, 80, 0xFF );
+	_pmic_reg_write(TwiStruct, PROT_LEVEL_NONE, WLEDCTRL1, WLED_CURENT_SYNK_ENABLE_BITMASK | WLED_PWM_DIMMING_FREQ_200, 0xFF );
+	_pmic_reg_write(TwiStruct, PROT_LEVEL_NONE, WLEDCTRL2, 80, 0xFF );
 }
 /*#####################################################*/
-void pmic_wled_level(new_twi* TwiStruct, unsigned char level)
+void _pmic_wled_level(new_twi* TwiStruct, unsigned char level)
 {
     if(!TwiStruct) return;
 	if(level > 100) return;
-	pmic_reg_write(TwiStruct, PROT_LEVEL_NONE, WLEDCTRL2, level, 0xFF );
+	_pmic_reg_write(TwiStruct, PROT_LEVEL_NONE, WLEDCTRL2, level, 0xFF );
 }
 /*#####################################################*/
 #endif

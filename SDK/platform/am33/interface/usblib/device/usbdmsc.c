@@ -1392,7 +1392,7 @@ HandleRequests(void *pvInstance, tUSBRequest *pUSBRequest,
     //
     // This class only support a single LUN.
     //
-    const static unsigned char ucMaxLun = 0;
+    static const unsigned char ucMaxLun = 0;
 
     ASSERT(pvInstance != 0);
 

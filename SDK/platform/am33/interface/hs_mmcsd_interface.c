@@ -413,7 +413,7 @@ static void HSMMCSDControllerSetup(signed int CardDetectPortNr, signed int CardD
 }
 
 
-inline void _mmcsd_init(void *SdStruct, signed int CardDetectPortNr, signed int CardDetectPinNr, new_gpio* StatusLed)
+void _mmcsd_init(void *SdStruct, signed int CardDetectPortNr, signed int CardDetectPinNr, new_gpio* StatusLed)
 {
 
 	LedStatusMmcSd0 = StatusLed;
@@ -436,7 +436,7 @@ inline void _mmcsd_init(void *SdStruct, signed int CardDetectPortNr, signed int 
     MMCSDIntEnable((mmcsdCtrlInfo*)&ctrlInfo);
 }
 
-inline void _mmcsd_idle(void *SdStruct)
+void _mmcsd_idle(void *SdStruct)
 {
     if(!gpio_in(CardDetectPinMmcSd0)/*(HSMMCSDCardPresent(&ctrlInfo)) == 1*/)
     {

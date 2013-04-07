@@ -46,7 +46,7 @@
 #include "../include/hw/soc_AM335x.h"
 #include "../include/hw/hw_types.h"
 #include "cp15.h"
-#include "init.h"
+//#include "init.h"
 
 /***********************************************************************
 **                            MACRO DEFINITIONS

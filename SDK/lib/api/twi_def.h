@@ -28,8 +28,8 @@ typedef struct
 {
 	unsigned char MasterSlaveAddr;
 	unsigned char TwiNr;
-	unsigned char flag;
-	unsigned char error_flag;
+	volatile unsigned char flag;
+	volatile unsigned char error_flag;
 	unsigned char Priority;
 	unsigned char WithInterrupt;
 	volatile unsigned char result;

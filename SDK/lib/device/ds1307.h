@@ -58,7 +58,7 @@ typedef enum DS1307_Seconds_Enum
 	DS1307_Ch_bp = 7,
 	DS1307_Seconds_gm = 0x0F<<0,
 	DS1307_10Seconds_gm = 0x07<<4,
-	DS1307_Ch_bm = 0x01<<7,
+	DS1307_Ch_bm = 0x01<<7
 }DS1307_Seconds_t;
 //-----------------------------------------------------
 //MINUTES
@@ -67,7 +67,7 @@ typedef enum DS1307_Minutes_Enum
 	DS1307_Minutes_gp	= 0,
 	DS1307_10Minutes_gp = 4,
 	DS1307_Minutes_gm	= 0x0F<<0,
-	DS1307_10Minutes_gm = 0x07<<4,
+	DS1307_10Minutes_gm = 0x07<<4
 }DS1307_Minutes_t;
 //-----------------------------------------------------
 //HOURS
@@ -78,14 +78,14 @@ typedef enum DS1307_Hours_Enum
 	DS1307_12_24_bp = 6,
 	DS1307_Hours_gm = 0x0F<<0,
 	DS1307_10Hours_gm	= 0x03<<4,
-	DS1307_12_24_bm = 0x01<<6,
+	DS1307_12_24_bm = 0x01<<6
 }DS1307_Hours_t;
 //-----------------------------------------------------
 //DAYS
 typedef enum DS1307_Days_Enum
 {
 	DS1307_Day_gp = 0,
-	DS1307_Day_gm = 0x07<<0,
+	DS1307_Day_gm = 0x07<<0
 }DS1307_Days_t;
 //-----------------------------------------------------
 //DATES
@@ -94,7 +94,7 @@ typedef enum DS1307_Dates_Enum
 	DS1307_Date_gp = 0,
 	DS1307_10Date_gp	= 4,
 	DS1307_Date_gm = 0x0F<<0,
-	DS1307_10Date_gm	= 0x03<<4,
+	DS1307_10Date_gm	= 0x03<<4
 }DS1307_Dates_t;
 //-----------------------------------------------------
 //MONTHS
@@ -103,7 +103,7 @@ typedef enum DS1307_Months_Enum
 	DS1307_Month_gp = 0,
 	DS1307_10Month_bp	= 4,
 	DS1307_Month_gm = 0x0F<<0,
-	DS1307_10Month_bm	= 0x01<<4,
+	DS1307_10Month_bm	= 0x01<<4
 }DS1307_Months_t;
 //-----------------------------------------------------
 //YEARS
@@ -112,7 +112,7 @@ typedef enum DS1307_Years_Enum
 	DS1307_Year_gp = 0,
 	DS1307_10Year_gp	= 4,
 	DS1307_Year_gm = 0x0F<<0,
-	DS1307_10Year_gm	= 0x0F<<4,
+	DS1307_10Year_gm	= 0x0F<<4
 }DS1307_Years_t;
 //-----------------------------------------------------
 //CONTROL

@@ -53,21 +53,21 @@ typedef enum
 	AR1020_TouchOptions,
 	AR1020_CalibrationInset,
 	AR1020_PenStateReportDelay,
-	AR1020_TouchReportDelay,
+	AR1020_TouchReportDelay
 }AR1020_enum;
 //-----------------------------------------------------
 //Touch Threshold
 typedef enum
 {
 	AR1020_TouchThreshold_Min = 0,
-	AR1020_TouchThreshold_Max = 255,
+	AR1020_TouchThreshold_Max = 255
 }AR1020_TouchThreshold_enum;
 //-----------------------------------------------------
 //Sensitivity Filter
 typedef enum
 {
 	AR1020_SensitivityFilter_Min = 0,
-	AR1020_SensitivityFilter_Max = 255,
+	AR1020_SensitivityFilter_Max = 255
 }AR1020_SensitivityFilter_enum;
 //-----------------------------------------------------
 //Sampling Fast
@@ -80,7 +80,7 @@ typedef enum
 	AR1020_SamplingFast_16 = 16,
 	AR1020_SamplingFast_32 = 32,
 	AR1020_SamplingFast_64 = 64,
-	AR1020_SamplingFast_128 = 128,
+	AR1020_SamplingFast_128 = 128
 }AR1020_SamplingFast_enum;
 //-----------------------------------------------------
 //Sampling Slow
@@ -93,42 +93,42 @@ typedef enum
 	AR1020_SamplingSlow_16 = 16,
 	AR1020_SamplingSlow_32 = 32,
 	AR1020_SamplingSlow_64 = 64,
-	AR1020_SamplingSlow_128 = 128,
+	AR1020_SamplingSlow_128 = 128
 }AR1020_SamplingSlow_enum;
 //-----------------------------------------------------
 //Accuracy Filter Fast
 typedef enum
 {
 	AR1020_SamplingFast_Min = 1,
-	AR1020_SamplingFast_Max = 8,
+	AR1020_SamplingFast_Max = 8
 }AR1020_AccuracyFilterFast_enum;
 //-----------------------------------------------------
 //Accuracy Filter Slow
 typedef enum
 {
 	AR1020_SamplingSlow_Min = 1,
-	AR1020_SamplingSlow_Max = 8,
+	AR1020_SamplingSlow_Max = 8
 }AR1020_AccuracyFilterSlow_enum;
 //-----------------------------------------------------
 //Speed Threshold
 typedef enum
 {
 	AR1020_SpeedThreshold_Min = 0,
-	AR1020_SpeedThreshold_Max = 255,
+	AR1020_SpeedThreshold_Max = 255
 }AR1020_SpeedThreshold_enum;
 //-----------------------------------------------------
 //Sleep Delay
 typedef enum
 {
 	AR1020_SleepDelay_Min = 0,
-	AR1020_SleepDelay_Max = 255,
+	AR1020_SleepDelay_Max = 255
 }AR1020_SleepDelay_enum;
 //-----------------------------------------------------
 //Pen Up Delay
 typedef enum
 {
 	AR1020_PenUpDelay_Min = 0,
-	AR1020_PenUpDelay_Max = 255,
+	AR1020_PenUpDelay_Max = 255
 }AR1020_PenUpDelay_enum;
 //-----------------------------------------------------
 //Touch Mode
@@ -142,7 +142,7 @@ typedef enum
 	AR1020_TouchMode_PenDown_P1_gc = 2<<5,
 	AR1020_TouchMode_PenDown_P10_gc = 3<<5,
 	AR1020_TouchMode_PenDown_P010_gc = 4<<5,
-	AR1020_TouchMode_PenDown_P01_gc = 5<<5,
+	AR1020_TouchMode_PenDown_P01_gc = 5<<5
 }AR1020_TouchMode_PenDown_enum;
 //------------------------
 //Touch Mode Pen movement
@@ -152,7 +152,7 @@ typedef enum
 	AR1020_TouchMode_PenMove_gm = 3<<3,
 	AR1020_TouchMode_PenMove_NoTouch_gc = 0<<3,
 	AR1020_TouchMode_PenMove_P0_gc = 1<<3,
-	AR1020_TouchMode_PenMove_P1_gc = 2<<3,
+	AR1020_TouchMode_PenMove_P1_gc = 2<<3
 }AR1020_TouchMode_PenMove_enum;
 //------------------------
 //Touch Mode Pen up
@@ -165,7 +165,7 @@ typedef enum
 	AR1020_TouchMode_PenUp_P1_gc = 2<<0,
 	AR1020_TouchMode_PenUp_P10_gc = 3<<0,
 	AR1020_TouchMode_PenUp_P010_gc = 4<<0,
-	AR1020_TouchMode_PenUp_P01_gc = 5<<0,
+	AR1020_TouchMode_PenUp_P01_gc = 5<<0
 }AR1020_TouchMode_PenUp_enum;
 //-----------------------------------------------------
 //Touch Options
@@ -174,28 +174,28 @@ typedef enum
 	AR1020_TouchMode_48W_bp = 1,
 	AR1020_TouchMode_48W_bm = 1<<1,
 	AR1020_TouchMode_CCE_bp = 0,
-	AR1020_TouchMode_CCE_bc = 1<<0,
+	AR1020_TouchMode_CCE_bc = 1<<0
 }AR1020_TouchOption_enum;
 //-----------------------------------------------------
 //Calibration Inset
 typedef enum
 {
 	AR1020_CalibrationInset_Min = 0,
-	AR1020_CalibrationInset_Max = 40,
+	AR1020_CalibrationInset_Max = 40
 }AR1020_CalibrationInset_enum;
 //-----------------------------------------------------
 //Pen State Report Delay
 typedef enum
 {
 	AR1020_PenStateReportDelay_Min = 0,
-	AR1020_PenStateReportDelay_Max = 255,
+	AR1020_PenStateReportDelay_Max = 255
 }AR1020_PenStateReportDelay_enum;
 //-----------------------------------------------------
 //Touch Report Delay
 typedef enum
 {
 	AR1020_TouchReportDelay_Min = 0,
-	AR1020_TouchReportDelay_Max = 255,
+	AR1020_TouchReportDelay_Max = 255
 }AR1020_TouchReportDelay_enum;
 //#####################################################
 //Responses
@@ -205,7 +205,7 @@ typedef enum
 	AR1020_Response_UnrecognizedCommand = 0x01,
 	AR1020_Response_UnrecognizedHeader = 0x03,
 	AR1020_Response_CommandTimeout = 0x04,
-	AR1020_Response_CalibrationCancel = 0xFC,
+	AR1020_Response_CalibrationCancel = 0xFC
 }AR1020_Response_enum;
 //#####################################################
 //#####################################################
