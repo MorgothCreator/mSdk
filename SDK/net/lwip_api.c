@@ -79,7 +79,7 @@ void EVMMACAddrGet(unsigned int addrIdx, unsigned char *macAddr)
 }
 
 
-void lan_interface_init(void)
+void lan_interface_init(unsigned long ip)
 {
 	UARTPuts(DebugCom, "Initialize the LWIP library.\n\r" , -1);
     unsigned int ipAddr;
@@ -101,29 +101,25 @@ void lan_interface_init(void)
 //#define STATIC_IP_ADDRESS_PORT1 192<<24 | 168<<16 | 0<<8 | 10
 //#define STATIC_IP_ADDRESS_PORT1  0
 
-#if STATIC_IP_ADDRESS_PORT1
-
-    lwipIfPort1.instNum = 0;
-    lwipIfPort1.slvPortNum = 1;
-    lwipIfPort1.ipAddr = STATIC_IP_ADDRESS_PORT1;
-    lwipIfPort1.netMask = 0;
-    lwipIfPort1.gwAddr = 0;
-    lwipIfPort1.ipMode = IPADDR_USE_STATIC;
-
-    ipAddr = lwIPInit(&lwipIfPort1);
-
-#else
-
-    lwipIfPort1.instNum = 0;
-    lwipIfPort1.slvPortNum = 1;
-    lwipIfPort1.ipAddr = 0;
-    lwipIfPort1.netMask = 0;
-    lwipIfPort1.gwAddr = 0;
-    lwipIfPort1.ipMode = IPADDR_USE_DHCP;
-
-    ipAddr = lwIPInit(&lwipIfPort1);
-
-#endif
+    if(ip)
+    {
+		lwipIfPort1.instNum = 0;
+		lwipIfPort1.slvPortNum = 1;
+		lwipIfPort1.ipAddr = ip;
+		lwipIfPort1.netMask = 0;
+		lwipIfPort1.gwAddr = 0;
+		lwipIfPort1.ipMode = IPADDR_USE_STATIC;
+    }
+    else
+    {
+		lwipIfPort1.instNum = 0;
+		lwipIfPort1.slvPortNum = 1;
+		lwipIfPort1.ipAddr = 0;
+		lwipIfPort1.netMask = 0;
+		lwipIfPort1.gwAddr = 0;
+		lwipIfPort1.ipMode = IPADDR_USE_DHCP;
+    }
+	ipAddr = lwIPInit(&lwipIfPort1);
     if(ipAddr)
     {
         UARTPuts(DebugCom, "\n\r\n\rPort 1 IP Address Assigned: ", -1);

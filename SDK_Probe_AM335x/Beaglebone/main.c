@@ -45,7 +45,7 @@
 //#include "lib/gfx/mpeg/config.h"
 //#include "lib/gfx/mpeg/Mpeg_api.h"
 
-//#include "net/http_simple_server.h"
+#include "http_simple_server.h"
 
 #ifdef UseMpeg12
 #include "lib/gfx/mpeg12/mpeg12_api.h"
@@ -146,6 +146,7 @@ void* check_change_location(void* data)
 int main(void) {
 	board_init();
 	RtcInit();
+	http_simple_init(192<<24 | 168<<16 | 0<<8 | 10);
 /*******************************************************/
     timer_interval(&TimerScanTouch, 20);
     timer_interval(&TimerStlPaint, 1000);

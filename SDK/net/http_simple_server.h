@@ -35,7 +35,7 @@ This is a small test page. \
 </body> \
 </html>";
 
-void http_simple_init(void);
+void http_simple_init(unsigned long ip);
 
 #include "http_simple_server.c"
 

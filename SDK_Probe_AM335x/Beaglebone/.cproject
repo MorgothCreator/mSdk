@@ -53,6 +53,12 @@
 									<listOptionValue builtIn="false" value="&quot;C:\GitHub\mSdk\SDK\lib&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${CG_TOOL_ROOT}/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\GitHub\mSdk\SDK\net&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\GitHub\mSdk\SDK\net\lwip-1.4.0&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\GitHub\mSdk\SDK\net\lwip-1.4.0\ports\cpsw\include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\GitHub\mSdk\SDK\net\lwip-1.4.0\src\include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\GitHub\mSdk\SDK\net\lwip-1.4.0\src\include\ipv4&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\GitHub\mSdk\SDK\net\lwip-1.4.0\src\include\lwip&quot;"/>
 								</option>
 								<option id="com.ti.ccstudio.buildDefinitions.TMS470_5.0.compilerID.GCC.1976768655" name="Enable support for GCC extensions (--gcc)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_5.0.compilerID.GCC" value="true" valueType="boolean"/>
 								<option id="com.ti.ccstudio.buildDefinitions.TMS470_5.0.compilerID.DIAG_WARNING.259532015" name="Treat diagnostic &lt;id&gt; as warning (--diag_warning, -pdsw)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_5.0.compilerID.DIAG_WARNING" valueType="stringList">

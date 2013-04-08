@@ -103,9 +103,9 @@ err_t http_simple_accept(void *arg, struct tcp_pcb *pcb, err_t err)
 }
 
 /* The initialization function. */
-void http_simple_init(void)
+void http_simple_init(unsigned long ip)
 {
-	lan_interface_init();
+	lan_interface_init(ip);
 	struct tcp_pcb *pcb;
 	pcb = tcp_new();
 	tcp_bind(pcb, IP_ADDR_ANY, ECHO_SERVER_PORT);

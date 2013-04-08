@@ -58,7 +58,7 @@
 /* DriverLib Header Files required for this interface driver. */
 #include "include/cpsw.h"
 #include "include/mdio.h"
-#include "api/interrupt_api.h"
+#include "include/interrupt.h"
 #include "sys/sysdelay.h"
 #include "include/phy.h"
 #include "sys/cache.h"

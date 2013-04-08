@@ -21,7 +21,7 @@
 
 #define LEN_IP_ADDR                        (4u)
 
-void lan_interface_init(void);
+void lan_interface_init(unsigned long ip);
 
 #include "lwip_api.c"
 
