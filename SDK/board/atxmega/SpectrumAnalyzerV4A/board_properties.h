@@ -11,6 +11,8 @@
 #define F_CPU	40000000
 extern unsigned long CoreFreq;
 #define SourceClock (CoreClk_Source_PLL)
+#define CoreClkDivider 1
+#define CoreExternClk	false
 /*#####################################################*/
 #define FLASH_DEVICE
 //#define USE_SELECTED_FONTS
