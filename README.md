@@ -35,4 +35,4 @@ At this moment is supported the next platforms:
   
 I added the settings for all example projects to help beginners to understand how it work, is necessary to clone mSdk into "C:\GitHub\" directory.
 
-  
+<a href="http://forum.devboardshop.com/">Detalied description link.</a>
