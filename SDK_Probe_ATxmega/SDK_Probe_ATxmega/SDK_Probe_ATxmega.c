@@ -2,7 +2,7 @@
  * SDK_Probe_ATxmega.c
  *
  * Created: 2/8/2013 12:14:37 AM
- *  Author: XxXx
+ *  Author: Iulian Gheorghiu (morgoth.creator@gmail.com)
  */ 
 /*#####################################################*/
 #define F_CPU	44000000
@@ -13,12 +13,12 @@
 #include "board_properties.h"
 #include "board_init.h"
 #include "sys/core_init.h"
-#include "lib/gfx/buton.h"
+/*#include "lib/gfx/buton.h"
 #include "lib/gfx/checkbox.h"
 #include "lib/gfx/progressbar.h"
 #include "lib/gfx/scrollbar.h"
 #include "lib/gfx/textbox.h"
-#include "lib/gfx/listbox.h"
+#include "lib/gfx/listbox.h"*/
 #include "lib/gfx/window.h"
 //#include "device/24c.h"
 #include "device/ar1020.h"
