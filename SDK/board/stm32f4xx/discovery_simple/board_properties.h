@@ -26,7 +26,7 @@
 //#define FFT_BUFFER_SIZE_LOG 8
 //#define USE_FFT_STATIC_BUFF
 /*#####################################################*/
-//#define USE_G_SFONT_CMSS_14B
+//#define USE_FONT_CMSS14B
 /*#####################################################*/
 #define STM32F407VGT6_Discovery
 /*#####################################################*/
