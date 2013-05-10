@@ -37,7 +37,7 @@ void CPDMAAINTCConfigure(int usbInstance)
 		IntRegister(SYS_INT_USBSSINT, USB1HostIntHandler);
 
 		/* Setting the priority for the system interrupt in AINTC. */
-		IntPrioritySet(SYS_INT_USBSSINT, 0, AINTC_HOSTINT_ROUTE_IRQ);
+		IntPrioritySet(SYS_INT_USBSSINT, 1, AINTC_HOSTINT_ROUTE_IRQ);
 
 		/* Enabling the system interrupt in AINTC. */
 		IntSystemEnable(SYS_INT_USBSSINT);
@@ -50,7 +50,7 @@ void CPDMAAINTCConfigure(int usbInstance)
 	    IntRegister(SYS_INT_USBSSINT, USB0HostIntHandler);
 
 	    /* Setting the priority for the system interrupt in AINTC. */
-	    IntPrioritySet(SYS_INT_USBSSINT, 0, AINTC_HOSTINT_ROUTE_IRQ);
+	    IntPrioritySet(SYS_INT_USBSSINT, 1, AINTC_HOSTINT_ROUTE_IRQ);
 
 	    /* Enabling the system interrupt in AINTC. */
 	    IntSystemEnable(SYS_INT_USBSSINT);
@@ -69,7 +69,7 @@ static void USBAINTCConfigure(int usbInstance)
 	   IntRegister(SYS_INT_USB1, USB1HostIntHandler);
 
 	   /* Setting the priority for the system interrupt in AINTC. */
-	   IntPrioritySet(SYS_INT_USB1, 0, AINTC_HOSTINT_ROUTE_IRQ);
+	   IntPrioritySet(SYS_INT_USB1, 1, AINTC_HOSTINT_ROUTE_IRQ);
 
 	   /* Enabling the system interrupt in AINTC. */
 	   IntSystemEnable(SYS_INT_USB1);
@@ -82,7 +82,7 @@ static void USBAINTCConfigure(int usbInstance)
 	   IntRegister(SYS_INT_USB0, USB0HostIntHandler);
 
 	   /* Setting the priority for the system interrupt in AINTC. */
-	   IntPrioritySet(SYS_INT_USB0, 0, AINTC_HOSTINT_ROUTE_IRQ);
+	   IntPrioritySet(SYS_INT_USB0, 1, AINTC_HOSTINT_ROUTE_IRQ);
 
 	   /* Enabling the system interrupt in AINTC. */
 	   IntSystemEnable(SYS_INT_USB0);

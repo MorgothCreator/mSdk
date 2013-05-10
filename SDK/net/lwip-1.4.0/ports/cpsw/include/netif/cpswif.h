@@ -52,7 +52,7 @@
 #ifdef am335x
 #include "include/hw/soc_AM335x.h"
 
-#define MAX_CPSW_INST                   1    
+#define MAX_CPSW_INST                   1
 #define CPSW0_SS_REGS                   SOC_CPSW_SS_REGS
 #define CPSW0_MDIO_REGS                 SOC_CPSW_MDIO_REGS
 #define CPSW0_WR_REGS                   SOC_CPSW_WR_REGS

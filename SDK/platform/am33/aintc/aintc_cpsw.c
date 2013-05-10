@@ -23,8 +23,8 @@ void AintcCPSWIntrSetUp(void)
     IntRegister(SYS_INT_3PGSWTXINT0, CPSWCore0TxIsr);
 
     /* Set the priority */
-    IntPrioritySet(SYS_INT_3PGSWTXINT0, 0, AINTC_HOSTINT_ROUTE_IRQ);
-    IntPrioritySet(SYS_INT_3PGSWRXINT0, 0, AINTC_HOSTINT_ROUTE_IRQ);
+    IntPrioritySet(SYS_INT_3PGSWTXINT0, 1, AINTC_HOSTINT_ROUTE_IRQ);
+    IntPrioritySet(SYS_INT_3PGSWRXINT0, 1, AINTC_HOSTINT_ROUTE_IRQ);
 
     /* Enable the system interrupt */
     IntSystemEnable(SYS_INT_3PGSWTXINT0);

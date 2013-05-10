@@ -9,6 +9,7 @@
 #include "clk/clk_cpsw.h"
 #include "pin_mux_cpsw.h"
 #include "aintc/aintc_cpsw.h"
+#include "driver/cpu.h"
 
 #ifdef UseLwip
 extern new_uart* DebugCom;
@@ -41,7 +42,9 @@ static void IpAddrDisplay(unsigned int ipAddr)
 */
 void CPSWCore0RxIsr(void)
 {
-    lwIPRxIntHandler(0);
+	//CPUirqd();
+	lwIPRxIntHandler(0);
+	//CPUirqe();
 }
 
 /*
@@ -49,7 +52,9 @@ void CPSWCore0RxIsr(void)
 */
 void CPSWCore0TxIsr(void)
 {
+	//CPUirqd();
     lwIPTxIntHandler(0);
+    //CPUirqe();
 }
 
 

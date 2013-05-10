@@ -642,16 +642,31 @@ void _FatData_ReadPointedFileDetails(FileInfo_t *fileinfo)
 		memset(fileinfo->FileInfo_PointedFileInDirectoryLongFileName, 32, 12);
 		char* TmpPtr = (char*)(fileinfo->FileInfo_BufferAddr + (Pointer & (((unsigned long)fileinfo->FileInfo_DiskInfo->DiskInfo_SectorsPerCluster<<9)-1)));
 		volatile unsigned int TmpStrLen = (unsigned int)(strchr(TmpPtr, 32) - TmpPtr);
+		if(TmpStrLen > 8) TmpStrLen = 8;
 		memcpy(fileinfo->FileInfo_PointedFileInDirectoryLongFileName, TmpPtr, TmpStrLen);
-		TmpStrLen++;
+		TmpPtr += TmpStrLen;
+		//if(TmpStrLen == 8) TmpStrLen++;
 		char *TmpExtensionPtr = (char *)(fileinfo->FileInfo_BufferAddr + (Pointer & (((unsigned long)fileinfo->FileInfo_DiskInfo->DiskInfo_SectorsPerCluster<<9)-1)) + 8);
 		if(TmpExtensionPtr[0] != ' ' || TmpExtensionPtr[1] != ' ' || TmpExtensionPtr[2] != ' ')
 		{
 			fileinfo->FileInfo_PointedFileInDirectoryLongFileName[TmpStrLen] = '.';
 			TmpStrLen++;
-			memcpy(fileinfo->FileInfo_PointedFileInDirectoryLongFileName + TmpStrLen, TmpExtensionPtr, 3);
-			TmpStrLen += 3;
-		}		
+		}
+		if(TmpExtensionPtr[0] != ' ')
+		{
+			fileinfo->FileInfo_PointedFileInDirectoryLongFileName[TmpStrLen] = TmpExtensionPtr[0];
+			TmpStrLen++;
+			if(TmpExtensionPtr[1] != ' ')
+			{
+				fileinfo->FileInfo_PointedFileInDirectoryLongFileName[TmpStrLen] = TmpExtensionPtr[1];
+				TmpStrLen++;
+				if(TmpExtensionPtr[2] != ' ')
+				{
+					fileinfo->FileInfo_PointedFileInDirectoryLongFileName[TmpStrLen] = TmpExtensionPtr[2];
+					TmpStrLen++;
+				}
+			}
+		}
 		fileinfo->FileInfo_PointedFileInDirectoryLongFileName[TmpStrLen] = 0;
 	}
 	memcpy(fileinfo->FileInfo_PointedFileInDirectoryExtension, fileinfo->FileInfo_BufferAddr + ((Pointer & (((unsigned long)fileinfo->FileInfo_DiskInfo->DiskInfo_SectorsPerCluster<<9)-1)) + 0x08), 3);
@@ -1074,19 +1089,24 @@ bool _FatData_CloseSesion(FileInfo_t *fileinfo)
 	return true;
 }
 //***********************************************************
-FileInfo_t *_FatData_SearchFileDirectory(unsigned int FriveNr, char *Str, unsigned char *Status)
+FileInfo_t *_FatData_SearchFileDirectory(unsigned int DriveNr, char *Str, unsigned char *Status)
 {
-	FileInfo_t *fileinfo = _FatData_OpenSesion(FriveNr);
+	FileInfo_t *fileinfo = _FatData_OpenSesion(DriveNr);
+	if(!fileinfo)
+	{
+		*Status = FileSearch_Status_Directory_not_exist;
+		return NULL;
+	}
 	*Status = FileSearch_Status_Directory_not_exist;
 	bool Response = true;
 	char *Ptr1 = Str;
 	char *Ptr2 = Str;
 	Ptr1 = strstr(Ptr1, ":/") + 2;
 	Ptr2 = strchr(Ptr1, '/');
-	while (Ptr1 != Ptr2)
+	while (Ptr1 != Ptr2 && Ptr2 != NULL)
 	{
 		//UARTprintf(DebugCom, "Pointed file: %s\n\r" , str_to_upercase(fileinfo->FileInfo_PointedFileInDirectoryLongFileName));
-		while(memcmp(str_to_upercase(Ptr1), str_to_upercase(fileinfo->FileInfo_PointedFileInDirectoryLongFileName), Ptr2 - Ptr1) && Response)
+		while(!memcmp(str_to_upercase(Ptr1), str_to_upercase(fileinfo->FileInfo_PointedFileInDirectoryLongFileName), Ptr2 - Ptr1) && Response)
 		{
 			Response = _FatData_Dn(fileinfo);
 			//UARTprintf(DebugCom, "Pointed file: %s\n\r" , str_to_upercase(fileinfo->FileInfo_PointedFileInDirectoryLongFileName));
@@ -1124,6 +1144,7 @@ FileInfo_t *_FatData_SearchFileDirectory(unsigned int FriveNr, char *Str, unsign
 				else
 				{
 					//UARTprintf(DebugCom, "Opened file: %s\n\r" , str_to_upercase(fileinfo->FileInfo_PointedFileInDirectoryLongFileName));
+					//_FatData_CloseFile(fileinfo);
 					*Status = FileSearch_Status_File_open_ok;
 					return fileinfo;
 				}

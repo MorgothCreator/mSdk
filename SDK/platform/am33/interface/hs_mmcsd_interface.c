@@ -76,7 +76,7 @@ extern FileInfo_t *FILE1;
 
 /* Frequency */
 #define HSMMCSD_IN_FREQ                96000000 /* 96MHz */
-#define HSMMCSD_INIT_FREQ              400000   /* 400kHz */
+#define HSMMCSD_INIT_FREQ              48000000   /* 400kHz */
 
 #define HSMMCSD_CARD_DETECT_PINNUM     6
 

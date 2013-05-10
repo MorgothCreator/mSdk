@@ -101,7 +101,7 @@
 **                          Memory Options
 *****************************************************************************/
 #define MEM_ALIGNMENT                   4         
-#define MEM_SIZE                        (128 * 1024) /* 128K */
+#define MEM_SIZE                        (1024 * 1024) /* 128K */
 
 #define MEMP_NUM_PBUF                   96     
 #define MEMP_NUM_TCP_PCB                32    
@@ -135,7 +135,7 @@
 **                           TCP  Options
 *****************************************************************************/
 #define TCP_MSS                         1500           
-#define TCP_WND                         (8 * TCP_MSS)  
+#define TCP_WND                         (8 * TCP_MSS)
 #define TCP_SND_BUF                     (8 * TCP_MSS)
 #define TCP_OVERSIZE                    TCP_MSS
 

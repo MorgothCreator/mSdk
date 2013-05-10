@@ -368,7 +368,7 @@ unsigned long _FatData_ReadSection(FileInfo_t *fileinfo, unsigned char *Buff, un
 unsigned char* _FatData_ReadFile(FileInfo_t *fileinfo);
 FileInfo_t *_FatData_OpenSesion(unsigned char DriveNr);
 bool _FatData_CloseSesion(FileInfo_t *fileinfo);
-FileInfo_t *_FatData_SearchFileDirectory(unsigned int FriveNr, char *Str, unsigned char *Status);
+FileInfo_t *_FatData_SearchFileDirectory(unsigned int DriveNr, char *Str, unsigned char *Status);
 #ifdef Fs_RW
 signed char _FatData_File_Create(FileInfo_t *fileinfo, char *Name, char *Extension, unsigned char Attr, unsigned long Size);
 #endif
