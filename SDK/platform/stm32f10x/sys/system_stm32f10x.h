@@ -49,11 +49,11 @@
   * @{
   */
 
-extern const uint32_t SystemFrequency;          /*!< System Clock Frequency (Core Clock) */
-extern const uint32_t SystemFrequency_SysClk;   /*!< System clock                        */
-extern const uint32_t SystemFrequency_AHBClk;   /*!< AHB System bus speed                */
-extern const uint32_t SystemFrequency_APB1Clk;  /*!< APB Peripheral Bus 1 (low)  speed   */
-extern const uint32_t SystemFrequency_APB2Clk;  /*!< APB Peripheral Bus 2 (high) speed   */
+extern const unsigned long SystemFrequency;          /*!< System Clock Frequency (Core Clock) */
+extern const unsigned long SystemFrequency_SysClk;   /*!< System clock                        */
+extern const unsigned long SystemFrequency_AHBClk;   /*!< AHB System bus speed                */
+extern const unsigned long SystemFrequency_APB1Clk;  /*!< APB Peripheral Bus 1 (low)  speed   */
+extern const unsigned long SystemFrequency_APB2Clk;  /*!< APB Peripheral Bus 2 (high) speed   */
 
 /**
   * @}

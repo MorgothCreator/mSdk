@@ -362,7 +362,7 @@ typedef __I uint8_t vuc8;   /*!< Read Only */
 #else
 
 #ifndef __cplusplus
-typedef enum {FALSE = 0, TRUE = !FALSE} bool;
+//typedef enum {FALSE = 0, TRUE = !FALSE} bool;
 #endif
 
 #endif
