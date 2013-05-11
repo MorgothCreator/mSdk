@@ -4,9 +4,9 @@
     <Device manufacturerId="9" manufacturerName="ST" chipId="305" chipName="STM32F103C8" boardId="" boardName=""/>
     <BuildOption>
       <Compile>
-        <Option name="OptimizationLevel" value="0"/>
+        <Option name="OptimizationLevel" value="4"/>
         <Option name="UseFPU" value="0"/>
-        <Option name="UserEditCompiler" value=""/>
+        <Option name="UserEditCompiler" value="-save-temps;-c"/>
         <Includepaths>
           <Includepath path="."/>
           <Includepath path="../sdk/platform/stm32f10x"/>
@@ -149,13 +149,13 @@
     <File name="stm32f10x/interface/mcspi_interface.h" path="../SDK/platform/stm32f10x/interface/mcspi_interface.h" type="1"/>
     <File name="stm32f10x/driver/misc.c" path="../SDK/platform/stm32f10x/driver/misc.c" type="1"/>
     <File name="stm32f10x/driver/stm32f10x_adc.h" path="../SDK/platform/stm32f10x/driver/stm32f10x_adc.h" type="1"/>
-    <File name="lib/api/touchscreen_def.h" path="../SDK/lib/api/touchscreen_def.h" type="1"/>
     <File name="lib/lib/gfx/jpg/IJG/jmemnobs.c" path="../SDK/lib/lib/gfx/jpg/IJG/jmemnobs.c" type="1"/>
     <File name="lib/lib/gfx/jpg/jpegfile.h" path="../SDK/lib/lib/gfx/jpg/jpegfile.h" type="1"/>
+    <File name="lib/api/touchscreen_def.h" path="../SDK/lib/api/touchscreen_def.h" type="1"/>
     <File name="lib/lib/generic.h" path="../SDK/lib/lib/generic.h" type="1"/>
-    <File name="lib/api/mmcsd_api.h" path="../SDK/lib/api/mmcsd_api.h" type="1"/>
     <File name="lib/device/ms5611.h" path="../SDK/lib/device/ms5611.h" type="1"/>
     <File name="stm32f10x/sys/core_init.h" path="../SDK/platform/stm32f10x/sys/core_init.h" type="1"/>
+    <File name="lib/api/mmcsd_api.h" path="../SDK/lib/api/mmcsd_api.h" type="1"/>
     <File name="lib/lib/gfx/jpg/IJG/jcomapi.c" path="../SDK/lib/lib/gfx/jpg/IJG/jcomapi.c" type="1"/>
     <File name="stm32f10x/driver/stm32f10x_rcc.c" path="../SDK/platform/stm32f10x/driver/stm32f10x_rcc.c" type="1"/>
     <File name="lib/api/twi_api.h" path="../SDK/lib/api/twi_api.h" type="1"/>
@@ -185,9 +185,9 @@
     <File name="lib/api/edma_api.c" path="../SDK/lib/api/edma_api.c" type="1"/>
     <File name="stm32f10x/driver/stm32f10x_adc.c" path="../SDK/platform/stm32f10x/driver/stm32f10x_adc.c" type="1"/>
     <File name="stm32f10x/driver/stm32f10x_fsmc.h" path="../SDK/platform/stm32f10x/driver/stm32f10x_fsmc.h" type="1"/>
-    <File name="lib/api/gpio_api.h" path="../SDK/lib/api/gpio_api.h" type="1"/>
     <File name="stm32f10x/include/stm32f10x.h" path="../SDK/platform/stm32f10x/include/stm32f10x.h" type="1"/>
     <File name="lib/lib/fft.h" path="../SDK/lib/lib/fft.h" type="1"/>
+    <File name="lib/api/gpio_api.h" path="../SDK/lib/api/gpio_api.h" type="1"/>
     <File name="lib/lib/gfx/jpg/IJG/cdjpeg.h" path="../SDK/lib/lib/gfx/jpg/IJG/cdjpeg.h" type="1"/>
     <File name="lib/lib/gfx/jpg/IJG/jchuff.c" path="../SDK/lib/lib/gfx/jpg/IJG/jchuff.c" type="1"/>
     <File name="lib/lib/gfx/jpg/jpeg_decoder.h" path="../SDK/lib/lib/gfx/jpg/jpeg_decoder.h" type="1"/>

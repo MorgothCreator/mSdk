@@ -755,7 +755,7 @@ uint32_t __STREXB(uint8_t value, uint8_t *addr)
 #ifdef MOD_MTHOMAS_STMLIB
    __ASM volatile ("strexb %0, %2, [%1]" : "=&r" (result) : "r" (addr), "r" (value) );
 #else
-   __ASM volatile ("strexb %0, %2, [%1]" : "=r" (result) : "r" (addr), "r" (value) );
+   __ASM volatile ("strexb %0, %2, [%1]" : "=&r" (result) : "r" (addr), "r" (value) );
 #endif
    return(result);
 }
@@ -775,7 +775,7 @@ uint32_t __STREXH(uint16_t value, uint16_t *addr)
 #ifdef MOD_MTHOMAS_STMLIB
    __ASM volatile ("strexh %0, %2, [%1]" : "=&r" (result) : "r" (addr), "r" (value) );
 #else
-   __ASM volatile ("strexh %0, %2, [%1]" : "=r" (result) : "r" (addr), "r" (value) );
+   __ASM volatile ("strexh %0, %2, [%1]" : "=&r" (result) : "r" (addr), "r" (value) );
 #endif
    return(result);
 }
