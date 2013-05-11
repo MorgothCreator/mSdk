@@ -148,7 +148,7 @@ typedef struct {
    */
   int DCT_scaled_size;
   /* The downsampled dimensions are the component's actual, unpadded number
-   * of samples at the main buffer (preprocessing/compression interface), thus
+   * of samples at the main_main buffer (preprocessing/compression interface), thus
    * downsampled_width = ceil(image_width * Hi/Hmax)
    * and similarly for height.  For decompression, IDCT scaling is included, so
    * downsampled_width = ceil(image_width * Hi/Hmax * DCT_scaled_size/DCTSIZE)
@@ -396,7 +396,7 @@ struct jpeg_compress_struct {
    * Links to compression subobjects (methods and private variables of modules)
    */
   struct jpeg_comp_master * master;
-  struct jpeg_c_main_controller * main;
+  struct jpeg_c_main_controller * main_main;
   struct jpeg_c_prep_controller * prep;
   struct jpeg_c_coef_controller * coef;
   struct jpeg_marker_writer * marker;
@@ -620,7 +620,7 @@ struct jpeg_decompress_struct {
    * Links to decompression subobjects (methods, private variables of modules)
    */
   struct jpeg_decomp_master * master;
-  struct jpeg_d_main_controller * main;
+  struct jpeg_d_main_controller * main_main;
   struct jpeg_d_coef_controller * coef;
   struct jpeg_d_post_controller * post;
   struct jpeg_input_controller * inputctl;

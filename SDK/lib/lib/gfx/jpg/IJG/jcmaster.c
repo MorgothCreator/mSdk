@@ -118,7 +118,7 @@ initial_setup (j_compress_ptr cinfo)
   }
 
   /* Compute number of fully interleaved MCU rows (number of times that
-   * main controller will call coefficient controller).
+   * main_main controller will call coefficient controller).
    */
   cinfo->total_iMCU_rows = (JDIMENSION)
     jdiv_round_up((long) cinfo->image_height,
@@ -421,7 +421,7 @@ prepare_for_pass (j_compress_ptr cinfo)
     (*cinfo->coef->start_pass) (cinfo,
 				(master->total_passes > 1 ?
 				 JBUF_SAVE_AND_PASS : JBUF_PASS_THRU));
-    (*cinfo->main->start_pass) (cinfo, JBUF_PASS_THRU);
+    (*cinfo->main_main->start_pass) (cinfo, JBUF_PASS_THRU);
     if (cinfo->optimize_coding) {
       /* No immediate data output; postpone writing frame/scan headers */
       master->pub.call_pass_startup = FALSE;
@@ -574,7 +574,7 @@ jinit_c_master_control (j_compress_ptr cinfo, boolean transcode_only)
 
   /* Initialize my private state */
   if (transcode_only) {
-    /* no main pass in transcoding */
+    /* no main_main pass in transcoding */
     if (cinfo->optimize_coding)
       master->pass_type = huff_opt_pass;
     else

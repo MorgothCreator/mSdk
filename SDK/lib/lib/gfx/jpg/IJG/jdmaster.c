@@ -447,7 +447,7 @@ prepare_for_output_pass (j_decompress_ptr cinfo)
     master->pub.is_dummy_pass = FALSE;
     (*cinfo->cquantize->start_pass) (cinfo, FALSE);
     (*cinfo->post->start_pass) (cinfo, JBUF_CRANK_DEST);
-    (*cinfo->main->start_pass) (cinfo, JBUF_CRANK_DEST);
+    (*cinfo->main_main->start_pass) (cinfo, JBUF_CRANK_DEST);
 #else
     ERREXIT(cinfo, JERR_NOT_COMPILED);
 #endif /* QUANT_2PASS_SUPPORTED */
@@ -473,7 +473,7 @@ prepare_for_output_pass (j_decompress_ptr cinfo)
 	(*cinfo->cquantize->start_pass) (cinfo, master->pub.is_dummy_pass);
       (*cinfo->post->start_pass) (cinfo,
 	    (master->pub.is_dummy_pass ? JBUF_SAVE_AND_PASS : JBUF_PASS_THRU));
-      (*cinfo->main->start_pass) (cinfo, JBUF_PASS_THRU);
+      (*cinfo->main_main->start_pass) (cinfo, JBUF_PASS_THRU);
     }
   }
 
