@@ -19,6 +19,7 @@
   */ 
 
 /* Includes ------------------------------------------------------------------*/
+#include "stm32f10x_conf.h"
 #include "stm32f10x_sdio.h"
 #include "stm32f10x_rcc.h"
 
@@ -757,7 +758,7 @@ ITStatus SDIO_GetITStatus(uint32_t SDIO_IT)
 }
 
 /**
-  * @brief  Clears the SDIO’s interrupt pending bits.
+  * @brief  Clears the SDIOï¿½s interrupt pending bits.
   * @param  SDIO_IT: specifies the interrupt pending bit to clear. 
   *   This parameter can be one or a combination of the following values:
   *     @arg SDIO_IT_CCRCFAIL: Command response received (CRC check failed) interrupt

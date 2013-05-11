@@ -19,6 +19,7 @@
   */ 
 
 /* Includes ------------------------------------------------------------------*/
+#include "stm32f10x_conf.h"
 #include "stm32f10x_dma.h"
 #include "stm32f10x_rcc.h"
 
@@ -607,7 +608,7 @@ ITStatus DMA_GetITStatus(uint32_t DMA_IT)
 }
 
 /**
-  * @brief  Clears the DMAy Channelx’s interrupt pending bits.
+  * @brief  Clears the DMAy Channelxï¿½s interrupt pending bits.
   * @param  DMA_IT: specifies the DMA interrupt pending bit to clear.
   *   This parameter can be any combination (for the same DMA) of the following values:
   *     @arg DMA1_IT_GL1: DMA1 Channel1 global interrupt.

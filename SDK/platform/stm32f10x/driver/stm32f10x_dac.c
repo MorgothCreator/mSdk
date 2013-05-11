@@ -19,6 +19,7 @@
   */ 
 
 /* Includes ------------------------------------------------------------------*/
+#include "stm32f10x_conf.h"
 #include "stm32f10x_dac.h"
 #include "stm32f10x_rcc.h"
 

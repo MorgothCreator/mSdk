@@ -19,6 +19,8 @@
   */ 
 
 /* Includes ------------------------------------------------------------------*/
+#include "stm32f10x_conf.h"
+#include "stm32f10x_conf.h"
 #include "stm32f10x_dbgmcu.h"
 
 /** @addtogroup STM32F10x_StdPeriph_Driver
