@@ -257,7 +257,7 @@ void Reset_Handler(void)
   SystemInit_ExtMemCtl();
 
   /* restore original stack pointer */
-  asm(" LDR r0, =_estack");
+  asm(" LDR r0, =_end");
   asm(" MSR msp, r0");
   
   /* Initialize data and bss */

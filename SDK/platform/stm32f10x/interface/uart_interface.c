@@ -73,9 +73,7 @@ const uint16_t COM_TX_PIN[COMn] = {GPIO_Pin_6, GPIO_Pin_5, GPIO_Pin_8, GPIO_Pin_
 
 const uint16_t COM_RX_PIN[COMn] = {GPIO_Pin_7, GPIO_Pin_6, GPIO_Pin_9, GPIO_Pin_11, GPIO_Pin_12};
 
-const uint16_t COM_TX_PIN_SOURCE[COMn] = {GPIO_PinSource6, GPIO_PinSource5, GPIO_PinSource8, GPIO_PinSource10, GPIO_PinSource2};
-
-const uint16_t COM_RX_PIN_SOURCE[COMn] = {GPIO_PinSource7, GPIO_PinSource6, GPIO_PinSource9, GPIO_PinSource11, GPIO_PinSource12};
+//const uint16_t COM_TX_PIN_REMAP[COMn] = {GPIO_Remap_USART1, GPIO_Remap_USART2, GPIO_FullRemap_USART3, GPIO_PinSource10, GPIO_PinSource2};
 
 //const uint16_t COM_TX_AF[COMn] = {GPIO_AF_USART1, GPIO_AF_USART2, GPIO_AF_USART3, GPIO_AF_UART4, GPIO_AF_UART5};
 
@@ -83,14 +81,64 @@ const uint16_t COM_RX_PIN_SOURCE[COMn] = {GPIO_PinSource7, GPIO_PinSource6, GPIO
 
 void STM_EVAL_COMInit(unsigned char COM, USART_InitTypeDef* USART_InitStruct)
 {
+	  GPIO_InitTypeDef GPIO_InitStructure;
 
+	  /* Enable GPIO clock */
+	  RCC_APB2PeriphClockCmd(COM_TX_PORT_CLK[COM], ENABLE);
+	  RCC_APB2PeriphClockCmd(COM_RX_PORT_CLK[COM], ENABLE);
+
+	  if (COM == 0 || COM == 5) RCC_APB2PeriphClockCmd(COM_USART_CLK[COM], ENABLE);
+	  else
+	  {
+	    /* Enable UART clock */
+	    RCC_APB1PeriphClockCmd(COM_USART_CLK[COM], ENABLE);
+	  }
+
+	  /* Connect PXx to USARTx_Tx*/
+	  //GPIO_PinAFConfig(COM_TX_PORT[COM], COM_TX_PIN_SOURCE[COM], COM_TX_AF[COM]);
+
+	  /* Connect PXx to USARTx_Rx*/
+	  //GPIO_PinAFConfig(COM_RX_PORT[COM], COM_RX_PIN_SOURCE[COM], COM_RX_AF[COM]);
+
+	  switch(COM)
+	  {
+	  case 0:
+		  GPIO_PinRemapConfig(GPIO_Remap_USART1, ENABLE);
+		  break;
+	  case 1:
+		  GPIO_PinRemapConfig(GPIO_Remap_USART2, ENABLE);
+		  break;
+	  case 2:
+		  GPIO_PinRemapConfig(GPIO_FullRemap_USART3, ENABLE);
+		  break;
+	  }
+
+	  /* Configure USART Tx as alternate function  */
+	  //GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+	  //GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
+	  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+
+	  GPIO_InitStructure.GPIO_Pin = COM_TX_PIN[COM];
+	  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	  GPIO_Init(COM_TX_PORT[COM], &GPIO_InitStructure);
+
+	  /* Configure USART Rx as alternate function  */
+	  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+	  GPIO_InitStructure.GPIO_Pin = COM_RX_PIN[COM];
+	  GPIO_Init(COM_RX_PORT[COM], &GPIO_InitStructure);
+
+	  /* USART configuration */
+	  USART_Init(COM_USART[COM], USART_InitStruct);
+
+	  /* Enable USART */
+	  USART_Cmd(COM_USART[COM], ENABLE);
 }
 /*#####################################################*/
 bool _uart_open(Uart_t* UartSettings)
 {
 	//USART_DeInit(COM_USART[UartSettings->UartNr]);
 	//UART_nvic_config(UartSettings);
-/*	UartSettings->BaseAddr = (unsigned int)COM_USART[UartSettings->UartNr];
+	UartSettings->BaseAddr = (unsigned int)COM_USART[UartSettings->UartNr];
 	USART_InitTypeDef USART_InitStructure;
 	USART_InitStructure.USART_BaudRate = UartSettings->BaudRate;
 	USART_InitStructure.USART_WordLength = USART_WordLength_8b;
@@ -98,7 +146,7 @@ bool _uart_open(Uart_t* UartSettings)
 	USART_InitStructure.USART_Parity = USART_Parity_No;
 	USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
 	USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
-	STM_EVAL_COMInit(UartSettings->UartNr, &USART_InitStructure);*/
+	STM_EVAL_COMInit(UartSettings->UartNr, &USART_InitStructure);
 	  //while(1);
 	//USART_TypeDef* base_addr = (USART_TypeDef*)UartSettings->BaseAddr;
 	//base_addr->CR1 |= USART_Mode_Rx | USART_Mode_Tx;
