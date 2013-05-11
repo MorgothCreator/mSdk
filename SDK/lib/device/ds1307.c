@@ -111,8 +111,8 @@ bool DS1307_ReadTime_Str(new_twi* TwiStruct, unsigned char* Buff)
 	if(!SetupI2CReception(TwiStruct, DS1307_Address_Length, 7)) return false;
 	else
 	{
+#if defined(_AVR_IOXXX_H_)
 		unsigned char *ReadBuffer = TwiStruct->RxBuff;
-#ifdef _AVR_IOXXX_H_
 		utoa((unsigned short)((ReadBuffer[6] & DS1307_10Year_gm) >> DS1307_10Year_gp), (char *)Buff, 10);
 		utoa((unsigned short)((ReadBuffer[6] & DS1307_Year_gm) >> DS1307_Year_gp), (char *)Buff+1, 10);
 		Buff[2] = '/';
@@ -132,7 +132,7 @@ bool DS1307_ReadTime_Str(new_twi* TwiStruct, unsigned char* Buff)
 		utoa((unsigned short)((ReadBuffer[0] & DS1307_Seconds_gm) >> DS1307_Seconds_gp), (char *)Buff+ 16, 10);
 #else
 	#ifndef NO_I_TO_A_IN_STD_LIB
-
+		unsigned char *ReadBuffer = TwiStruct->RxBuff;
 		ltoa((unsigned short)((ReadBuffer[6] & DS1307_10Year_gm) >> DS1307_10Year_gp), (char *)Buff);
 		ltoa((unsigned short)((ReadBuffer[6] & DS1307_Year_gm) >> DS1307_Year_gp), (char *)Buff+1);
 		Buff[2] = '/';
