@@ -36,3 +36,48 @@ At this moment is supported the next platforms:
 I added the settings for all example projects to help beginners to understand how it work, is necessary to clone mSdk into "C:\GitHub\" directory.
 
 <a href="http://forum.devboardshop.com/">Detalied description link.</a>
+
+Done API's for every platform:
+
+	AM335x:
+		EDMA.
+		GPIO.
+		MMCSD.
+		Internal AD touchscreen.
+		LCD.
+		SPI.
+		RTC.
+		TWI.
+		UART.
+		USB.
+	AT32AP7000:
+		GPIO.
+		MMCSD.
+		LCD.
+		RTC.
+		TWI.
+		UART.
+	AT32UC3L:
+		ADC.
+		GPIO.
+		UART.
+	ATXMEGA:
+		GPIO.
+		MMCSD using USART in SPI mode.
+		SPI.
+		TWI.
+		USART.
+	OMAP4:
+		GPIO.
+		TWI.
+		UART.
+	STM32F0:
+		In development.
+	STM32F1:
+		In development.
+	STM32F3:
+		In development.
+	STM32F4:
+		GPIO.
+
+
