@@ -17,7 +17,7 @@ unsigned long CoreFreq = 0;
 
 void _core_init(void)
 {
-	SystemInit();
+	//SystemInit();
 	SystemCoreClockUpdate();
 	//RCC_PCLK1Config(RCC_HCLK_Div4);
 	//RCC_PCLK2Config(RCC_HCLK_Div2);

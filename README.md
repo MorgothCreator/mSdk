@@ -79,5 +79,6 @@ Done API's for every platform:
 		In development.
 	STM32F4:
 		GPIO.
+		USART.
 
 

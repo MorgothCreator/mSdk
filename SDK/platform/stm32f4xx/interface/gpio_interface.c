@@ -4,6 +4,7 @@
  *  Created on: Mar 21, 2013
  *      Author: XxXx
  */
+#include <string.h>
 #include "stm32f4xx_conf.h"
 #include "gpio_interface.h"
 #include "driver/stm32f4xx_gpio.h"

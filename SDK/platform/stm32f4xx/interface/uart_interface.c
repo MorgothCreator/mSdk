@@ -15,7 +15,7 @@
   * @param  None
   * @retval None
   */
-/*static void UART_nvic_config(Uart_t* UartSettings)
+static void UART_nvic_config(Uart_t* UartSettings)
 {
   NVIC_InitTypeDef NVIC_InitStructure;
 
@@ -36,13 +36,13 @@
   	  case 4:
   		  NVIC_InitStructure.NVIC_IRQChannel = UART5_IRQn;
   		  break;
-  }*/
+  }
   /* Enable the USARTx Interrupt */
-  /*NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = UartSettings->Priority;
+  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = UartSettings->Priority;
   NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
   NVIC_Init(&NVIC_InitStructure);
-}*/
+}
 /**
   * @brief  Configures COM port.
   * @param  COM: Specifies the COM port to be configured.
@@ -134,6 +134,7 @@ bool _uart_open(Uart_t* UartSettings)
 	USART_InitStructure.USART_Parity = USART_Parity_No;
 	USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
 	USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
+	//UART_nvic_config(UartSettings);
 	STM_EVAL_COMInit(UartSettings->UartNr, &USART_InitStructure);
 	  //while(1);
 	//USART_TypeDef* base_addr = (USART_TypeDef*)UartSettings->BaseAddr;

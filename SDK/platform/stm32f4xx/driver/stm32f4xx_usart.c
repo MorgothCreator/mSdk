@@ -558,8 +558,9 @@ void USART_SendData(USART_TypeDef* USARTx, uint16_t Data)
   /* Check the parameters */
   assert_param(IS_USART_ALL_PERIPH(USARTx));
   assert_param(IS_USART_DATA(Data));
-  //while(!(USARTx->SR & USART_FLAG_TC));
+  while(!(USARTx->SR & USART_FLAG_TC));
   /* Transmit Data */
+
   USARTx->DR = (Data & (uint16_t)0x01FF);
   //while (USART_GetFlagStatus(USARTx, USART_FLAG_TC) == RESET);
 }

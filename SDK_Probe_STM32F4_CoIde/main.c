@@ -10,10 +10,10 @@
 int main(void)
 {
 	board_init();
-	register int CntDelay;
+	volatile int CntDelay;
 	while(1)
 	{
-		CntDelay = 8000000;
+		CntDelay = 7000000;
 		do {
 			if(!CntDelay) break;
 			CntDelay--;

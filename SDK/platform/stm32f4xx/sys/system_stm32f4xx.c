@@ -120,10 +120,12 @@
   * @{
   */
 
+
 #include "../include/stm32f4xx.h"
 #include "system_stm32f4xx.h"
 #include "../driver/stm32f4xx_rcc.h"
 #include "board_properties.h"
+
 
 /**
   * @}
@@ -182,7 +184,7 @@
   * @{
   */
 
-  uint32_t SystemCoreClock = 168000000;
+  uint32_t SystemCoreClock = CoreFreq_Mhz * 1000000;
 
   __I uint8_t AHBPrescTable[16] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 6, 7, 8, 9};
 
@@ -362,7 +364,7 @@ static void SetSysClock(void)
   {
     HSEStatus = RCC->CR & RCC_CR_HSERDY;
     StartUpCounter++;
-  } while((HSEStatus == 0) && (StartUpCounter != HSE_STARTUP_TIMEOUT));
+  } while((HSEStatus == 0) && (StartUpCounter < HSE_STARTUP_TIMEOUT));
 
   if ((RCC->CR & RCC_CR_HSERDY) != RESET)
   {
