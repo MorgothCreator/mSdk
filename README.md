@@ -29,9 +29,11 @@ At this moment is supported the next platforms:
 
   Xplained Board.
   
-6) STM32F4xx (ODeV).
+6) STM32F4xx (ODeV & CoIde).
 
   Discovery Board.
+  
+  Mikromedia board.
   
 I added the settings for all example projects to help beginners to understand how it work, is necessary to clone mSdk into "C:\GitHub\" directory.
 
