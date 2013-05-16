@@ -29,7 +29,19 @@ At this moment is supported the next platforms:
 
   Xplained Board.
   
-6) STM32F4xx (ODeV & CoIde).
+6) STM32F0 (CoIde).
+
+  --
+
+7) STM32F1 (CoIde).
+
+  --
+
+8) STM32F3 (CoIde).
+
+  --
+
+9) STM32F4xx (ODeV & CoIde).
 
   Discovery Board.
   
