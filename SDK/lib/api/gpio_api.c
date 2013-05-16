@@ -33,9 +33,9 @@ void gpio_init(unsigned int GpioModuleNr)
 /*#####################################################*/
 //- GPIO_DIR_INPUT - to configure the pin as an input pin\n
 //- GPIO_DIR_OUTPUT - to configure the pin as an output pin\n
-new_gpio *gpio_assign(unsigned char PortNr, unsigned char PinNr, unsigned char Direction)
+new_gpio *gpio_assign(unsigned char PortNr, unsigned char PinNr, unsigned char Direction, bool Multipin)
 {
-	return _gpio_assign(PortNr, PinNr, Direction);
+	return _gpio_assign(PortNr, PinNr, Direction, Multipin);
 }
 /*#####################################################*/
 void gpio_free(new_gpio *gpio_struct)

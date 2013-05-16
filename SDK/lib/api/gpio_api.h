@@ -29,7 +29,7 @@
 #include "interface/gpio_interface.h"
 /*#####################################################*/
 void gpio_init(unsigned int GpioModuleNr);
-new_gpio *gpio_assign(unsigned char PortNr, unsigned char PinNr, unsigned char Direction);
+new_gpio *gpio_assign(unsigned char PortNr, unsigned char PinNr, unsigned char Direction, bool Multipin);
 void gpio_free(new_gpio *gpio_struct);
 bool gpio_out(new_gpio *gpio_struct, unsigned char State);
 bool gpio_direction(new_gpio *gpio_struct, unsigned char Direction);

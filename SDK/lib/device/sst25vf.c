@@ -13,8 +13,8 @@
 
 bool sst25vf_init(sst25vf_t *Settings, unsigned char Wp_PortNr, unsigned char Wp_PinNr, unsigned char Hold_PortNr, unsigned char Hold_PinNr)
 {
-	Settings->WP_Port = gpio_assign(Wp_PortNr, Wp_PinNr, GPIO_DIR_OUTPUT);
-	Settings->Hold_Port = gpio_assign(Hold_PortNr, Hold_PinNr, GPIO_DIR_OUTPUT);
+	Settings->WP_Port = gpio_assign(Wp_PortNr, Wp_PinNr, GPIO_DIR_OUTPUT, false);
+	Settings->Hold_Port = gpio_assign(Hold_PortNr, Hold_PinNr, GPIO_DIR_OUTPUT, false);
 	if(!Settings->WP_Port && !Settings->Hold_Port)
 	{
 		gpio_free(Settings->WP_Port);

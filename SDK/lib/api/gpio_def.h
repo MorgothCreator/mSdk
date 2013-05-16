@@ -23,6 +23,7 @@
 #define GPIO_DEF_H_
 /*#####################################################*/
 #include <stdlib.h>
+#include <stdbool.h>
 /*#####################################################*/
 typedef enum
 {
@@ -37,9 +38,10 @@ typedef enum
 typedef struct
 {
 	unsigned int BaseAddr;
-	unsigned char PinNr;
+	unsigned int Pin;
 	unsigned char PortNr;
 	unsigned char Direction;
+	bool Multipin;
 }Gpio_t;
 /*#####################################################*/
 #define new_gpio Gpio_t
