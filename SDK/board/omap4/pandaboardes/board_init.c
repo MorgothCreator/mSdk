@@ -73,9 +73,9 @@ bool board_init()
 	UARTprintf(DebugCom, "Use %s Board.\n\r", BOARD_MESSAGE);
 #endif
 /*-----------------------------------------------------*/
-	LED1 = gpio_assign(pin_mux_convert_to_port_pin(110), GPIO_DIR_OUTPUT);
-	LED2 = gpio_assign(pin_mux_convert_to_port_pin(8), GPIO_DIR_OUTPUT);
-	HARDBTN1 = gpio_assign(1, 4, GPIO_DIR_INPUT);
+	LED1 = gpio_assign(pin_mux_convert_to_port_pin(110), GPIO_DIR_OUTPUT, false);
+	LED2 = gpio_assign(pin_mux_convert_to_port_pin(8), GPIO_DIR_OUTPUT, false);
+	HARDBTN1 = gpio_assign(1, 4, GPIO_DIR_INPUT, false);
 /*-----------------------------------------------------*/
 /* Set up the Twi 0 to communicate with PMIC and the Onboard serial EEprom memory */
 	UARTPuts(DebugCom, "Setup TWI 0 with RxBuff = 258, TxBuff = 258....." , -1);
@@ -167,11 +167,11 @@ bool board_init()
 		UARTPuts(DebugCom, "Capacitive touch screen detected and set up successful.\n\r" , -1);
 		UARTPuts(DebugCom, "I suppose that is PandaBoard Expansion from Chipsee.\n\r" , -1);
 
-		HARDBTN2 = gpio_assign(1, 4, GPIO_DIR_INPUT);
-		HARDBTN3 = gpio_assign(1, 0, GPIO_DIR_INPUT);
-		HARDBTN4 = gpio_assign(1, 6, GPIO_DIR_INPUT);
-		HARDBTN5 = gpio_assign(1, 1, GPIO_DIR_INPUT);
-		HARDBTN6 = gpio_assign(1, 5, GPIO_DIR_INPUT);
+		HARDBTN2 = gpio_assign(1, 4, GPIO_DIR_INPUT, false);
+		HARDBTN3 = gpio_assign(1, 0, GPIO_DIR_INPUT, false);
+		HARDBTN4 = gpio_assign(1, 6, GPIO_DIR_INPUT, false);
+		HARDBTN5 = gpio_assign(1, 1, GPIO_DIR_INPUT, false);
+		HARDBTN6 = gpio_assign(1, 5, GPIO_DIR_INPUT, false);
 	}
 /*-----------------------------------------------------*/
 /*	cm_muxmode_set(j27_gpio_0);//DVI-D Transmitter (TFP410) Power Down

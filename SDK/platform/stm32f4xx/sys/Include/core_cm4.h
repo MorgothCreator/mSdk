@@ -28,6 +28,8 @@
  extern "C" {
 #endif
 
+#include "include/stm32f4xx.h"
+
 #ifndef __CORE_CM4_H_GENERIC
 #define __CORE_CM4_H_GENERIC
 

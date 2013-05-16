@@ -403,7 +403,7 @@ static void HSMMCSDControllerSetup(signed int CardDetectPortNr, signed int CardD
     sdCard.ctrl = &ctrlInfo;
 
     CardDetectPinMmcSd0 = new_(new_gpio);
-    CardDetectPinMmcSd0 = gpio_assign(CardDetectPortNr, CardDetectPinNr, GPIO_DIR_INPUT);
+    CardDetectPinMmcSd0 = gpio_assign(CardDetectPortNr, CardDetectPinNr, GPIO_DIR_INPUT, false);
 
     callbackOccured = 0;
     xferCompFlag = 0;

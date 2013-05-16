@@ -10,6 +10,7 @@
 //#####################################################
 void SysDelayTimerSetup(void);
 void Sysdelay(unsigned int milliSec);
+void TimerCnt_Isr_Increment(void);
 //#####################################################
 #ifdef HEADER_INCLUDE_C_FILES
 #include "sysdelay.c"

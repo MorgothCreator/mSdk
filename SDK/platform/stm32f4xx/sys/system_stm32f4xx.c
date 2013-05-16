@@ -125,8 +125,10 @@
 #include "system_stm32f4xx.h"
 #include "../driver/stm32f4xx_rcc.h"
 #include "board_properties.h"
+#include "sys/include/core_cm4.h"
 
-
+#define __FPU_USED 1
+#define __FPU_PRESENT	1
 /**
   * @}
   */
@@ -184,7 +186,7 @@
   * @{
   */
 
-  uint32_t SystemCoreClock = CoreFreq_Mhz * 1000000;
+  unsigned long SystemCoreClock = CoreFreq_Mhz * 1000000;
 
   __I uint8_t AHBPrescTable[16] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 6, 7, 8, 9};
 
@@ -204,7 +206,7 @@ static void SetSysClock(void);
 /**
   * @}
   */
-
+  /*enable fpu end*/
 /** @addtogroup STM32F4xx_System_Private_Functions
   * @{
   */
@@ -220,9 +222,8 @@ void SystemInit(void)
 {
   /* FPU settings ------------------------------------------------------------*/
   #if (__FPU_PRESENT == 1) && defined(__FPU_USED)
-    SCB->CPACR |= ((3UL << 10*2)|(3UL << 11*2));  /* set CP10 and CP11 Full Access */
+  SCB->CPACR |= ((3UL << 10*2)|(3UL << 11*2));  /* set CP10 and CP11 Full Access */
   #endif
-  /* Reset the RCC clock configuration to the default reset state ------------*/
   /* Set HSION bit */
   RCC->CR |= (uint32_t)0x00000001;
 
@@ -417,7 +418,42 @@ static void SetSysClock(void)
   else
   { /* If HSE fails to start-up, the application will have wrong clock
          configuration. User can add here some code to deal with this error */
-	  while(1);
+	    /* Select regulator voltage output Scale 1 mode, System frequency up to 168 MHz */
+	    RCC->APB1ENR |= RCC_APB1ENR_PWREN;
+	    PWR->CR |= PWR_CR_VOS;
+
+	    /* HCLK = SYSCLK / 1*/
+	    RCC->CFGR |= RCC_CFGR_HPRE_DIV1;
+
+	    /* PCLK2 = HCLK / 2*/
+	    RCC->CFGR |= RCC_CFGR_PPRE2_DIV2;
+
+	    /* PCLK1 = HCLK / 4*/
+	    RCC->CFGR |= RCC_CFGR_PPRE1_DIV4;
+
+	    /* Configure the main PLL */
+	    RCC->PLLCFGR = (PLL_M * 2) | (PLL_N << 6) | (((PLL_P >> 1) -1) << 16) |
+	                   (RCC_PLLCFGR_PLLSRC_HSI) | (PLL_Q << 24);
+
+	    /* Enable the main PLL */
+	    RCC->CR |= RCC_CR_PLLON;
+
+	    /* Wait till the main PLL is ready */
+	    while((RCC->CR & RCC_CR_PLLRDY) == 0)
+	    {
+	    }
+
+	    /* Configure Flash prefetch, Instruction cache, Data cache and wait state */
+	    FLASH->ACR = FLASH_ACR_PRFTEN |FLASH_ACR_ICEN |FLASH_ACR_DCEN |FLASH_ACR_LATENCY_5WS;
+
+	    /* Select the main PLL as system clock source */
+	    RCC->CFGR &= (uint32_t)((uint32_t)~(RCC_CFGR_SW));
+	    RCC->CFGR |= RCC_CFGR_SW_PLL;
+
+	    /* Wait till the main PLL is used as system clock source */
+	    while ((RCC->CFGR & (uint32_t)RCC_CFGR_SWS ) != RCC_CFGR_SWS_PLL);
+	    {
+	    }
   }
 
 }

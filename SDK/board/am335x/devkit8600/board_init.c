@@ -113,12 +113,12 @@ bool board_init()
 	UARTprintf(DebugCom, "Use %s Board.\n\r", BOARD_MESSAGE);
 #endif
 /*-----------------------------------------------------*/
-	HARDBTN1 = gpio_assign(0, 22, GPIO_DIR_INPUT);
-	HARDBTN2 = gpio_assign(1, 30, GPIO_DIR_INPUT);
-	HARDBTN3 = gpio_assign(1, 31, GPIO_DIR_INPUT);
+	HARDBTN1 = gpio_assign(0, 22, GPIO_DIR_INPUT, false);
+	HARDBTN2 = gpio_assign(1, 30, GPIO_DIR_INPUT, false);
+	HARDBTN3 = gpio_assign(1, 31, GPIO_DIR_INPUT, false);
 /*-----------------------------------------------------*/
-	LED1 = gpio_assign(1, 26, GPIO_DIR_OUTPUT);
-	LED2 = gpio_assign(1, 27, GPIO_DIR_OUTPUT);
+	LED1 = gpio_assign(1, 26, GPIO_DIR_OUTPUT, false);
+	LED2 = gpio_assign(1, 27, GPIO_DIR_OUTPUT, false);
 /*-----------------------------------------------------*/
 /* Set up the Twi 0 to communicate with PMIC and the Onboard serial EEprom memory */
 	UARTPuts(DebugCom, "Setup TWI 0 with RxBuff = 258, TxBuff = 258 at 100000b/s....." , -1);

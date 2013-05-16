@@ -20,7 +20,7 @@ _estack = 0x20020000;
 
 /* define stack size and heap size here */
 stack_size = 1024;
-heap_size = 256;
+heap_size = 10;
  
 /* define beginning and ending of stack */
 _stack_end = ORIGIN(RAM)+LENGTH(RAM);

@@ -23,6 +23,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_it.h"
+#include "sys/sysdelay.h"
 
 /** @addtogroup STM32F4_Discovery_Peripheral_Examples
   * @{
@@ -138,6 +139,7 @@ void PendSV_Handler(void)
   */
 void SysTick_Handler(void)
 {
+	TimerCnt_Isr_Increment();
 }
 
 /******************************************************************************/

@@ -6,7 +6,9 @@
  */
 
 #include "sysdelay.h"
+#include "sys/include/core_cm4.h"
 
+extern unsigned long SystemCoreClock;
 /******************************************************************************
 **                      INTERNAL VARIABLE DEFINITIONS
 *******************************************************************************/
@@ -15,7 +17,7 @@ static volatile unsigned long long STimerCnt;
 //#####################################################
 void SysDelayTimerSetup(void)
 {
-
+	SysTick_Config(SystemCoreClock / 1000);
 }
 //#####################################################
 void Sysdelay(unsigned int milliSec)
@@ -24,7 +26,7 @@ void Sysdelay(unsigned int milliSec)
 	while(flagIsr < STimerCnt);
 }
 //#####################################################
-//ISR(RTC_OVF_vect)
-//{
-//	STimerCnt++;
-//}
+void TimerCnt_Isr_Increment(void)
+{
+	STimerCnt++;
+}

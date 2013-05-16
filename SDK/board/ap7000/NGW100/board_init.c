@@ -62,9 +62,9 @@ bool board_init()
 	twi_open(TWI0);
 	UARTPuts(DebugCom, "OK.\n\r" , -1);
 /*-----------------------------------------------------*/
-	LED1 = gpio_assign(4, 19, dir_out);
-	LED2 = gpio_assign(0, 16, dir_out);
-	LED3 = gpio_assign(0, 19, dir_out);
+	LED1 = gpio_assign(4, 19, dir_out, false);
+	LED2 = gpio_assign(0, 16, dir_out, false);
+	LED3 = gpio_assign(0, 19, dir_out, false);
 /*-----------------------------------------------------*/
 	UARTPuts(DebugCom, "Init MMCSD0 Host.......", -1);
 	mmcsd_init(NULL, 2, 25, NULL);

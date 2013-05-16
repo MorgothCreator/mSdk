@@ -15,7 +15,7 @@
   * @param  None
   * @retval None
   */
-static void UART_nvic_config(Uart_t* UartSettings)
+void UART_nvic_config(Uart_t* UartSettings)
 {
   NVIC_InitTypeDef NVIC_InitStructure;
 

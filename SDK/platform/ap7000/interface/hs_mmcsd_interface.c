@@ -76,7 +76,7 @@ void _mmcsd_init(void *SdStruct, signed int CardDetectPortNr, signed int CardDet
 	LedStatusMmcSd0 = StatusLed;
 
     CardDetectPinMmcSd0 = new_(new_gpio);
-    CardDetectPinMmcSd0 = gpio_assign(CardDetectPortNr, CardDetectPinNr, dir_in);
+    CardDetectPinMmcSd0 = gpio_assign(CardDetectPortNr, CardDetectPinNr, dir_in, false);
 
     mmc_controller_init();
 }

@@ -16,7 +16,7 @@
 
 
 void _gpio_init(unsigned int GpioModuleNr);
-new_gpio *_gpio_assign(unsigned int PortNr, unsigned int PinNr, unsigned int Direction);
+new_gpio *_gpio_assign(unsigned int PortNr, unsigned int PinNr, unsigned int Direction, bool Multipin);
 void _gpio_free(new_gpio *gpio_struct);
 bool _gpio_out(new_gpio *gpio_struct, unsigned int State);
 bool _gpio_direction(new_gpio *gpio_struct, unsigned int Direction);

@@ -198,10 +198,10 @@ bool board_init()
 	DebugCom->UartNr = 0;
 	uart_open(DebugCom);
 /*-----------------------------------------------------*/
-	LED1 = gpio_assign(1, 21, GPIO_DIR_OUTPUT);
-	LED2 = gpio_assign(1, 22, GPIO_DIR_OUTPUT);
-	LED3 = gpio_assign(1, 23, GPIO_DIR_OUTPUT);
-	LED4 = gpio_assign(1, 24, GPIO_DIR_OUTPUT);
+	LED1 = gpio_assign(1, 21, GPIO_DIR_OUTPUT, false);
+	LED2 = gpio_assign(1, 22, GPIO_DIR_OUTPUT, false);
+	LED3 = gpio_assign(1, 23, GPIO_DIR_OUTPUT, false);
+	LED4 = gpio_assign(1, 24, GPIO_DIR_OUTPUT, false);
 /*-----------------------------------------------------*/
 	/* Display board message*/
 #if defined(BOARD_MESSAGE)
@@ -291,14 +291,14 @@ bool board_init()
 	if(LCD3_Cape_Detected)
 	{
 /*-----------------------------------------------------*/
-		HARDBTN1 = gpio_assign(1, 16, GPIO_DIR_INPUT);
-		HARDBTN2 = gpio_assign(1, 17, GPIO_DIR_INPUT);
-		HARDBTN3 = gpio_assign(3, 19, GPIO_DIR_INPUT);
-		HARDBTN4 = gpio_assign(1, 28, GPIO_DIR_INPUT);
-		HARDBTN5 = gpio_assign(0, 7, GPIO_DIR_INPUT);
+		HARDBTN1 = gpio_assign(1, 16, GPIO_DIR_INPUT, false);
+		HARDBTN2 = gpio_assign(1, 17, GPIO_DIR_INPUT, false);
+		HARDBTN3 = gpio_assign(3, 19, GPIO_DIR_INPUT, false);
+		HARDBTN4 = gpio_assign(1, 28, GPIO_DIR_INPUT, false);
+		HARDBTN5 = gpio_assign(0, 7, GPIO_DIR_INPUT, false);
 /*-----------------------------------------------------*/
-		LED5 = gpio_assign(1, 28, GPIO_DIR_OUTPUT);
-		LED6 = gpio_assign(1, 18, GPIO_DIR_OUTPUT);
+		LED5 = gpio_assign(1, 28, GPIO_DIR_OUTPUT, false);
+		LED6 = gpio_assign(1, 18, GPIO_DIR_OUTPUT, false);
 /*-----------------------------------------------------*/
 		ScreenBuff = new_(new_screen);
 		ScreenBuff->LcdType = S035Q01;
@@ -324,11 +324,11 @@ bool board_init()
 			UARTPuts(DebugCom, "Capacitive touch screen detected and set up successful.\n\r" , -1);
 			UARTPuts(DebugCom, "I suppose that is BeagleBone Multimedia cape from Chipsee.\n\r" , -1);
 /*-----------------------------------------------------*/
-			HARDBTN1 = gpio_assign(1, 19, GPIO_DIR_INPUT);
-			HARDBTN2 = gpio_assign(1, 16, GPIO_DIR_INPUT);
-			HARDBTN3 = gpio_assign(1, 17, GPIO_DIR_INPUT);
-			HARDBTN4 = gpio_assign(0, 7, GPIO_DIR_INPUT);
-			HARDBTN5 = gpio_assign(1, 3, GPIO_DIR_INPUT);
+			HARDBTN1 = gpio_assign(1, 19, GPIO_DIR_INPUT, false);
+			HARDBTN2 = gpio_assign(1, 16, GPIO_DIR_INPUT, false);
+			HARDBTN3 = gpio_assign(1, 17, GPIO_DIR_INPUT, false);
+			HARDBTN4 = gpio_assign(0, 7, GPIO_DIR_INPUT, false);
+			HARDBTN5 = gpio_assign(1, 3, GPIO_DIR_INPUT, false);
 /*-----------------------------------------------------*/
 			ScreenBuff = new_(new_screen);
 			ScreenBuff->LcdType = AT070TN92;

@@ -24,6 +24,7 @@
 #ifndef __CORE_CMFUNC_H
 #define __CORE_CMFUNC_H
 
+#include "sys/include/core_cm4.h"
 
 /* ###########################  Core Function Access  ########################### */
 /** \ingroup  CMSIS_Core_FunctionInterface
@@ -572,7 +573,7 @@ __attribute__( ( always_inline ) ) __STATIC_INLINE void __set_FAULTMASK(uint32_t
  */
 __attribute__( ( always_inline ) ) __STATIC_INLINE uint32_t __get_FPSCR(void)
 {
-#if (__FPU_PRESENT == 1) && (__FPU_USED == 1)
+#if (__FPU_PRESENT == 1) && defined(__FPU_USED)
   uint32_t result;
 
   __ASM volatile ("VMRS %0, fpscr" : "=r" (result) );
@@ -591,7 +592,7 @@ __attribute__( ( always_inline ) ) __STATIC_INLINE uint32_t __get_FPSCR(void)
  */
 __attribute__( ( always_inline ) ) __STATIC_INLINE void __set_FPSCR(uint32_t fpscr)
 {
-#if (__FPU_PRESENT == 1) && (__FPU_USED == 1)
+#if (__FPU_PRESENT == 1) && defined(__FPU_USED)
   __ASM volatile ("VMSR fpscr, %0" : : "r" (fpscr) );
 #endif
 }

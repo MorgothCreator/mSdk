@@ -10,6 +10,7 @@
 #include "driver/stm32f4xx_gpio.h"
 #include "sys/system_stm32f4xx.h"
 #include "api/gpio_def.h"
+#include "stm32f4xx_gpio.h"
 
 void _gpio_init(unsigned int GpioModuleNr)
 {
@@ -49,7 +50,7 @@ void _gpio_init(unsigned int GpioModuleNr)
 	RCC_AHB1PeriphClockCmd(BaseAddr, ENABLE);
 }
 /*#####################################################*/
-new_gpio *_gpio_assign(unsigned int PortNr, unsigned int PinNr, unsigned int Direction)
+new_gpio *_gpio_assign(unsigned int PortNr, unsigned int Pin, unsigned int Direction, bool Multipin)
 {
 	GPIO_InitTypeDef  GPIO_InitStructure;
 	new_gpio* GpioStruct = new_(new_gpio);
@@ -88,9 +89,12 @@ new_gpio *_gpio_assign(unsigned int PortNr, unsigned int PinNr, unsigned int Dir
 		return NULL;
 	}
 	GpioStruct->BaseAddr = BaseAddr;
-	GpioStruct->PinNr = PinNr;
+	GpioStruct->Pin = Pin;
 	GpioStruct->Direction = Direction;
-	GPIO_InitStructure.GPIO_Pin = 1 << PinNr;
+	GpioStruct->PortNr = PortNr;
+	GpioStruct->Multipin = Multipin;
+	if(Multipin) GPIO_InitStructure.GPIO_Pin = Pin;
+	else GPIO_InitStructure.GPIO_Pin = 1 << Pin;
 	if(Direction == GPIO_DIR_OUTPUT) GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
 	else if(Direction == GPIO_DIR_INPUT) GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
@@ -111,8 +115,16 @@ bool _gpio_out(new_gpio *gpio_struct, unsigned int State)
 {
 	if(!gpio_struct) return false;
 	GPIO_TypeDef *BaseAddr = (GPIO_TypeDef *)gpio_struct->BaseAddr;
-	if(State) BaseAddr->BSRRH = 1 << gpio_struct->PinNr;
-	else  BaseAddr->BSRRL = 1 << gpio_struct->PinNr;
+	if(gpio_struct->Multipin)
+	{
+		BaseAddr->BSRRH = State & gpio_struct->Pin;
+		BaseAddr->BSRRL = (~State) & gpio_struct->Pin;
+	}
+	else
+	{
+		if(State) BaseAddr->BSRRH = 1 << gpio_struct->Pin;
+		else  BaseAddr->BSRRL = 1 << gpio_struct->Pin;
+	}
 	return true;
 }
 /*#####################################################*/
@@ -120,8 +132,25 @@ bool _gpio_direction(new_gpio *gpio_struct, unsigned int Direction)
 {
 	if(!gpio_struct) return false;
 	GPIO_TypeDef *BaseAddr = (GPIO_TypeDef *)gpio_struct->BaseAddr;
-	BaseAddr->MODER  &= ~(GPIO_MODER_MODER0 << (gpio_struct->PinNr * 2));
-	if(gpio_struct->Direction == GPIO_DIR_OUTPUT) BaseAddr->MODER |= (GPIO_Mode_OUT << (gpio_struct->PinNr * 2));
+	unsigned char cnt = 0;
+	unsigned int tmp = gpio_struct->Pin;
+	if(gpio_struct->Multipin)
+	{
+		for(; cnt < 16; cnt++)
+		{
+			if(tmp & 1)
+			{
+				BaseAddr->MODER  &= ~(GPIO_MODER_MODER0 << (cnt * 2));
+				if(gpio_struct->Direction == GPIO_DIR_OUTPUT) BaseAddr->MODER |= (GPIO_Mode_OUT << (cnt * 2));
+			}
+			tmp = tmp >> 1;
+		}
+	}
+	else
+	{
+		BaseAddr->MODER  &= ~(GPIO_MODER_MODER0 << (gpio_struct->Pin * 2));
+		if(gpio_struct->Direction == GPIO_DIR_OUTPUT) BaseAddr->MODER |= (GPIO_Mode_OUT << (gpio_struct->Pin * 2));
+	}
 	return true;
 }
 /*#####################################################*/
@@ -129,7 +158,8 @@ signed int _gpio_in(new_gpio *gpio_struct)
 {
 	if(!gpio_struct) return -1;
 	GPIO_TypeDef *BaseAddr = (GPIO_TypeDef *)gpio_struct->BaseAddr;
-	return GPIO_ReadInputDataBit(BaseAddr, 1 << gpio_struct->PinNr);
+	if(gpio_struct->Multipin) return GPIO_ReadInputData(BaseAddr) & gpio_struct->Pin;
+	else return GPIO_ReadInputDataBit(BaseAddr, 1 << gpio_struct->Pin);
 }
 /*#####################################################*/
 bool _gpio_up_dn_enable(new_gpio *gpio_struct, bool enable)
@@ -142,9 +172,27 @@ bool _gpio_up_dn(new_gpio *gpio_struct, unsigned char value)
 {
 	if(!gpio_struct) return false;
 	GPIO_TypeDef *BaseAddr = (GPIO_TypeDef *)gpio_struct->BaseAddr;
-	BaseAddr->PUPDR &= ~(GPIO_PUPDR_PUPDR0 << ((uint16_t)gpio_struct->PinNr * 2));
-    if(value) BaseAddr->PUPDR |= (((uint32_t)GPIO_PuPd_UP) << (gpio_struct->PinNr * 2));
-    else BaseAddr->PUPDR |= (((uint32_t)GPIO_PuPd_DOWN) << (gpio_struct->PinNr * 2));
+	unsigned char cnt = 0;
+	unsigned int tmp = gpio_struct->Pin;
+	if(gpio_struct->Multipin)
+	{
+		for(; cnt < 16; cnt++)
+		{
+			if(tmp & 1)
+			{
+				BaseAddr->PUPDR &= ~(GPIO_PUPDR_PUPDR0 << ((uint16_t)cnt * 2));
+				if(value) BaseAddr->PUPDR |= (((uint32_t)GPIO_PuPd_UP) << (cnt * 2));
+				else BaseAddr->PUPDR |= (((uint32_t)GPIO_PuPd_DOWN) << (cnt * 2));
+			}
+			tmp = tmp >> 1;
+		}
+	}
+	else
+	{
+		BaseAddr->PUPDR &= ~(GPIO_PUPDR_PUPDR0 << ((uint16_t)gpio_struct->Pin * 2));
+		if(value) BaseAddr->PUPDR |= (((uint32_t)GPIO_PuPd_UP) << (gpio_struct->Pin * 2));
+		else BaseAddr->PUPDR |= (((uint32_t)GPIO_PuPd_DOWN) << (gpio_struct->Pin * 2));
+	}
 	return true;
 }
 /*#####################################################*/

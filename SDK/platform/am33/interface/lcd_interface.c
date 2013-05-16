@@ -105,22 +105,22 @@ bool SetUpLCD(tDisplay* LcdStruct)
 		case AT070TN92:
 			LcdStruct->Width = 800;
 			LcdStruct->Height = 480;
-			LcdStruct->BackLight = gpio_assign(LcdStruct->BackLightPort, LcdStruct->BackLightPin, GPIO_DIR_OUTPUT);
+			LcdStruct->BackLight = gpio_assign(LcdStruct->BackLightPort, LcdStruct->BackLightPin, GPIO_DIR_OUTPUT, false);
 			break;
 		case TFT43AB_OMAP35x:
 			LcdStruct->Width = 480;
 			LcdStruct->Height = 272;
-			LcdStruct->BackLight = gpio_assign(LcdStruct->BackLightPort, LcdStruct->BackLightPin, GPIO_DIR_OUTPUT);
+			LcdStruct->BackLight = gpio_assign(LcdStruct->BackLightPort, LcdStruct->BackLightPin, GPIO_DIR_OUTPUT, false);
 			break;
 		case VGA:
 			LcdStruct->Width = 1024;
 			LcdStruct->Height = 768;
-			LcdStruct->BackLight = gpio_assign(LcdStruct->BackLightPort, LcdStruct->BackLightPin, GPIO_DIR_OUTPUT);
+			LcdStruct->BackLight = gpio_assign(LcdStruct->BackLightPort, LcdStruct->BackLightPin, GPIO_DIR_OUTPUT, false);
 			break;
 		case LVDS:
 			LcdStruct->Width = 800;
 			LcdStruct->Height = 600;
-			LcdStruct->BackLight = gpio_assign(LcdStruct->BackLightPort, LcdStruct->BackLightPin, GPIO_DIR_OUTPUT);
+			LcdStruct->BackLight = gpio_assign(LcdStruct->BackLightPort, LcdStruct->BackLightPin, GPIO_DIR_OUTPUT, false);
 			break;
 		default:
 			return false;

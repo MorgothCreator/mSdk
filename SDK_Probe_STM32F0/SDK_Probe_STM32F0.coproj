@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Project version="2G - 1.7.2" name="SDK_Probe_STM32F0">
   <Target name="SDK_Probe_STM32F0" isCurrent="1">
-    <Device manufacturerId="9" manufacturerName="ST" chipId="310" chipName="STM32F103RB" boardId="" boardName=""/>
+    <Device manufacturerId="9" manufacturerName="ST" chipId="249" chipName="STM32F051R8" boardId="" boardName=""/>
     <BuildOption>
       <Compile>
         <Option name="OptimizationLevel" value="0"/>
         <Option name="UseFPU" value="0"/>
-        <Option name="UserEditCompiler" value=""/>
+        <Option name="UserEditCompiler" value="-save-temps"/>
         <Includepaths>
           <Includepath path="."/>
           <Includepath path="../sdk/platform/stm32f0"/>
@@ -14,8 +14,8 @@
           <Includepath path="../sdk/board/stm32f0/discovery_simple"/>
         </Includepaths>
         <DefinedSymbols>
-          <Define name="STM32F103RB"/>
-          <Define name="STM32F10X_MD"/>
+          <Define name="STM32F051R8"/>
+          <Define name="STM32F0XX"/>
         </DefinedSymbols>
       </Compile>
       <Link useDefault="0">
@@ -25,11 +25,13 @@
         <Option name="LTO" value="0"/>
         <Option name="IsNewStartupCode" value="1"/>
         <Option name="Library" value="Retarget"/>
-        <Option name="UserEditLinker" value="-TC:\GitHub\mSdk\SDK\platform\stm32f0\sys\CoIde_stm32f0xx_flash.ld"/>
+        <Option name="UserEditLinker" value="--entry=main; -TC:\GitHub\mSdk\SDK\platform\stm32f0\sys\CoIde_stm32f0xx_flash.ld;"/>
+        <Option name="DiscardUnusedSections" value="1"/>
+        <Option name="nostartfiles" value="1"/>
         <LinkedLibraries/>
         <MemoryAreas debugInFlashNotRAM="1">
-          <Memory name="IROM1" type="ReadOnly" size="0x00020000" startValue="0x08000000"/>
-          <Memory name="IRAM1" type="ReadWrite" size="0x00005000" startValue="0x20000000"/>
+          <Memory name="IROM1" type="ReadOnly" size="0x00010000" startValue="0x00000000"/>
+          <Memory name="IRAM1" type="ReadWrite" size="0x00002000" startValue="0x20000000"/>
           <Memory name="IROM2" type="ReadOnly" size="" startValue=""/>
           <Memory name="IRAM2" type="ReadWrite" size="" startValue=""/>
         </MemoryAreas>
@@ -64,7 +66,7 @@
       <Option name="org.coocox.codebugger.gdbjtag.core.autoDownload" value="1"/>
       <Option name="org.coocox.codebugger.gdbjtag.core.verify" value="1"/>
       <Option name="org.coocox.codebugger.gdbjtag.core.downloadFuction" value="Erase Effected"/>
-      <Option name="org.coocox.codebugger.gdbjtag.core.defaultAlgorithm" value="STM32F10x_MD_128.elf"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.defaultAlgorithm" value="STM32F05xx_64.elf"/>
     </DebugOption>
     <ExcludeFile/>
   </Target>
@@ -77,9 +79,9 @@
     <File name="stm32f0/driver/stm32f0xx_dma.c" path="../SDK/platform/stm32f0/driver/stm32f0xx_dma.c" type="1"/>
     <File name="lib/lib/fft.c" path="../SDK/lib/lib/fft.c" type="1"/>
     <File name="lib/lib/gfx/jpg/IJG/jerror.h" path="../SDK/lib/lib/gfx/jpg/IJG/jerror.h" type="1"/>
-    <File name="stm32f0/sys/Include/arm_math.h" path="../SDK/platform/stm32f0/sys/Include/arm_math.h" type="1"/>
     <File name="stm32f0/driver/stm32f0xx_cec.h" path="../SDK/platform/stm32f0/driver/stm32f0xx_cec.h" type="1"/>
     <File name="lib/lib/gfx/jpg/IJG/jmorecfg.h" path="../SDK/lib/lib/gfx/jpg/IJG/jmorecfg.h" type="1"/>
+    <File name="stm32f0/sys/Include/arm_math.h" path="../SDK/platform/stm32f0/sys/Include/arm_math.h" type="1"/>
     <File name="lib/device/mpu60x0.c" path="../SDK/lib/device/mpu60x0.c" type="1"/>
     <File name="stm32f0/driver/stm32f0xx_iwdg.c" path="../SDK/platform/stm32f0/driver/stm32f0xx_iwdg.c" type="1"/>
     <File name="stm32f0/sys/Include/core_cmFunc.h" path="../SDK/platform/stm32f0/sys/Include/core_cmFunc.h" type="1"/>
@@ -144,8 +146,8 @@
     <File name="lib/lib/string_lib.h" path="../SDK/lib/lib/string_lib.h" type="1"/>
     <File name="stm32f0/interface" path="" type="2"/>
     <File name="lib/lib/gfx/jpg/IJG/jcinit.c" path="../SDK/lib/lib/gfx/jpg/IJG/jcinit.c" type="1"/>
-    <File name="lib/device/mhc5883.h" path="../SDK/lib/device/mhc5883.h" type="1"/>
     <File name="lib/lib/fs" path="" type="2"/>
+    <File name="lib/device/mhc5883.h" path="../SDK/lib/device/mhc5883.h" type="1"/>
     <File name="lib/lib/gfx/jpg/IJG/jinclude.h" path="../SDK/lib/lib/gfx/jpg/IJG/jinclude.h" type="1"/>
     <File name="lib/lib/gfx/jpg/IJG/jcphuff.c" path="../SDK/lib/lib/gfx/jpg/IJG/jcphuff.c" type="1"/>
     <File name="stm32f0/include" path="" type="2"/>
@@ -159,13 +161,13 @@
     <File name="stm32f0/driver/stm32f0xx_misc.h" path="../SDK/platform/stm32f0/driver/stm32f0xx_misc.h" type="1"/>
     <File name="stm32f0/driver/stm32f0xx_syscfg.h" path="../SDK/platform/stm32f0/driver/stm32f0xx_syscfg.h" type="1"/>
     <File name="stm32f0/driver/stm32f0xx_flash.c" path="../SDK/platform/stm32f0/driver/stm32f0xx_flash.c" type="1"/>
-    <File name="lib/lib/gfx/jpg/IJG/jmemnobs.c" path="../SDK/lib/lib/gfx/jpg/IJG/jmemnobs.c" type="1"/>
     <File name="lib/api/touchscreen_def.h" path="../SDK/lib/api/touchscreen_def.h" type="1"/>
     <File name="lib/lib/gfx/jpg/jpegfile.h" path="../SDK/lib/lib/gfx/jpg/jpegfile.h" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jmemnobs.c" path="../SDK/lib/lib/gfx/jpg/IJG/jmemnobs.c" type="1"/>
     <File name="lib/lib/generic.h" path="../SDK/lib/lib/generic.h" type="1"/>
-    <File name="lib/lib/gfx/jpg/IJG/jcomapi.c" path="../SDK/lib/lib/gfx/jpg/IJG/jcomapi.c" type="1"/>
     <File name="lib/device/ms5611.h" path="../SDK/lib/device/ms5611.h" type="1"/>
     <File name="lib/api/mmcsd_api.h" path="../SDK/lib/api/mmcsd_api.h" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jcomapi.c" path="../SDK/lib/lib/gfx/jpg/IJG/jcomapi.c" type="1"/>
     <File name="lib/api/twi_api.h" path="../SDK/lib/api/twi_api.h" type="1"/>
     <File name="lib/lib/gfx/jpg/IJG/jddctmgr.c" path="../SDK/lib/lib/gfx/jpg/IJG/jddctmgr.c" type="1"/>
     <File name="lib/api/usb_msc_host_api.c" path="../SDK/lib/api/usb_msc_host_api.c" type="1"/>
@@ -289,8 +291,8 @@
     <File name="lib/api/mcspi_api.h" path="../SDK/lib/api/mcspi_api.h" type="1"/>
     <File name="lib/lib/gfx/progressbar.h" path="../SDK/lib/lib/gfx/progressbar.h" type="1"/>
     <File name="lib/api/core_init_api.h" path="../SDK/lib/api/core_init_api.h" type="1"/>
-    <File name="lib/lib/buffers" path="" type="2"/>
     <File name="stm32f0/driver/stm32f0xx_usart.c" path="../SDK/platform/stm32f0/driver/stm32f0xx_usart.c" type="1"/>
+    <File name="lib/lib/buffers" path="" type="2"/>
     <File name="lib/device/adxl345.h" path="../SDK/lib/device/adxl345.h" type="1"/>
     <File name="discovery_simple/board_init.h" path="../SDK/board/stm32f0/discovery_simple/board_init.h" type="1"/>
     <File name="stm32f0/interface/mcspi_interface.c" path="../SDK/platform/stm32f0/interface/mcspi_interface.c" type="1"/>
@@ -313,17 +315,17 @@
     <File name="lib/lib/gfx/listbox.c" path="../SDK/lib/lib/gfx/listbox.c" type="1"/>
     <File name="lib/lib/gfx/bmp/bmp.c" path="../SDK/lib/lib/gfx/bmp/bmp.c" type="1"/>
     <File name="stm32f0/sys/Include/arm_common_tables.h" path="../SDK/platform/stm32f0/sys/Include/arm_common_tables.h" type="1"/>
-    <File name="lib/lib/gfx/jpg/IJG/cderror.h" path="../SDK/lib/lib/gfx/jpg/IJG/cderror.h" type="1"/>
     <File name="lib/api/uart_def.h" path="../SDK/lib/api/uart_def.h" type="1"/>
     <File name="lib/lib/gfx/resource/grlib.h" path="../SDK/lib/lib/gfx/resource/grlib.h" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/cderror.h" path="../SDK/lib/lib/gfx/jpg/IJG/cderror.h" type="1"/>
     <File name="lib/lib/gfx/checkbox.c" path="../SDK/lib/lib/gfx/checkbox.c" type="1"/>
     <File name="stm32f0/sys/cache.c" path="../SDK/platform/stm32f0/sys/cache.c" type="1"/>
     <File name="lib/lib/gfx/jpg/IJG/jdphuff.c" path="../SDK/lib/lib/gfx/jpg/IJG/jdphuff.c" type="1"/>
     <File name="stm32f0/interface/twi_interface.c" path="../SDK/platform/stm32f0/interface/twi_interface.c" type="1"/>
-    <File name="lib/lib/gfx/files/stl.h" path="../SDK/lib/lib/gfx/files/stl.h" type="1"/>
-    <File name="stm32f0/driver/stm32f0xx_spi.h" path="../SDK/platform/stm32f0/driver/stm32f0xx_spi.h" type="1"/>
     <File name="lib/lib/gfx/jpg/IJG/jctrans.c" path="../SDK/lib/lib/gfx/jpg/IJG/jctrans.c" type="1"/>
+    <File name="stm32f0/driver/stm32f0xx_spi.h" path="../SDK/platform/stm32f0/driver/stm32f0xx_spi.h" type="1"/>
     <File name="lib/lib/gfx/jpg/IJG/jdapistd.c" path="../SDK/lib/lib/gfx/jpg/IJG/jdapistd.c" type="1"/>
+    <File name="lib/lib/gfx/files/stl.h" path="../SDK/lib/lib/gfx/files/stl.h" type="1"/>
     <File name="stm32f0/sys" path="" type="2"/>
     <File name="lib/lib/gfx/progressbar.c" path="../SDK/lib/lib/gfx/progressbar.c" type="1"/>
     <File name="stm32f0/sys/sysdelay.c" path="../SDK/platform/stm32f0/sys/sysdelay.c" type="1"/>

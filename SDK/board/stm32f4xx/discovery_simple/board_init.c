@@ -11,7 +11,7 @@
 #include "sys/system_stm32f4xx.h"
 #include "board_init.h"
 #include "api/core_init_api.h"
-//#include "api/timer_api.h"
+#include "api/timer_api.h"
 #include "api/gpio_def.h"
 #include "api/gpio_api.h"
 #include "api/uart_def.h"
@@ -42,7 +42,7 @@ bool board_init()
 {
 	//RtcStruct.Rtc_ClkSource = _Rtc_Clk_Source_RCOSC_gc;
 	core_init();
-	//timer_init();
+	timer_init();
 /*-----------------------------------------------------*/
 /* Set up the Uart 0 like debug interface with RxBuff = 256, TxBuff = 256, 115200b/s*/
 	DebugCom = new_(new_uart);
@@ -63,13 +63,13 @@ bool board_init()
 	UARTprintf(DebugCom, "Use %s Board.\n\r", BOARD_MESSAGE);
 #endif
 /*-----------------------------------------------------*/
-	HARDBTN1 = gpio_assign(0, 1, GPIO_DIR_INPUT);
+	HARDBTN1 = gpio_assign(0, 1, GPIO_DIR_INPUT, false);
 	gpio_up_dn(HARDBTN1, 1);
 /*-----------------------------------------------------*/
-	LED1 = gpio_assign(3, 12, GPIO_DIR_OUTPUT);
-	LED2 = gpio_assign(3, 13, GPIO_DIR_OUTPUT);
-	LED3 = gpio_assign(3, 14, GPIO_DIR_OUTPUT);
-	LED4 = gpio_assign(3, 15, GPIO_DIR_OUTPUT);
+	LED1 = gpio_assign(3, 12, GPIO_DIR_OUTPUT, false);
+	LED2 = gpio_assign(3, 13, GPIO_DIR_OUTPUT, false);
+	LED3 = gpio_assign(3, 14, GPIO_DIR_OUTPUT, false);
+	LED4 = gpio_assign(3, 15, GPIO_DIR_OUTPUT, false);
 /*-----------------------------------------------------*/
 	return true;
 }
