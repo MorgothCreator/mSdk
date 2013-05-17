@@ -23,7 +23,7 @@ At this moment is supported the next platforms:
   
 4) ATxmega (Atmel Studio).
 
-  XmegaMediaPlayer Board.
+  <a href="http://shop.devboardshop.com/en/home/9-xmegamediaplayer.html">XmegaMediaPlayer Board.</a>
   
 5) AT32UC3L (Atmel Studio).
 
