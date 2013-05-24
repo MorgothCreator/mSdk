@@ -129,7 +129,10 @@ typedef struct
 void listbox(tListBox *settings, tControlCommandData* control_comand);
 tListBox *new_listbox(tDisplay *ScreenDisplay);
 bool free_listbox(tListBox* settings);
+bool listbox_item_insert(void* _settings, char* text, unsigned int location);
 bool listbox_item_add(void* _settings, char* text);
+bool listbox_item_remove(void* _settings, unsigned int location);
+bool listbox_item_remove_all(void* _settings);
 //#######################################################################################
 #ifdef HEADER_INCLUDE_C_FILES
 #include "listbox.c"

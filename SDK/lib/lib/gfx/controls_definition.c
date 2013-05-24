@@ -70,7 +70,7 @@ controlscolor controls_color =
 	COLOR_24_to_16((0xFF)/2,(0xFF)/2,(0xFF)/2),
 	COLOR_24_to_16((0x37)/2,(0x37)/2,(0x37)/2),
 	COLOR_24_to_16(0x98, 0x9C, 0xB6),
-#ifdef USE_G_SFONT_CMSS_14B
+#ifdef USE_FONT_CMSS14B
 	(tFont*)&g_sFontCmss14b
 #else
 	(tFont*)NULL

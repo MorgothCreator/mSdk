@@ -509,6 +509,7 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 		control_comand->Cursor = Cursor_Up;
 		window_set_children_settings(settings, true, true, control_comand, true, &ChildrenWindowSize);
 		control_comand->Cursor = cursor;
+		control_comand->CursorCoordonateUsed = true;
 	}
 	pDisplay->sClipRegion = back_up_clip;
 

@@ -51,6 +51,7 @@ bool ar1020_init(new_touchscreen* structure, unsigned char Port, unsigned char P
 	if(!structure) return false;
 	structure->TouchScreen_Type = TouchScreen_Type_AR1020;
 	structure->IrqStruct = gpio_assign(Port, Pin, GPIO_DIR_INPUT, false);
+	if(!structure->IrqStruct) return false;
 	if(ar1020_enable_touch(structure)) 
 	{
 		ar1020_disable_touch(structure);

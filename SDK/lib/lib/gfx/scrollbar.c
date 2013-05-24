@@ -36,10 +36,6 @@ static void paint_scrollbar(tScrollBar* settings, tDisplay *pDisplay, signed int
 	pDisplay->sClipRegion.sYMin = y_start;
 	pDisplay->sClipRegion.sXMax = x_start + x_len;
 	pDisplay->sClipRegion.sYMax = y_start + y_len;
-	//if(pDisplay->sClipRegion.sXMin < back_up_clip.sXMin) pDisplay->sClipRegion.sXMin = back_up_clip.sXMin;
-	//if(pDisplay->sClipRegion.sYMin < back_up_clip.sYMin) pDisplay->sClipRegion.sYMin = back_up_clip.sYMin;
-	//if(pDisplay->sClipRegion.sXMax >= back_up_clip.sXMax) pDisplay->sClipRegion.sXMax = back_up_clip.sXMax;
-	//if(pDisplay->sClipRegion.sYMax >= back_up_clip.sYMax) pDisplay->sClipRegion.sYMax = back_up_clip.sYMax;
 	clip_limit(&pDisplay->sClipRegion, &back_up_clip);
 	if(settings->Internals.NeedEntireRefresh == true || settings->Internals.NeedEntireRepaint == true || settings->Internals.Control.Initiated == false)
 	{
@@ -276,6 +272,11 @@ static void paint_scrollbar(tScrollBar* settings, tDisplay *pDisplay, signed int
 	{
 		CursorState back = control_comand->Cursor;
 		if(CursorBtnSelfModified)  control_comand->Cursor = Cursor_Down;
+		if(settings->Events.ValueChanged)
+		{
+			ButtonSettings->Internals.NeedEntireRefresh = true;
+			control_comand->Cursor = Cursor_Up;
+		}
 		button((void*)ButtonSettings, control_comand);
 		control_comand->Cursor = back;
 	}
@@ -284,10 +285,6 @@ static void paint_scrollbar(tScrollBar* settings, tDisplay *pDisplay, signed int
 	pDisplay->sClipRegion.sYMin = y_start;
 	pDisplay->sClipRegion.sXMax = x_start + x_len;
 	pDisplay->sClipRegion.sYMax = y_start + y_len;
-	//if(pDisplay->sClipRegion.sXMin < back_up_clip.sXMin) pDisplay->sClipRegion.sXMin = back_up_clip.sXMin;
-	//if(pDisplay->sClipRegion.sYMin < back_up_clip.sYMin) pDisplay->sClipRegion.sYMin = back_up_clip.sYMin;
-	//if(pDisplay->sClipRegion.sXMax >= back_up_clip.sXMax) pDisplay->sClipRegion.sXMax = back_up_clip.sXMax;
-	//if(pDisplay->sClipRegion.sYMax >= back_up_clip.sYMax) pDisplay->sClipRegion.sYMax = back_up_clip.sYMax;
 	clip_limit(&pDisplay->sClipRegion, &back_up_clip);
 	box_cache_clean(pDisplay, x_start, y_start, x_len, y_len);
 	pDisplay->sClipRegion = back_up_clip;
@@ -389,6 +386,8 @@ void scrollbar(tScrollBar *settings, tControlCommandData* control_comand)
 		}
 		//settings->Internals.BtnSettings->Color.Scren = settings->Color.Enabled.Buton.Pull;
 	}
+	if(settings->Value > settings->Maximum) settings->Value = settings->Maximum;
+	if(settings->Value < settings->Minimum) settings->Value = settings->Minimum;
 	/* Verify if position on size has been modified */
 	if(settings->Position.X != settings->Internals.Position.X ||
 			settings->Position.Y != settings->Internals.Position.Y ||
@@ -417,10 +416,6 @@ void scrollbar(tScrollBar *settings, tControlCommandData* control_comand)
 			pDisplay->sClipRegion.sYMin = Y_StartBox;
 			pDisplay->sClipRegion.sXMax = X_StartBox + X_LenBox;
 			pDisplay->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
-			//if(pDisplay->sClipRegion.sXMin < back_up_clip.sXMin) pDisplay->sClipRegion.sXMin = back_up_clip.sXMin;
-			//if(pDisplay->sClipRegion.sYMin < back_up_clip.sYMin) pDisplay->sClipRegion.sYMin = back_up_clip.sYMin;
-			//if(pDisplay->sClipRegion.sXMax >= back_up_clip.sXMax) pDisplay->sClipRegion.sXMax = back_up_clip.sXMax;
-			//if(pDisplay->sClipRegion.sYMax >= back_up_clip.sYMax) pDisplay->sClipRegion.sYMax = back_up_clip.sYMax;
 			clip_limit(&pDisplay->sClipRegion, &back_up_clip);
 			put_rectangle(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, true, settings->Color.Scren);
 			box_cache_clean(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox);
@@ -457,10 +452,6 @@ void scrollbar(tScrollBar *settings, tControlCommandData* control_comand)
 		pDisplay->sClipRegion.sYMin = Y_StartBox;
 		pDisplay->sClipRegion.sXMax = X_StartBox + X_LenBox;
 		pDisplay->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
-		//if(pDisplay->sClipRegion.sXMin < back_up_clip.sXMin) pDisplay->sClipRegion.sXMin = back_up_clip.sXMin;
-		//if(pDisplay->sClipRegion.sYMin < back_up_clip.sYMin) pDisplay->sClipRegion.sYMin = back_up_clip.sYMin;
-		//if(pDisplay->sClipRegion.sXMax >= back_up_clip.sXMax) pDisplay->sClipRegion.sXMax = back_up_clip.sXMax;
-		//if(pDisplay->sClipRegion.sYMax >= back_up_clip.sYMax) pDisplay->sClipRegion.sYMax = back_up_clip.sYMax;
 		clip_limit(&pDisplay->sClipRegion, &back_up_clip);
 		paint_scrollbar(settings, pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, control_comand);
 		pDisplay->sClipRegion = back_up_clip;
@@ -481,10 +472,6 @@ void scrollbar(tScrollBar *settings, tControlCommandData* control_comand)
 	pDisplay->sClipRegion.sYMin = Y_StartBox;
 	pDisplay->sClipRegion.sXMax = X_StartBox + X_LenBox;
 	pDisplay->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
-	//if(pDisplay->sClipRegion.sXMin < back_up_clip.sXMin) pDisplay->sClipRegion.sXMin = back_up_clip.sXMin;
-	//if(pDisplay->sClipRegion.sYMin < back_up_clip.sYMin) pDisplay->sClipRegion.sYMin = back_up_clip.sYMin;
-	//if(pDisplay->sClipRegion.sXMax >= back_up_clip.sXMax) pDisplay->sClipRegion.sXMax = back_up_clip.sXMax;
-	//if(pDisplay->sClipRegion.sYMax >= back_up_clip.sYMax) pDisplay->sClipRegion.sYMax = back_up_clip.sYMax;
 	clip_limit(&pDisplay->sClipRegion, &back_up_clip);
 	if(control_comand->Cursor)paint_scrollbar(settings, pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, control_comand);
 	pDisplay->sClipRegion = back_up_clip;

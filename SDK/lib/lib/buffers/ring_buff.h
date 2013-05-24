@@ -8,11 +8,11 @@
 //###########################################################################
 typedef struct
 {
-	volatile char* Buffer;
-	volatile unsigned int buff_size;
-	volatile unsigned int push_ptr;
-	volatile unsigned int pop_ptr;
-	volatile unsigned int bytes_to_buff;
+	char* Buffer;
+	unsigned int buff_size;
+	unsigned int push_ptr;
+	unsigned int pop_ptr;
+	unsigned int bytes_to_buff;
 }fifo_settings_t;
 //###########################################################################
 typedef struct

@@ -15,11 +15,11 @@ bool fifo_push(fifo_settings_t* Settings, char Character)
 	ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
 	{
 #endif
-		volatile unsigned int BuffSize = Settings->buff_size;
-		volatile unsigned int BytesToBuff = Settings->bytes_to_buff;
+		unsigned int BuffSize = Settings->buff_size;
+		unsigned int BytesToBuff = Settings->bytes_to_buff;
 		if(BytesToBuff != BuffSize)
 		{
-			volatile unsigned int PushPtr = Settings->push_ptr;
+			unsigned int PushPtr = Settings->push_ptr;
 			Settings->Buffer[Settings->push_ptr] = Character;
 			PushPtr++;
 			if(PushPtr == BuffSize) PushPtr = 0;
@@ -41,11 +41,11 @@ fifo_pop_return_t fifo_pop(fifo_settings_t* Settings)
 	ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
 	{
 #endif
-		volatile unsigned int BytesToBuff = Settings->bytes_to_buff;
+		unsigned int BytesToBuff = Settings->bytes_to_buff;
 		if(BytesToBuff == 0) Result.status = false;
 		else
 		{
-			volatile unsigned int PopPtr = Settings->pop_ptr;
+			unsigned int PopPtr = Settings->pop_ptr;
 			Result.character = Settings->Buffer[PopPtr];
 			PopPtr++;
 			if(PopPtr == Settings->buff_size) PopPtr = 0;
