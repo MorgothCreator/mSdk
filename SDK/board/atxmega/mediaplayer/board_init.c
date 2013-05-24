@@ -24,7 +24,7 @@
 #include "driver/uart.h"
 #include "driver/twi.h"
 #include "lib/gfx/controls_definition.h"
-//#include "lib/fs/fat.h"
+#include "lib/fs/fat.h"
 //#include "device/mi0283.h"
 /*#####################################################*/
 new_uart* DebugCom = NULL;
@@ -46,8 +46,8 @@ new_dma_gen* Dma = NULL;
 new_touchscreen* TouchScreen = NULL;
 new_screen* ScreenBuff = NULL;
 /*-----------------------------------------------------*/
-//SD_Struct_t SD_StructDisk1;
-//SD_Struct_t SD_StructDisk2;
+SD_Struct_t SD_StructDisk1;
+SD_Struct_t SD_StructDisk2;
 /*#####################################################*/
 bool board_init()
 {
@@ -60,7 +60,7 @@ bool board_init()
 	DebugCom = new_(new_uart);
 	DebugCom->BaudRate = 115200;
 	DebugCom->RxBuffSize = 20;
-	DebugCom->TxBuffSize = 10;
+	DebugCom->TxBuffSize = 2;
 	DebugCom->Mode = UsartCom_Mode_Asynchronus;
 	DebugCom->Priority = Usart_Int_Med_Level;
 	DebugCom->UartNr = 4;
@@ -75,7 +75,7 @@ bool board_init()
 	UARTprintf(DebugCom, "Use %s Board.\n\r", BOARD_MESSAGE);
 #endif
 /*-----------------------------------------------------*/
-	HARDBTN1 = gpio_assign(0, 1, GPIO_DIR_INPUT);
+	HARDBTN1 = gpio_assign(0, 1, GPIO_DIR_INPUT, false);
 	gpio_up_dn(HARDBTN1, 1);
 /*-----------------------------------------------------*/
 	Dma = new_(new_dma_gen);
@@ -84,9 +84,9 @@ bool board_init()
 /* Set up the Twi 0 to communicate with PMIC and the Onboard serial EEprom memory */
 	UARTPuts(DebugCom, "Setup TWI 0 with RxBuff = 258, TxBuff = 258 at 100000b/s....." , -1);
 	TWI3 = new_(new_twi);
-	TWI3->BaudRate = 50000;
+	TWI3->BaudRate = 100000;
 	TWI3->TwiNr = 3;
-	TWI3->Priority = TWI_Int_Med_Level;
+	TWI3->Priority = TWI_Int_High_Level;
 	TWI3->RxBuffSize = 20;
 	TWI3->TxBuffSize = 20;
 	twi_open(TWI3);
@@ -108,14 +108,14 @@ bool board_init()
 	TouchScreen->screen_max_y = (double)ScreenBuff->Height;
 	TouchScreen->TwiStruct = TWI3;
 	TouchScreen->pDisplay = ScreenBuff;
-	ar1020_init(TouchScreen, 5, 2);
+	ar1020_init(TouchScreen, 3, 1);
 	//UARTPuts(DebugCom, "Init calibration of LCD resistive touch screen....." , -1);
 	//ar1020_calibration_start(TouchScreen, ScreenBuff);
 	//UARTPuts(DebugCom, "OK.\n\r" , -1);
 /*-----------------------------------------------------*/
 	UARTPuts(DebugCom, "\n\r" , -1);
 /*-----------------------------------------------------*/
-	/*SD_StructDisk1.CS_Port = &uSD_CS1_Port;
+	SD_StructDisk1.CS_Port = &uSD_CS1_Port;
 	SD_StructDisk1.CS_PinMask = uSD_CS1_Pin_pm;
 	SD_StructDisk1.DriveNr = 0;
 	if(_mmcsd_init(&SD_StructDisk1, 0, 0, NULL)) 
@@ -125,9 +125,9 @@ bool board_init()
 		mmcsd_idle(&SD_StructDisk1);
 		UARTPuts(DebugCom, "\n\r" , -1);
 	}		
-	else  UARTPuts(DebugCom, "uSD disk 1 not detected.\n\r" , -1);*/
+	else  UARTPuts(DebugCom, "uSD disk 1 not detected.\n\r" , -1);
 /*-----------------------------------------------------*/
-	/*SD_StructDisk2.CS_Port = &uSD_CS2_Port;
+	SD_StructDisk2.CS_Port = &uSD_CS2_Port;
 	SD_StructDisk2.CS_PinMask = uSD_CS2_Pin_pm;
 	SD_StructDisk2.DriveNr = 4;
 	if(_mmcsd_init(&SD_StructDisk2, 0, 0, NULL)) 
@@ -137,7 +137,7 @@ bool board_init()
 		mmcsd_idle(&SD_StructDisk2);
 		UARTPuts(DebugCom, "\n\r" , -1);
 	}		
-	else  UARTPuts(DebugCom, "uSD disk 2 not detected.\n\r" , -1);*/
+	else  UARTPuts(DebugCom, "uSD disk 2 not detected.\n\r" , -1);
 /*-----------------------------------------------------*/
 
 	return true;

@@ -7,6 +7,8 @@
 /*#####################################################*/
 #define F_CPU	44000000
 
+#define IngludeGraphics
+
 #include <avr/io.h>
 #include <stdlib.h>
 #include "sys/avr_compiler.h"
@@ -51,11 +53,11 @@ int main(void)
 	malloc_set_end(0xFFFF);
     board_init();
     timer_interval(&TimerScanTouch, 25);
-	timer_interval(&TimerInitTouchCalibration, 10000);
+	timer_interval(&TimerInitTouchCalibration, 5000);
 	//unsigned char TmpBuff[10];
 	//if (E2promRead(TWI3, 0x50, 0, TmpBuff, 10)) UARTPuts(DebugCom, "24C eeprom device detected\n\r" , -1);
 	//else UARTPuts(DebugCom, "24C eeprom device not detected\n\r" , -1);
-
+#ifdef IngludeGraphics
     MainWindow = new_window(ScreenBuff);
     window_new_buton(MainWindow, Btn1);
     window_new_checkbox(MainWindow, CB1);
@@ -64,13 +66,14 @@ int main(void)
     window_new_scrollbar(MainWindow, ScrollBar1);
     window_new_textbox(MainWindow, TextBox1);
 
-    char TmpStr[30];
+    /*char TmpStr[30];
     unsigned int CntItems = 0;
     for(CntItems = 0; CntItems < 100; CntItems++)
     {
 	    sprintf(TmpStr, "%d", CntItems);
 	    listbox_item_add(ListBox1, TmpStr);
-    }
+    }*/
+#endif
 	//btn->Events.OnUp.CallbackData = (void*)btn;
 	//btn->Events.OnUp.CallBack = btn_change_location;
 
@@ -122,7 +125,9 @@ int main(void)
 			control_comand.X = TouchScreen->TouchResponse.x1;
 			control_comand.Y = TouchScreen->TouchResponse.y1;
 			control_comand.Cursor = (CursorState)TouchScreen->TouchResponse.touch_event1;
+#ifdef IngludeGraphics
 			MainWindow->idle(MainWindow, &control_comand);
+#endif
 		}			
     }
 }

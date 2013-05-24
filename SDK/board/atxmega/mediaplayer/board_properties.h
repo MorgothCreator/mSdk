@@ -42,6 +42,11 @@ extern unsigned long CoreFreq;
 /*#####################################################*/
 #define board_xmega_mediaplayer
 /*#####################################################*/
+#ifndef EBI_CS_ASPACE_1MB_gc
+#define EBI_CS_ASPACE_1MB_gc		EBI_CS_ASIZE_1MB_gc
+#endif
+
+
 #define Sys_Reset_Port					PORTE
 #define Sys_Reset_Pin					0
 #define Sys_Reset_Pin_CTRL				PIN0CTRL

@@ -62,6 +62,14 @@
 #include <avr/io.h>
 #include "sys/avr_compiler.h"
 
+#ifndef EBI_CS_ASPACE_t
+#define EBI_CS_ASPACE_t			EBI_CS_ASIZE_t
+#endif
+
+#ifndef EBI_CS_ASPACE_gm
+#define EBI_CS_ASPACE_gm		EBI_CS_ASIZE_gm
+#endif
+
 #if defined( __GNUC__ )
 
 	/*! \brief Macro to access SRAM.
