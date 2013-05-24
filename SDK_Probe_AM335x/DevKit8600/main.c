@@ -86,6 +86,11 @@ static volatile unsigned int CntDisplayRTC = 0;
 
 tDisplay *BackScreen = NULL;
 
+void *ButonCallback(void *data)
+{
+	listbox_item_remove(data, 0);
+	return NULL;
+}
 /*#####################################################*/
 timer(TimerScanTouch);
 timer(TimerStlPaint);
@@ -163,6 +168,9 @@ int main(void) {
     window_new_scrollbar(MainWindow, ScrollBar1);
     window_new_textbox(MainWindow, TextBox1);
 
+    Btn1->Events.OnUp.CallbackData = ListBox1;
+    Btn1->Events.OnUp.CallBack = ButonCallback;
+
 	char TmpStr[30];
 	unsigned int CntItems = 0;
 	for(CntItems = 0; CntItems < 100; CntItems++)
@@ -170,6 +178,9 @@ int main(void) {
 		sprintf(TmpStr, "%d", CntItems);
 		listbox_item_add(ListBox1, TmpStr);
 	}
+	listbox_item_insert(ListBox1, "Inserted Item", 1);
+	listbox_item_remove(ListBox1, 3);
+	//listbox_item_remove_all(ListBox1);
 
 	tControlCommandData control_comand;
 	control_comand.Comand = Control_Nop;
@@ -195,8 +206,8 @@ int main(void) {
 				control_comand.Y = TouchScreen->TouchResponse.y1;
 				control_comand.Cursor = (CursorState)TouchScreen->TouchResponse.touch_event1;
 				MainWindow->idle(MainWindow, &control_comand);
-				if(control_comand.CursorCoordonateUsed) ScreenReRefreshCnt = 4;
-				if(control_comand.CursorCoordonateUsed || ScreenReRefreshCnt != 0)
+				if(control_comand.CursorCoordonateUsed) ScreenReRefreshCnt = 2;
+				if(ScreenReRefreshCnt)
 				{
 					ScreenReRefreshCnt--;
 					screen_copy(ScreenBuff, BackScreen);
