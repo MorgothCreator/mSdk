@@ -31,6 +31,7 @@
 #include "progressbar.h"
 #include "scrollbar.h"
 #include "textbox.h"
+#include "picturebox.h"
 //#######################################################################################
 void window(struct Window_s *settings, tControlCommandData *control_comand);
 void* window_add_children(struct Window_s *settings, unsigned int children_type, char *children_name);
@@ -188,6 +189,25 @@ void window_set_children_settings(struct Window_s *settings, bool call_childrens
 					TextBox_settings->Internals.NoPaintBackGround = true;
 				}
 				if(call_childrens) textbox(TextBox_settings, control_comand);
+			}
+			else if(WindowPictureboxChildren == children_type)
+			{
+				tPictureBox *PictureBox_settings = (tPictureBox *)children;
+				if(refresh_childrens) PictureBox_settings->Internals.NeedEntireRefresh = true;
+				if(transfer_settings)
+				{
+					PictureBox_settings->Color = settings->Internals.Childrens[Tmp_Children_Cnt]->Color;
+					PictureBox_settings->Enabled = settings->Internals.Childrens[Tmp_Children_Cnt]->Enabled;
+					PictureBox_settings->Visible = settings->Internals.Childrens[Tmp_Children_Cnt]->Visible;
+					//PictureBox_settings->StateChangedOn = settings->Internals.Childrens[Tmp_Children_Cnt]->StateChangedOn;
+					//PictureBox_settings->Caption = settings->Internals.Childrens[Tmp_Children_Cnt]->Caption;
+					PictureBox_settings->Size.X = settings->Internals.Childrens[Tmp_Children_Cnt]->Size.X;
+					PictureBox_settings->Size.Y = settings->Internals.Childrens[Tmp_Children_Cnt]->Size.Y;
+					PictureBox_settings->Position.X = settings->Position.X + settings->Internals.Childrens[Tmp_Children_Cnt]->Position.X + 3 + settings->Internals.Position.ChildrenPosition_X;
+					PictureBox_settings->Position.Y = settings->Position.Y + settings->Internals.Childrens[Tmp_Children_Cnt]->Position.Y + settings->Internals.Header.Size.Y + 1 + settings->Internals.Position.ChildrenPosition_Y;
+					PictureBox_settings->Internals.NoPaintBackGround = true;
+				}
+				if(call_childrens) picturebox(PictureBox_settings, control_comand);
 			}
 		}
 		Tmp_Children_Cnt++;
@@ -393,7 +413,7 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 		}
 		else
 		{
-			settings->Internals.H_ScrollBar->Maximum = ChildrenWindowSize.X - (settings->Size.X - 4 - settings->Internals.Size.ScrollBarSize);
+			settings->Internals.H_ScrollBar->Maximum = ChildrenWindowSize.X - (settings->Size.X - 4 - settings->Internals.Size.ScrollBarSize - settings->Internals.Header.Size.Y);
 			settings->Internals.V_ScrollBar->Maximum = ChildrenWindowSize.Y - (settings->Size.Y - 4 - settings->Internals.Size.ScrollBarSize - settings->Internals.Header.Size.Y);
 			if(settings->Internals.V_ScrollBar->Maximum <= 0)
 			{
@@ -483,7 +503,7 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 		}
 		else
 		{
-			settings->Internals.H_ScrollBar->Maximum = ChildrenWindowSize.X - (settings->Size.X - 4 - settings->Internals.Size.ScrollBarSize);
+			settings->Internals.H_ScrollBar->Maximum = ChildrenWindowSize.X - (settings->Size.X - 4 - settings->Internals.Size.ScrollBarSize - settings->Internals.Header.Size.Y);
 			settings->Internals.V_ScrollBar->Maximum = ChildrenWindowSize.Y - (settings->Size.Y - 4 - settings->Internals.Size.ScrollBarSize - settings->Internals.Header.Size.Y);
 			if(settings->Internals.V_ScrollBar->Maximum <= 0)
 			{
@@ -625,6 +645,9 @@ void* window_add_children(struct Window_s *settings, unsigned int children_type,
 	case WindowTextboxChildren:
 		children_addr = (void *)new_textbox(settings->Internals.pDisplay);
 		break;
+	case WindowPictureboxChildren:
+		children_addr = (void *)new_picturebox(settings->Internals.pDisplay);
+		break;
 	default:
 		return NULL;
 	}
@@ -699,6 +722,12 @@ void* window_add_children(struct Window_s *settings, unsigned int children_type,
 		settings->Internals.Childrens[added_children]->StateChangedOn = settings->StateChangedOn;
 		settings->Internals.Childrens[added_children]->Caption.Text = "Multiplatform SDK to create standalone applications\n\r1\n\r2\n\r3\n\r4\n\r5\n\r6\n\r7\n\r8\n\r9\n\r10\n\r11\n\r12\n\r13\n\r14\n\r15\n\r16\n\r17\n\r18";
 		break;
+	case WindowPictureboxChildren:
+		settings->Internals.Childrens[added_children]->Position.X = settings->Position.X + 320;
+		settings->Internals.Childrens[added_children]->Position.Y = settings->Position.Y;
+		settings->Internals.Childrens[added_children]->Size.X = 128;//settings->Size.X;
+		settings->Internals.Childrens[added_children]->Size.Y = 96;//settings->Size.Y;
+		break;
 	}
 	settings->Internals.ChildrensNr++;
 	ChildrenWindowSize_t ChildrenWindowSize;
@@ -725,6 +754,9 @@ window_can_not_add_children:
 		break;
 	case WindowTextboxChildren:
 		free_textbox(children_addr);
+		break;
+	case WindowPictureboxChildren:
+		free_picturebox(children_addr);
 		break;
 	}
 	return NULL;

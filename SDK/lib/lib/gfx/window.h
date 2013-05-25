@@ -29,6 +29,7 @@
 #include "progressbar.h"
 #include "scrollbar.h"
 #include "textbox.h"
+#include "picturebox.h"
 //#######################################################################################
 #define WindowButonChildren			1
 #define WindowCheckboxChildren		2
@@ -36,6 +37,7 @@
 #define WindowProgressbarChildren	4
 #define WindowScrollbarChildren		5
 #define WindowTextboxChildren		6
+#define WindowPictureboxChildren	7
 //#######################################################################################
 typedef struct
 {
@@ -229,6 +231,9 @@ bool window_set_list_of_childrens(struct Window_s *settings, window_children_t *
 
 #define window_new_textbox(window_addr, textbox_name)\
 			tTextBox *textbox_name = (tTextBox *)window_add_children(window_addr, WindowTextboxChildren, #textbox_name)
+
+#define window_new_picturebox(window_addr, picturebox_name)\
+			tPictureBox *picturebox_name = (tPictureBox *)window_add_children(window_addr, WindowPictureboxChildren, #picturebox_name)
 
 
 //#######################################################################################
