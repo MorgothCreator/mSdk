@@ -38,7 +38,7 @@ signed int window_get_children_index(struct Window_s *settings, char *name);
 window_children_t *window_get_children_address(struct Window_s *settings, char *name);
 bool window_set_list_of_childrens(struct Window_s *settings, window_children_t **list, unsigned int num_of_childrens);
 //#######################################################################################
-static void window_set_children_settings(struct Window_s *settings, bool call_childrens, bool transfer_settings, tControlCommandData* control_comand, bool refresh_childrens, ChildrenWindowSize_t *ChildrenWindowSize)
+void window_set_children_settings(struct Window_s *settings, bool call_childrens, bool transfer_settings, tControlCommandData* control_comand, bool refresh_childrens, ChildrenWindowSize_t *ChildrenWindowSize)
 {
 	unsigned int Tmp_Children_Cnt = 0;
 	tRectangle sClipRegion;
@@ -57,6 +57,9 @@ static void window_set_children_settings(struct Window_s *settings, bool call_ch
 	ChildrenWindowSize->X = 0;
 	ChildrenWindowSize->Y = 0;
 
+	CursorState back;
+	if(control_comand) back = control_comand->Cursor;
+	if(control_comand && settings->Internals.CursorDownOnHeader) control_comand->Cursor = Cursor_Up;
 	while(Tmp_Children_Cnt < settings->Internals.ChildrensNr && settings->Internals.ChildrensNr != 0)
 	{
 		if(ChildrenWindowSize->X < (settings->Internals.Childrens[Tmp_Children_Cnt]->Position.X + settings->Internals.Childrens[Tmp_Children_Cnt]->Size.X))
@@ -89,6 +92,7 @@ static void window_set_children_settings(struct Window_s *settings, bool call_ch
 					Buton_settings->Internals.NoPaintBackGround = true;
 				}
 				if(call_childrens) button(Buton_settings, control_comand);
+				//control_comand->Cursor = cursor;
 			}
 			else if(WindowCheckboxChildren == children_type)
 			{
@@ -189,6 +193,7 @@ static void window_set_children_settings(struct Window_s *settings, bool call_ch
 		Tmp_Children_Cnt++;
 	}
 	//control_comand->Cursor = back;
+	if(control_comand) control_comand->Cursor = back;
 	if(call_childrens == true && settings->Internals.ChildrensNr != 0) settings->Internals.pDisplay->sClipRegion = sClipRegion;
 }
 //#######################################################################################
@@ -534,10 +539,8 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 			settings->Position.X = settings->Internals.WindowTouchDownPointX + (control_comand->X - settings->Internals.HeaderTouchDownPointX);
 			settings->Position.Y = settings->Internals.WindowTouchDownPointY + (control_comand->Y - settings->Internals.HeaderTouchDownPointY);
 		}
-		if(control_comand->Cursor == Cursor_Up || control_comand->Cursor == Cursor_NoAction) settings->Internals.CursorDownOnHeader = false;
-
 	}
-
+	if(control_comand->Cursor == Cursor_Up || control_comand->Cursor == Cursor_NoAction) settings->Internals.CursorDownOnHeader = false;
 }
 //#######################################################################################
 tWindow *new_window(tDisplay *ScreenDisplay)
@@ -643,7 +646,8 @@ void* window_add_children(struct Window_s *settings, unsigned int children_type,
 	settings->Internals.Childrens[added_children]->Children = children_addr;
 	settings->Internals.Childrens[added_children]->ChildrenName = children_name;
 	settings->Internals.Childrens[added_children]->Type = children_type;
-	settings->Internals.Childrens[added_children]->Caption.Text = children_name;
+	settings->Internals.Childrens[added_children]->Caption.Text = malloc(strlen(children_name) + 1);
+	strcpy(settings->Internals.Childrens[added_children]->Caption.Text, children_name);
 	settings->Internals.Childrens[added_children]->Caption.Font = settings->Caption.Font;
 	settings->Internals.Childrens[added_children]->Caption.TextAlign = settings->Caption.TextAlign;
 	settings->Internals.Childrens[added_children]->Caption.WordWrap = settings->Caption.WordWrap;
