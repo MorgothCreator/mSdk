@@ -35,19 +35,15 @@ static void paint_button(tButton* settings, tDisplay *pDisplay, signed int x_sta
 	pDisplay->sClipRegion.sYMin = y_start;
 	pDisplay->sClipRegion.sXMax = x_start + x_len;
 	pDisplay->sClipRegion.sYMax = y_start + y_len;
-	//if(pDisplay->sClipRegion.sXMin < back_up_clip.sXMin) pDisplay->sClipRegion.sXMin = back_up_clip.sXMin;
-	//if(pDisplay->sClipRegion.sYMin < back_up_clip.sYMin) pDisplay->sClipRegion.sYMin = back_up_clip.sYMin;
-	//if(pDisplay->sClipRegion.sXMax >= back_up_clip.sXMax) pDisplay->sClipRegion.sXMax = back_up_clip.sXMax;
-	//if(pDisplay->sClipRegion.sYMax >= back_up_clip.sYMax) pDisplay->sClipRegion.sYMax = back_up_clip.sYMax;
 	clip_limit(&pDisplay->sClipRegion, &back_up_clip);
-	if(cursor == Cursor_Down) color = controls_color.Control_Color_Enabled_Border_Push;
-	else if(cursor == Cursor_Move) color = controls_color.Control_Color_Enabled_Border_Push;
+	if(cursor == Cursor_Down || cursor == Cursor_Move) color = controls_color.Control_Color_Enabled_Border_Push;
+	/*else if(cursor == Cursor_Move) color = controls_color.Control_Color_Enabled_Border_Push;*/
 	else if(cursor == Cursor_Up) color = controls_color.Control_Color_Enabled_Border_Pull;
 	else color = controls_color.Control_Color_Enabled_Border_Pull;
 	put_rectangle(pDisplay, x_start, y_start, x_len, y_len, false, controlls_change_color(color, -3));
 	put_rectangle(pDisplay, x_start + 1, y_start + 1, x_len - 2, y_len - 2, false, controlls_change_color(color, -2));
-	if(cursor == Cursor_Down) color = controls_color.Control_Color_Enabled_Buton_Push;
-	else if(cursor == Cursor_Move) color = controls_color.Control_Color_Enabled_Buton_Push;
+	if(cursor == Cursor_Down || cursor == Cursor_Move) color = controls_color.Control_Color_Enabled_Buton_Push;
+	/*else if(cursor == Cursor_Move) color = controls_color.Control_Color_Enabled_Buton_Push;*/
 	else if(cursor == Cursor_Up) color = controls_color.Control_Color_Enabled_Buton_Pull;
 	else color = controls_color.Control_Color_Enabled_Buton_Pull;
 	put_rectangle(pDisplay, x_start + 2, y_start + 2, x_len - 4, y_len - 4, true, color);
@@ -57,10 +53,6 @@ static void paint_button(tButton* settings, tDisplay *pDisplay, signed int x_sta
 		pDisplay->sClipRegion.sYMin = y_start + 4;
 		pDisplay->sClipRegion.sXMax = ((x_start + x_len) - 4);
 		pDisplay->sClipRegion.sYMax = ((y_start + y_len) - 4);
-		//if(pDisplay->sClipRegion.sXMin < back_up_clip.sXMin) pDisplay->sClipRegion.sXMin = back_up_clip.sXMin;
-		//if(pDisplay->sClipRegion.sYMin < back_up_clip.sYMin) pDisplay->sClipRegion.sYMin = back_up_clip.sYMin;
-		//if(pDisplay->sClipRegion.sXMax >= back_up_clip.sXMax) pDisplay->sClipRegion.sXMax = back_up_clip.sXMax;
-		//if(pDisplay->sClipRegion.sYMax >= back_up_clip.sYMax) pDisplay->sClipRegion.sYMax = back_up_clip.sYMax;
 		clip_limit(&pDisplay->sClipRegion, &back_up_clip);
 
 		signed int x_str_location = pDisplay->sClipRegion.sXMin;
@@ -72,8 +64,8 @@ static void paint_button(tButton* settings, tDisplay *pDisplay, signed int x_sta
 			y_str_location = y_start + ((settings->Internals.Size.Y>>1)-(str_properties.StringColsHeight_Pixels>>1));
 		}
 
-		if(cursor == Cursor_Down) put_string(pDisplay, settings->Internals.Caption.Font, settings->Internals.Caption.Text, -1, settings->Color.Enabled.Ink.Push, settings->Color.Enabled.Buton.Push, false, true, settings->Internals.Caption.WordWrap, x_str_location, y_str_location, 0, 0);
-		else if(cursor == Cursor_Move) put_string(pDisplay, settings->Internals.Caption.Font, settings->Internals.Caption.Text, -1, settings->Color.Enabled.Ink.Push, settings->Color.Enabled.Buton.Push, false, true, settings->Internals.Caption.WordWrap, x_str_location, y_str_location, 0, 0);
+		if(cursor == Cursor_Down || cursor == Cursor_Move) put_string(pDisplay, settings->Internals.Caption.Font, settings->Internals.Caption.Text, -1, settings->Color.Enabled.Ink.Push, settings->Color.Enabled.Buton.Push, false, true, settings->Internals.Caption.WordWrap, x_str_location, y_str_location, 0, 0);
+		/*else if(cursor == Cursor_Move) put_string(pDisplay, settings->Internals.Caption.Font, settings->Internals.Caption.Text, -1, settings->Color.Enabled.Ink.Push, settings->Color.Enabled.Buton.Push, false, true, settings->Internals.Caption.WordWrap, x_str_location, y_str_location, 0, 0);*/
 		else if(cursor == Cursor_Up) put_string(pDisplay, settings->Internals.Caption.Font, settings->Internals.Caption.Text, -1, settings->Color.Enabled.Ink.Pull, settings->Color.Enabled.Buton.Pull, false, true, settings->Internals.Caption.WordWrap, x_str_location, y_str_location, 0, 0);
 		else put_string(pDisplay, settings->Internals.Caption.Font, settings->Internals.Caption.Text, -1, settings->Color.Enabled.Ink.Pull, settings->Color.Enabled.Buton.Pull, false, true, settings->Internals.Caption.WordWrap, x_str_location, y_str_location, 0, 0);
 	}
@@ -81,10 +73,6 @@ static void paint_button(tButton* settings, tDisplay *pDisplay, signed int x_sta
 	pDisplay->sClipRegion.sYMin = y_start;
 	pDisplay->sClipRegion.sXMax = x_start + x_len;
 	pDisplay->sClipRegion.sYMax = y_start + y_len;
-	//if(pDisplay->sClipRegion.sXMin < back_up_clip.sXMin) pDisplay->sClipRegion.sXMin = back_up_clip.sXMin;
-	//if(pDisplay->sClipRegion.sYMin < back_up_clip.sYMin) pDisplay->sClipRegion.sYMin = back_up_clip.sYMin;
-	//if(pDisplay->sClipRegion.sXMax >= back_up_clip.sXMax) pDisplay->sClipRegion.sXMax = back_up_clip.sXMax;
-	//if(pDisplay->sClipRegion.sYMax >= back_up_clip.sYMax) pDisplay->sClipRegion.sYMax = back_up_clip.sYMax;
 	clip_limit(&pDisplay->sClipRegion, &back_up_clip);
 	box_cache_clean(pDisplay, x_start, y_start, x_len, y_len);
 	pDisplay->sClipRegion = back_up_clip;
@@ -171,10 +159,6 @@ void button(tButton *settings, tControlCommandData* control_comand)
 			pDisplay->sClipRegion.sYMin = Y_StartBox;
 			pDisplay->sClipRegion.sXMax = X_StartBox + X_LenBox;
 			pDisplay->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
-			//if(pDisplay->sClipRegion.sXMin < back_up_clip.sXMin) pDisplay->sClipRegion.sXMin = back_up_clip.sXMin;
-			//if(pDisplay->sClipRegion.sYMin < back_up_clip.sYMin) pDisplay->sClipRegion.sYMin = back_up_clip.sYMin;
-			//if(pDisplay->sClipRegion.sXMax >= back_up_clip.sXMax) pDisplay->sClipRegion.sXMax = back_up_clip.sXMax;
-			//if(pDisplay->sClipRegion.sYMax >= back_up_clip.sYMax) pDisplay->sClipRegion.sYMax = back_up_clip.sYMax;
 			clip_limit(&pDisplay->sClipRegion, &back_up_clip);
 			put_rectangle(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, true, settings->Color.Scren);
 			box_cache_clean(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox);
