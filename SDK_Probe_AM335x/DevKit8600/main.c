@@ -15,6 +15,9 @@
 /*    You should have received a copy of the GNU General Public License                */
 /*    along with this program.  If not, see <http://www.gnu.org/licenses/>             */
 /***************************************************************************************/
+#define USE_BACK_SCREEN
+
+
 #include <math.h>
 #include "main.h"
 
@@ -84,11 +87,17 @@ signed int CompasFieldCalibration = 0;
 
 static volatile unsigned int CntDisplayRTC = 0;
 
+#ifdef USE_BACK_SCREEN
 tDisplay *BackScreen = NULL;
+volatile unsigned char ScreenReRefreshCnt = 0;
+#endif
 
 void *ButonCallback(void *data)
 {
 	listbox_item_remove(data, 0);
+#ifdef USE_BACK_SCREEN
+	ScreenReRefreshCnt = 2;
+#endif
 	return NULL;
 }
 /*#####################################################*/
@@ -155,12 +164,16 @@ int main(void) {
 /*******************************************************/
     //http_simple_init();
 /*******************************************************/
+#ifdef USE_BACK_SCREEN
     BackScreen = new_(new_screen);
     memcpy((void *)BackScreen, (void *)ScreenBuff, sizeof(new_screen));
     //BackScreen->Height = ScreenBuff->Height;
     //BackScreen->Width = ScreenBuff->Width;
     BackScreen->DisplayData = memalign(sizeof(BackScreen->DisplayData[0]) << 3, (BackScreen->Width * BackScreen->Height * sizeof(BackScreen->DisplayData[0])) + 32);
     MainWindow = new_window(BackScreen);
+#else
+    MainWindow = new_window(ScreenBuff);
+#endif
     window_new_buton(MainWindow, Btn1);
     window_new_checkbox(MainWindow, CB1);
     window_new_listbox(MainWindow, ListBox1);
@@ -186,7 +199,6 @@ int main(void) {
 	control_comand.Comand = Control_Nop;
 	control_comand.CursorCoordonateUsed = true;
 /*******************************************************/
-	volatile unsigned char ScreenReRefreshCnt = 0;
 /*******************************************************/
 	while(1)
 	{
@@ -195,7 +207,11 @@ int main(void) {
 #endif
 		if(timer_tick(&TimerScanTouch))
 		{
+#ifdef USE_BACK_SCREEN
 			if(BackScreen)
+#else
+			if(ScreenBuff)
+#endif
 			{
 				if(TouchScreen->TouchScreen_Type == TouchScreen_Type_Int) TouchIdle(TouchScreen);
 				else if(TouchScreen->TouchScreen_Type == TouchScreen_Type_FT5x06) ft5x06_TouchIdle(TouchScreen);
@@ -206,13 +222,14 @@ int main(void) {
 				control_comand.Y = TouchScreen->TouchResponse.y1;
 				control_comand.Cursor = (CursorState)TouchScreen->TouchResponse.touch_event1;
 				MainWindow->idle(MainWindow, &control_comand);
+#ifdef USE_BACK_SCREEN
 				if(control_comand.CursorCoordonateUsed) ScreenReRefreshCnt = 2;
 				if(ScreenReRefreshCnt)
 				{
 					ScreenReRefreshCnt--;
 					screen_copy(ScreenBuff, BackScreen);
 				}
-
+#endif
 				#ifdef UseMpeg12
 				if(FILE1)
 				{
