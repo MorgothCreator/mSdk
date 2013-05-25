@@ -480,12 +480,20 @@ tListBox *new_listbox(tDisplay *ScreenDisplay)
 	settings->StateChangedOn = Cursor_Up;
 	settings->Visible = true;
 	settings->Size.ScrollSize = 20;
+#ifdef USE_FULL_GRAPHICS
+	settings->Item.add = listbox_item_add;
+	settings->Item.insert = listbox_item_insert;
+	settings->Item.remove = listbox_item_remove;
+	settings->Item.remove_all = listbox_item_remove_all;
+	settings->free = free_listbox;
+#endif
 	//settings->AlwaisShowScrollbar = false;
 	return settings;
 }
 //#######################################################################################
-bool free_listbox(tListBox *settings)
+bool free_listbox(void* _settings)
 {
+	tListBox* settings = _settings;
 	if(!settings) return false;
 
 	if(!free_scrollbar(settings->Internals.ScrollBar)) return false;

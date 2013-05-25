@@ -121,6 +121,20 @@ typedef struct
 	bool AlwaisShowScrollbar;
 	CursorState StateChangedOn;
 	tControlCommandData*(*Idle)(void*, tControlCommandData*);
+#ifdef USE_FULL_GRAPHICS
+	struct
+	{
+
+	}Text;
+	struct
+	{
+		bool (*insert)(void* /*_settings*/, char* /*text*/, unsigned int /*location*/);
+		bool (*add)(void* /*_settings*/, char* /*text*/);
+		bool (*remove)(void* /*_settings*/, unsigned int /*location*/);
+		bool (*remove_all)(void* /*_settings*/);
+	}Item;
+#endif
+	bool (*free)(void */*settings*/);
 	unsigned int ItemsCount;
 	unsigned int SelectedItem;
 	listbox_item **Items;
@@ -128,7 +142,7 @@ typedef struct
 //#######################################################################################
 void listbox(tListBox *settings, tControlCommandData* control_comand);
 tListBox *new_listbox(tDisplay *ScreenDisplay);
-bool free_listbox(tListBox* settings);
+bool free_listbox(void* _settings);
 bool listbox_item_insert(void* _settings, char* text, unsigned int location);
 bool listbox_item_add(void* _settings, char* text);
 bool listbox_item_remove(void* _settings, unsigned int location);
