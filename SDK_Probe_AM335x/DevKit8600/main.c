@@ -2,10 +2,10 @@
 /*    AM335x Multiplatform SDK test application.                                       */
 /*    Copyright (C) 2013  Iulian Gheorghiu.                                            */
 /*                                                                                     */
-/*    This program is free software: you can redistribute it and/or modify             */
-/*    it under the terms of the GNU General Public License as published by             */
-/*    the Free Software Foundation, either version 3 of the License, or                */
-/*    (at your option) any later version.                                              */
+/*    This program is free software; you can redistribute it and/or                    */
+/*    modify it under the terms of the GNU General Public License                      */
+/*    as published by the Free Software Foundation; either version 2                   */
+/*    of the License, or (at your option) any later version.                           */
 /*                                                                                     */
 /*    This program is distributed in the hope that it will be useful,                  */
 /*    but WITHOUT ANY WARRANTY; without even the implied warranty of                   */
@@ -42,8 +42,33 @@ tWindow *MainWindow = NULL;
 tDisplay *BackScreen = NULL;
 volatile unsigned char ScreenReRefreshCnt = 0;
 #endif
+
+signed int picture_old_x = 0;
+signed int picture_old_y = 0;
 /*#####################################################*/
 timer(TimerScanTouch);
+/*#####################################################*/
+void *picture_box_clear_callback(void *data)
+{
+	tPictureBox* settings = (tPictureBox*)data;
+	picturebox_clear(settings);
+	return NULL;
+}
+/*#####################################################*/
+void *picture_box_callback_on_down(struct PictureBox_s *settings, tControlCommandData *control_comand)
+{
+	picture_old_x = control_comand->X;
+	picture_old_y = control_comand->Y;
+	return NULL;
+}
+/*#####################################################*/
+void *picture_box_callback(struct PictureBox_s *settings, tControlCommandData *control_comand)
+{
+	picturebox_put_line(settings, picture_old_x, picture_old_y, control_comand->X, control_comand->Y, 1, ClrBlack);
+	picture_old_x = control_comand->X;
+	picture_old_y = control_comand->Y;
+	return NULL;
+}
 /*#####################################################*/
 int main(void) {
     board_init();
@@ -64,6 +89,14 @@ int main(void) {
     window_new_progressbar(MainWindow, PBar1);
     window_new_scrollbar(MainWindow, ScrollBar1);
     window_new_textbox(MainWindow, TextBox1);
+    window_new_picturebox(MainWindow, PictureBox1);
+
+    PictureBox1->PaintBackground = true;
+    PictureBox1->Events.OnMove.CallBack = picture_box_callback;
+    PictureBox1->Events.OnDown.CallBack = picture_box_callback_on_down;
+
+    Btn1->Events.OnUp.CallbackData = PictureBox1;
+    Btn1->Events.OnUp.CallBack = picture_box_clear_callback;
 
     char TmpStr[30];
     unsigned int CntItems = 0;
