@@ -139,13 +139,15 @@ unsigned int controlls_change_color(unsigned int color, double value)
 bool screen_copy(tDisplay *pDisplayTo, tDisplay *pDisplayFrom)
 {
 	if(pDisplayTo->Height != pDisplayFrom->Height || pDisplayTo->Width != pDisplayFrom->Width) return false;
-	memcpy((void *)pDisplayTo->DisplayData, (void *)pDisplayFrom->DisplayData, (sizeof(unsigned int) * pDisplayFrom->Height * pDisplayFrom->Width) + 32);
+	//memcpy((void *)pDisplayTo->DisplayData, (void *)pDisplayFrom->DisplayData, (sizeof(unsigned int) * pDisplayFrom->Height * pDisplayFrom->Width) + 32);
 	//box_cache_clean(pDisplayTo, 0, 0, pDisplayFrom->Width, pDisplayFrom->Height);
 	signed int LineCnt = 0;
 	volatile unsigned int* ScreenBuff = pDisplayTo->DisplayData + 8;
-	for(; LineCnt < pDisplayFrom->Height; LineCnt ++)
+	volatile unsigned int* _ScreenBuff = pDisplayFrom->DisplayData + 8;
+	for(; LineCnt < pDisplayTo->Height; LineCnt ++)
 	{
-		CacheDataCleanInvalidateBuff((unsigned int)((unsigned int*)(ScreenBuff + (pDisplayFrom->Width * LineCnt))), (sizeof(ScreenBuff[0]) * pDisplayFrom->Width) + 64);
+		memcpy((void *)(ScreenBuff + (pDisplayFrom->Width * LineCnt)), (void *)(_ScreenBuff + (pDisplayFrom->Width * LineCnt)), (sizeof(ScreenBuff[0]) * pDisplayTo->Width));
+		CacheDataCleanInvalidateBuff((unsigned int)((unsigned int*)(ScreenBuff + (pDisplayFrom->Width * LineCnt))), (sizeof(ScreenBuff[0]) * pDisplayTo->Width) + 64);
 	}
 	return true;
 }
