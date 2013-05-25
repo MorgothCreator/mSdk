@@ -24,6 +24,9 @@
 
 char* str_to_upercase(char* string);
 char* str_to_lowercase(char* string);
+char *str_append(char* dest, char* src);
+char *str_insert(char* dest, char* src, unsigned int location);
+char *str_copy(char* str);
 
 #ifdef HEADER_INCLUDE_C_FILES
 #include "string_lib.c"

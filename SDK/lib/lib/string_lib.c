@@ -21,6 +21,7 @@
 
 #include <string.h>
 #include <ctype.h>
+#include <stdlib.h>
 #include "string_lib.h"
 
 char* str_to_upercase(char* string)
@@ -43,4 +44,45 @@ char* str_to_lowercase(char* string)
 		Str++;
 	}while(--TmpCnt);
 	return string;
+}
+
+char *str_append(char* dest, char* src)
+{
+	if(!dest || !src) return NULL;
+	unsigned int LenSrc = strlen(src);
+	unsigned int LenDest = strlen(dest);
+	char *Return = (char *)realloc(dest, LenDest + LenSrc + 1);
+	if(!Return) return NULL;
+	strcat(Return, src);
+	return Return;
+}
+
+char *str_insert(char* dest, char* src, unsigned int location)
+{
+	if(!dest || !src) return NULL;
+	unsigned int LenSrc = strlen(src);
+	if(location > LenSrc) return NULL;
+	unsigned int LenDest = strlen(dest);
+	char *Tmp = (char *)malloc(LenSrc + 1);
+	if(!Tmp) return NULL;
+	strcpy(Tmp, dest + location);
+	char *Return = (char *)realloc(dest, LenDest + LenSrc + 1);
+	if(!Return)
+	{
+		free(Tmp);
+		return NULL;
+	}
+	strcpy(Return + location, src);
+	strcat(Return, Tmp);
+	free(Tmp);
+	return Return;
+}
+
+char *str_copy(char* str)
+{
+	if(!str) return NULL;
+	unsigned int LenSrc = strlen(str);
+	char *Return = (char *)realloc(str, LenSrc + 1);
+	strcpy(Return, str);
+	return Return;
 }
