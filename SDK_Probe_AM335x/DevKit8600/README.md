@@ -12,7 +12,7 @@ This example will create instances for:
 
 6) MCSPI 0 with CS0.
 
-7) MMC/SD module and attach LED1to wach activity of memory card.
+7) MMC/SD module and attach LED1 to wach activity of memory card.
 
 8) USB0 and USB1 in MSC Host mode, and will connect the LED2 to watch the activity of this two USB modules..
 
