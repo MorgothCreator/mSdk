@@ -45,6 +45,8 @@ volatile unsigned char ScreenReRefreshCnt = 0;
 
 signed int picture_old_x = 0;
 signed int picture_old_y = 0;
+
+unsigned int PictureBoxbackBuff[128*96];
 /*#####################################################*/
 timer(TimerScanTouch);
 /*#####################################################*/
@@ -52,6 +54,13 @@ void *picture_box_clear_callback(void *data)
 {
 	tPictureBox* settings = (tPictureBox*)data;
 	picturebox_clear(settings);
+	unsigned int ClearCnt = 0;
+	for(; ClearCnt < 128*96; ClearCnt++)
+	{
+		PictureBoxbackBuff[ClearCnt] = settings->BackgroundColor;
+	}
+	//picturebox_copy_rectangle(settings, PictureBoxbackBuff, 128, 96, 0, 0);
+	//ScreenReRefreshCnt = 2;
 	return NULL;
 }
 /*#####################################################*/
@@ -62,11 +71,20 @@ void *picture_box_callback_on_down(struct PictureBox_s *settings, tControlComman
 	return NULL;
 }
 /*#####################################################*/
+void *picture_box_refresh_callback(struct PictureBox_s *settings, tControlCommandData *control_comand)
+{
+	picturebox_copy_rectangle(settings, PictureBoxbackBuff, 128, 96, 0, 0);
+	ScreenReRefreshCnt = 2;
+	return NULL;
+}
+/*#####################################################*/
 void *picture_box_callback(struct PictureBox_s *settings, tControlCommandData *control_comand)
 {
-	picturebox_put_line(settings, picture_old_x, picture_old_y, control_comand->X, control_comand->Y, 1, ClrBlack);
+	//picturebox_put_line(settings, picture_old_x, picture_old_y, control_comand->X, control_comand->Y, 1, ClrBlack);
+	PictureBoxbackBuff[control_comand->X + (control_comand->Y * 128)] = ClrBlack;
 	picture_old_x = control_comand->X;
 	picture_old_y = control_comand->Y;
+	picturebox_copy_rectangle(settings, PictureBoxbackBuff, 128, 96, 0, 0);
 	return NULL;
 }
 /*#####################################################*/
@@ -94,10 +112,12 @@ int main(void) {
     PictureBox1->PaintBackground = true;
     PictureBox1->Events.OnMove.CallBack = picture_box_callback;
     PictureBox1->Events.OnDown.CallBack = picture_box_callback_on_down;
+    PictureBox1->Events.Refresh.CallBack = picture_box_refresh_callback;
 
     Btn1->Events.OnUp.CallbackData = PictureBox1;
     Btn1->Events.OnUp.CallBack = picture_box_clear_callback;
 
+    picture_box_clear_callback(PictureBox1);
     char TmpStr[30];
     unsigned int CntItems = 0;
     for(CntItems = 0; CntItems < 100; CntItems++)
@@ -107,6 +127,7 @@ int main(void) {
     }
     listbox_item_insert(ListBox1, "Inserted Item", 1);
     listbox_item_remove(ListBox1, 3);
+
 
     tControlCommandData control_comand;
     control_comand.Comand = Control_Nop;

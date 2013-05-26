@@ -83,6 +83,7 @@ void picturebox(tPictureBox *settings, tControlCommandData* control_comand);
 tPictureBox *new_picturebox(tDisplay *ScreenDisplay);
 bool free_picturebox(tPictureBox* settings);
 void picturebox_clear(tPictureBox* settings);
+void picturebox_copy_rectangle(tPictureBox* settings, unsigned int *src_buff, signed int src_x_buff_size, signed int src_y_buff_size, signed int src_x_offset, signed int src_y_offset);
 void picturebox_put_pixel(tPictureBox* settings, signed int X, signed int Y, unsigned int color);
 void picturebox_put_horizontal_line(tPictureBox* settings, signed int X1, signed int X2, signed int Y, unsigned char width, unsigned int color);
 void picturebox_put_vertical_line(tPictureBox* settings, signed int Y1, signed int Y2, signed int X, unsigned char width, unsigned int color);

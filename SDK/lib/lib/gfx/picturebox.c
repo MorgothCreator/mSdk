@@ -130,7 +130,7 @@ void picturebox(tPictureBox *settings, tControlCommandData* control_comand)
 	if(settings->Internals.NeedEntireRefresh == true || (settings->Internals.OldStateVisible != settings->Visible && settings->Visible == false))
 	{
 		settings->Internals.OldStateVisible = settings->Visible;
-		if(settings->Events.Refresh.CallBack)
+		/*if(settings->Events.Refresh.CallBack)
 		{
 			tRectangle back_up_clip = pDisplay->sClipRegion;
 			tRectangle clip;
@@ -149,7 +149,7 @@ void picturebox(tPictureBox *settings, tControlCommandData* control_comand)
 			control_comand->Y = Y;
 			box_cache_clean(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox);
 			pDisplay->sClipRegion = back_up_clip;
-		}
+		}*/
 	}
 
 	/* Verify if is Entire refresh, entire repaint, or state changed */
@@ -327,6 +327,25 @@ void picturebox_clear(tPictureBox* settings)
 	clip_limit(&pDisplay->sClipRegion, &back_up_clip);
 	put_rectangle(pDisplay, X_StartBox + 2, Y_StartBox + 2, X_LenBox - 4, Y_LenBox - 4, true, settings->BackgroundColor);
 	box_cache_clean(pDisplay, X_StartBox + 2, Y_StartBox + 2, X_LenBox - 4, Y_LenBox - 4);
+	pDisplay->sClipRegion = back_up_clip;
+}
+//#######################################################################################
+void picturebox_copy_rectangle(tPictureBox* settings, unsigned int *src_buff, signed int src_x_buff_size, signed int src_y_buff_size, signed int src_x_offset, signed int src_y_offset)
+{
+	tDisplay *pDisplay = settings->Internals.pDisplay;
+	tRectangle back_up_clip = pDisplay->sClipRegion;
+	pDisplay->sClipRegion = settings->Internals.PictureWindowLimits;
+	//put_pixel(pDisplay, X + settings->Position.X + 2, Y + settings->Position.Y + 2, color);
+
+	signed int Y_cnt = 0;
+	signed int X_len = (pDisplay->sClipRegion.sXMax - pDisplay->sClipRegion.sXMin);
+	if(X_len <= 0) return;
+	for(; Y_cnt < src_y_offset + (pDisplay->sClipRegion.sYMax - pDisplay->sClipRegion.sYMin); Y_cnt++)
+	{
+		if(Y_cnt + pDisplay->sClipRegion.sYMin >= pDisplay->sClipRegion.sYMax) break;
+		memcpy((void *)(pDisplay->DisplayData + 8 + ((Y_cnt + settings->Position.Y + 2) * pDisplay->Width) + settings->Position.X + 2), (void *)((char *)(src_buff + ((Y_cnt + src_y_offset) * src_x_buff_size)/**/) - 1), X_len * sizeof(pDisplay->DisplayData[0]));
+		CacheDataCleanInvalidateBuff((unsigned int)(void *)(pDisplay->DisplayData + 8 + ((Y_cnt + settings->Position.Y + 2) * pDisplay->Width) + settings->Position.X + 2), X_len * sizeof(pDisplay->DisplayData[0]) + 64);
+	}
 	pDisplay->sClipRegion = back_up_clip;
 }
 //#######################################################################################
