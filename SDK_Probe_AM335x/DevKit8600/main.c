@@ -73,7 +73,20 @@ void *picture_box_callback_on_down(struct PictureBox_s *settings, tControlComman
 /*#####################################################*/
 void *picture_box_refresh_callback(struct PictureBox_s *settings, tControlCommandData *control_comand)
 {
-	picturebox_copy_rectangle(settings, PictureBoxbackBuff, 128, 96, 0, 0);
+	//picturebox_copy_rectangle(settings, PictureBoxbackBuff, 128, 96, 0, 0);
+	tRectangle dest_rectangle;
+	dest_rectangle.sXMin = 0;
+	dest_rectangle.sXMax = 128;
+	dest_rectangle.sYMin = 0;
+	dest_rectangle.sYMax = 96;
+
+	tRectangle src_rectangle;
+	src_rectangle.sXMin = 0;
+	src_rectangle.sXMax = 128;
+	src_rectangle.sYMin = 0;
+	src_rectangle.sYMax = 96;
+
+	picturebox_copy_rectangle(settings, PictureBoxbackBuff, 8, 0, &dest_rectangle, &src_rectangle, 128, 96);
 	ScreenReRefreshCnt = 2;
 	return NULL;
 }
@@ -84,7 +97,21 @@ void *picture_box_callback(struct PictureBox_s *settings, tControlCommandData *c
 	PictureBoxbackBuff[control_comand->X + (control_comand->Y * 128)] = ClrBlack;
 	picture_old_x = control_comand->X;
 	picture_old_y = control_comand->Y;
-	picturebox_copy_rectangle(settings, PictureBoxbackBuff, 128, 96, 0, 0);
+
+	tRectangle dest_rectangle;
+	dest_rectangle.sXMin = 0;
+	dest_rectangle.sXMax = 128;
+	dest_rectangle.sYMin = 0;
+	dest_rectangle.sYMax = 96;
+
+	tRectangle src_rectangle;
+	src_rectangle.sXMin = 0;
+	src_rectangle.sXMax = 128;
+	src_rectangle.sYMin = 0;
+	src_rectangle.sYMax = 96;
+
+	picturebox_copy_rectangle(settings, PictureBoxbackBuff, 8, 0, &dest_rectangle, &src_rectangle, 128, 96);
+//picturebox_copy_rectangle(settings, PictureBoxbackBuff, 128, 96, 0, 0);
 	return NULL;
 }
 /*#####################################################*/
