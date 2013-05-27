@@ -323,7 +323,7 @@ void _put_rectangle(tDisplay *pDisplay, signed int x_start, signed int y_start, 
 
 	register int _x_end = x_end;
 	int _x_start = x_start;
-	if(_x_end > pDisplay->sClipRegion.sXMax) _x_end = pDisplay->sClipRegion.sXMax;
+	if(_x_end >= pDisplay->sClipRegion.sXMax) _x_end = pDisplay->sClipRegion.sXMax;
 	if(_x_start < pDisplay->sClipRegion.sXMin) _x_start = pDisplay->sClipRegion.sXMin;
 	if(y_start >= pDisplay->sClipRegion.sYMin)
 	{
@@ -342,7 +342,7 @@ void _put_rectangle(tDisplay *pDisplay, signed int x_start, signed int y_start, 
 	}
 
 	int _y_end = y_end;
-	if(_y_end > pDisplay->sClipRegion.sYMax) _y_end = pDisplay->sClipRegion.sYMax;
+	if(_y_end >= pDisplay->sClipRegion.sYMax) _y_end = pDisplay->sClipRegion.sYMax;
 	int _y_start = y_start;
 	if(_y_start < pDisplay->sClipRegion.sYMin) _y_start = pDisplay->sClipRegion.sYMin;
 	if(x_start >= pDisplay->sClipRegion.sXMin)
