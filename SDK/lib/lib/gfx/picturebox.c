@@ -329,7 +329,7 @@ void picturebox_clear(tPictureBox* settings)
 	box_cache_clean(pDisplay, X_StartBox + 2, Y_StartBox + 2, X_LenBox - 4, Y_LenBox - 4);
 	pDisplay->sClipRegion = back_up_clip;
 }
-//#######################################################################################
+/*//#######################################################################################
 void picturebox_copy_rectangle(tPictureBox* settings, unsigned int *src_buff, signed int src_x_buff_size, signed int src_y_buff_size, signed int src_x_offset, signed int src_y_offset)
 {
 	tDisplay *pDisplay = settings->Internals.pDisplay;
@@ -343,8 +343,61 @@ void picturebox_copy_rectangle(tPictureBox* settings, unsigned int *src_buff, si
 	for(; Y_cnt < src_y_offset + (pDisplay->sClipRegion.sYMax - pDisplay->sClipRegion.sYMin); Y_cnt++)
 	{
 		if(Y_cnt + pDisplay->sClipRegion.sYMin >= pDisplay->sClipRegion.sYMax) break;
-		memcpy((void *)(pDisplay->DisplayData + 8 + ((Y_cnt + settings->Position.Y + 2) * pDisplay->Width) + settings->Position.X + 2), (void *)((char *)(src_buff + ((Y_cnt + src_y_offset) * src_x_buff_size)/**/) - 1), X_len * sizeof(pDisplay->DisplayData[0]));
+		memcpy((void *)(pDisplay->DisplayData + 8 + ((Y_cnt + settings->Position.Y + 2) * pDisplay->Width) + settings->Position.X + 2), (void *)((char *)(src_buff + ((Y_cnt + src_y_offset) * src_x_buff_size)) - 1), X_len * sizeof(pDisplay->DisplayData[0]));
 		CacheDataCleanInvalidateBuff((unsigned int)(void *)(pDisplay->DisplayData + 8 + ((Y_cnt + settings->Position.Y + 2) * pDisplay->Width) + settings->Position.X + 2), X_len * sizeof(pDisplay->DisplayData[0]) + 64);
+	}
+	pDisplay->sClipRegion = back_up_clip;
+}*/
+//#######################################################################################
+void picturebox_copy_rectangle(tPictureBox* settings, unsigned int *src_buff, unsigned int dest_buff_data_offset, unsigned int src_buff_data_offset, tRectangle *_dest_rectangle, tRectangle *_src_rectangle, signed int src_width, signed int src_height)
+{
+	tDisplay *pDisplay = settings->Internals.pDisplay;
+	tRectangle back_up_clip = pDisplay->sClipRegion;
+	pDisplay->sClipRegion = settings->Internals.PictureWindowLimits;
+	//put_pixel(pDisplay, X + settings->Position.X + 2, Y + settings->Position.Y + 2, color);
+
+	tRectangle *dest_rectangle = _dest_rectangle;
+	tRectangle *src_rectangle = _src_rectangle;
+
+	signed int dest_X_StartBox = settings->Internals.Position.X;
+	signed int dest_Y_StartBox = settings->Internals.Position.Y;
+	//signed int dest_X_EndBox = settings->Internals.Position.X + settings->Internals.Size.X;
+	//signed int dest_Y_EndBox = settings->Internals.Position.Y + settings->Internals.Size.Y;
+
+	//Calculate the destination locations on the screen.
+	dest_rectangle->sXMin += dest_X_StartBox;
+	dest_rectangle->sXMax += dest_X_StartBox;
+	dest_rectangle->sYMin += dest_Y_StartBox;
+	dest_rectangle->sYMax += dest_Y_StartBox;
+
+	//Limit the destination area to the picture box size.
+	/*if(dest_rectangle->sXMin < dest_X_StartBox) dest_rectangle->sXMin = dest_X_StartBox;
+	if(dest_rectangle->sYMin < dest_Y_StartBox) dest_rectangle->sYMin = dest_Y_StartBox;
+	if(dest_rectangle->sXMax >= dest_X_EndBox) dest_rectangle->sXMax = dest_X_EndBox;
+	if(dest_rectangle->sYMax >= dest_Y_EndBox) dest_rectangle->sYMax = dest_Y_EndBox;*/
+
+	clip_limit(dest_rectangle, &settings->Internals.PictureWindowLimits);
+
+	signed int x_line_len = dest_rectangle->sXMax - dest_rectangle->sXMin;
+
+	if(x_line_len <= 0) return;
+	if(dest_X_StartBox <= dest_rectangle->sXMin) dest_X_StartBox = dest_rectangle->sXMin;
+
+	signed int Y_cnt = dest_Y_StartBox;
+	if(Y_cnt <= dest_rectangle->sYMin) Y_cnt = dest_rectangle->sYMin;
+
+	signed int X_Start_Src_Buff = (settings->Internals.Position.X + 2) - settings->Internals.PictureWindowLimits.sXMin;
+	if(X_Start_Src_Buff > 0) X_Start_Src_Buff = 0;
+	else X_Start_Src_Buff = (~X_Start_Src_Buff) + 1;
+	signed int Y_Start_Src_Buff = (settings->Internals.Position.Y + 2) - settings->Internals.PictureWindowLimits.sYMin;
+	if(Y_Start_Src_Buff > 0) Y_Start_Src_Buff = 0;
+	else Y_Start_Src_Buff = (~Y_Start_Src_Buff) + 1;
+
+	for(; Y_cnt < dest_rectangle->sYMax; Y_cnt++)
+	{
+		//if(Y_cnt >= pDisplay->sClipRegion.sYMax) break;
+		memcpy((void *)(pDisplay->DisplayData + dest_buff_data_offset + (Y_cnt * pDisplay->Width) + dest_X_StartBox), (void *)((char *)(src_buff + src_buff_data_offset + (((Y_cnt - settings->Internals.PictureWindowLimits.sYMin + Y_Start_Src_Buff) + src_rectangle->sYMin) * src_width) + src_rectangle->sXMin + X_Start_Src_Buff) - 1), x_line_len * sizeof(pDisplay->DisplayData[0]));
+		//CacheDataCleanInvalidateBuff((unsigned int)(void *)(pDisplay->DisplayData + 8 + ((Y_cnt + settings->Position.Y + 2) * pDisplay->Width) + settings->Position.X + 2), X_len * sizeof(pDisplay->DisplayData[0]) + 64);
 	}
 	pDisplay->sClipRegion = back_up_clip;
 }
