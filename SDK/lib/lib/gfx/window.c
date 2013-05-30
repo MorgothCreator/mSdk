@@ -260,11 +260,20 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 	}
 	if(settings->Internals.Control.Initiated == false)
 	{
+		settings->Internals.WindowMoveLimits.sXMin = settings->WindowMoveLimits.sXMin;
+		settings->Internals.WindowMoveLimits.sYMin = settings->WindowMoveLimits.sYMin;
+		settings->Internals.WindowMoveLimits.sXMax = settings->WindowMoveLimits.sXMax;
+		settings->Internals.WindowMoveLimits.sYMax = settings->WindowMoveLimits.sYMax;
+		settings->Position.X = settings->Internals.WindowMoveLimits.sXMin;
+		settings->Position.Y = settings->Internals.WindowMoveLimits.sYMin;
+		settings->Size.X = settings->WindowMoveLimits.sXMax - settings->Internals.WindowMoveLimits.sXMin;
+		settings->Size.Y = settings->WindowMoveLimits.sYMax - settings->Internals.WindowMoveLimits.sYMin;
 		settings->Internals.Position.X = settings->Position.X;
 		settings->Internals.Position.Y = settings->Position.Y;
 		settings->Internals.Size.X = settings->Size.X;
 		settings->Internals.Size.Y = settings->Size.Y;
-
+		settings->Internals.NormalScreenPosition.X = settings->Position.X;
+		settings->Internals.NormalScreenPosition.Y = settings->Position.Y;
 		settings->Internals.Header.Close = new_button(settings->Internals.pDisplay);
 		if(!settings->Internals.Header.Close) return;
 
@@ -290,8 +299,12 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 						settings->Internals.Caption.Font != settings->Caption.Font ||
 							settings->Internals.Caption.Text != settings->Caption.Text ||
 								settings->Internals.Caption.TextAlign != settings->Caption.TextAlign ||
-									settings->Internals.Caption.WordWrap != settings->Caption.WordWrap)
-										settings->Internals.NeedEntireRefresh = true;
+									settings->Internals.Caption.WordWrap != settings->Caption.WordWrap ||
+										settings->Internals.WindowMoveLimits.sXMin != settings->WindowMoveLimits.sXMin ||
+											settings->Internals.WindowMoveLimits.sYMin != settings->WindowMoveLimits.sYMin ||
+												settings->Internals.WindowMoveLimits.sXMax != settings->WindowMoveLimits.sXMax ||
+													settings->Internals.WindowMoveLimits.sYMax != settings->WindowMoveLimits.sYMax)
+																settings->Internals.NeedEntireRefresh = true;
 
 	//if(settings->Internals.Caption.Text != NULL && settings->Caption.Text != NULL && strcmp(settings->Internals.Caption.Text, settings->Caption.Text) == NULL)
 		//settings->Internals.NeedEntireRefresh = true;
@@ -312,6 +325,7 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 		pDisplay->sClipRegion.sXMax = X_StartBox + X_LenBox;
 		pDisplay->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
 		clip_limit(&pDisplay->sClipRegion, &back_up_clip);
+		clip_limit(&pDisplay->sClipRegion, &settings->WindowMoveLimits);
 		//if(!settings->Internals.NoPaintBackGround)
 		//{
 		put_rectangle(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, true, settings->Color.Scren);
@@ -338,6 +352,10 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 		settings->Internals.Caption.TextAlign = settings->Caption.TextAlign;
 		settings->Internals.Caption.WordWrap = settings->Caption.WordWrap;
 		settings->Internals.Size.ScrollBarSize = settings->Size.ScrollBarSize;
+		settings->Internals.WindowMoveLimits.sXMin = settings->WindowMoveLimits.sXMin;
+		settings->Internals.WindowMoveLimits.sYMin = settings->WindowMoveLimits.sYMin;
+		settings->Internals.WindowMoveLimits.sXMax = settings->WindowMoveLimits.sXMax;
+		settings->Internals.WindowMoveLimits.sYMax = settings->WindowMoveLimits.sYMax;
 		X_StartBox = settings->Internals.Position.X;
 		Y_StartBox = settings->Internals.Position.Y;
 		X_LenBox = settings->Internals.Size.X;
@@ -389,6 +407,7 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 		pDisplay->sClipRegion.sXMax = X_StartBox + X_LenBox;
 		pDisplay->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
 		clip_limit(&pDisplay->sClipRegion, &back_up_clip);
+		clip_limit(&pDisplay->sClipRegion, &settings->WindowMoveLimits);
 		put_rectangle(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, false, controlls_change_color(controls_color.Control_Color_Enabled_Border_Pull, - 3));
 		put_rectangle(pDisplay, X_StartBox + 1, Y_StartBox + 1, X_LenBox - 2, settings->Internals.Header.Size.Y - 2, true, controlls_change_color(controls_color.Control_Color_Enabled_Buton_Pull, - 2));
 		put_rectangle(pDisplay, X_StartBox + 1, Y_StartBox + settings->Internals.Header.Size.Y, X_LenBox - 2, Y_LenBox - settings->Internals.Header.Size.Y - 1, true, controlls_change_color(controls_color.Scren, 1.2));
@@ -458,6 +477,7 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 	pDisplay->sClipRegion.sXMax = X_StartBox + X_LenBox;
 	pDisplay->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
 	clip_limit(&pDisplay->sClipRegion, &back_up_clip);
+	clip_limit(&pDisplay->sClipRegion, &settings->WindowMoveLimits);
 	button(settings->Internals.Header.Close, control_comand);
 	checkbox(settings->Internals.Header.MaxMin, control_comand);
 	bool full_screen_has_changed_state = false;
@@ -469,6 +489,10 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 		settings->Position.X = settings->Internals.NormalScreenPosition.X;
 		settings->Position.Y = settings->Internals.NormalScreenPosition.Y;
 		settings->Internals.FullScreen = false;
+		//if(settings->Position.X < settings->WindowMoveLimits.sXMin) settings->Position.X = settings->WindowMoveLimits.sXMin;
+		//if(settings->Position.Y < settings->WindowMoveLimits.sYMin) settings->Position.Y = settings->WindowMoveLimits.sYMin;
+		//if(settings->Position.X + settings->Size.X >= settings->WindowMoveLimits.sXMax) settings->Position.X = settings->WindowMoveLimits.sXMax - settings->Size.X;
+		//if(settings->Position.Y + settings->Size.Y >= settings->WindowMoveLimits.sYMax) settings->Position.Y = settings->WindowMoveLimits.sYMax - settings->Size.Y;
 		full_screen_has_changed_state = true;
 	}
 	else if(settings->Internals.Header.MaxMin->Events.UnChecked)
@@ -476,10 +500,10 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 		settings->Internals.Header.MaxMin->Events.UnChecked = false;
 		settings->Internals.NormalScreenPosition.X = settings->Position.X;
 		settings->Internals.NormalScreenPosition.Y = settings->Position.Y;
-		settings->Size.X = settings->SizeFullScreen.X;
-		settings->Size.Y = settings->SizeFullScreen.Y;
-		settings->Position.X = 0;
-		settings->Position.Y = 0;
+		settings->Position.X = settings->Internals.WindowMoveLimits.sXMin;
+		settings->Position.Y = settings->Internals.WindowMoveLimits.sYMin;
+		settings->Size.X = settings->WindowMoveLimits.sXMax - settings->Internals.WindowMoveLimits.sXMin;
+		settings->Size.Y = settings->WindowMoveLimits.sYMax - settings->Internals.WindowMoveLimits.sYMin;
 		settings->Internals.FullScreen = true;
 		full_screen_has_changed_state = true;
 	}
@@ -541,7 +565,7 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 	if(full_screen_has_changed_state) return;
 
 	if(check_if_inside_box(X_StartBox + 1, Y_StartBox + 1, X_LenBox - 2, settings->Internals.Header.Size.Y - 2, control_comand->X, control_comand->Y) && control_comand->CursorCoordonateUsed == false) settings->Internals.CursorDownOnHeader = true;
-	
+	/* If is in sizeable window, from here begin to calculate the move of window using touchscreen */
 	if(settings->Internals.CursorDownOnHeader == true &&
 		control_comand->CursorCoordonateUsed == false &&
 			settings->Internals.FullScreen == false)
@@ -558,6 +582,10 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 		{
 			settings->Position.X = settings->Internals.WindowTouchDownPointX + (control_comand->X - settings->Internals.HeaderTouchDownPointX);
 			settings->Position.Y = settings->Internals.WindowTouchDownPointY + (control_comand->Y - settings->Internals.HeaderTouchDownPointY);
+			//if(settings->Position.X < settings->WindowMoveLimits.sXMin) settings->Position.X = settings->WindowMoveLimits.sXMin;
+			if(settings->Position.Y < settings->WindowMoveLimits.sYMin) settings->Position.Y = settings->WindowMoveLimits.sYMin;
+			//if(settings->Position.X >= settings->WindowMoveLimits.sXMax) settings->Position.X = settings->WindowMoveLimits.sXMax;
+			if(settings->Position.Y + settings->Internals.Header.Size.Y >= settings->WindowMoveLimits.sYMax) settings->Position.Y = settings->WindowMoveLimits.sYMax - settings->Internals.Header.Size.Y;
 		}
 	}
 	if(control_comand->Cursor == Cursor_Up || control_comand->Cursor == Cursor_NoAction) settings->Internals.CursorDownOnHeader = false;
@@ -597,13 +625,13 @@ tWindow *new_window(tDisplay *ScreenDisplay)
 	settings->Color.Disabled.Buton = controls_color.Control_Color_Disabled_Buton_Pull;
 	settings->Color.Disabled.Ink = controls_color.Control_Color_Disabled_Ink_Pull;
 
-	settings->Position.X = 0;
-	settings->Position.Y = 0;
+	//settings->Position.X = settings->PositionFullScreen.X;
+	//settings->Position.Y = settings->PositionFullScreen.Y;
 	settings->Size.X = ScreenDisplay->Width;
 	settings->Size.Y = ScreenDisplay->Height;
 	settings->Size.ScrollBarSize = 20;
-	settings->SizeFullScreen.X = ScreenDisplay->Width;
-	settings->SizeFullScreen.Y = ScreenDisplay->Height;
+	//settings->SizeFullScreen.X = ScreenDisplay->Width;
+	//settings->SizeFullScreen.Y = ScreenDisplay->Height;
 	settings->SizeNormalScreen.X = 200;
 	settings->SizeNormalScreen.Y = 150;
 	settings->StateChangedOn = Cursor_Up;

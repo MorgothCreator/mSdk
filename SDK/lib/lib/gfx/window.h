@@ -84,11 +84,16 @@ typedef struct Window_s
 		signed int Y;
 		signed int ScrollBarSize;
 	}Size;
-	struct
-	{
-		signed int X;
-		signed int Y;
-	}SizeFullScreen;
+	//struct
+	//{
+	//	signed int X;
+	//	signed int Y;
+	//}SizeFullScreen;
+	//struct
+	//{
+	//	signed int X;
+	//	signed int Y;
+	//}PositionFullScreen;
 	struct
 	{
 		signed int X;
@@ -154,6 +159,16 @@ typedef struct Window_s
 			signed int X;
 			signed int Y;
 		}NormalScreenPosition;
+		//struct
+		//{
+		//	signed int X;
+		//	signed int Y;
+		//}SizeFullScreen;
+		//struct
+		//{
+		//	signed int X;
+		//	signed int Y;
+		//}PositionFullScreen;
 		controls_caption_t Caption;
 		unsigned int ButonCnt;
 		unsigned int CheckBoxCnt;
@@ -186,6 +201,7 @@ typedef struct Window_s
 		tScrollBar *H_ScrollBar;
 		tScrollBar *V_ScrollBar;
 		ChildrenWindowSize_t ChildrenWindowSize;
+		tRectangle WindowMoveLimits;
 	}Internals;
 	bool Visible;
 	bool Enabled;
@@ -196,6 +212,7 @@ typedef struct Window_s
 	bool MinimizeButonEnabled;
 	bool MinimizeButonVisible;
 	CursorState StateChangedOn;
+	tRectangle WindowMoveLimits;
 	//tControlCommandData*(*Idle)(void*, tControlCommandData*);
 
 	void (*idle)(struct Window_s *, tControlCommandData *);//window
