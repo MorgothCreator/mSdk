@@ -70,14 +70,6 @@ typedef struct
     //! The maximum Y coordinate of the rectangle.
     //
 	signed int sYMax;
-
-
-
-	signed int sX_Offset;
-
-
-
-	signed int sY_Offset;
 }
 tRectangle;
 //*****************************************************************************
