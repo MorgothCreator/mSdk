@@ -144,9 +144,15 @@ static void paint_textbox(tTextBox* settings, tDisplay *pDisplay, signed int x_s
 				CursorState cursor = control_comand->Cursor;
 				control_comand->Cursor = Cursor_Up;
 				if(((command_return & ReturnCommand_gm) == ReturnCommand_GoUp || (command_return & ReturnCommand_gm) == ReturnCommand_GoDn) || settings->Internals.NeedEntireRefresh)
+				{
+					settings->Internals.Vscrollbar->Internals.NoPaintBackGround = true;
 					scrollbar(settings->Internals.Vscrollbar, control_comand);
+				}
 				if(((command_return & ReturnCommand_gm) == ReturnCommand_GoLeft || (command_return & ReturnCommand_gm) == ReturnCommand_GoRight) || settings->Internals.NeedEntireRefresh)
+				{
+					settings->Internals.Hscrollbar->Internals.NoPaintBackGround = true;
 					scrollbar(settings->Internals.Hscrollbar, control_comand);
+				}
 				control_comand->Comand = ComandBeck;
 				control_comand->Cursor = cursor;
 
@@ -341,7 +347,9 @@ void textbox(tTextBox *settings, tControlCommandData* control_comand)
 		clip_limit(&pDisplay->sClipRegion, &back_up_clip);
 		//ControlCommands ComandBeck = control_comand->Comand;
 		if(settings->Internals.NeedEntireRepaint) control_comand->Comand = Control_Refresh;
+		settings->Internals.Vscrollbar->Internals.NoPaintBackGround = true;
 		scrollbar(settings->Internals.Vscrollbar, control_comand);
+		settings->Internals.Hscrollbar->Internals.NoPaintBackGround = true;
 		scrollbar(settings->Internals.Hscrollbar, control_comand);
 
 		settings->Internals.Caption.Text = gfx_change_str(settings->Internals.Caption.Text, settings->Caption.Text);
