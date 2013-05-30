@@ -1696,6 +1696,16 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
+			<name>lib/lib/gfx/keyboard.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/SDK/lib/lib/gfx/keyboard.c</locationURI>
+		</link>
+		<link>
+			<name>lib/lib/gfx/keyboard.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/SDK/lib/lib/gfx/keyboard.h</locationURI>
+		</link>
+		<link>
 			<name>lib/lib/gfx/listbox.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/SDK/lib/lib/gfx/listbox.c</locationURI>
