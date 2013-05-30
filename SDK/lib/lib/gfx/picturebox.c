@@ -352,9 +352,9 @@ void picturebox_copy_rectangle(tPictureBox* settings, unsigned int *src_buff, si
 void picturebox_copy_rectangle(tPictureBox* settings, unsigned int *src_buff, unsigned int dest_buff_data_offset, unsigned int src_buff_data_offset, tRectangle *_dest_rectangle, tRectangle *_src_rectangle, signed int src_width, signed int src_height)
 {
 	tDisplay *pDisplay = settings->Internals.pDisplay;
-	tRectangle back_up_clip = pDisplay->sClipRegion;
-	pDisplay->sClipRegion = settings->Internals.PictureWindowLimits;
-	//put_pixel(pDisplay, X + settings->Position.X + 2, Y + settings->Position.Y + 2, color);
+	//tRectangle back_up_clip = pDisplay->sClipRegion;
+	//pDisplay->sClipRegion = settings->Internals.PictureWindowLimits;
+	////put_pixel(pDisplay, X + settings->Position.X + 2, Y + settings->Position.Y + 2, color);
 
 	tRectangle *dest_rectangle = _dest_rectangle;
 	tRectangle *src_rectangle = _src_rectangle;
@@ -369,6 +369,10 @@ void picturebox_copy_rectangle(tPictureBox* settings, unsigned int *src_buff, un
 	dest_rectangle->sXMax += dest_X_StartBox;
 	dest_rectangle->sYMin += dest_Y_StartBox;
 	dest_rectangle->sYMax += dest_Y_StartBox;
+	if(dest_rectangle->sXMax < settings->Internals.Position.X + 2 ||
+			dest_rectangle->sYMax < settings->Internals.Position.Y + 2 ||
+				dest_rectangle->sXMin >= settings->Internals.Position.X + (settings->Internals.Size.X - 4) ||
+					dest_rectangle->sYMin >= settings->Internals.Position.Y + (settings->Internals.Size.Y - 4)) return;
 
 	//Limit the destination area to the picture box size.
 	/*if(dest_rectangle->sXMin < dest_X_StartBox) dest_rectangle->sXMin = dest_X_StartBox;
@@ -399,7 +403,7 @@ void picturebox_copy_rectangle(tPictureBox* settings, unsigned int *src_buff, un
 		memcpy((void *)(pDisplay->DisplayData + dest_buff_data_offset + (Y_cnt * pDisplay->Width) + dest_X_StartBox), (void *)((char *)(src_buff + src_buff_data_offset + (((Y_cnt - settings->Internals.PictureWindowLimits.sYMin + Y_Start_Src_Buff) + src_rectangle->sYMin) * src_width) + src_rectangle->sXMin + X_Start_Src_Buff) - 1), x_line_len * sizeof(pDisplay->DisplayData[0]));
 		//CacheDataCleanInvalidateBuff((unsigned int)(void *)(pDisplay->DisplayData + 8 + ((Y_cnt + settings->Position.Y + 2) * pDisplay->Width) + settings->Position.X + 2), X_len * sizeof(pDisplay->DisplayData[0]) + 64);
 	}
-	pDisplay->sClipRegion = back_up_clip;
+	//pDisplay->sClipRegion = back_up_clip;
 }
 //#######################################################################################
 void picturebox_put_pixel(tPictureBox* settings, signed int X, signed int Y, unsigned int color)
