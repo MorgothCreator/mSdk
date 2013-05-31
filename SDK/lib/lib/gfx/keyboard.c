@@ -43,25 +43,25 @@ const unsigned int kbd_qwerty_keys_big_return[] ={
 const unsigned int kbd_qwerty_keys_numeric_return[] ={
 		kbd_qwerty_ctrl,'1','2','3','4','5','6','7','8','9','0'            ,'='          ,8               ,
 		'Nr'           ,'*','+','#','-','_','(',')','&','!','?'            ,kbd_qwerty_up,13              ,
-		0              ,' ','&',' ',47 ,92 ,34 ,96 ,32     ,kbd_qwerty_left,kbd_qwerty_dn,kbd_qwerty_right
+		0              ,0  ,'&',0  ,47 ,92 ,34 ,96 ,32     ,kbd_qwerty_left,kbd_qwerty_dn,kbd_qwerty_right
 };
 //#######################################################################################
 const unsigned char *kbd_qwerty_keys_little[] ={
-		"Ctrl","q","w","e","r","t","y","u","i" ,"o","p"   ,"," ,"BkS" ,
-		"Nr"  ,"a","s","d","f","g","h","j","k" ,"l","."   ,"Up","Ent",
+		"Ctrl","q","w","e","r","t","y","u","i" ,"o","p"  ,"," ,"BkS",
+		"Nr"  ,"a","s","d","f","g","h","j","k" ,"l","."  ,"Up","Ent",
 		"^"   ,"z","x","c","v","b","n","m","space" ,"Lef","Dn","Rig"
 };
 //#######################################################################################
 const unsigned char *kbd_qwerty_keys_big[] ={
-		"Ctrl","Q","W","E","R","T","Y","U","I" ,"O","P"   ,";" ,"BkS" ,
-		"Nr"  ,"A","S","D","F","G","H","J","K" ,"L",":"   ,"Up","Ent",
+		"Ctrl","Q","W","E","R","T","Y","U","I" ,"O","P"  ,";" ,"BkS",
+		"Nr"  ,"A","S","D","F","G","H","J","K" ,"L",":"  ,"Up","Ent",
 		"^"   ,"Z","X","C","V","B","N","M","space" ,"Lef","Dn","Rig"
 };
 //#######################################################################################
 const unsigned char *kbd_qwerty_keys_numeric[] ={
-		"Ctrl","1","2","3","4","5","6","7","8" ,"9","0"   ,"=" ,"BkS" ,
-		"Nr"  ,"*","+","#","-","_","(",")","&" ,"!","?"   ,"Up","Ent",
-		"^"   ," ","&"," ","/","sl","quot","'","space" ,"Lef","Dn","Rig"
+		"Ctrl","1","2","3","4","5","6","7","8" ,"9"     ,"0"  ,"=" ,"BkS",
+		"Nr"  ,"*","+","#","-","_","(",")","&" ,"!"     ,"?"  ,"Up","Ent",
+		"^"   ," ","&"," ","/","sl","quot","'" ,"space" ,"Lef","Dn","Rig"
 };
 //#######################################################################################
 static void paint_v_keyboard(tVKbd_Qwerty* settings, tDisplay *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len, tControlCommandData* control_comand, bool refrash)
@@ -92,8 +92,6 @@ static void paint_v_keyboard(tVKbd_Qwerty* settings, tDisplay *pDisplay, signed 
 		for(; CntInitKeys < sizeof(settings->Internals.Keys)/sizeof(settings->Internals.Keys[0]); CntInitKeys++)
 		{
 			tButton* KeyTmpPtr =  settings->Internals.Keys[CntInitKeys];
-			//KeyTmpPtr->Visible = FALSE;
-			//_gfx_btn_refresh(KeyTmpPtr);
 			if(KeyTmpPtr == 0) break;
 			switch (CntInitKeys)
 			{
@@ -167,7 +165,6 @@ static void paint_v_keyboard(tVKbd_Qwerty* settings, tDisplay *pDisplay, signed 
 				else if(settings->Internals.keboard_type == Kbd_Qwerty_LittleLetters) settings->Return = (unsigned int)kbd_qwerty_keys_little_return[CntInitKeys];
 				settings->Events.CursorUp = true;
 				if(settings->Events.OnUp.CallBack) settings->Events.OnUp.CallbackReturnData = settings->Events.OnUp.CallBack(settings->Events.OnUp.CallbackData, settings->Return);
-				//control_comand->CursorCoordonateUsed = true;
 			}
 			else if(KeyTmpPtr->Events.CursorDown == true)
 			{
@@ -177,7 +174,6 @@ static void paint_v_keyboard(tVKbd_Qwerty* settings, tDisplay *pDisplay, signed 
 				else if(settings->Internals.keboard_type == Kbd_Qwerty_LittleLetters) settings->Return = (unsigned int)kbd_qwerty_keys_little_return[CntInitKeys];
 				settings->Events.CursorDown = true;
 				if(settings->Events.OnDown.CallBack) settings->Events.OnDown.CallbackReturnData = settings->Events.OnDown.CallBack(settings->Events.OnDown.CallbackData, settings->Return);
-				//control_comand->CursorCoordonateUsed = true;
 			}
 			else if(KeyTmpPtr->Events.CursorMove == true)
 			{
@@ -187,7 +183,6 @@ static void paint_v_keyboard(tVKbd_Qwerty* settings, tDisplay *pDisplay, signed 
 				else if(settings->Internals.keboard_type == Kbd_Qwerty_LittleLetters) settings->Return = (unsigned int)kbd_qwerty_keys_little_return[CntInitKeys];
 				settings->Events.CursorMove = true;
 				if(settings->Events.OnMove.CallBack) settings->Events.OnMove.CallbackReturnData = settings->Events.OnMove.CallBack(settings->Events.OnMove.CallbackData, settings->Return);
-				//control_comand->CursorCoordonateUsed = true;
 			}
 		}
 	}
@@ -257,11 +252,6 @@ void v_keyboard(tVKbd_Qwerty *settings, tControlCommandData* control_comand)
 					settings->Internals.keboard_type != settings->Internals.old_keboard_type)
 										settings->Internals.NeedEntireRefresh = true;
 
-	//CursorState cursor = control_comand->Cursor;
-	//if(settings->Internals.NeedEntireRefresh) control_comand->Cursor = Cursor_Up;
-	//if(settings->Internals.Caption.Text != NULL && settings->Caption.Text != NULL && strcmp(settings->Internals.Caption.Text, settings->Caption.Text) == NULL)
-		//settings->Internals.NeedEntireRefresh = true;
-
 	signed int X_StartBox = settings->Internals.Position.X;
 	signed int Y_StartBox = settings->Internals.Position.Y;
 	signed int X_LenBox = settings->Internals.Size.X;
@@ -325,21 +315,7 @@ void v_keyboard(tVKbd_Qwerty *settings, tControlCommandData* control_comand)
 		//control_comand->Cursor = cursor;
 		return;
 	}
-	/* Check if inside window */
-/*	bool inside_window = check_if_inside_box(X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, control_comand->X, control_comand->Y);
-	bool _inside_window = check_if_inside_box(pDisplay->sClipRegion.sXMin, pDisplay->sClipRegion.sYMin, pDisplay->sClipRegion.sXMax - pDisplay->sClipRegion.sXMin, pDisplay->sClipRegion.sYMax - pDisplay->sClipRegion.sYMin, control_comand->X, control_comand->Y);
-	if(!_inside_window) inside_window = false;
-	if((control_comand->Cursor == Cursor_Up || control_comand->Cursor == Cursor_Down) &&
-			settings->Internals.OldStateCursor != control_comand->Cursor &&
-				(inside_window == true || settings->Internals.CursorDownInsideBox == true) &&
-					settings->Enabled == true &&
-						settings->Visible == true)
-	{
-		settings->Internals.OldStateCursor = control_comand->Cursor;
-	}*/
 	paint_v_keyboard(settings, pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, control_comand, false);
-	//if(settings->Internals.CursorDownInsideBox == true && control_comand->Cursor == Cursor_Up) settings->Internals.CursorDownInsideBox = false;
-	//control_comand->CursorCoordonateUsed = settings->Internals.CursorDownInsideBox;
 	return;
 }
 //#######################################################################################
