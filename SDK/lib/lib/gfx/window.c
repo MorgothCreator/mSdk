@@ -638,6 +638,12 @@ tWindow *new_window(tDisplay *ScreenDisplay)
 	settings->Visible = true;
 	settings->Enabled = true;
 
+	settings->WindowMoveLimits.sXMin = 0;
+	settings->WindowMoveLimits.sXMax = ScreenDisplay->Width;
+	settings->WindowMoveLimits.sYMin = 0;
+	settings->WindowMoveLimits.sYMax = ScreenDisplay->Height;
+
+
 	settings->Internals.Header.Size.Y = 20;
 	settings->Internals.FullScreen = true;
 
