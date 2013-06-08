@@ -88,10 +88,10 @@ void put_3d_triangle(tDisplay *pDisplay, _3d_points *Points, signed int X_offset
 
 	//double triangle_median = (screenPoints.z[1] + screenPoints.z[2] + screenPoints.z[3]) / 3;
 	unsigned int color = Color;//(controlls_change_color(Color, (-triangle_median))<<8) & 0xFFFFFF00;
-	signed int X_start = (signed int)screenPoints.x[0];
-	signed int Y_start = (signed int)screenPoints.y[0];
-	signed int X_end = (signed int)screenPoints.x[1];
-	signed int Y_end = (signed int)screenPoints.y[1];
+	//signed int X_start;// = (signed int)screenPoints.x[0];
+	//signed int Y_start;// = (signed int)screenPoints.y[0];
+	//signed int X_end;// = (signed int)screenPoints.x[1];
+	//signed int Y_end;// = (signed int)screenPoints.y[1];
 /*	put_line(pDisplay, X_offset + X_start, Y_offset + Y_start, X_offset + X_end, Y_offset + Y_end, 1, color);
 
 	X_start = (signed int)screenPoints.x[0];
@@ -106,10 +106,10 @@ void put_3d_triangle(tDisplay *pDisplay, _3d_points *Points, signed int X_offset
 	Y_end = (signed int)screenPoints.y[3];
 	put_line(pDisplay, X_offset + X_start, Y_offset + Y_start, X_offset + X_end, Y_offset + Y_end, 1, color);*/
 
-	X_start = (signed int)screenPoints.x[1];
-	Y_start = (signed int)screenPoints.y[1];
-	X_end = (signed int)screenPoints.x[2];
-	Y_end = (signed int)screenPoints.y[2];
+	signed int X_start = (signed int)screenPoints.x[1];
+	signed int Y_start = (signed int)screenPoints.y[1];
+	signed int X_end = (signed int)screenPoints.x[2];
+	signed int Y_end = (signed int)screenPoints.y[2];
 	put_line(pDisplay, X_offset + X_start, Y_offset + Y_start, X_offset + X_end, Y_offset + Y_end, 1, color);
 
 	X_start = (signed int)screenPoints.x[2];

@@ -75,6 +75,7 @@ typedef struct
 	point points[8];
 }Transformed_Points_Array;
 
+void Transform3DPointsTo2DPoints(_3d_points *screenPoints, _3d_points *Points, axisRotations AxisRotations);
 void put_3d_triangle(tDisplay *pDisplay, _3d_points *Points, signed int X_offset, signed int Y_offset, double X_Angle, double Y_Angle, double Z_Angle, unsigned int Color);
 void put_3d_rectangle(tDisplay *pDisplay, _3d_points *Points, signed int X_offset, signed int Y_offset, double X_Angle, double Y_Angle, double Z_Angle, unsigned int Color);
 

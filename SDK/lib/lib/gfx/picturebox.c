@@ -23,6 +23,7 @@
 #include "api/lcd_def.h"
 #include "api/lcd_api.h"
 #include "api/timer_api.h"
+#include "3d.h"
 #include "controls_definition.h"
 //#######################################################################################
 static void paint_picturebox(tPictureBox* settings, tDisplay *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len, tControlCommandData* control_comand)
@@ -476,5 +477,64 @@ void picturebox_put_string(tPictureBox* settings, tFont *pFont, char *pcString, 
 	pDisplay->sClipRegion = settings->Internals.PictureWindowLimits;
 	put_string(pDisplay, pFont, pcString, lLength, foreground_color, background_color, ulOpaque, ulVisible, WordWrap, lX + settings->Position.X + 2, lY + settings->Position.Y + 2, _SelStart, _SelLen);
 	pDisplay->sClipRegion = back_up_clip;
+}
+//#######################################################################################
+void picturebox_put_3d_triangle(tPictureBox* settings, _3d_points *Points, signed int X_offset, signed int Y_offset, double X_Angle, double Y_Angle, double Z_Angle, unsigned int Color)
+{
+	_3d_points screenPoints;
+
+	axisRotations cubeAxisRotations;
+	cubeAxisRotations.y = Y_Angle;
+	cubeAxisRotations.x = X_Angle;
+	cubeAxisRotations.z = Z_Angle;
+	Points->length = 4;
+	Transform3DPointsTo2DPoints(&screenPoints, Points, cubeAxisRotations);
+
+	unsigned int color = Color;//(controlls_change_color(Color, (-triangle_median))<<8) & 0xFFFFFF00;
+
+	signed int X_start = (signed int)screenPoints.x[1];
+	signed int Y_start = (signed int)screenPoints.y[1];
+	signed int X_end = (signed int)screenPoints.x[2];
+	signed int Y_end = (signed int)screenPoints.y[2];
+	picturebox_put_line(settings, X_offset + X_start, Y_offset + Y_start, X_offset + X_end, Y_offset + Y_end, 1, color);
+
+	X_start = (signed int)screenPoints.x[2];
+	Y_start = (signed int)screenPoints.y[2];
+	X_end = (signed int)screenPoints.x[3];
+	Y_end = (signed int)screenPoints.y[3];
+	picturebox_put_line(settings, X_offset + X_start, Y_offset + Y_start, X_offset + X_end, Y_offset + Y_end, 1, color);
+
+	X_start = (signed int)screenPoints.x[3];
+	Y_start = (signed int)screenPoints.y[3];
+	X_end = (signed int)screenPoints.x[1];
+	Y_end = (signed int)screenPoints.y[1];
+	picturebox_put_line(settings, X_offset + X_start, Y_offset + Y_start, X_offset + X_end, Y_offset + Y_end, 1, color);
+}
+//#######################################################################################
+void picturebox_put_3d_rectangle(tPictureBox* settings, _3d_points *Points, signed int X_offset, signed int Y_offset, double X_Angle, double Y_Angle, double Z_Angle, unsigned int Color)
+{
+	_3d_points screenPoints;
+
+	axisRotations cubeAxisRotations;
+	cubeAxisRotations.y = Y_Angle;
+	cubeAxisRotations.x = X_Angle;
+	cubeAxisRotations.z = Z_Angle;
+	Points->length = 8;
+	Transform3DPointsTo2DPoints(&screenPoints, Points, cubeAxisRotations);
+	picturebox_put_line(settings, (signed int)screenPoints.x[0] + X_offset, (signed int)screenPoints.y[0] + Y_offset, (signed int)screenPoints.x[1] + X_offset, (signed int)screenPoints.y[1] + Y_offset, 1, Color);
+	picturebox_put_line(settings, (signed int)screenPoints.x[0] + X_offset, (signed int)screenPoints.y[0] + Y_offset, (signed int)screenPoints.x[3] + X_offset, (signed int)screenPoints.y[3] + Y_offset, 1, Color);
+	picturebox_put_line(settings, (signed int)screenPoints.x[0] + X_offset, (signed int)screenPoints.y[0] + Y_offset, (signed int)screenPoints.x[4] + X_offset, (signed int)screenPoints.y[4] + Y_offset, 1, Color);
+
+	picturebox_put_line(settings, (signed int)screenPoints.x[2] + X_offset, (signed int)screenPoints.y[2] + Y_offset, (signed int)screenPoints.x[1] + X_offset, (signed int)screenPoints.y[1] + Y_offset, 1, Color);
+	picturebox_put_line(settings, (signed int)screenPoints.x[2] + X_offset, (signed int)screenPoints.y[2] + Y_offset, (signed int)screenPoints.x[3] + X_offset, (signed int)screenPoints.y[3] + Y_offset, 1, Color);
+	picturebox_put_line(settings, (signed int)screenPoints.x[2] + X_offset, (signed int)screenPoints.y[2] + Y_offset, (signed int)screenPoints.x[6] + X_offset, (signed int)screenPoints.y[6] + Y_offset, 1, Color);
+
+	picturebox_put_line(settings, (signed int)screenPoints.x[5] + X_offset, (signed int)screenPoints.y[5] + Y_offset, (signed int)screenPoints.x[1] + X_offset, (signed int)screenPoints.y[1] + Y_offset, 1, Color);
+	picturebox_put_line(settings, (signed int)screenPoints.x[5] + X_offset, (signed int)screenPoints.y[5] + Y_offset, (signed int)screenPoints.x[4] + X_offset, (signed int)screenPoints.y[4] + Y_offset, 1, Color);
+	picturebox_put_line(settings, (signed int)screenPoints.x[5] + X_offset, (signed int)screenPoints.y[5] + Y_offset, (signed int)screenPoints.x[6] + X_offset, (signed int)screenPoints.y[6] + Y_offset, 1, Color);
+
+	picturebox_put_line(settings, (signed int)screenPoints.x[7] + X_offset, (signed int)screenPoints.y[7] + Y_offset, (signed int)screenPoints.x[3] + X_offset, (signed int)screenPoints.y[3] + Y_offset, 1, Color);
+	picturebox_put_line(settings, (signed int)screenPoints.x[7] + X_offset, (signed int)screenPoints.y[7] + Y_offset, (signed int)screenPoints.x[4] + X_offset, (signed int)screenPoints.y[4] + Y_offset, 1, Color);
+	picturebox_put_line(settings, (signed int)screenPoints.x[7] + X_offset, (signed int)screenPoints.y[7] + Y_offset, (signed int)screenPoints.x[6] + X_offset, (signed int)screenPoints.y[6] + Y_offset, 1, Color);
 }
 //#######################################################################################

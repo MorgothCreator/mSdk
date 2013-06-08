@@ -3,6 +3,7 @@
 //#######################################################################################
 #include <stdbool.h>
 #include "api/timer_api.h"
+#include "3d.h"
 #include "controls_definition.h"
 //#######################################################################################
 typedef struct PictureBox_s
@@ -93,6 +94,8 @@ void picturebox_put_line(tPictureBox* settings, signed int X1, signed int Y1, si
 void picturebox_put_elipse(tPictureBox* settings, signed int xc,signed int yc,signed int rx,signed int ry, unsigned char fill, unsigned int color);
 void picturebox_put_triangle(tPictureBox* settings, signed int  Ax,signed int  Ay,signed int  Bx,signed int  By,signed int  Cx,signed int  Cy, unsigned char fill, unsigned int color);
 void picturebox_put_string(tPictureBox* settings, tFont *pFont, char *pcString, signed int lLength, unsigned int foreground_color, unsigned int background_color, bool ulOpaque, bool ulVisible, bool WordWrap, signed int lX, signed int lY, signed int _SelStart, signed int _SelLen);
+void picturebox_put_3d_triangle(tPictureBox* settings, _3d_points *Points, signed int X_offset, signed int Y_offset, double X_Angle, double Y_Angle, double Z_Angle, unsigned int Color);
+void picturebox_put_3d_rectangle(tPictureBox* settings, _3d_points *Points, signed int X_offset, signed int Y_offset, double X_Angle, double Y_Angle, double Z_Angle, unsigned int Color);
 //#######################################################################################
 #ifdef HEADER_INCLUDE_C_FILES
 #include "buton.c"
