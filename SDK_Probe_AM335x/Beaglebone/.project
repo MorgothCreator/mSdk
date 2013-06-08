@@ -1711,6 +1711,16 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
+			<name>lib/lib/gfx/picturebox.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/SDK/lib/lib/gfx/picturebox.c</locationURI>
+		</link>
+		<link>
+			<name>lib/lib/gfx/picturebox.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/SDK/lib/lib/gfx/picturebox.h</locationURI>
+		</link>
+		<link>
 			<name>lib/lib/gfx/png</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
