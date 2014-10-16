@@ -590,7 +590,7 @@ void IntMasterFIQDisable(void)
  **/
 unsigned int IntMasterStatusGet(void)
 {
-    return CPUIntStatus();
+    //return CPUIntStatus();
 }
 
 /**

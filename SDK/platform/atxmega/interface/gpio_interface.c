@@ -4,7 +4,7 @@
  * Created: 2/8/2013 12:33:18 AM
  *  Author: XxXx
  */ 
-
+#include <stdlib.h>
 #include "gpio_interface.h"
 #include "driver/gpio.h"
 #include "api/gpio_def.h"

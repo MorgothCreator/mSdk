@@ -21,11 +21,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307 USA
  */
-#include "pl310.h"
-#include "driver/cpu.h"
+//#include "pl310.h"
+//#include "driver/cpu.h"
 //#include "include/cache-l2x0.h"
 
-struct pl310_regs *const pl310 = (struct pl310_regs *)CONFIG_SYS_PL310_BASE;
+//struct pl310_regs *const pl310 = (struct pl310_regs *)CONFIG_SYS_PL310_BASE;
 
 
 /*void enable_cache()
@@ -38,7 +38,7 @@ struct pl310_regs *const pl310 = (struct pl310_regs *)CONFIG_SYS_PL310_BASE;
 );
 }*/
 
-void pl310_enable()
+/*void pl310_enable()
 {
 	//CPUSwitchToSecureMode();
 
@@ -54,4 +54,4 @@ void pl310_enable()
 	pl310->pl310_intr_clear = 0xFFFF;
 	pl310->pl310_ctrl |= pl310_ctrl_cache_enable;
 	CPUSwitchToUserMode();
-}
+}*/

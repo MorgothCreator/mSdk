@@ -58,6 +58,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include "adc.h"
+#include "board_init.h"
 //#####################################################
 AdcServiceAddresses Adc_ServiceAddresses;
 //#####################################################
@@ -381,7 +382,7 @@ unsigned short adc_get_value(Adc_t *AdcGenStruct, unsigned char ChNr, bool WaitC
 		}
 #endif
 //-----------------------------------------------------
-#ifdef use_adcc_ch1
+#ifdef use_adcb_ch1
 		ISR(ADCB_CH1_vect)
 		{
 			if(!Adc_ServiceAddresses.AdcAGeneralRamServiceAddr) return;
@@ -393,7 +394,7 @@ unsigned short adc_get_value(Adc_t *AdcGenStruct, unsigned char ChNr, bool WaitC
 		}
 #endif
 //-----------------------------------------------------
-#ifdef use_adcd_ch2
+#ifdef use_adcb_ch2
 		ISR(ADCB_CH2_vect)
 		{
 			if(!Adc_ServiceAddresses.AdcAGeneralRamServiceAddr) return;
@@ -405,7 +406,7 @@ unsigned short adc_get_value(Adc_t *AdcGenStruct, unsigned char ChNr, bool WaitC
 		}
 #endif
 //-----------------------------------------------------
-#ifdef use_adce_ch3
+#ifdef use_adcb_ch3
 		ISR(ADCB_CH3_vect)
 		{
 			if(!Adc_ServiceAddresses.AdcAGeneralRamServiceAddr) return;

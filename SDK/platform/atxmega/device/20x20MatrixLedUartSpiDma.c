@@ -13,7 +13,6 @@
 #include <util/atomic.h>
 #include <string.h>
 #include <stdlib.h>
-#include "20x20MatrixLedUartSpiDma.h"
 #include "board_properties.h"
 #include "driver/dma.h"
 //#include "api/lcd_api.h"
@@ -23,6 +22,9 @@
 #include "interface/uart_interface.h"
 #include "driver/uart.h"
 #include "driver/timer.h"
+#include "20x20MatrixLedUartSpiDma.h"
+#include "board_init.h"
+extern new_uart* DebugCom;
 //#######################################################################################
 new_dma_ch* DMA_SCREEN = NULL;
 new_timer *Timer0_Struct = NULL;
@@ -117,6 +119,9 @@ void screen_open(tDisplay* LcdStruct)
 	LcdStruct->UserData = (void*)malloc(60);
 	if(LcdStruct->DisplayData == 0 && LcdStruct->UserData == 0) return;
 	
+	SCLR_Port.DIRSET = SCLR_bm;
+	SCLR_Port.OUTSET = SCLR_bm;
+	
 	//LcdStruct->DisplayData[0] = 0xFF;
 	//LcdStruct->DisplayData[1] = 0xFF;
 	memset((void*)LcdStruct->DisplayData, 0xFF, 60);
@@ -129,6 +134,8 @@ void screen_open(tDisplay* LcdStruct)
 	UART_SCREEN->CS_Port = (void*)&SCS_Port;
 	UART_SCREEN->CS_PinMask = SCS_bm;
 	uart_open(UART_SCREEN);
+	
+
 
 	DMA_SCREEN = new_(new_dma_ch);
 	DMA_SCREEN->Dma_BlockLength = 5;
@@ -151,7 +158,7 @@ void screen_open(tDisplay* LcdStruct)
 	
 	Timer0_Struct = new_(new_timer);
 	Timer0_Struct->Timer_PeriodUpdate = CoreFreq / (100 * 20);
-	Timer0_Struct->Timer_CompCapUpdateA = (CoreFreq * 16) / (100 * 20) ;
+	Timer0_Struct->Timer_CompCapUpdateA = (Timer0_Struct->Timer_PeriodUpdate / 10) * 9 ;
 	Timer0_Struct->Timer_CompCapUpdateB = 0;
 	Timer0_Struct->Timer_CompCapUpdateC = 0;
 	Timer0_Struct->Timer_CompCapUpdateD = 0;
@@ -189,7 +196,7 @@ void screen_open(tDisplay* LcdStruct)
 	Timer0_Struct->CallBackCompCaptureA = screen_black;
 	Timer0_Struct->CallBackCompCaptureDataA = (void*)DMA_SCREEN;
 	tc_init(Timer0_Struct,1);
-
+	screen_clear(LcdStruct, 0x0000);
 }
 //#######################################################################################
 void screen_put_pixel16(tDisplay* LcdStruct, signed int X_Coordonate, signed int Y_Coordonate, unsigned int Color16)

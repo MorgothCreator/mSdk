@@ -811,6 +811,21 @@
 			<locationURI>PARENT-1-PROJECT_LOC/SDK/platform/omap4/pinmux/pin_mux_uart.h</locationURI>
 		</link>
 		<link>
+			<name>omap4/sys/am43xx_evm.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/SDK/platform/omap4/sys/am43xx_evm.h</locationURI>
+		</link>
+		<link>
+			<name>omap4/sys/armv7.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/SDK/platform/omap4/sys/armv7.h</locationURI>
+		</link>
+		<link>
+			<name>omap4/sys/cache-pl310.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/SDK/platform/omap4/sys/cache-pl310.c</locationURI>
+		</link>
+		<link>
 			<name>omap4/sys/cache.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/SDK/platform/omap4/sys/cache.c</locationURI>
@@ -831,14 +846,24 @@
 			<locationURI>PARENT-1-PROJECT_LOC/SDK/platform/omap4/sys/core_init.h</locationURI>
 		</link>
 		<link>
-			<name>omap4/sys/exceptionhandler.asm</name>
+			<name>omap4/sys/exceptionhandler.S</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/SDK/platform/omap4/sys/exceptionhandler.asm</locationURI>
+			<locationURI>PARENT-1-PROJECT_LOC/SDK/platform/omap4/sys/exceptionhandler.S</locationURI>
 		</link>
 		<link>
-			<name>omap4/sys/init.asm</name>
+			<name>omap4/sys/exceptionhandler.h</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/SDK/platform/omap4/sys/init.asm</locationURI>
+			<locationURI>PARENT-1-PROJECT_LOC/SDK/platform/omap4/sys/exceptionhandler.h</locationURI>
+		</link>
+		<link>
+			<name>omap4/sys/init.S</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/SDK/platform/omap4/sys/init.S</locationURI>
+		</link>
+		<link>
+			<name>omap4/sys/io.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/SDK/platform/omap4/sys/io.h</locationURI>
 		</link>
 		<link>
 			<name>omap4/sys/mmu.c</name>
@@ -851,9 +876,19 @@
 			<locationURI>PARENT-1-PROJECT_LOC/SDK/platform/omap4/sys/mmu.h</locationURI>
 		</link>
 		<link>
-			<name>omap4/sys/smc.asm</name>
+			<name>omap4/sys/omap.h</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/SDK/platform/omap4/sys/smc.asm</locationURI>
+			<locationURI>PARENT-1-PROJECT_LOC/SDK/platform/omap4/sys/omap.h</locationURI>
+		</link>
+		<link>
+			<name>omap4/sys/pl310.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/SDK/platform/omap4/sys/pl310.h</locationURI>
+		</link>
+		<link>
+			<name>omap4/sys/smc.S</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/SDK/platform/omap4/sys/smc.S</locationURI>
 		</link>
 		<link>
 			<name>omap4/sys/smc.h</name>
@@ -871,6 +906,11 @@
 			<locationURI>PARENT-1-PROJECT_LOC/SDK/platform/omap4/sys/startup.h</locationURI>
 		</link>
 		<link>
+			<name>omap4/sys/sys_types.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/SDK/platform/omap4/sys/sys_types.h</locationURI>
+		</link>
+		<link>
 			<name>omap4/sys/sysdelay.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/SDK/platform/omap4/sys/sysdelay.c</locationURI>
@@ -879,6 +919,11 @@
 			<name>omap4/sys/sysdelay.h</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/SDK/platform/omap4/sys/sysdelay.h</locationURI>
+		</link>
+		<link>
+			<name>omap4/sys/utils.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/SDK/platform/omap4/sys/utils.h</locationURI>
 		</link>
 		<link>
 			<name>lib/lib/buffers/ring_buff.c</name>
@@ -989,6 +1034,16 @@
 			<name>lib/lib/gfx/mpeg4</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>lib/lib/gfx/picturebox.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/SDK/lib/lib/gfx/picturebox.c</locationURI>
+		</link>
+		<link>
+			<name>lib/lib/gfx/picturebox.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/SDK/lib/lib/gfx/picturebox.h</locationURI>
 		</link>
 		<link>
 			<name>lib/lib/gfx/png</name>
@@ -1141,6 +1196,11 @@
 			<locationURI>PARENT-1-PROJECT_LOC/SDK/lib/lib/gfx/resource/fonts.c</locationURI>
 		</link>
 		<link>
+			<name>lib/lib/gfx/resource/fonts.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/SDK/lib/lib/gfx/resource/fonts.h</locationURI>
+		</link>
+		<link>
 			<name>lib/lib/gfx/resource/grlib.h</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/SDK/lib/lib/gfx/resource/grlib.h</locationURI>
@@ -1154,6 +1214,11 @@
 			<name>lib/lib/gfx/jpg/IJG/cdjpeg.h</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/SDK/lib/lib/gfx/jpg/IJG/cdjpeg.h</locationURI>
+		</link>
+		<link>
+			<name>lib/lib/gfx/jpg/IJG/jcapimin.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/SDK/lib/lib/gfx/jpg/IJG/jcapimin.c</locationURI>
 		</link>
 		<link>
 			<name>lib/lib/gfx/jpg/IJG/jcapistd.c</name>

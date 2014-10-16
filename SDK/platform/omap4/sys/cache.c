@@ -7,7 +7,8 @@
 
 #include "cache.h"
 #include "smc.h"
-#if 0
+#include "utils.h"
+//#if 0
 //#if 0
 void v7_outer_cache_enable(void)
 {
@@ -18,6 +19,11 @@ void v7_outer_cache_disable(void)
 {
 	//set_pl310_ctrl_reg(0);
 }
+
+//#include <linux/types.h>
+//#include <common.h>
+#include "armv7.h"
+//#include <asm/utils.h>
 
 #define ARMV7_DCACHE_INVAL_ALL		1
 #define ARMV7_DCACHE_CLEAN_INVAL_ALL	2
@@ -30,8 +36,7 @@ void v7_outer_cache_disable(void)
  * to get size details from Current Cache Size ID Register(CCSIDR)
  */
 static void set_csselr(unsigned int level, unsigned int type)
-{
-	unsigned int csselr = level << 1 | type;
+{	unsigned int csselr = level << 1 | type;
 
 	/* Write to Cache Size Selection Register(CSSELR) */
 	asm volatile ("mcr p15, 2, %0, c0, c0, 0" : : "r" (csselr));
@@ -179,8 +184,7 @@ static void v7_dcache_inval_range(unsigned int start, unsigned int stop, unsigne
 	 * invalidate the first cache-line
 	 */
 	if (start & (line_len - 1)) {
-		printf("ERROR: %s - start address is not aligned - 0x%08x\n",
-			__func__, start);
+		//printf("ERROR: %s - start address is not aligned - 0x%08x\n", __func__, start);
 		/* move to next cache line */
 		start = (start + line_len - 1) & ~(line_len - 1);
 	}
@@ -190,8 +194,7 @@ static void v7_dcache_inval_range(unsigned int start, unsigned int stop, unsigne
 	 * invalidate the last cache-line
 	 */
 	if (stop & (line_len - 1)) {
-		printf("ERROR: %s - stop address is not aligned - 0x%08x\n",
-			__func__, stop);
+		//printf("ERROR: %s - stop address is not aligned - 0x%08x\n", __func__, stop);
 		/* align to the beginning of this cache line */
 		stop &= ~(line_len - 1);
 	}
@@ -264,7 +267,7 @@ void flush_dcache_all(void)
  * Invalidates range in all levels of D-cache/unified cache used:
  * Affects the range [start, stop - 1]
  */
-void invalidate_dcache_range(unsigned long start, unsigned long stop)
+void invalidate_dcache_range(unsigned int start, unsigned int stop)
 {
 
 	v7_dcache_maint_range(start, stop, ARMV7_DCACHE_INVAL_RANGE);
@@ -277,7 +280,7 @@ void invalidate_dcache_range(unsigned long start, unsigned long stop)
  * cache used:
  * Affects the range [start, stop - 1]
  */
-void flush_dcache_range(unsigned long start, unsigned long stop)
+void flush_dcache_range(unsigned int start, unsigned int stop)
 {
 	v7_dcache_maint_range(start, stop, ARMV7_DCACHE_CLEAN_INVAL_RANGE);
 
@@ -291,14 +294,57 @@ void arm_init_before_mmu(void)
 	v7_inval_tlb();
 }
 
+void mmu_page_table_flush(unsigned int start, unsigned int stop)
+{
+	flush_dcache_range(start, stop);
+	v7_inval_tlb();
+}
+
 /*
  * Flush range from all levels of d-cache/unified-cache used:
  * Affects the range [start, start + size - 1]
  */
-void  flush_cache(unsigned long start, unsigned long size)
+void  flush_cache(unsigned int start, unsigned int size)
 {
 	flush_dcache_range(start, start + size);
 }
+
+
+#else /* #ifndef CONFIG_SYS_DCACHE_OFF */
+void invalidate_dcache_all(void)
+{
+}
+
+void flush_dcache_all(void)
+{
+}
+
+void invalidate_dcache_range(unsigned int start, unsigned int stop)
+{
+}
+
+void flush_dcache_range(unsigned int start, unsigned int stop)
+{
+}
+
+void arm_init_before_mmu(void)
+{
+}
+
+void  flush_cache(unsigned int start, unsigned int size)
+{
+}
+
+void mmu_page_table_flush(unsigned int start, unsigned int stop)
+{
+}
+
+void arm_init_domains(void)
+{
+}
+#endif /* #ifndef CONFIG_SYS_DCACHE_OFF */
+
+#ifndef CONFIG_SYS_ICACHE_OFF
 /* Invalidate entire I-cache and branch predictor array */
 void invalidate_icache_all(void)
 {
@@ -306,10 +352,10 @@ void invalidate_icache_all(void)
 	 * Invalidate all instruction caches to PoU.
 	 * Also flushes branch target cache.
 	 */
-	asm volatile ("	mcr p15, 0, %0, c7, c5, 0" : : "r" (0));
+	asm volatile ("mcr p15, 0, %0, c7, c5, 0" : : "r" (0));
 
 	/* Invalidate entire branch predictor array */
-	asm volatile ("	mcr p15, 0, %0, c7, c5, 6" : : "r" (0));
+	asm volatile ("mcr p15, 0, %0, c7, c5, 6" : : "r" (0));
 
 	/* Full system DSB - make sure that the invalidation is complete */
 	CP15DSB;
@@ -317,6 +363,176 @@ void invalidate_icache_all(void)
 	/* ISB - make sure the instruction stream sees it */
 	CP15ISB;
 }
+#else
+void invalidate_icache_all(void)
+{
+}
 #endif
 
-#endif
+/*  Stub implementations for outer cache operations */
+/*__weak*/ //void v7_outer_cache_enable(void) {};
+/*__weak*/ //void v7_outer_cache_disable(void) {};
+/*__weak*/ //void v7_outer_cache_flush_all(void) {};
+/*__weak*/ //void v7_outer_cache_inval_all(void) {};
+/*__weak*/ //void v7_outer_cache_flush_range(unsigned int start, unsigned int end) {};
+/*__weak*/ //void v7_outer_cache_inval_range(unsigned int start, unsigned int end) {};
+
+//#else
+/**
+ * \brief   Disables Cache. The levels/type of Cache to be disabled
+ *          is passed as parameter.
+ *
+ * \param   disFlag   Caches to be disabled.
+ *            'disFlag' can take one of the below values. \n
+ *                CACHE_ICACHE - To disable Instruction Cache \n
+ *                CACHE_DCACHE - To disable Data/Unified Cache \n
+ *                CACHE_ALL - To disable all levels of Cache
+ *
+ * \return  None.
+ *
+ * \Note    Disabling Data Cache disables Unified cache also, if present.
+ **/
+void CacheDisable(unsigned int disFlag)
+{
+
+}
+
+/**
+ * \brief   Enables Cache. The levels/type of Cache to be enabled
+ *          is passed as parameter.
+ *
+ * \param   enFlag   Caches to be enabled.
+ *            'enFlag' can take one of the below values. \n
+ *                CACHE_ICACHE - To enable Instruction Cache \n
+ *                CACHE_DCACHE - To enable Data/Unified Cache \n
+ *                CACHE_ALL - To enable all levels of Cache
+ *
+ * \return  None.
+ *
+ * \Note    Enabling Data Cache enables Unified cache also, if present.
+ **/
+
+void CacheEnable(unsigned int enFlag)
+{
+
+}
+
+/**
+ * \brief   This API invalidates the entire I-Cache
+ *
+ * \param   None
+ *
+ * \return  None.
+ *
+ **/
+void CacheInstInvalidateAll(void)
+{
+
+}
+
+/**
+ * \brief   This API invalidates a section of I-Cache.
+ *
+ * \param   startAddr    Starting address to be invalidated
+ * \param   numBytes     The number of bytes to be invalidated
+ *
+ * \return  None.
+ *
+ **/
+void CacheInstInvalidateBuff(unsigned int startAddr, unsigned int numBytes)
+{
+
+}
+
+/**
+ * \brief   This API Cleans and Invalidates the entire Data Cache.
+ *
+ * \param   None
+ *
+ * \return  None.
+ *
+ **/
+void CacheDataCleanInvalidateAll(void)
+{
+
+}
+
+/**
+ * \brief   This API Cleans the entire Data Cache.
+ *
+ * \param   None
+ *
+ * \return  None.
+ *
+ **/
+void CacheDataCleanAll(void)
+{
+
+}
+
+/**
+ * \brief   This API Invalidates the entire Data Cache.
+ *
+ * \param   None
+ *
+ * \return  None.
+ *
+ **/
+void CacheDataInvalidateAll(void)
+{
+
+}
+
+/**
+ * \brief   This API clean a section of D-Cache, upto PoC. This API
+ *          can be used to make a buffer in D-Cache to be coherent
+ *          with the memory. For example, If DMA engine has to access
+ *          a memory area for transmitting, to make sure that the
+ *          D-Cache values for the corresponding buffer is written to
+ *          memory, this API can be used.
+ *
+ * \param   startAddr    Starting address of the buffer to be cleaned
+ * \param   numBytes     The number of bytes to be cleaned.
+ *
+ * \return  None.
+ *
+ **/
+void CacheDataCleanBuff(unsigned int startAddr, unsigned int numBytes)
+{
+
+}
+
+/**
+ * \brief   This API invalidates a section of D-Cache till PoC. With this
+ *          API, we can make sure that the next read of the buffer happens
+ *          from memory. This is required if any DMA engine has updated
+ *          the memory area with any data, other than from the D-Cache.
+ *
+ * \param   startAddr    Starting address of the buffer to be invalidated
+ * \param   numBytes     The number of bytes to be invalidated
+ *
+ * \return  None.
+ *
+ **/
+void CacheDataInvalidateBuff(unsigned int startAddr, unsigned int numBytes)
+{
+
+}
+
+/**
+ * \brief   This API cleans and invalidates a section of D-Cache to PoC.
+ *
+ * \param   startAddr    Starting address of the buffer to be cleaned
+ *                       and invalidated
+ * \param   numBytes     The number of bytes to be cleaned and invalidated
+ *
+ * \return  None.
+ *
+ **/
+void CacheDataCleanInvalidateBuff(unsigned int startAddr, unsigned int numBytes)
+{
+
+}
+
+//#endif
+

@@ -16,7 +16,6 @@
 #define CACHE_DCACHE                 (0x02) /* Data and Unified cache*/
 #define CACHE_ALL                    (0x03) /* Instruction, Data and Unified*/
 
-#if 0
 /*
  * CP15 Barrier instructions
  * Please note that we have separate barrier instructions in ARMv7
@@ -161,7 +160,6 @@ typedef enum
 
 
 /*****************************************************************************/
-#endif
 void CacheEnable(unsigned int enFlag);
 void CacheDisable(unsigned int disFlag);
 void CacheInstInvalidateAll(void);

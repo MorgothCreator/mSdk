@@ -8,6 +8,8 @@
 #ifndef SYSDELAY_H_
 #define SYSDELAY_H_
 //#####################################################
+static volatile unsigned long long STimerCnt;
+//#####################################################
 void SysDelayTimerSetup(void);
 void Sysdelay(unsigned int milliSec);
 //#####################################################

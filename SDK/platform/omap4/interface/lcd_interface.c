@@ -6,6 +6,7 @@
  */
 
 #include <stdbool.h>
+#include <malloc.h>
 #include "lcd_interface.h"
 #include "clk/clk_lcd.h"
 #include "aintc/aintc_lcd.h"

@@ -24,10 +24,10 @@
 #ifndef _PL310_H_
 #define _PL310_H_
 
-#define CONFIG_SYS_PL310_BASE 0x48242000
+//#define CONFIG_SYS_PL310_BASE 0x48242000
 
 /* Register bit fields */
-#define PL310_AUX_CTRL_ASSOCIATIVITY_MASK	(1 << 16)
+/*#define PL310_AUX_CTRL_ASSOCIATIVITY_MASK	(1 << 16)
 
 struct pl310_regs {
 	unsigned int pl310_cache_id;
@@ -100,12 +100,12 @@ struct pl310_regs {
 #define L2X0_CLEAN_WAY			0x7BC
 #define L2X0_CLEAN_INV_LINE_PA		0x7F0
 #define L2X0_CLEAN_INV_LINE_IDX		0x7F8
-#define L2X0_CLEAN_INV_WAY		0x7FC
+#define L2X0_CLEAN_INV_WAY		0x7FC*/
 /*
  * The lockdown registers repeat 8 times for L310, the L210 has only one
  * D and one I lockdown register at 0x0900 and 0x0904.
  */
-#define L2X0_LOCKDOWN_WAY_D_BASE	0x900
+/*#define L2X0_LOCKDOWN_WAY_D_BASE	0x900
 #define L2X0_LOCKDOWN_WAY_I_BASE	0x904
 #define L2X0_LOCKDOWN_STRIDE		0x08
 #define L2X0_ADDR_FILTER_START		0xC00
@@ -123,9 +123,9 @@ struct pl310_regs {
 #define L2X0_POWER_CTRL			0xF80
 #define L2X0_DYNAMIC_CLK_GATING_EN	(1 << 1)
 #define L2X0_STNDBY_MODE_EN		(1 << 0)
-
+*/
 /* Registers shifts and masks */
-#define L2X0_CACHE_ID_REV_MASK		(0x3f)
+/*#define L2X0_CACHE_ID_REV_MASK		(0x3f)
 #define L2X0_CACHE_ID_PART_MASK		(0xf << 6)
 #define L2X0_CACHE_ID_PART_L210		(1 << 6)
 #define L2X0_CACHE_ID_PART_L310		(3 << 6)
@@ -176,7 +176,7 @@ struct pl310_regs {
 
 
 void pl310_enable();
-
+*/
 #ifdef HEADER_INCLUDE_C_FILES
 #include "pl310.c"
 #endif

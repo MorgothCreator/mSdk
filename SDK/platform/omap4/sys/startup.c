@@ -46,6 +46,7 @@
 #include "startup.h"
 #include "include/hw/soc_AM335x.h"
 #include "include/hw/hw_types.h"
+#include "exceptionhandler.h"
 //#include "cp15.h"
 
 /***********************************************************************
@@ -53,18 +54,6 @@
 ***********************************************************************/
 #define E_PASS                         (0)
 #define E_FAIL                         (-1)
-
-
-/***********************************************************************
-**                     EXTERNAL FUNCTION PROTOTYPES
-***********************************************************************/
-extern void Entry(void);
-extern void UndefInstHandler(void);
-extern void SVCHandler(void);
-extern void AbortHandler(void);
-extern void IRQHandler(void);
-extern void FIQHandler(void);
-
 /**********************************************************************
 *                   INTERNAL FUNCTION PROTOTYPES
 **********************************************************************/
@@ -107,7 +96,7 @@ static unsigned int const vecTbl[8]=
     //0xE59FF010,    /* Opcode for loading PC with the contents of [PC + 0x10] */
     (unsigned int)Entry,
     (unsigned int)UndefInstHandler,
-    (unsigned int)SVCHandler,
+    (unsigned int)SVC_Handler,
     (unsigned int)AbortHandler,
     (unsigned int)AbortHandler,
     (unsigned int)0,
