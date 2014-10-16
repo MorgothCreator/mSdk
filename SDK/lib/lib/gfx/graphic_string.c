@@ -20,6 +20,7 @@
  */
 
 #include <stdbool.h>
+#include <stdlib.h>
 #include <string.h>
 #include "graphic_string.h"
 #include "../../api/lcd_def.h"

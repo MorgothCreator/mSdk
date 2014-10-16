@@ -153,7 +153,7 @@ USBHKeyboardOpen(unsigned int ulIndex, tUSBCallback pfnCallback, unsigned char *
                                                    USBHKeyboardCallback,
                     (unsigned int)&g_sUSBHKeyboard);
 
-    return((unsigned int)&g_sUSBHKeyboard);
+    return(g_sUSBHKeyboard.ulHIDInstance);
 }
 
 //*****************************************************************************
@@ -174,7 +174,10 @@ unsigned int
 USBHKeyboardClose(unsigned int ulInstance)
 {
     tUSBHKeyboard *pUSBHKeyboard;
+    tHIDInstance *pHIDInstance;
 
+    pHIDInstance = (tHIDInstance *) ulInstance;
+    pUSBHKeyboard = (tUSBHKeyboard *) pHIDInstance->ulCBData;
     //
     // Recover the pointer to the instance data.
     //
@@ -226,11 +229,13 @@ USBHKeyboardUsageToChar(unsigned int ulInstance,
     unsigned int ulOffset;
     unsigned int ulShift;
     tUSBHKeyboard *pUSBHKeyboard;
+    tHIDInstance *pHIDInstance;
 
     //
     // Recover the pointer to the instance data.
     //
-    pUSBHKeyboard = (tUSBHKeyboard *)ulInstance;
+    pHIDInstance = (tHIDInstance *) ulInstance;
+    pUSBHKeyboard = (tUSBHKeyboard *) pHIDInstance->ulCBData;
 
     //
     // The added offset for the shifted character value.
@@ -343,11 +348,13 @@ unsigned int
 USBHKeyboardModifierSet(unsigned int ulInstance, unsigned int ulModifiers)
 {
     tUSBHKeyboard *pUSBHKeyboard;
+    tHIDInstance *pHIDInstance;
 
     //
     // Recover the pointer to the instance data.
     //
-    pUSBHKeyboard = (tUSBHKeyboard *)ulInstance;
+    pHIDInstance = (tHIDInstance *) ulInstance;
+    pUSBHKeyboard = (tUSBHKeyboard *) pHIDInstance->ulCBData;
 
     //
     // Remeber the fact that this is set.
@@ -389,11 +396,13 @@ USBHKeyboardInit(unsigned int ulInstance)
 {
     unsigned char ucModData;
     tUSBHKeyboard *pUSBHKeyboard;
+    tHIDInstance *pHIDInstance;
 
     //
     // Recover the pointer to the instance data.
     //
-    pUSBHKeyboard = (tUSBHKeyboard *)ulInstance;
+    pHIDInstance = (tHIDInstance *) ulInstance;
+    pUSBHKeyboard = (tUSBHKeyboard *) pHIDInstance->ulCBData;
 
     //
     // Set the initial rate to only update on keyboard state changes.
@@ -451,11 +460,13 @@ unsigned int
 USBHKeyboardPollRateSet(unsigned int ulInstance, unsigned int ulPollRate)
 {
     tUSBHKeyboard *pUSBHKeyboard;
+    tHIDInstance *pHIDInstance;
 
     //
     // Recover the pointer to the instance data.
     //
-    pUSBHKeyboard = (tUSBHKeyboard *)ulInstance;
+    pHIDInstance = (tHIDInstance *) ulInstance;
+    pUSBHKeyboard = (tUSBHKeyboard *) pHIDInstance->ulCBData;
 
     //
     // Send the Set Idle command to the USB keyboard.

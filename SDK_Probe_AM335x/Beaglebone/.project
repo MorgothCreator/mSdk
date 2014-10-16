@@ -81,11 +81,6 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>beaglebone/BoardConfig.cmd</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/SDK/board/am335x/beaglebone/BoardConfig.cmd</locationURI>
-		</link>
-		<link>
 			<name>beaglebone/board_init.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/SDK/board/am335x/beaglebone/board_init.c</locationURI>
@@ -876,14 +871,19 @@
 			<locationURI>PARENT-2-PROJECT_LOC/SDK/platform/am33/sys/core_init.h</locationURI>
 		</link>
 		<link>
-			<name>am33/sys/cp15.asm</name>
+			<name>am33/sys/cp15.S</name>
 			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/SDK/platform/am33/sys/cp15.asm</locationURI>
+			<locationURI>PARENT-2-PROJECT_LOC/SDK/platform/am33/sys/cp15.S</locationURI>
 		</link>
 		<link>
 			<name>am33/sys/cp15.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/SDK/platform/am33/sys/cp15.h</locationURI>
+		</link>
+		<link>
+			<name>am33/sys/exceptionhandler.S</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/SDK/platform/am33/sys/exceptionhandler.S</locationURI>
 		</link>
 		<link>
 			<name>am33/sys/gpio_definition.h</name>
@@ -899,6 +899,11 @@
 			<name>am33/sys/mmc_definition.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/SDK/platform/am33/sys/mmc_definition.h</locationURI>
+		</link>
+		<link>
+			<name>am33/sys/mmu.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/SDK/platform/am33/sys/mmu.c</locationURI>
 		</link>
 		<link>
 			<name>am33/sys/mmu.h</name>
@@ -1986,11 +1991,6 @@
 			<locationURI>PARENT-2-PROJECT_LOC/SDK/platform/am33/interface/usblib/include/usbmsc.h</locationURI>
 		</link>
 		<link>
-			<name>am33/lib/am335x/system_config/system.lib</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/SDK/platform/am33/lib/am335x/system_config/system.lib</locationURI>
-		</link>
-		<link>
 			<name>lib/lib/gfx/bmp/bmp.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/SDK/lib/lib/gfx/bmp/bmp.c</locationURI>
@@ -2074,6 +2074,11 @@
 			<name>lib/lib/gfx/jpg/IJG/cdjpeg.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/SDK/lib/lib/gfx/jpg/IJG/cdjpeg.h</locationURI>
+		</link>
+		<link>
+			<name>lib/lib/gfx/jpg/IJG/jcapimin.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/SDK/lib/lib/gfx/jpg/IJG/jcapimin.c</locationURI>
 		</link>
 		<link>
 			<name>lib/lib/gfx/jpg/IJG/jcapistd.c</name>

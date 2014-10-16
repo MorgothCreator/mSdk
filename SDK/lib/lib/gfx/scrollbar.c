@@ -20,17 +20,20 @@
  */
 
 #include <stdbool.h>
+#include <stdlib.h>
 #include "scrollbar.h"
+#include "button.h"
+#include "window_def.h"
 #include "api/lcd_def.h"
 #include "api/lcd_api.h"
 #include "../generic.h"
 #include "controls_definition.h"
-#include "buton.h"
 #include "board_properties.h"
 //#######################################################################################
 static void paint_scrollbar(tScrollBar* settings, tDisplay *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len, tControlCommandData* control_comand)
 {
 	unsigned int color = 0;
+	tWindow *ParentWindow = (tWindow*)settings->Internals.ParentWindow;
 	tRectangle back_up_clip = pDisplay->sClipRegion;
 	pDisplay->sClipRegion.sXMin = x_start;
 	pDisplay->sClipRegion.sYMin = y_start;
@@ -39,9 +42,11 @@ static void paint_scrollbar(tScrollBar* settings, tDisplay *pDisplay, signed int
 	clip_limit(&pDisplay->sClipRegion, &back_up_clip);
 	if(settings->Internals.NeedEntireRefresh == true || settings->Internals.NeedEntireRepaint == true || settings->Internals.Control.Initiated == false)
 	{
-		color = controls_color.Control_Color_Enabled_Border_Push;
+		if(settings->Enabled) color = controls_color.Control_Color_Enabled_Border_Push;
+		else color = settings->Color.Disabled.Border;
 		put_rectangle(pDisplay, x_start, y_start, x_len, y_len, false, controlls_change_color(color, -2));
 		put_rectangle(pDisplay, x_start + 1, y_start + 1, x_len - 2, y_len - 2, true, color);
+		control_comand->WindowRefresh |= true;
 	}
 
 	signed int ValueBetweenMinAndMax = (settings->Internals.OldMaximum - settings->Internals.OldMinimum);
@@ -53,26 +58,34 @@ static void paint_scrollbar(tScrollBar* settings, tDisplay *pDisplay, signed int
 
 	if(settings->Size.X < settings->Size.Y)
 	{
-		BtnUpSettings->Position.X = settings->Internals.Position.X + 2;
-		BtnUpSettings->Position.Y = settings->Internals.Position.Y + 2;
+		BtnUpSettings->Position.X = 2;
+		BtnUpSettings->Position.Y = 2;
+		BtnUpSettings->Internals.PositionOffset.X = x_start - ParentWindow->Internals.Position.X;
+		BtnUpSettings->Internals.PositionOffset.Y = y_start - ParentWindow->Internals.Position.Y;
 		BtnUpSettings->Size.X = settings->Internals.Size.X - 4;
 		BtnUpSettings->Size.Y = settings->Internals.Size.X - 4;
 
-		BtnDnSettings->Position.X = settings->Internals.Position.X + 2;
-		BtnDnSettings->Position.Y = (settings->Internals.Position.Y + settings->Internals.Size.Y) - (settings->Internals.Size.X - 2);
+		BtnDnSettings->Position.X = 2;
+		BtnDnSettings->Position.Y = settings->Internals.Size.Y - (settings->Internals.Size.X - 2);
+		BtnDnSettings->Internals.PositionOffset.X = x_start - ParentWindow->Internals.Position.X;
+		BtnDnSettings->Internals.PositionOffset.Y = y_start - ParentWindow->Internals.Position.Y;
 		BtnDnSettings->Size.X = settings->Internals.Size.X - 4;
 		BtnDnSettings->Size.Y = settings->Internals.Size.X - 4;
 	}
 	else
 	{
 		/* Left */
-		BtnUpSettings->Position.X = settings->Internals.Position.X + 2;
-		BtnUpSettings->Position.Y = settings->Internals.Position.Y + 2;
+		BtnUpSettings->Position.X = 2;
+		BtnUpSettings->Position.Y = 2;
+		BtnUpSettings->Internals.PositionOffset.X = x_start - ParentWindow->Internals.Position.X;
+		BtnUpSettings->Internals.PositionOffset.Y = y_start - ParentWindow->Internals.Position.Y;
 		BtnUpSettings->Size.X = settings->Internals.Size.Y - 4;
 		BtnUpSettings->Size.Y = settings->Internals.Size.Y - 4;
 		/* Right */
-		BtnDnSettings->Position.X = (settings->Internals.Position.X + settings->Internals.Size.X) - (settings->Internals.Size.Y - 2);
-		BtnDnSettings->Position.Y = settings->Internals.Position.Y + 2;
+		BtnDnSettings->Position.X = settings->Internals.Size.X - (settings->Internals.Size.Y - 2);
+		BtnDnSettings->Position.Y = 2;
+		BtnDnSettings->Internals.PositionOffset.X = x_start - ParentWindow->Internals.Position.X;
+		BtnDnSettings->Internals.PositionOffset.Y = y_start - ParentWindow->Internals.Position.Y;
 		BtnDnSettings->Size.X = settings->Internals.Size.Y - 4;
 		BtnDnSettings->Size.Y = settings->Internals.Size.Y - 4;
 	}
@@ -80,17 +93,16 @@ static void paint_scrollbar(tScrollBar* settings, tDisplay *pDisplay, signed int
 	if(control_comand->Cursor != Cursor_NoAction || settings->Internals.NeedEntireRefresh == true || settings->Internals.NeedEntireRepaint == true)
 	{
 		BtnUpSettings->Internals.NeedEntireRefresh = settings->Internals.NeedEntireRefresh;
+		BtnUpSettings->Enabled = settings->Enabled;
 		CursorState back = control_comand->Cursor;
 		if(BtnUpSettings->Internals.NeedEntireRefresh) control_comand->Cursor = Cursor_Up;
 		button((void*)BtnUpSettings, control_comand);
-		control_comand->Cursor = back;
-	}
+		//control_comand->Cursor = back;
 
-	if(control_comand->Cursor != Cursor_NoAction || settings->Internals.NeedEntireRefresh == true || settings->Internals.NeedEntireRepaint == true)
-	{
 		BtnDnSettings->Internals.NeedEntireRefresh = settings->Internals.NeedEntireRefresh;
-		CursorState back = control_comand->Cursor;
-		if(BtnDnSettings->Internals.NeedEntireRefresh) control_comand->Cursor = Cursor_Up;
+		BtnDnSettings->Enabled = settings->Enabled;
+		//CursorState back = control_comand->Cursor;
+		//if(BtnDnSettings->Internals.NeedEntireRefresh) control_comand->Cursor = Cursor_Up;
 		button((void*)BtnDnSettings, control_comand);
 		control_comand->Cursor = back;
 	}
@@ -113,12 +125,14 @@ static void paint_scrollbar(tScrollBar* settings, tDisplay *pDisplay, signed int
 			{
 				settings->Value--;
 				scroll_internal_modified = true;
+				//control_comand->WindowRefresh |= true;
 				//settings->Internals.NeedEntireRefresh = true;
 			}
 			else
 			{
 				settings->Internals.NeedEntireRefresh = false;
-				control_comand->CursorCoordonateUsed = true;
+				//control_comand->CursorCoordonateUsed = true;
+				//control_comand->WindowRefresh |= true;
 			}
 		}
 	}
@@ -132,12 +146,14 @@ static void paint_scrollbar(tScrollBar* settings, tDisplay *pDisplay, signed int
 			{
 				settings->Value++;
 				scroll_internal_modified = true;
+				//control_comand->WindowRefresh |= true;
 				//settings->Internals.NeedEntireRefresh = true;
 			}
 			else
 			{
 				settings->Internals.NeedEntireRefresh = false;
-				control_comand->CursorCoordonateUsed = true;
+				//control_comand->CursorCoordonateUsed = true;
+				//control_comand->WindowRefresh |= true;
 			}
 		}
 	}
@@ -148,87 +164,90 @@ static void paint_scrollbar(tScrollBar* settings, tDisplay *pDisplay, signed int
 		ValueBetweenMinAndMax = 1;
 		if(settings->Size.X < settings->Size.Y)
 		{
-			ButtonSettings->Position.X = settings->Position.X + 2;
-			ButtonSettings->Position.Y = settings->Position.Y + 2 + (settings->Size.X - 2);
+			ButtonSettings->Position.X = 2;
+			ButtonSettings->Position.Y = settings->Size.X;
+			//ButtonSettings->Position.X = settings->Position.X + 2;
+			//ButtonSettings->Position.Y = settings->Position.Y + 2 + (settings->Size.X - 2);
 			ButtonSettings->Size.X = settings->Size.X - 4;
 			ButtonSettings->Size.Y = settings->Size.Y - 4 - ((settings->Size.X - 2)<<1);
 		}
 		else
 		{
-			ButtonSettings->Position.X = settings->Position.X + 2 + (settings->Size.Y - 2);
-			ButtonSettings->Position.Y = settings->Position.Y + 2;
+			ButtonSettings->Position.X = settings->Size.Y;
+			ButtonSettings->Position.Y = 2;
+			//ButtonSettings->Position.X = settings->Position.X + 2 + (settings->Size.Y - 2);
+			//ButtonSettings->Position.Y = settings->Position.Y + 2;
 			ButtonSettings->Size.X = settings->Size.X - 4 - ((settings->Size.Y - 2)<<1);
 			ButtonSettings->Size.Y = settings->Size.Y - 4;
 		}
 	}
 	else
 	{
-		if(settings->Size.X < settings->Size.Y)
+		if(control_comand->CursorCoordonateUsed == false&&
+				settings->Enabled == true &&
+					settings->Visible == true)
 		{
-			ButtonSettings->Size.Y = BtnSize;
-			//signed int Steps = settings->Size.Y - 4 - BtnSize;
-			ButtonSettings->Position.X = settings->Position.X + 2;
-			//ButtonSettings->Position.Y = settings->Position.Y + 2;
-			ButtonSettings->Size.X = settings->Size.X - 4;
-			//ButtonSettings->Size.Y = settings->Size.Y - 4;
-			if(ButtonSettings->Events.CursorDown == true)
+			if(settings->Size.X < settings->Size.Y)
 			{
-				settings->Internals.CoordonateOfTouchDown = control_comand->Y;
-				settings->Internals.CoordonateOfButtonDown = ButtonSettings->Position.Y;
-				ButtonSettings->Events.CursorDown = false;
-				settings->Internals.OffsetButtonCoord = ButtonSettings->Position.Y - settings->Position.Y - (settings->Size.X - 2);
+				ButtonSettings->Size.Y = BtnSize;
+				////signed int Steps = settings->Size.Y - 4 - BtnSize;
+				//ButtonSettings->Position.X = settings->Position.X + 2;
+				////ButtonSettings->Position.Y = settings->Position.Y + 2;
+				ButtonSettings->Size.X = settings->Size.X - 4;
+				//ButtonSettings->Size.Y = settings->Size.Y - 4;
+				if(ButtonSettings->Events.CursorDown == true)
+				{
+					settings->Internals.CoordonateOfTouchDown = control_comand->Y;
+					settings->Internals.CoordonateOfButtonDown = ButtonSettings->Internals.Position.Y - settings->Internals.PositionOffset.Y;
+					ButtonSettings->Events.CursorDown = false;
+				}
+				else if(control_comand->Cursor == Cursor_Move && settings->Internals.CursorDownInsideBox == true && ButtonSettings->Internals.CursorDownInsideBox == true)
+				{
+					ButtonSettings->Position.Y = settings->Internals.CoordonateOfButtonDown + ((control_comand->Y - (ParentWindow->Internals.Position.Y)) - settings->Internals.CoordonateOfTouchDown);
+
+					if(ButtonSettings->Position.Y < settings->Position.Y + (settings->Size.X - 2) + 2) ButtonSettings->Position.Y = settings->Position.Y + 2 + (settings->Size.X - 2);
+					else if((ButtonSettings->Position.Y + ButtonSettings->Size.Y) > (settings->Position.Y + settings->Size.Y) - 2  - (settings->Size.X - 2)) ButtonSettings->Position.Y = ((settings->Position.Y + settings->Size.Y) - 2) - ButtonSettings->Size.Y   - (settings->Size.X - 2);
+
+					settings->Value = percentage_to(settings->Minimum, settings->Maximum, settings->Size.Y - 4 - BtnSize - ((settings->Size.X - 2)<<1), (ButtonSettings->Position.Y - (settings->Position.Y + 2) - (settings->Size.X - 2)));
+
+					CursorBtnSelfModified = true;
+				}
 			}
-			else if(control_comand->Cursor == Cursor_Move && settings->Internals.CursorDownInsideBox == true && ButtonSettings->Internals.CursorDownInsideBox == true)
+			else
 			{
-				ButtonSettings->Position.Y = settings->Internals.CoordonateOfButtonDown + (control_comand->Y - settings->Internals.CoordonateOfTouchDown);
+				ButtonSettings->Size.X = BtnSize;
+				////signed int Steps = settings->Size.X - 4 - BtnSize;
+				//ButtonSettings->Position.Y = settings->Position.Y + 2;
+				////ButtonSettings->Position.X = settings->Position.X + 2;
+				ButtonSettings->Size.Y = settings->Size.Y - 4;
+				//ButtonSettings->Size.X = settings->Size.X - 4;
+				if(ButtonSettings->Events.CursorDown == true)
+				{
+					settings->Internals.CoordonateOfTouchDown = control_comand->X;
+					settings->Internals.CoordonateOfButtonDown = ButtonSettings->Internals.Position.X;
+					ButtonSettings->Events.CursorDown = false;
+				}
+				else if(control_comand->Cursor == Cursor_Move && settings->Internals.CursorDownInsideBox == true && ButtonSettings->Internals.CursorDownInsideBox == true)
+				{
+					ButtonSettings->Position.X = settings->Internals.CoordonateOfButtonDown + ((control_comand->X - (ParentWindow->Internals.Position.X)) - settings->Internals.CoordonateOfTouchDown);
 
-				if(ButtonSettings->Position.Y < settings->Position.Y + (settings->Size.X - 2) + 2) ButtonSettings->Position.Y = settings->Position.Y + 2 + (settings->Size.X - 2);
-				else if((ButtonSettings->Position.Y + ButtonSettings->Size.Y) > (settings->Position.Y + settings->Size.Y) - 2  - (settings->Size.X - 2)) ButtonSettings->Position.Y = ((settings->Position.Y + settings->Size.Y) - 2) - ButtonSettings->Size.Y   - (settings->Size.X - 2);
+					if(ButtonSettings->Position.X < settings->Position.X + (settings->Size.Y - 2) + 2) ButtonSettings->Position.X = settings->Position.X + 2 + (settings->Size.Y - 2);
+					else if((ButtonSettings->Position.X + ButtonSettings->Size.X) > (settings->Position.X + settings->Size.X) - 2  - (settings->Size.Y - 2)) ButtonSettings->Position.X = ((settings->Position.X + settings->Size.X) - 2) - ButtonSettings->Size.X   - (settings->Size.Y - 2);
 
-				settings->Internals.OffsetButtonCoord = ButtonSettings->Position.Y - settings->Position.Y - (settings->Size.X - 2);
+					settings->Value = percentage_to(settings->Minimum, settings->Maximum, settings->Size.X - 4 - BtnSize - ((settings->Size.Y - 2)<<1), (ButtonSettings->Position.X - (settings->Position.X + 2) - (settings->Size.Y - 2)));
 
-				//if(BtnSize > settings->Size.MinBtnSize) settings->Value = (ButtonSettings->Position.Y - (settings->Position.Y + 2)) + settings->Minimum;
-				/*else */
-				settings->Value = percentage_to(settings->Minimum, settings->Maximum, settings->Size.Y - 4 - BtnSize - ((settings->Size.X - 2)<<1), (ButtonSettings->Position.Y - (settings->Position.Y + 2) - (settings->Size.X - 2)));
-
-				CursorBtnSelfModified = true;
-			}
-		}
-		else
-		{
-			ButtonSettings->Size.X = BtnSize;
-			//signed int Steps = settings->Size.X - 4 - BtnSize;
-			ButtonSettings->Position.Y = settings->Position.Y + 2;
-			//ButtonSettings->Position.X = settings->Position.X + 2;
-			ButtonSettings->Size.Y = settings->Size.Y - 4;
-			//ButtonSettings->Size.X = settings->Size.X - 4;
-			if(ButtonSettings->Events.CursorDown == true)
-			{
-				settings->Internals.CoordonateOfTouchDown = control_comand->X;
-				settings->Internals.CoordonateOfButtonDown = ButtonSettings->Position.X;
-				ButtonSettings->Events.CursorDown = false;
-				settings->Internals.OffsetButtonCoord = ButtonSettings->Position.X - settings->Position.X - (settings->Size.Y - 2);
-			}
-			else if(control_comand->Cursor == Cursor_Move && settings->Internals.CursorDownInsideBox == true && ButtonSettings->Internals.CursorDownInsideBox == true)
-			{
-				ButtonSettings->Position.X = settings->Internals.CoordonateOfButtonDown + (control_comand->X - settings->Internals.CoordonateOfTouchDown);
-
-				if(ButtonSettings->Position.X < settings->Position.X + (settings->Size.Y - 2) + 2) ButtonSettings->Position.X = settings->Position.X + 2 + (settings->Size.Y - 2);
-				else if((ButtonSettings->Position.X + ButtonSettings->Size.X) > (settings->Position.X + settings->Size.X) - 2  - (settings->Size.Y - 2)) ButtonSettings->Position.X = ((settings->Position.X + settings->Size.X) - 2) - ButtonSettings->Size.X   - (settings->Size.Y - 2);
-
-				settings->Internals.OffsetButtonCoord = ButtonSettings->Position.X - settings->Position.X - (settings->Size.Y - 2);
-
-				//if(BtnSize > settings->Size.MinBtnSize) settings->Value = (ButtonSettings->Position.X - (settings->Position.X + 2)) + settings->Minimum;
-				/*else */
-				settings->Value = percentage_to(settings->Minimum, settings->Maximum, settings->Size.X - 4 - BtnSize - ((settings->Size.Y - 2)<<1), (ButtonSettings->Position.X - (settings->Position.X + 2) - (settings->Size.Y - 2)));
-
-				CursorBtnSelfModified = true;
+					CursorBtnSelfModified = true;
+				}
 			}
 		}
 	}
+
+	bool ValueIsChangedExternaly = false;
 	if(settings->Internals.OldValue != settings->Value)
 	{
 		settings->Internals.OldValue = settings->Value;
+		//settings->Events.ValueChanged = true;
+		ValueIsChangedExternaly = true;
 		settings->Events.ValueChanged = true;
 		if(settings->Events.OnValueChanged.CallBack)
 		{
@@ -240,26 +259,28 @@ static void paint_scrollbar(tScrollBar* settings, tDisplay *pDisplay, signed int
 	else  ButtonSettings->Color.Scren = settings->Color.Disabled.Buton;
 	if(BtnSize > settings->Size.MinBtnSize)
 	{
-		if(settings->Size.X < settings->Size.Y) ButtonSettings->Position.Y = (settings->Value + (settings->Position.Y + 2) + (settings->Size.X - 2)) - settings->Minimum;
-		else 									ButtonSettings->Position.X = (settings->Value + (settings->Position.X + 2) + (settings->Size.Y - 2)) - settings->Minimum;
+		if(settings->Size.X < settings->Size.Y) ButtonSettings->Position.Y = (settings->Value + 2 + (settings->Size.X - 2)) - settings->Minimum;
+		else 									ButtonSettings->Position.X = (settings->Value + 2 + (settings->Size.Y - 2)) - settings->Minimum;
 	}
 	else
 	{
-		if(settings->Size.X < settings->Size.Y) ButtonSettings->Position.Y = (settings->Position.Y + 2) + (settings->Size.X - 2) + to_percentage(settings->Minimum, settings->Maximum, settings->Size.Y - ((settings->Size.X - 2)<<1) - 4 - settings->Size.MinBtnSize, settings->Value);
-		else 									ButtonSettings->Position.X = (settings->Position.X + 2) + (settings->Size.Y - 2) + to_percentage(settings->Minimum, settings->Maximum, settings->Size.X - ((settings->Size.Y - 2)<<1) - 4 - settings->Size.MinBtnSize, settings->Value);
+		if(settings->Size.X < settings->Size.Y) ButtonSettings->Position.Y = 2 + (settings->Size.X - 2) + to_percentage(settings->Minimum, settings->Maximum, settings->Size.Y - ((settings->Size.X - 2)<<1) - 4 - settings->Size.MinBtnSize, settings->Value);
+		else 									ButtonSettings->Position.X = 2 + (settings->Size.Y - 2) + to_percentage(settings->Minimum, settings->Maximum, settings->Size.X - ((settings->Size.Y - 2)<<1) - 4 - settings->Size.MinBtnSize, settings->Value);
 	}
 
 	if(settings->Internals.NeedEntireRefresh == true || settings->Internals.NeedEntireRepaint == true)
 	{
 		ButtonSettings->Internals.NoPaintBackGround = true;
 		ButtonSettings->Internals.NeedEntireRefresh = true;
+		ButtonSettings->Enabled = settings->Enabled;
 		CursorState back = control_comand->Cursor;
 		control_comand->Cursor = Cursor_Up;
 		button((void*)ButtonSettings, control_comand);
 		control_comand->Cursor = back;
 		ButtonSettings->Internals.NoPaintBackGround = false;
 	}
-	else if(ButtonSettings->Position.X != ButtonSettings->Internals.Position.X || ButtonSettings->Position.Y != ButtonSettings->Internals.Position.Y)
+	else if(ButtonSettings->Position.X + ParentWindow->Internals.Position.X + ButtonSettings->Internals.PositionOffset.X != ButtonSettings->Internals.Position.X ||
+			ButtonSettings->Position.Y + ParentWindow->Internals.Position.Y + ButtonSettings->Internals.PositionOffset.Y != ButtonSettings->Internals.Position.Y)
 	{
 		ButtonSettings->Internals.NeedEntireRefresh = true;
 		CursorState back = control_comand->Cursor;
@@ -272,7 +293,7 @@ static void paint_scrollbar(tScrollBar* settings, tDisplay *pDisplay, signed int
 	{
 		CursorState back = control_comand->Cursor;
 		if(CursorBtnSelfModified)  control_comand->Cursor = Cursor_Down;
-		if(settings->Events.ValueChanged)
+		if(ValueIsChangedExternaly)
 		{
 			ButtonSettings->Internals.NeedEntireRefresh = true;
 			control_comand->Cursor = Cursor_Up;
@@ -293,14 +314,14 @@ static void paint_scrollbar(tScrollBar* settings, tDisplay *pDisplay, signed int
 //#######################################################################################
 void scrollbar(tScrollBar *settings, tControlCommandData* control_comand)
 {
-	if((control_comand->CursorCoordonateUsed == true && settings->Internals.NeedEntireRefresh == false) || settings == NULL) return;
+	if(settings == NULL) return;
 	if(control_comand->Comand != Control_Nop)
 	{
 		/* Parse commands */
 #ifdef NO_ENUM_ON_SWITCH
 		switch((unsigned char)control_comand->Comand)
 #else
-		switch(control_comand->Comand)
+		switch((int)control_comand->Comand)
 #endif
 		{
 		case Control_Entire_Repaint:
@@ -332,55 +353,79 @@ void scrollbar(tScrollBar *settings, tControlCommandData* control_comand)
 			return;
 		}
 	}
+	tWindow *ParentWindow = (tWindow*)settings->Internals.ParentWindow;
 	if(settings->Internals.Control.Initiated == false)
 	{
-		settings->Internals.Position.X = settings->Position.X;
-		settings->Internals.Position.Y = settings->Position.Y;
+		if(ParentWindow)
+		{
+			settings->Internals.Position.X = settings->Position.X + ParentWindow->Internals.Position.X + settings->Internals.PositionOffset.X;
+			settings->Internals.Position.Y = settings->Position.Y + ParentWindow->Internals.Position.Y + settings->Internals.PositionOffset.Y;
+		}
+		else
+		{
+			settings->Internals.Position.X = settings->Position.X;
+			settings->Internals.Position.Y = settings->Position.Y;
+		}
 		settings->Internals.Size.X = settings->Size.X;
 		settings->Internals.Size.Y = settings->Size.Y;
 		settings->Internals.OldMinimum = settings->Minimum;
 		settings->Internals.OldMaximum = settings->Maximum;
 		settings->Internals.OldValue = settings->Value;
 
-		settings->Internals.BtnSettings = new_button(settings->Internals.pDisplay);
+		settings->Internals.BtnSettings = new_button(settings->Internals.ParentWindow);
 		tButton* ButtonSettings = settings->Internals.BtnSettings;
 		ButtonSettings->Internals.NoPaintBackGround = false;
 		ButtonSettings->Internals.ContinuouslyPushTimerDisabled = true;
+		ButtonSettings->Enabled = settings->Enabled;
 
-		settings->Internals.BtnUpSettings = new_button(settings->Internals.pDisplay);
+		settings->Internals.BtnUpSettings = new_button(settings->Internals.ParentWindow);
 		tButton* BtnUpSettings = settings->Internals.BtnUpSettings;
 		BtnUpSettings->Internals.NoPaintBackGround = true;
+		BtnUpSettings->Enabled = settings->Enabled;
 
-		settings->Internals.BtnDnSettings = new_button(settings->Internals.pDisplay);
+		settings->Internals.BtnDnSettings = new_button(settings->Internals.ParentWindow);
 		tButton* BtnDnSettings = settings->Internals.BtnDnSettings;
 		BtnDnSettings->Internals.NoPaintBackGround = true;
+		BtnDnSettings->Enabled = settings->Enabled;
 		if(settings->Size.X < settings->Size.Y)
 		{
-			settings->Internals.BtnSettings->Position.Y = settings->Internals.Position.Y + 2 + (settings->Size.X - 2);
-			settings->Internals.OffsetButtonCoord = ButtonSettings->Position.Y - settings->Position.Y - (settings->Size.X - 2);
+			settings->Internals.BtnSettings->Position.X = 2;
+			settings->Internals.BtnSettings->Position.Y = settings->Size.X;
+			settings->Internals.BtnSettings->Internals.PositionOffset.Y = settings->Internals.Position.Y - ParentWindow->Internals.Position.Y;
+			settings->Internals.BtnSettings->Internals.PositionOffset.X = settings->Internals.Position.X - ParentWindow->Internals.Position.X;
 
-			BtnUpSettings->Position.X = settings->Internals.Position.X + 2;
-			BtnUpSettings->Position.Y = settings->Internals.Position.Y + 2;
+			BtnUpSettings->Position.X = 2;
+			BtnUpSettings->Position.Y = 2;
+			BtnUpSettings->Internals.PositionOffset.X = settings->Internals.Position.X;
+			BtnUpSettings->Internals.PositionOffset.Y = settings->Internals.Position.Y;
 			BtnUpSettings->Size.X = settings->Internals.Size.X - 4;
 			BtnUpSettings->Size.Y = settings->Internals.Size.X - 4;
 
-			BtnDnSettings->Position.X = settings->Internals.Position.X + 2;
-			BtnDnSettings->Position.Y = (settings->Internals.Position.Y + settings->Internals.Size.Y) - (settings->Internals.Size.X - 2);
+			BtnDnSettings->Position.X = 2;
+			BtnDnSettings->Position.Y = settings->Internals.Size.Y - (settings->Internals.Size.X - 2);
+			BtnDnSettings->Internals.PositionOffset.X = settings->Internals.Position.X;
+			BtnDnSettings->Internals.PositionOffset.Y = settings->Internals.Position.Y;
 			BtnDnSettings->Size.X = settings->Internals.Size.X - 4;
 			BtnDnSettings->Size.Y = settings->Internals.Size.X - 4;
 		}
 		else
 		{
-			settings->Internals.BtnSettings->Position.X = settings->Internals.Position.X + 2 + (settings->Size.Y - 2);
-			settings->Internals.OffsetButtonCoord = ButtonSettings->Position.X - settings->Position.X - (settings->Size.Y - 2);
+			settings->Internals.BtnSettings->Position.X = settings->Size.Y;
+			settings->Internals.BtnSettings->Position.Y = 2;
+			settings->Internals.BtnSettings->Internals.PositionOffset.X = settings->Internals.Position.X - ParentWindow->Internals.Position.X;
+			settings->Internals.BtnSettings->Internals.PositionOffset.Y = settings->Internals.Position.Y - ParentWindow->Internals.Position.Y;
 			/* Left */
-			BtnUpSettings->Position.X = settings->Internals.Position.X + 2;
-			BtnUpSettings->Position.Y = settings->Internals.Position.Y + 2;
+			BtnUpSettings->Position.X = 2;
+			BtnUpSettings->Position.Y = 2;
+			BtnUpSettings->Internals.PositionOffset.X = settings->Internals.Position.X;
+			BtnUpSettings->Internals.PositionOffset.Y = settings->Internals.Position.Y;
 			BtnUpSettings->Size.X = settings->Internals.Size.Y - 4;
 			BtnUpSettings->Size.Y = settings->Internals.Size.Y - 4;
 			/* Right */
-			BtnDnSettings->Position.X = (settings->Internals.Position.X + settings->Internals.Size.X) - (settings->Internals.Size.Y - 2);
-			BtnDnSettings->Position.Y = settings->Internals.Position.Y + 2;
+			BtnDnSettings->Position.X = settings->Internals.Size.X - (settings->Internals.Size.Y - 2);
+			BtnDnSettings->Position.Y = 2;
+			BtnDnSettings->Internals.PositionOffset.X = settings->Internals.Position.X;
+			BtnDnSettings->Internals.PositionOffset.Y = settings->Internals.Position.Y;
 			BtnDnSettings->Size.X = settings->Internals.Size.Y - 4;
 			BtnDnSettings->Size.Y = settings->Internals.Size.Y - 4;
 		}
@@ -389,15 +434,35 @@ void scrollbar(tScrollBar *settings, tControlCommandData* control_comand)
 	if(settings->Value > settings->Maximum) settings->Value = settings->Maximum;
 	if(settings->Value < settings->Minimum) settings->Value = settings->Minimum;
 	/* Verify if position on size has been modified */
-	if(settings->Position.X != settings->Internals.Position.X ||
+	if(ParentWindow)
+	{
+		if(((settings->Position.X + ParentWindow->Internals.Position.X + settings->Internals.PositionOffset.X) != settings->Internals.Position.X ||
+				(settings->Position.Y + ParentWindow->Internals.Position.Y + settings->Internals.PositionOffset.Y) != settings->Internals.Position.Y ||
+					settings->Size.X != settings->Internals.Size.X ||
+						settings->Size.Y != settings->Internals.Size.Y ||
+							settings->Size.MinBtnSize != settings->Internals.Size.MinBtnSize ||
+								settings->Minimum != settings->Internals.OldMinimum||
+									settings->Maximum != settings->Internals.OldMaximum ||
+										settings->Value != settings->Internals.OldValue ||
+											settings->Internals.OldStateEnabled != settings->Enabled ||
+												ParentWindow->Internals.OldStateEnabled != settings->Internals.ParentWindowStateEnabled) &&
+													settings->Visible == true)
+														settings->Internals.NeedEntireRefresh = true;
+	}
+	else
+	{
+		if((settings->Position.X != settings->Internals.Position.X ||
 			settings->Position.Y != settings->Internals.Position.Y ||
 				settings->Size.X != settings->Internals.Size.X ||
 					settings->Size.Y != settings->Internals.Size.Y ||
 						settings->Size.MinBtnSize != settings->Internals.Size.MinBtnSize ||
 							settings->Minimum != settings->Internals.OldMinimum||
 								settings->Maximum != settings->Internals.OldMaximum ||
-									settings->Value != settings->Internals.OldValue)
-										settings->Internals.NeedEntireRefresh = true;
+									settings->Internals.OldStateEnabled != settings->Enabled ||
+										settings->Value != settings->Internals.OldValue) &&
+											settings->Visible == true)
+												settings->Internals.NeedEntireRefresh = true;
+	}
 
 	signed int X_StartBox = settings->Internals.Position.X;
 	signed int Y_StartBox = settings->Internals.Position.Y;
@@ -406,9 +471,9 @@ void scrollbar(tScrollBar *settings, tControlCommandData* control_comand)
 	tDisplay *pDisplay = settings->Internals.pDisplay;
 
 	/*Clear background of box with actual painted dimensions and positions if they been changed*/
-	if(settings->Internals.NeedEntireRefresh == true || (settings->Internals.OldStateVisible != settings->Visible && settings->Visible == false))
+	if(settings->Internals.NeedEntireRefresh == true || settings->Internals.OldStateVisible != settings->Visible)
 	{
-		if(!settings->Internals.NoPaintBackGround)
+		if(!settings->Internals.NoPaintBackGround || !settings->Visible)
 		{
 			settings->Internals.OldStateVisible = settings->Visible;
 			tRectangle back_up_clip = pDisplay->sClipRegion;
@@ -420,25 +485,33 @@ void scrollbar(tScrollBar *settings, tControlCommandData* control_comand)
 			put_rectangle(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, true, settings->Color.Scren);
 			box_cache_clean(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox);
 			pDisplay->sClipRegion = back_up_clip;
+			if(!settings->Visible) return;
 		}
+		settings->Internals.NeedEntireRefresh = true;
 	}
-
 	/* Verify if is Entire refresh, entire repaint, or state changed */
 	if((settings->Internals.NeedEntireRefresh == true ||
 			settings->Internals.NeedEntireRepaint == true ||
-				settings->Internals.Control.Initiated == false ||
-					//settings->Enabled == true ||
-						settings->Internals.OldStateVisible != settings->Visible) &&
-							settings->Visible == true)
+				settings->Internals.Control.Initiated == false) &&
+					settings->Visible == true)
 	{
 		/* Copy new locations and dimensions to actual locations and dimensions */
-		settings->Internals.Position.X = settings->Position.X;
-		settings->Internals.Position.Y = settings->Position.Y;
+		if(ParentWindow)
+		{
+			settings->Internals.Position.X = settings->Position.X + ParentWindow->Internals.Position.X + settings->Internals.PositionOffset.X;
+			settings->Internals.Position.Y = settings->Position.Y + ParentWindow->Internals.Position.Y + settings->Internals.PositionOffset.Y;
+		}
+		else
+		{
+			settings->Internals.Position.X = settings->Position.X;
+			settings->Internals.Position.Y = settings->Position.Y;
+		}
 		settings->Internals.Size.X = settings->Size.X;
 		settings->Internals.Size.Y = settings->Size.Y;
 		settings->Internals.Size.MinBtnSize = settings->Size.MinBtnSize;
 		settings->Internals.OldMinimum = settings->Minimum;
 		settings->Internals.OldMaximum = settings->Maximum;
+		if(settings->Size.X == 0 || settings->Size.Y == 0) return;
 		if(settings->Value > settings->Maximum) settings->Value = settings->Internals.OldMaximum;
 		if(settings->Value < settings->Minimum) settings->Value = settings->Internals.OldMinimum;
 		X_StartBox = settings->Internals.Position.X;
@@ -453,13 +526,32 @@ void scrollbar(tScrollBar *settings, tControlCommandData* control_comand)
 		pDisplay->sClipRegion.sXMax = X_StartBox + X_LenBox;
 		pDisplay->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
 		clip_limit(&pDisplay->sClipRegion, &back_up_clip);
+
+		if(settings->Size.X < settings->Size.Y)
+		{
+			settings->Internals.BtnSettings->Position.X = 2;
+			settings->Internals.BtnSettings->Position.Y = settings->Size.X;
+			settings->Internals.BtnSettings->Internals.PositionOffset.Y = settings->Internals.Position.Y - ParentWindow->Internals.Position.Y;
+			settings->Internals.BtnSettings->Internals.PositionOffset.X = settings->Internals.Position.X - ParentWindow->Internals.Position.X;
+		}
+		else
+		{
+			settings->Internals.BtnSettings->Position.X = settings->Size.Y;
+			settings->Internals.BtnSettings->Position.Y = 2;
+			settings->Internals.BtnSettings->Internals.PositionOffset.X = settings->Internals.Position.X - ParentWindow->Internals.Position.X;
+			settings->Internals.BtnSettings->Internals.PositionOffset.Y = settings->Internals.Position.Y - ParentWindow->Internals.Position.Y;
+		}
+
 		paint_scrollbar(settings, pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, control_comand);
 		pDisplay->sClipRegion = back_up_clip;
 		//control_comand->Cursor = _cursor;
+		settings->Internals.ParentWindowStateEnabled = ParentWindow->Internals.OldStateEnabled;
 		settings->Internals.OldStateVisible = settings->Visible;
+		settings->Internals.OldStateEnabled = settings->Enabled;
 		settings->Internals.Control.Initiated = true;
 		settings->Internals.NeedEntireRefresh = false;
 		settings->Internals.NeedEntireRepaint = false;
+		control_comand->WindowRefresh |= true;
 	}
 	if(settings->Internals.OldStateCursor != control_comand->Cursor &&
 					settings->Enabled == true &&
@@ -479,17 +571,20 @@ void scrollbar(tScrollBar *settings, tControlCommandData* control_comand)
 	bool _inside_window = check_if_inside_box(pDisplay->sClipRegion.sXMin, pDisplay->sClipRegion.sYMin, pDisplay->sClipRegion.sXMax - pDisplay->sClipRegion.sXMin, pDisplay->sClipRegion.sYMax - pDisplay->sClipRegion.sYMin, control_comand->X, control_comand->Y);
 	if(!_inside_window) inside_window = false;
 	if(inside_window == true && control_comand->Cursor == Cursor_Down) settings->Internals.CursorDownInsideBox = true;
-	if(settings->Internals.CursorDownInsideBox == true && control_comand->Cursor == Cursor_Up) settings->Internals.CursorDownInsideBox = false;
-	control_comand->CursorCoordonateUsed = settings->Internals.CursorDownInsideBox;
+	if(settings->Internals.CursorDownInsideBox == true && (control_comand->Cursor == Cursor_Up || control_comand->Cursor == Cursor_NoAction)) settings->Internals.CursorDownInsideBox = false;
+	//control_comand->WindowRefresh |= true;
+	//control_comand->CursorCoordonateUsed |= settings->Internals.CursorDownInsideBox;
 }
 //#######################################################################################
-tScrollBar *new_scrollbar(tDisplay *ScreenDisplay)
+tScrollBar *new_scrollbar(void *ParentWindow)
 {
 	tScrollBar* settings = (tScrollBar*)calloc(1, sizeof(tScrollBar));
 
-	if(!settings || !ScreenDisplay) return NULL;
+	if(!settings || !ParentWindow) return NULL;
+	settings->Internals.ParentWindow = ParentWindow;
 
-	settings->Internals.pDisplay = ScreenDisplay;
+	tWindow *_ParentWindow = (tWindow *)ParentWindow;
+	settings->Internals.pDisplay = _ParentWindow->Internals.pDisplay;
 
 	settings->Color.Scren = controls_color.Scren;
 	settings->Color.Enabled.BackGround = controls_color.Control_Color_Enabled_BackGround;

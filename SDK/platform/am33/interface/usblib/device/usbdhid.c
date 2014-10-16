@@ -23,11 +23,11 @@
 //
 //*****************************************************************************
 
-#include "../../../include/hw/hw_usb.h"
-#include "../../../include/hw/hw_types.h"
-#include "../../../include/debug.h"
-#include "../../../include/usb.h"
-#include "../../../include/interrupt.h"
+#include "include/hw/hw_usb.h"
+#include "include/hw/hw_types.h"
+#include "include/debug.h"
+#include "include/usb.h"
+#include "include/interrupt.h"
 #include "../include/usblib.h"
 #include "../include/usbhid.h"
 #include "../include/usbdevice.h"
@@ -84,6 +84,7 @@
 // supporting more than one controller in the future.
 //
 //*****************************************************************************
+#if (USB_NUM_INSTANCE == 2)
 #define USB_BASE_TO_INDEX(BaseAddr, index) do{                   \
                                     if(USB0_BASE==BaseAddr)      \
                                         index = 0;               \
@@ -101,6 +102,21 @@
                                     else                         \
                                         BaseAddr = -1;           \
                                    )
+#else
+#define USB_BASE_TO_INDEX(BaseAddr, index) do{                   \
+                                    if(USB0_BASE==BaseAddr)      \
+                                        index = 0;               \
+                                    else                         \
+                                        index = -1;              \
+                                   }while(0)
+
+#define USB_INDEX_TO_BASE(Index, BaseAddr)   (                   \
+                                    if(0==Index)                 \
+                                        BaseAddr = USB0_BASE;    \
+                                    else                         \
+                                        BaseAddr = -1;           \
+                                   )
+#endif
 
 //*****************************************************************************
 //
@@ -2029,6 +2045,7 @@ USBDHIDCompositeInit(unsigned int ulIndex, const tUSBDHIDDevice *psDevice)
         g_USBInstance[ulIndex].uiSubInterruptNum = SYS_INT_USBSSINT;
         g_USBInstance[ulIndex].uiPHYConfigRegAddr = CFGCHIP2_USBPHYCTRL;
     }
+#if (USB_NUM_INSTANCE == 2)
     else if(ulIndex == 1)
     {
 
@@ -2039,6 +2056,7 @@ USBDHIDCompositeInit(unsigned int ulIndex, const tUSBDHIDDevice *psDevice)
         g_USBInstance[ulIndex].uiSubInterruptNum = SYS_INT_USBSSINT;
         g_USBInstance[ulIndex].uiPHYConfigRegAddr = CFGCHIP2_USB1PHYCTRL;
     }
+#endif
 
     //
     // Initialize the workspace in the passed instance structure.

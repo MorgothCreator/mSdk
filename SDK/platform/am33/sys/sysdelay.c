@@ -84,36 +84,36 @@ void SysDelayTimerSetup(void)
 
 #ifdef DELAY_USE_INTERRUPTS
     /* This function will enable clocks for the DMTimer7 instance */
-    DMTimer7ModuleClkConfig(TimerClkSource_CLK_M_OSC);
+    DMTimer2ModuleClkConfig(TimerClkSource_CLK_M_OSC);
 
 	IntProtectionDisable();
     /* Registering DMTimerIsr */
-    IntRegister(SYS_INT_TINT7, DMTimerIsr);
+    IntRegister(SYS_INT_TINT2, DMTimerIsr);
 
     /* Set the priority */
-    IntPrioritySet(SYS_INT_TINT7, 0, AINTC_HOSTINT_ROUTE_IRQ);
+    IntPrioritySet(SYS_INT_TINT2, 0, AINTC_HOSTINT_ROUTE_IRQ);
 
     /* Enable the system interrupt */
-    IntSystemEnable(SYS_INT_TINT7);
+    IntSystemEnable(SYS_INT_TINT2);
 
     IntProtectionEnable();
-    DMTimerCounterSet(SOC_DMTIMER_7_REGS, TIMER_INITIAL_COUNT);
+    DMTimerCounterSet(SOC_DMTIMER_2_REGS, TIMER_INITIAL_COUNT);
 
     /* Load the load register with the reload count value */
-    DMTimerReloadSet(SOC_DMTIMER_7_REGS, TIMER_INITIAL_COUNT);
+    DMTimerReloadSet(SOC_DMTIMER_2_REGS, TIMER_INITIAL_COUNT);
 
     /* Configure the DMTimer for Auto-reload and compare mode */
-    DMTimerModeConfigure(SOC_DMTIMER_7_REGS, DMTIMER_AUTORLD_NOCMP_ENABLE);
+    DMTimerModeConfigure(SOC_DMTIMER_2_REGS, DMTIMER_AUTORLD_NOCMP_ENABLE);
 
     /* Enable the DMTimer interrupts */
-    DMTimerIntEnable(SOC_DMTIMER_7_REGS, DMTIMER_INT_OVF_EN_FLAG);
+    DMTimerIntEnable(SOC_DMTIMER_2_REGS, DMTIMER_INT_OVF_EN_FLAG);
 
     /* Start the DMTimer */
-    DMTimerEnable(SOC_DMTIMER_7_REGS);
+    DMTimerEnable(SOC_DMTIMER_2_REGS);
 #else
     DMTimer7ModuleClkConfig();
 
-    DMTimerModeConfigure(SOC_DMTIMER_7_REGS, DMTIMER_ONESHOT_NOCMP_ENABLE);
+    DMTimerModeConfigure(SOC_DMTIMER_2_REGS, DMTIMER_ONESHOT_NOCMP_ENABLE);
 #endif
 
 }
@@ -149,10 +149,10 @@ void Sysdelay(unsigned int milliSec)
 #else
     while(milliSec != 0)
     {
-        DMTimerCounterSet(SOC_DMTIMER_7_REGS, 0);
-        DMTimerEnable(SOC_DMTIMER_7_REGS);
-        while(DMTimerCounterGet(SOC_DMTIMER_7_REGS) < 0x5DC0);
-        DMTimerDisable(SOC_DMTIMER_7_REGS);
+        DMTimerCounterSet(SOC_DMTIMER_2_REGS, 0);
+        DMTimerEnable(SOC_DMTIMER_2_REGS);
+        while(DMTimerCounterGet(SOC_DMTIMER_2_REGS) < 0x5DC0);
+        DMTimerDisable(SOC_DMTIMER_2_REGS);
         milliSec--;
     }
  
@@ -167,10 +167,10 @@ void Sysdelay(unsigned int milliSec)
 static void DMTimerIsr(void)
 {
     /* Disable the DMTimer interrupts */
-    DMTimerIntDisable(SOC_DMTIMER_7_REGS, DMTIMER_INT_OVF_EN_FLAG);
+    DMTimerIntDisable(SOC_DMTIMER_2_REGS, DMTIMER_INT_OVF_EN_FLAG);
 
     /* Clear the status of the interrupt flags */
-    DMTimerIntStatusClear(SOC_DMTIMER_7_REGS, DMTIMER_INT_OVF_EN_FLAG);
+    DMTimerIntStatusClear(SOC_DMTIMER_2_REGS, DMTIMER_INT_OVF_EN_FLAG);
 
     /* Adding extra protection */
     if(flagIsr > 0)
@@ -183,7 +183,7 @@ static void DMTimerIsr(void)
     //DMTimerEndOfInterrupt(SOC_DMTIMER_7_REGS);
 
     /* Enable the DMTimer interrupts */
-    DMTimerIntEnable(SOC_DMTIMER_7_REGS, DMTIMER_INT_OVF_EN_FLAG);
+    DMTimerIntEnable(SOC_DMTIMER_2_REGS, DMTIMER_INT_OVF_EN_FLAG);
 }
 #endif
 

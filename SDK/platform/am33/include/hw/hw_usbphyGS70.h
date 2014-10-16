@@ -82,8 +82,6 @@ extern "C"
 void UsbPhyOn(unsigned int ulIndex);
 void UsbPhyOff(unsigned int ulIndex);
 
-//#include "driver/usbphyGS70.c"
-
 #ifdef __cplusplus
 }
 #endif

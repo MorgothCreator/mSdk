@@ -26,6 +26,8 @@
 #ifndef __USBHHID_H__
 #define __USBHHID_H__
 
+#include "usbhost.h"
+
 //*****************************************************************************
 //
 // If building with a C++ compiler, make all of the definitions in this header
@@ -36,8 +38,7 @@
 extern "C"
 {
 #endif
-#include "usbhost.h"
-#include "usblib.h"
+
 //*****************************************************************************
 //
 //! \addtogroup usblib_host_class
@@ -190,7 +191,7 @@ extern unsigned int USBHHIDGetReport(unsigned int ulInstance,
                                       unsigned int ulInterface,
                                       unsigned char *pucData,
                                       unsigned int ulSize);
-extern const tUSBHostClassDriver g_USBHIDClassDriver;
+//extern const tUSBHostClassDriver g_USBHIDClassDriver;
 
 //*****************************************************************************
 //

@@ -22,7 +22,7 @@
 #ifndef GPIO_DEF_H_
 #define GPIO_DEF_H_
 /*#####################################################*/
-#include <stdlib.h>
+//#include <stdlib.h>
 #include <stdbool.h>
 /*#####################################################*/
 typedef enum

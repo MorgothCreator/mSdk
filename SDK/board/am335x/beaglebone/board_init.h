@@ -31,42 +31,31 @@
 #include "pinmux/pin_mux_uart.h"
 #include "pinmux/pin_mux_spi.h"
 #include "pinmux/pin_mux_twi.h"
+#include "interface/mmcsdlib/mmcsd_proto.h"
 /*#####################################################*/
 #define USE_ADXL345 1
 /*-----------------------------------------------------*/
 #define BOARD_MESSAGE "Beaglebone"
 /*-----------------------------------------------------*/
-#define E2PROM_ONBOARD TWI0, 0x50
-#define E2PROM_BOARD1 TWI2,0x54
-#define E2PROM_BOARD2 TWI2,0x55
-#define E2PROM_BOARD3 TWI2,0x56
-#define E2PROM_BOARD4 TWI2,0x57
+#define E2PROM_ONBOARD TWI[0], 0x50
+#define E2PROM_BOARD1 TWI[2],0x54
+#define E2PROM_BOARD2 TWI[2],0x55
+#define E2PROM_BOARD3 TWI[2],0x56
+#define E2PROM_BOARD4 TWI[2],0x57
 /*#####################################################*/
+extern new_uart* Uart[];
 extern new_uart* DebugCom;
-extern new_uart* Uart1;
-extern new_uart* Uart2;
-extern new_uart* Uart3;
-extern new_twi* TWI0;
-extern new_twi* TWI1;
-extern new_twi* TWI2;
+extern new_twi* TWI[];
 extern new_mcspi* MCSPI0;
-extern new_gpio* HARDBTN1;
-extern new_gpio* HARDBTN2;
-extern new_gpio* HARDBTN3;
-extern new_gpio* HARDBTN4;
-extern new_gpio* HARDBTN5;
-extern new_gpio* LED1;
-extern new_gpio* LED2;
-extern new_gpio* LED3;
-extern new_gpio* LED4;
-extern new_gpio* LED5;
-extern new_gpio* LED6;
+extern new_gpio* HARDBTN[];
+extern new_gpio* LED[];
 extern new_adxl345* ADXL345_1;
 extern new_touchscreen* TouchScreen;
 /*-----------------------------------------------------*/
 extern new_screen* ScreenBuff;
 /*-----------------------------------------------------*/
 extern FileInfo_t *FILE1;
+extern mmcsdCtrlInfo sdCtrl;
 /*-----------------------------------------------------*/
 extern unsigned char *OnBoardConfigData;
 extern unsigned char *Board1ConfigData;

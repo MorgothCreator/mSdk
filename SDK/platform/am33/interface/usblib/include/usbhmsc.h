@@ -117,15 +117,15 @@ tUSBHMSCInstance;
 // Prototypes for the USB MSC host driver APIs.
 //
 //*****************************************************************************
-unsigned int USBHMSCDriveOpen(unsigned int ulIndex,
+extern unsigned int USBHMSCDriveOpen(unsigned int ulIndex, 
                                         unsigned int ulDrive,
                                       tUSBHMSCCallback pfnCallback);
-void USBHMSCDriveClose(unsigned int ulInstance);
-int USBHMSCDriveReady(unsigned int ulInstance);
-int USBHMSCBlockRead(unsigned int ulInstance, unsigned long ulLBA,
+extern void USBHMSCDriveClose(unsigned int ulInstance);
+extern int USBHMSCDriveReady(unsigned int ulInstance);
+extern int USBHMSCBlockRead(unsigned int ulInstance, unsigned int ulLBA,
                              unsigned char *pucData,
                              unsigned int ulNumBlocks);
-int USBHMSCBlockWrite(unsigned int ulInstance, unsigned long ulLBA,
+extern int USBHMSCBlockWrite(unsigned int ulInstance, unsigned int ulLBA,
                               unsigned char *pucData,
                               unsigned int ulNumBlocks);
 

@@ -23,17 +23,16 @@
 //
 //*****************************************************************************
 
-#include "../../../include/hw/hw_usb.h"
-#include "../../../include/hw/hw_types.h"
-#include "../../../include/hw/hw_usbphyGS70.h"
-#include "../../../include/debug.h"
-#include "../../../include/usb.h"
+#include "include/hw/hw_usb.h"
+#include "include/hw/hw_types.h"
+#include "include/debug.h"
+#include "include/usb.h"
 #include "../include/usblib.h"
 #include "../include/usbdevice.h"
 #include "../include/usbdevicepriv.h"
 #include "../include/usblibpriv.h"
-#include "../../../include/delay.h"
-#include "../../../include/interrupt.h"
+#include "sys/sysdelay.h"
+#include "include/interrupt.h"
 
 //*****************************************************************************
 //
@@ -485,10 +484,10 @@ USBDCDInit(unsigned int ulIndex, tDeviceInfo *psDevice)
         //
         USBIntStatusControl(g_USBInstance[ulIndex].uiBaseAddr);
            USBIntStatusEndpoint(g_USBInstance[ulIndex].uiBaseAddr);
-        if(USB_REV_AM1808 == USBVersionGet())
+        /*if(USB_REV_AM1808 == USBVersionGet())
         {
             USBClearOtgIntr(g_USBInstance[ulIndex].uiSubBaseAddr);
-        }
+        }*/
 
         USBEnableOtgIntr(g_USBInstance[ulIndex].uiSubBaseAddr);
         //
@@ -547,7 +546,7 @@ USBDCDInit(unsigned int ulIndex, tDeviceInfo *psDevice)
         //
         // Wait about 100mS.
         //
-        delay(100);
+        Sysdelay(100);
 
 
         //
@@ -618,10 +617,10 @@ USBDCDTerm(unsigned int ulIndex)
     //
     USBIntStatusControl(g_USBInstance[ulIndex].uiBaseAddr);
     USBIntStatusEndpoint(g_USBInstance[ulIndex].uiBaseAddr);
-    if(USB_REV_AM1808 == USBVersionGet())
+    /*if(USB_REV_AM1808 == USBVersionGet())
     {
         USBClearOtgIntr(g_USBInstance[ulIndex].uiSubBaseAddr);
-    }
+    }*/
 
     //
     // Turn off USB Phy clock.

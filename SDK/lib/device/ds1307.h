@@ -140,7 +140,7 @@ bool DS1307_SetOut(new_twi* TwiStruct);
 bool DS1307_ClrSqwe(new_twi* TwiStruct);
 bool DS1307_SetSqwe(new_twi* TwiStruct);
 bool DS1307_SetRs(new_twi* TwiStruct, unsigned char Rs);
-bool DS1307_ReadTime_Str(new_twi* TwiStruct, unsigned char* Buff);
+bool DS1307_ReadTime_Str(new_twi* TwiStruct, char* Buff);
 void DS1307_Write_RTC(new_twi* TwiStruct, unsigned char Reg, unsigned char Data);
 unsigned char DS1307_Read_RTC(new_twi* TwiStruct, unsigned char Reg);
 //#####################################################

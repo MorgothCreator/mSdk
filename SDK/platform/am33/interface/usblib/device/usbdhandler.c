@@ -23,10 +23,10 @@
 //
 //*****************************************************************************
 
-#include "../../../include/hw/hw_usb.h"
-#include "../../../include/interrupt.h"
-#include "../../../include/hw/hw_types.h"
-#include "../../../include/usb.h"
+#include "include/hw/hw_usb.h"
+#include "include/interrupt.h"
+#include "include/hw/hw_types.h"
+#include "include/usb.h"
 #include "../include/usblib.h"
 #include "../include/usbdevice.h"
 #include "../include/usbdevicepriv.h"
@@ -69,10 +69,12 @@ void
 USB0DeviceIntHandler(void)
 {
     unsigned int ulStatus = 0;
-    unsigned int epStatus = 0;    
 
 #if defined(am335x) || defined (am335x_15x15) || defined(c6a811x) || defined(am386x) || \
     defined(c6741x)
+
+    unsigned int epStatus = 0;
+
     //
     // Get the controller interrupt status.
     //
@@ -112,11 +114,10 @@ USB0DeviceIntHandler(void)
     // Get the controller interrupt status.
     //
     ulStatus = HWREG(g_USBInstance[0].uiSubBaseAddr + USB_0_INTR_SRC);
-    epStatus = 0;
     // Clear the Interrupts
     HWREG(g_USBInstance[0].uiSubBaseAddr + USB_0_INTR_SRC_CLEAR) = ulStatus;
 #ifdef _TMS320C6X
-    IntEventClear(SYS_INT_USB0_INT);
+    IntEventClear(g_USBInstance[0].uiInterruptNum);
 #else
     IntSystemStatusClear(g_USBInstance[0].uiInterruptNum);
 #endif
@@ -137,9 +138,10 @@ void
 USB1DeviceIntHandler(void)
 {
     unsigned int ulStatus = 0;
-    unsigned int epStatus = 0;
 
 #if defined (am335x_15x15) || defined(am335x) || defined(c6a811x)
+
+    unsigned int epStatus = 0;
 
     //
     // Get the controller interrupt status.
@@ -180,11 +182,10 @@ USB1DeviceIntHandler(void)
     // Get the controller interrupt status.
     //
     ulStatus = HWREG(g_USBInstance[1].uiSubBaseAddr + USB_0_INTR_SRC);
-    epStatus = 0;
     // Clear the Interrupts
     HWREG(g_USBInstance[1].uiSubBaseAddr + USB_0_INTR_SRC_CLEAR) = ulStatus;
 #ifdef _TMS320C6X
-    IntEventClear(SYS_INT_USB0_INT);
+    IntEventClear(g_USBInstance[1].uiInterruptNum);
 #else
     IntSystemStatusClear(g_USBInstance[1].uiInterruptNum);
 #endif

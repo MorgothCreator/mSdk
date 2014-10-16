@@ -129,7 +129,7 @@ bool adxl345_read_multiple(new_adxl345* adxl345_struct, unsigned int regOffset, 
 /*#####################################################*/
 bool adxl345_device_id_corect(new_adxl345* adxl345_struct)
 {
-	unsigned char data;
+	unsigned char data = 0;
 	adxl345_read(adxl345_struct, 0, &data);
 	if(data == 0xE5) return true;
 	else return false;
@@ -138,7 +138,7 @@ bool adxl345_device_id_corect(new_adxl345* adxl345_struct)
 /* ADXL345_REG_ACT_TAP_STATUS */
 unsigned char adxl345_tap_status_read(new_adxl345* adxl345_struct)
 {
-	unsigned char Status;
+	unsigned char Status = 0;
 	adxl345_read(adxl345_struct, ADXL345_REG_ACT_TAP_STATUS, &Status);
 	return Status;
 }
@@ -301,7 +301,7 @@ bool adxl345_init(new_adxl345* adxl345_struct)
 	}
 	else
 	{
-		if(adxl345_struct) free(adxl345_struct);
+		//if(adxl345_struct) free(adxl345_struct);
 		return false;
 	}
 }

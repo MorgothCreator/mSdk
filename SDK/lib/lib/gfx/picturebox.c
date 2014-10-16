@@ -20,6 +20,7 @@
  */
 #include <stdbool.h>
 #include "picturebox.h"
+#include "window_def.h"
 #include "api/lcd_def.h"
 #include "api/lcd_api.h"
 #include "api/timer_api.h"
@@ -29,6 +30,7 @@
 static void paint_picturebox(tPictureBox* settings, tDisplay *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len, tControlCommandData* control_comand)
 {
 	unsigned int color = 0;
+	tWindow *ParentWindow = (tWindow*)settings->Internals.ParentWindow;
 	tRectangle back_up_clip = pDisplay->sClipRegion;
 	pDisplay->sClipRegion.sXMin = x_start;
 	pDisplay->sClipRegion.sYMin = y_start;
@@ -36,10 +38,13 @@ static void paint_picturebox(tPictureBox* settings, tDisplay *pDisplay, signed i
 	pDisplay->sClipRegion.sYMax = y_start + y_len;
 	clip_limit(&pDisplay->sClipRegion, &back_up_clip);
 	color = controls_color.Control_Color_Enabled_Border_Pull;
+	if(!settings->Enabled || !ParentWindow->Internals.OldStateEnabled) color = settings->Color.Disabled.Border;
 	put_rectangle(pDisplay, x_start, y_start, x_len, y_len, false, controlls_change_color(color, -3));
 	put_rectangle(pDisplay, x_start + 1, y_start + 1, x_len - 2, y_len - 2, false, controlls_change_color(color, -2));
+	color = settings->BackgroundColor;
+	if(!settings->Enabled || !ParentWindow->Internals.OldStateEnabled) color = settings->Color.Disabled.Buton;
 	//color = controls_color.Control_Color_Enabled_Buton_Pull;
-	if(settings->PaintBackground) put_rectangle(pDisplay, x_start + 2, y_start + 2, x_len - 4, y_len - 4, true, settings->BackgroundColor);
+	if(settings->PaintBackground) put_rectangle(pDisplay, x_start + 2, y_start + 2, x_len - 4, y_len - 4, true, color);
 	if(settings->Events.Refresh.CallBack)
 	{
 		tRectangle clip;
@@ -51,8 +56,8 @@ static void paint_picturebox(tPictureBox* settings, tDisplay *pDisplay, signed i
 		settings->Internals.PictureWindowLimits = pDisplay->sClipRegion;
 		signed int X = control_comand->X;
 		signed int Y = control_comand->Y;
-		control_comand->X -= settings->Position.X + 2;
-		control_comand->Y -= settings->Position.Y + 2;
+		control_comand->X -= settings->Internals.Position.X + 2;
+		control_comand->Y -= settings->Internals.Position.Y + 2;
 		settings->Events.Refresh.CallbackReturnData = settings->Events.Refresh.CallBack(settings, control_comand);
 		control_comand->X = X;
 		control_comand->Y = Y;
@@ -64,18 +69,19 @@ static void paint_picturebox(tPictureBox* settings, tDisplay *pDisplay, signed i
 	clip_limit(&pDisplay->sClipRegion, &back_up_clip);
 	box_cache_clean(pDisplay, x_start, y_start, x_len, y_len);
 	pDisplay->sClipRegion = back_up_clip;
+	control_comand->WindowRefresh |= true;
 }
 //#######################################################################################
 void picturebox(tPictureBox *settings, tControlCommandData* control_comand)
 {
-	if((control_comand->CursorCoordonateUsed == true && settings->Internals.NeedEntireRefresh == false) || settings == NULL) return;
+	if(settings == NULL) return;
 	if(control_comand->Comand != Control_Nop)
 	{
 		/* Parse commands */
 #ifdef NO_ENUM_ON_SWITCH
 		switch((unsigned char)control_comand->Comand)
 #else
-		switch(control_comand->Comand)
+		switch((int)control_comand->Comand)
 #endif
 		{
 		case Control_Entire_Repaint:
@@ -107,19 +113,42 @@ void picturebox(tPictureBox *settings, tControlCommandData* control_comand)
 			return;
 		}
 	}
+	tWindow *ParentWindow = (tWindow*)settings->Internals.ParentWindow;
 	if(settings->Internals.Control.Initiated == false)
 	{
-		settings->Internals.Position.X = settings->Position.X;
-		settings->Internals.Position.Y = settings->Position.Y;
+		if(ParentWindow)
+		{
+			settings->Internals.Position.X = settings->Position.X + ParentWindow->Internals.Position.X + settings->Internals.PositionOffset.X;
+			settings->Internals.Position.Y = settings->Position.Y + ParentWindow->Internals.Position.Y + settings->Internals.PositionOffset.Y;
+		}
+		else
+		{
+			settings->Internals.Position.X = settings->Position.X;
+			settings->Internals.Position.Y = settings->Position.Y;
+		}
 		settings->Internals.Size.X = settings->Size.X;
 		settings->Internals.Size.Y = settings->Size.Y;
 	}
 	/* Verify if position on size has been modified */
-	if(settings->Position.X != settings->Internals.Position.X ||
-			settings->Position.Y != settings->Internals.Position.Y ||
-				settings->Size.X != settings->Internals.Size.X ||
-					settings->Size.Y != settings->Internals.Size.Y)
-										settings->Internals.NeedEntireRefresh = true;
+	if(ParentWindow)
+	{
+		if((settings->Position.X + ParentWindow->Internals.Position.X + settings->Internals.PositionOffset.X) != settings->Internals.Position.X ||
+				(settings->Position.Y + ParentWindow->Internals.Position.Y + settings->Internals.PositionOffset.Y) != settings->Internals.Position.Y ||
+					settings->Size.X != settings->Internals.Size.X ||
+						settings->Size.Y != settings->Internals.Size.Y ||
+							settings->Internals.OldStateEnabled != settings->Enabled ||
+								ParentWindow->Internals.OldStateEnabled != settings->Internals.ParentWindowStateEnabled)
+											settings->Internals.NeedEntireRefresh = true;
+	}
+	else
+	{
+		if(settings->Position.X != settings->Internals.Position.X ||
+				settings->Position.Y != settings->Internals.Position.Y ||
+					settings->Size.X != settings->Internals.Size.X ||
+						settings->Size.Y != settings->Internals.Size.Y ||
+							settings->Internals.OldStateEnabled != settings->Enabled)
+											settings->Internals.NeedEntireRefresh = true;
+	}
 
 	signed int X_StartBox = settings->Internals.Position.X;
 	signed int Y_StartBox = settings->Internals.Position.Y;
@@ -128,10 +157,10 @@ void picturebox(tPictureBox *settings, tControlCommandData* control_comand)
 	tDisplay *pDisplay = settings->Internals.pDisplay;
 
 	/*Clear background of box with actual painted dimensions and positions if they been changed*/
-	if(settings->Internals.NeedEntireRefresh == true || (settings->Internals.OldStateVisible != settings->Visible && settings->Visible == false))
+	/*if(settings->Internals.NeedEntireRefresh == true || (settings->Internals.OldStateVisible != settings->Visible && settings->Visible == false))
 	{
 		settings->Internals.OldStateVisible = settings->Visible;
-		/*if(settings->Events.Refresh.CallBack)
+		if(settings->Events.Refresh.CallBack)
 		{
 			tRectangle back_up_clip = pDisplay->sClipRegion;
 			tRectangle clip;
@@ -150,20 +179,46 @@ void picturebox(tPictureBox *settings, tControlCommandData* control_comand)
 			control_comand->Y = Y;
 			box_cache_clean(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox);
 			pDisplay->sClipRegion = back_up_clip;
-		}*/
+		}
+	}*/
+	if(settings->Internals.NeedEntireRefresh == true || settings->Internals.OldStateVisible != settings->Visible)
+	{
+		if(!settings->Internals.NoPaintBackGround || !settings->Visible)
+		{
+			settings->Internals.OldStateVisible = settings->Visible;
+			tRectangle back_up_clip = pDisplay->sClipRegion;
+			pDisplay->sClipRegion.sXMin = X_StartBox;
+			pDisplay->sClipRegion.sYMin = Y_StartBox;
+			pDisplay->sClipRegion.sXMax = X_StartBox + X_LenBox;
+			pDisplay->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
+			clip_limit(&pDisplay->sClipRegion, &back_up_clip);
+			put_rectangle(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, true, settings->Color.Scren);
+			box_cache_clean(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox);
+			pDisplay->sClipRegion = back_up_clip;
+			control_comand->WindowRefresh |= true;
+			if(!settings->Visible) return;
+		}
+		settings->Internals.NeedEntireRefresh = true;
 	}
+
 
 	/* Verify if is Entire refresh, entire repaint, or state changed */
 	if((settings->Internals.NeedEntireRefresh == true ||
 			settings->Internals.NeedEntireRepaint == true ||
-				settings->Internals.Control.Initiated == false ||
-					//settings->Enabled == true ||
-						settings->Internals.OldStateVisible != settings->Visible) &&
+				settings->Internals.Control.Initiated == false) &&
 							settings->Visible == true)
 	{
 		/* Copy new locations and dimensions to actual locations and dimensions */
-		settings->Internals.Position.X = settings->Position.X;
-		settings->Internals.Position.Y = settings->Position.Y;
+		if(ParentWindow)
+		{
+			settings->Internals.Position.X = settings->Position.X + ParentWindow->Internals.Position.X + settings->Internals.PositionOffset.X;
+			settings->Internals.Position.Y = settings->Position.Y + ParentWindow->Internals.Position.Y + settings->Internals.PositionOffset.Y;
+		}
+		else
+		{
+			settings->Internals.Position.X = settings->Position.X;
+			settings->Internals.Position.Y = settings->Position.Y;
+		}
 		settings->Internals.Size.X = settings->Size.X;
 		settings->Internals.Size.Y = settings->Size.Y;
 		X_StartBox = settings->Internals.Position.X;
@@ -171,24 +226,28 @@ void picturebox(tPictureBox *settings, tControlCommandData* control_comand)
 		X_LenBox = settings->Internals.Size.X;
 		Y_LenBox = settings->Internals.Size.Y;
 		paint_picturebox(settings, pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, control_comand);
+		settings->Internals.ParentWindowStateEnabled = ParentWindow->Internals.OldStateEnabled;
 		settings->Internals.OldStateVisible = settings->Visible;
+		settings->Internals.OldStateEnabled = settings->Enabled;
 		settings->Internals.Control.Initiated = true;
 		settings->Internals.NeedEntireRefresh = false;
 		settings->Internals.NeedEntireRepaint = false;
 		//control_comand->Cursor = cursor;
+		//control_comand->WindowRefresh |= true;
 		return;
 	}
 	/* Check if inside window */
 	bool inside_window = check_if_inside_box(X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, control_comand->X, control_comand->Y);
 	bool _inside_window = check_if_inside_box(pDisplay->sClipRegion.sXMin, pDisplay->sClipRegion.sYMin, pDisplay->sClipRegion.sXMax - pDisplay->sClipRegion.sXMin, pDisplay->sClipRegion.sYMax - pDisplay->sClipRegion.sYMin, control_comand->X, control_comand->Y);
 	if(!_inside_window) inside_window = false;
-	if((control_comand->Cursor == Cursor_Up || control_comand->Cursor == Cursor_Down) &&
-			settings->Internals.OldStateCursor != control_comand->Cursor &&
+	if((control_comand->Cursor) &&
+			//settings->Internals.OldStateCursor != control_comand->Cursor &&
 				(inside_window == true || settings->Internals.CursorDownInsideBox == true) &&
 					settings->Enabled == true &&
-						settings->Visible == true)
+						settings->Visible == true &&
+							control_comand->CursorCoordonateUsed == false)
 	{
-		settings->Internals.OldStateCursor = control_comand->Cursor;
+		//settings->Internals.OldStateCursor = control_comand->Cursor;
 		if(control_comand->Cursor == Cursor_Down && inside_window == true)
 		{
 			settings->Events.CursorDown = true;
@@ -205,13 +264,14 @@ void picturebox(tPictureBox *settings, tControlCommandData* control_comand)
 				settings->Internals.PictureWindowLimits = pDisplay->sClipRegion;
 				signed int X = control_comand->X;
 				signed int Y = control_comand->Y;
-				control_comand->X -= settings->Position.X + 2;
-				control_comand->Y -= settings->Position.Y + 2;
+				control_comand->X -= settings->Internals.Position.X + 2;
+				control_comand->Y -= settings->Internals.Position.Y + 2;
 				settings->Events.OnDown.CallbackReturnData = settings->Events.OnDown.CallBack(settings, control_comand);
 				control_comand->X = X;
 				control_comand->Y = Y;
 				box_cache_clean(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox);
 				pDisplay->sClipRegion = back_up_clip;
+				control_comand->WindowRefresh |= true;
 			}
 		}
 		if(control_comand->Cursor == Cursor_Up && settings->Internals.CursorDownInsideBox == true && inside_window == true)
@@ -229,53 +289,59 @@ void picturebox(tPictureBox *settings, tControlCommandData* control_comand)
 				settings->Internals.PictureWindowLimits = pDisplay->sClipRegion;
 				signed int X = control_comand->X;
 				signed int Y = control_comand->Y;
-				control_comand->X -= settings->Position.X + 2;
-				control_comand->Y -= settings->Position.Y + 2;
+				control_comand->X -= settings->Internals.Position.X + 2;
+				control_comand->Y -= settings->Internals.Position.Y + 2;
 				settings->Events.OnUp.CallbackReturnData = settings->Events.OnUp.CallBack(settings, control_comand);
 				control_comand->X = X;
 				control_comand->Y = Y;
 				box_cache_clean(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox);
 				pDisplay->sClipRegion = back_up_clip;
+				control_comand->WindowRefresh |= true;
 			}
 		}
 		//paint_picturebox(settings, pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, control_comand);
-	}
-	if(control_comand->Cursor == Cursor_Move && inside_window == true && settings->Internals.CursorDownInsideBox == true && inside_window == true)
-	{
-		settings->Events.CursorMove = true;
-		if(settings->Events.OnMove.CallBack)
+		if(control_comand->Cursor == Cursor_Move && settings->Internals.CursorDownInsideBox == true && inside_window == true)
 		{
-			tRectangle back_up_clip = pDisplay->sClipRegion;
-			tRectangle clip;
-			clip.sXMin = X_StartBox + 2;
-			clip.sXMax = (X_StartBox + X_LenBox) - 2;
-			clip.sYMin = Y_StartBox + 2;
-			clip.sYMax = (Y_StartBox + Y_LenBox) - 2;
-			clip_limit(&pDisplay->sClipRegion, &clip);
-			settings->Internals.PictureWindowLimits = pDisplay->sClipRegion;
-			signed int X = control_comand->X;
-			signed int Y = control_comand->Y;
-			control_comand->X -= settings->Position.X + 2;
-			control_comand->Y -= settings->Position.Y + 2;
-			settings->Events.OnMove.CallbackReturnData = settings->Events.OnMove.CallBack(settings, control_comand);
-			control_comand->X = X;
-			control_comand->Y = Y;
-			box_cache_clean(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox);
-			pDisplay->sClipRegion = back_up_clip;
+			settings->Events.CursorMove = true;
+			if(settings->Events.OnMove.CallBack)
+			{
+				tRectangle back_up_clip = pDisplay->sClipRegion;
+				tRectangle clip;
+				clip.sXMin = X_StartBox + 2;
+				clip.sXMax = (X_StartBox + X_LenBox) - 2;
+				clip.sYMin = Y_StartBox + 2;
+				clip.sYMax = (Y_StartBox + Y_LenBox) - 2;
+				clip_limit(&pDisplay->sClipRegion, &clip);
+				settings->Internals.PictureWindowLimits = pDisplay->sClipRegion;
+				signed int X = control_comand->X;
+				signed int Y = control_comand->Y;
+				control_comand->X -= settings->Internals.Position.X + 2;
+				control_comand->Y -= settings->Internals.Position.Y + 2;
+				settings->Events.OnMove.CallbackReturnData = settings->Events.OnMove.CallBack(settings, control_comand);
+				control_comand->X = X;
+				control_comand->Y = Y;
+				box_cache_clean(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox);
+				pDisplay->sClipRegion = back_up_clip;
+				control_comand->WindowRefresh |= true;
+			}
 		}
 	}
-	if(settings->Internals.CursorDownInsideBox == true && control_comand->Cursor == Cursor_Up) settings->Internals.CursorDownInsideBox = false;
-	control_comand->CursorCoordonateUsed = settings->Internals.CursorDownInsideBox;
+	if(control_comand->Cursor && settings->Internals.CursorDownInsideBox) control_comand->CursorCoordonateUsed |= true;
+	if(settings->Internals.CursorDownInsideBox == true && (control_comand->Cursor == Cursor_Up || control_comand->Cursor == Cursor_NoAction)) settings->Internals.CursorDownInsideBox = false;
+	//control_comand->CursorCoordonateUsed |= settings->Internals.CursorDownInsideBox;
+	//control_comand->WindowRefresh |= true;
 	return;
 }
 //#######################################################################################
-tPictureBox *new_picturebox(tDisplay *ScreenDisplay)
+tPictureBox *new_picturebox(void *ParentWindow)
 {
 	tPictureBox* settings = (tPictureBox*)calloc(1, sizeof(tPictureBox));
 
-	if(!settings || !ScreenDisplay) return NULL;
+	if(!settings || !ParentWindow) return NULL;
+	settings->Internals.ParentWindow = ParentWindow;
 
-	settings->Internals.pDisplay = ScreenDisplay;
+	tWindow *_ParentWindow = (tWindow *)ParentWindow;
+	settings->Internals.pDisplay = _ParentWindow->Internals.pDisplay;
 
 	settings->Color.Scren = controls_color.Scren;
 	settings->Color.Enabled.BackGround = controls_color.Control_Color_Enabled_BackGround;
@@ -315,6 +381,7 @@ bool free_picturebox(tPictureBox* settings)
 //#######################################################################################
 void picturebox_clear(tPictureBox* settings)
 {
+	tWindow *ParentWindow = (tWindow*)settings->Internals.ParentWindow;
 	tDisplay *pDisplay = settings->Internals.pDisplay;
 	tRectangle back_up_clip = pDisplay->sClipRegion;
 	signed int X_StartBox = settings->Internals.Position.X;
@@ -326,13 +393,16 @@ void picturebox_clear(tPictureBox* settings)
 	pDisplay->sClipRegion.sXMax = X_StartBox + X_LenBox;
 	pDisplay->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
 	clip_limit(&pDisplay->sClipRegion, &back_up_clip);
-	put_rectangle(pDisplay, X_StartBox + 2, Y_StartBox + 2, X_LenBox - 4, Y_LenBox - 4, true, settings->BackgroundColor);
+	unsigned int color = settings->BackgroundColor;
+	if(!settings->Enabled || !ParentWindow->Internals.OldStateEnabled) color = settings->Color.Disabled.Buton;
+	put_rectangle(pDisplay, X_StartBox + 2, Y_StartBox + 2, X_LenBox - 4, Y_LenBox - 4, true, color);
 	box_cache_clean(pDisplay, X_StartBox + 2, Y_StartBox + 2, X_LenBox - 4, Y_LenBox - 4);
 	pDisplay->sClipRegion = back_up_clip;
 }
 /*//#######################################################################################
 void picturebox_copy_rectangle(tPictureBox* settings, unsigned int *src_buff, signed int src_x_buff_size, signed int src_y_buff_size, signed int src_x_offset, signed int src_y_offset)
 {
+	//tWindow *ParentWindow = (tWindow*)settings->Internals.ParentWindow;
 	tDisplay *pDisplay = settings->Internals.pDisplay;
 	tRectangle back_up_clip = pDisplay->sClipRegion;
 	pDisplay->sClipRegion = settings->Internals.PictureWindowLimits;
@@ -352,6 +422,7 @@ void picturebox_copy_rectangle(tPictureBox* settings, unsigned int *src_buff, si
 //#######################################################################################
 void picturebox_copy_rectangle(tPictureBox* settings, unsigned int *src_buff, unsigned int dest_buff_data_offset, unsigned int src_buff_data_offset, tRectangle *_dest_rectangle, tRectangle *_src_rectangle, signed int src_width, signed int src_height)
 {
+	//tWindow *ParentWindow = (tWindow*)settings->Internals.ParentWindow;
 	tDisplay *pDisplay = settings->Internals.pDisplay;
 	//tRectangle back_up_clip = pDisplay->sClipRegion;
 	//pDisplay->sClipRegion = settings->Internals.PictureWindowLimits;
@@ -409,78 +480,87 @@ void picturebox_copy_rectangle(tPictureBox* settings, unsigned int *src_buff, un
 //#######################################################################################
 void picturebox_put_pixel(tPictureBox* settings, signed int X, signed int Y, unsigned int color)
 {
+	//tWindow *ParentWindow = (tWindow*)settings->Internals.ParentWindow;
 	tDisplay *pDisplay = settings->Internals.pDisplay;
 	tRectangle back_up_clip = pDisplay->sClipRegion;
 	pDisplay->sClipRegion = settings->Internals.PictureWindowLimits;
-	put_pixel(pDisplay, X + settings->Position.X + 2, Y + settings->Position.Y + 2, color);
+	put_pixel(pDisplay, X + settings->Internals.Position.X + 2, Y + settings->Internals.Position.Y + 2, color);
 	pDisplay->sClipRegion = back_up_clip;
 }
 //#######################################################################################
 void picturebox_put_horizontal_line(tPictureBox* settings, signed int X1, signed int X2, signed int Y, unsigned char width, unsigned int color)
 {
+	//tWindow *ParentWindow = (tWindow*)settings->Internals.ParentWindow;
 	tDisplay *pDisplay = settings->Internals.pDisplay;
 	tRectangle back_up_clip = pDisplay->sClipRegion;
 	pDisplay->sClipRegion = settings->Internals.PictureWindowLimits;
-	put_horizontal_line(pDisplay, X1 + settings->Position.X + 2, X2 + settings->Position.X + 2, Y + settings->Position.Y + 2, width, color);
+	put_horizontal_line(pDisplay, X1 + settings->Internals.Position.X + 2, X2 + settings->Internals.Position.X + 2, Y + settings->Internals.Position.Y + 2, width, color);
 	pDisplay->sClipRegion = back_up_clip;
 }
 //#######################################################################################
 void picturebox_put_vertical_line(tPictureBox* settings, signed int Y1, signed int Y2, signed int X, unsigned char width, unsigned int color)
 {
+	//tWindow *ParentWindow = (tWindow*)settings->Internals.ParentWindow;
 	tDisplay *pDisplay = settings->Internals.pDisplay;
 	tRectangle back_up_clip = pDisplay->sClipRegion;
 	pDisplay->sClipRegion = settings->Internals.PictureWindowLimits;
-	put_vertical_line(pDisplay, Y1 + settings->Position.Y + 2, Y2 + settings->Position.Y + 2, X + settings->Position.X + 2, width, color);
+	put_vertical_line(pDisplay, Y1 + settings->Internals.Position.Y + 2, Y2 + settings->Internals.Position.Y + 2, X + settings->Internals.Position.X + 2, width, color);
 	pDisplay->sClipRegion = back_up_clip;
 }
 //#######################################################################################
 void picturebox_put_circle(tPictureBox* settings, signed int x, signed int y, signed int radius, unsigned char fill, unsigned int color)
 {
+	//tWindow *ParentWindow = (tWindow*)settings->Internals.ParentWindow;
 	tDisplay *pDisplay = settings->Internals.pDisplay;
 	tRectangle back_up_clip = pDisplay->sClipRegion;
 	pDisplay->sClipRegion = settings->Internals.PictureWindowLimits;
-	put_circle(pDisplay, x + settings->Position.X + 2, y + settings->Position.Y + 2, radius, fill, color);
+	put_circle(pDisplay, x + settings->Internals.Position.X + 2, y + settings->Internals.Position.Y + 2, radius, fill, color);
 	pDisplay->sClipRegion = back_up_clip;
 }
 //#######################################################################################
 void picturebox_put_line(tPictureBox* settings, signed int X1, signed int Y1, signed int X2, signed int Y2, unsigned char width, unsigned int color)
 {
+	//tWindow *ParentWindow = (tWindow*)settings->Internals.ParentWindow;
 	tDisplay *pDisplay = settings->Internals.pDisplay;
 	tRectangle back_up_clip = pDisplay->sClipRegion;
 	pDisplay->sClipRegion = settings->Internals.PictureWindowLimits;
-	put_line(pDisplay, X1 + settings->Position.X + 2, Y1 + settings->Position.Y + 2, X2 + settings->Position.X + 2, Y2 + settings->Position.Y + 2, width, color);
+	put_line(pDisplay, X1 + settings->Internals.Position.X + 2, Y1 + settings->Internals.Position.Y + 2, X2 + settings->Internals.Position.X + 2, Y2 + settings->Internals.Position.Y + 2, width, color);
 	pDisplay->sClipRegion = back_up_clip;
 }
 //#######################################################################################
 void picturebox_put_elipse(tPictureBox* settings, signed int xc,signed int yc,signed int rx,signed int ry, unsigned char fill, unsigned int color)
 {
+	//tWindow *ParentWindow = (tWindow*)settings->Internals.ParentWindow;
 	tDisplay *pDisplay = settings->Internals.pDisplay;
 	tRectangle back_up_clip = pDisplay->sClipRegion;
 	pDisplay->sClipRegion = settings->Internals.PictureWindowLimits;
-	put_elipse(pDisplay, xc + settings->Position.X + 2, yc + settings->Position.Y + 2, rx + settings->Position.X + 2, ry + settings->Position.Y + 2, fill, color);
+	put_elipse(pDisplay, xc + settings->Internals.Position.X + 2, yc + settings->Internals.Position.Y + 2, rx + settings->Internals.Position.X + 2, ry + settings->Internals.Position.Y + 2, fill, color);
 	pDisplay->sClipRegion = back_up_clip;
 }
 //#######################################################################################
 void picturebox_put_triangle(tPictureBox* settings, signed int  Ax,signed int  Ay,signed int  Bx,signed int  By,signed int  Cx,signed int  Cy, unsigned char fill, unsigned int color)
 {
+	//tWindow *ParentWindow = (tWindow*)settings->Internals.ParentWindow;
 	tDisplay *pDisplay = settings->Internals.pDisplay;
 	tRectangle back_up_clip = pDisplay->sClipRegion;
 	pDisplay->sClipRegion = settings->Internals.PictureWindowLimits;
-	put_triangle(pDisplay, Ax + settings->Position.X + 2, Ay + settings->Position.Y + 2, Bx + settings->Position.X + 2, By + settings->Position.Y + 2, Cx + settings->Position.X + 2, Cy + settings->Position.Y + 2, fill, color);
+	put_triangle(pDisplay, Ax + settings->Internals.Position.X + 2, Ay + settings->Internals.Position.Y + 2, Bx + settings->Internals.Position.X + 2, By + settings->Internals.Position.Y + 2, Cx + settings->Internals.Position.X + 2, Cy + settings->Internals.Position.Y + 2, fill, color);
 	pDisplay->sClipRegion = back_up_clip;
 }
 //#######################################################################################
 void picturebox_put_string(tPictureBox* settings, tFont *pFont, char *pcString, signed int lLength, unsigned int foreground_color, unsigned int background_color, bool ulOpaque, bool ulVisible, bool WordWrap, signed int lX, signed int lY, signed int _SelStart, signed int _SelLen)
 {
+	//tWindow *ParentWindow = (tWindow*)settings->Internals.ParentWindow;
 	tDisplay *pDisplay = settings->Internals.pDisplay;
 	tRectangle back_up_clip = pDisplay->sClipRegion;
 	pDisplay->sClipRegion = settings->Internals.PictureWindowLimits;
-	put_string(pDisplay, pFont, pcString, lLength, foreground_color, background_color, ulOpaque, ulVisible, WordWrap, lX + settings->Position.X + 2, lY + settings->Position.Y + 2, _SelStart, _SelLen);
+	put_string(pDisplay, pFont, pcString, lLength, foreground_color, background_color, ulOpaque, ulVisible, WordWrap, lX + settings->Internals.Position.X + 2, lY + settings->Internals.Position.Y + 2, _SelStart, _SelLen);
 	pDisplay->sClipRegion = back_up_clip;
 }
 //#######################################################################################
 void picturebox_put_3d_triangle(tPictureBox* settings, _3d_points *Points, signed int X_offset, signed int Y_offset, double X_Angle, double Y_Angle, double Z_Angle, unsigned int Color)
 {
+	//tWindow *ParentWindow = (tWindow*)settings->Internals.ParentWindow;
 	_3d_points screenPoints;
 
 	axisRotations cubeAxisRotations;
@@ -513,6 +593,7 @@ void picturebox_put_3d_triangle(tPictureBox* settings, _3d_points *Points, signe
 //#######################################################################################
 void picturebox_put_3d_rectangle(tPictureBox* settings, _3d_points *Points, signed int X_offset, signed int Y_offset, double X_Angle, double Y_Angle, double Z_Angle, unsigned int Color)
 {
+	//tWindow *ParentWindow = (tWindow*)settings->Internals.ParentWindow;
 	_3d_points screenPoints;
 
 	axisRotations cubeAxisRotations;

@@ -24,10 +24,10 @@
 //*****************************************************************************
 
 //#include "hw_memmap.h"
-#include "../../../include/hw/hw_usb.h"
-#include "../../../include/hw/hw_types.h"
-#include "../../../include/debug.h"
-#include "../../../include/usb.h"
+#include "include/hw/hw_usb.h"
+#include "include/hw/hw_types.h"
+#include "include/debug.h"
+#include "include/usb.h"
 #include "../include/usblib.h"
 #include "../include/usbdevice.h"
 

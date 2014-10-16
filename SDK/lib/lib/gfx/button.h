@@ -25,6 +25,7 @@
 #include <stdbool.h>
 #include "api/timer_api.h"
 #include "controls_definition.h"
+//#include "window_def.h"
 //#######################################################################################
 typedef struct
 {
@@ -79,6 +80,11 @@ typedef struct
 		{
 			signed int X;
 			signed int Y;
+		}PositionOffset;
+		struct
+		{
+			signed int X;
+			signed int Y;
 		}Size;
 		controls_caption_t Caption;
 		bool OldStateVisible;
@@ -91,7 +97,9 @@ typedef struct
 		bool ContinuouslyPushTimerDisabled;
 		CursorState OldStateCursor;
 		STimer_t ContinuouslyPushTimer;
-		tDisplay *pDisplay;
+		//tDisplay *pDisplay;
+		void *ParentWindow;
+		bool ParentWindowStateEnabled;
 	}Internals;
 	bool Visible;
 	bool Enabled;
@@ -100,11 +108,11 @@ typedef struct
 }tButton;
 //#######################################################################################
 void button(tButton *settings, tControlCommandData* control_comand);
-tButton *new_button(tDisplay *ScreenDisplay);
+tButton *new_button(void *ParentWindow);
 bool free_button(tButton* settings);
 //#######################################################################################
 #ifdef HEADER_INCLUDE_C_FILES
-#include "buton.c"
+#include "button.c"
 #endif
 //#######################################################################################
 #endif /* BUTON_H_ */

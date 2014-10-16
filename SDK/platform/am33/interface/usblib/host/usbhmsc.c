@@ -356,7 +356,7 @@ USBHMSCDriveReady(unsigned int ulInstance)
     //
     // Get the Maximum LUNs on this device.
     //
-      USBHMSCGetMaxLUN(pMSCDevice->ulIndex, pMSCDevice->pDevice->ulAddress,
+    USBHMSCGetMaxLUN(pMSCDevice->ulIndex, pMSCDevice->pDevice->ulAddress,
                      pMSCDevice->pDevice->ulInterface, &ucMaxLUN);
 
     //
@@ -365,7 +365,32 @@ USBHMSCDriveReady(unsigned int ulInstance)
     pMSCDevice->ulMaxLUN = ucMaxLUN;
 
     //
-    // Just return if the device is returning not present.
+    // Issue a SCSI Inquiry to get basic information on the device
+    //
+    ulSize = SCSI_INQUIRY_DATA_SZ;
+    if((USBHSCSIInquiry(pMSCDevice->ulIndex, pMSCDevice->ulBulkInPipe, 
+                        pMSCDevice->ulBulkOutPipe,
+                        pBuffer, &ulSize) != SCSI_CMD_STATUS_PASS))
+    {
+        return(-1);
+    }
+    //
+    // See if the drive is ready to use.
+    //
+    if(USBHSCSITestUnitReady(pMSCDevice->ulIndex, pMSCDevice->ulBulkInPipe,
+                             pMSCDevice->ulBulkOutPipe) != SCSI_CMD_STATUS_PASS)
+    {
+        //
+        // Get the current sense data from the device to see why it failed
+        // the Test Unit Ready command.
+        //
+        ulSize = SCSI_REQUEST_SENSE_SZ;
+        USBHSCSIRequestSense(pMSCDevice->ulIndex, pMSCDevice->ulBulkInPipe,
+                             pMSCDevice->ulBulkOutPipe, pBuffer, &ulSize);    
+    }
+    
+    //	   
+    // Send Request Sense agian, return if device returnss command fail 
     //
     ulSize = SCSI_REQUEST_SENSE_SZ;
     if(USBHSCSIRequestSense(pMSCDevice->ulIndex, pMSCDevice->ulBulkInPipe, 
@@ -377,17 +402,6 @@ USBHMSCDriveReady(unsigned int ulInstance)
 
     if((pBuffer[SCSI_RS_SKEY] == SCSI_RS_KEY_UNIT_ATTN) &&
        (pBuffer[SCSI_RS_SKEY_AD_SKEY] == SCSI_RS_KEY_NOTPRSNT))
-    {
-        return(-1);
-    }
-
-    //
-    // Issue a SCSI Inquiry to get basic information on the device
-    //
-    ulSize = SCSI_INQUIRY_DATA_SZ;
-    if((USBHSCSIInquiry(pMSCDevice->ulIndex, pMSCDevice->ulBulkInPipe, 
-                        pMSCDevice->ulBulkOutPipe,
-                        pBuffer, &ulSize) != SCSI_CMD_STATUS_PASS))
     {
         return(-1);
     }
@@ -425,9 +439,9 @@ USBHMSCDriveReady(unsigned int ulInstance)
             (pBuffer[3] | (pBuffer[2] << 8) | pBuffer[1] << 16 |
              (pBuffer[0] << 24));
     }
-
+   
     //
-    // See if the drive is ready to use.
+    // Check whether unit is ready again
     //
     if(USBHSCSITestUnitReady(pMSCDevice->ulIndex, pMSCDevice->ulBulkInPipe,
                              pMSCDevice->ulBulkOutPipe) != SCSI_CMD_STATUS_PASS)
@@ -440,12 +454,14 @@ USBHMSCDriveReady(unsigned int ulInstance)
         USBHSCSIRequestSense(pMSCDevice->ulIndex, pMSCDevice->ulBulkInPipe,
                              pMSCDevice->ulBulkOutPipe, pBuffer, &ulSize);
         return(-1);
+    }	
+    else
+    {
+	//
+	// Success.
+	//
+	return(0);
     }
-
-    //
-    // Success.
-    //
-    return(0);
 }
 
 //*****************************************************************************
@@ -552,7 +568,7 @@ USBHMSCDriveClose(unsigned int ulInstance)
 //
 //*****************************************************************************
 int
-USBHMSCBlockRead(unsigned int ulInstance, unsigned long ulLBA,
+USBHMSCBlockRead(unsigned int ulInstance, unsigned int ulLBA,
                  unsigned char *pucData, unsigned int ulNumBlocks)
 {
     tUSBHMSCInstance *pMSCDevice;
@@ -614,7 +630,7 @@ USBHMSCBlockRead(unsigned int ulInstance, unsigned long ulLBA,
 //
 //*****************************************************************************
 int
-USBHMSCBlockWrite(unsigned int ulInstance, unsigned long ulLBA,
+USBHMSCBlockWrite(unsigned int ulInstance, unsigned int ulLBA,
                   unsigned char *pucData, unsigned int ulNumBlocks)
 {
     tUSBHMSCInstance *pMSCDevice;

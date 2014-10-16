@@ -6,6 +6,7 @@
  */
 
 #include <stdbool.h>
+#include <stdlib.h>
 #include <string.h>
 #include "stm32f4xx_conf.h"
 #include "sys/system_stm32f4xx.h"

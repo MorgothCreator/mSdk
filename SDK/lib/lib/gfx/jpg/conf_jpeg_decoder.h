@@ -48,9 +48,18 @@
 #define _CONF_JPEG_DECODER_H_
 
 //! Maximal image dimensions
-#define JPEG_DECODER_MAX_IMAGE_WIDTH      1024
-#define JPEG_DECODER_MAX_IMAGE_HEIGHT     768
+#define JPEG_DECODER_MAX_IMAGE_WIDTH      	1024
+#define JPEG_DECODER_MAX_IMAGE_HEIGHT     	768
 //! The size of a pixel in byte
-#define JPEG_DECODER_PIXEL_SIZE_IN_BYTES  2
+#define JPEG_DECODER_PIXEL_SIZE_IN_BYTES  	2
+#define JPEG_INPUT_BUF_SIZE         		1024
+
+#ifndef picturebox_stream_jpeg_src_ptr
+#define picturebox_stream_jpeg_src_ptr		0
+#endif
+#ifndef picturebox_stream_src_size
+#define picturebox_stream_src_size			0
+#endif
+
 
 #endif // _CONF_JPEG_DECODER_H_

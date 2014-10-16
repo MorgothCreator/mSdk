@@ -5,6 +5,7 @@
 #include "api/timer_api.h"
 #include "3d.h"
 #include "controls_definition.h"
+//#include "window_def.h"
 //#######################################################################################
 typedef struct PictureBox_s
 {
@@ -60,6 +61,11 @@ typedef struct PictureBox_s
 		{
 			signed int X;
 			signed int Y;
+		}PositionOffset;
+		struct
+		{
+			signed int X;
+			signed int Y;
 		}Size;
 		bool OldStateVisible;
 		bool OldStateEnabled;
@@ -68,10 +74,12 @@ typedef struct PictureBox_s
 		bool CursorDownInsideBox;
 		bool IsChildren;
 		bool NoPaintBackGround;
-		CursorState OldStateCursor;
+		//CursorState OldStateCursor;
 		STimer_t ContinuouslyPushTimer;
 		tDisplay *pDisplay;
 		tRectangle PictureWindowLimits;
+		void *ParentWindow;
+		bool ParentWindowStateEnabled;
 	}Internals;
 	bool PaintBackground;
 	unsigned int BackgroundColor;
@@ -81,7 +89,7 @@ typedef struct PictureBox_s
 }tPictureBox;
 //#######################################################################################
 void picturebox(tPictureBox *settings, tControlCommandData* control_comand);
-tPictureBox *new_picturebox(tDisplay *ScreenDisplay);
+tPictureBox *new_picturebox(void *ParentWindow);
 bool free_picturebox(tPictureBox* settings);
 void picturebox_clear(tPictureBox* settings);
 //void picturebox_copy_rectangle(tPictureBox* settings, unsigned int *src_buff, signed int src_x_buff_size, signed int src_y_buff_size, signed int src_x_offset, signed int src_y_offset);

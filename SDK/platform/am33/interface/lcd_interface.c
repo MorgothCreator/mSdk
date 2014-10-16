@@ -6,6 +6,8 @@
  */
 /**********************************************/
 #include <stdbool.h>
+#include <stdlib.h>
+#include <string.h>
 #include "../include/hw/hw_lcdc.h"
 #include "lcd_interface.h"
 #include "../include/raster.h"
@@ -93,33 +95,39 @@ void _RasterDMAConfig(unsigned int baseAddr, unsigned int frmMode,
 bool SetUpLCD(tDisplay* LcdStruct)
 {
 	ScreenRander = LcdStruct;
+	int FrameRate = 60;
 	switch(LcdStruct->LcdType)
 	{
 		case S035Q01:
 			LcdStruct->Width = 320;
 			LcdStruct->Height = 240;
 			pmic_backlight_enable(LcdStruct->PmicTwiModuleStruct);
-			LcdStruct->BackLightLevel = 80;
+			FrameRate = 120;
+			//LcdStruct->BackLightLevel = 80;
 			pmic_backlight_level(LcdStruct->PmicTwiModuleStruct, LcdStruct->BackLightLevel);
 			break;
 		case AT070TN92:
 			LcdStruct->Width = 800;
 			LcdStruct->Height = 480;
+			FrameRate = 120;
 			LcdStruct->BackLight = gpio_assign(LcdStruct->BackLightPort, LcdStruct->BackLightPin, GPIO_DIR_OUTPUT, false);
 			break;
 		case TFT43AB_OMAP35x:
 			LcdStruct->Width = 480;
 			LcdStruct->Height = 272;
+			FrameRate = 120;
 			LcdStruct->BackLight = gpio_assign(LcdStruct->BackLightPort, LcdStruct->BackLightPin, GPIO_DIR_OUTPUT, false);
 			break;
 		case VGA:
 			LcdStruct->Width = 1024;
 			LcdStruct->Height = 768;
+			FrameRate = 60;
 			LcdStruct->BackLight = gpio_assign(LcdStruct->BackLightPort, LcdStruct->BackLightPin, GPIO_DIR_OUTPUT, false);
 			break;
 		case LVDS:
 			LcdStruct->Width = 800;
 			LcdStruct->Height = 600;
+			FrameRate = 60;
 			LcdStruct->BackLight = gpio_assign(LcdStruct->BackLightPort, LcdStruct->BackLightPin, GPIO_DIR_OUTPUT, false);
 			break;
 		default:
@@ -127,7 +135,11 @@ bool SetUpLCD(tDisplay* LcdStruct)
 	}
 	LcdStruct->sClipRegion.sXMax = LcdStruct->Width;
 	LcdStruct->sClipRegion.sYMax = LcdStruct->Height;
-	LcdStruct->DisplayData = memalign(sizeof(LcdStruct->DisplayData[0]) << 3, (LcdStruct->Width * LcdStruct->Height * sizeof(LcdStruct->DisplayData[0])) + 32);
+#ifdef gcc
+	LcdStruct->DisplayData = (volatile unsigned int *)malloc((LcdStruct->Width * LcdStruct->Height * sizeof(LcdStruct->DisplayData[0])) + 32);
+#else
+	LcdStruct->DisplayData = (volatile unsigned int *)memalign(sizeof(LcdStruct->DisplayData[0]) << 3, (LcdStruct->Width * LcdStruct->Height * sizeof(LcdStruct->DisplayData[0])) + 32);
+#endif
     LCDAINTCConfigure();
     /* Enable clock for LCD Module */
     LCDModuleClkConfig();
@@ -145,7 +157,7 @@ bool SetUpLCD(tDisplay* LcdStruct)
     RasterDisable(SOC_LCDC_0_REGS);
 
     /* Configure the pclk */
-    RasterClkConfig(SOC_LCDC_0_REGS, LcdStruct->Width * LcdStruct->Height * 120, 192000000);
+    RasterClkConfig(SOC_LCDC_0_REGS, LcdStruct->Width * LcdStruct->Height * FrameRate, 192000000);
 
     /* Configuring DMA of LCD controller */
     _RasterDMAConfig(SOC_LCDC_0_REGS, RASTER_DOUBLE_FRAME_BUFFER,
@@ -192,10 +204,10 @@ bool SetUpLCD(tDisplay* LcdStruct)
 			break;
 		case VGA:
 			/* Configuring horizontal timing parameter */
-			RasterHparamConfig(SOC_LCDC_0_REGS, 1024, 53, 18, 1248);
+			RasterHparamConfig(SOC_LCDC_0_REGS, 1024, 144, 168, 8);
 
 			/* Configuring vertical timing parameters */
-			RasterVparamConfig(SOC_LCDC_0_REGS, 760, 6, 3, 29);
+			RasterVparamConfig(SOC_LCDC_0_REGS, 768, 4, 29, 3);
 			break;
 		case LVDS:
 			/* Configuring horizontal timing parameter */

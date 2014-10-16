@@ -48,7 +48,7 @@
 //
 //*****************************************************************************
 #ifdef __cplusplus
-"C"
+extern "C"
 {
 #endif
 
@@ -158,6 +158,7 @@
 //
 //*****************************************************************************
 #define USB_UNDEF_SPEED         0x80000000  // Current speed is undefined
+#define USB_HIGH_SPEED         	0x00000002  // Current speed is High speed
 #define USB_FULL_SPEED          0x00000001  // Current speed is Full Speed
 #define USB_LOW_SPEED           0x00000000  // Current speed is Low Speed
 
@@ -407,124 +408,130 @@
 // Prototypes for the APIs.
 //
 //*****************************************************************************
-unsigned int USBDevAddrGet(unsigned int ulBase);
-void USBDevAddrSet(unsigned int ulBase, unsigned int ulAddress);
-void USBDevConnect(unsigned int ulBase);
-void USBDevDisconnect(unsigned int ulBase);
-void USBDevEndpointConfigSet(unsigned int ulBase,
+extern unsigned int USBDevAddrGet(unsigned int ulBase);
+extern void USBDevAddrSet(unsigned int ulBase, unsigned int ulAddress);
+extern void USBDevConnect(unsigned int ulBase);
+extern void USBDevDisconnect(unsigned int ulBase);
+extern void USBDevEndpointConfigSet(unsigned int ulBase,
                                     unsigned int ulEndpoint,
                                     unsigned int ulMaxPacketSize,
                                     unsigned int ulFlags);
-void USBDevEndpointConfigGet(unsigned int ulBase,
+extern void USBDevEndpointConfigGet(unsigned int ulBase,
                                     unsigned int ulEndpoint,
                                     unsigned int *pulMaxPacketSize,
                                     unsigned int *pulFlags);
-void USBDevEndpointDataAck(unsigned int ulBase,
+extern void USBDevEndpointDataAck(unsigned int ulBase,
                                   unsigned int ulEndpoint,
                                   tBoolean bIsLastPacket);
-void USBDevEndpointStall(unsigned int ulBase, unsigned int ulEndpoint,
+extern void USBDevEndpointStall(unsigned int ulBase, unsigned int ulEndpoint,
                                 unsigned int ulFlags);
-void USBDevEndpointStallClear(unsigned int ulBase,
+extern void USBDevEndpointStallClear(unsigned int ulBase,
                                      unsigned int ulEndpoint,
                                      unsigned int ulFlags);
-void USBDevEndpointStatusClear(unsigned int ulBase,
+extern void USBDevEndpointStatusClear(unsigned int ulBase,
                                       unsigned int ulEndpoint,
                                       unsigned int ulFlags);
-unsigned int USBEndpointDataAvail(unsigned int ulBase,
+extern unsigned int USBEndpointDataAvail(unsigned int ulBase,
                                           unsigned int ulEndpoint);
-void USBEndpointDMAEnable(unsigned int ulBase, unsigned int ulEndpoint,
+extern void USBEndpointDMAEnable(unsigned int ulBase, unsigned int ulEndpoint,
                                  unsigned int ulFlags);
-void USBEndpointDMADisable(unsigned int ulBase,
+extern void USBEndpointDMADisable(unsigned int ulBase,
                                   unsigned int ulEndpoint,
                                   unsigned int ulFlags);
-int USBEndpointDataGet(unsigned int ulBase, unsigned int ulEndpoint,
+extern int USBEndpointDataGet(unsigned int ulBase, unsigned int ulEndpoint,
                                unsigned char *pucData, unsigned int *pulSize);
-int USBEndpointDataPut(unsigned int ulBase, unsigned int ulEndpoint,
+extern int USBEndpointDataPut(unsigned int ulBase, unsigned int ulEndpoint,
                                unsigned char *pucData, unsigned int ulSize);
-int USBEndpointDataSend(unsigned int ulBase, unsigned int ulEndpoint,
+extern int USBEndpointDataSend(unsigned int ulBase, unsigned int ulEndpoint,
                                 unsigned int ulTransType);
-void USBEndpointDataToggleClear(unsigned int ulBase,
+extern void USBEndpointDataToggleClear(unsigned int ulBase,
                                        unsigned int ulEndpoint,
                                        unsigned int ulFlags);
-unsigned int USBEndpointStatus(unsigned int ulBase,
+extern unsigned int USBEndpointStatus(unsigned int ulBase,
                                        unsigned int ulEndpoint);
-unsigned int USBFIFOAddrGet(unsigned int ulBase,
+extern unsigned int USBFIFOAddrGet(unsigned int ulBase,
                                     unsigned int ulEndpoint);
-void USBFIFOConfigGet(unsigned int ulBase, unsigned int ulEndpoint,
+extern void USBFIFOConfigGet(unsigned int ulBase, unsigned int ulEndpoint,
                              unsigned int *pulFIFOAddress,
                              unsigned int *pulFIFOSize,
                              unsigned int ulFlags);
-void USBFIFOConfigSet(unsigned int ulBase, unsigned int ulEndpoint,
+extern void USBFIFOConfigSet(unsigned int ulBase, unsigned int ulEndpoint,
                              unsigned int ulFIFOAddress,
                              unsigned int ulFIFOSize, unsigned int ulFlags);
-void USBFIFOFlush(unsigned int ulBase, unsigned int ulEndpoint,
+extern void USBFIFOFlush(unsigned int ulBase, unsigned int ulEndpoint,
                          unsigned int ulFlags);
-unsigned int USBFrameNumberGet(unsigned int ulBase);
-unsigned int USBHostAddrGet(unsigned int ulBase,
+extern unsigned int USBFrameNumberGet(unsigned int ulBase);
+extern unsigned int USBHostAddrGet(unsigned int ulBase,
                                     unsigned int ulEndpoint,
                                     unsigned int ulFlags);
-void USBHostAddrSet(unsigned int ulBase, unsigned int ulEndpoint,
+extern void USBHostAddrSet(unsigned int ulBase, unsigned int ulEndpoint,
                            unsigned int ulAddr, unsigned int ulFlags);
-void USBHostEndpointConfig(unsigned int ulBase,
+extern void USBHostEndpointConfig(unsigned int ulBase,
                                   unsigned int ulEndpoint,
                                   unsigned int ulMaxPacketSize,
                                   unsigned int ulNAKPollInterval,
                                   unsigned int ulTargetEndpoint,
                                   unsigned int ulFlags);
-void USBHostEndpointDataAck(unsigned int ulBase,
+extern void USBHostEndpointDataAck(unsigned int ulBase,
                                    unsigned int ulEndpoint);
-void USBHostEndpointDataToggle(unsigned int ulBase,
+extern void USBHostEndpointDataToggle(unsigned int ulBase,
                                       unsigned int ulEndpoint,
                                       tBoolean bDataToggle,
                                       unsigned int ulFlags);
-void USBHostEndpointStatusClear(unsigned int ulBase,
+extern void USBHostEndpointStatusClear(unsigned int ulBase,
                                        unsigned int ulEndpoint,
                                        unsigned int ulFlags);
-unsigned int USBHostHubAddrGet(unsigned int ulBase,
+extern unsigned int USBHostHubAddrGet(unsigned int ulBase,
                                        unsigned int ulEndpoint,
                                        unsigned int ulFlags);
-void USBHostHubAddrSet(unsigned int ulBase, unsigned int ulEndpoint,
+extern void USBHostHubAddrSet(unsigned int ulBase, unsigned int ulEndpoint,
                               unsigned int ulAddr, unsigned int ulFlags);
-void USBHostPwrDisable(unsigned int ulBase);
-void USBHostPwrEnable(unsigned int ulBase);
-void USBHostPwrConfig(unsigned int ulBase, unsigned int ulFlags);
+extern void USBHostPwrDisable(unsigned int ulBase);
+extern void USBHostPwrEnable(unsigned int ulBase);
+extern void USBHostPwrConfig(unsigned int ulBase, unsigned int ulFlags);
 #ifndef DEPRECATED
 #define USBHostPwrFaultConfig   USBHostPwrConfig
 #endif
-void USBHostPwrFaultDisable(unsigned int ulBase);
-void USBHostPwrFaultEnable(unsigned int ulBase);
-void USBHostRequestIN(unsigned int ulBase, unsigned int ulEndpoint);
-void USBHostRequestStatus(unsigned int ulBase);
-void USBHostReset(unsigned int ulBase, tBoolean bStart);
-void USBHostResume(unsigned int ulBase, tBoolean bStart);
-unsigned int USBHostSpeedGet(unsigned int ulBase);
-void USBHostSuspend(unsigned int ulBase);
-void USBIntDisableControl(unsigned int ulBase,
+extern void USBHostPwrFaultDisable(unsigned int ulBase);
+extern void USBHostPwrFaultEnable(unsigned int ulBase);
+extern void USBHostRequestIN(unsigned int ulBase, unsigned int ulEndpoint);
+extern void USBHostRequestStatus(unsigned int ulBase);
+extern void USBHostReset(unsigned int ulBase, tBoolean bStart);
+extern void USBHostResume(unsigned int ulBase, tBoolean bStart);
+extern unsigned int USBHostSpeedGet(unsigned int ulBase);
+extern void USBHostSuspend(unsigned int ulBase);
+extern void USBIntDisableControl(unsigned int ulBase,
                                  unsigned int ulIntFlags);
-void USBIntEnableControl(unsigned int ulBase,
+extern void USBIntEnableControl(unsigned int ulBase,
                                 unsigned int ulIntFlags);
-unsigned int USBIntStatusControl(unsigned int ulBase);
-void USBIntDisableEndpoint(unsigned int ulBase,
+extern unsigned int USBIntStatusControl(unsigned int ulBase);
+extern void USBIntDisableEndpoint(unsigned int ulBase,
                                   unsigned int ulIntFlags);
-void USBIntEnableEndpoint(unsigned int ulBase,
+extern void USBIntEnableEndpoint(unsigned int ulBase,
                                  unsigned int ulIntFlags);
-unsigned int USBIntStatusEndpoint(unsigned int ulBase);
-void USBIntRegister(unsigned int ulBase, void(*pfnHandler)(void));
-void USBIntUnregister(unsigned int ulBase);
-void USBOTGSessionRequest(unsigned int ulBase, tBoolean bStart);
-unsigned int USBModeGet(unsigned int ulBase);
-void USBEndpointDMAChannel(unsigned int ulBase,
+extern unsigned int USBIntStatusEndpoint(unsigned int ulBase);
+extern void USBIntRegister(unsigned int ulBase, void(*pfnHandler)(void));
+extern void USBIntUnregister(unsigned int ulBase);
+extern void USBOTGSessionRequest(unsigned int ulBase, tBoolean bStart);
+extern unsigned int USBModeGet(unsigned int ulBase);
+extern void USBEndpointDMAChannel(unsigned int ulBase,
                                   unsigned int ulEndpoint,
                                   unsigned int ulChannel);
-void USBEnableOtgIntr(unsigned int ulBase);
-void USBReset(unsigned int ulBase);
-void USBClearOtgIntr(unsigned int ulBase);
+extern void USBEnableOtgIntr(unsigned int ulBase);
+extern void USBReset(unsigned int ulBase);
+extern void USBClearOtgIntr(unsigned int ulBase);
 
-void USB0ModuleClkConfig(void);
+extern void USB0ModuleClkConfig(void);
 extern void USBModuleClkEnable(unsigned int ulIndex, unsigned int ulBase);
 extern void USBModuleClkDisable(unsigned int ulIndex, unsigned int ulBase);
-
-
+//
+// Channel Abort functions
+//
+extern void USBRxChAbort(unsigned int ulBase, unsigned int ulEndpoint);
+extern void USBHostTxChAbort(unsigned int ulBase, unsigned int ulEndpoint);
+extern void USBDmaTxChTeardown(unsigned int ulBase, unsigned int ulEndpoint);
+extern void USBDmaTxChDisable(unsigned int ulBase, unsigned int ulEndpoint);
+extern void USBHostTxFifoFlush(unsigned int ulBase, unsigned int ulEndpoint);
 //*****************************************************************************
 //
 // Several USB APIs have been renamed, with the original function name being
@@ -573,19 +580,15 @@ extern void USBModuleClkDisable(unsigned int ulIndex, unsigned int ulBase);
 #define USB_INT_EP0             0x00000001  // Endpoint 0 Interrupt
 
 #define USBDevEndpointConfig    USBDevEndpointConfigSet
-void USBIntDisable(unsigned int ulBase, unsigned int ulIntFlags);
-void USBIntEnable(unsigned int ulBase, unsigned int ulIntFlags);
-unsigned int USBIntStatus(unsigned int ulBase);
-unsigned int USBVersionGet(void);
-void USBEnableInt(unsigned int ulBase);
-void USBClearInt(unsigned int ulBase);
-void USBHostAutoReqClear(unsigned int ulBase, unsigned int ulEndpoint);
-void USBHostRequestINClear(unsigned int ulBase, unsigned int ulEndpoint);
-void USBHostAutoReqSet(unsigned int ulBase, unsigned int ulEndpoint);
-
-#ifdef HEADER_INCLUDE_C_FILES
-#include "driver/usb.c"
-#endif
+extern void USBIntDisable(unsigned int ulBase, unsigned int ulIntFlags);
+extern void USBIntEnable(unsigned int ulBase, unsigned int ulIntFlags);
+extern unsigned int USBIntStatus(unsigned int ulBase);
+extern unsigned int USBVersionGet(void);
+extern void USBEnableInt(unsigned int ulBase);
+extern void USBClearInt(unsigned int ulBase);
+extern void USBHostAutoReqClear(unsigned int ulBase, unsigned int ulEndpoint);
+extern void USBHostRequestINClear(unsigned int ulBase, unsigned int ulEndpoint);
+extern void USBHostAutoReqSet(unsigned int ulBase, unsigned int ulEndpoint);
 
 #endif
 

@@ -25,6 +25,7 @@
 #include <stdbool.h>
 #include "scrollbar.h"
 #include "controls_definition.h"
+//#include "window_def.h"
 //#######################################################################################
 typedef struct
 {
@@ -99,6 +100,11 @@ typedef struct
 		{
 			signed int X;
 			signed int Y;
+		}PositionOffset;
+		struct
+		{
+			signed int X;
+			signed int Y;
 			signed int ItemSizeY;
 			signed int ScrollSize;
 		}Size;
@@ -115,6 +121,8 @@ typedef struct
 		CursorState OldStateCursor;
 		tDisplay *pDisplay;
 		tScrollBar* ScrollBar;
+		void *ParentWindow;
+		bool ParentWindowStateEnabled;
 	}Internals;
 	bool Visible;
 	bool Enabled;
@@ -128,8 +136,8 @@ typedef struct
 	}Text;
 	struct
 	{
-		bool (*insert)(void* /*_settings*/, char* /*text*/, unsigned int /*location*/);
-		bool (*add)(void* /*_settings*/, char* /*text*/);
+		void* (*insert)(void* /*_settings*/, char* /*text*/, unsigned int /*location*/);
+		void* (*add)(void* /*_settings*/, char* /*text*/);
 		bool (*remove)(void* /*_settings*/, unsigned int /*location*/);
 		bool (*remove_all)(void* /*_settings*/);
 	}Item;
@@ -141,10 +149,10 @@ typedef struct
 }tListBox;
 //#######################################################################################
 void listbox(tListBox *settings, tControlCommandData* control_comand);
-tListBox *new_listbox(tDisplay *ScreenDisplay);
+tListBox *new_listbox(void *ParentWindow);
 bool free_listbox(void* _settings);
-bool listbox_item_insert(void* _settings, char* text, unsigned int location);
-bool listbox_item_add(void* _settings, char* text);
+void* listbox_item_insert(void* _settings, char* text, unsigned int location);
+void* listbox_item_add(void* _settings, char* text);
 bool listbox_item_remove(void* _settings, unsigned int location);
 bool listbox_item_remove_all(void* _settings);
 //#######################################################################################

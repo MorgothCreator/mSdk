@@ -29,6 +29,7 @@
 #include "../include/usbhost.h"
 #include "../include/usbhmsc.h"
 #include "../include/usbhscsi.h"
+#include "string.h"
 
 //*****************************************************************************
 //
@@ -76,6 +77,8 @@ USBHSCSISendCommand(unsigned int ulIndex, unsigned int ulInPipe,
 {
     tMSCCSW CmdStatus;
     unsigned int ulBytes;
+
+    memset (&CmdStatus, 0, sizeof(CmdStatus));
 
     //
     // Initialize the command status.
@@ -190,6 +193,8 @@ USBHSCSIInquiry(unsigned int ulIndex, unsigned int ulInPipe,
 {
     tMSCCBW SCSICmd;
 
+    memset (&SCSICmd, 0, sizeof(tMSCCBW));
+
     //
     // The number of bytes of data that the host expects to transfer on the
     // Bulk-In or Bulk-Out endpoint (as indicated by the Direction bit) during
@@ -220,40 +225,40 @@ USBHSCSIInquiry(unsigned int ulIndex, unsigned int ulInPipe,
     // Send Inquiry command with no request for vital product data.
     //
     SCSICmd.CBWCB[0] = SCSI_INQUIRY_CMD;
-    SCSICmd.CBWCB[1] = 0;
-    SCSICmd.CBWCB[2] = 0;
-    SCSICmd.CBWCB[3] = 0;  
+
     //
     // Allocation length.
     //
-    SCSICmd.CBWCB[4] = SCSI_INQUIRY_DATA_SZ;
-    SCSICmd.CBWCB[5] = 0;
-    SCSICmd.CBWCB[6] = 0;
-    SCSICmd.CBWCB[7] = 0;
-    SCSICmd.CBWCB[8] = 0;
-    SCSICmd.CBWCB[9] = 0;
-    SCSICmd.CBWCB[10] = 0;
-    SCSICmd.CBWCB[11] = 0;
-    SCSICmd.CBWCB[12] = 0;
-    SCSICmd.CBWCB[13] = 0;
-    SCSICmd.CBWCB[14] = 0;
-    SCSICmd.CBWCB[15] = 0;
+    // MSB of Alloc length
+    //
+    SCSICmd.CBWCB[3] = (SCSI_INQUIRY_DATA_SZ >> 8 ) & 0xFF;
+    //
+    // LSB of alloc length
+    //
+    SCSICmd.CBWCB[4] = SCSI_INQUIRY_DATA_SZ & 0xFF;
+#elif defined (_TMS320C6X)
+    //
+    // Send Inquiry command with no request for vital product data.
+    //
+    _mem4(&SCSICmd.CBWCB[0]) = SCSI_INQUIRY_CMD;
+    //
+    // Allocation length.
+    //
+    _mem4(&SCSICmd.CBWCB[4]) = SCSI_INQUIRY_DATA_SZ;
 #else
     //
     // Send Inquiry command with no request for vital product data.
     //
-    *((unsigned int *)&SCSICmd.CBWCB[0]) = SCSI_INQUIRY_CMD;
-
+    SCSICmd.CBWCB[0] = SCSI_INQUIRY_CMD;
     //
-    // Allocation length.
+    // MSB of Alloc length
     //
-    *((unsigned int *)&SCSICmd.CBWCB[4]) = SCSI_INQUIRY_DATA_SZ;
-    *((unsigned int *)&SCSICmd.CBWCB[8]) = 0;
-    *((unsigned int *)&SCSICmd.CBWCB[12]) = 0;
+    SCSICmd.CBWCB[3] = (SCSI_INQUIRY_DATA_SZ >> 8 ) & 0xFF;
+    //
+    // LSB of alloc length
+    //
+    SCSICmd.CBWCB[4] = SCSI_INQUIRY_DATA_SZ & 0xFF;
 #endif  
-
-
-
 
     //
     // Send the command and get the results.
@@ -292,6 +297,8 @@ USBHSCSIReadCapacity(unsigned int ulIndex, unsigned int ulInPipe,
 {
     tMSCCBW SCSICmd;
 
+    memset (&SCSICmd, 0, sizeof(tMSCCBW));
+
     //
     // Set the size of the command data.
     //
@@ -313,31 +320,14 @@ USBHSCSIReadCapacity(unsigned int ulIndex, unsigned int ulInPipe,
     SCSICmd.bCBWCBLength = 12;   
     
     //
-    // Only use the first byte and set it to the Read Capacity command.  The
-    // rest are set to 0.    //
-     
+    // Set command to read the capacity
+    //
 #if defined (__IAR_SYSTEMS_ICC__)  
     SCSICmd.CBWCB[0] = SCSI_READ_CAPACITY;
-    SCSICmd.CBWCB[1] = 0;
-    SCSICmd.CBWCB[2] = 0;
-    SCSICmd.CBWCB[3] = 0;  
-    SCSICmd.CBWCB[4] = 0;
-    SCSICmd.CBWCB[5] = 0;
-    SCSICmd.CBWCB[6] = 0;
-    SCSICmd.CBWCB[7] = 0;
-    SCSICmd.CBWCB[8] = 0;
-    SCSICmd.CBWCB[9] = 0;
-    SCSICmd.CBWCB[10] = 0;
-    SCSICmd.CBWCB[11] = 0;
-    SCSICmd.CBWCB[12] = 0;
-    SCSICmd.CBWCB[13] = 0;
-    SCSICmd.CBWCB[14] = 0;
-    SCSICmd.CBWCB[15] = 0;
+#elif defined (_TMS320C6X)
+    _mem4(&SCSICmd.CBWCB[0]) = SCSI_READ_CAPACITY;
 #else
-    *((unsigned int *)&SCSICmd.CBWCB[0]) = SCSI_READ_CAPACITY;
-    *((unsigned int *)&SCSICmd.CBWCB[4]) = 0;
-    *((unsigned int *)&SCSICmd.CBWCB[8]) = 0;
-    *((unsigned int *)&SCSICmd.CBWCB[12]) = 0;
+    SCSICmd.CBWCB[0] = SCSI_READ_CAPACITY;
 #endif
 
     //
@@ -373,6 +363,8 @@ USBHSCSIReadCapacities(unsigned int ulIndex, unsigned int ulInPipe,
 {
     tMSCCBW SCSICmd;
 
+    memset (&SCSICmd, 0, sizeof(tMSCCBW));
+
     //
     // This is an IN request.
     //
@@ -394,26 +386,10 @@ USBHSCSIReadCapacities(unsigned int ulIndex, unsigned int ulInPipe,
     //
 #if defined (__IAR_SYSTEMS_ICC__)  
     SCSICmd.CBWCB[0] = SCSI_READ_CAPACITIES;
-    SCSICmd.CBWCB[1] = 0;
-    SCSICmd.CBWCB[2] = 0;
-    SCSICmd.CBWCB[3] = 0;  
-    SCSICmd.CBWCB[4] = 0;
-    SCSICmd.CBWCB[5] = 0;
-    SCSICmd.CBWCB[6] = 0;
-    SCSICmd.CBWCB[7] = 0;
-    SCSICmd.CBWCB[8] = 0;
-    SCSICmd.CBWCB[9] = 0;
-    SCSICmd.CBWCB[10] = 0;
-    SCSICmd.CBWCB[11] = 0;
-    SCSICmd.CBWCB[12] = 0;
-    SCSICmd.CBWCB[13] = 0;
-    SCSICmd.CBWCB[14] = 0;
-    SCSICmd.CBWCB[15] = 0;
+#elif defined (_TMS320C6X)
+    _mem4(&SCSICmd.CBWCB[0]) = SCSI_READ_CAPACITIES;
 #else
-    *((unsigned int *)&SCSICmd.CBWCB[0]) = SCSI_READ_CAPACITIES;
-    *((unsigned int *)&SCSICmd.CBWCB[4]) = 0;
-    *((unsigned int *)&SCSICmd.CBWCB[8]) = 0;
-    *((unsigned int *)&SCSICmd.CBWCB[12]) = 0;
+    SCSICmd.CBWCB[0] = SCSI_READ_CAPACITIES;
 #endif
 
     //
@@ -486,6 +462,8 @@ USBHSCSIModeSense6(unsigned int ulIndex, unsigned int ulInPipe,
 {
     tMSCCBW SCSICmd;
 
+    memset (&SCSICmd, 0, sizeof(tMSCCBW));
+
     //
     // This is an IN request.
     //
@@ -510,23 +488,14 @@ USBHSCSIModeSense6(unsigned int ulIndex, unsigned int ulInPipe,
     SCSICmd.CBWCB[2] = 0;
     SCSICmd.CBWCB[3] = 0;  
     SCSICmd.CBWCB[4] = (unsigned char)*pulSize;
-    SCSICmd.CBWCB[5] = 0;
-    SCSICmd.CBWCB[6] = 0;
-    SCSICmd.CBWCB[7] = 0;
-    SCSICmd.CBWCB[8] = 0;
-    SCSICmd.CBWCB[9] = 0;
-    SCSICmd.CBWCB[10] = 0;
-    SCSICmd.CBWCB[11] = 0;
-    SCSICmd.CBWCB[12] = 0;
-    SCSICmd.CBWCB[13] = 0;
-    SCSICmd.CBWCB[14] = 0;
-    SCSICmd.CBWCB[15] = 0;
+#elif defined (_TMS320C6X)
+    _mem4(&SCSICmd.CBWCB[0]) = (SCSI_MODE_SENSE_6 | ulFlags);
+    _mem4(&SCSICmd.CBWCB[4]) = (unsigned char)*pulSize;
 #else
-    *((unsigned int *)&SCSICmd.CBWCB[0]) = (SCSI_MODE_SENSE_6 | ulFlags);
-    *((unsigned int *)&SCSICmd.CBWCB[4]) = (unsigned char)*pulSize;
-    *((unsigned int *)&SCSICmd.CBWCB[8]) = 0;
-    *((unsigned int *)&SCSICmd.CBWCB[12]) = 0;
+    SCSICmd.CBWCB[0] = (SCSI_MODE_SENSE_6 | ulFlags);
+    SCSICmd.CBWCB[4] = (unsigned char)*pulSize;
 #endif
+
     //
     // Send the command and get the results.
     //
@@ -556,6 +525,8 @@ USBHSCSITestUnitReady(unsigned int ulIndex, unsigned int ulInPipe,
     tMSCCBW SCSICmd;
     unsigned int ulSize;
 
+    memset (&SCSICmd, 0, sizeof(tMSCCBW));
+
     //
     // No data in this command.
     //
@@ -581,26 +552,10 @@ USBHSCSITestUnitReady(unsigned int ulIndex, unsigned int ulInPipe,
     //
 #if defined (__IAR_SYSTEMS_ICC__) 
     SCSICmd.CBWCB[0] = SCSI_TEST_UNIT_READY;
-    SCSICmd.CBWCB[1] = 0;
-    SCSICmd.CBWCB[2] = 0;
-    SCSICmd.CBWCB[3] = 0;  
-    SCSICmd.CBWCB[4] = 0;
-    SCSICmd.CBWCB[5] = 0;
-    SCSICmd.CBWCB[6] = 0;
-    SCSICmd.CBWCB[7] = 0;
-    SCSICmd.CBWCB[8] = 0;
-    SCSICmd.CBWCB[9] = 0;
-    SCSICmd.CBWCB[10] = 0;
-    SCSICmd.CBWCB[11] = 0;
-    SCSICmd.CBWCB[12] = 0;
-    SCSICmd.CBWCB[13] = 0;
-    SCSICmd.CBWCB[14] = 0;
-    SCSICmd.CBWCB[15] = 0;
+#elif defined (_TMS320C6X)
+    _mem4(&SCSICmd.CBWCB[0]) = SCSI_TEST_UNIT_READY;
 #else
-    *((unsigned int *)&SCSICmd.CBWCB[0]) = SCSI_TEST_UNIT_READY;
-    *((unsigned int *)&SCSICmd.CBWCB[4]) = 0;
-    *((unsigned int *)&SCSICmd.CBWCB[8]) = 0;
-    *((unsigned int *)&SCSICmd.CBWCB[12]) = 0;
+    SCSICmd.CBWCB[0] = SCSI_TEST_UNIT_READY;
 #endif
 
     //
@@ -636,6 +591,8 @@ USBHSCSIRequestSense(unsigned int ulIndex, unsigned int ulInPipe,
 {
     tMSCCBW SCSICmd;
 
+    memset (&SCSICmd, 0, sizeof(tMSCCBW));
+
     //
     // This is an IN request.
     //
@@ -656,28 +613,15 @@ USBHSCSIRequestSense(unsigned int ulIndex, unsigned int ulInPipe,
     //
 #if defined (__IAR_SYSTEMS_ICC__) 
     SCSICmd.CBWCB[0] = SCSI_REQUEST_SENSE;    
-    SCSICmd.CBWCB[1] = 0;
-    SCSICmd.CBWCB[2] = 0;
-    SCSICmd.CBWCB[3] = 0;  
     SCSICmd.CBWCB[4] = 18;
-    SCSICmd.CBWCB[5] = 0;
-    SCSICmd.CBWCB[6] = 0;
-    SCSICmd.CBWCB[7] = 0;
-    SCSICmd.CBWCB[8] = 0;
-    SCSICmd.CBWCB[9] = 0;
-    SCSICmd.CBWCB[10] = 0;
-    SCSICmd.CBWCB[11] = 0;
-    SCSICmd.CBWCB[12] = 0;
-    SCSICmd.CBWCB[13] = 0;
-    SCSICmd.CBWCB[14] = 0;
-    SCSICmd.CBWCB[15] = 0;
+#elif defined (_TMS320C6X)
+    _mem4(&SCSICmd.CBWCB[0]) = SCSI_REQUEST_SENSE;
+    _mem4(&SCSICmd.CBWCB[4]) = 18;
 #else
-    *((unsigned int *)&SCSICmd.CBWCB[0]) = SCSI_REQUEST_SENSE;
-    *((unsigned int *)&SCSICmd.CBWCB[4]) = 18;
-    *((unsigned int *)&SCSICmd.CBWCB[8]) = 0;
-    *((unsigned int *)&SCSICmd.CBWCB[12]) = 0;
-
+    SCSICmd.CBWCB[0] = SCSI_REQUEST_SENSE;
+    SCSICmd.CBWCB[4] = 18;
 #endif
+
     //
     // Send the command and get the results.
     //
@@ -717,6 +661,8 @@ USBHSCSIRead10(unsigned int ulIndex, unsigned int ulInPipe,
                      unsigned int ulNumBlocks)
 {
     tMSCCBW SCSICmd;
+
+    memset (&SCSICmd, 0, sizeof(tMSCCBW));
 
     //
     // This is an IN request.
@@ -764,16 +710,10 @@ USBHSCSIRead10(unsigned int ulIndex, unsigned int ulInPipe,
 
 #if defined (__IAR_SYSTEMS_ICC__)
     SCSICmd.CBWCB[8] = (ulNumBlocks & 0xFF);
-    SCSICmd.CBWCB[9] = 0;
-    SCSICmd.CBWCB[10]= 0;
-    SCSICmd.CBWCB[11]= 0;
-    SCSICmd.CBWCB[12] = 0;
-    SCSICmd.CBWCB[13] = 0;
-    SCSICmd.CBWCB[14] = 0;
-    SCSICmd.CBWCB[15] = 0;
-#else    
-    *((unsigned int *)&SCSICmd.CBWCB[8]) = (ulNumBlocks & 0xFF);
-    *((unsigned int *)&SCSICmd.CBWCB[12]) = 0;
+#elif defined (_TMS320C6X)
+    _mem4(&SCSICmd.CBWCB[8]) = (ulNumBlocks & 0xFF);
+#else
+    SCSICmd.CBWCB[8] = (ulNumBlocks & 0xFF);
 #endif    
 
     //
@@ -813,6 +753,8 @@ USBHSCSIWrite10(unsigned int ulIndex, unsigned int ulInPipe,
                      unsigned int ulNumBlocks)
 {
     tMSCCBW SCSICmd;
+
+    memset (&SCSICmd, 0, sizeof(tMSCCBW));
 
     //
     // This is an IN request.
@@ -860,17 +802,12 @@ USBHSCSIWrite10(unsigned int ulIndex, unsigned int ulInPipe,
 
 #if defined (__IAR_SYSTEMS_ICC__)    
     SCSICmd.CBWCB[8] = (ulNumBlocks & 0xFF);
-    SCSICmd.CBWCB[9] = 0;
-    SCSICmd.CBWCB[10]= 0;
-    SCSICmd.CBWCB[11]= 0;
-    SCSICmd.CBWCB[12] = 0;
-    SCSICmd.CBWCB[13] = 0;
-    SCSICmd.CBWCB[14] = 0;
-    SCSICmd.CBWCB[15] = 0;
-#else    
-    *((unsigned int *)&SCSICmd.CBWCB[8]) = (ulNumBlocks & 0xFF);
-    *((unsigned int *)&SCSICmd.CBWCB[12]) = 0;
+#elif defined (_TMS320C6X)
+    _mem4(&SCSICmd.CBWCB[8]) = ulNumBlocks & 0xFF;
+#else
+    SCSICmd.CBWCB[8] = (ulNumBlocks & 0xFF);
 #endif   
+
     //
     // Send the command and get the results.
     //

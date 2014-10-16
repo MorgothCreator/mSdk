@@ -25,6 +25,7 @@
 #include <stdbool.h>
 #include "api/timer_api.h"
 #include "controls_definition.h"
+//#include "window_def.h"
 //#######################################################################################
 typedef enum kbd_qwerty_type_enum
 {
@@ -108,6 +109,8 @@ typedef struct
 		CursorState OldStateCursor;
 		tDisplay *pDisplay;
 		tButton *Keys[38];
+		void *ParentWindow;
+		bool ParentWindowStateEnabled;
 	}Internals;
 	bool Visible;
 	bool Enabled;
@@ -118,7 +121,7 @@ typedef struct
 }tVKbd_Qwerty;
 //#######################################################################################
 void v_keyboard(tVKbd_Qwerty *settings, tControlCommandData* control_comand);
-tVKbd_Qwerty *new_v_keyboard(tDisplay *ScreenDisplay);
+tVKbd_Qwerty *new_v_keyboard(void *ParentWindow);
 bool free_v_keyboard(tVKbd_Qwerty* settings);
 //#######################################################################################
 #ifdef HEADER_INCLUDE_C_FILES

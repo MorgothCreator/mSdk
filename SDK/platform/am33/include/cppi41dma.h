@@ -39,7 +39,6 @@
 *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *
 */
-
 #ifndef __CPPI41DMA_H
 #define __CPPI41DMA_H
 
@@ -49,15 +48,43 @@ extern "C"
 #endif
 
 #include "usb.h"
-#include "hw/hw_usb.h"
+#include "include/hw/hw_usb.h"
 
 #ifndef NULL
 #define NULL ((void *)0)
 #endif
 
+#if defined(ccs) ||             \
+    defined(codered) ||         \
+    defined(gcc) ||             \
+    defined(rvmdk) ||           \
+    defined(__ARMCC_VERSION) || \
+    defined(sourcerygxx)
+#define CPPI_DMA_PACKED __attribute__ ((packed))
+#elif defined(ewarm) || defined(__IAR_SYSTEMS_ICC__)
+#define CPPI_DMA_PACKED
+#elif defined(__TMS470__)
+#if defined(__TI_TMS470_V7__) || (__TI_COMPILER_VERSION__ >= 5000000)
+#define CPPI_DMA_PACKED __attribute__ ((packed))
+#else
+#warn The packed attribute is not supported by this version of the TI ARM CGT. \
+      Please upgrade to version 5.x or use an alternate toolchain instead.
+#define CPPI_DMA_PACKED
+#endif
+#elif defined(_TMS320C6X)
+#define CPPI_DMA_PACKED __attribute__ ((packed))
+#else
+#error Unrecognized COMPILER!
+#endif
+
+#if defined (am335x_15x15) || defined(am335x) || defined(c6a811x)
+#define USB_TX_MODE_SHIFT(n)       (((n) * 2) - 2)
+#define USB_RX_MODE_SHIFT(n)       (((n) * 2) - 2)
+#else
 #define USB_TX_MODE_SHIFT(n)       (((((n) - 1) << 1) * 2))
 #define USB_RX_MODE_SHIFT(n)       ((((((n) - 1) << 1) * 2) + 16))
 
+#endif
 #if defined (am335x_15x15) || defined(am335x) || defined(c6a811x)
 #define USB_OTGBASE USBSS_BASE
 
@@ -73,20 +100,33 @@ extern "C"
 #define CPDMA_TX_PENDING 0x03000000
 #define CPDMA_RX_PENDING 0x0C000000
 
-#define NUMOF_USB_INSTANCE                    1
+#define NUMOF_USB_INSTANCE                    USB_CONTROLLER_NUM_INSTANCES
 #endif
 
 #define CPDMA_STAR_0_PEND    0x1
 #define CPDMA_STAR_1_PEND    0x2
+//
+//Link RAM size  = 4* number of Descriptors
+//                                           4000
+#define LINK_RAM0_SIZE                       1024 //  max value would be (512 + 20) * 4
+#define DESC0_REGION_SIZE                    (1024 * 20) + SOC_CACHELINE_SIZE_MAX //16384 // > (512 + 20)*64 + SOC_CACHELINE_SIZE_MAX
 
-//Link RAM size
-#define LINK_RAM_SIZE                        1024
-#define DESC_REGION_SIZE                    (1024 * 20) + SOC_CACHELINE_SIZE_MAX
+//#define LINK_RAM_SIZE                        1024
+//#define DESC_REGION_SIZE                    (1024 * 20) + SOC_CACHELINE_SIZE_MAX
+//
+// Link and Desc Region1  - this is where TDs would be stored
+// Why : Our BDs or PDs are 64 bytes long and the TDs 32. Data structures of
+// only similar sizes can be stored in the same Descriptor region . Link RAM though
+// can be shared , but we define another Linking RAM region  .. Paranoia
+//
+#define LINK_RAM1_SIZE                       32  //  max value would be (32 * 4)
+#define DESC1_REGION_SIZE                    1088  // > 32 * 32 + SOC_CACHELINE_SIZE_MAX
 
-// Maximum packet length for GRNDS mode
-#define GRNDIS_MAX_PACKET_LENGTH            512 * 8
 
-#define  CPDMA_NUMOF_BUFFERS                512
+// Maximum packet length for GRNDIS mode
+#define GRNDIS_MAX_PACKET_LENGTH             512 * 8
+
+#define  CPDMA_NUMOF_BUFFERS                 512
 
 #ifdef USB_MODE_FULLSPEED
     #define USB_PACKET_LENGTH                64
@@ -94,26 +134,45 @@ extern "C"
     #define USB_PACKET_LENGTH                512
 #endif /* USB_MODE_FULLSPEED */
 
-#define QUEUE_MGR_DESCSIZE                  0x100
-#define QUEUE_MGR_REGSIZE                   0x3
+//Encoded as 2^(5+ desc_size)
+#define QUEUE_MGR_DESCSIZE                   0x100
+//Encoded as 2^(5+ reg_size)
+
+#define QUEUE_MGR_REGSIZE                    0x3
+
+// Defines for The tear down Q
+#define QUEUE_TDDESC_MGR_DESCSIZE            0x0   // DescSize in # of bytes: 2^(5+0) = 32 Bytes
+#define QUEUE_TDDESC_MGR_REGSIZE             0x0   // RegionSize in # of desc: 2^(5+1) = 64 Desc
+#define QUEUE_TDDESC_STARTINDEX_SHIFT        16
+#define QUEUE_TDDESC_STARTINDEX      	     0
+#define MAX_TDD_NUM                          32 	  //Max TearDown Desc Count: QUEUE_TDDESC_MGR_REGSIZE
+
+#define CPDMA_DESC_TYPE_TD_SHIFT    		 27
+#define CPDMA_DESC_TYPE_TD                	 0x13
 
 //Maximum number of data endpoints in one USB Intance
 #define MAX_NUM_EP                           15
 
+//
+// Maximum number of BDs to be reduced to 64 so as to reduce memory foot print
+//
 #define MAX_BD_NUM                           512
 #define NUM_OF_RX_BDs                        20
 
-#define BYTE_ALIGNMENT                      SOC_CACHELINE_SIZE_MAX
+#define BYTE_ALIGNMENT                       SOC_CACHELINE_SIZE_MAX
 
-#define SCHEDULER_ENABLE_SHFT               31
-#define CLAER_INTDO_STATUS                  0x03
+#define SCHEDULER_ENABLE_SHFT                31
+#define CLAER_INTDO_STATUS                   0x03
 
-#define SIZE_OF_SINGLE_BD                   0X0A
+//encoded in 4-byte increments with values 0 to 31 representing 24 and so on to 148 bytes.
+#define SIZE_OF_SINGLE_BD                	 0X0A
+#define SIZE_OF_TEARDOWNDESC             	 0x02 //32 bytes
 
-#define    CPDMA_BUFFER_NOT_USED            0
-#define CPDMA_BUFFER_USED                   1
+#define CPDMA_BUFFER_NOT_USED                0
+#define CPDMA_BUFFER_USED                    1
 
-#define CPDMA_BD_PACKET_TYPE                16
+#define CPDMA_BD_PACKET_TYPE                 16
+#define CPDMA_TEARDOWN_DESC_TYPE             0x13
 
 #define SOP                                 1
 #define MOP                                 2
@@ -124,6 +183,8 @@ extern "C"
 
 #if defined (am335x_15x15) || defined(am335x) || defined(c6a811x)
 //DMA registers
+
+#define CPDMA_TD_FD_QUEUE_CONTROL_REG       0x2004
 #define CPDMA_TX_CHANNEL_CONFIG_REG         0x2800 
 #define CPDMA_RX_CHANNEL_CONFIG_REG         0x2808 
 #define CPDMA_RX_CHANNEL_REG_A              0x280C
@@ -137,6 +198,7 @@ extern "C"
 #define NUM_OF_SCHEDULER_ENTRIES            16
 #else
 //DMA registers
+#define CPDMA_TD_FD_QUEUE_CONTROL_REG       0x1004
 #define CPDMA_TX_CHANNEL_CONFIG_REG         0x1800 
 #define CPDMA_RX_CHANNEL_CONFIG_REG         0x1808 
 #define CPDMA_RX_CHANNEL_REG_A              0x180C
@@ -149,9 +211,9 @@ extern "C"
 
 #define CPDMA_INTD_0_REGISTER                0x3200
 #define CPDMA_CLEAR_INTD_0_STATUS            0x3280
-#define    CPDMA_LRAM_0_BASE                 0x4080
-#define    CPDMA_LRAM_0_SIZE                 0x4084
-#define    CPDMA_LRAM_1_BASE                 0x4088
+#define CPDMA_LRAM_0_BASE                 	 0x4080
+#define CPDMA_LRAM_0_SIZE                    0x4084
+#define CPDMA_LRAM_1_BASE                    0x4088
 #define CPDMA_PEND_0_REGISTER                0x4090
 #define CPDMA_PEND_1_REGISTER                0x4094
 #define CPDMA_PEND_2_REGISTER                0x4098
@@ -159,9 +221,12 @@ extern "C"
 #define CPDMA_PEND_4_REGISTER                0x40A0
 #define CPDMA_QUEUEMGR_REGION_0              0x5000
 #define CPDMA_QUEUEMGR_REGION_0_CONTROL      0x5004
-
+#define CPDMA_QUEUEMGR_REGION_1              0x5010
+#define CPDMA_QUEUEMGR_REGION_1_CONTROL      0x5014
+#define CPDMA_QUEUEMGR_QUEUE_N_REGISTER_A    0x6000
 #define CPDMA_QUEUE_REGISTER_D               0x600C
-
+#define CPDMA_QUEUE_STATUS_A                 0x7000
+#define CPDMA_QUEUE_STATUS_A_COUNT_MASK   	 0x3FFF
 
 //Bit Fields for Channel Config
 #define SCHEDULE_RX_CHANNEL                 0x83828180
@@ -170,14 +235,27 @@ extern "C"
 #define SCHEDULE_RX1_CHANNEL                0x9291908F
 #define SCHEDULE_TX1_CHANNEL                0x1211100F
 
+// Changed by vineeth - Writing to reserved Location
+//#define CPDMA_RX_CHANNEL_ENABLE             0x81004000
 #define CPDMA_RX_CHANNEL_ENABLE             0x81004000
 #define CPDMA_TX_CHANNEL_ENABLE             0x80000000
+
+/* Tx Channel N Global Configuration Register bits */
+#define DMA_CH_TX_ENABLE_SHIFT		31
+#define DMA_CH_TX_ENABLE_MASK		(1 << DMA_CH_TX_ENABLE_SHIFT)
+#define DMA_CH_TX_TEARDOWN_SHIFT	30
+#define DMA_CH_TX_TEARDOWN_MASK		(1 << DMA_CH_TX_TEARDOWN_SHIFT)
+#define DMA_CH_TX_DEFAULT_QMGR_SHIFT	12
+#define DMA_CH_TX_DEFAULT_QMGR_MASK	(3 << DMA_CH_TX_DEFAULT_QMGR_SHIFT)
+#define DMA_CH_TX_DEFAULT_QNUM_SHIFT	0
+#define DMA_CH_TX_DEFAULT_QNUM_MASK	(0xfff << DMA_CH_TX_DEFAULT_QNUM_SHIFT)
 
 //Clear Auto set for TX endpoint
 #define CPDMA_TX_CLR_AUTO_SET               0x7FFF
 
-// Set DMAReqEnab & DMAReqMode for TX
+// Set DMAReqEnab
 #define CPDMA_TX_SET_REQ_ENABLE             0x1400
+#define CPDMA_TX_SET_DMAMODE                0x0400
 
 // Clear AUTOCLEAR and DMAReqMode
 #define CPDMA_RX_CLR_AUTO_CLEAR             0x77FF
@@ -190,7 +268,10 @@ extern "C"
 // Clear DMAReqEnab & DMAReqMode
 #define CPDMA_TX_CLR_REQ_ENABLE             0xEBFF
 
-// Bit fields  for Schduler controll reg
+// Clear DMA Request Enable
+#define CPDMA_TX_CLEAR_REQ_ENABLE             0xEFFF
+
+// Bit fields  for Schduler control reg
 #define ENABLE_CPPIDMA                      0x1
 #define DISABLE_CPPIDMA                     0x0
 
@@ -202,10 +283,10 @@ extern "C"
 #define CPDMA_MODE_ENABLE_GLOBAL_RNDIS       0x00000010
 
 //DMA mode
-#define CPDMA_MODE_SET_TRANSPARENT            0x0
+#define CPDMA_MODE_SET_TRANSPARENT          0x0
 #define CPDMA_MODE_SET_RNDIS                0x1
-#define CPDMA_MODE_SET_LINUXCDC                0x2
-#define CPDMA_MODE_SET_GRNDIS                0x3
+#define CPDMA_MODE_SET_LINUXCDC             0x2
+#define CPDMA_MODE_SET_GRNDIS               0x3
 
 #if defined (am335x_15x15) || defined(am335x) || defined(c6a811x)
 #define NUM_TX_SUBMITQ                      60
@@ -233,7 +314,7 @@ extern "C"
 #define TX_SUBMITQ18                        49
 #define TX_SUBMITQ19                        50
 #define TX_SUBMITQ20                        51
-#define    TX_SUBMITQ21                     52
+#define TX_SUBMITQ21                        52
 #define TX_SUBMITQ22                        53
 #define TX_SUBMITQ23                        54
 #define TX_SUBMITQ24                        55
@@ -281,6 +362,10 @@ extern "C"
 #define RX_COMPQ15                          123
 
 #define RX_COMPQ16                          141
+//
+// Teardown descriptor Queue
+//
+#define USB0_TEARDOWNQ1             	    31
 
 #else
 #define NUM_TX_SUBMITQ                      8
@@ -288,7 +373,7 @@ extern "C"
 #define NUM_RX_COMPQ                        4
 
 //TX submit q
-#define    TX_SUBMITQ1                      16
+#define TX_SUBMITQ1                      	16
 #define TX_SUBMITQ2                         17
 #define TX_SUBMITQ3                         18
 #define TX_SUBMITQ4                         19
@@ -305,7 +390,36 @@ extern "C"
 #define RX_COMPQ1                           26
 #define RX_COMPQ2                           27
 
+// This needs to be verified for AM18x
+#define USB0_TEARDOWNQ1             	    15
 #endif
+
+#define CPPI41_TEARDOWN_TX_RX_SHIFT	16
+#define CPPI41_TEARDOWN_TX_RX_MASK	(1 << CPPI41_TEARDOWN_TX_RX_SHIFT)
+#define CPPI41_TEARDOWN_DMA_NUM_SHIFT	10
+#define CPPI41_TEARDOWN_DMA_NUM_MASK	(0x3f << CPPI41_TEARDOWN_DMA_NUM_SHIFT)
+#define CPPI41_TEARDOWN_CHAN_NUM_SHIFT	0
+#define CPPI41_TEARDOWN_CHAN_NUM_MASK	(0x3f << CPPI41_TEARDOWN_CHAN_NUM_SHIFT)
+
+/*
+ * CPPI 4.1 Teardown Descriptor
+ */
+typedef struct
+{
+	unsigned int channelNumber:6;
+	unsigned int reserved2:4;
+	unsigned int dmaNumber:6; /*DMA number*/
+	unsigned int txrx:1; /*Tx=0; Rx=1*/
+	unsigned int reserved1:10;
+	unsigned int tearDownDescType:5;	/* Teardown information */
+}CPPI_DMA_PACKED cppi41TearDownInfo;
+
+typedef struct
+{
+	unsigned int teardown_info;	/* Teardown information */
+	unsigned int reserved[7];	/* 28 byte padding */
+}CPPI_DMA_PACKED cppi41TearDownDesc;
+
 
 //BD-PD structure
 typedef struct {
@@ -365,14 +479,22 @@ typedef struct
 {
     unsigned int submitq;
     unsigned int complettionq;
-    unsigned short channel;
+    unsigned int tearDownq;
+	unsigned short channel;
     unsigned short mode;
 }configEndPointInfo;
 
 typedef struct
 {
-unsigned int usbBaseAddress;
-unsigned int otgBaseAddress;
+//unsigned int usbBaseAddress;
+//unsigned int otgBaseAddress;
+
+unsigned int usbSubSysBaseAddress;
+unsigned int usbInstBaseAddress;
+
+ unsigned int usbInstPhyBaseAddress;
+ unsigned int usbInstCoreBaseAddress;
+
 configEndPointInfo rxEndPoint[NUM_USB_EP/2];
 configEndPointInfo txEndPoint[NUM_USB_EP/2];
 
@@ -388,16 +510,20 @@ typedef struct
 
     //RX Completion queues
     unsigned int rxCompletionq[NUM_RX_COMPQ];
-
+    //TearDown queue - for Queuing Up
+    unsigned int tearDownq;
     //Pointers for BD Management
     hostPacketDesc *tail_bd ;
     hostPacketDesc *head_bd;    
+    //Pointers for TD Management
+    cppi41TearDownDesc *tail_tdd ;
+    cppi41TearDownDesc *head_tdd;
     unsigned int *region0DescriptorAddress;
+    unsigned int *region1DescriptorAddress;
     
     //Array of USB Instances
     usbInstance usbInst[NUMOF_USB_INSTANCE];
 }cppi41DmaInfo;
-
 
 extern endpointInfo epInfo[];
 
@@ -418,18 +544,19 @@ void disableCoreRxDMA(unsigned short usbDevIns, unsigned int ulEndpoint);
 void disableCoreTxDMA(unsigned short usbDevIns, unsigned int ulEndpoint);
 
 unsigned int CppiDmaGetPendStatus(unsigned short usbDevInst);
-unsigned int CppiDmaGetINTD0Status(unsigned short usbDevInst);
 
 unsigned int * cppiDmaAllocBuffer();
 void cppiDmaFreeBuffer(unsigned int *dataBuffer);
 unsigned int * cppiDmaAllocnBuffer(unsigned int numOfBlocks);
 void cppiDmaFreenBuffer(unsigned int *dataBuffer);
 void cppiDmaHandleError(unsigned int usbDevInst); 
+unsigned int CppiDmaGetINTD0Status(unsigned short usbDevInst);
 
-#ifdef HEADER_INCLUDE_C_FILES
-#include "driver/cppi41dma.c"
-#endif
-
+void print_pend ( );
+// Teardown related function declarations
+void Cppi41DmaInitTddPool(unsigned short usbDevInst );
+int Cppi41DmaRxChTeardown(unsigned short usbDevInst, unsigned int ulEndpoint );
+int Cppi41DmaTxChTeardown(unsigned short usbDevInst, unsigned int ulEndpoint );
 #ifdef __cplusplus
 }
 #endif

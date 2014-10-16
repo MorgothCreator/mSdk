@@ -24,6 +24,7 @@
 //#######################################################################################
 #include <stdbool.h>
 #include "controls_definition.h"
+//#include "window_def.h"
 #include "lib/generic.h"
 //#######################################################################################
 typedef struct
@@ -86,6 +87,11 @@ typedef struct
 		{
 			signed int X;
 			signed int Y;
+		}PositionOffset;
+		struct
+		{
+			signed int X;
+			signed int Y;
 		}Size;
 		controls_caption_t Caption;
 		unsigned int OldValue;
@@ -100,6 +106,8 @@ typedef struct
 		bool CursorDownInsideBox;
 		CursorState OldStateCursor;
 		tDisplay *pDisplay;
+		void *ParentWindow;
+		bool ParentWindowStateEnabled;
 	}Internals;
 	bool Visible;
 	bool Enabled;
@@ -111,7 +119,7 @@ typedef struct
 }tProgressBar;
 //#######################################################################################
 void progressbar(tProgressBar *settings, tControlCommandData* control_comand);
-tProgressBar *new_progressbar(tDisplay *ScreenDisplay);
+tProgressBar *new_progressbar(void *ParentWindow);
 bool free_progressbar(tProgressBar* settings);
 //#######################################################################################
 #ifdef HEADER_INCLUDE_C_FILES

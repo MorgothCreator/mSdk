@@ -85,14 +85,18 @@ typedef struct
 	unsigned int Control_Color_Enabled_Border_Pull;
 	unsigned int Control_Color_Enabled_Border_Push;
 	unsigned int Control_Color_Enabled_BackGround;
+	unsigned int Control_Color_Enabled_WindowBorder;
+	unsigned int Control_Color_Enabled_WindowHeader;
 
 	unsigned int Control_Color_Disabled_Ink_Pull;
-	unsigned int Control_Color_Disabled_Ink_Push;
+	//unsigned int Control_Color_Disabled_Ink_Push;
 	unsigned int Control_Color_Disabled_Buton_Pull;
-	unsigned int Control_Color_Disabled_Buton_Push;
+	//unsigned int Control_Color_Disabled_Buton_Push;
 	unsigned int Control_Color_Disabled_Border_Pull;
-	unsigned int Control_Color_Disabled_Border_Push;
+	//unsigned int Control_Color_Disabled_Border_Push;
 	unsigned int Control_Color_Disabled_BackGround;
+	unsigned int Control_Color_Disabled_WindowBorder;
+	unsigned int Control_Color_Disabled_WindowHeader;
 	unsigned int Scren;
 	tFont* DefaultFont;
 }controlscolor;
@@ -174,6 +178,7 @@ typedef struct
 	unsigned int Data;
 	void* Settings;
 	bool CursorCoordonateUsed;
+	bool WindowRefresh;
 	ControlCommands Comand;
 	CursorState Cursor;
 }tControlCommandData;

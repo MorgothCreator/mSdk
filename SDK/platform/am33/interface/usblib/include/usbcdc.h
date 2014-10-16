@@ -760,7 +760,7 @@ typedef struct
     //
     unsigned char ucDatabits;
 }
-/*USBLIB_PACKED */tLineCoding;
+USBLIB_PACKED tLineCoding;
 
 //*****************************************************************************
 //

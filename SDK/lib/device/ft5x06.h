@@ -22,7 +22,7 @@
 #ifndef __FT5X06_H__
 #define __FT5X06_H__
 
-#include <stdlib.h>
+//#include <stdlib.h>
 #include <stdbool.h>
 #include "../api/touchscreen_def.h"
 #include "../api/twi_api.h"

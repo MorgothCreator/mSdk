@@ -13,7 +13,6 @@ void DMTimer2ModuleClkConfig(int ClkSource)
     HWREG(SOC_CM_DPLL_REGS + CM_DPLL_CLKSEL_TIMER2_CLK) &=
           ~(CM_DPLL_CLKSEL_TIMER2_CLK_CLKSEL);
 
-    asm("_DMTimer2ModuleClkConfig_");
     HWREG(SOC_CM_DPLL_REGS + CM_DPLL_CLKSEL_TIMER2_CLK) |=
     		ClkSource;
 
@@ -34,7 +33,6 @@ void DMTimer3ModuleClkConfig(int ClkSource)
     HWREG(SOC_CM_DPLL_REGS + CM_DPLL_CLKSEL_TIMER3_CLK) &=
           ~(CM_DPLL_CLKSEL_TIMER3_CLK_CLKSEL);
 
-    asm("_DMTimer3ModuleClkConfig_");
     HWREG(SOC_CM_DPLL_REGS + CM_DPLL_CLKSEL_TIMER3_CLK) |=
     		ClkSource;
 
@@ -55,7 +53,6 @@ void DMTimer4ModuleClkConfig(int ClkSource)
     HWREG(SOC_CM_DPLL_REGS + CM_DPLL_CLKSEL_TIMER4_CLK) &=
           ~(CM_DPLL_CLKSEL_TIMER4_CLK_CLKSEL);
 
-    asm("_DMTimer4ModuleClkConfig_");
     HWREG(SOC_CM_DPLL_REGS + CM_DPLL_CLKSEL_TIMER4_CLK) |=
     		ClkSource;
 
@@ -76,7 +73,6 @@ void DMTimer5ModuleClkConfig(int ClkSource)
     HWREG(SOC_CM_DPLL_REGS + CM_DPLL_CLKSEL_TIMER5_CLK) &=
           ~(CM_DPLL_CLKSEL_TIMER5_CLK_CLKSEL);
 
-    asm("_DMTimer5ModuleClkConfig_");
     HWREG(SOC_CM_DPLL_REGS + CM_DPLL_CLKSEL_TIMER5_CLK) |=
     		ClkSource;
 
@@ -97,7 +93,6 @@ void DMTimer6ModuleClkConfig(int ClkSource)
     HWREG(SOC_CM_DPLL_REGS + CM_DPLL_CLKSEL_TIMER6_CLK) &=
           ~(CM_DPLL_CLKSEL_TIMER6_CLK_CLKSEL);
 
-    asm("_DMTimer6ModuleClkConfig_");
     HWREG(SOC_CM_DPLL_REGS + CM_DPLL_CLKSEL_TIMER6_CLK) |=
     		ClkSource;
 
@@ -117,7 +112,6 @@ void DMTimer7ModuleClkConfig(int ClkSource)
     /* Select the clock source for the Timer7 instance. */
     HWREG(SOC_CM_DPLL_REGS + CM_DPLL_CLKSEL_TIMER7_CLK) &=
           ~(CM_DPLL_CLKSEL_TIMER7_CLK_CLKSEL);
-    asm("_DMTimer7ModuleClkConfig_");
 
     HWREG(SOC_CM_DPLL_REGS + CM_DPLL_CLKSEL_TIMER7_CLK) |=
     		ClkSource;

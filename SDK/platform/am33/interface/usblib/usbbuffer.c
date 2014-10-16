@@ -23,8 +23,8 @@
 //
 //*****************************************************************************
 
-#include "../../include/hw/hw_types.h"
-#include "../../include/debug.h"
+#include "include/hw/hw_types.h"
+#include "include/debug.h"
 #include "include/usblib.h"
 #include "include/usblibpriv.h"
 

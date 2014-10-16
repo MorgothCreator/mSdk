@@ -39,7 +39,7 @@ void UARTPutHexNum(Uart_t* UartSettings, unsigned long hexValue);
 long UARTGetNum(Uart_t* UartSettings);
 unsigned long UARTGetHexNum(Uart_t* UartSettings);
 unsigned int UARTwrite(Uart_t* UartSettings, const char *pcBuf, unsigned int len);
-void UARTprintf(Uart_t* UartSettings,const char *pcString, ...);
+Uart_t* UARTprintf(Uart_t* UartSettings,const char *pcString, ...);
 bool uart_open(Uart_t *UartSettings);
 bool uart_close(Uart_t *UartSettings);
 /*#####################################################*/

@@ -689,9 +689,9 @@ unsigned int UARTwrite(Uart_t* UartSettings,
  *
  * \return None.
  */
-void UARTprintf(Uart_t* UartSettings,const char *pcString, ...)
+Uart_t*  UARTprintf(Uart_t* UartSettings,const char *pcString, ...)
 {
-	if(!UartSettings) return;
+	if(!UartSettings) return UartSettings;
     unsigned long idx, pos, count, base, neg;
     char *pcStr, pcBuf[16], cFill;
     va_list vaArgP;
@@ -959,6 +959,7 @@ convert:
 
     /* End the varargs processing. */
     va_end(vaArgP);
+    return UartSettings;
 }
 
 bool uart_open(Uart_t* UartSettings)

@@ -13,10 +13,10 @@
 #include "mmcsdlib/mmcsd_proto.h"
 #include "api/gpio_def.h"
 /*#####################################################*/
-extern mmcsdCtrlInfo  ctrlInfo;
+//extern mmcsdCtrlInfo  ctrlInfo;
 /*#####################################################*/
-void _mmcsd_init(void *SdStruct, signed int CardDetectPortNr, signed int CardDetectPinNr, new_gpio* StatusLed);
-void _mmcsd_idle(void *SdStruct);
+void _mmcsd_init(void *SdCtrlStruct, signed int CardDetectPortNr, signed int CardDetectPinNr, new_gpio* StatusLed);
+void _mmcsd_idle(void *SdCtrlStruct);
 /*#####################################################*/
 #ifdef HEADER_INCLUDE_C_FILES
 #include "hs_mmcsd_interface.c"

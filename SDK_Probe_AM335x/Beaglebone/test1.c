@@ -124,7 +124,11 @@ int main(void) {
 #ifdef USE_BACK_SCREEN
     BackScreen = new_(new_screen);
     memcpy((void *)BackScreen, (void *)ScreenBuff, sizeof(new_screen));
+#ifdef gcc
+    BackScreen->DisplayData = malloc((BackScreen->Width * BackScreen->Height * sizeof(BackScreen->DisplayData[0])) + 32);
+#else
     BackScreen->DisplayData = memalign(sizeof(BackScreen->DisplayData[0]) << 3, (BackScreen->Width * BackScreen->Height * sizeof(BackScreen->DisplayData[0])) + 32);
+#endif
     MainWindow = new_window(BackScreen);
 #else
     MainWindow = new_window(ScreenBuff);
@@ -198,3 +202,4 @@ int main(void) {
     }
 }
 #endif
+

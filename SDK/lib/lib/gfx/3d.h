@@ -22,7 +22,7 @@
 #ifndef _3D_H_
 #define _3D_H_
 
-#include <math.h>
+//#include <math.h>
 #include <stdlib.h>
 #include "../../api/lcd_def.h"
 //#define focalLength  300

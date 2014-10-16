@@ -74,10 +74,10 @@ static struct jpeg_lib jpeg_lib_data;
 /* If the image is bigger than these values it will be resized
  * by a factor of 1/2, 1/3, 1/4 .... until it fits */
 
-#define DEFAULT_MAX_IMAGE_WIDTH     1024
-#define DEFAULT_MAX_IMAGE_HEIGHT    768
-#define DEFAULT_PIXEL_SIZE_IN_BYTES 2
-#define JPEG_INPUT_BUF_SIZE         1024
+//#define DEFAULT_MAX_IMAGE_WIDTH     1024
+//#define DEFAULT_MAX_IMAGE_HEIGHT    768
+//#define DEFAULT_PIXEL_SIZE_IN_BYTES 2
+//#define JPEG_INPUT_BUF_SIZE         1024
 
 #if !defined(JPEG_DECODER_MAX_IMAGE_WIDTH)
   #define JPEG_DECODER_MAX_IMAGE_WIDTH      DEFAULT_MAX_IMAGE_WIDTH
@@ -89,8 +89,8 @@ static struct jpeg_lib jpeg_lib_data;
   #define JPEG_DECODER_PIXEL_SIZE_IN_BYTES  DEFAULT_PIXEL_SIZE_IN_BYTES
 #endif
 /* --------- Stream management from FLASH buffer --------------------*/
-extern const unsigned char *picturebox_stream_jpeg_src_ptr;
-extern unsigned int picturebox_stream_src_size;
+//extern const unsigned char *picturebox_stream_jpeg_src_ptr;
+//extern unsigned int picturebox_stream_src_size;
 static size_t stream_offset;
 
 void stream_open(void)
@@ -100,11 +100,12 @@ void stream_open(void)
 
 size_t stream_read(JOCTET * buffer, size_t nb_byte)
 { // assume nb_byte never goes beyond the stream buffer size
+	if(!picturebox_stream_src_size && !picturebox_stream_jpeg_src_ptr) return nb_byte;
 	if ((stream_offset+nb_byte) > (size_t)picturebox_stream_src_size)
 	{
 		nb_byte = (size_t)picturebox_stream_src_size - stream_offset;
 	}
-	memcpy (buffer, (picturebox_stream_jpeg_src_ptr + stream_offset), nb_byte);
+	memcpy (buffer, ((unsigned char*)picturebox_stream_jpeg_src_ptr + stream_offset), nb_byte);
 	stream_offset += nb_byte;
 	return nb_byte;
 }

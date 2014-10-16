@@ -58,7 +58,7 @@ bool ft5x06_init(new_touchscreen* structure, unsigned char Port, unsigned char P
 		twistruct->TxBuff[0] = 0xF9;
 		if(SetupI2CReception(twistruct, 1, 38)) return true;
     }
-    ft5x06_free(structure);
+    //ft5x06_free(structure);
     return false;
 }
 
@@ -76,162 +76,162 @@ bool ft5x06_TouchIdle(new_touchscreen* structure)
 	SetupI2CReception(twistruct, 1, 38);
 	volatile unsigned char* Response = twistruct->RxBuff;
 	//if(Response[0] != 0xAA || Response[1] != 0xAA) return 0;
-	TouchScreen_Data_t* TouchReport = &structure->TouchResponse;
-	TouchReport->touch_point = Response[ft5x06_TouchIdle_offset + 1] & 0x0F;
+	//TouchScreen_Data_t* structure->TouchResponse = &structure->TouchResponse;
+	structure->TouchResponse.touch_point = Response[ft5x06_TouchIdle_offset + 1] & 0x0F;
 	unsigned char State1 = Gfx_IntTouch_MouseNoAction;
 	unsigned char State2 = Gfx_IntTouch_MouseNoAction;
 	unsigned char State3 = Gfx_IntTouch_MouseNoAction;
 	unsigned char State4 = Gfx_IntTouch_MouseNoAction;
 	unsigned char State5 = Gfx_IntTouch_MouseNoAction;
-	switch(TouchReport->touch_point)
+	switch(structure->TouchResponse.touch_point)
 	{
 	case 5:
-		TouchReport->x5 = (structure->screen_max_x - 1) - to_percentage(0,structure->touch_max_x,structure->screen_max_x,((Response[ft5x06_TouchIdle_offset + 26]<<8) | Response[ft5x06_TouchIdle_offset + 27]) & 0x0FFF);
-		TouchReport->y5 = to_percentage(0,structure->touch_max_y,structure->screen_max_y,((Response[ft5x06_TouchIdle_offset + 28]<<8) | Response[ft5x06_TouchIdle_offset + 29]) & 0x0FFF);
-		TouchReport->touch_ID5=(unsigned short)(Response[ft5x06_TouchIdle_offset + 29] & 0xF0)>>4;
-		//TouchReport->touch_event5 = (unsigned short)((Response[ft5x06_TouchIdle_offset + 27] & 0xc0) >> 6);
+		structure->TouchResponse.x5 = (structure->screen_max_x - 1) - to_percentage(0,structure->touch_max_x,structure->screen_max_x,((Response[ft5x06_TouchIdle_offset + 26]<<8) | Response[ft5x06_TouchIdle_offset + 27]) & 0x0FFF);
+		structure->TouchResponse.y5 = to_percentage(0,structure->touch_max_y,structure->screen_max_y,((Response[ft5x06_TouchIdle_offset + 28]<<8) | Response[ft5x06_TouchIdle_offset + 29]) & 0x0FFF);
+		structure->TouchResponse.touch_ID5=(unsigned short)(Response[ft5x06_TouchIdle_offset + 29] & 0xF0)>>4;
+		//structure->TouchResponse->touch_event5 = (unsigned short)((Response[ft5x06_TouchIdle_offset + 27] & 0xc0) >> 6);
 		State5 = Gfx_IntTouch_MouseMove;
 	case 4:
-		TouchReport->x4 = (structure->screen_max_x - 1) - to_percentage(0,structure->touch_max_x,structure->screen_max_x,((Response[ft5x06_TouchIdle_offset + 20]<<8) | Response[ft5x06_TouchIdle_offset + 21]) & 0x0FFF);
-		TouchReport->y4 = to_percentage(0,structure->touch_max_y,structure->screen_max_y,((Response[ft5x06_TouchIdle_offset + 22]<<8) | Response[ft5x06_TouchIdle_offset + 23]) & 0x0FFF);
-		TouchReport->touch_ID4=(unsigned short)(Response[ft5x06_TouchIdle_offset + 23] & 0xF0)>>4;
-		//TouchReport->touch_event4 = (unsigned short)((Response[ft5x06_TouchIdle_offset + 21] & 0xc0) >> 6);
+		structure->TouchResponse.x4 = (structure->screen_max_x - 1) - to_percentage(0,structure->touch_max_x,structure->screen_max_x,((Response[ft5x06_TouchIdle_offset + 20]<<8) | Response[ft5x06_TouchIdle_offset + 21]) & 0x0FFF);
+		structure->TouchResponse.y4 = to_percentage(0,structure->touch_max_y,structure->screen_max_y,((Response[ft5x06_TouchIdle_offset + 22]<<8) | Response[ft5x06_TouchIdle_offset + 23]) & 0x0FFF);
+		structure->TouchResponse.touch_ID4=(unsigned short)(Response[ft5x06_TouchIdle_offset + 23] & 0xF0)>>4;
+		//structure->TouchResponse->touch_event4 = (unsigned short)((Response[ft5x06_TouchIdle_offset + 21] & 0xc0) >> 6);
 		State4 = Gfx_IntTouch_MouseMove;
 	case 3:
-		TouchReport->x3 = (structure->screen_max_x - 1) - to_percentage(0,structure->touch_max_x,structure->screen_max_x,((Response[ft5x06_TouchIdle_offset + 14]<<8) | Response[ft5x06_TouchIdle_offset + 15]) & 0x0FFF);
-		TouchReport->y3 = to_percentage(0,structure->touch_max_y,structure->screen_max_y,((Response[ft5x06_TouchIdle_offset + 16]<<8) | Response[ft5x06_TouchIdle_offset + 17]) & 0x0FFF);
-		TouchReport->touch_ID3=(unsigned short)(Response[ft5x06_TouchIdle_offset + 17] & 0xF0)>>4;
-		//TouchReport->touch_event3 = (unsigned short)((Response[ft5x06_TouchIdle_offset + 15] & 0xc0) >> 6);
+		structure->TouchResponse.x3 = (structure->screen_max_x - 1) - to_percentage(0,structure->touch_max_x,structure->screen_max_x,((Response[ft5x06_TouchIdle_offset + 14]<<8) | Response[ft5x06_TouchIdle_offset + 15]) & 0x0FFF);
+		structure->TouchResponse.y3 = to_percentage(0,structure->touch_max_y,structure->screen_max_y,((Response[ft5x06_TouchIdle_offset + 16]<<8) | Response[ft5x06_TouchIdle_offset + 17]) & 0x0FFF);
+		structure->TouchResponse.touch_ID3=(unsigned short)(Response[ft5x06_TouchIdle_offset + 17] & 0xF0)>>4;
+		//structure->TouchResponse->touch_event3 = (unsigned short)((Response[ft5x06_TouchIdle_offset + 15] & 0xc0) >> 6);
 		State3 = Gfx_IntTouch_MouseMove;
 	case 2:
-		TouchReport->x2 = (structure->screen_max_x - 1) - to_percentage(0,structure->touch_max_x,structure->screen_max_x,((Response[ft5x06_TouchIdle_offset + 8]<<8) | Response[ft5x06_TouchIdle_offset + 9]) & 0x0FFF);
-		TouchReport->y2 = to_percentage(0,structure->touch_max_y,structure->screen_max_y,((Response[ft5x06_TouchIdle_offset + 10]<<8) | Response[ft5x06_TouchIdle_offset + 11]) & 0x0FFF);
-		TouchReport->touch_ID2=(unsigned short)(Response[ft5x06_TouchIdle_offset + 11] & 0xF0)>>4;
-		//TouchReport->touch_event2 = (unsigned short)((Response[ft5x06_TouchIdle_offset + 9] & 0xc0) >> 6);
+		structure->TouchResponse.x2 = (structure->screen_max_x - 1) - to_percentage(0,structure->touch_max_x,structure->screen_max_x,((Response[ft5x06_TouchIdle_offset + 8]<<8) | Response[ft5x06_TouchIdle_offset + 9]) & 0x0FFF);
+		structure->TouchResponse.y2 = to_percentage(0,structure->touch_max_y,structure->screen_max_y,((Response[ft5x06_TouchIdle_offset + 10]<<8) | Response[ft5x06_TouchIdle_offset + 11]) & 0x0FFF);
+		structure->TouchResponse.touch_ID2=(unsigned short)(Response[ft5x06_TouchIdle_offset + 11] & 0xF0)>>4;
+		//structure->TouchResponse->touch_event2 = (unsigned short)((Response[ft5x06_TouchIdle_offset + 9] & 0xc0) >> 6);
 		State2 = Gfx_IntTouch_MouseMove;
 	case 1:
-		TouchReport->x1 = (structure->screen_max_x - 1) - to_percentage(0,structure->touch_max_x,structure->screen_max_x,((Response[ft5x06_TouchIdle_offset + 2]<<8) | Response[ft5x06_TouchIdle_offset + 3]) & 0x0FFF);
-		TouchReport->y1 = to_percentage(0,structure->touch_max_y,structure->screen_max_y,((Response[ft5x06_TouchIdle_offset + 4]<<8) | Response[ft5x06_TouchIdle_offset + 5]) & 0x0FFF);
-		TouchReport->touch_ID1=(unsigned short)(Response[ft5x06_TouchIdle_offset + 5] & 0xF0)>>4;
-		//TouchReport->touch_event1 = (unsigned short)((Response[ft5x06_TouchIdle_offset + 3] & 0xc0) >> 6);
+		structure->TouchResponse.x1 = (structure->screen_max_x - 1) - to_percentage(0,structure->touch_max_x,structure->screen_max_x,((Response[ft5x06_TouchIdle_offset + 2]<<8) | Response[ft5x06_TouchIdle_offset + 3]) & 0x0FFF);
+		structure->TouchResponse.y1 = to_percentage(0,structure->touch_max_y,structure->screen_max_y,((Response[ft5x06_TouchIdle_offset + 4]<<8) | Response[ft5x06_TouchIdle_offset + 5]) & 0x0FFF);
+		structure->TouchResponse.touch_ID1=(unsigned short)(Response[ft5x06_TouchIdle_offset + 5] & 0xF0)>>4;
+		//structure->TouchResponse->touch_event1 = (unsigned short)((Response[ft5x06_TouchIdle_offset + 3] & 0xc0) >> 6);
 		State1 = Gfx_IntTouch_MouseMove;
 	}
 
-	//if(timer_tick(&structure->timer1) && structure->LastState1 == Gfx_MouseMove || structure->LastState1 == Gfx_MouseDn) TouchReport->touch_event1 = Gfx_MouseUp;
+	//if(timer_tick(&structure->timer1) && structure->LastState1 == Gfx_MouseMove || structure->LastState1 == Gfx_MouseDn) structure->TouchResponse->touch_event1 = Gfx_MouseUp;
 
 	if(structure->LastState1 == Gfx_IntTouch_MouseNoAction && State1 == Gfx_IntTouch_MouseMove)
 	{
 		structure->LastState1 = Gfx_IntTouch_MouseDn;
-		TouchReport->touch_event1 = Gfx_IntTouch_MouseDn;
+		structure->TouchResponse.touch_event1 = Gfx_IntTouch_MouseDn;
 	}
 	else if((structure->LastState1 == Gfx_IntTouch_MouseDn || structure->LastState1 == Gfx_IntTouch_MouseMove) && State1 == Gfx_IntTouch_MouseMove)
 	{
 		structure->LastState1 = Gfx_IntTouch_MouseMove;
-		TouchReport->touch_event1 = Gfx_IntTouch_MouseMove;
+		structure->TouchResponse.touch_event1 = Gfx_IntTouch_MouseMove;
 	}
 	else if((structure->LastState1 == Gfx_IntTouch_MouseDn || structure->LastState1 == Gfx_IntTouch_MouseMove) && State1 == Gfx_IntTouch_MouseNoAction)
 	{
 		structure->LastState1 = Gfx_IntTouch_MouseUp;
-		TouchReport->touch_event1 = Gfx_IntTouch_MouseUp;
+		structure->TouchResponse.touch_event1 = Gfx_IntTouch_MouseUp;
 	}
 	else if(structure->LastState1 == Gfx_IntTouch_MouseUp && State1 == Gfx_IntTouch_MouseNoAction)
 	{
 		structure->LastState1 = Gfx_IntTouch_MouseNoAction;
-		TouchReport->touch_event1 = Gfx_IntTouch_MouseNoAction;
-		TouchReport->x1 = -1;
-		TouchReport->y1 = -1;
+		structure->TouchResponse.touch_event1 = Gfx_IntTouch_MouseNoAction;
+		structure->TouchResponse.x1 = -1;
+		structure->TouchResponse.y1 = -1;
 	}
 
 	if(structure->LastState2 == Gfx_IntTouch_MouseNoAction && State2 == Gfx_IntTouch_MouseMove)
 	{
 		structure->LastState2 = Gfx_IntTouch_MouseDn;
-		TouchReport->touch_event2 = Gfx_IntTouch_MouseDn;
+		structure->TouchResponse.touch_event2 = Gfx_IntTouch_MouseDn;
 	}
 	else if((structure->LastState2 == Gfx_IntTouch_MouseDn || structure->LastState2 == Gfx_IntTouch_MouseMove) && State2 == Gfx_IntTouch_MouseMove)
 	{
 		structure->LastState2 = Gfx_IntTouch_MouseMove;
-		TouchReport->touch_event2 = Gfx_IntTouch_MouseMove;
+		structure->TouchResponse.touch_event2 = Gfx_IntTouch_MouseMove;
 	}
 	else if((structure->LastState2 == Gfx_IntTouch_MouseDn || structure->LastState2 == Gfx_IntTouch_MouseMove) && State2 == Gfx_IntTouch_MouseNoAction)
 	{
 		structure->LastState2 = Gfx_IntTouch_MouseUp;
-		TouchReport->touch_event2 = Gfx_IntTouch_MouseUp;
+		structure->TouchResponse.touch_event2 = Gfx_IntTouch_MouseUp;
 	}
 	else if(structure->LastState2 == Gfx_IntTouch_MouseUp && State2 == Gfx_IntTouch_MouseNoAction)
 	{
 		structure->LastState2 = Gfx_IntTouch_MouseNoAction;
-		TouchReport->touch_event2 = Gfx_IntTouch_MouseNoAction;
-		TouchReport->x2 = -1;
-		TouchReport->y2 = -1;
+		structure->TouchResponse.touch_event2 = Gfx_IntTouch_MouseNoAction;
+		structure->TouchResponse.x2 = -1;
+		structure->TouchResponse.y2 = -1;
 	}
 
 	if(structure->LastState3 == Gfx_IntTouch_MouseNoAction && State3 == Gfx_IntTouch_MouseMove)
 	{
 		structure->LastState3 = Gfx_IntTouch_MouseDn;
-		TouchReport->touch_event3 = Gfx_IntTouch_MouseDn;
+		structure->TouchResponse.touch_event3 = Gfx_IntTouch_MouseDn;
 	}
 	else if((structure->LastState3 == Gfx_IntTouch_MouseDn || structure->LastState3 == Gfx_IntTouch_MouseMove) && State3 == Gfx_IntTouch_MouseMove)
 	{
 		structure->LastState3 = Gfx_IntTouch_MouseMove;
-		TouchReport->touch_event3 = Gfx_IntTouch_MouseMove;
+		structure->TouchResponse.touch_event3 = Gfx_IntTouch_MouseMove;
 	}
 	else if((structure->LastState3 == Gfx_IntTouch_MouseDn || structure->LastState3 == Gfx_IntTouch_MouseMove) && State3 == Gfx_IntTouch_MouseNoAction)
 	{
 		structure->LastState3 = Gfx_IntTouch_MouseUp;
-		TouchReport->touch_event3 = Gfx_IntTouch_MouseUp;
+		structure->TouchResponse.touch_event3 = Gfx_IntTouch_MouseUp;
 	}
 	else if(structure->LastState3 == Gfx_IntTouch_MouseUp && State3 == Gfx_IntTouch_MouseNoAction)
 	{
 		structure->LastState3 = Gfx_IntTouch_MouseNoAction;
-		TouchReport->touch_event3 = Gfx_IntTouch_MouseNoAction;
-		TouchReport->x3 = -1;
-		TouchReport->y3 = -1;
+		structure->TouchResponse.touch_event3 = Gfx_IntTouch_MouseNoAction;
+		structure->TouchResponse.x3 = -1;
+		structure->TouchResponse.y3 = -1;
 	}
 
 	if(structure->LastState4 == Gfx_IntTouch_MouseNoAction && State4 == Gfx_IntTouch_MouseMove)
 	{
 		structure->LastState4 = Gfx_IntTouch_MouseDn;
-		TouchReport->touch_event4 = Gfx_IntTouch_MouseDn;
+		structure->TouchResponse.touch_event4 = Gfx_IntTouch_MouseDn;
 	}
 	else if((structure->LastState4 == Gfx_IntTouch_MouseDn || structure->LastState4 == Gfx_IntTouch_MouseMove) && State4 == Gfx_IntTouch_MouseMove)
 	{
 		structure->LastState4 = Gfx_IntTouch_MouseMove;
-		TouchReport->touch_event4 = Gfx_IntTouch_MouseMove;
+		structure->TouchResponse.touch_event4 = Gfx_IntTouch_MouseMove;
 	}
 	else if((structure->LastState4 == Gfx_IntTouch_MouseDn || structure->LastState4 == Gfx_IntTouch_MouseMove) && State4 == Gfx_IntTouch_MouseNoAction)
 	{
 		structure->LastState4 = Gfx_IntTouch_MouseUp;
-		TouchReport->touch_event4 = Gfx_IntTouch_MouseUp;
+		structure->TouchResponse.touch_event4 = Gfx_IntTouch_MouseUp;
 	}
 	else if(structure->LastState4 == Gfx_IntTouch_MouseUp && State4 == Gfx_IntTouch_MouseNoAction)
 	{
 		structure->LastState4 = Gfx_IntTouch_MouseNoAction;
-		TouchReport->touch_event4 = Gfx_IntTouch_MouseNoAction;
-		TouchReport->x4 = -1;
-		TouchReport->y4 = -1;
+		structure->TouchResponse.touch_event4 = Gfx_IntTouch_MouseNoAction;
+		structure->TouchResponse.x4 = -1;
+		structure->TouchResponse.y4 = -1;
 	}
 
 	if(structure->LastState5 == Gfx_IntTouch_MouseNoAction && State5 == Gfx_IntTouch_MouseMove)
 	{
 		structure->LastState5 = Gfx_IntTouch_MouseDn;
-		TouchReport->touch_event5 = Gfx_IntTouch_MouseDn;
+		structure->TouchResponse.touch_event5 = Gfx_IntTouch_MouseDn;
 	}
 	else if((structure->LastState5 == Gfx_IntTouch_MouseDn || structure->LastState5 == Gfx_IntTouch_MouseMove) && State5 == Gfx_IntTouch_MouseMove)
 	{
 		structure->LastState5 = Gfx_IntTouch_MouseMove;
-		TouchReport->touch_event5 = Gfx_IntTouch_MouseMove;
+		structure->TouchResponse.touch_event5 = Gfx_IntTouch_MouseMove;
 	}
 	else if((structure->LastState5 == Gfx_IntTouch_MouseDn || structure->LastState5 == Gfx_IntTouch_MouseMove) && State5 == Gfx_IntTouch_MouseNoAction)
 	{
 		structure->LastState5 = Gfx_IntTouch_MouseUp;
-		TouchReport->touch_event5 = Gfx_IntTouch_MouseUp;
+		structure->TouchResponse.touch_event5 = Gfx_IntTouch_MouseUp;
 	}
 	else if(structure->LastState5 == Gfx_IntTouch_MouseUp && State5 == Gfx_IntTouch_MouseNoAction)
 	{
 		structure->LastState5 = Gfx_IntTouch_MouseNoAction;
-		TouchReport->touch_event5 = Gfx_IntTouch_MouseNoAction;
-		TouchReport->x5 = -1;
-		TouchReport->y5 = -1;
+		structure->TouchResponse.touch_event5 = Gfx_IntTouch_MouseNoAction;
+		structure->TouchResponse.x5 = -1;
+		structure->TouchResponse.y5 = -1;
 	}
 
 	return true;

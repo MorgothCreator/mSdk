@@ -82,6 +82,7 @@ extern "C"
 //
 //USB subsystem register offsets
 //
+#define USBSS_SYSCONFIG                 (0x10)
 #define USBSS_IRQ_EOI				0x20
 #define USBSS_IRQ_STATUS_RAW		0x24
 #define USBSS_IRQ_STATUS			0x28

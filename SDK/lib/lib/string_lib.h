@@ -22,11 +22,39 @@
 #ifndef STRING_LIB_H_
 #define STRING_LIB_H_
 
+//#define string (char)
+
+typedef enum{
+	STR_OK = 0,
+	STR_UNKNOWN_ERR,
+	STR_OUT_OF_MEMORY,
+	STR_OUT_OF_RANGE,
+	STR_NOT_ALLOCATED
+}STR_RESULT;
+
+char* str_remove_new_line(char *string);
 char* str_to_upercase(char* string);
 char* str_to_lowercase(char* string);
 char *str_append(char* dest, char* src);
 char *str_insert(char* dest, char* src, unsigned int location);
+char *str_clear(char* dest);
 char *str_copy(char* str);
+
+char ** str_array_new();
+STR_RESULT str_array_free(char **array);
+STR_RESULT str_array_items_nr(char **array, unsigned int *items_nr);
+char **str_array_item_add(char **array, char *item);
+STR_RESULT str_array_item_get(char **item, char **array, unsigned int item_nr);
+
+
+//#######################################################
+#define new_string char*
+#ifndef new_
+#define new_(structure) (structure*)calloc(1,sizeof(structure));
+#endif
+#define free_string(address) free(address);
+//#######################################################
+
 
 #ifdef HEADER_INCLUDE_C_FILES
 #include "string_lib.c"

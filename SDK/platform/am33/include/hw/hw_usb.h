@@ -88,10 +88,17 @@
 // The following are defines for the Univeral Serial Bus register offsets.
 //
 //*****************************************************************************
-#define USB0_BASE				SOC_USB_0_BASE
-#define INT_USB0				SYS_INT_USB0
-#define USB1_BASE				SOC_USB_1_BASE
-#define INT_USB1				SYS_INT_USB1
+#if defined(am335x) || defined(am335x_13x13) || defined(am335x_15x15)
+#define USB_CONTROLLER_NUM_INSTANCES   (2)
+#else
+#define USB_CONTROLLER_NUM_INSTANCES   (1)
+#endif
+#define USB0_BASE                      SOC_USB_0_BASE
+#define INT_USB0                       SYS_INT_USB0
+#if (USB_CONTROLLER_NUM_INSTANCES == 2)
+#define USB1_BASE                      SOC_USB_1_BASE
+#define INT_USB1                       SYS_INT_USB1
+#endif
 
 #define USB_O_FADDR             0x00000000  // USB Device Functional Address
 #define USB_O_POWER             0x00000001  // USB Power
@@ -707,6 +714,7 @@
 //
 //*****************************************************************************
 #define USB_POWER_ISOUP         0x00000080  // Isochronous Update
+#define USB_POWER_HS_MODE       0x00000010  // High speed mode
 #define USB_POWER_SOFTCONN      0x00000040  // Soft Connect/Disconnect
 #define USB_POWER_RESET         0x00000008  // RESET Signaling
 #define USB_POWER_RESUME        0x00000004  // RESUME Signaling
@@ -2027,6 +2035,240 @@
 //*****************************************************************************
 #define USB_TXMAXP1_MAXLOAD_M   0x000007FF  // Maximum Payload
 #define USB_TXMAXP1_MAXLOAD_S   0
+
+//*****************************************************************************
+//
+// Defines for the bit fields in the USB_O_TXCSR register - 16 bit access
+//
+//*****************************************************************************
+/* TXCSR in Peripheral and Host mode */
+#define MUSB_TXCSR_AUTOSET			0x8000
+#define MUSB_TXCSR_DMAENAB			0x1000
+#define MUSB_TXCSR_FRCDATATOG		0x0800
+#define MUSB_TXCSR_DMAMODE			0x0400
+#define MUSB_TXCSR_CLRDATATOG		0x0040
+#define MUSB_TXCSR_FLUSHFIFO		0x0008
+#define MUSB_TXCSR_FIFONOTEMPTY		0x0002
+#define MUSB_TXCSR_TXPKTRDY			0x0001
+
+/* TXCSR in Peripheral mode */
+#define MUSB_TXCSR_P_ISO			0x4000
+#define MUSB_TXCSR_P_INCOMPTX		0x0080
+#define MUSB_TXCSR_P_SENTSTALL		0x0020
+#define MUSB_TXCSR_P_SENDSTALL		0x0010
+#define MUSB_TXCSR_P_UNDERRUN		0x0004
+
+/* TXCSR in Host mode */
+#define MUSB_TXCSR_H_WR_DATATOGGLE	0x0200
+#define MUSB_TXCSR_H_DATATOGGLE		0x0100
+#define MUSB_TXCSR_H_NAKTIMEOUT		0x0080
+#define MUSB_TXCSR_H_RXSTALL		0x0020
+#define MUSB_TXCSR_H_ERROR			0x0004
+
+/* TXCSR bits to avoid zeroing (write zero clears, write 1 ignored) */
+#define MUSB_TXCSR_P_WZC_BITS	\
+	(MUSB_TXCSR_P_INCOMPTX | MUSB_TXCSR_P_SENTSTALL \
+	| MUSB_TXCSR_P_UNDERRUN | MUSB_TXCSR_FIFONOTEMPTY)
+#define MUSB_TXCSR_H_WZC_BITS	\
+	(MUSB_TXCSR_H_NAKTIMEOUT | MUSB_TXCSR_H_RXSTALL \
+	| MUSB_TXCSR_H_ERROR | MUSB_TXCSR_FIFONOTEMPTY)
+
+//*****************************************************************************
+//
+// Defines for the bit fields in the USB_O_RXCSR register - 16 bit access
+//
+//*****************************************************************************
+
+/* RXCSR in Peripheral and Host mode */
+#define MUSB_RXCSR_AUTOCLEAR		0x8000
+#define MUSB_RXCSR_DMAENAB			0x2000
+#define MUSB_RXCSR_DISNYET			0x1000
+#define MUSB_RXCSR_PID_ERR			0x1000
+#define MUSB_RXCSR_DMAMODE			0x0800
+#define MUSB_RXCSR_INCOMPRX			0x0100
+#define MUSB_RXCSR_CLRDATATOG		0x0080
+#define MUSB_RXCSR_FLUSHFIFO		0x0010
+#define MUSB_RXCSR_DATAERROR		0x0008
+#define MUSB_RXCSR_FIFOFULL			0x0002
+#define MUSB_RXCSR_RXPKTRDY			0x0001
+
+/* RXCSR in Peripheral mode */
+#define MUSB_RXCSR_P_ISO			0x4000
+#define MUSB_RXCSR_P_SENTSTALL		0x0040
+#define MUSB_RXCSR_P_SENDSTALL		0x0020
+#define MUSB_RXCSR_P_OVERRUN		0x0004
+
+/* RXCSR in Host mode */
+#define MUSB_RXCSR_H_AUTOREQ		0x4000
+#define MUSB_RXCSR_H_WR_DATATOGGLE	0x0400
+#define MUSB_RXCSR_H_DATATOGGLE		0x0200
+#define MUSB_RXCSR_H_RXSTALL		0x0040
+#define MUSB_RXCSR_H_REQPKT			0x0020
+#define MUSB_RXCSR_H_ERROR			0x0004
+
+/* RXCSR bits to avoid zeroing (write zero clears, write 1 ignored) */
+#define MUSB_RXCSR_P_WZC_BITS	\
+	(MUSB_RXCSR_P_SENTSTALL | MUSB_RXCSR_P_OVERRUN \
+	| MUSB_RXCSR_RXPKTRDY)
+#define MUSB_RXCSR_H_WZC_BITS	\
+	(MUSB_RXCSR_H_RXSTALL | MUSB_RXCSR_H_ERROR \
+	| MUSB_RXCSR_DATAERROR | MUSB_RXCSR_RXPKTRDY)
+
+//*****************************************************************************
+//
+// Defines for the bit fields in the USB_O_TXCSR register - 16 bit access
+//
+//*****************************************************************************
+/* TXCSR in Peripheral and Host mode */
+#define MUSB_TXCSR_AUTOSET			0x8000
+#define MUSB_TXCSR_DMAENAB			0x1000
+#define MUSB_TXCSR_FRCDATATOG		0x0800
+#define MUSB_TXCSR_DMAMODE			0x0400
+#define MUSB_TXCSR_CLRDATATOG		0x0040
+#define MUSB_TXCSR_FLUSHFIFO		0x0008
+#define MUSB_TXCSR_FIFONOTEMPTY		0x0002
+#define MUSB_TXCSR_TXPKTRDY			0x0001
+
+/* TXCSR in Peripheral mode */
+#define MUSB_TXCSR_P_ISO			0x4000
+#define MUSB_TXCSR_P_INCOMPTX		0x0080
+#define MUSB_TXCSR_P_SENTSTALL		0x0020
+#define MUSB_TXCSR_P_SENDSTALL		0x0010
+#define MUSB_TXCSR_P_UNDERRUN		0x0004
+
+/* TXCSR in Host mode */
+#define MUSB_TXCSR_H_WR_DATATOGGLE	0x0200
+#define MUSB_TXCSR_H_DATATOGGLE		0x0100
+#define MUSB_TXCSR_H_NAKTIMEOUT		0x0080
+#define MUSB_TXCSR_H_RXSTALL		0x0020
+#define MUSB_TXCSR_H_ERROR			0x0004
+
+/* TXCSR bits to avoid zeroing (write zero clears, write 1 ignored) */
+#define MUSB_TXCSR_P_WZC_BITS	\
+	(MUSB_TXCSR_P_INCOMPTX | MUSB_TXCSR_P_SENTSTALL \
+	| MUSB_TXCSR_P_UNDERRUN | MUSB_TXCSR_FIFONOTEMPTY)
+#define MUSB_TXCSR_H_WZC_BITS	\
+	(MUSB_TXCSR_H_NAKTIMEOUT | MUSB_TXCSR_H_RXSTALL \
+	| MUSB_TXCSR_H_ERROR | MUSB_TXCSR_FIFONOTEMPTY)
+
+//*****************************************************************************
+//
+// Defines for the bit fields in the USB_O_RXCSR register - 16 bit access
+//
+//*****************************************************************************
+
+/* RXCSR in Peripheral and Host mode */
+#define MUSB_RXCSR_AUTOCLEAR		0x8000
+#define MUSB_RXCSR_DMAENAB			0x2000
+#define MUSB_RXCSR_DISNYET			0x1000
+#define MUSB_RXCSR_PID_ERR			0x1000
+#define MUSB_RXCSR_DMAMODE			0x0800
+#define MUSB_RXCSR_INCOMPRX			0x0100
+#define MUSB_RXCSR_CLRDATATOG		0x0080
+#define MUSB_RXCSR_FLUSHFIFO		0x0010
+#define MUSB_RXCSR_DATAERROR		0x0008
+#define MUSB_RXCSR_FIFOFULL			0x0002
+#define MUSB_RXCSR_RXPKTRDY			0x0001
+
+/* RXCSR in Peripheral mode */
+#define MUSB_RXCSR_P_ISO			0x4000
+#define MUSB_RXCSR_P_SENTSTALL		0x0040
+#define MUSB_RXCSR_P_SENDSTALL		0x0020
+#define MUSB_RXCSR_P_OVERRUN		0x0004
+
+/* RXCSR in Host mode */
+#define MUSB_RXCSR_H_AUTOREQ		0x4000
+#define MUSB_RXCSR_H_WR_DATATOGGLE	0x0400
+#define MUSB_RXCSR_H_DATATOGGLE		0x0200
+#define MUSB_RXCSR_H_RXSTALL		0x0040
+#define MUSB_RXCSR_H_REQPKT			0x0020
+#define MUSB_RXCSR_H_ERROR			0x0004
+
+/* RXCSR bits to avoid zeroing (write zero clears, write 1 ignored) */
+#define MUSB_RXCSR_P_WZC_BITS	\
+	(MUSB_RXCSR_P_SENTSTALL | MUSB_RXCSR_P_OVERRUN \
+	| MUSB_RXCSR_RXPKTRDY)
+#define MUSB_RXCSR_H_WZC_BITS	\
+	(MUSB_RXCSR_H_RXSTALL | MUSB_RXCSR_H_ERROR \
+	| MUSB_RXCSR_DATAERROR | MUSB_RXCSR_RXPKTRDY)
+
+//*****************************************************************************
+//
+// Defines for the bit fields in the USB_O_TXCSR register - 16 bit access
+//
+//*****************************************************************************
+/* TXCSR in Peripheral and Host mode */
+#define MUSB_TXCSR_AUTOSET			0x8000
+#define MUSB_TXCSR_DMAENAB			0x1000
+#define MUSB_TXCSR_FRCDATATOG		0x0800
+#define MUSB_TXCSR_DMAMODE			0x0400
+#define MUSB_TXCSR_CLRDATATOG		0x0040
+#define MUSB_TXCSR_FLUSHFIFO		0x0008
+#define MUSB_TXCSR_FIFONOTEMPTY		0x0002
+#define MUSB_TXCSR_TXPKTRDY			0x0001
+
+/* TXCSR in Peripheral mode */
+#define MUSB_TXCSR_P_ISO			0x4000
+#define MUSB_TXCSR_P_INCOMPTX		0x0080
+#define MUSB_TXCSR_P_SENTSTALL		0x0020
+#define MUSB_TXCSR_P_SENDSTALL		0x0010
+#define MUSB_TXCSR_P_UNDERRUN		0x0004
+
+/* TXCSR in Host mode */
+#define MUSB_TXCSR_H_WR_DATATOGGLE	0x0200
+#define MUSB_TXCSR_H_DATATOGGLE		0x0100
+#define MUSB_TXCSR_H_NAKTIMEOUT		0x0080
+#define MUSB_TXCSR_H_RXSTALL		0x0020
+#define MUSB_TXCSR_H_ERROR			0x0004
+
+/* TXCSR bits to avoid zeroing (write zero clears, write 1 ignored) */
+#define MUSB_TXCSR_P_WZC_BITS	\
+	(MUSB_TXCSR_P_INCOMPTX | MUSB_TXCSR_P_SENTSTALL \
+	| MUSB_TXCSR_P_UNDERRUN | MUSB_TXCSR_FIFONOTEMPTY)
+#define MUSB_TXCSR_H_WZC_BITS	\
+	(MUSB_TXCSR_H_NAKTIMEOUT | MUSB_TXCSR_H_RXSTALL \
+	| MUSB_TXCSR_H_ERROR | MUSB_TXCSR_FIFONOTEMPTY)
+
+//*****************************************************************************
+//
+// Defines for the bit fields in the USB_O_RXCSR register - 16 bit access
+//
+//*****************************************************************************
+
+/* RXCSR in Peripheral and Host mode */
+#define MUSB_RXCSR_AUTOCLEAR		0x8000
+#define MUSB_RXCSR_DMAENAB			0x2000
+#define MUSB_RXCSR_DISNYET			0x1000
+#define MUSB_RXCSR_PID_ERR			0x1000
+#define MUSB_RXCSR_DMAMODE			0x0800
+#define MUSB_RXCSR_INCOMPRX			0x0100
+#define MUSB_RXCSR_CLRDATATOG		0x0080
+#define MUSB_RXCSR_FLUSHFIFO		0x0010
+#define MUSB_RXCSR_DATAERROR		0x0008
+#define MUSB_RXCSR_FIFOFULL			0x0002
+#define MUSB_RXCSR_RXPKTRDY			0x0001
+
+/* RXCSR in Peripheral mode */
+#define MUSB_RXCSR_P_ISO			0x4000
+#define MUSB_RXCSR_P_SENTSTALL		0x0040
+#define MUSB_RXCSR_P_SENDSTALL		0x0020
+#define MUSB_RXCSR_P_OVERRUN		0x0004
+
+/* RXCSR in Host mode */
+#define MUSB_RXCSR_H_AUTOREQ		0x4000
+#define MUSB_RXCSR_H_WR_DATATOGGLE	0x0400
+#define MUSB_RXCSR_H_DATATOGGLE		0x0200
+#define MUSB_RXCSR_H_RXSTALL		0x0040
+#define MUSB_RXCSR_H_REQPKT			0x0020
+#define MUSB_RXCSR_H_ERROR			0x0004
+
+/* RXCSR bits to avoid zeroing (write zero clears, write 1 ignored) */
+#define MUSB_RXCSR_P_WZC_BITS	\
+	(MUSB_RXCSR_P_SENTSTALL | MUSB_RXCSR_P_OVERRUN \
+	| MUSB_RXCSR_RXPKTRDY)
+#define MUSB_RXCSR_H_WZC_BITS	\
+	(MUSB_RXCSR_H_RXSTALL | MUSB_RXCSR_H_ERROR \
+	| MUSB_RXCSR_DATAERROR | MUSB_RXCSR_RXPKTRDY)
 
 //*****************************************************************************
 //
@@ -4688,6 +4930,16 @@
 
 #define USB_REV_AM335X          2
 #define USB_REV_AM1808          1
+//*****************************************************************************
+//
+// USB0/1 Tear Down Register mask
+//
+//*****************************************************************************
+/* Teardown register bits */
+#define USB_TX_TDOWN_SHIFT(n)   (16 + (n))
+#define USB_TX_TDOWN_MASK(n)    (1 << USB_TX_TDOWN_SHIFT(n))
+#define USB_RX_TDOWN_SHIFT(n)   (n)
+#define USB_RX_TDOWN_MASK(n)    (1 << USB_RX_TDOWN_SHIFT(n))
 
 
 #endif

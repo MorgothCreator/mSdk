@@ -24,7 +24,7 @@
 /*#####################################################*/
 #include <stdbool.h>
 #include <stdio.h>
-#include <stdlib.h>
+//#include <stdlib.h>
 #include "gpio_def.h"
 #include "interface/gpio_interface.h"
 /*#####################################################*/

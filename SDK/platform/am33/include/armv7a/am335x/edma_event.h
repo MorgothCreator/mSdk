@@ -53,6 +53,11 @@ extern "C" {
 ****************************************************************************/
 
 /********************* Direct Mapped Events ********************************/
+/* MMCSD0 transmit event. */
+#define EDMA3_CHA_MMCSD1_TX               (2u)
+/* MMCSD0 receive event. */
+#define EDMA3_CHA_MMCSD1_RX               (3u)
+
 /* Events for McASP 1*/
 #define EDMA3_CHA_MCASP1_TX               (10u)
 #define EDMA3_CHA_MCASP1_RX               (11u)
@@ -106,6 +111,11 @@ extern "C" {
 
 
 /********************** Crossbar Mapped Events ********************************/
+/* MMCSD2 transmit event. */
+#define EDMA3_CHA_MMCSD2_TX               (1u)
+/* MMCSD2 receive event. */
+#define EDMA3_CHA_MMCSD2_RX               (2u)
+
 /* I2C2 Receive Event */
 #define EDMA3_CHA_HSI2C2_RX               (4u)
 /* I2C2 Transmit Event */

@@ -120,6 +120,9 @@ extern "C" {
 #define SOC_CPSW_CPPI_RAM_REGS               (0x4A102000)
 
 /** @brief Base address of McASP memory mapped registers                      */
+#define SOC_MCASP_0_CTRL_REGS                (0x48038000)
+#define SOC_MCASP_0_FIFO_REGS                (SOC_MCASP_0_CTRL_REGS + 0x1000)
+#define SOC_MCASP_0_DATA_REGS                (0x46000000)
 #define SOC_MCASP_1_CTRL_REGS                (0x4803C000)
 #define SOC_MCASP_1_FIFO_REGS                (SOC_MCASP_1_CTRL_REGS + 0x1000)
 #define SOC_MCASP_1_DATA_REGS                (0x46400000)

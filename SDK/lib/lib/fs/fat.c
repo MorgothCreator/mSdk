@@ -24,6 +24,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <malloc.h>
 #include "fat.h"
 #include "board_init.h"
 #include "board_properties.h"
@@ -1000,7 +1001,7 @@ unsigned char* _FatData_ReadFile(FileInfo_t *fileinfo)
 		unsigned long FileSize_Pages = FileSize/(fileinfo->FileInfo_DiskInfo->DiskInfo_BytesPerSector * fileinfo->FileInfo_DiskInfo->DiskInfo_SectorsPerCluster);
 		unsigned short FileSize_RestOfBytes = FileSize - (FileSize_Pages*(fileinfo->FileInfo_DiskInfo->DiskInfo_BytesPerSector * fileinfo->FileInfo_DiskInfo->DiskInfo_SectorsPerCluster));
 		unsigned long PagesCount = 0;
-#ifdef NO_USE_MALIGN
+#ifdef gcc
 		unsigned char* Buff = (unsigned char*)malloc(FileSize);
 #else
 		unsigned char* Buff = (unsigned char*)memalign(32, FileSize);

@@ -511,7 +511,7 @@ extern "C"
 //*****************************************************************************
 //
 // All structures defined in this section of the header require byte packing of
-// fields.  This is usually a ccomplished using the  macro but, for IAR
+// fields.  This is usually a ccomplished using the USBLIB_PACKED macro but, for IAR
 // Embedded Workbench, this requires a pragma.
 //
 //*****************************************************************************
@@ -538,7 +538,7 @@ typedef struct
     //
     unsigned short wDescriptorLength;
 }
- tHIDClassDescriptorInfo;
+USBLIB_PACKED tHIDClassDescriptorInfo;
 
 //*****************************************************************************
 //
@@ -587,7 +587,7 @@ typedef struct
     //
     tHIDClassDescriptorInfo sClassDescriptor[1];
 }
- tHIDDescriptor;
+USBLIB_PACKED tHIDDescriptor;
 
 //*****************************************************************************
 //

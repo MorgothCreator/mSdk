@@ -11,8 +11,8 @@
 #include "mmcsdlib/hs_mmcsdlib.h"
 #include "mmcsdlib/mmcsd_proto.h"
 
-void EDMA3Initialize(void);
-void HSMMCSDEdmaInit(void);
+void EDMA3Initialize(int SdNr);
+void HSMMCSDEdmaInit(int SdNr);
 
 #ifdef HEADER_INCLUDE_C_FILES
 #include "edma3_interface.c"

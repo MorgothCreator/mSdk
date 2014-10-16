@@ -46,19 +46,11 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-void DelayTimerSetup(void);
-void delay(unsigned int milliSec);
-void StartTimer(unsigned int millisec);
-void StopTimer();
-unsigned int IsTimerElapsed(void);
 /*
 * External functions
 */
-extern void SysDelayTimerSetup(void);
-extern void Sysdelay(unsigned int milliSec);
-extern void SysStartTimer(unsigned int millisec);
-extern void SysStopTimer(void);
-extern unsigned int SysIsTimerElapsed(void);
+void SysDelayTimerSetup(void);
+void Sysdelay(unsigned int milliSec);
 
 #ifdef __cplusplus
 }

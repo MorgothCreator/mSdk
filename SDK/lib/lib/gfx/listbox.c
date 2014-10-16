@@ -20,16 +20,20 @@
  */
 
 #include <stdbool.h>
+#include <stdlib.h>
 #include "listbox.h"
+#include "window_def.h"
 #include "api/lcd_def.h"
 #include "api/lcd_api.h"
 #include "scrollbar.h"
 #include "controls_definition.h"
 #include "board_properties.h"
+#include "lib/string_lib.h"
 //#######################################################################################
-static bool paint_listbox_item(listbox_item* settings, tDisplay *pDisplay, signed int x_start, signed int y_start, tControlCommandData* control_comand, bool Pushed, bool Paint)
+static bool paint_listbox_item(tListBox *_settings, listbox_item* settings, tDisplay *pDisplay, signed int x_start, signed int y_start, tControlCommandData* control_comand, bool Pushed, bool Paint)
 {
 	if(!settings) return false;
+	tWindow *ParentWindow = (tWindow*)_settings->Internals.ParentWindow;
 	bool inside_window = check_if_inside_box(x_start, y_start, settings->Size.X, settings->Size.Y, control_comand->X, control_comand->Y);
 	bool _inside_window = check_if_inside_box(pDisplay->sClipRegion.sXMin, pDisplay->sClipRegion.sYMin, pDisplay->sClipRegion.sXMax - pDisplay->sClipRegion.sXMin, pDisplay->sClipRegion.sYMax - pDisplay->sClipRegion.sYMin, control_comand->X, control_comand->Y);
 	if(!_inside_window) inside_window = false;
@@ -46,10 +50,12 @@ static bool paint_listbox_item(listbox_item* settings, tDisplay *pDisplay, signe
 		clip_limit(&pDisplay->sClipRegion, &back_up_clip);
 		if(Pushed == true) color = controls_color.Control_Color_Enabled_Border_Push;
 		else color = controls_color.Control_Color_Enabled_Border_Pull;
+		if(!_settings->Enabled || !ParentWindow->Internals.OldStateEnabled) color = settings->Color.Disabled.Border;
 		put_rectangle(pDisplay, x_start, y_start, settings->Size.X, settings->Size.Y, false, controlls_change_color(color, -3));
 		put_rectangle(pDisplay, x_start + 1, y_start + 1, settings->Size.X - 2, settings->Size.Y - 2, false, controlls_change_color(color, -2));
 		if(Pushed == true) color = controls_color.Control_Color_Enabled_Buton_Push;
 		else color = controls_color.Control_Color_Enabled_Buton_Pull;
+		if(!_settings->Enabled || !ParentWindow->Internals.OldStateEnabled) color = settings->Color.Disabled.Buton;
 		put_rectangle(pDisplay, x_start + 2, y_start + 2, settings->Size.X - 4, settings->Size.Y - 4, true, color);
 		if(settings->Caption.Text)
 		{
@@ -78,20 +84,21 @@ static bool paint_listbox_item(listbox_item* settings, tDisplay *pDisplay, signe
 		clip_limit(&pDisplay->sClipRegion, &back_up_clip);
 		box_cache_clean(pDisplay, x_start, y_start, settings->Size.X, settings->Size.Y);
 		pDisplay->sClipRegion = back_up_clip;
+		control_comand->WindowRefresh |= true;
 	}
 	return inside_window;
 }
 //#######################################################################################
 void listbox(tListBox *settings, tControlCommandData* control_comand)
 {
-	if((control_comand->CursorCoordonateUsed == true && settings->Internals.NeedEntireRefresh == false) || settings == NULL) return;
+	if(settings == NULL) return;
 	if(control_comand->Comand != Control_Nop)
 	{
 		/* Parse commands */
 #ifdef NO_ENUM_ON_SWITCH
 		switch((unsigned char)control_comand->Comand)
 #else
-		switch(control_comand->Comand)
+		switch((int)control_comand->Comand)
 #endif
 		{
 		case Control_Entire_Repaint:
@@ -123,34 +130,69 @@ void listbox(tListBox *settings, tControlCommandData* control_comand)
 			return;
 		}
 	}
+	tWindow *ParentWindow = (tWindow*)settings->Internals.ParentWindow;
 	if(settings->Internals.Control.Initiated == false)
 	{
-		settings->Internals.Position.X = settings->Position.X;
-		settings->Internals.Position.Y = settings->Position.Y;
+		if(ParentWindow)
+		{
+			settings->Internals.Position.X = settings->Position.X + ParentWindow->Internals.Position.X + settings->Internals.PositionOffset.X;
+			settings->Internals.Position.Y = settings->Position.Y + ParentWindow->Internals.Position.Y + settings->Internals.PositionOffset.Y;
+		}
+		else
+		{
+			settings->Internals.Position.X = settings->Position.X;
+			settings->Internals.Position.Y = settings->Position.Y;
+		}
 		settings->Internals.Size.X = settings->Size.X;
 		settings->Internals.Size.Y = settings->Size.Y;
-		settings->Internals.ScrollBar = new_scrollbar(settings->Internals.pDisplay);
+		settings->Internals.ScrollBar = new_scrollbar(settings->Internals.ParentWindow);
 		tScrollBar *ScrollBar = settings->Internals.ScrollBar;
-		ScrollBar->Position.X = (settings->Internals.Position.X + settings->Internals.Size.X) - 2 - settings->Size.ScrollSize;
-		ScrollBar->Position.Y = settings->Internals.Position.Y + 2;
+
+
+		ScrollBar->Position.X = settings->Internals.Size.X - 2 - settings->Size.ScrollSize;
+		ScrollBar->Position.Y = 2;
+		ScrollBar->Internals.PositionOffset.X = settings->Internals.Position.X - ParentWindow->Internals.Position.X;
+		ScrollBar->Internals.PositionOffset.Y = settings->Internals.Position.Y - ParentWindow->Internals.Position.Y;
+
+		//ScrollBar->Position.X = (settings->Internals.Position.X + settings->Internals.Size.X) - 2 - settings->Size.ScrollSize;
+		//ScrollBar->Position.Y = settings->Internals.Position.Y + 2;
 		ScrollBar->Size.X = settings->Size.ScrollSize;
 		ScrollBar->Size.Y = settings->Internals.Size.Y - 4;
 		ScrollBar->Maximum = settings->ItemsCount - ((settings->Size.Y - 4) / settings->Size.ItemSizeY);
 		ScrollBar->Internals.NoPaintBackGround = true;
 	}
 	/* Verify if position on size has been modified */
-	if(settings->Position.X != settings->Internals.Position.X ||
-			settings->Position.Y != settings->Internals.Position.Y ||
-				settings->Size.X != settings->Internals.Size.X ||
-					settings->Size.Y != settings->Internals.Size.Y ||
-						settings->Internals.Size.ItemSizeY != settings->Size.ItemSizeY ||
-							settings->Internals.Size.ScrollSize != settings->Size.ScrollSize ||
-								settings->Internals.Caption.Font != settings->Caption.Font ||
-									settings->Internals.Caption.Text != settings->Caption.Text ||
-										settings->Internals.Caption.TextAlign != settings->Caption.TextAlign ||
-											settings->Internals.Caption.WordWrap != settings->Caption.WordWrap)
-												settings->Internals.NeedEntireRefresh = true;
-
+	if(ParentWindow)
+	{
+		if((settings->Position.X + ParentWindow->Internals.Position.X + settings->Internals.PositionOffset.X) != settings->Internals.Position.X ||
+				(settings->Position.Y + ParentWindow->Internals.Position.Y + settings->Internals.PositionOffset.Y) != settings->Internals.Position.Y ||
+					settings->Size.X != settings->Internals.Size.X ||
+						settings->Size.Y != settings->Internals.Size.Y ||
+							settings->Internals.Size.ItemSizeY != settings->Size.ItemSizeY ||
+								settings->Internals.Size.ScrollSize != settings->Size.ScrollSize ||
+									settings->Internals.Caption.Font != settings->Caption.Font ||
+										settings->Internals.Caption.Text != settings->Caption.Text ||
+											settings->Internals.Caption.TextAlign != settings->Caption.TextAlign ||
+												settings->Internals.Caption.WordWrap != settings->Caption.WordWrap ||
+													settings->Internals.OldStateEnabled != settings->Enabled ||
+														ParentWindow->Internals.OldStateEnabled != settings->Internals.ParentWindowStateEnabled)
+															settings->Internals.NeedEntireRefresh = true;
+	}
+	else
+	{
+		if(settings->Position.X != settings->Internals.Position.X ||
+				settings->Position.Y != settings->Internals.Position.Y ||
+					settings->Size.X != settings->Internals.Size.X ||
+						settings->Size.Y != settings->Internals.Size.Y ||
+							settings->Internals.Size.ItemSizeY != settings->Size.ItemSizeY ||
+								settings->Internals.Size.ScrollSize != settings->Size.ScrollSize ||
+									settings->Internals.Caption.Font != settings->Caption.Font ||
+										settings->Internals.Caption.Text != settings->Caption.Text ||
+											settings->Internals.Caption.TextAlign != settings->Caption.TextAlign ||
+												settings->Internals.Caption.WordWrap != settings->Caption.WordWrap ||
+													settings->Internals.OldStateEnabled != settings->Enabled)
+														settings->Internals.NeedEntireRefresh = true;
+	}
 	//if(settings->Internals.Caption.Text != NULL && settings->Caption.Text != NULL && strcmp(settings->Internals.Caption.Text, settings->Caption.Text) == NULL)
 		//settings->Internals.NeedEntireRefresh = true;
 
@@ -161,9 +203,9 @@ void listbox(tListBox *settings, tControlCommandData* control_comand)
 	tDisplay *pDisplay = settings->Internals.pDisplay;
 
 	/*Clear background of box with actual painted dimensions and positions if they been changed*/
-	if(settings->Internals.NeedEntireRefresh == true || (settings->Internals.OldStateVisible != settings->Visible && settings->Visible == false))
+	if(settings->Internals.NeedEntireRefresh == true || settings->Internals.OldStateVisible != settings->Visible)
 	{
-		if(!settings->Internals.NoPaintBackGround)
+		if(!settings->Internals.NoPaintBackGround || !settings->Visible)
 		{
 			settings->Internals.OldStateVisible = settings->Visible;
 			tRectangle back_up_clip = pDisplay->sClipRegion;
@@ -175,6 +217,7 @@ void listbox(tListBox *settings, tControlCommandData* control_comand)
 			put_rectangle(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, true, settings->Color.Scren);
 			box_cache_clean(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox);
 			pDisplay->sClipRegion = back_up_clip;
+			if(!settings->Visible) return;
 		}
 	}
 
@@ -187,8 +230,16 @@ void listbox(tListBox *settings, tControlCommandData* control_comand)
 							settings->Visible == true)
 	{
 		/* Copy new locations and dimensions to actual locations and dimensions */
-		settings->Internals.Position.X = settings->Position.X;
-		settings->Internals.Position.Y = settings->Position.Y;
+		if(ParentWindow)
+		{
+			settings->Internals.Position.X = settings->Position.X + ParentWindow->Internals.Position.X + settings->Internals.PositionOffset.X;
+			settings->Internals.Position.Y = settings->Position.Y + ParentWindow->Internals.Position.Y + settings->Internals.PositionOffset.Y;
+		}
+		else
+		{
+			settings->Internals.Position.X = settings->Position.X;
+			settings->Internals.Position.Y = settings->Position.Y;
+		}
 		settings->Internals.Size.X = settings->Size.X;
 		settings->Internals.Size.Y = settings->Size.Y;
 		settings->Internals.Size.ItemSizeY = settings->Size.ItemSizeY;
@@ -198,11 +249,15 @@ void listbox(tListBox *settings, tControlCommandData* control_comand)
 		settings->Internals.Caption.TextAlign = settings->Caption.TextAlign;
 		settings->Internals.Caption.WordWrap = settings->Caption.WordWrap;
 
-		settings->Internals.ScrollBar->Position.X = (settings->Internals.Position.X + settings->Internals.Size.X) - 2 - settings->Size.ScrollSize;
-		settings->Internals.ScrollBar->Position.Y = settings->Internals.Position.Y + 2;
+		//settings->Internals.ScrollBar->Position.X = (settings->Internals.Position.X + settings->Internals.Size.X) - 2 - settings->Size.ScrollSize;
+		//settings->Internals.ScrollBar->Position.Y = settings->Internals.Position.Y + 2;
+		settings->Internals.ScrollBar->Internals.PositionOffset.X = settings->Internals.Position.X - ParentWindow->Internals.Position.X;
+		settings->Internals.ScrollBar->Internals.PositionOffset.Y = settings->Internals.Position.Y - ParentWindow->Internals.Position.Y;
 		settings->Internals.ScrollBar->Size.X = settings->Size.ScrollSize;
 		settings->Internals.ScrollBar->Size.Y = settings->Internals.Size.Y - 4;
 		settings->Internals.ScrollBar->Maximum = settings->ItemsCount - ((settings->Size.Y - 4) / settings->Size.ItemSizeY);
+		settings->Internals.ScrollBar->Enabled = settings->Enabled;
+		if(settings->Size.X == 0 || settings->Size.Y == 0) return;
 
 		X_StartBox = settings->Internals.Position.X;
 		Y_StartBox = settings->Internals.Position.Y;
@@ -222,6 +277,7 @@ void listbox(tListBox *settings, tControlCommandData* control_comand)
 		pDisplay->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
 		clip_limit(&pDisplay->sClipRegion, &back_up_clip);
 		unsigned int color = controls_color.Control_Color_Enabled_Border_Pull;
+		if(!settings->Enabled || !ParentWindow->Internals.OldStateEnabled) color = settings->Color.Disabled.Border;
 		put_rectangle(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, false, controlls_change_color(color, -3));
 		put_rectangle(pDisplay, X_StartBox + 1, Y_StartBox + 1, X_LenBox - 2, Y_LenBox - 2, true, controlls_change_color(color, -2));
 		box_cache_clean(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox);
@@ -235,7 +291,7 @@ void listbox(tListBox *settings, tControlCommandData* control_comand)
 			bool Pushed = false;
 			if(settings->SelectedItem == CntDisplayItems) Pushed = true;
 			else if(settings->Internals.IsChildren == false || settings->SelectedItem != CntDisplayItems) Pushed = false;
-			paint_listbox_item(settings->Items[CntDisplayItems], pDisplay, X_StartBox + 2, settings->Position.Y + 2 + ((CntDisplayItems - settings->Internals.ItemStartOnBox) * settings->Size.ItemSizeY), control_comand, Pushed, true);
+			paint_listbox_item(settings, settings->Items[CntDisplayItems], pDisplay, X_StartBox + 2, Y_StartBox + 2 + ((CntDisplayItems - settings->Internals.ItemStartOnBox) * settings->Size.ItemSizeY), control_comand, Pushed, true);
 		}
 		control_comand->Cursor = cursor;
 
@@ -243,11 +299,13 @@ void listbox(tListBox *settings, tControlCommandData* control_comand)
 		scrollbar(settings->Internals.ScrollBar, control_comand);
 
 		pDisplay->sClipRegion = back_up_clip;
+		settings->Internals.ParentWindowStateEnabled = ParentWindow->Internals.OldStateEnabled;
 		settings->Internals.OldStateVisible = settings->Visible;
 		settings->Internals.OldStateEnabled = settings->Enabled;
 		settings->Internals.Control.Initiated = true;
 		settings->Internals.NeedEntireRefresh = false;
 		settings->Internals.NeedEntireRepaint = false;
+		control_comand->WindowRefresh |= true;
 		return;
 	}
 
@@ -266,7 +324,9 @@ void listbox(tListBox *settings, tControlCommandData* control_comand)
 			settings->Internals.OldStateCursor != control_comand->Cursor &&
 				(inside_window == true || settings->Internals.CursorDownInsideBox == true) &&
 					settings->Enabled == true &&
-						settings->Visible == true) || settings->Internals.ItemStartOnBox != settings->Internals.OldItemStartOnBox)
+						settings->Visible == true &&
+							control_comand->CursorCoordonateUsed == false) ||
+								settings->Internals.ItemStartOnBox != settings->Internals.OldItemStartOnBox)
 	{
 		if(control_comand->Cursor == Cursor_Down && inside_window == true) settings->Internals.CursorDownInsideBox = true;
 		settings->Internals.OldStateCursor = control_comand->Cursor;
@@ -293,19 +353,19 @@ void listbox(tListBox *settings, tControlCommandData* control_comand)
 				bool Pushed = false;
 				if(settings->SelectedItem == CntDisplayItems) Pushed = true;
 				else if(settings->Internals.IsChildren == false || settings->SelectedItem != CntDisplayItems) Pushed = false;
-				paint_listbox_item(settings->Items[CntDisplayItems], pDisplay, X_StartBox + 2, settings->Position.Y + 2 + ((CntDisplayItems - settings->Internals.ItemStartOnBox) * settings->Size.ItemSizeY), control_comand, Pushed, true);
+				paint_listbox_item(settings, settings->Items[CntDisplayItems], pDisplay, X_StartBox + 2, Y_StartBox + 2 + ((CntDisplayItems - settings->Internals.ItemStartOnBox) * settings->Size.ItemSizeY), control_comand, Pushed, true);
 			}
 			else
 			{
-				if(paint_listbox_item(settings->Items[CntDisplayItems], pDisplay, X_StartBox + 2, settings->Position.Y + 2 + ((CntDisplayItems - settings->Internals.ItemStartOnBox) * settings->Size.ItemSizeY), control_comand, false, false))
+				if(paint_listbox_item(settings, settings->Items[CntDisplayItems], pDisplay, X_StartBox + 2, Y_StartBox + 2 + ((CntDisplayItems - settings->Internals.ItemStartOnBox) * settings->Size.ItemSizeY), control_comand, false, false))
 				{
 					unsigned int _CntDisplayItems = CntDisplayItems;
 					if(settings->SelectedItem < EndDisplayedItems && settings->SelectedItem >= settings->Internals.ItemStartOnBox)
 					{
-						paint_listbox_item(settings->Items[settings->SelectedItem], pDisplay, X_StartBox + 2, settings->Position.Y + 2 + ((settings->SelectedItem - settings->Internals.ItemStartOnBox) * settings->Size.ItemSizeY), control_comand, false, true);
+						paint_listbox_item(settings, settings->Items[settings->SelectedItem], pDisplay, X_StartBox + 2, Y_StartBox + 2 + ((settings->SelectedItem - settings->Internals.ItemStartOnBox) * settings->Size.ItemSizeY), control_comand, false, true);
 					}
 					settings->SelectedItem = _CntDisplayItems;
-					paint_listbox_item(settings->Items[_CntDisplayItems], pDisplay, X_StartBox + 2, settings->Position.Y + 2 + ((_CntDisplayItems - settings->Internals.ItemStartOnBox) * settings->Size.ItemSizeY), control_comand, true, true);
+					paint_listbox_item(settings, settings->Items[_CntDisplayItems], pDisplay, X_StartBox + 2, Y_StartBox + 2 + ((_CntDisplayItems - settings->Internals.ItemStartOnBox) * settings->Size.ItemSizeY), control_comand, true, true);
 					break;
 				}
 			}
@@ -328,14 +388,16 @@ void listbox(tListBox *settings, tControlCommandData* control_comand)
 		settings->Events.OnMove.CallbackReturnData = settings->Events.OnMove.CallBack(settings->Events.OnMove.CallbackData);
 	}
 
-	if(settings->Internals.CursorDownInsideBox == true && control_comand->Cursor == Cursor_Up) settings->Internals.CursorDownInsideBox = false;
-	control_comand->CursorCoordonateUsed = settings->Internals.CursorDownInsideBox;
+	if(control_comand->Cursor && settings->Internals.CursorDownInsideBox) control_comand->CursorCoordonateUsed |= true;
+	if(settings->Internals.CursorDownInsideBox == true && (control_comand->Cursor == Cursor_Up || control_comand->Cursor == Cursor_NoAction)) settings->Internals.CursorDownInsideBox = false;
+	//control_comand->CursorCoordonateUsed = settings->Internals.CursorDownInsideBox;
+	//control_comand->WindowRefresh |= true;
 	return;
 }
 //#######################################################################################
-bool listbox_item_insert(void* _settings, char* text, unsigned int location)
+void* listbox_item_insert(void* _settings, char* text, unsigned int location)
 {
-	if(!_settings) return false;
+	if(!_settings) return NULL;
 	tListBox* settings = _settings;
 	listbox_item* item_settings = (listbox_item*)calloc(1, sizeof(listbox_item));
 	if(!item_settings) return false;
@@ -354,6 +416,7 @@ bool listbox_item_insert(void* _settings, char* text, unsigned int location)
 		return false;
 	}
 	strcpy(item_settings->Caption.Text, text);
+	item_settings->Caption.Text = str_remove_new_line(item_settings->Caption.Text);
 
 	//item_settings->Caption.Font = settings->Internals.Caption.Font;
 	//item_settings->Caption.TextAlign = settings->Internals.Caption.TextAlign;
@@ -367,7 +430,7 @@ bool listbox_item_insert(void* _settings, char* text, unsigned int location)
 	{
 		free(item_settings->Caption.Text);
 		free(item_settings);
-		return false;
+		return NULL;
 	}
 	unsigned int TmpCntItemsToMove = settings->ItemsCount;
 	for(; TmpCntItemsToMove > location; TmpCntItemsToMove --)
@@ -378,10 +441,10 @@ bool listbox_item_insert(void* _settings, char* text, unsigned int location)
 	settings->Items = Tmp;
 	settings->ItemsCount++;
 	settings->Internals.NeedEntireRefresh = true;
-	return true;
+	return _settings;
 }
 //#######################################################################################
-bool listbox_item_add(void* _settings, char* text)
+void* listbox_item_add(void* _settings, char* text)
 {
 	tListBox* settings = _settings;
 	return listbox_item_insert(_settings, text, settings->ItemsCount);
@@ -442,13 +505,16 @@ bool listbox_item_remove_all(void* _settings)
 	return true;
 }
 //#######################################################################################
-tListBox *new_listbox(tDisplay *ScreenDisplay)
+tListBox *new_listbox(void *ParentWindow)
 {
 	tListBox* settings = (tListBox*)calloc(1, sizeof(tListBox));
 
-	if(!settings || !ScreenDisplay) return NULL;
+	if(!settings || !ParentWindow) return NULL;
+	settings->Internals.ParentWindow = ParentWindow;
 
-	settings->Internals.pDisplay = ScreenDisplay;
+	tWindow *_ParentWindow = (tWindow *)ParentWindow;
+	settings->Internals.pDisplay = _ParentWindow->Internals.pDisplay;
+
 	settings->Caption.TextAlign = Align_Left;
 	settings->Caption.WordWrap = true;
 	settings->Caption.Font = controls_color.DefaultFont;

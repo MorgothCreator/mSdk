@@ -209,7 +209,7 @@ bool TouchIdle(LcdTouch_t* structure)
 		WDR();
 #endif
 	if(!structure) return false;
-	TouchScreen_Data_t* TouchReport = &structure->TouchResponse;
+	//TouchScreen_Data_t* TouchReport = &structure->TouchResponse;
 	unsigned char State1 = Gfx_ft5x06_Touch_MouseNoAction;
 	bool Return = false;
     signed int TouchX = -1, TouchY = -1;
@@ -220,8 +220,8 @@ bool TouchIdle(LcdTouch_t* structure)
 			IsTSPress = 0;
 			State1 = Gfx_ft5x06_MouseMove;
 			TouchCoOrdGet(structure, &TouchX, &TouchY);
-			TouchReport->x1 = TouchX;
-			TouchReport->y1 = TouchY;
+			structure->TouchResponse.x1 = TouchX;
+			structure->TouchResponse.y1 = TouchY;
 			Return = true;
     	}else
     	{
@@ -232,24 +232,24 @@ bool TouchIdle(LcdTouch_t* structure)
 	if(structure->LastState1 == Gfx_ft5x06_Touch_MouseNoAction && State1 == Gfx_ft5x06_MouseMove)
 	{
 		structure->LastState1 = Gfx_ft5x06_MouseDn;
-		TouchReport->touch_event1 = Gfx_ft5x06_MouseDn;
+		structure->TouchResponse.touch_event1 = Gfx_ft5x06_MouseDn;
 	}
 	else if((structure->LastState1 == Gfx_ft5x06_MouseDn || structure->LastState1 == Gfx_ft5x06_MouseMove) && State1 == Gfx_ft5x06_MouseMove)
 	{
 		structure->LastState1 = Gfx_ft5x06_MouseMove;
-		TouchReport->touch_event1 = Gfx_ft5x06_MouseMove;
+		structure->TouchResponse.touch_event1 = Gfx_ft5x06_MouseMove;
 	}
 	else if((structure->LastState1 == Gfx_ft5x06_MouseDn || structure->LastState1 == Gfx_ft5x06_MouseMove) && State1 == Gfx_ft5x06_Touch_MouseNoAction)
 	{
 		structure->LastState1 = Gfx_ft5x06_MouseUp;
-		TouchReport->touch_event1 = Gfx_ft5x06_MouseUp;
+		structure->TouchResponse.touch_event1 = Gfx_ft5x06_MouseUp;
 	}
 	else if(structure->LastState1 == Gfx_ft5x06_MouseUp && State1 == Gfx_ft5x06_Touch_MouseNoAction)
 	{
 		structure->LastState1 = Gfx_ft5x06_Touch_MouseNoAction;
-		TouchReport->touch_event1 = Gfx_ft5x06_Touch_MouseNoAction;
-		TouchReport->x1 = -1;
-		TouchReport->y1 = -1;
+		structure->TouchResponse.touch_event1 = Gfx_ft5x06_Touch_MouseNoAction;
+		structure->TouchResponse.x1 = -1;
+		structure->TouchResponse.y1 = -1;
 	}
 	return Return;
 }

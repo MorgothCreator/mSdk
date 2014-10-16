@@ -24,17 +24,27 @@ extern void (*cb_Fxn[EDMA3_NUM_TCC]) (unsigned int tcc, unsigned int status);
 #define EDMA_ERROR_INT_NUM             (SYS_INT_EDMAERRINT)
 
 /* EDMA Events */
-#define MMCSD_TX_EDMA_CHAN             (EDMA3_CHA_MMCSD0_TX)
-#define MMCSD_RX_EDMA_CHAN             (EDMA3_CHA_MMCSD0_RX)
+//#define MMCSD_TX_EDMA_CHAN             (EDMA3_CHA_MMCSD0_TX)
+//#define MMCSD_RX_EDMA_CHAN             (EDMA3_CHA_MMCSD0_RX)
 
 
-extern volatile unsigned int callbackOccured;
+extern volatile unsigned int callbackOccured[];
 /*
 ** This function is used as a callback from EDMA3 Completion Handler.
 */
-static void callback(unsigned int tccNum, unsigned int status)
+static void callbackMMcSd0(unsigned int tccNum, unsigned int status)
 {
-    callbackOccured = 1;
+	callbackOccured[0] = 1;
+    EDMA3DisableTransfer(EDMA_INST_BASE, tccNum, EDMA3_TRIG_MODE_EVENT);
+}
+static void callbackMMcSd1(unsigned int tccNum, unsigned int status)
+{
+	callbackOccured[1] = 1;
+    EDMA3DisableTransfer(EDMA_INST_BASE, tccNum, EDMA3_TRIG_MODE_EVENT);
+}
+static void callbackMMcSd2(unsigned int tccNum, unsigned int status)
+{
+	callbackOccured[2] = 1;
     EDMA3DisableTransfer(EDMA_INST_BASE, tccNum, EDMA3_TRIG_MODE_EVENT);
 }
 //#ifdef sayftewy
@@ -183,11 +193,13 @@ static void _Edma3CCErrorIsr(void)
     }
 
 }
-extern void HSMMCSDIsr(void);
+extern void HSMMCSD0Isr(void);
+extern void HSMMCSD1Isr(void);
+extern void HSMMCSD2Isr(void);
 /*
 ** This function configures the AINTC to receive EDMA3 interrupts.
 */
-static void _EDMA3AINTCConfigure(void)
+static void _EDMA3AINTCConfigure(int SdNr)
 {
     /* Initializing the ARM Interrupt Controller. */
 
@@ -209,14 +221,39 @@ static void _EDMA3AINTCConfigure(void)
     /* Enabling the EDMA3CC Error interrupt in AINTC. */
     IntSystemEnable(EDMA_ERROR_INT_NUM);
 
-    /* Registering HSMMC Interrupt handler */
-    IntRegister(MMCSD_INT_NUM, HSMMCSDIsr);
+    switch(SdNr)
+    {
+    case(0):
+		/* Registering HSMMC Interrupt handler */
+		IntRegister(SYS_INT_MMCSD0INT, HSMMCSD0Isr);
 
-    /* Setting the priority for EDMA3CC completion interrupt in AINTC. */
-    IntPrioritySet(MMCSD_INT_NUM, 0, AINTC_HOSTINT_ROUTE_IRQ);
+		/* Setting the priority for EDMA3CC completion interrupt in AINTC. */
+		IntPrioritySet(SYS_INT_MMCSD0INT, 0, AINTC_HOSTINT_ROUTE_IRQ);
 
-    /* Enabling the HSMMC interrupt in AINTC. */
-    IntSystemEnable(MMCSD_INT_NUM);
+		/* Enabling the HSMMC interrupt in AINTC. */
+		IntSystemEnable(SYS_INT_MMCSD0INT);
+		break;
+    case(1):
+		/* Registering HSMMC Interrupt handler */
+		IntRegister(SYS_INT_MMCSD1INT, HSMMCSD1Isr);
+
+		/* Setting the priority for EDMA3CC completion interrupt in AINTC. */
+		IntPrioritySet(SYS_INT_MMCSD1INT, 0, AINTC_HOSTINT_ROUTE_IRQ);
+
+		/* Enabling the HSMMC interrupt in AINTC. */
+		IntSystemEnable(SYS_INT_MMCSD1INT);
+		break;
+    case(2):
+		/* Registering HSMMC Interrupt handler */
+		IntRegister(SYS_INT_MMCSD2INT, HSMMCSD2Isr);
+
+		/* Setting the priority for EDMA3CC completion interrupt in AINTC. */
+		IntPrioritySet(SYS_INT_MMCSD2INT, 0, AINTC_HOSTINT_ROUTE_IRQ);
+
+		/* Enabling the HSMMC interrupt in AINTC. */
+		IntSystemEnable(SYS_INT_MMCSD2INT);
+    break;
+    }
 
     /* Enabling IRQ in CPSR of ARM processor. */
     IntMasterIRQEnable();
@@ -224,35 +261,75 @@ static void _EDMA3AINTCConfigure(void)
 
 //#endif
 
-void EDMA3Initialize(void)
+void EDMA3Initialize(int SdNr)
 {
 	_EDMAModuleClkConfig();
     /* Initialization of EDMA3 */
     EDMA3Init(SOC_EDMA30CC_0_REGS, EVT_QUEUE_NUM);
 
     /* Configuring the AINTC to receive EDMA3 interrupts. */
-    _EDMA3AINTCConfigure();
+    _EDMA3AINTCConfigure(SdNr);
 }
 
-void HSMMCSDEdmaInit(void)
+void HSMMCSDEdmaInit(int SdNr)
 {
-	EDMA3Initialize();
+	EDMA3Initialize(SdNr);
 
-    /* Request DMA Channel and TCC for MMCSD Transmit*/
-    EDMA3RequestChannel(EDMA_INST_BASE, EDMA3_CHANNEL_TYPE_DMA,
-                        MMCSD_TX_EDMA_CHAN, MMCSD_TX_EDMA_CHAN,
-                        EVT_QUEUE_NUM);
+    switch(SdNr)
+    {
 
-    /* Registering Callback Function for TX*/
-    cb_Fxn[MMCSD_TX_EDMA_CHAN] = &callback;
+    case(0):
+    		/* Request DMA Channel and TCC for MMCSD Transmit*/
+			EDMA3RequestChannel(EDMA_INST_BASE, EDMA3_CHANNEL_TYPE_DMA,
+					EDMA3_CHA_MMCSD0_TX, EDMA3_CHA_MMCSD0_TX,
+								EVT_QUEUE_NUM);
 
-    /* Request DMA Channel and TCC for UART Receive */
-    EDMA3RequestChannel(EDMA_INST_BASE, EDMA3_CHANNEL_TYPE_DMA,
-                        MMCSD_RX_EDMA_CHAN, MMCSD_RX_EDMA_CHAN,
-                        EVT_QUEUE_NUM);
+			/* Registering Callback Function for TX*/
+			cb_Fxn[EDMA3_CHA_MMCSD0_TX] = &callbackMMcSd0;
 
-    /* Registering Callback Function for RX*/
-    cb_Fxn[MMCSD_RX_EDMA_CHAN] = &callback;
+			/* Request DMA Channel and TCC for MMCSD Receive */
+			EDMA3RequestChannel(EDMA_INST_BASE, EDMA3_CHANNEL_TYPE_DMA,
+					EDMA3_CHA_MMCSD0_RX, EDMA3_CHA_MMCSD0_RX,
+								EVT_QUEUE_NUM);
+
+			/* Registering Callback Function for RX*/
+			cb_Fxn[EDMA3_CHA_MMCSD0_RX] = &callbackMMcSd0;
+			break;
+    case(1):
+    		/* Request DMA Channel and TCC for MMCSD Transmit*/
+			EDMA3RequestChannel(EDMA_INST_BASE, EDMA3_CHANNEL_TYPE_DMA,
+					EDMA3_CHA_MMCSD1_TX, EDMA3_CHA_MMCSD1_TX,
+								EVT_QUEUE_NUM);
+
+			/* Registering Callback Function for TX*/
+			cb_Fxn[EDMA3_CHA_MMCSD1_TX] = &callbackMMcSd1;
+
+			/* Request DMA Channel and TCC for MMCSD Receive */
+			EDMA3RequestChannel(EDMA_INST_BASE, EDMA3_CHANNEL_TYPE_DMA,
+					EDMA3_CHA_MMCSD1_RX, EDMA3_CHA_MMCSD1_RX,
+								EVT_QUEUE_NUM);
+
+			/* Registering Callback Function for RX*/
+			cb_Fxn[EDMA3_CHA_MMCSD1_RX] = &callbackMMcSd1;
+			break;
+    case(2):
+    		/* Request DMA Channel and TCC for MMCSD Transmit*/
+			EDMA3RequestChannel(EDMA_INST_BASE, EDMA3_CHANNEL_TYPE_DMA,
+					EDMA3_CHA_MMCSD2_TX, EDMA3_CHA_MMCSD2_TX,
+								EVT_QUEUE_NUM);
+
+			/* Registering Callback Function for TX*/
+			cb_Fxn[EDMA3_CHA_MMCSD2_TX] = &callbackMMcSd2;
+
+			/* Request DMA Channel and TCC for MMCSD Receive */
+			EDMA3RequestChannel(EDMA_INST_BASE, EDMA3_CHANNEL_TYPE_DMA,
+					EDMA3_CHA_MMCSD2_RX, EDMA3_CHA_MMCSD2_RX,
+								EVT_QUEUE_NUM);
+
+			/* Registering Callback Function for RX*/
+			cb_Fxn[EDMA3_CHA_MMCSD2_RX] = &callbackMMcSd2;
+			break;
+    }
 }
 
 

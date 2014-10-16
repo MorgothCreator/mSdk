@@ -8,6 +8,7 @@
 #ifndef BOARD_PROPERTIES_H_
 #define BOARD_PROPERTIES_H_
 /*#####################################################*/
+#include "sys/mmu.h"
 #define USE_TPS65217
 
 #define board_type_beaglebone
@@ -33,7 +34,8 @@ static volatile unsigned int pageTable[4*1024];
 #pragma data_alignment=16384
 static volatile unsigned int pageTable[4*1024];
 #else
-static volatile unsigned int pageTable[4*1024] __attribute__((aligned(16*1024)));
+static volatile unsigned int pageTable[MMU_PAGETABLE_NUM_ENTRY]
+            __attribute__ ((aligned(MMU_PAGETABLE_ALIGN_SIZE)));
 #endif
 /*#####################################################*/
 #endif /* BOARD_PROPERTIES_H_ */

@@ -60,7 +60,7 @@
 ***********************************************************************/
 extern void Entry(void);
 extern void UndefInstHandler(void);
-extern void SVCHandler(void);
+extern void SVC_Handler(void);
 extern void AbortHandler(void);
 extern void IRQHandler(void);
 extern void FIQHandler(void);
@@ -97,7 +97,7 @@ static unsigned int const vecTbl[14]=
     0xE59FF010,    /* Opcode for loading PC with the contents of [PC + 0x10] */
     (unsigned int)Entry,
     (unsigned int)UndefInstHandler,
-    (unsigned int)SVCHandler,
+    (unsigned int)SVC_Handler,
     (unsigned int)AbortHandler,
     (unsigned int)IRQHandler,
     (unsigned int)FIQHandler
@@ -166,5 +166,12 @@ static void CopyVectorTable(void)
         dest[count] = src[count];
     }
 }
+
+void _exit (int __status)
+ {
+ __status = __status;
+while(1) {};
+
+ }
 
 /***************************** End Of File ***********************************/

@@ -23,19 +23,19 @@
 //*****************************************************************************
 //#include "inc/hw_memmap.h"
 
-#include "../../../include/hw/hw_usb.h"
-#include "../../../include/hw/hw_types.h"
-#include "../../../include/debug.h"
-#include "../../../include/interrupt.h"
-#include "../../../include/usb.h"
-#include "../../../include/cppi41dma.h"
+#include "include/hw/hw_usb.h"
+#include "include/hw/hw_types.h"
+#include "include/debug.h"
+#include "include/interrupt.h"
+#include "include/usb.h"
+#include "include/cppi41dma.h"
 #include "../include/usblib.h"
 #include "../include/usbmsc.h"
 #include "../include/usbdevice.h"
 #include "../include/usbdmsc.h"
 #include "../include/usblibpriv.h"
 #include <string.h>
-#include "../../../include/delay.h"
+#include "sys/sysdelay.h"
 //#include <perf.h>
 
 //*****************************************************************************
@@ -553,10 +553,10 @@ HandleEndpoints(void *pvInstance, unsigned int ulStatus, unsigned int ulIndex)
 
 #ifdef DMA_MODE
     // Get the Starvation interrupt status
-    CppiDmaGetINTD0Status(g_USBInstance[ulIndex].uiUSBInstance);
-    
+    //CppiDmaGetINTD0Status(g_USBInstance[ulIndex].uiUSBInstance);
     // Get the DMA Interrupt status
     pendReg = CppiDmaGetPendStatus(g_USBInstance[ulIndex].uiUSBInstance);
+    
 #endif
     
     //
@@ -1230,6 +1230,7 @@ USBDMSCCompositeInit(unsigned int ulIndex, const tUSBDMSCDevice *psDevice)
         g_USBInstance[ulIndex].uiSubInterruptNum = SYS_INT_USBSSINT;
         g_USBInstance[ulIndex].uiPHYConfigRegAddr = CFGCHIP2_USBPHYCTRL;
     }
+#if (USB_NUM_INSTANCE == 2)
     else if(ulIndex == 1)
     {
 
@@ -1240,6 +1241,7 @@ USBDMSCCompositeInit(unsigned int ulIndex, const tUSBDMSCDevice *psDevice)
         g_USBInstance[ulIndex].uiSubInterruptNum = SYS_INT_USBSSINT;
         g_USBInstance[ulIndex].uiPHYConfigRegAddr = CFGCHIP2_USB1PHYCTRL;
     }
+#endif
 
     //
     // Initialize the workspace in the passed instance structure.
@@ -1451,7 +1453,10 @@ USBDSCSIInquiry(const tUSBDMSCDevice *psDevice, unsigned int ulIndex)
 #ifdef _TMS320C6X
     _mem4(&g_pucCommand[0]) = SCSI_INQ_PDT_SBC | (SCSI_INQ_RMB << 8);
 #else
-    *(unsigned int *)&g_pucCommand[0] = SCSI_INQ_PDT_SBC | (SCSI_INQ_RMB << 8);
+    g_pucCommand[0] = SCSI_INQ_PDT_SBC;
+    g_pucCommand[1] = SCSI_INQ_RMB;
+    g_pucCommand[2] = 0x00;
+    g_pucCommand[3] = 0x00;
 #endif
 
     //
@@ -1460,7 +1465,10 @@ USBDSCSIInquiry(const tUSBDMSCDevice *psDevice, unsigned int ulIndex)
 #ifdef _TMS320C6X
     _mem4(&g_pucCommand[4]) = 31;
 #else
-    *(unsigned int *)&g_pucCommand[4] = 31;
+    g_pucCommand[4] = 31;
+    g_pucCommand[5] = 0x00;
+    g_pucCommand[6] = 0x00;
+    g_pucCommand[7] = 0x00;
 #endif
 
     //
@@ -1482,7 +1490,7 @@ USBDSCSIInquiry(const tUSBDMSCDevice *psDevice, unsigned int ulIndex)
     //
     // Copy the Version string.
     //
-    for(iIdx = 0; iIdx < 16; iIdx++)
+    for(iIdx = 0; iIdx < 4; iIdx++)
     {
         g_pucCommand[iIdx + 32] = psDevice->pucVersion[iIdx];
     }
@@ -1555,7 +1563,10 @@ USBDSCSIReadCapacities(const tUSBDMSCDevice *psDevice, unsigned int ulIndex)
 #ifdef _TMS320C6X
         _mem4(&g_pucCommand[0]) = 0x08000000;
 #else
-        *(unsigned int *)&g_pucCommand[0] = 0x08000000;
+        g_pucCommand[0] = 0x00;
+        g_pucCommand[1] = 0x00;
+        g_pucCommand[2] = 0x00;
+        g_pucCommand[3] = 0x08;
 #endif
 
         //
@@ -1978,7 +1989,6 @@ USBDSCSIRead10(const tUSBDMSCDevice *psDevice, tMSCCBW *pSCSICBW,
         // Stall the IN endpoint
         //
         USBDevEndpointStall(g_USBInstance[ulIndex].uiBaseAddr, psInst->ucINEndpoint, USB_EP_DEV_IN);
-
         //
         // Mark the sense code as valid and indicate that these is no media
         // present.

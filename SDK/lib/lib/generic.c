@@ -30,6 +30,7 @@ signed int to_percentage(signed int MinValue, signed int MaxValue, signed int Ma
 	if (MaxValue < 65536) ReturnedValue = ((Value- MinValue) * 0x10000)/(((MaxValue - MinValue) * 0x10000)/MaxPercentageValue);
 	else ReturnedValue = (Value- MinValue)/((MaxValue-MinValue)/MaxPercentageValue);
 	if(ReturnedValue > MaxPercentageValue) ReturnedValue = MaxPercentageValue;
+	else if(ReturnedValue < 0) ReturnedValue = 0;
 	return ReturnedValue;
 }
 //#####################################################
@@ -38,6 +39,7 @@ double to_percentage_double(double MinValue, double MaxValue, double MaxPercenta
 	double ReturnedValue = 0;
 	ReturnedValue = (Value- MinValue)/((MaxValue-MinValue)/MaxPercentageValue);
 	if(ReturnedValue > MaxPercentageValue) ReturnedValue = MaxPercentageValue;
+	else if(ReturnedValue < 0) ReturnedValue = 0;
 	return ReturnedValue;
 }
 //#####################################################
@@ -54,13 +56,28 @@ ToPercentageWithDecimals_t to_percentage_with_decimals(signed int MinValue, sign
 //#####################################################
 signed int percentage_to(signed int MinValue, signed int MaxValue, signed int MaxPercentageValue, signed int Value)
 {
-	if(MaxValue < 65536) return (Value*MaxValue)/MaxPercentageValue;
-	else return ((Value*(MaxValue / 0x10000))/MaxPercentageValue) * 0x10000;
+	if(MaxValue < 65536)
+	{
+		signed int result = ((Value*(MaxValue - MinValue))/MaxPercentageValue) + MinValue;
+		if(result > MaxValue) result = MaxValue;
+		else if(result < MinValue) result = MinValue;
+		return result;
+	}
+	else //return ((Value*(MaxValue / 0x10000))/MaxPercentageValue) * 0x10000;
+	{
+		signed int result = (signed long long)((Value*(MaxValue - MinValue))/MaxPercentageValue) + MinValue;
+		if(result > MaxValue) result = MaxValue;
+		else if(result < MinValue) result = MinValue;
+		return (signed int)result;
+	}
 }
 //#####################################################
 double percentage_to_double(double MinValue, double MaxValue, double MaxPercentageValue, double Value)
 {
-	return (Value*MaxValue)/MaxPercentageValue;
+	double result = ((Value*(MaxValue - MinValue))/MaxPercentageValue) + MinValue;
+	if(result > MaxValue) result = MaxValue;
+	else if(result < MinValue) result = MinValue;
+	return result;
 }
 //#####################################################
 #endif

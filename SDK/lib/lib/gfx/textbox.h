@@ -25,6 +25,7 @@
 #include <stdbool.h>
 #include "scrollbar.h"
 #include "controls_definition.h"
+//#include "window_def.h"
 //#######################################################################################
 typedef struct
 {
@@ -80,6 +81,11 @@ typedef struct
 		{
 			signed int X;
 			signed int Y;
+		}PositionOffset;
+		struct
+		{
+			signed int X;
+			signed int Y;
 			signed int ScrollSize;
 		}Size;
 		controls_caption_t Caption;
@@ -100,6 +106,8 @@ typedef struct
 		tScrollBar *Hscrollbar;
 		tScrollBar *Vscrollbar;
 		tDisplay *pDisplay;
+		void *ParentWindow;
+		bool ParentWindowStateEnabled;
 	}Internals;
 	bool Visible;
 	bool Enabled;
@@ -112,7 +120,7 @@ typedef struct
 }tTextBox;
 //#######################################################################################
 void textbox(tTextBox *settings, tControlCommandData* control_comand);
-tTextBox *new_textbox(tDisplay *ScreenDisplay);
+tTextBox *new_textbox(void *ParentWindow);
 bool free_textbox(tTextBox* settings);
 //#######################################################################################
 #ifdef HEADER_INCLUDE_C_FILES

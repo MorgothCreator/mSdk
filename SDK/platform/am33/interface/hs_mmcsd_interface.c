@@ -38,6 +38,7 @@
 *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *
 */
+#define thirdpartyfatfs
 
 #include "board_properties.h"
 #include "hs_mmcsd_interface.h"
@@ -59,6 +60,7 @@
 #include "../clk/clk_mmcsd.h"
 #include "../pinmux/pin_mux_mmcsd.h"
 #include "lib/fs/fat.h"
+#include "lib/fat_fs/inc/ff.h"
 #include "api/gpio_api.h"
 #include "board_init.h"
 #ifdef MMCSD_PERF
@@ -69,6 +71,26 @@ new_gpio *CardDetectPinMmcSd0 = NULL;
 new_gpio *LedStatusMmcSd0 = NULL;
 extern new_uart* DebugCom;
 extern FileInfo_t *FILE1;
+
+
+//*****************************************************************************
+//
+// Current FAT fs state.
+//
+//*****************************************************************************
+FATFS g_sFatFs;
+DIR g_sDirObject;
+FILINFO g_sFileInfo;
+FIL g_sFileObject;
+
+//*****************************************************************************
+//
+// This buffer holds the full path to the current working directory.  Initially
+// it is root ("/").
+//
+//*****************************************************************************
+#define PATH_BUF_SIZE   80
+static char g_cCwdBuf[PATH_BUF_SIZE] = "/";
 
 /******************************************************************************
 **                      INTERNAL MACRO DEFINITIONS
@@ -111,10 +133,10 @@ extern FileInfo_t *FILE1;
 
 
 /* SD card info structure */
-mmcsdCardInfo sdCard;
+//mmcsdCardInfo sdCard;
 
 /* SD Controller info structure */
-mmcsdCtrlInfo  ctrlInfo;
+mmcsdCtrlInfo *ctrlInfo[3];
 
 /* EDMA callback function array */
 extern void (*cb_Fxn[EDMA3_NUM_TCC]) (unsigned int tcc, unsigned int status);
@@ -124,13 +146,13 @@ extern void (*cb_Fxn[EDMA3_NUM_TCC]) (unsigned int tcc, unsigned int status);
 *******************************************************************************/
 /* Global flags for interrupt handling */
 volatile unsigned int sdBlkSize = HSMMCSD_BLK_SIZE;
-volatile unsigned int callbackOccured = 0;
-volatile unsigned int xferCompFlag = 0; 
-volatile unsigned int dataTimeout = 0;
-volatile unsigned int cmdCompFlag = 0;
-volatile unsigned int cmdTimeout = 0; 
-volatile unsigned int errFlag = 0;
-volatile unsigned int initFlg = 1;
+volatile unsigned int callbackOccured[3] = {0,0,0};
+volatile unsigned int xferCompFlag[3] = {0,0,0};
+volatile unsigned int dataTimeout[3] = {0,0,0};
+volatile unsigned int cmdCompFlag[3] = {0,0,0};
+volatile unsigned int cmdTimeout[3] = {0,0,0};
+volatile unsigned int errFlag[3] = {0,0,0};
+volatile unsigned int initFlg[3] = {1,1,1};
 
 #ifdef __IAR_SYSTEMS_ICC__
 #pragma data_alignment=SOC_CACHELINE_SIZE
@@ -141,26 +163,12 @@ unsigned char data[HSMMCSD_DATA_SIZE];
 unsigned char data[HSMMCSD_DATA_SIZE];
 
 #elif defined(gcc)
-unsigned char data[HSMMCSD_DATA_SIZE] 
+unsigned char data[HSMMCSD_DATA_SIZE]
                     __attribute__ ((aligned (SOC_CACHELINE_SIZE)))= {0};
 
 #else
 #error "Unsupported Compiler. \r\n"
 
-#endif
-
-/* page tables start must be aligned in 16K boundary */                  //
-#ifdef __TMS470__
-#pragma DATA_ALIGN(pageTable, MMU_PAGETABLE_ALIGN_SIZE);
-static volatile unsigned int pageTable[MMU_PAGETABLE_NUM_ENTRY];
-#elif defined(__IAR_SYSTEMS_ICC__)
-#pragma data_alignment=MMU_PAGETABLE_ALIGN_SIZE
-static volatile unsigned int pageTable[MMU_PAGETABLE_NUM_ENTRY];
-#elif defined(gcc)
-static volatile unsigned int pageTable[MMU_PAGETABLE_NUM_ENTRY] 
-            __attribute__((aligned(MMU_PAGETABLE_ALIGN_SIZE)));
-#else
-#error "Unsupported Compiler. \r\n"
 #endif
 
 /*
@@ -175,22 +183,22 @@ static unsigned int HSMMCSDCmdStatusGet(mmcsdCtrlInfo *ctrl)
     {
     	if(gpio_in(CardDetectPinMmcSd0))
     	{
-    		cmdTimeout = 0;
+    		cmdTimeout[ctrl->SdNr] = 0;
     		break;
     	}
     }
-    while ((cmdCompFlag == 0) && (cmdTimeout == 0));
+    while ((cmdCompFlag[ctrl->SdNr] == 0) && (cmdTimeout[ctrl->SdNr] == 0));
 
-    if (cmdCompFlag)
+    if (cmdCompFlag[ctrl->SdNr])
     {
         status = 1;
-        cmdCompFlag = 0;
+        cmdCompFlag[ctrl->SdNr] = 0;
     }
 
-    if (cmdTimeout)
+    if (cmdTimeout[ctrl->SdNr])
     {
         status = 0;
-        cmdTimeout = 0;
+        cmdTimeout[ctrl->SdNr] = 0;
     }
 
     return status;
@@ -205,29 +213,29 @@ static unsigned int HSMMCSDXferStatusGet(mmcsdCtrlInfo *ctrl)
     {
     	if(gpio_in(CardDetectPinMmcSd0))
     	{
-    		cmdTimeout = 0;
+    		cmdTimeout[ctrl->SdNr] = 0;
     		break;
     	}
     }
-    while ((xferCompFlag == 0) && (dataTimeout == 0));
+    while ((xferCompFlag[ctrl->SdNr] == 0) && (dataTimeout[ctrl->SdNr] == 0));
 
-    if (xferCompFlag)
+    if (xferCompFlag[ctrl->SdNr])
     {
         status = 1;
-        xferCompFlag = 0;
+        xferCompFlag[ctrl->SdNr] = 0;
     }
 
-    if (dataTimeout)
+    if (dataTimeout[ctrl->SdNr])
     {
         status = 0;
-        dataTimeout = 0;
+        dataTimeout[ctrl->SdNr] = 0;
     }
 
     /* Also, poll for the callback */
     if (HWREG(ctrl->memBase + MMCHS_CMD) & MMCHS_CMD_DP)
     {
-        while(callbackOccured == 0 && ((timeOut--) != 0));
-        callbackOccured = 0;
+        while(callbackOccured[ctrl->SdNr] == 0 && ((timeOut--) != 0));
+        callbackOccured[ctrl->SdNr] = 0;
 
         if(timeOut == 0)
         {
@@ -235,16 +243,16 @@ static unsigned int HSMMCSDXferStatusGet(mmcsdCtrlInfo *ctrl)
         }
     }
 
-    ctrlInfo.dmaEnable = 0;
+    ctrl->dmaEnable = 0;
 
     return status;
 }
 
-void HSMMCSDRxDmaConfig(void *ptr, unsigned int blkSize, unsigned int nblks)
+void HSMMCSDRxDmaConfig(mmcsdCtrlInfo *ctrl, void *ptr, unsigned int blkSize, unsigned int nblks)
 {
     EDMA3CCPaRAMEntry paramSet;
 
-    paramSet.srcAddr    = ctrlInfo.memBase + MMCHS_DATA;
+    paramSet.srcAddr    = ctrl->memBase + MMCHS_DATA;
     paramSet.destAddr   = (unsigned int)ptr;
     paramSet.srcBIdx    = 0;
     paramSet.srcCIdx    = 0;
@@ -279,12 +287,12 @@ void HSMMCSDRxDmaConfig(void *ptr, unsigned int blkSize, unsigned int nblks)
     EDMA3EnableTransfer(EDMA_INST_BASE, MMCSD_RX_EDMA_CHAN, EDMA3_TRIG_MODE_EVENT);
 }
 
-void HSMMCSDTxDmaConfig(void *ptr, unsigned int blkSize, unsigned int blks)
+void HSMMCSDTxDmaConfig(mmcsdCtrlInfo *ctrl, void *ptr, unsigned int blkSize, unsigned int blks)
 {
     EDMA3CCPaRAMEntry paramSet;
 
     paramSet.srcAddr    = (unsigned int)ptr;
-    paramSet.destAddr   = ctrlInfo.memBase + MMCHS_DATA;
+    paramSet.destAddr   = ctrl->memBase + MMCHS_DATA;
     paramSet.srcBIdx    = 4;
     paramSet.srcCIdx    = blkSize;
     paramSet.destBIdx   = 0;
@@ -321,16 +329,16 @@ void HSMMCSDTxDmaConfig(void *ptr, unsigned int blkSize, unsigned int blks)
 static void HSMMCSDXferSetup(mmcsdCtrlInfo *ctrl, unsigned char rwFlag, void *ptr,
                              unsigned int blkSize, unsigned int nBlks)
 {
-    callbackOccured = 0;
-    xferCompFlag = 0;
+    callbackOccured[ctrl->SdNr] = 0;
+    xferCompFlag[ctrl->SdNr] = 0;
     CacheDataCleanInvalidateBuff((unsigned int) ptr, (512 * nBlks));
     if (rwFlag == 1)
     {
-        HSMMCSDRxDmaConfig(ptr, blkSize, nBlks);
+        HSMMCSDRxDmaConfig(ctrl, ptr, blkSize, nBlks);
     }
     else
     {
-        HSMMCSDTxDmaConfig(ptr, blkSize, nBlks);
+        HSMMCSDTxDmaConfig(ctrl, ptr, blkSize, nBlks);
     }
 
     ctrl->dmaEnable = 1;
@@ -339,86 +347,100 @@ static void HSMMCSDXferSetup(mmcsdCtrlInfo *ctrl, unsigned char rwFlag, void *pt
 
 
 
-void HSMMCSDIsr(void)
+void HSMMCSDIsrGen(mmcsdCtrlInfo* SdCtrlStruct)
 {
     volatile unsigned int status = 0;
 
-    status = HSMMCSDIntrStatusGet(ctrlInfo.memBase, 0xFFFFFFFF);
+    status = HSMMCSDIntrStatusGet(SdCtrlStruct->memBase, 0xFFFFFFFF);
     
-    HSMMCSDIntrStatusClear(ctrlInfo.memBase, status);
+    HSMMCSDIntrStatusClear(SdCtrlStruct->memBase, status);
 
     if (status & HS_MMCSD_STAT_CMDCOMP)
     {
-        cmdCompFlag = 1;
+        cmdCompFlag[SdCtrlStruct->SdNr] = 1;
     }
 
     if (status & HS_MMCSD_STAT_ERR)
     {
-        errFlag = status & 0xFFFF0000;
+        errFlag[SdCtrlStruct->SdNr] = status & 0xFFFF0000;
 
         if (status & HS_MMCSD_STAT_CMDTIMEOUT)
         {
-            cmdTimeout = 1;
+            cmdTimeout[SdCtrlStruct->SdNr] = 1;
         }
 
         if (status & HS_MMCSD_STAT_DATATIMEOUT)
         {
-            dataTimeout = 1;
+            dataTimeout[SdCtrlStruct->SdNr] = 1;
         }
     }
 
     if (status & HS_MMCSD_STAT_TRNFCOMP)
     {
-        xferCompFlag = 1;
+        xferCompFlag[SdCtrlStruct->SdNr] = 1;
     }
 }
 
+void HSMMCSD0Isr(void)
+{
+	HSMMCSDIsrGen(ctrlInfo[0]);
+}
+void HSMMCSD1Isr(void)
+{
+	HSMMCSDIsrGen(ctrlInfo[1]);
+}
+void HSMMCSD2Isr(void)
+{
+	HSMMCSDIsrGen(ctrlInfo[2]);
+}
 /*
 ** Initialize the MMCSD controller structure for use
 */
-static void HSMMCSDControllerSetup(signed int CardDetectPortNr, signed int CardDetectPinNr)
+static void HSMMCSDControllerSetup(mmcsdCtrlInfo* SdCtrlStruct, signed int CardDetectPortNr, signed int CardDetectPinNr)
 {
-    ctrlInfo.memBase = MMCSD_INST_BASE;
-    ctrlInfo.ctrlInit = HSMMCSDControllerInit;
-    ctrlInfo.xferSetup = HSMMCSDXferSetup;
-    ctrlInfo.cmdStatusGet = HSMMCSDCmdStatusGet;
-    ctrlInfo.xferStatusGet = HSMMCSDXferStatusGet;
+	ctrlInfo[SdCtrlStruct->SdNr] = SdCtrlStruct;
+	SdCtrlStruct->memBase = MMCSD_INST_BASE;
+	SdCtrlStruct->ctrlInit = HSMMCSDControllerInit;
+	SdCtrlStruct->xferSetup = HSMMCSDXferSetup;
+	SdCtrlStruct->cmdStatusGet = HSMMCSDCmdStatusGet;
+	SdCtrlStruct->xferStatusGet = HSMMCSDXferStatusGet;
     /* Use the funciton HSMMCSDCDPinStatusGet() to use the card presence
        using the controller.
     */
-    ctrlInfo.cardPresent = HSMMCSDCardPresent;
-    ctrlInfo.cmdSend = HSMMCSDCmdSend;
-    ctrlInfo.busWidthConfig = HSMMCSDBusWidthConfig;
-    ctrlInfo.busFreqConfig = HSMMCSDBusFreqConfig;
-    ctrlInfo.intrMask = (HS_MMCSD_INTR_CMDCOMP | HS_MMCSD_INTR_CMDTIMEOUT |
+	SdCtrlStruct->cardPresent = HSMMCSDCardPresent;
+	SdCtrlStruct->cmdSend = HSMMCSDCmdSend;
+	SdCtrlStruct->busWidthConfig = HSMMCSDBusWidthConfig;
+	SdCtrlStruct->busFreqConfig = HSMMCSDBusFreqConfig;
+	SdCtrlStruct->intrMask = (HS_MMCSD_INTR_CMDCOMP | HS_MMCSD_INTR_CMDTIMEOUT |
                             HS_MMCSD_INTR_DATATIMEOUT | HS_MMCSD_INTR_TRNFCOMP);
-    ctrlInfo.intrEnable = HSMMCSDIntEnable;
-    ctrlInfo.busWidth = (SD_BUS_WIDTH_1BIT | SD_BUS_WIDTH_4BIT);
-    ctrlInfo.highspeed = 1;
-    ctrlInfo.ocr = (SD_OCR_VDD_3P0_3P1 | SD_OCR_VDD_3P1_3P2);
-    ctrlInfo.card = &sdCard;
-    ctrlInfo.ipClk = HSMMCSD_IN_FREQ;
-    ctrlInfo.opClk = HSMMCSD_INIT_FREQ;
-    ctrlInfo.cdPinNum = (CardDetectPortNr<<5) + CardDetectPinNr;
-    sdCard.ctrl = &ctrlInfo;
+	SdCtrlStruct->intrEnable = HSMMCSDIntEnable;
+	SdCtrlStruct->busWidth = (SD_BUS_WIDTH_1BIT | SD_BUS_WIDTH_4BIT);
+	SdCtrlStruct->highspeed = 1;
+	SdCtrlStruct->ocr = (SD_OCR_VDD_3P0_3P1 | SD_OCR_VDD_3P1_3P2);
+	SdCtrlStruct->card = (mmcsdCardInfo*)malloc(sizeof(mmcsdCardInfo));//&sdCard;
+	SdCtrlStruct->ipClk = HSMMCSD_IN_FREQ;
+	SdCtrlStruct->opClk = HSMMCSD_INIT_FREQ;
+	SdCtrlStruct->cdPinNum = (CardDetectPortNr<<5) + CardDetectPinNr;
+    //sdCard.ctrl = &ctrlInfo;
+	SdCtrlStruct->card->ctrl = (mmcsdCtrlInfo*)(void*)&ctrlInfo;
 
     CardDetectPinMmcSd0 = new_(new_gpio);
     CardDetectPinMmcSd0 = gpio_assign(CardDetectPortNr, CardDetectPinNr, GPIO_DIR_INPUT, false);
 
-    callbackOccured = 0;
-    xferCompFlag = 0;
-    dataTimeout = 0;
-    cmdCompFlag = 0;
-    cmdTimeout = 0;
+    callbackOccured[SdCtrlStruct->SdNr] = 0;
+    xferCompFlag[SdCtrlStruct->SdNr] = 0;
+    dataTimeout[SdCtrlStruct->SdNr] = 0;
+    cmdCompFlag[SdCtrlStruct->SdNr] = 0;
+    cmdTimeout[SdCtrlStruct->SdNr] = 0;
 }
 
 
-void _mmcsd_init(void *SdStruct, signed int CardDetectPortNr, signed int CardDetectPinNr, new_gpio* StatusLed)
+void _mmcsd_init(void *SdCtrlStruct, signed int CardDetectPortNr, signed int CardDetectPinNr, new_gpio* StatusLed)
 {
 
 	LedStatusMmcSd0 = StatusLed;
 	/* Configure EDMA to service the HSMMCSD events. */
-    HSMMCSDEdmaInit();
+    HSMMCSDEdmaInit(0);
 
     /* Perform pin-mux for HSMMCSD pins. */
     //HSMMCSDPinMuxSetup();
@@ -428,22 +450,24 @@ void _mmcsd_init(void *SdStruct, signed int CardDetectPortNr, signed int CardDet
     HSMMCSDModuleClkConfig();
 
     /* Basic controller initializations */
-    HSMMCSDControllerSetup(CardDetectPortNr, CardDetectPinNr);
+    HSMMCSDControllerSetup((mmcsdCtrlInfo*)SdCtrlStruct, CardDetectPortNr, CardDetectPinNr);
 
     /* Initialize the MMCSD controller */
-    MMCSDCtrlInit((mmcsdCtrlInfo*)&ctrlInfo);
+    MMCSDCtrlInit((mmcsdCtrlInfo*)SdCtrlStruct);
 
-    MMCSDIntEnable((mmcsdCtrlInfo*)&ctrlInfo);
+    MMCSDIntEnable((mmcsdCtrlInfo*)SdCtrlStruct);
 }
 
-void _mmcsd_idle(void *SdStruct)
+void _mmcsd_idle(void *SdCtrlStruct)
 {
     if(!gpio_in(CardDetectPinMmcSd0)/*(HSMMCSDCardPresent(&ctrlInfo)) == 1*/)
     {
-        if(initFlg)
+        if(initFlg[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr])
         {
-        	if(MMCSDCardInit((mmcsdCtrlInfo*)&ctrlInfo))
+            initFlg[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr] = 0;
+        	if(MMCSDCardInit((mmcsdCtrlInfo*)SdCtrlStruct))
         	{
+#ifndef thirdpartyfatfs
                 Drives_Table[0] = new_(new_fat_disk);
                 Drives_Table[0]->DiskInfo_SdDriverStructAddr = &ctrlInfo;
                 //Drives_Table[0]->drive_init = MMCSD_CardInit;
@@ -472,30 +496,60 @@ void _mmcsd_idle(void *SdStruct)
                 	}
                 }
                 else if(DebugCom)											UARTPuts(DebugCom,   "MMCSD0 Fat not detected\n\r" , -1);
+#else
+                g_sFatFs.drv_rw_func.DriveStruct = SdCtrlStruct;
+                g_sFatFs.drv_rw_func.drv_r_func = MMCSDReadCmdSend;
+                g_sFatFs.drv_rw_func.drv_w_func = MMCSDWriteCmdSend;
+                if(!f_mount(0, &g_sFatFs))
+                {
+                    if(f_opendir(&g_sDirObject, g_cCwdBuf) == FR_OK)
+                    {
+						if(DebugCom)
+						{
+																				UARTPuts(DebugCom,   "MMCSD0 drive 0 mounted\n\r" , -1);
+																				UARTPuts(DebugCom,   "MMCSD0 Fat fs detected\n\r" , -1);
+							if(g_sFatFs.fs_type == FS_FAT12)	{ 				UARTprintf(DebugCom, "MMCSD0 Fs type:                 Fat12\n\r");}
+							else if(g_sFatFs.fs_type == FS_FAT16){ 				UARTprintf(DebugCom, "MMCSD0 Fs type:                 Fat16\n\r");}
+							else if(g_sFatFs.fs_type == FS_FAT32){ 				UARTprintf(DebugCom, "MMCSD0 Fs type:                 Fat32\n\r");}
+							else								{ 				UARTprintf(DebugCom, "MMCSD0 Fs type:                 None\n\r");}
+																				//UARTprintf(DebugCom, "MMCSD0 BootSectorAddress:       %u \n\r",(unsigned int)g_sFatFs.);
+																				UARTprintf(DebugCom, "MMCSD0 BytesPerSector:          %d \n\r",/*(int)g_sFatFs.s_size*/512);
+																				UARTprintf(DebugCom, "MMCSD0 SectorsPerCluster:       %d \n\r",(int)g_sFatFs.csize);
+																				//UARTprintf(DebugCom, "MMCSD0 AllocTable1Begin:        %u \n\r",(unsigned int)g_sFatFs.fatbase);
+																				UARTprintf(DebugCom, "MMCSD0 NumberOfFats:            %d \n\r",(int)g_sFatFs.n_fats);
+																				//UARTprintf(DebugCom, "MMCSD0 MediaType:               %d \n\r",Drives_Table[0]->DiskInfo_MediaType);
+																				//UARTprintf(DebugCom, "MMCSD0 AllocTableSize:          %u \n\r",Drives_Table[0]->DiskInfo_AllocTableSize);
+																				UARTprintf(DebugCom, "MMCSD0 DataSectionBegin:        %d \n\r",(int)g_sFatFs.fatbase);
+																				UARTprintf(DebugCom, "MMCSD0 uSD DiskCapacity:        %uMB\n\r",(unsigned long)((unsigned long long)((unsigned long long)g_sFatFs.max_clust * (unsigned long long)g_sFatFs.csize * (unsigned long long)/*g_sFatFs.s_size*/512) / 1000000));
+						}
+                    } else  if(DebugCom)											UARTPuts(DebugCom,   "MMCSD0 ERROR oppening path\n\r" , -1);
+#endif
+                }
+                else if(DebugCom)												UARTPuts(DebugCom,   "MMCSD0 ERROR mounting disk\n\r" , -1);
         	}
-            else if(DebugCom)												UARTPuts(DebugCom,   "MMCSD0 card not detected\n\r" , -1);
         }
-        initFlg = 0;
     }
     else
     {
         Sysdelay(1);
-        if(initFlg != 1)
+        if(initFlg[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr] != 1)
         {
+            initFlg[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr] = 1;
+#ifndef thirdpartyfatfs
         	if(_FatData_CloseSesion(FILE1) == 1 && DebugCom != NULL)						UARTPuts(DebugCom, "MMCSD0 Session closed\n\r" , -1);
         	FILE1 = NULL;
         	if(_Fat_Unmount(0) == 1 && DebugCom != NULL)									UARTPuts(DebugCom, "MMCSD0 unmount\n\r" , -1);
+#endif
         	/* Reinitialize all the state variables */
-            callbackOccured = 0;
-            xferCompFlag = 0;
-            dataTimeout = 0;
-            cmdCompFlag = 0;
-            cmdTimeout = 0;
+            callbackOccured[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr] = 0;
+            xferCompFlag[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr] = 0;
+            dataTimeout[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr] = 0;
+            cmdCompFlag[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr] = 0;
+            cmdTimeout[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr] = 0;
             /* Initialize the MMCSD controller */
-            MMCSDCtrlInit((mmcsdCtrlInfo*)&ctrlInfo);
-            MMCSDIntEnable((mmcsdCtrlInfo*)&ctrlInfo);
+            MMCSDCtrlInit((mmcsdCtrlInfo*)SdCtrlStruct);
+            MMCSDIntEnable((mmcsdCtrlInfo*)SdCtrlStruct);
         }
-        initFlg = 1;
     }
 }
 

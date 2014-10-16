@@ -24,7 +24,8 @@
 
 #include <stdbool.h>
 #include "controls_definition.h"
-#include "buton.h"
+//#include "window_def.h"
+#include "button.h"
 
 //#######################################################################################
 typedef struct
@@ -87,6 +88,11 @@ typedef struct
 		{
 			signed int X;
 			signed int Y;
+		}PositionOffset;
+		struct
+		{
+			signed int X;
+			signed int Y;
 			signed int MinBtnSize;
 		}Size;
 		bool CursorDownInsideBox;
@@ -101,12 +107,14 @@ typedef struct
 		signed int OldValue;
 		signed int CoordonateOfTouchDown;
 		signed int CoordonateOfButtonDown;
-		signed int OffsetButtonCoord;
+		//signed int OffsetButtonCoord;
 		CursorState OldStateCursor;
 		tButton* BtnSettings;
 		tButton* BtnUpSettings;
 		tButton* BtnDnSettings;
 		tDisplay *pDisplay;
+		void *ParentWindow;
+		bool ParentWindowStateEnabled;
 	}Internals;
 	bool Visible;
 	bool Enabled;
@@ -118,7 +126,7 @@ typedef struct
 }tScrollBar;
 //#######################################################################################
 void scrollbar(tScrollBar *settings, tControlCommandData* control_comand);
-tScrollBar *new_scrollbar(tDisplay *ScreenDisplay);
+tScrollBar *new_scrollbar(void *ParentWindow);
 bool free_scrollbar(tScrollBar* settings);
 //#######################################################################################
 #ifdef HEADER_INCLUDE_C_FILES

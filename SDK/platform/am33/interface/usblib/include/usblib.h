@@ -36,6 +36,8 @@ extern "C"
 {
 #endif
 
+#include "include/hw/hw_usb.h"
+
 //*****************************************************************************
 //
 // This is the maximum number of endpoints supported by the usblib.
@@ -59,7 +61,7 @@ extern "C"
 //      char cCharMember;
 //      unsigned short usShort;
 //   }
-//    tPackedStructName;
+//   USBLIB_PACKED tPackedStructName;
 //
 //   #ifdef ewarm
 //   #pragma pack()
@@ -77,19 +79,19 @@ extern "C"
     defined(rvmdk) ||           \
     defined(__ARMCC_VERSION) || \
     defined(sourcerygxx)
-#define  __attribute__ ((packed))
+#define USBLIB_PACKED __attribute__ ((packed))
 #elif defined(ewarm) || defined(__IAR_SYSTEMS_ICC__)
 #define USBLIB_PACKED
 #elif defined(__TMS470__)
 #if defined(__TI_TMS470_V7__) || (__TI_COMPILER_VERSION__ >= 5000000)
-#define  __attribute__ ((packed))
+#define USBLIB_PACKED __attribute__ ((packed))
 #else
 #warn The packed attribute is not supported by this version of the TI ARM CGT. \
       Please upgrade to version 5.x or use an alternate toolchain instead.
 #define USBLIB_PACKED
 #endif
 #elif defined(_TMS320C6X)
-#define  __attribute__ ((packed))
+#define USBLIB_PACKED __attribute__ ((packed))
 #else
 #error Unrecognized COMPILER!
 #endif
@@ -142,7 +144,7 @@ extern "C"
 //*****************************************************************************
 //
 // All structures defined in this section of the header require byte packing of
-// fields.  This is usually accomplished using the  macro but, for IAR
+// fields.  This is usually accomplished using the USBLIB_PACKED macro but, for IAR
 // Embedded Workbench, this requires a pragma.
 //
 //*****************************************************************************
@@ -192,7 +194,7 @@ typedef struct
     unsigned short wLength;
 
 }
- tUSBRequest;
+USBLIB_PACKED tUSBRequest;
 
 //*****************************************************************************
 //
@@ -313,7 +315,7 @@ typedef struct
     //
     unsigned char bDescriptorType;
 }
- tDescriptorHeader;
+USBLIB_PACKED tDescriptorHeader;
 
 //*****************************************************************************
 //
@@ -402,7 +404,7 @@ typedef struct
     //
     unsigned char bNumConfigurations;
 }
- tDeviceDescriptor;
+USBLIB_PACKED tDeviceDescriptor;
 
 //*****************************************************************************
 //
@@ -514,7 +516,7 @@ typedef struct
     //
     unsigned char bReserved;
 }
- tDeviceQualifierDescriptor;
+USBLIB_PACKED tDeviceQualifierDescriptor;
 
 //*****************************************************************************
 //
@@ -573,7 +575,7 @@ typedef struct
     //
     unsigned char bMaxPower;
 }
- tConfigDescriptor;
+USBLIB_PACKED tConfigDescriptor;
 
 //*****************************************************************************
 //
@@ -646,7 +648,7 @@ typedef struct
     //
     unsigned char iInterface;
 }
- tInterfaceDescriptor;
+USBLIB_PACKED tInterfaceDescriptor;
 
 //*****************************************************************************
 //
@@ -696,7 +698,7 @@ typedef struct
     //
     unsigned char bInterval;
 }
- tEndpointDescriptor;
+USBLIB_PACKED tEndpointDescriptor;
 
 //*****************************************************************************
 //
@@ -767,7 +769,7 @@ typedef struct
     //
     unsigned short wLANGID[1];
 }
- tString0Descriptor;
+USBLIB_PACKED tString0Descriptor;
 
 //*****************************************************************************
 //
@@ -797,7 +799,7 @@ typedef struct
     //
     unsigned char bString;
 }
- tStringDescriptor;
+USBLIB_PACKED tStringDescriptor;
 
 //*****************************************************************************
 //
@@ -1365,11 +1367,8 @@ typedef unsigned int (* tUSBCallback)(void *pvCBData, unsigned int ulEvent,
 // The below macro defines the number USB Instances.
 //
 //*****************************************************************************
-#if defined (am335x_15x15) || defined(am335x) || defined(c6a811x)
-#define USB_NUM_INSTANCE        2
-#else
-#define USB_NUM_INSTANCE        1
-#endif
+#define USB_NUM_INSTANCE        USB_CONTROLLER_NUM_INSTANCES
+
 //
 // Event base identifiers for the various device classes supported in host
 // and device modes.

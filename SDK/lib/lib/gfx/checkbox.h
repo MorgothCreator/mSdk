@@ -24,6 +24,7 @@
 //#######################################################################################
 #include <stdbool.h>
 #include "controls_definition.h"
+//#include "window_def.h"
 //#######################################################################################
 typedef struct
 {
@@ -92,6 +93,11 @@ typedef struct
 		{
 			signed int X;
 			signed int Y;
+		}PositionOffset;
+		struct
+		{
+			signed int X;
+			signed int Y;
 		}Size;
 		controls_caption_t Caption;
 		bool OldStateVisible;
@@ -103,6 +109,8 @@ typedef struct
 		bool NoPaintBackGround;
 		CursorState OldStateCursor;
 		tDisplay *pDisplay;
+		void *ParentWindow;
+		bool ParentWindowStateEnabled;
 	}Internals;
 	bool Visible;
 	bool Enabled;
@@ -112,7 +120,7 @@ typedef struct
 }tCheckBox;
 //#######################################################################################
 void checkbox(tCheckBox *settings, tControlCommandData* control_comand);
-tCheckBox *new_checkbox(tDisplay *ScreenDisplay);
+tCheckBox *new_checkbox(void *ParentWindow);
 bool free_checkbox(tCheckBox* settings);
 //#######################################################################################
 #ifdef HEADER_INCLUDE_C_FILES

@@ -23,9 +23,9 @@
 //
 //*****************************************************************************
 
-#include "../../include/hw/hw_types.h"
-#include "../../include/debug.h"
-#include "../../include/interrupt.h"
+#include "include/hw/hw_types.h"
+#include "include/debug.h"
+#include "include/interrupt.h"
 #include "include/usblib.h"
 
 //*****************************************************************************

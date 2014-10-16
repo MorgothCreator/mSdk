@@ -24,11 +24,11 @@
 //****************************************************************************
 
 //#include "hw_memmap.h"
-#include "../../../include/hw/hw_types.h"
-#include "../../../include/debug.h"
-#include "../../../include/interrupt.h"
+#include "include/hw/hw_types.h"
+#include "include/debug.h"
+#include "include/interrupt.h"
 //#include "sysctl.h"
-#include "../../../include/usb.h"
+#include "include/usb.h"
 //#include "udma.h"
 #include "../include/usblib.h"
 #include "../include/usb-ids.h"

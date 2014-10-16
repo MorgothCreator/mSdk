@@ -71,7 +71,6 @@ typedef struct _mmcsdCardInfo {
 	unsigned int blkLen;
 	unsigned int nBlks;
 	unsigned int size;
-
 }mmcsdCardInfo;
 
 /* Structure for command */
@@ -107,6 +106,7 @@ typedef struct _mmcsdCtrlInfo {
         unsigned int cdPinNum;
         unsigned int wpPinNum;
 	mmcsdCardInfo *card;
+	unsigned int SdNr;
 }mmcsdCtrlInfo;
 
 /* SD Commands enumeration */

@@ -104,7 +104,7 @@ bool DS1307_SetRs(new_twi* TwiStruct, unsigned char Rs)
 //#####################################################
 //#####################################################
 //#####################################################
-bool DS1307_ReadTime_Str(new_twi* TwiStruct, unsigned char* Buff)
+bool DS1307_ReadTime_Str(new_twi* TwiStruct, char* Buff)
 {
 	TwiStruct->MasterSlaveAddr = DS1307_Rtc_DeviceAddr;
 	*TwiStruct->TxBuff = DS1307_RTC_SecReg;

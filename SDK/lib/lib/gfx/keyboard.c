@@ -20,45 +20,77 @@
  */
 //#######################################################################################
 #include <stdbool.h>
-#include "buton.h"
+#include <stdlib.h>
+#include "button.h"
 #include "keyboard.h"
+#include "window_def.h"
 #include "api/lcd_def.h"
 #include "api/lcd_api.h"
 #include "api/timer_api.h"
 #include "graphic_string.h"
 #include "controls_definition.h"
 //#######################################################################################
-const unsigned int kbd_qwerty_keys_little_return[] ={
+#ifdef FLASH_DEVICE
+const unsigned char kbd_qwerty_keys_little_return[1375]  PROGMEM =
+#else
+static const unsigned int kbd_qwerty_keys_little_return[38] =
+#endif
+{
 		kbd_qwerty_ctrl,'q','w','e','r','t','y','u','i' ,'o','p'            ,','          ,8               ,
-		'Nr'           ,'a','s','d','f','g','h','j','k' ,'l','.'            ,kbd_qwerty_up,13              ,
+		'#'           ,'a','s','d','f','g','h','j','k' ,'l','.'            ,kbd_qwerty_up,13              ,
 		0            ,'z','x','c','v','b','n','m',32      ,kbd_qwerty_left,kbd_qwerty_dn,kbd_qwerty_right
 };
 //#######################################################################################
-const unsigned int kbd_qwerty_keys_big_return[] ={
+#ifdef FLASH_DEVICE
+const unsigned char kbd_qwerty_keys_big_return[1375]  PROGMEM =
+#else
+static const unsigned int kbd_qwerty_keys_big_return[38] =
+#endif
+{
 		kbd_qwerty_ctrl,'Q','W','E','R','T','Y','U','I','O','P'            ,';'          ,8               ,
-		'Nr'           ,'A','S','D','F','G','H','J','K','L',':'            ,kbd_qwerty_up,13              ,
+		'#'           ,'A','S','D','F','G','H','J','K','L',':'            ,kbd_qwerty_up,13              ,
 		0              ,'Z','X','C','V','B','N','M',32     ,kbd_qwerty_left,kbd_qwerty_dn,kbd_qwerty_right
 };
 //#######################################################################################
-const unsigned int kbd_qwerty_keys_numeric_return[] ={
+#ifdef FLASH_DEVICE
+const unsigned char kbd_qwerty_keys_numeric_return[1375]  PROGMEM =
+#else
+static const unsigned int kbd_qwerty_keys_numeric_return[38] =
+#endif
+{
 		kbd_qwerty_ctrl,'1','2','3','4','5','6','7','8','9','0'            ,'='          ,8               ,
-		'Nr'           ,'*','+','#','-','_','(',')','&','!','?'            ,kbd_qwerty_up,13              ,
+		'#'           ,'*','+','#','-','_','(',')','&','!','?'            ,kbd_qwerty_up,13              ,
 		0              ,0  ,'&',0  ,47 ,92 ,34 ,96 ,32     ,kbd_qwerty_left,kbd_qwerty_dn,kbd_qwerty_right
 };
 //#######################################################################################
-const unsigned char *kbd_qwerty_keys_little[] ={
+#ifdef FLASH_DEVICE
+const unsigned char kbd_qwerty_keys_little[][6]  PROGMEM =
+#else
+static const unsigned char kbd_qwerty_keys_little[][6] =
+#endif
+{
 		"Ctrl","q","w","e","r","t","y","u","i" ,"o","p"  ,"," ,"BkS",
 		"Nr"  ,"a","s","d","f","g","h","j","k" ,"l","."  ,"Up","Ent",
 		"^"   ,"z","x","c","v","b","n","m","space" ,"Lef","Dn","Rig"
 };
 //#######################################################################################
-const unsigned char *kbd_qwerty_keys_big[] ={
+#ifdef FLASH_DEVICE
+const unsigned char kbd_qwerty_keys_big[][6]  PROGMEM =
+#else
+static const unsigned char kbd_qwerty_keys_big[][6] =
+#endif
+{
 		"Ctrl","Q","W","E","R","T","Y","U","I" ,"O","P"  ,";" ,"BkS",
 		"Nr"  ,"A","S","D","F","G","H","J","K" ,"L",":"  ,"Up","Ent",
 		"^"   ,"Z","X","C","V","B","N","M","space" ,"Lef","Dn","Rig"
 };
 //#######################################################################################
-const unsigned char *kbd_qwerty_keys_numeric[] ={
+#ifdef FLASH_DEVICE
+const unsigned char kbd_qwerty_keys_numeric[][6]  PROGMEM =
+#else
+static const unsigned char kbd_qwerty_keys_numeric[][6] =
+#endif
+{
 		"Ctrl","1","2","3","4","5","6","7","8" ,"9"     ,"0"  ,"=" ,"BkS",
 		"Nr"  ,"*","+","#","-","_","(",")","&" ,"!"     ,"?"  ,"Up","Ent",
 		"^"   ," ","&"," ","/","sl","quot","'" ,"space" ,"Lef","Dn","Rig"
@@ -67,6 +99,7 @@ const unsigned char *kbd_qwerty_keys_numeric[] ={
 static void paint_v_keyboard(tVKbd_Qwerty* settings, tDisplay *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len, tControlCommandData* control_comand, bool refrash)
 {
 	unsigned int color = 0;
+	//tWindow *ParentWindow = (tWindow*)settings->Internals.ParentWindow;
 	tRectangle back_up_clip = pDisplay->sClipRegion;
 	pDisplay->sClipRegion.sXMin = x_start;
 	pDisplay->sClipRegion.sYMin = y_start;
@@ -121,7 +154,7 @@ static void paint_v_keyboard(tVKbd_Qwerty* settings, tDisplay *pDisplay, signed 
 				case 35:
 				KeyTmpPtr->Size.X = key_size_x;
 				KeyTmpPtr->Size.Y = key_size_y;
-				KeyLocationX += (key_size_x + settings->key_space_size << 1);
+				KeyLocationX += (key_size_x + (settings->key_space_size << 1));
 				break;
 				default:
 				KeyTmpPtr->Size.X = key_size_x;
@@ -135,6 +168,7 @@ static void paint_v_keyboard(tVKbd_Qwerty* settings, tDisplay *pDisplay, signed 
 			KeyTmpPtr->Visible = settings->Visible;
 			button(KeyTmpPtr, control_comand);
 		}
+		control_comand->WindowRefresh |= true;
 	}
 	else
 	{
@@ -202,11 +236,7 @@ void v_keyboard(tVKbd_Qwerty *settings, tControlCommandData* control_comand)
 	if(control_comand->Comand != Control_Nop)
 	{
 		/* Parse commands */
-#ifdef NO_ENUM_ON_SWITCH
 		switch((unsigned char)control_comand->Comand)
-#else
-		switch(control_comand->Comand)
-#endif
 		{
 		case Control_Entire_Repaint:
 			settings->Internals.NeedEntireRepaint = true;
@@ -237,6 +267,7 @@ void v_keyboard(tVKbd_Qwerty *settings, tControlCommandData* control_comand)
 			return;
 		}
 	}
+	//tWindow *ParentWindow = (tWindow*)settings->Internals.ParentWindow;
 	if(settings->Internals.Control.Initiated == false)
 	{
 		settings->Internals.Position.X = settings->Position.X;
@@ -311,21 +342,27 @@ void v_keyboard(tVKbd_Qwerty *settings, tControlCommandData* control_comand)
 		settings->Internals.Control.Initiated = true;
 		settings->Internals.NeedEntireRefresh = false;
 		settings->Internals.NeedEntireRepaint = false;
-		control_comand->CursorCoordonateUsed = true;
 		//control_comand->Cursor = cursor;
+		//control_comand->WindowRefresh |= true;
 		return;
 	}
 	paint_v_keyboard(settings, pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, control_comand, false);
+	if(control_comand->Cursor && settings->Internals.CursorDownInsideBox) control_comand->CursorCoordonateUsed |= true;
+	//control_comand->CursorCoordonateUsed |= true;
+	//control_comand->WindowRefresh |= true;
 	return;
 }
 //#######################################################################################
-tVKbd_Qwerty *new_v_keyboard(tDisplay *ScreenDisplay)
+tVKbd_Qwerty *new_v_keyboard(void *ParentWindow)
 {
 	tVKbd_Qwerty* settings = (tVKbd_Qwerty*)calloc(1, sizeof(tVKbd_Qwerty));
 
-	if(!settings || !ScreenDisplay) return NULL;
+	if(!settings || !ParentWindow) return NULL;
+	settings->Internals.ParentWindow = ParentWindow;
 
-	settings->Internals.pDisplay = ScreenDisplay;
+	tWindow *_ParentWindow = (tWindow *)ParentWindow;
+	settings->Internals.pDisplay = _ParentWindow->Internals.pDisplay;
+
 	settings->Caption.TextAlign = Align_Center;
 	settings->Caption.WordWrap = true;
 	settings->Caption.Font = controls_color.DefaultFont;
@@ -355,7 +392,7 @@ tVKbd_Qwerty *new_v_keyboard(tDisplay *ScreenDisplay)
 	unsigned char CntInitKeys = 0;
 	for(; CntInitKeys < sizeof(settings->Internals.Keys)/sizeof(settings->Internals.Keys[0]); CntInitKeys++)
 	{
-		settings->Internals.Keys[CntInitKeys] = new_button(ScreenDisplay);
+		settings->Internals.Keys[CntInitKeys] = new_button(settings->Internals.ParentWindow);
 		settings->Internals.Keys[CntInitKeys]->Caption.WordWrap = false;
 		if(settings->Internals.Keys[CntInitKeys]->Caption.Text) free(settings->Internals.Keys[CntInitKeys]->Caption.Text);
 		settings->Internals.Keys[CntInitKeys]->Caption.Text = (char *)kbd_qwerty_keys_little[CntInitKeys];

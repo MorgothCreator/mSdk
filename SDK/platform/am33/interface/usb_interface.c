@@ -51,13 +51,34 @@ extern new_uart* DebugCom;
 new_gpio *LedStatusUsb0 = NULL;
 new_gpio *LedStatusUsb1 = NULL;
 
+static unsigned int g_ulButtons;
+static int MouseCursorX;
+static int MouseCursorY;
+
+
 void USBHCDEvents(void *pvData);
+
+
+//*****************************************************************************
+//
+// The size of the mouse device interface's memory pool in bytes.
+//
+//*****************************************************************************
+#define MOUSE_MEMORY_SIZE       128
+
+//*****************************************************************************
+//
+// The memory pool to provide to the mouse device.
+//
+//*****************************************************************************
+unsigned char g_pucMouseBuffer[MOUSE_MEMORY_SIZE];
+
 //*****************************************************************************
 //
 // A macro that holds the number of result codes.
 //
 //*****************************************************************************
-#define NUM_FRESULT_CODES (sizeof(g_sFresultStrings) / sizeof(tFresultString))
+//#define NUM_FRESULT_CODES (sizeof(g_sFresultStrings) / sizeof(tFresultString))
 
 //*****************************************************************************
 //
@@ -78,13 +99,18 @@ unsigned char g_pHCDPool[HCD_MEMORY_SIZE];
 // The instance data for the MSC driver.
 //
 //*****************************************************************************
-unsigned int g_ulMSCInstance0 = 0;
-unsigned int g_ulMSCInstance1 = 0;
+unsigned int g_ulMSCInstance0Usb0 = 0;//UsbMsc driver
+unsigned int g_ulMSCInstance0Usb1 = 0;//UsbMsc driver
 
-tUSBHTimeOut *USBHTimeOut0 = NULL;
+unsigned int g_ulMSCInstance1Usb0 = 0;//UsbMouse driver
+unsigned int g_ulMSCInstance1Usb1 = 0;//UsbMouse driver
+
+
+
+/*tUSBHTimeOut *USBHTimeOut0 = NULL;
 tUSBHTimeOut *USBHTimeOut1 = NULL;
 unsigned int deviceRetryOnTimeOut0 = USBMSC_DRIVE_RETRY;
-unsigned int deviceRetryOnTimeOut1 = USBMSC_DRIVE_RETRY;
+unsigned int deviceRetryOnTimeOut1 = USBMSC_DRIVE_RETRY;*/
 //*****************************************************************************
 //
 // Declare the USB Events driver interface.
@@ -98,11 +124,32 @@ DECLARE_EVENT_DRIVER(g_sUSBEventDriver, 0, 0, USBHCDEvents);
 // In this case, only the MSC class is loaded.
 //
 //*****************************************************************************
-static tUSBHostClassDriver const * const g_ppHostClassDrivers[] =
+static tUSBHostClassDriver const * const g_ppHostClassDriversMsc[] =
 {
     &g_USBHostMSCClassDriver,
+	//&g_USBHIDClassDriver,
     &g_sUSBEventDriver
 };
+//*****************************************************************************
+//
+// The global that holds all of the host drivers in use in the application.
+// In this case, only the Mouse class is loaded.
+//
+//*****************************************************************************
+static tUSBHostClassDriver const * const g_ppHostClassDriversMouse[] =
+{
+    &g_USBHIDClassDriver
+    ,&g_sUSBEventDriver
+};
+//*****************************************************************************
+//
+// This global holds the number of class drivers in the g_ppHostClassDrivers
+// list.
+//
+//*****************************************************************************
+#define NUM_CLASS_DRIVERS       (sizeof(g_ppHostClassDriversMsc) /               \
+                                 sizeof(g_ppHostClassDriversMsc[0]))
+
 
 //*****************************************************************************
 //
@@ -110,8 +157,8 @@ static tUSBHostClassDriver const * const g_ppHostClassDrivers[] =
 // list.
 //
 //*****************************************************************************
-#define NUM_CLASS_DRIVERS       (sizeof(g_ppHostClassDrivers) /               \
-                                 sizeof(g_ppHostClassDrivers[0]))
+static const unsigned int g_ulNumHostClassDrivers =
+    sizeof(g_ppHostClassDriversMouse) / sizeof(tUSBHostClassDriver *);
 
 //*****************************************************************************
 //
@@ -145,15 +192,8 @@ typedef enum
     //
     STATE_POWER_FAULT,
 
-    //
-    // A babble int has occurred.
-    //
-    STATE_BABBLE_INT,
 
-    //
-    // Device Timeout.
-    //
-    STATE_TIMEDOUT
+    STATE_MOUSE_INIT
 }
 tState;
 volatile tState g_eState0;
@@ -229,7 +269,7 @@ void USBHCDEvents(void *pvData)
     //
     pEventInfo = (tEventInfo *)pvData;
 
-    if(pEventInfo->ulInstance == g_ulMSCInstance1)
+    if(pEventInfo->ulInstance == g_ulMSCInstance0Usb1 || pEventInfo->ulInstance == g_ulMSCInstance1Usb1)
     {
 		switch(pEventInfo->ulEvent)
 		{
@@ -275,7 +315,7 @@ void USBHCDEvents(void *pvData)
 			}
 		}
     }
-    else if(pEventInfo->ulInstance == g_ulMSCInstance0)
+    else if(pEventInfo->ulInstance == g_ulMSCInstance0Usb0 || pEventInfo->ulInstance == g_ulMSCInstance1Usb0)
     {
 		switch(pEventInfo->ulEvent)
 		{
@@ -344,7 +384,7 @@ void USBHCDEvents(void *pvData)
 void
 MSCCallback(unsigned int ulInstance, unsigned int ulEvent, void *pvData)
 {
-    if(ulInstance == g_ulMSCInstance1)
+    if(ulInstance == g_ulMSCInstance0Usb1)
     {
 		//
 		// Determine the event.
@@ -384,7 +424,7 @@ MSCCallback(unsigned int ulInstance, unsigned int ulEvent, void *pvData)
 			}
 		}
     }
-    else if(ulInstance == g_ulMSCInstance0)
+    else if(ulInstance == g_ulMSCInstance0Usb0)
     {
 		//
 		// Determine the event.
@@ -425,6 +465,216 @@ MSCCallback(unsigned int ulInstance, unsigned int ulEvent, void *pvData)
 		}
     }
 }
+
+//*****************************************************************************
+//
+// This is the callback from the USB HID mouse handler.
+//
+// \param pvCBData is ignored by this function.
+// \param ulEvent is one of the valid events for a mouse device.
+// \param ulMsgParam is defined by the event that occurs.
+// \param pvMsgData is a pointer to data that is defined by the event that
+// occurs.
+//
+// This function will be called to inform the application when a mouse has
+// been plugged in or removed and anytime mouse movement or button pressed
+// is detected.
+//
+// \return This function will return 0.
+//
+//*****************************************************************************
+unsigned int
+MouseCallbackUsb1(void *pvCBData, unsigned int ulEvent, unsigned int ulMsgParam,
+              void *pvMsgData)
+{
+		switch(ulEvent)
+		{
+			//
+			// New mouse detected.
+			//
+			case USB_EVENT_CONNECTED:
+			{
+
+				//
+				// Proceed to the STATE_MOUSE_INIT state so that the main loop can
+				// finish initialized the mouse since USBHMouseInit() cannot be
+				// called from within a callback.
+				//
+				g_eState1 = STATE_MOUSE_INIT;
+
+				break;
+			}
+
+			//
+			// Mouse has been unplugged.
+			//
+			case USB_EVENT_DISCONNECTED:
+			{
+				//
+				// Change the state so that the main loop knows that the mouse is
+				// no longer present.
+				//
+				g_eState1 = STATE_NO_DEVICE;
+
+				//
+				// Reset the button state.
+				//
+				g_ulButtons = 0;
+
+				break;
+			}
+
+			//
+			// Mouse button press detected.
+			//
+			case USBH_EVENT_HID_MS_PRESS:
+			{
+				//
+				// Save the new button that was pressed.
+				//
+				g_ulButtons |= ulMsgParam;
+
+				break;
+			}
+
+			//
+			// Mouse button release detected.
+			//
+			case USBH_EVENT_HID_MS_REL:
+			{
+				//
+				// Remove the button from the pressed state.
+				//
+				g_ulButtons &= ~ulMsgParam;
+
+				break;
+			}
+
+			//
+			// Mouse X movement detected.
+			//
+			case USBH_EVENT_HID_MS_X:
+			{
+				//
+				// Update the cursor on the screen.
+				//
+            	MouseCursorX += (signed char)ulMsgParam;
+
+				break;
+			}
+
+			//
+			// Mouse Y movement detected.
+			//
+			case USBH_EVENT_HID_MS_Y:
+			{
+				//
+				// Update the cursor on the screen.
+				//
+            	MouseCursorY += (signed char)ulMsgParam;
+
+				break;
+			}
+		}
+	    return(0);
+}
+
+unsigned int
+MouseCallbackUsb0(void *pvCBData, unsigned int ulEvent, unsigned int ulMsgParam,
+		      void *pvMsgData)
+{
+	switch(ulEvent)
+        {
+            //
+            // New mouse detected.
+            //
+            case USB_EVENT_CONNECTED:
+            {
+
+                //
+                // Proceed to the STATE_MOUSE_INIT state so that the main loop can
+                // finish initialized the mouse since USBHMouseInit() cannot be
+                // called from within a callback.
+                //
+            	g_eState0 = STATE_MOUSE_INIT;
+
+                break;
+            }
+
+            //
+            // Mouse has been unplugged.
+            //
+            case USB_EVENT_DISCONNECTED:
+            {
+                //
+                // Change the state so that the main loop knows that the mouse is
+                // no longer present.
+                //
+            	g_eState0 = STATE_NO_DEVICE;
+
+                //
+                // Reset the button state.
+                //
+                g_ulButtons = 0;
+
+                break;
+            }
+
+            //
+            // Mouse button press detected.
+            //
+            case USBH_EVENT_HID_MS_PRESS:
+            {
+                //
+                // Save the new button that was pressed.
+                //
+                g_ulButtons |= ulMsgParam;
+
+                break;
+            }
+
+            //
+            // Mouse button release detected.
+            //
+            case USBH_EVENT_HID_MS_REL:
+            {
+                //
+                // Remove the button from the pressed state.
+                //
+                g_ulButtons &= ~ulMsgParam;
+
+                break;
+            }
+
+            //
+            // Mouse X movement detected.
+            //
+            case USBH_EVENT_HID_MS_X:
+            {
+                //
+                // Update the cursor on the screen.
+                //
+            	MouseCursorX += (signed char)ulMsgParam;
+
+                break;
+            }
+
+            //
+            // Mouse Y movement detected.
+            //
+            case USBH_EVENT_HID_MS_Y:
+            {
+                //
+                // Update the cursor on the screen.
+                //
+            	MouseCursorY += (signed char)ulMsgParam;
+
+                break;
+            }
+        }
+    return(0);
+}
+
 
 unsigned int USBMSCReadBlock0(void *_ctrl, void *ptr, unsigned long block,
                               unsigned int nblks)
@@ -524,13 +774,20 @@ void _usb_host_init(unsigned int instance, new_gpio* StatusLed)
     //
     // Register the host class drivers.
     //
-    USBHCDRegisterDrivers(instance, g_ppHostClassDrivers, NUM_CLASS_DRIVERS);
-
+    USBHCDRegisterDrivers(instance, g_ppHostClassDriversMsc, NUM_CLASS_DRIVERS);
+    //
+    // Register the host class drivers.
+    //
+    //USBHCDRegisterDrivers(instance, g_ppHostClassDriversMouse, g_ulNumHostClassDrivers);
     //
     // Open an instance of the mass storage class driver.
     //
-    if(instance) g_ulMSCInstance1 = USBHMSCDriveOpen(instance, 1, MSCCallback);
-    else g_ulMSCInstance0 = USBHMSCDriveOpen(instance, 0, MSCCallback);
+    if(instance) g_ulMSCInstance0Usb1 = USBHMSCDriveOpen(instance, 1, MSCCallback);
+    else g_ulMSCInstance0Usb0 = USBHMSCDriveOpen(instance, 0, MSCCallback);
+
+    //if(instance) g_ulMSCInstance1Usb1 = USBHMouseOpen(instance, MouseCallbackUsb1, g_pucMouseBuffer, MOUSE_MEMORY_SIZE);
+    //else g_ulMSCInstance1Usb0 = USBHMouseOpen(instance, MouseCallbackUsb0, g_pucMouseBuffer, MOUSE_MEMORY_SIZE);
+
 
     //
     // Initialize the power configuration.  This sets the power enable signal
@@ -542,10 +799,10 @@ void _usb_host_init(unsigned int instance, new_gpio* StatusLed)
     Cppi41DmaInit(instance, epInfo, NUMBER_OF_ENDPOINTS);
 #endif
 
-	SET_CONNECT_RETRY(instance, 4);
+	/*SET_CONNECT_RETRY(instance, 4);
 
     if(instance == 0) USBHCDTimeOutHook(instance, &USBHTimeOut0);
-    else USBHCDTimeOutHook(instance, &USBHTimeOut1);
+    else USBHCDTimeOutHook(instance, &USBHTimeOut1);*/
     //
     // Initialize the host controller.
     //
@@ -558,7 +815,7 @@ extern FileInfo_t *FILE1;
 
 void _usb_host_idle(unsigned int instance)
 {
-    if(instance == 1 && g_ulMSCInstance1 != 0)
+    if(instance == 1 && (g_ulMSCInstance0Usb1 != 0 || g_ulMSCInstance1Usb1 != 0))
     {
     	//unsigned int ulPrompt;
     	//
@@ -566,11 +823,12 @@ void _usb_host_idle(unsigned int instance)
     	//
     	if(g_eState1 == STATE_DEVICE_ENUM)
     	{
+    		//UARTprintf(DebugCom, "\nDevice enumerate.\n");
     	    //
     	    // Take it easy on the Mass storage device if it is slow to
     	    // start up after connecting.
     	    //
-    	    if(USBHMSCDriveReady(g_ulMSCInstance1) != 0)
+    	    if(USBHMSCDriveReady(g_ulMSCInstance0Usb1) != 0)
     	    {
     	    	//
     	    	// Wait about 100ms before attempting to check if the
@@ -581,9 +839,9 @@ void _usb_host_idle(unsigned int instance)
     	        return;
     	    }
 
-            deviceRetryOnTimeOut1 = USBMSC_DRIVE_RETRY;
+            //deviceRetryOnTimeOut1 = USBMSC_DRIVE_RETRY;
     		Drives_Table[8] = new_(new_fat_disk);
-    		Drives_Table[8]->DiskInfo_SdDriverStructAddr = (void*)g_ulMSCInstance1;
+    		Drives_Table[8]->DiskInfo_SdDriverStructAddr = (void*)g_ulMSCInstance0Usb1;
     		//Drives_Table[4]->drive_init = MMCSD_CardInit;
     		Drives_Table[8]->drive_read_page = USBMSCReadBlock1;
     		Drives_Table[8]->drive_write_page = USBMSCWriteBlock1;
@@ -619,7 +877,7 @@ void _usb_host_idle(unsigned int instance)
     	// prevent a compiler warning about undefined order of volatile
     	// accesses.
     	//
-        if((USBHTimeOut1->Status.slEP0)||
+        /*if((USBHTimeOut1->Status.slEP0)||
             (USBHTimeOut1->Status.slNonEP0))
         {
             deviceRetryOnTimeOut1--;
@@ -633,7 +891,7 @@ void _usb_host_idle(unsigned int instance)
         	USBHTimeOut1->Value.slNonEP0= USB_NONEP0_TIMEOUT_MILLISECS;
         	USBHTimeOut1->Status.slEP0 = 0;
             USBHTimeOut1->Status.slNonEP0= 0;
-        }
+        }*/
 
         eStateCopy1 = g_eUIState1;
     	if(g_eState1 != eStateCopy1)
@@ -641,7 +899,7 @@ void _usb_host_idle(unsigned int instance)
     	    //
     	    // Determine the new state.
     	    //
-    	    switch(g_eState1)
+    	    switch((int)g_eState1)
     	    {
     	        //
     	        // A previously connected device has been disconnected.
@@ -708,9 +966,9 @@ void _usb_host_idle(unsigned int instance)
     	      //
     	      g_eUIState1 = g_eState1;
     	 }
-        USBHCDMain(instance, g_ulMSCInstance1);
+        USBHCDMain(instance, g_ulMSCInstance0Usb1);
     }
-    else if (instance == 0 && g_ulMSCInstance0 != 0)
+    else if (instance == 0 && g_ulMSCInstance0Usb0 != 0)
     {
 		//unsigned int ulPrompt;
 		//
@@ -722,7 +980,7 @@ void _usb_host_idle(unsigned int instance)
 			// Take it easy on the Mass storage device if it is slow to
 			// start up after connecting.
 			//
-			if(USBHMSCDriveReady(g_ulMSCInstance0) != 0)
+			if(USBHMSCDriveReady(g_ulMSCInstance0Usb0) != 0)
 			{
 				//
 				// Wait about 100ms before attempting to check if the
@@ -733,9 +991,9 @@ void _usb_host_idle(unsigned int instance)
 				return;
 			}
 
-            deviceRetryOnTimeOut0 = USBMSC_DRIVE_RETRY;
+            //deviceRetryOnTimeOut0 = USBMSC_DRIVE_RETRY;
 			Drives_Table[4] = new_(new_fat_disk);
-			Drives_Table[4]->DiskInfo_SdDriverStructAddr = (void*)g_ulMSCInstance0;
+			Drives_Table[4]->DiskInfo_SdDriverStructAddr = (void*)g_ulMSCInstance0Usb0;
 			//Drives_Table[4]->drive_init = MMCSD_CardInit;
 			Drives_Table[4]->drive_read_page = USBMSCReadBlock0;
 			Drives_Table[4]->drive_write_page = USBMSCWriteBlock0;
@@ -766,7 +1024,7 @@ void _usb_host_idle(unsigned int instance)
 			g_eState0 = STATE_DEVICE_READY;
 			//}
 		}
-        if((USBHTimeOut0->Status.slEP0)||
+        /*if((USBHTimeOut0->Status.slEP0)||
             (USBHTimeOut0->Status.slNonEP0))
         {
             deviceRetryOnTimeOut0--;
@@ -780,7 +1038,7 @@ void _usb_host_idle(unsigned int instance)
         	USBHTimeOut0->Value.slNonEP0= USB_NONEP0_TIMEOUT_MILLISECS;
         	USBHTimeOut0->Status.slEP0 = 0;
             USBHTimeOut0->Status.slNonEP0= 0;
-        }
+        }*/
 
 		//
 		// See if the state has changed.  We make a copy of g_eUIState0 to
@@ -793,7 +1051,7 @@ void _usb_host_idle(unsigned int instance)
 		    //
 		    // Determine the new state.
 		    //
-		    switch(g_eState0)
+		    switch((int)g_eState0)
 		    {
 		        //
 		        // A previously connected device has been disconnected.
@@ -860,6 +1118,6 @@ void _usb_host_idle(unsigned int instance)
 		      //
 		      g_eUIState0 = g_eState0;
 		 }
-	    USBHCDMain(instance, g_ulMSCInstance0);
+	    USBHCDMain(instance, g_ulMSCInstance0Usb0);
     }
 }

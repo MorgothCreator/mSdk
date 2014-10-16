@@ -8,6 +8,8 @@
 #include "aintc_cpsw.h"
 #include "../include/interrupt.h"
 
+#ifdef CPSWCore0RxIsr
+#ifdef CPSWCore0TxIsr
 extern void CPSWCore0RxIsr(void);
 extern void CPSWCore0TxIsr(void);
 /*
@@ -31,6 +33,7 @@ void AintcCPSWIntrSetUp(void)
     IntSystemEnable(SYS_INT_3PGSWRXINT0);
     IntProtectionEnable();
 }
-
+#endif
+#endif
 
 

@@ -6,6 +6,7 @@
  */
 /*#####################################################*/
 #include <stdbool.h>
+#include <stdlib.h>
 #include "api/gpio_def.h"
 #include "sys/gpio_definition.h"
 #include "../pinmux/pin_mux_gpio.h"

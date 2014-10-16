@@ -64,7 +64,7 @@ extern "C"
 //*****************************************************************************
 //
 // All structures defined in this section of the header require byte packing of
-// fields.  This is usually accomplished using the  macro but, for IAR
+// fields.  This is usually accomplished using the USBLIB_PACKED macro but, for IAR
 // Embedded Workbench, this requries a pragma.
 //
 //*****************************************************************************
@@ -146,7 +146,7 @@ typedef struct
     //
     unsigned char CBWCB[16];
 }
- tMSCCBW;
+USBLIB_PACKED tMSCCBW;
 
 //*****************************************************************************
 //
@@ -197,7 +197,7 @@ typedef struct
     //
     unsigned char bCSWStatus;
 }
- tMSCCSW;
+USBLIB_PACKED tMSCCSW;
 
 //*****************************************************************************
 //

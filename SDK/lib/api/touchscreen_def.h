@@ -31,7 +31,8 @@
 #define TouchScreen_Type_FT5x06	1
 #define TouchScreen_Type_AR1020	2
 /*#####################################################*/
-typedef struct{
+typedef struct
+{
 	signed int	x1;
 	signed int	y1;
 	signed int	x2;
@@ -74,7 +75,31 @@ typedef struct LcdTouch_Struct
 	unsigned char LastState3;
 	unsigned char LastState4;
 	unsigned char LastState5;
-	TouchScreen_Data_t TouchResponse;
+	struct
+	{
+		signed int	x1;
+		signed int	y1;
+		signed int	x2;
+		signed int	y2;
+		signed int	x3;
+		signed int	y3;
+		signed int	x4;
+		signed int	y4;
+		signed int	x5;
+		signed int	y5;
+		signed int	pressure;
+		signed int touch_ID1;
+		signed int touch_ID2;
+		signed int touch_ID3;
+		signed int touch_ID4;
+		signed int touch_ID5;
+		signed int touch_event1;
+		signed int touch_event2;
+		signed int touch_event3;
+		signed int touch_event4;
+		signed int touch_event5;
+		unsigned char  touch_point;
+	}TouchResponse;
 	tDisplay *pDisplay;
 	new_twi* TwiStruct;
 	new_gpio* IrqStruct;
