@@ -8,6 +8,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include "board_init.h"
+#include "board/boards.h"
 #include "api/core_init_api.h"
 #include "api/timer_api.h"
 #include "api/uart_api.h"
@@ -26,7 +27,7 @@
 #include "device/tps65910a.h"
 #include "lib/gfx/controls_definition.h"
 #include "lib/fs/fat.h"
-#include "board_properties.h"
+#include "sys/plat_properties.h"
 #include "interface/usb_interface.h"
 #include "interface/rtc_interface.h"
 #include "pinmux/pin_mux_uart.h"
@@ -52,131 +53,12 @@ mmcsdCtrlInfo sdCtrl;
 /* SD Controller info structure */
 //mmcsdCtrlInfo  ctrlInfo;
 
-/*-----------------------------------------------------*/
-unsigned char *OnBoardConfigData = NULL;
-unsigned char *Board1ConfigData = NULL;
-unsigned char *Board2ConfigData = NULL;
-unsigned char *Board3ConfigData = NULL;
-unsigned char *Board4ConfigData = NULL;
-/********************************************************************/
-unsigned int RtcVersionGet(void)
-{
-	return 2;
-}
-
-unsigned int EDMAVersionGet(void)
-{
-	return 2;
-}
-/********************************************************************/
-static bool verify_if_is_beaglebone_board_extension(unsigned char*BoardInfo)
-{
-	if((unsigned int)(BoardInfo[0]<<24 | BoardInfo[1]<<16 | BoardInfo[2]<<8 | BoardInfo[3]<<0) == 0xAA5533EE) return true;
-	else return false;
-}
-/********************************************************************/
-static bool beaglebone_decode_board_info(unsigned char *BoardInfo)
-{
-	if(!memcmp(BoardInfo + 4, "A0BeagleBone BATTERY CAPE", 25))
-	{
-		UARTPuts(DebugCom, "BeagleBone battery cape detected.\n\r", -1);
-		return true;
-	}
-	if(!memcmp(BoardInfo + 4, "A0BeagleBone LCD3 CAPE", 22))
-	{
-		UARTPuts(DebugCom, "BeagleBone LCD3 cape detected.\n\r", -1);
-		return true;
-	}
-	return false;
-}
-/********************************************************************/
-void beaglebone_detect_extension_boards()
-{
-	unsigned char TwiBuff[49];
-	TwiBuff[48] = 0;
-
-	if(E2promRead(E2PROM_BOARD1, 0, TwiBuff, 48) && verify_if_is_beaglebone_board_extension(TwiBuff))
-	{
-		if(!beaglebone_decode_board_info(TwiBuff))
-		{
-			UARTPuts(DebugCom, "Board ID:1 unidentified.\n\r" , -1);
-		}
-		else
-		{
-			Board1ConfigData = (unsigned char*)calloc(1, 49);
-			memcpy(Board1ConfigData, TwiBuff, 48);
-		}
-	}else Board1ConfigData = NULL;
-
-	if(E2promRead(E2PROM_BOARD2, 0, TwiBuff, 48) && verify_if_is_beaglebone_board_extension(TwiBuff))
-	{
-		if(!beaglebone_decode_board_info(TwiBuff))
-		{
-			UARTPuts(DebugCom, "Board ID:2 unidentified.\n\r" , -1);
-		}
-		else
-		{
-			Board2ConfigData = (unsigned char*)calloc(1, 49);
-			memcpy(Board2ConfigData, TwiBuff, 48);
-		}
-	}else Board2ConfigData = NULL;
-
-	if(E2promRead(E2PROM_BOARD3, 0, TwiBuff, 48) && verify_if_is_beaglebone_board_extension(TwiBuff))
-	{
-		if(!beaglebone_decode_board_info(TwiBuff))
-		{
-			UARTPuts(DebugCom, "Board ID:3 unidentified.\n\r" , -1);
-		}
-		else
-		{
-			Board3ConfigData = (unsigned char*)calloc(1, 49);
-			memcpy(Board3ConfigData, TwiBuff, 48);
-		}
-	}else Board3ConfigData = NULL;
-
-	if(E2promRead(E2PROM_BOARD4, 0, TwiBuff, 48) && verify_if_is_beaglebone_board_extension(TwiBuff))
-	{
-		if(!beaglebone_decode_board_info(TwiBuff))
-		{
-			UARTPuts(DebugCom, "Board ID:4 unidentified.\n\r" , -1);
-		}
-		else
-		{
-			Board4ConfigData = (unsigned char*)calloc(1, 49);
-			memcpy(Board4ConfigData, TwiBuff, 48);
-		}
-	}else Board4ConfigData = NULL;
-}
-/********************************************************************/
-static bool detect_if_is_beaglebone()
-{
-	UARTPuts(DebugCom, "Read BeagleBone data.\n\r" , -1);
-	unsigned char TwiBuff[49];
-	TwiBuff[48] = 0;
-	if(E2promRead(E2PROM_ONBOARD, 0, TwiBuff, 48) && verify_if_is_beaglebone_board_extension(TwiBuff))
-	{
-		OnBoardConfigData = (unsigned char*)calloc(1, 49);
-		memcpy(OnBoardConfigData, TwiBuff, 48);
-		if(!memcmp(OnBoardConfigData + 4, "A335BONE", 8))
-		{
-			unsigned char tmpstr[3];
-			memcpy(tmpstr, OnBoardConfigData + 14, 2);
-			tmpstr[2] = (int)NULL;
-			UARTprintf(DebugCom, "Board detected: BeagleBone rev %s.\n\r", tmpstr);
-			return true;
-		}else
-		{
-			OnBoardConfigData = NULL;
-		}
-	}
-	return false;
-}
 /*#####################################################*/
 bool board_init()
 {
 	core_init();
 	timer_init();
-	RtcInit();
+	//RtcInit();
 /*-----------------------------------------------------*/
 /* Set up the Uart 0 like debug interface with RxBuff = 256, TxBuff = 256, 115200b/s*/
 	Uart[0] = new_(new_uart);
@@ -215,7 +97,7 @@ bool board_init()
 	twi_open(TWI[0]);
 	UARTPuts(DebugCom, "OK.\n\r" , -1);
 /*-----------------------------------------------------*/
-	if(!detect_if_is_beaglebone()) return false;
+	if(!is_beaglebone()) return false;
 /*-----------------------------------------------------*/
 /* Set up the Twi 1 to communicate with PMIC and the Onboard serial EEprom memory */
 	UARTPuts(DebugCom, "Setup TWI 1 with RxBuff = 258, TxBuff = 258....." , -1);

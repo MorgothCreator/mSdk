@@ -24,7 +24,7 @@
 #include <stdarg.h>
 #include "uart_api.h"
 #include "uart_def.h"
-#include "board_properties.h"
+#include "sys/plat_properties.h"
 #include "interface/uart_interface.h"
 /*#####################################################*/
 /* A mapping from an integer between 0 and 15 to its ASCII character

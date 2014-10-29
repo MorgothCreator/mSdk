@@ -28,8 +28,9 @@ inline void VfpEnable(void)
 		    "    MOV r1, #0\n\t"
 		    "    MCR p15, #0, r1, c7, c5, #4\n\t" // flush prefetch buffer because of FMXR below
 		    "    MOV r0,#0x40000000\n\t"
-		    /*"    FMXR FPEXC, r0\n\t"*/); // FPEXC = r0
+		    "    FMXR FPEXC, r0\n\t"); // FPEXC = r0
 }
+
 
 
 void _core_init(void)

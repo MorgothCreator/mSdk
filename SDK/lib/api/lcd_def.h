@@ -25,7 +25,7 @@
 #include <stdbool.h>
 #include "twi_def.h"
 #include "gpio_def.h"
-#include "board_properties.h"
+#include "sys/plat_properties.h"
 /**********************************************/
 #ifdef FLASH_DEVICE
 #define read_data_byte(addr) pgm_read_byte(&addr)

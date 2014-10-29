@@ -27,7 +27,7 @@
 #include "api/lcd_api.h"
 #include "scrollbar.h"
 #include "controls_definition.h"
-#include "board_properties.h"
+#include "sys/plat_properties.h"
 #include "lib/string_lib.h"
 //#######################################################################################
 static bool paint_listbox_item(tListBox *_settings, listbox_item* settings, tDisplay *pDisplay, signed int x_start, signed int y_start, tControlCommandData* control_comand, bool Pushed, bool Paint)

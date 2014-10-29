@@ -21,7 +21,7 @@
 
 #include "pmic_api.h"
 /*#####################################################*/
-#include "board_properties.h"
+#include "sys/plat_properties.h"
 #include "api/twi_api.h"
 #ifdef USE_TPS65217
 #include "device/tps65217.h"

@@ -8,6 +8,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "ls.h"
+#include "ffconf.h"		/* FatFs configuration options */
 #include "lib/fat_fs/inc/ff.h"
 #include "lib/string_lib.h"
 #include "app_result.h"
@@ -40,8 +41,10 @@ int _ls(int argc, char *argv[])
         if(!strcmp(argv[1], "-help"));
         else
         {
-			settings->g_sFileInfo.lfname = settings->lfn_tmp;
+#if _USE_LFN
+        	settings->g_sFileInfo.lfname = settings->lfn_tmp;
 			settings->g_sFileInfo.lfsize = 255;
+#endif
 			fresult = f_opendir(&settings->g_sDirObject, argv[1]);
 			settings->fresult = fresult;
 			/*

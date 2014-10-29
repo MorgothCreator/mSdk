@@ -20,8 +20,8 @@
  */
 
 /*#####################################################*/
-#include "board_properties.h"
-#ifdef USE_TPS65910A
+#include "sys/plat_properties.h"
+#if (defined USE_TPS65910A) || (defined evmAM335x) || (defined evmskAM335x) || (defined devkit8600)
 #include "tps65910a.h"
 #include "api/twi_api.h"
 #include "include/hw/hw_tps65910.h"

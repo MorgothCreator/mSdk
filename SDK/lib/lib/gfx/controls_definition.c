@@ -22,7 +22,7 @@
 #ifdef FLASH_DEVICE
 #include <avr/pgmspace.h>
 #endif
-#include "board_properties.h"
+#include "sys/plat_properties.h"
 #include "controls_definition.h"
 #include "api/lcd_api.h"
 #include "api/lcd_def.h"

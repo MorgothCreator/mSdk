@@ -27,7 +27,7 @@
 #include <malloc.h>
 #include "fat.h"
 #include "board_init.h"
-#include "board_properties.h"
+#include "sys/plat_properties.h"
 #include "../../api/uart_api.h"
 #include "../string_lib.h"
 #ifdef USE_UNIONS

@@ -22,10 +22,10 @@
 #ifndef TPS65910A_H_
 #define TPS65910A_H_
 /*#####################################################*/
-#include "board_properties.h"
+#include "sys/plat_properties.h"
 #include "../api/twi_api.h"
 
-#ifdef USE_TPS65910A
+#if (defined USE_TPS65910A) || (defined evmAM335x) || (defined evmskAM335x) || (defined devkit8600)
 /*#####################################################*/
 void _pmic_reg_read(new_twi* TwiStruct,unsigned char regOffset, unsigned char* dest);
 void _pmic_reg_write(new_twi* TwiStruct,unsigned char port_level, unsigned char regOffset,

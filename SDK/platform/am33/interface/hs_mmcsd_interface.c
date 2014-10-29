@@ -40,7 +40,7 @@
 */
 #define thirdpartyfatfs
 
-#include "board_properties.h"
+#include "sys/plat_properties.h"
 #include "hs_mmcsd_interface.h"
 #include "edma3_interface.h"
 #include "api/edma_api.h"
@@ -508,10 +508,12 @@ void _mmcsd_idle(void *SdCtrlStruct)
 						{
 																				UARTPuts(DebugCom,   "MMCSD0 drive 0 mounted\n\r" , -1);
 																				UARTPuts(DebugCom,   "MMCSD0 Fat fs detected\n\r" , -1);
-							if(g_sFatFs.fs_type == FS_FAT12)	{ 				UARTprintf(DebugCom, "MMCSD0 Fs type:                 Fat12\n\r");}
-							else if(g_sFatFs.fs_type == FS_FAT16){ 				UARTprintf(DebugCom, "MMCSD0 Fs type:                 Fat16\n\r");}
-							else if(g_sFatFs.fs_type == FS_FAT32){ 				UARTprintf(DebugCom, "MMCSD0 Fs type:                 Fat32\n\r");}
-							else								{ 				UARTprintf(DebugCom, "MMCSD0 Fs type:                 None\n\r");}
+																				UARTprintf(DebugCom, "MMCSD0 Fs type:                 ");
+							if(g_sFatFs.fs_type == FS_FAT12)	{ 				UARTprintf(DebugCom, "Fat12");}
+							else if(g_sFatFs.fs_type == FS_FAT16){ 				UARTprintf(DebugCom, "Fat16");}
+							else if(g_sFatFs.fs_type == FS_FAT32){ 				UARTprintf(DebugCom, "Fat32");}
+							else								{ 				UARTprintf(DebugCom, "None");}
+																				UARTprintf(DebugCom, "\n\r");
 																				//UARTprintf(DebugCom, "MMCSD0 BootSectorAddress:       %u \n\r",(unsigned int)g_sFatFs.);
 																				UARTprintf(DebugCom, "MMCSD0 BytesPerSector:          %d \n\r",/*(int)g_sFatFs.s_size*/512);
 																				UARTprintf(DebugCom, "MMCSD0 SectorsPerCluster:       %d \n\r",(int)g_sFatFs.csize);
@@ -522,7 +524,7 @@ void _mmcsd_idle(void *SdCtrlStruct)
 																				UARTprintf(DebugCom, "MMCSD0 DataSectionBegin:        %d \n\r",(int)g_sFatFs.fatbase);
 																				UARTprintf(DebugCom, "MMCSD0 uSD DiskCapacity:        %uMB\n\r",(unsigned long)((unsigned long long)((unsigned long long)g_sFatFs.max_clust * (unsigned long long)g_sFatFs.csize * (unsigned long long)/*g_sFatFs.s_size*/512) / 1000000));
 						}
-                    } else  if(DebugCom)											UARTPuts(DebugCom,   "MMCSD0 ERROR oppening path\n\r" , -1);
+                    } else  if(DebugCom)										UARTPuts(DebugCom,   "MMCSD0 ERROR oppening path\n\r" , -1);
 #endif
                 }
                 else if(DebugCom)												UARTPuts(DebugCom,   "MMCSD0 ERROR mounting disk\n\r" , -1);

@@ -77,6 +77,7 @@
 /---------------------------------------------------------------------------*/
 
 #include "../inc/ff.h"			/* FatFs configurations and declarations */
+#include "ffconf.h"		/* FatFs configuration options */
 #include "../inc/diskio.h"		/* Declarations of low level disk I/O functions */
 
 

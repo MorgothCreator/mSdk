@@ -7,7 +7,7 @@
 //#include <ucos_ii.h>	// uC/OS-II
 
 #include "../../inc/ff.h"
-#include "../../inc/ffconf.h"
+#include "ffconf.h"
 
 #if _FS_REENTRANT
 

@@ -5,7 +5,7 @@
  *      Author: Iulian Gheorghiu morgoth2600@gmail.com
  */
 
-#include "sys/plat_properties.h"
+#include "board_properties.h"
 #include "pin_mux_cpsw.h"
 
 /**

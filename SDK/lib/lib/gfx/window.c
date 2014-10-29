@@ -23,7 +23,7 @@
 #include "window_def.h"
 #include "graphic_string.h"
 #include "controls_definition.h"
-#include "board_properties.h"
+#include "sys/plat_properties.h"
 #include "api/lcd_def.h"
 #include "api/lcd_api.h"
 #include "button.h"
@@ -563,6 +563,8 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 		settings->Internals.NormalScreenPosition.Y = settings->Position.Y;
 		settings->Position.X = settings->Internals.WindowMoveLimits.sXMin;
 		settings->Position.Y = settings->Internals.WindowMoveLimits.sYMin;
+		settings->Internals.Position.ChildrenPosition_X = 0;
+		settings->Internals.Position.ChildrenPosition_Y = 0;
 		settings->Size.X = settings->WindowMoveLimits.sXMax - settings->Internals.WindowMoveLimits.sXMin;
 		settings->Size.Y = settings->WindowMoveLimits.sYMax - settings->Internals.WindowMoveLimits.sYMin;
 		settings->Internals.FullScreen = true;

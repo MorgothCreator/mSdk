@@ -22,9 +22,9 @@
 #ifndef TPS65217_H_
 #define TPS65217_H_
 /*#####################################################*/
-#include "board_properties.h"
+#include "sys/plat_properties.h"
 #include "../api/twi_api.h"
-#ifdef USE_TPS65217
+#if (defined USE_TPS65217) || (defined beaglebone)
 /*#####################################################*/
 #define WLED_CURENT_SYNK_ENABLE_BITMASK	0x8
 #define WLED_ISET_BITMASK				0x4

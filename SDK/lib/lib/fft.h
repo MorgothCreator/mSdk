@@ -22,7 +22,7 @@
 #ifndef FFT_H_
 #define FFT_H_
 
-#include "board_properties.h"
+#include "sys/plat_properties.h"
 
 /* FFT data structures */
 #ifndef FFT_BUFFER_SIZE_LOG

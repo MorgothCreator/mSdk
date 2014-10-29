@@ -28,7 +28,7 @@
 #include "api/lcd_api.h"
 #include "scrollbar.h"
 #include "graphic_string.h"
-#include "board_properties.h"
+#include "sys/plat_properties.h"
 //#######################################################################################
 static void paint_textbox(tTextBox* settings, tDisplay *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len, tControlCommandData* control_comand)
 {

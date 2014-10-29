@@ -5,7 +5,7 @@
  *      Author: XxXx
  */
 
-#include "board_properties.h"
+#include "sys/plat_properties.h"
 #include "sys/mmu.h"
 
 void MMUConfigAndEnable(void)

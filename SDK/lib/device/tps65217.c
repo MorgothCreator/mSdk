@@ -20,8 +20,8 @@
  */
 
 
-#include "board_properties.h"
-#ifdef USE_TPS65217
+#include "sys/plat_properties.h"
+#if (defined USE_TPS65217) || (defined beaglebone)
 #include "tps65217.h"
 #include "../api/twi_api.h"
 #include "include/hw/hw_tps65217.h"
@@ -89,7 +89,7 @@ void _pmic_reg_write(new_twi* TwiStruct,unsigned char port_level, unsigned char 
 {
     if(!TwiStruct) return;
     unsigned char read_val;
-    unsigned xor_reg;
+    unsigned xor_reg = 0;
 
     /* Configure PMIC slave address */
 	TwiStruct->MasterSlaveAddr = PMIC_TPS65217_I2C_SLAVE_ADDR;

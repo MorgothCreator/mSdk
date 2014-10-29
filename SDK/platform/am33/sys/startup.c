@@ -124,7 +124,7 @@ static unsigned int const vecTbl[14]=
  *          target. This function never returns, but gives control to the
  *          application entry point.
  **/
-unsigned int start_boot(void) 
+void start_boot(void)
 {
     /*
     ** Copy the vector table to desired location. This is needed if the vector

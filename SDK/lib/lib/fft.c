@@ -22,7 +22,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "../api/uart_api.h"
-#include "board_properties.h"
+#include "sys/plat_properties.h"
 #include "fft.h"
 
 #ifndef PI

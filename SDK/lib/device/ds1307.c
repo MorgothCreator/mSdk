@@ -22,7 +22,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include "ds1307.h"
-#include "board_properties.h"
+#include "sys/plat_properties.h"
 #include "../api/twi_api.h"
 #include "../api/twi_def.h"
 //#####################################################

@@ -1857,8 +1857,8 @@ USBDSCSIRead10(const tUSBDMSCDevice *psDevice, tMSCCBW *pSCSICBW,
     unsigned int usNumBlocks;
 
 #ifdef DMA_MODE
-    unsigned int txBuffer;
-    unsigned int nBlocks;
+    unsigned int txBuffer = 0;
+    unsigned int nBlocks = 0;
 #endif
 
     //

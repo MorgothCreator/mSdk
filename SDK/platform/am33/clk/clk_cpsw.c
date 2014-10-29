@@ -11,9 +11,9 @@
 #include "../include/hw/hw_cm_wkup.h"
 #include "../include/hw/hw_cm_per.h"
 #include "../include/hw/hw_types.h"
-#include "board_properties.h"
+#include "sys/plat_properties.h"
 
-#ifdef board_type_beaglebone
+#if (defined board_type_beaglebone) || (defined beaglebone) || (defined evmAM335x) || (defined evmskAM335x)
 
 /**
  * \brief   Enables CPSW clocks
@@ -39,7 +39,7 @@ void CPSWClkEnable(void)
 
 #endif
 
-#ifdef board_type_devkit8600
+#if (defined board_type_devkit8600) || (defined devkit8600)
 /**
  * \brief   Enables CPSW clocks
  *
