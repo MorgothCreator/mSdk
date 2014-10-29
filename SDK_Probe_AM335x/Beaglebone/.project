@@ -1641,14 +1641,14 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>lib/lib/gfx/buton.c</name>
+			<name>lib/lib/gfx/button.c</name>
 			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/SDK/lib/lib/gfx/buton.c</locationURI>
+			<locationURI>PARENT-2-PROJECT_LOC/SDK/lib/lib/gfx/button.c</locationURI>
 		</link>
 		<link>
-			<name>lib/lib/gfx/buton.h</name>
+			<name>lib/lib/gfx/button.h</name>
 			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/SDK/lib/lib/gfx/buton.h</locationURI>
+			<locationURI>PARENT-2-PROJECT_LOC/SDK/lib/lib/gfx/button.h</locationURI>
 		</link>
 		<link>
 			<name>lib/lib/gfx/checkbox.c</name>

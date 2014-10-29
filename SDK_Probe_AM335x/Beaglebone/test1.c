@@ -32,7 +32,7 @@
 #include "device/ft5x06.h"
 
 #include "lib/gfx/controls_definition.h"
-#include "lib/gfx/buton.h"
+#include "lib/gfx/button.h"
 #include "lib/gfx/checkbox.h"
 #include "lib/gfx/progressbar.h"
 #include "lib/gfx/scrollbar.h"
