@@ -28,6 +28,7 @@
 #include "lib/gfx/controls_definition.h"
 #include "lib/fs/fat.h"
 #include "sys/plat_properties.h"
+#include "sys/sysdelay.h"
 #include "interface/usb_interface.h"
 #include "interface/rtc_interface.h"
 #include "pinmux/pin_mux_uart.h"
@@ -44,12 +45,13 @@ new_gpio* HARDBTN[6] = {NULL,NULL,NULL,NULL,NULL,NULL};
 new_gpio* LED[6] = {NULL,NULL,NULL,NULL,NULL,NULL};
 new_adxl345* ADXL345_1 = NULL;
 new_touchscreen* TouchScreen = NULL;
+new_gpio* eMMC_Res = NULL;
 /*-----------------------------------------------------*/
 new_screen* ScreenBuff = NULL;
 /*-----------------------------------------------------*/
 FileInfo_t *FILE1 = NULL;
 
-mmcsdCtrlInfo sdCtrl;
+mmcsdCtrlInfo sdCtrl[2];
 /* SD Controller info structure */
 //mmcsdCtrlInfo  ctrlInfo;
 
@@ -58,7 +60,7 @@ bool board_init()
 {
 	core_init();
 	timer_init();
-	//RtcInit();
+	RtcInit();
 /*-----------------------------------------------------*/
 /* Set up the Uart 0 like debug interface with RxBuff = 256, TxBuff = 256, 115200b/s*/
 	Uart[0] = new_(new_uart);
@@ -149,16 +151,27 @@ bool board_init()
 #endif
 /*-----------------------------------------------------*/
 	UARTPuts(DebugCom, "Init MMCSD0 Host.......", -1);
-	//sdCard.ctrl->SdNr = 0;
-	mmcsd_init(&sdCtrl, 0, 6, LED[0]);
+	sdCtrl[1].SdNr = 0;
+	mmcsd_init(&sdCtrl[0], 0, 6, LED[0]);
 	UARTPuts(DebugCom, "OK.\n\r", -1);
 /*-----------------------------------------------------*/
-	//UARTPuts(DebugCom, "Init USBMSC1 Host.......", -1);
-	//usb_host_init(1, LED2);
-	//UARTPuts(DebugCom, "OK.\n\r", -1);
+	eMMC_Res = gpio_assign(1, 20, GPIO_DIR_OUTPUT, false);
+	gpio_out(eMMC_Res, 0);
+	Sysdelay(10);
+	gpio_out(eMMC_Res, 1);
+	UARTPuts(DebugCom, "Init MMCSD1 Host.......", -1);
+	sdCtrl[1].SdNr = 1;
+	mmcsd_init(&sdCtrl[1], -1, -1, LED[0]);
+	UARTPuts(DebugCom, "OK.\n\r", -1);
 /*-----------------------------------------------------*/
+	UARTPuts(DebugCom, "Init USBMSC1 Host.......", -1);
+	usb_host_init(1, LED[2]);
+	UARTPuts(DebugCom, "OK.\n\r", -1);
+/*-----------------------------------------------------*/
+#ifdef lcd
 	TouchScreen = new_(new_touchscreen);
 	TouchScreen->TwiStruct = TWI[1];
+#endif
 	bool LCD3_Cape_Detected = false;
 	if(Board1ConfigData) if(!memcmp(Board1ConfigData + 4, "A0BeagleBone LCD3 CAPE", 22)) LCD3_Cape_Detected = true;
 	if(Board2ConfigData) if(!memcmp(Board2ConfigData + 4, "A0BeagleBone LCD3 CAPE", 22)) LCD3_Cape_Detected = true;
@@ -176,6 +189,7 @@ bool board_init()
 		LED[4] = gpio_assign(1, 28, GPIO_DIR_OUTPUT, false);
 		LED[5] = gpio_assign(1, 18, GPIO_DIR_OUTPUT, false);
 /*-----------------------------------------------------*/
+#ifdef lcd
 		ScreenBuff = new_(new_screen);
 		ScreenBuff->LcdType = S035Q01;
 		ScreenBuff->BackLightLevel = 60;
@@ -192,20 +206,24 @@ bool board_init()
 		UARTPuts(DebugCom, "OK.\n\r" , -1);
 		put_rectangle(ScreenBuff, 0, 0, ScreenBuff->Width, ScreenBuff->Height, true, controls_color.Scren);
 		box_cache_clean(ScreenBuff, 0, 0, ScreenBuff->Width, ScreenBuff->Height);
+#endif
 	}
 	else
 	{
+#ifdef lcd
 		if(ft5x06_init(TouchScreen, 0, 30))
 		{
 			UARTPuts(DebugCom, "Capacitive touch screen detected and set up successful.\n\r" , -1);
+#endif
 			UARTPuts(DebugCom, "I suppose that is BeagleBone Multimedia cape from Chipsee.\n\r" , -1);
 /*-----------------------------------------------------*/
 			HARDBTN[0] = gpio_assign(1, 19, GPIO_DIR_INPUT, false);
 			HARDBTN[1] = gpio_assign(1, 16, GPIO_DIR_INPUT, false);
 			HARDBTN[2] = gpio_assign(1, 17, GPIO_DIR_INPUT, false);
 			HARDBTN[3] = gpio_assign(0, 7, GPIO_DIR_INPUT, false);
-			HARDBTN[4] = gpio_assign(1, 3, GPIO_DIR_INPUT, false);
+			//HARDBTN[4] = gpio_assign(1, 3, GPIO_DIR_INPUT, false);
 /*-----------------------------------------------------*/
+#ifdef lcd
 			ScreenBuff = new_(new_screen);
 			ScreenBuff->LcdType = AT070TN92;
 			ScreenBuff->BackLightPort = 1;
@@ -217,7 +235,7 @@ bool board_init()
 			UARTprintf(DebugCom, "LCD display initialize successful for %dx%d resolution, 24 Bit bus.\n\r" , ScreenBuff->Width, ScreenBuff->Height);
 			put_rectangle(ScreenBuff, 0, 0, ScreenBuff->Width, ScreenBuff->Height, true, controls_color.Scren);
 			box_cache_clean(ScreenBuff, 0, 0, ScreenBuff->Width, ScreenBuff->Height);
-			screen_backlight_on(ScreenBuff);
+			backlight_on(ScreenBuff);
 		}
 		else
 		{
@@ -249,8 +267,9 @@ bool board_init()
 			UARTprintf(DebugCom, "LCD display initialize successful for %dx%d resolution, 24 Bit bus.\n\r" , ScreenBuff->Width, ScreenBuff->Height);
 			put_rectangle(ScreenBuff, 0, 0, ScreenBuff->Width, ScreenBuff->Height, true, controls_color.Scren);
 			box_cache_clean(ScreenBuff, 0, 0, ScreenBuff->Width, ScreenBuff->Height);
-			screen_backlight_on(ScreenBuff);
+			backlight_on(ScreenBuff);
 		}
+#endif
 	}
 	return true;
 }

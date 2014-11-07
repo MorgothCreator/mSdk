@@ -8,7 +8,7 @@
 #ifndef CLK_MMCSD_H_
 #define CLK_MMCSD_H_
 /*#####################################################*/
-void HSMMCSDModuleClkConfig(void);
+void HSMMCSDModuleClkConfig(int module);
 /*#####################################################*/
 #ifdef HEADER_INCLUDE_C_FILES
 #include "clk_mmcsd.c"

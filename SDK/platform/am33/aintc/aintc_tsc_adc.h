@@ -8,7 +8,7 @@
 #ifndef AINTC_TSC_ADC_H_
 #define AINTC_TSC_ADC_H_
 /*#####################################################*/
-#define analog_touch_filter_level	8
+#define analog_touch_filter_level	32
 /*#####################################################*/
 void TouchIntEnable(void);
 void TouchIntRegister(void);

@@ -25,6 +25,7 @@ volatile unsigned int ana_cnt_touch = 0;
 volatile signed int ignore_cnt = 0;
 volatile unsigned int xdata = 0;
 volatile unsigned int ydata = 0;
+volatile unsigned int ignored_touch = analog_touch_filter_level;
 /*#####################################################*/
 static void TouchScreenIsr(void);
 
@@ -146,7 +147,8 @@ static void TouchScreenIsr(void)
 										   TSCADC_OUT_OF_RANGE_INT |
 										   TSCADC_PEN_UP_EVENT_INT);
 
-    IsTSPress = 1;
+	if(!ignored_touch) IsTSPress = 1;
+	else ignored_touch--;
     touchRelease = 0;
 
     StepEnable();

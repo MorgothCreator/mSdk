@@ -29,6 +29,7 @@
 #include "board_init.h"
 #include "interface/lcd_interface.h"
 #include "api/timer_api.h"
+#include "api/usb_msc_host_api.h"
 #include "device/ft5x06.h"
 
 #include "lib/gfx/controls_definition.h"
@@ -39,6 +40,8 @@
 #include "lib/gfx/textbox.h"
 #include "lib/gfx/listbox.h"
 #include "lib/gfx/window.h"
+
+#include "app/console.h"
 
 tWindow *MainWindow = NULL;
 
@@ -119,8 +122,9 @@ void *picture_box_callback(struct PictureBox_s *settings, tControlCommandData *c
 int main(void) {
     board_init();
 /*******************************************************/
-    timer_interval(&TimerScanTouch, 20);
+    timer_interval(&TimerScanTouch, 10);
 /*******************************************************/
+#ifdef lcd
 #ifdef USE_BACK_SCREEN
     BackScreen = new_(new_screen);
     memcpy((void *)BackScreen, (void *)ScreenBuff, sizeof(new_screen));
@@ -170,12 +174,17 @@ int main(void) {
     tControlCommandData control_comand;
     control_comand.Comand = Control_Nop;
     control_comand.CursorCoordonateUsed = true;
+#endif
 /*******************************************************/
+/*arg's for console*/
+    char *argv[2];
+    argv[0] = NULL;
 /*******************************************************/
     while(1)
     {
         if(timer_tick(&TimerScanTouch))
         {
+#ifdef lcd
 #ifdef USE_BACK_SCREEN
             if(BackScreen)
 #else
@@ -198,8 +207,14 @@ int main(void) {
                 }
 #endif
             }
-            mmcsd_idle(&sdCtrl);
+#endif
+            mmcsd_idle(&sdCtrl[0]);
+            mmcsd_idle(&sdCtrl[1]);
+            usb_host_idle(1);
         }
+        signed int R_Chr = UARTGetcNoBlocking(DebugCom);
+        argv[1] = (char *)R_Chr;
+        console(2, argv);
     }
 }
 #endif

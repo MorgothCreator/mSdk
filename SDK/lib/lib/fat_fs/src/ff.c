@@ -1468,7 +1468,7 @@ FRESULT chk_mounted (	/* FR_OK(0): successful, !=0: any error occurred */
 )
 {
 	BYTE fmt, *tbl;
-	UINT vol;
+	UINT vol = 0;
 	DSTATUS stat;
 	DWORD bsect, fsize, tsect, mclst;
 	const XCHAR *p = *path;
@@ -1482,7 +1482,7 @@ FRESULT chk_mounted (	/* FR_OK(0): successful, !=0: any error occurred */
 #if _FS_RPATH
 		vol = Drive;				/* Use current drive */
 #else
-		vol = 0;					/* Use drive 0 */
+		//vol = 0;					/* Use drive 0 */
 #endif
 	}
 

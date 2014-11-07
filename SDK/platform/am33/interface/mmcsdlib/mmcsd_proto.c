@@ -66,7 +66,7 @@ static unsigned char dataBuffer[DATA_RESPONSE_WIDTH]
 #error "Unsupported compiler\n\r"
 #endif
 
-extern new_gpio *LedStatusMmcSd0;
+extern new_gpio *LedStatusMmcSd[];
 
 /**
  * \brief   This function sends the command to MMCSD.
@@ -571,6 +571,165 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
         card->sd_ver = SD_CARD_VERSION(card);
         card->busWidth = SD_CARD_BUSWIDTH(card);
     }
+    else
+    {
+        ctrl->card->cardType = MMCSD_CARD_MMC;
+
+        /* CMD0 - reset card */
+        status = MMCSDCardReset(ctrl);
+
+        if (status == 0)
+        {
+            return 0;
+        }
+        /* CMD8 - send oper voltage */
+        //cmd.idx = SD_CMD(8);
+       // cmd.flags = 0;
+        //cmd.arg = (SD_CHECK_PATTERN | SD_VOLT_2P7_3P6);
+
+        //status = MMCSDCmdSend(ctrl, &cmd);
+
+        //if (status == 0)
+       // {
+            /* If the cmd fails, it can be due to version < 2.0, since
+             * we are currently supporting high voltage cards only
+             */
+        //	return 0;
+        //}
+        /* Poll until we get the card status (BIT31 of OCR) is powered up */
+        do {
+                cmd.idx = SD_CMD(1);
+                cmd.flags = 0;
+                cmd.arg = SD_OCR_HIGH_CAPACITY | SD_OCR_VDD_WILDCARD | 1<<7;
+
+                MMCSDCmdSend(ctrl,&cmd);
+
+        } while (!(cmd.rsp[0] & ((unsigned int)BIT(31))) && --retry);
+
+        if (retry == 0)
+        {
+            /* No point in continuing */
+            return 0;
+        }
+
+        card->ocr = cmd.rsp[0];
+
+        card->highCap = (card->ocr & SD_OCR_HIGH_CAPACITY) ? 1 : 0;
+
+        /* Send CMD2, to get the card identification register */
+        cmd.idx = SD_CMD(2);
+        cmd.flags = SD_CMDRSP_136BITS;
+        cmd.arg = 0;
+
+        status = MMCSDCmdSend(ctrl,&cmd);
+
+        memcpy(card->raw_cid, cmd.rsp, 16);
+
+        if (status == 0)
+        {
+            return 0;
+        }
+
+        /* Send CMD3, to set the card relative address */
+        cmd.idx = SD_CMD(3);
+        cmd.flags = SD_CMDRSP_NONE;
+        cmd.arg = 0x1 << 16;
+
+        status = MMCSDCmdSend(ctrl,&cmd);
+
+        card->rca = 1;//SD_RCA_ADDR(cmd.rsp[0]);
+
+        if (status == 0)
+        {
+            return 0;
+        }
+        /* Select the card */
+        /*cmd.idx = SD_CMD(7);
+        cmd.flags = SD_CMDRSP_BUSY;
+        cmd.arg = card->rca << 16;
+
+        status = MMCSDCmdSend(ctrl,&cmd);
+
+        if (status == 0)
+        {
+            return 0;
+        }*/
+        /* Send CMD9, to get the card specific data */
+		cmd.idx = SD_CMD(9);
+		cmd.flags = SD_CMDRSP_136BITS;
+		cmd.arg = card->rca << 16;
+
+		status = MMCSDCmdSend(ctrl,&cmd);
+
+        memcpy(card->raw_csd, cmd.rsp, 16);
+
+        if (status == 0)
+        {
+            return 0;
+        }
+
+        if (SD_CARD_CSD_VERSION(card))
+        {
+            card->tranSpeed = SD_CARD1_TRANSPEED(card);
+            card->blkLen = 1 << (SD_CARD1_RDBLKLEN(card));
+            card->size = SD_CARD1_SIZE(card);
+            card->nBlks = card->size / card->blkLen;
+        }
+        else
+        {
+            card->tranSpeed = SD_CARD0_TRANSPEED(card);
+            card->blkLen = 1 << (SD_CARD0_RDBLKLEN(card));
+            card->nBlks = SD_CARD0_NUMBLK(card);
+            card->size = SD_CARD0_SIZE(card);
+
+        }
+
+        /*
+         * Send ACMD51, to get the SD Configuration register details.
+         * Note, this needs data transfer (on data lines).
+         */
+        cmd.idx = SD_CMD(55);
+        cmd.flags = 0;
+        cmd.arg = card->rca << 16;
+
+        status = MMCSDCmdSend(ctrl,&cmd);
+        if (status == 0)
+        {
+            return 0;
+        }
+
+        ctrl->xferSetup(ctrl, 1, dataBuffer, 8, 1);
+
+        cmd.idx = SD_CMD(51);
+        cmd.flags = SD_CMDRSP_READ | SD_CMDRSP_DATA;
+        cmd.arg = card->rca << 16;
+        cmd.nblks = 1;
+        cmd.data = (signed char*)dataBuffer;
+
+        status = MMCSDCmdSend(ctrl,&cmd);
+        if (status == 0)
+        {
+            return 0;
+        }
+
+        status = ctrl->xferStatusGet(ctrl);
+
+        if (status == 0)
+        {
+            return 0;
+        }
+
+        /* Invalidate the data cache. */
+        CacheDataCleanInvalidateBuff((unsigned int)dataBuffer, DATA_RESPONSE_WIDTH);
+
+        card->raw_scr[0] = (dataBuffer[3] << 24) | (dataBuffer[2] << 16) | \
+		                   (dataBuffer[1] << 8) | (dataBuffer[0]);
+        card->raw_scr[1] = (dataBuffer[7] << 24) | (dataBuffer[6] << 16) | \
+                                   (dataBuffer[5] << 8) | (dataBuffer[4]);
+
+        card->sd_ver = SD_CARD_VERSION(card);
+        card->busWidth = SD_CARD_BUSWIDTH(card);
+    }
 
     return 1;
 }
@@ -588,8 +747,8 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
  **/
 unsigned int MMCSDWriteCmdSend(void *_ctrl, void *ptr, unsigned long block, unsigned int nblks)
 {
-	if(LedStatusMmcSd0) gpio_out(LedStatusMmcSd0, 1);
 	mmcsdCtrlInfo *ctrl = _ctrl;
+	if(LedStatusMmcSd[ctrl->SdNr]) gpio_out(LedStatusMmcSd[ctrl->SdNr], 1);
     mmcsdCardInfo *card = ctrl->card;
     unsigned int status = 0;
     unsigned int address;
@@ -632,7 +791,7 @@ unsigned int MMCSDWriteCmdSend(void *_ctrl, void *ptr, unsigned long block, unsi
 
     if (status == 0)
     {
-    	if(LedStatusMmcSd0) gpio_out(LedStatusMmcSd0, 0);
+    	if(LedStatusMmcSd[ctrl->SdNr]) gpio_out(LedStatusMmcSd[ctrl->SdNr], 0);
         return 0;
     }
 
@@ -640,7 +799,7 @@ unsigned int MMCSDWriteCmdSend(void *_ctrl, void *ptr, unsigned long block, unsi
 
     if (status == 0)
     {
-    	if(LedStatusMmcSd0) gpio_out(LedStatusMmcSd0, 0);
+    	if(LedStatusMmcSd[ctrl->SdNr]) gpio_out(LedStatusMmcSd[ctrl->SdNr], 0);
         return 0;
     }
 
@@ -651,12 +810,12 @@ unsigned int MMCSDWriteCmdSend(void *_ctrl, void *ptr, unsigned long block, unsi
 
         if (status == 0)
         {
-        	if(LedStatusMmcSd0) gpio_out(LedStatusMmcSd0, 0);
+        	if(LedStatusMmcSd[ctrl->SdNr]) gpio_out(LedStatusMmcSd[ctrl->SdNr], 0);
             return 0;
         }
     }
 
-	if(LedStatusMmcSd0) gpio_out(LedStatusMmcSd0, 0);
+	if(LedStatusMmcSd[ctrl->SdNr]) gpio_out(LedStatusMmcSd[ctrl->SdNr], 0);
     return 1;
 }
 
@@ -673,8 +832,8 @@ unsigned int MMCSDWriteCmdSend(void *_ctrl, void *ptr, unsigned long block, unsi
  **/
 unsigned int MMCSDReadCmdSend(void *_ctrl, void *ptr, unsigned long block, unsigned int nblks)
 {
-	if(LedStatusMmcSd0) gpio_out(LedStatusMmcSd0, 1);
 	mmcsdCtrlInfo *ctrl = _ctrl;
+	if(LedStatusMmcSd[ctrl->SdNr]) gpio_out(LedStatusMmcSd[ctrl->SdNr], 1);
 	mmcsdCardInfo *card = ctrl->card;
     unsigned int status = 0;
     unsigned int address;
@@ -712,7 +871,7 @@ unsigned int MMCSDReadCmdSend(void *_ctrl, void *ptr, unsigned long block, unsig
     status = MMCSDCmdSend(ctrl, &cmd);
     if (status == 0)
     {
-    	if(LedStatusMmcSd0) gpio_out(LedStatusMmcSd0, 0);
+    	if(LedStatusMmcSd[ctrl->SdNr]) gpio_out(LedStatusMmcSd[ctrl->SdNr], 0);
         return 0;
     }
 
@@ -720,7 +879,7 @@ unsigned int MMCSDReadCmdSend(void *_ctrl, void *ptr, unsigned long block, unsig
 
     if (status == 0)
     {
-    	if(LedStatusMmcSd0) gpio_out(LedStatusMmcSd0, 0);
+    	if(LedStatusMmcSd[ctrl->SdNr]) gpio_out(LedStatusMmcSd[ctrl->SdNr], 0);
         return 0;
     }
 
@@ -731,7 +890,7 @@ unsigned int MMCSDReadCmdSend(void *_ctrl, void *ptr, unsigned long block, unsig
 
         if (status == 0)
         {
-        	if(LedStatusMmcSd0) gpio_out(LedStatusMmcSd0, 0);
+        	if(LedStatusMmcSd[ctrl->SdNr]) gpio_out(LedStatusMmcSd[ctrl->SdNr], 0);
             return 0;
         }
     }
@@ -739,6 +898,6 @@ unsigned int MMCSDReadCmdSend(void *_ctrl, void *ptr, unsigned long block, unsig
     /* Invalidate the data cache. */
     CacheDataCleanInvalidateBuff((unsigned int) ptr, (512 * nblks));
 
-	if(LedStatusMmcSd0) gpio_out(LedStatusMmcSd0, 0);
+	if(LedStatusMmcSd[ctrl->SdNr]) gpio_out(LedStatusMmcSd[ctrl->SdNr], 0);
     return 1;
 }

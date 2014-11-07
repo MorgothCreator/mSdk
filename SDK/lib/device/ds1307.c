@@ -47,18 +47,18 @@ bool DS1307_Setup(new_twi* TwiStruct)
 	return true;
 }
 //#####################################################
-unsigned char DS1307_Read_Ram_Byte(new_twi* TwiStruct, unsigned char Address)
+int DS1307_Read_Reg(new_twi* TwiStruct, unsigned char Address)
 {
 	TwiStruct->MasterSlaveAddr = DS1307_Rtc_DeviceAddr;
 	*TwiStruct->TxBuff = Address;
 	if(SetupI2CReception(TwiStruct, DS1307_Address_Length, 1))
 	{
-		return *TwiStruct->RxBuff;
+		return (int)*TwiStruct->RxBuff;
 	}
-	return 0;
+	return -1;
 }
 //-----------------------------------------------------
-bool DS1307_Write_Ram_Byte(new_twi* TwiStruct, unsigned char Address, unsigned char Data)
+bool DS1307_Write_Reg(new_twi* TwiStruct, unsigned char Address, unsigned char Data)
 {
 	unsigned char *TxBuff = TwiStruct->TxBuff;
 	*TxBuff++ = Address;
@@ -67,39 +67,61 @@ bool DS1307_Write_Ram_Byte(new_twi* TwiStruct, unsigned char Address, unsigned c
 	return SetupI2CTransmit(TwiStruct, DS1307_Address_Length + 1);
 }
 //#####################################################
+int DS1307_Read_Ram(new_twi* TwiStruct, unsigned char Address)
+{
+	if(Address >= DS1307_Sram_Size) return -1;
+	TwiStruct->MasterSlaveAddr = DS1307_Rtc_DeviceAddr;
+	*TwiStruct->TxBuff = DS1307_Sram_Start + Address;
+	if(SetupI2CReception(TwiStruct, DS1307_Address_Length, 1))
+	{
+		return (int)*TwiStruct->RxBuff;
+	}
+	return -1;
+}
+//-----------------------------------------------------
+bool DS1307_Write_Ram(new_twi* TwiStruct, unsigned char Address, unsigned char Data)
+{
+	if(Address >= DS1307_Sram_Size) return false;
+	unsigned char *TxBuff = TwiStruct->TxBuff;
+	*TxBuff++ = DS1307_Sram_Start + Address;
+	*TxBuff = Data;
+	TwiStruct->MasterSlaveAddr = DS1307_Rtc_DeviceAddr;
+	return SetupI2CTransmit(TwiStruct, DS1307_Address_Length + 1);
+}
+//#####################################################
 bool DS1307_Set12Hours(new_twi* TwiStruct)
 {
-	return DS1307_Write_Ram_Byte(TwiStruct, DS1307_RTC_HourReg, DS1307_Read_Ram_Byte(TwiStruct, DS1307_RTC_HourReg) & !DS1307_12_24_bm);
+	return DS1307_Write_Reg(TwiStruct, DS1307_RTC_HourReg, DS1307_Read_Reg(TwiStruct, DS1307_RTC_HourReg) & !DS1307_12_24_bm);
 }
 //#####################################################
 bool DS1307_Set24Hours(new_twi* TwiStruct)
 {
-	return DS1307_Write_Ram_Byte(TwiStruct, DS1307_RTC_HourReg, DS1307_Read_Ram_Byte(TwiStruct, DS1307_RTC_HourReg) | DS1307_12_24_bm);
+	return DS1307_Write_Reg(TwiStruct, DS1307_RTC_HourReg, DS1307_Read_Reg(TwiStruct, DS1307_RTC_HourReg) | DS1307_12_24_bm);
 }
 //#####################################################
 bool DS1307_ClrOut(new_twi* TwiStruct)
 {
-	return DS1307_Write_Ram_Byte(TwiStruct, DS1307_RTC_Control, DS1307_Read_Ram_Byte(TwiStruct, DS1307_RTC_Control) & !DS1307_OUT_bm);
+	return DS1307_Write_Reg(TwiStruct, DS1307_RTC_Control, DS1307_Read_Reg(TwiStruct, DS1307_RTC_Control) & !DS1307_OUT_bm);
 }
 //#####################################################
 bool DS1307_SetOut(new_twi* TwiStruct)
 {
-	return DS1307_Write_Ram_Byte(TwiStruct, DS1307_RTC_Control, DS1307_Read_Ram_Byte(TwiStruct, DS1307_RTC_Control) | DS1307_OUT_bm);
+	return DS1307_Write_Reg(TwiStruct, DS1307_RTC_Control, DS1307_Read_Reg(TwiStruct, DS1307_RTC_Control) | DS1307_OUT_bm);
 }
 //#####################################################
 bool DS1307_ClrSqwe(new_twi* TwiStruct)
 {
-	return DS1307_Write_Ram_Byte(TwiStruct, DS1307_RTC_Control, DS1307_Read_Ram_Byte(TwiStruct, DS1307_RTC_Control) & !DS1307_SQWE_bm);
+	return DS1307_Write_Reg(TwiStruct, DS1307_RTC_Control, DS1307_Read_Reg(TwiStruct, DS1307_RTC_Control) & !DS1307_SQWE_bm);
 }
 //#####################################################
 bool DS1307_SetSqwe(new_twi* TwiStruct)
 {
-	return DS1307_Write_Ram_Byte(TwiStruct, DS1307_RTC_Control, DS1307_Read_Ram_Byte(TwiStruct, DS1307_RTC_Control) | DS1307_SQWE_bm);
+	return DS1307_Write_Reg(TwiStruct, DS1307_RTC_Control, DS1307_Read_Reg(TwiStruct, DS1307_RTC_Control) | DS1307_SQWE_bm);
 }
 //#####################################################
 bool DS1307_SetRs(new_twi* TwiStruct, unsigned char Rs)
 {
-	return DS1307_Write_Ram_Byte(TwiStruct, DS1307_RTC_Control, (DS1307_Read_Ram_Byte(TwiStruct, DS1307_RTC_Control) & !DS1307_RS_gm) | (Rs & DS1307_RS_gm));
+	return DS1307_Write_Reg(TwiStruct, DS1307_RTC_Control, (DS1307_Read_Reg(TwiStruct, DS1307_RTC_Control) & !DS1307_RS_gm) | (Rs & DS1307_RS_gm));
 }
 //#####################################################
 //#####################################################
@@ -171,7 +193,7 @@ unsigned char DS1307_Bcd_To_Byte(unsigned char Bcd)
 //#####################################################
 void DS1307_Write_RTC(new_twi* TwiStruct, unsigned char Reg, unsigned char Data)
 {
-	unsigned char TmpReg = DS1307_Read_Ram_Byte(TwiStruct, Reg);
+	unsigned char TmpReg = DS1307_Read_Reg(TwiStruct, Reg);
 	switch (Reg)
 	{
 		case DS1307_RTC_SecReg:
@@ -193,12 +215,12 @@ void DS1307_Write_RTC(new_twi* TwiStruct, unsigned char Reg, unsigned char Data)
 		TmpReg = (TmpReg & ~(DS1307_Year_gm | DS1307_10Year_gm)) | (DS1307_Byte_To_Bcd(Data) & (DS1307_Year_gm | DS1307_10Year_gm));
 		break;
 	}
-	DS1307_Write_Ram_Byte(TwiStruct, Reg, TmpReg);
+	DS1307_Write_Reg(TwiStruct, Reg, TmpReg);
 }
 //#####################################################
 unsigned char DS1307_Read_RTC(new_twi* TwiStruct, unsigned char Reg)
 {
-	unsigned char TmpReg = DS1307_Read_Ram_Byte(TwiStruct, Reg);
+	unsigned char TmpReg = DS1307_Read_Reg(TwiStruct, Reg);
 	switch (Reg)
 	{
 		case DS1307_RTC_SecReg:

@@ -37,6 +37,7 @@
 /*-----------------------------------------------------*/
 #define BOARD_MESSAGE "Beaglebone"
 /*-----------------------------------------------------*/
+//#define lcd
 /*#####################################################*/
 extern new_uart* Uart[];
 extern new_uart* DebugCom;
@@ -50,7 +51,7 @@ extern new_touchscreen* TouchScreen;
 extern new_screen* ScreenBuff;
 /*-----------------------------------------------------*/
 extern FileInfo_t *FILE1;
-extern mmcsdCtrlInfo sdCtrl;
+extern mmcsdCtrlInfo sdCtrl[];
 /*#####################################################*/
 bool board_init();
 /*#####################################################*/

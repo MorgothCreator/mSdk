@@ -10,6 +10,7 @@
 #include "console.h"
 #include "cd.h"
 #include "ls.h"
+#include "cat.h"
 #include "lib/string_lib.h"
 #include "api/uart_api.h"
 #include "app_result.h"
@@ -25,8 +26,9 @@ const CONSOLE_APP_LIST console_app_list[]  PROGMEM =
 static const CONSOLE_APP_LIST console_app_list[] =
 #endif
 {
-		{"ls", _ls, 2, CONSOLE_CAT_PATH},
-		{"cd", _cd, 2, CONSOLE_CAT_NONE}
+		{"ls"	, _ls	, 1, CONSOLE_CAT_PATH,	CONSOLE_LS,		0/*,	(char *)(&"Usage : ls<path>, ls"),				(char *)(&"Usage : ls <path>, ls")*/},
+		{"cat"	, _cat	, 3, CONSOLE_CAT_PATH,	CONSOLE_CAT,	1/*,	(char *)(&"Usage : cat<file> <open mode>"),		(char *)(&"Usage : cat<file> <open mode>")*/},
+		{"cd"	, _cd	, 1, CONSOLE_CAT_NONE, CONSOLE_CD,		0/*,	(char *)(&"Usage : cd<path>"),					(char *)(&"Usage : cd<path>")*/}
 };
 //#######################################################################################
 static void console_clear_child_data(CONSOLE_STRUCT *settings)
@@ -38,7 +40,7 @@ static void console_clear_child_data(CONSOLE_STRUCT *settings)
 	settings->app = NULL;
 }
 //#######################################################################################
-static void console_start_end_arg(CONSOLE_STERT_END_ARG * start_end_arg, char* str)
+static bool console_start_end_arg(CONSOLE_STERT_END_ARG * start_end_arg, char* str)
 {
 	char *a = str;
 	while(*a == ' ' && *a != 0) a++;
@@ -46,6 +48,8 @@ static void console_start_end_arg(CONSOLE_STERT_END_ARG * start_end_arg, char* s
 	start_end_arg->start = a;
 	while(*a != ' ' && *a != 0) a++;
 	start_end_arg->end = a;
+	if(start_end_arg->end != start_end_arg->start) return true;
+	else return false;
 }
 /*
  * arg[0] = input uart settings
@@ -89,14 +93,14 @@ int console(int argc, char *argv[])
 	    			if(app_list_cnt >= 0)
 	    			{
 						a += strlen(console_app_list[app_list_cnt].name);
-						CONSOLE_STERT_END_ARG erg_start_end;
-						console_start_end_arg(&erg_start_end, a);
-						int arg_len = (int)(erg_start_end.end - erg_start_end.start);
-						char *argument = calloc(1, arg_len + 1);
-						strncat(argument, erg_start_end.start, arg_len);
-						a = erg_start_end.end;
 	    				if(console_app_list[app_list_cnt].console == _cd)
 	    				{
+							CONSOLE_STERT_END_ARG arg_start_end;
+							console_start_end_arg(&arg_start_end, a);
+							int arg_len = (int)(arg_start_end.end - arg_start_end.start);
+							char *argument = calloc(1, arg_len + 1);
+							strncat(argument, arg_start_end.start, arg_len);
+							a = arg_start_end.end;
 	    				    char *cd_arg[2];
 	    				    cd_arg[0] = settings->path;
 	    				    cd_arg[1] = argument;
@@ -107,23 +111,69 @@ int console(int argc, char *argv[])
 	    				    	if(settings->path) free(settings->path);
 	    				    	settings->path = cd_result;
 	    				    }
+	    				    UARTPuts(DebugCom, settings->path, -1);
+	    				    UARTPuts(DebugCom, "\n\r", -1);
 	    				}
 	    				else
 	    				{
-							if(console_app_list[app_list_cnt].category == CONSOLE_CAT_PATH)
+							CONSOLE_STERT_END_ARG arg_start_end;
+							switch((int)console_app_list[app_list_cnt].order)
 							{
-								char *tmp_path;
-								tmp_path = settings->path;
-								char *tmp = calloc(1, strlen(tmp_path) + 1);
-								strcpy(tmp, tmp_path);
-								//tmp = str_copy(tmp_path[0]);
-								tmp = path_append_parse(tmp, argument);
-
-								settings->child_arg = malloc(sizeof(char **) * console_app_list[app_list_cnt].arg_nr);
-								settings->child_arg[0] = NULL;
-								settings->child_arg[1] = tmp;
-								settings->child_arg_nr = console_app_list[app_list_cnt].arg_nr;
-								settings->app = console_app_list[app_list_cnt].console;
+								case(CONSOLE_LS):
+								case(CONSOLE_CAT):
+									settings->child_arg = calloc(1, sizeof(char **) * (console_app_list[app_list_cnt].arg_nr + 2));
+									settings->child_arg[0] = NULL;
+									settings->child_arg[1] = settings->path;
+									console_start_end_arg(&arg_start_end, a);
+									int arg_nr_cnt = console_app_list[app_list_cnt].arg_nr;
+									if(arg_nr_cnt)
+									{
+										/*char *argument = calloc(1, arg_len + 1);
+										strncat(argument, arg_start_end.start, arg_len);
+										a = arg_start_end.end;
+										char *tmp_path;
+										tmp_path = settings->path;
+										char *tmp = calloc(1, strlen(tmp_path) + 1);
+										strcpy(tmp, tmp_path);
+										//tmp = str_copy(tmp_path[0]);
+										tmp = path_append_parse(tmp, argument);
+										settings->child_arg[1] = tmp;*/
+										while(console_start_end_arg(&arg_start_end, a) && arg_nr_cnt != 0)
+										{
+											int arg_len = (int)(arg_start_end.end - arg_start_end.start);
+											settings->child_arg[console_app_list[app_list_cnt].arg_nr - arg_nr_cnt] = malloc(arg_len + 1);
+											strncpy(settings->child_arg[console_app_list[app_list_cnt].arg_nr - arg_nr_cnt], arg_start_end.start ,arg_len);
+											settings->child_arg[console_app_list[app_list_cnt].arg_nr - arg_nr_cnt][arg_len] = 0;
+											arg_nr_cnt--;
+											a = arg_start_end.end;
+										}
+									}
+									/*if(console_app_list[app_list_cnt].arg_nr - console_app_list[app_list_cnt].res_args == console_app_list[app_list_cnt].arg_nr - arg_nr_cnt)
+									{*/
+										settings->child_arg[0] = NULL;
+										settings->child_arg_nr = console_app_list[app_list_cnt].arg_nr - arg_nr_cnt/*console_app_list[app_list_cnt].arg_nr*/;
+										settings->app = console_app_list[app_list_cnt].console;
+										settings->app_order = console_app_list[app_list_cnt].order;
+				    				    if(console_app_list[app_list_cnt].order == CONSOLE_CAT)
+				    				    {
+											UARTPuts(DebugCom, settings->path, -1);
+											UARTPuts(DebugCom, "\n\r", -1);
+				    				    }
+									/*} else
+									{
+										if(console_app_list[app_list_cnt].arg_nr - console_app_list[app_list_cnt].res_args > console_app_list[app_list_cnt].arg_nr - arg_nr_cnt)
+										{
+											UARTPuts(DebugCom, console_app_list[app_list_cnt].help_many_args, -1);
+											UARTPuts(DebugCom, "\n\r", -1);
+										}
+										else
+										{
+											UARTPuts(DebugCom, console_app_list[app_list_cnt].help_few_args, -1);
+											UARTPuts(DebugCom, "\n\r", -1);
+										}
+										console_clear_child_data(settings);
+									}*/
+									break;
 							}
 	    				}
 	    			} else a++;
@@ -136,10 +186,25 @@ int console(int argc, char *argv[])
 			char* result;
 			if((result = (char *)settings->app(settings->child_arg_nr, settings->child_arg)))
 			{
-				UARTprintf(DebugCom, "%s" , result);
+				switch((int)settings->app_order)
+				{
+					case(CONSOLE_LS):
+					case(CONSOLE_CD):
+						UARTprintf(DebugCom, "%s" , result);
+						break;
+					case(CONSOLE_CAT):
+						if(!memcmp(result, "ERROR", 5)) UARTPuts(DebugCom, result, -1);
+						else	UARTPuts(DebugCom, result, (int)settings->child_arg[4]);
+						break;
+				}
 			}
 			else
 			{
+			    if(settings->app == _ls)
+			    {
+					UARTPuts(DebugCom, settings->path, -1);
+					UARTPuts(DebugCom, "\n\r", -1);
+			    }
 				console_clear_child_data(settings);
 			}
 		}

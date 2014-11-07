@@ -12,21 +12,35 @@
 #define new_console(name) char *name[CONSOLE_ARGS] = {NULL, NULL}
 #define console_arg(name) CONSOLE_ARGS, name
 //#######################################################
+#define CONSOLE_MAX_ARGS	16
+//#######################################################
 typedef enum{
 	CONSOLE_CAT_NONE = 0,
 	CONSOLE_CAT_PATH
 }CONSOLE_CATEGORY;
 //#######################################################
+typedef enum{
+	CONSOLE_NONE = 0,
+	CONSOLE_LS,
+	CONSOLE_CAT,
+	CONSOLE_CD
+}CONSOLE_ORDER;
+//#######################################################
 typedef struct{
 	char name[13];
 	int (*console)(int argc, char *argv[]);
 	int arg_nr;
-	int category;
+	CONSOLE_CATEGORY category;
+	CONSOLE_ORDER order;
+	int res_args;
+	//char *help_few_args;
+	//char *help_many_args;
 }CONSOLE_APP_LIST;
 //#######################################################
 typedef struct{
 	int cnt;
 	int rx_cnt;
+	int app_order;
 	char *rx_data;
     char *path;
     int child_arg_nr;

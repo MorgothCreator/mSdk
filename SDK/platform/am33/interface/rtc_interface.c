@@ -372,6 +372,9 @@ void RtcInit(void)
 
     RtcSecIntEnable();
 
+    /* Run the RTC. The seconds tick from now on.*/
+    RTCRun(SOC_RTC_0_REGS);
+
     /* Disabling Write Protection for RTC registers.*/
     RTCWriteProtectEnable(SOC_RTC_0_REGS);
 }
@@ -477,9 +480,6 @@ void RtcTimeCalSet(void)
     /* Set the _time registers of RTC with the received _time information.*/
     RTCTimeSet(SOC_RTC_0_REGS, _time);
 
-    /* Run the RTC. The seconds tick from now on.*/
-    RTCRun(SOC_RTC_0_REGS);
-
     /* Disabling Write Protection for RTC registers.*/
     RTCWriteProtectEnable(SOC_RTC_0_REGS);
  
@@ -579,15 +579,15 @@ void RtcTimeCalDisplay(void)
 */
 static void RTCIsr(void)
 {
-	RTCIntTimerDisable(SOC_RTC_0_REGS);
-	unsigned int CntTimeout = 1000;
-	while(RTCBusyStatusGet(SOC_RTC_0_REGS) == RTC_BUSY || CntTimeout--);
+//	RTCIntTimerDisable(SOC_RTC_0_REGS);
+	//unsigned int CntTimeout = 1000;
+	//while(RTCBusyStatusGet(SOC_RTC_0_REGS) == RTC_BUSY || CntTimeout--);
 	time = RTCTimeGet(SOC_RTC_0_REGS);
-	CntTimeout = 1000;
-	while(RTCBusyStatusGet(SOC_RTC_0_REGS) == RTC_BUSY || CntTimeout--);
+	//CntTimeout = 1000;
+	//while(RTCBusyStatusGet(SOC_RTC_0_REGS) == RTC_BUSY || CntTimeout--);
     cal = RTCCalendarGet(SOC_RTC_0_REGS);
     rtcSecUpdate++;
-    RTCIntTimerEnable(SOC_RTC_0_REGS, RTC_INT_EVERY_SECOND);
+   // RTCIntTimerEnable(SOC_RTC_0_REGS, RTC_INT_EVERY_SECOND);
 }
 
 /******************************** End of file **********************************/

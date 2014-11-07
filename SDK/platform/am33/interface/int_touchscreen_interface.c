@@ -39,6 +39,7 @@ extern volatile unsigned int touchRelease;
 extern volatile unsigned int dbidx;
 extern volatile unsigned int ana_cnt_touch;
 extern volatile signed int ignore_cnt;
+extern volatile unsigned int ignored_touch;
 
 
 extern volatile unsigned int xdata;
@@ -63,10 +64,10 @@ void InitTouchScreen(LcdTouch_t* structure)
 	TouchIntRegister();
 
 	/*	Timer3 Clock config	*/
-	DMTimer3ModuleClkConfig(TimerClkSource_CLK_M_OSC);
+	//DMTimer3ModuleClkConfig(TimerClkSource_CLK_M_OSC);
 
     /* configures ADC to 3Mhz */
-    TSCADCConfigureAFEClock(SOC_ADC_TSC_0_REGS, 24000000, 3000000);
+    TSCADCConfigureAFEClock(SOC_ADC_TSC_0_REGS, 24000000, 1000000);
 
     /* Enable Transistor bias */
     TSCADCTSTransistorConfig(SOC_ADC_TSC_0_REGS, TSCADC_TRANSISTOR_ENABLE);
@@ -243,11 +244,15 @@ bool TouchIdle(LcdTouch_t* structure)
 	{
 		structure->LastState1 = Gfx_ft5x06_MouseUp;
 		structure->TouchResponse.touch_event1 = Gfx_ft5x06_MouseUp;
+		ignored_touch = analog_touch_filter_level;
+		dbidx = 0;
 	}
 	else if(structure->LastState1 == Gfx_ft5x06_MouseUp && State1 == Gfx_ft5x06_Touch_MouseNoAction)
 	{
 		structure->LastState1 = Gfx_ft5x06_Touch_MouseNoAction;
 		structure->TouchResponse.touch_event1 = Gfx_ft5x06_Touch_MouseNoAction;
+		ignored_touch = analog_touch_filter_level;
+		dbidx = 0;
 		structure->TouchResponse.x1 = -1;
 		structure->TouchResponse.y1 = -1;
 	}

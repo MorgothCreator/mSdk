@@ -131,8 +131,10 @@ typedef enum DS1307_Control_Enum
 }DS1307_Control_t;
 //#####################################################
 bool DS1307_Setup(new_twi* TwiStruct);
-unsigned char DS1307_Read_Ram_Byte(new_twi* TwiStruct, unsigned char Address);
-bool DS1307_Write_Ram_Byte(new_twi* TwiStruct, unsigned char Address, unsigned char Data);
+int DS1307_Read_Reg(new_twi* TwiStruct, unsigned char Address);
+bool DS1307_Write_Reg(new_twi* TwiStruct, unsigned char Address, unsigned char Data);
+int DS1307_Read_Ram(new_twi* TwiStruct, unsigned char Address);
+bool DS1307_Write_Ram(new_twi* TwiStruct, unsigned char Address, unsigned char Data);
 bool DS1307_Set12Hours(new_twi* TwiStruct);
 bool DS1307_Set24Hours(new_twi* TwiStruct);
 bool DS1307_ClrOut(new_twi* TwiStruct);

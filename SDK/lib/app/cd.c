@@ -12,6 +12,7 @@
 #include "lib/string_lib.h"
 #include "app_result.h"
 #include "app_util/path_util.h"
+#include "board_init.h"
 
 
 int _cd(int argc, char *argv[])

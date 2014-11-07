@@ -199,7 +199,9 @@ AbortHandler:
 @ Go to infinite loop if returned from C handler
 @
 loop0:
-        B       loop0                      
+        @B       loop0
+        STMFD    r13!, {r0-r1, r14}       @ Save context in SVC stack
+        LDMFD    r13!, {r0-r1, pc}^       @ Restore registers from IRQ stack
 
 UndefInstHandler:
 @
@@ -214,7 +216,10 @@ UndefInstHandler:
 @ Go to infinite loop if returned from C handler
 @
 loop1:
-        B       loop1
+        @B       loop1
+        STMFD    r13!, {r0-r1, r14}       @ Save context in SVC stack
+        LDMFD    r13!, {r0-r1, pc}^       @ Restore registers from IRQ stack
+
 
 @*****************************************************************************
 @

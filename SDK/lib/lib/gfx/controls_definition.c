@@ -188,6 +188,7 @@ bool check_if_inside_box(signed int x_start, signed int y_start, signed int x_le
 	else return false;
 }
 //#######################################################################################
+void put_pixel(tDisplay *pDisplay, signed int X, signed int Y, unsigned int color);
 void put_circle(tDisplay *pDisplay, signed int x, signed int y, signed int _radius, unsigned char fill, unsigned int color)
 {
 	signed int radius = _radius;
@@ -558,18 +559,6 @@ void put_triangle(tDisplay *pDisplay, signed int  Ax,signed int  Ay,signed int  
 	}
 }
 //#######################################################################################
-extern void screen_put_horizontal_line(tDisplay *LcdStruct, signed int X1, signed int X2, signed int Y, unsigned char width, unsigned int color);
-extern void screen_put_vertical_line(tDisplay *LcdStruct, signed int Y1, signed int Y2, signed int X, unsigned char width, unsigned int color);
-//#######################################################################################
-void put_horizontal_line(tDisplay *pDisplay, signed int X1, signed int X2, signed int Y, unsigned char width, unsigned int color)
-{
-	screen_put_horizontal_line(pDisplay, X1, X2, Y, width, color);
-}
-//#######################################################################################
-void put_vertical_line(tDisplay *pDisplay, signed int Y1, signed int Y2, signed int X, unsigned char width, unsigned int color)
-{
-	screen_put_vertical_line(pDisplay, Y1, Y2, X, width, color);
-}
 //#######################################################################################
 static unsigned char _NumLeadingZeros(unsigned int x)
 {

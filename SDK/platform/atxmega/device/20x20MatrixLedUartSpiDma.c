@@ -256,7 +256,7 @@ void screen_draw_rectangle(tDisplay* LcdStruct, signed int x1, signed int y1, si
 	}
 }
 //#######################################################################################
-void _screen_put_horizontal_line_(tDisplay *LcdStruct, signed int X1, signed int X2, signed int Y, unsigned char width, unsigned int color)
+void screen_put_horizontal_line(tDisplay *LcdStruct, signed int X1, signed int X2, signed int Y, unsigned char width, unsigned int color)
 {
 	if(Y < 0) return;
 	if(Y > (int16_t)LcdStruct->Height) return;
@@ -278,7 +278,7 @@ void _screen_put_horizontal_line_(tDisplay *LcdStruct, signed int X1, signed int
 	}
 }
 //#######################################################################################
-void _screen_put_vertical_line_(tDisplay *LcdStruct, signed int Y1, signed int Y2, signed int X, unsigned char width, unsigned int color)
+void screen_put_vertical_line(tDisplay *LcdStruct, signed int Y1, signed int Y2, signed int X, unsigned char width, unsigned int color)
 {
 	if(X < 0) return;
 	if(X > (int16_t)LcdStruct->Width) return;

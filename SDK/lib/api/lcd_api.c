@@ -39,27 +39,27 @@ void lcd_disable()
 	_lcd_disable();
 }
 /**********************************************/
-void screen_backlight_on(tDisplay *pDisplay)
+void backlight_on(tDisplay *pDisplay)
 {
 	_screen_backlight_on(pDisplay);
 }
 
-void screen_backlight_off(tDisplay *pDisplay)
+void backlight_off(tDisplay *pDisplay)
 {
 	_screen_backlight_off(pDisplay);
 }
 
-void screen_put_rgb_array_16(void *_pDisplay, unsigned short *rgb_buffer, unsigned int x1, unsigned int y1,unsigned int width, unsigned int height)
+void put_rgb_array_16(void *_pDisplay, unsigned short *rgb_buffer, unsigned int x1, unsigned int y1,unsigned int width, unsigned int height)
 {
 	_screen_put_rgb_array_16(_pDisplay, rgb_buffer, x1, y1,width, height);
 }
 
-void screen_put_rgb_array_24(void *_pDisplay, unsigned char *rgb_buffer, unsigned long x1, unsigned long y1,unsigned long width, unsigned long height)
+void put_rgb_array_24(void *_pDisplay, unsigned char *rgb_buffer, unsigned long x1, unsigned long y1,unsigned long width, unsigned long height)
 {
 	_screen_put_rgb_array_24(_pDisplay, rgb_buffer, x1, y1, width, height);
 }
 
-void screen_put_rgb_array_32(void *_pDisplay, unsigned char *rgb_buffer, unsigned int x1, unsigned int y1,unsigned int width, unsigned int height)
+void put_rgb_array_32(void *_pDisplay, unsigned char *rgb_buffer, unsigned int x1, unsigned int y1,unsigned int width, unsigned int height)
 {
 	_screen_put_rgb_array_32(_pDisplay, rgb_buffer, x1, y1, width, height);
 }
@@ -79,12 +79,12 @@ void put_pixel(tDisplay *pDisplay, signed int X, signed int Y, unsigned int colo
 	_put_pixel(pDisplay, X, Y, color);
 }
 
-void screen_put_horizontal_line(tDisplay *pDisplay, signed int X1, signed int X2, signed int Y, unsigned char width, unsigned int color)
+void put_horizontal_line(tDisplay *pDisplay, signed int X1, signed int X2, signed int Y, unsigned char width, unsigned int color)
 {
 	_screen_put_horizontal_line(pDisplay, X1, X2, Y, width, color);
 }
 
-void screen_put_vertical_line(tDisplay *pDisplay, signed int Y1, signed int Y2, signed int X, unsigned char width, unsigned int color)
+void put_vertical_line(tDisplay *pDisplay, signed int Y1, signed int Y2, signed int X, unsigned char width, unsigned int color)
 {
 	_screen_put_vertical_line(pDisplay, Y1, Y2, X, width, color);
 }

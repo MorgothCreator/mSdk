@@ -511,7 +511,7 @@ void scrollbar(tScrollBar *settings, tControlCommandData* control_comand)
 		settings->Internals.Size.MinBtnSize = settings->Size.MinBtnSize;
 		settings->Internals.OldMinimum = settings->Minimum;
 		settings->Internals.OldMaximum = settings->Maximum;
-		if(settings->Size.X == 0 || settings->Size.Y == 0) return;
+		if((settings->Size.X == 0 || settings->Size.Y == 0) && settings->Internals.Control.Initiated == true ) return;
 		if(settings->Value > settings->Maximum) settings->Value = settings->Internals.OldMaximum;
 		if(settings->Value < settings->Minimum) settings->Value = settings->Internals.OldMinimum;
 		X_StartBox = settings->Internals.Position.X;

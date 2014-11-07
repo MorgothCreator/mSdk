@@ -72,6 +72,16 @@ void _put_pixel(tDisplay *pDisplay, signed int X, signed int Y, unsigned int col
 	screen_put_pixel16(pDisplay, X, Y, color);
 }
 //#######################################################################################
+void _screen_put_horizontal_line(tDisplay *pDisplay, signed int X1, signed int X2, signed int Y, unsigned char width, unsigned int color)
+{
+	screen_put_horizontal_line(pDisplay, X1, X2, Y, width, color);
+}
+//#######################################################################################
+void _screen_put_vertical_line(tDisplay *pDisplay, signed int X1, signed int X2, signed int Y, unsigned char width, unsigned int color)
+{
+	screen_put_vertical_line(pDisplay, X1, X2, Y, width, color);
+}
+//#######################################################################################
 void _screen_put_rgb_array_16(void *_pDisplay, unsigned short *rgb_buffer, unsigned int x1, unsigned int y1,unsigned int width, unsigned int height)
 {
 	/*tDisplay *pDisplay = (tDisplay *)_pDisplay;
@@ -142,15 +152,5 @@ void _screen_put_rgb_array_32(void *_pDisplay, unsigned char *rgb_buffer, unsign
 			CacheDataCleanBuff((unsigned int)((unsigned int*)(pDisplay->DisplayData + 8 + x1 + (pDisplay->Width * y))), _width);
 		}
 	}*/
-}
-//#######################################################################################
-void _screen_put_horizontal_line(tDisplay *pDisplay, signed int X1, signed int X2, signed int Y, unsigned char width, unsigned int color)
-{
-	_screen_put_horizontal_line_(pDisplay, X1, X2, Y, width, color);
-}
-//#######################################################################################
-void _screen_put_vertical_line(tDisplay *pDisplay, signed int Y1, signed int Y2, signed int X, unsigned char width, unsigned int color)
-{
-	_screen_put_vertical_line_(pDisplay, Y1, Y2, X, width, color);
 }
 //#######################################################################################
