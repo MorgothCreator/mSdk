@@ -215,7 +215,22 @@ static unsigned int HSMMCSDXferStatusGet(mmcsdCtrlInfo *ctrl)
     		break;
     	}
     }*/
-    while ((xferCompFlag[ctrl->SdNr] == 0) && (dataTimeout[ctrl->SdNr] == 0));
+    if((int)(CardDetectPinMmcSd[ctrl->SdNr]) == -1)
+    {
+    	while ((xferCompFlag[ctrl->SdNr] == 0) && (dataTimeout[ctrl->SdNr] == 0) && (timeOut--));
+    }
+    else
+    {
+    	do
+    	    {
+    	    	if(gpio_in(CardDetectPinMmcSd[ctrl->SdNr]))
+    	    	{
+    	    		cmdTimeout[ctrl->SdNr] = 0;
+    	    		break;
+    	    	}
+    	    }
+    	while ((xferCompFlag[ctrl->SdNr] == 0) && (dataTimeout[ctrl->SdNr] == 0) && (timeOut--));
+    }
 
     if (xferCompFlag[ctrl->SdNr])
     {
@@ -228,7 +243,7 @@ static unsigned int HSMMCSDXferStatusGet(mmcsdCtrlInfo *ctrl)
         status = 0;
         dataTimeout[ctrl->SdNr] = 0;
     }
-
+    timeOut = 0xFFFF;
     /* Also, poll for the callback */
     if (HWREG(ctrl->memBase + MMCHS_CMD) & MMCHS_CMD_DP)
     {
@@ -428,7 +443,7 @@ static void HSMMCSDControllerSetup(mmcsdCtrlInfo* SdCtrlStruct, signed int CardD
 	SdCtrlStruct->ocr = (SD_OCR_VDD_3P0_3P1 | SD_OCR_VDD_3P1_3P2);
 	SdCtrlStruct->card = (mmcsdCardInfo*)malloc(sizeof(mmcsdCardInfo));//&sdCard;
 	SdCtrlStruct->ipClk = HSMMCSD_IN_FREQ;
-	SdCtrlStruct->opClk = HSMMCSD_INIT_FREQ;
+	SdCtrlStruct->opClk = 400000;
     //sdCard.ctrl = &ctrlInfo;
 	SdCtrlStruct->card->ctrl = (mmcsdCtrlInfo*)(void*)&ctrlInfo;
 

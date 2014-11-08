@@ -47,7 +47,7 @@
 #include "api/gpio_def.h"
 #include "api/gpio_api.h"
 
-#define DATA_RESPONSE_WIDTH       (SOC_CACHELINE_SIZE)
+#define DATA_RESPONSE_WIDTH       (512)
 
 /* Cache size aligned data buffer (minimum of 64 bytes) for command response */
 #ifdef __TMS470__
@@ -582,20 +582,7 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
         {
             return 0;
         }
-        /* CMD8 - send oper voltage */
-        //cmd.idx = SD_CMD(8);
-       // cmd.flags = 0;
-        //cmd.arg = (SD_CHECK_PATTERN | SD_VOLT_2P7_3P6);
 
-        //status = MMCSDCmdSend(ctrl, &cmd);
-
-        //if (status == 0)
-       // {
-            /* If the cmd fails, it can be due to version < 2.0, since
-             * we are currently supporting high voltage cards only
-             */
-        //	return 0;
-        //}
         /* Poll until we get the card status (BIT31 of OCR) is powered up */
         do {
                 cmd.idx = SD_CMD(1);
@@ -632,28 +619,18 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
 
         /* Send CMD3, to set the card relative address */
         cmd.idx = SD_CMD(3);
-        cmd.flags = SD_CMDRSP_NONE;
-        cmd.arg = 0x1 << 16;
+        cmd.flags = 0;
+        cmd.arg = 0xFFFF << 16;
 
         status = MMCSDCmdSend(ctrl,&cmd);
 
-        card->rca = 1;//SD_RCA_ADDR(cmd.rsp[0]);
+        card->rca = 0xFFFF;//SD_RCA_ADDR(cmd.rsp[0]);
 
         if (status == 0)
         {
             return 0;
         }
-        /* Select the card */
-        /*cmd.idx = SD_CMD(7);
-        cmd.flags = SD_CMDRSP_BUSY;
-        cmd.arg = card->rca << 16;
 
-        status = MMCSDCmdSend(ctrl,&cmd);
-
-        if (status == 0)
-        {
-            return 0;
-        }*/
         /* Send CMD9, to get the card specific data */
 		cmd.idx = SD_CMD(9);
 		cmd.flags = SD_CMDRSP_136BITS;
@@ -662,6 +639,39 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
 		status = MMCSDCmdSend(ctrl,&cmd);
 
         memcpy(card->raw_csd, cmd.rsp, 16);
+
+        if (status == 0)
+        {
+            return 0;
+        }
+
+        /* Select the card */
+        cmd.idx = SD_CMD(7);
+        cmd.flags = SD_CMDRSP_BUSY;
+        cmd.arg = card->rca << 16;
+
+        status = MMCSDCmdSend(ctrl,&cmd);
+
+        if (status == 0)
+        {
+            return 0;
+        }
+
+        ctrl->xferSetup(ctrl, 1, dataBuffer, 512, 1);
+
+        cmd.idx = SD_CMD(8);
+        cmd.flags = SD_CMDRSP_READ | SD_CMDRSP_DATA;
+        cmd.arg = 0;
+        cmd.nblks = 1;
+        cmd.data = (signed char*)dataBuffer;
+
+        status = MMCSDCmdSend(ctrl,&cmd);
+        if (status == 0)
+        {
+            return 0;
+        }
+
+        status = ctrl->xferStatusGet(ctrl);
 
         if (status == 0)
         {
@@ -684,43 +694,9 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
 
         }
 
-        /*
-         * Send ACMD51, to get the SD Configuration register details.
-         * Note, this needs data transfer (on data lines).
-         */
-        cmd.idx = SD_CMD(55);
-        cmd.flags = 0;
-        cmd.arg = card->rca << 16;
-
-        status = MMCSDCmdSend(ctrl,&cmd);
-        if (status == 0)
-        {
-            return 0;
-        }
-
-        ctrl->xferSetup(ctrl, 1, dataBuffer, 8, 1);
-
-        cmd.idx = SD_CMD(51);
-        cmd.flags = SD_CMDRSP_READ | SD_CMDRSP_DATA;
-        cmd.arg = card->rca << 16;
-        cmd.nblks = 1;
-        cmd.data = (signed char*)dataBuffer;
-
-        status = MMCSDCmdSend(ctrl,&cmd);
-        if (status == 0)
-        {
-            return 0;
-        }
-
-        status = ctrl->xferStatusGet(ctrl);
-
-        if (status == 0)
-        {
-            return 0;
-        }
 
         /* Invalidate the data cache. */
-        CacheDataCleanInvalidateBuff((unsigned int)dataBuffer, DATA_RESPONSE_WIDTH);
+        /*CacheDataCleanInvalidateBuff((unsigned int)dataBuffer, DATA_RESPONSE_WIDTH);
 
         card->raw_scr[0] = (dataBuffer[3] << 24) | (dataBuffer[2] << 16) | \
 		                   (dataBuffer[1] << 8) | (dataBuffer[0]);
@@ -728,7 +704,8 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
                                    (dataBuffer[5] << 8) | (dataBuffer[4]);
 
         card->sd_ver = SD_CARD_VERSION(card);
-        card->busWidth = SD_CARD_BUSWIDTH(card);
+        card->busWidth = SD_CARD_BUSWIDTH(card);*/
+        return 0;
     }
 
     return 1;

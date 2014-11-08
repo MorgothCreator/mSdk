@@ -219,6 +219,7 @@ unsigned int HSMMCSDCmdSend(mmcsdCtrlInfo *ctrl, mmcsdCmd *c)
         HSMMCSDResponseGet(ctrl->memBase, c->rsp);
     }
 
+	HWREG(ctrl->memBase + MMCHS_CON) &= ~MMCHS_CON_OD;
     return status;
 }
 
