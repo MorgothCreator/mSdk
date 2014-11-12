@@ -166,8 +166,8 @@
  ** OSCIN = 24MHz, Fdpll = 300MHz
  ** CLKOUT = 150MHz
  */
-#define DISPLL_M                           25
-#define DISPLL_N                           3
+#define DISPLL_M                           32//25
+#define DISPLL_N                           3//3
 #define DISPLL_M2                          1
 
 /* 
