@@ -93,7 +93,7 @@ tPictureBox *new_picturebox(void *ParentWindow);
 bool free_picturebox(tPictureBox* settings);
 void picturebox_clear(tPictureBox* settings);
 //void picturebox_copy_rectangle(tPictureBox* settings, unsigned int *src_buff, signed int src_x_buff_size, signed int src_y_buff_size, signed int src_x_offset, signed int src_y_offset);
-void picturebox_copy_rectangle(tPictureBox* settings, unsigned int *src_buff, unsigned int dest_buff_data_offset, unsigned int src_buff_data_offset, tRectangle *_dest_rectangle, tRectangle *_src_rectangle, signed int src_width, signed int src_height);
+void picturebox_copy_rectangle(tPictureBox* settings, unsigned int *src_buff, unsigned int src_buff_data_offset, tRectangle *_dest_rectangle, tRectangle *_src_rectangle, signed int src_width, signed int src_height);
 void picturebox_put_pixel(tPictureBox* settings, signed int X, signed int Y, unsigned int color);
 void picturebox_put_horizontal_line(tPictureBox* settings, signed int X1, signed int X2, signed int Y, unsigned char width, unsigned int color);
 void picturebox_put_vertical_line(tPictureBox* settings, signed int Y1, signed int Y2, signed int X, unsigned char width, unsigned int color);

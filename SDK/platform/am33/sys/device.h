@@ -109,8 +109,8 @@ extern "C" {
 #define OPP_NITRO                            (5u)
 
 /* MACROS to Configure MPU divider */
-#define MPUPLL_N                             (23u)
-#define MPUPLL_M2                            (1u)
+//#define MPUPLL_N                             (23u)
+//#define MPUPLL_M2                            (1u)
 
 /* MACROS to configure MPU PLL */
 #define MPUPLL_M_275_MHZ                     (275u)

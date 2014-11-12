@@ -26,6 +26,7 @@
 #include "api/timer_api.h"
 #include "3d.h"
 #include "controls_definition.h"
+extern unsigned int palete_raster_len;
 //#######################################################################################
 static void paint_picturebox(tPictureBox* settings, tDisplay *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len, tControlCommandData* control_comand)
 {
@@ -420,7 +421,7 @@ void picturebox_copy_rectangle(tPictureBox* settings, unsigned int *src_buff, si
 	pDisplay->sClipRegion = back_up_clip;
 }*/
 //#######################################################################################
-void picturebox_copy_rectangle(tPictureBox* settings, unsigned int *src_buff, unsigned int dest_buff_data_offset, unsigned int src_buff_data_offset, tRectangle *_dest_rectangle, tRectangle *_src_rectangle, signed int src_width, signed int src_height)
+void picturebox_copy_rectangle(tPictureBox* settings, unsigned int *src_buff, unsigned int src_buff_data_offset, tRectangle *_dest_rectangle, tRectangle *_src_rectangle, signed int src_width, signed int src_height)
 {
 	//tWindow *ParentWindow = (tWindow*)settings->Internals.ParentWindow;
 	tDisplay *pDisplay = settings->Internals.pDisplay;
@@ -472,7 +473,7 @@ void picturebox_copy_rectangle(tPictureBox* settings, unsigned int *src_buff, un
 	for(; Y_cnt < dest_rectangle->sYMax; Y_cnt++)
 	{
 		//if(Y_cnt >= pDisplay->sClipRegion.sYMax) break;
-		memcpy((void *)(pDisplay->DisplayData + dest_buff_data_offset + (Y_cnt * pDisplay->Width) + dest_X_StartBox), (void *)((char *)(src_buff + src_buff_data_offset + (((Y_cnt - settings->Internals.PictureWindowLimits.sYMin + Y_Start_Src_Buff) + src_rectangle->sYMin) * src_width) + src_rectangle->sXMin + X_Start_Src_Buff) - 1), x_line_len * sizeof(pDisplay->DisplayData[0]));
+		memcpy((void *)(pDisplay->DisplayData + palete_raster_len + (Y_cnt * pDisplay->Width) + dest_X_StartBox), (void *)((char *)(src_buff + src_buff_data_offset + (((Y_cnt - settings->Internals.PictureWindowLimits.sYMin + Y_Start_Src_Buff) + src_rectangle->sYMin) * src_width) + src_rectangle->sXMin + X_Start_Src_Buff) - 1), x_line_len * sizeof(pDisplay->DisplayData[0]));
 		//CacheDataCleanInvalidateBuff((unsigned int)(void *)(pDisplay->DisplayData + 8 + ((Y_cnt + settings->Position.Y + 2) * pDisplay->Width) + settings->Position.X + 2), X_len * sizeof(pDisplay->DisplayData[0]) + 64);
 	}
 	//pDisplay->sClipRegion = back_up_clip;

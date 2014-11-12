@@ -42,6 +42,29 @@
 #define VGA 3
 #define LVDS 4
 #define MI0283 5
+#define HD 6
+#define FHD 7
+//*****************************************************************************
+
+//*****************************************************************************
+typedef struct
+{
+	unsigned int X;
+	unsigned int Y;
+	unsigned int pll_clk;
+	unsigned int pll_m;
+	unsigned int pll_n;
+	unsigned int pll_m2;
+	unsigned int raster_clk;
+	unsigned int palete_len;
+	unsigned int bus_size;
+	unsigned int hsw;
+	unsigned int hfp;
+	unsigned int hbp;
+	unsigned int vsw;
+	unsigned int vfp;
+	unsigned int vbp;
+}RASTER_TIMING_HD;
 //*****************************************************************************
 //
 //! This structure defines the extents of a rectangle.  All points greater than
@@ -134,6 +157,7 @@ typedef struct sDisplay
     tRectangle sClipRegion;
 	Gpio_t* BackLight;
 	Twi_t* PmicTwiModuleStruct;
+	RASTER_TIMING_HD *raster_timings;
 	void *UserData;
 }tDisplay;
 //*****************************************************************************

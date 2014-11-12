@@ -22,7 +22,7 @@ void LCDModuleClkConfig(void)
 {
     /* lcd pixel clock is derived from peripheral pll */
     HWREG(SOC_CM_DPLL_REGS + CM_DPLL_CLKSEL_LCDC_PIXEL_CLK) =
-                             CM_DPLL_CLKSEL_LCDC_PIXEL_CLK_CLKSEL_SEL3;
+                             CM_DPLL_CLKSEL_LCDC_PIXEL_CLK_CLKSEL_SEL1;
 
     HWREG(SOC_PRCM_REGS + CM_PER_LCDC_CLKCTRL) |=
                              CM_PER_LCDC_CLKCTRL_MODULEMODE_ENABLE;

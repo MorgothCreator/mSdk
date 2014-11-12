@@ -250,11 +250,11 @@ bool board_init()
 			HARDBTN[4] = gpio_assign(1, 3, GPIO_DIR_INPUT, false);
 /*-----------------------------------------------------*/
 			ScreenBuff = new_(new_screen);
-			ScreenBuff->LcdType = AT070TN92;
+			ScreenBuff->LcdType = FHD;
 			ScreenBuff->BackLightPort = 1;
 			ScreenBuff->BackLightPin = 18;
 			screen_init(ScreenBuff);
-			if(ScreenBuff->LcdType != VGA && ScreenBuff->LcdType != LVDS)
+			if(ScreenBuff->LcdType != VGA && ScreenBuff->LcdType != LVDS && ScreenBuff->LcdType != HD && ScreenBuff->LcdType != FHD)
 			{
 				TouchScreen->screen_max_x = ScreenBuff->Width;
 				TouchScreen->screen_max_y = ScreenBuff->Height;

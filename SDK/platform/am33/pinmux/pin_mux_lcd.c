@@ -371,6 +371,8 @@ unsigned int LCDPinMuxSetup(void)
 	else if(ScreenRander->LcdType == LVDS) return pin_mux_lcd_AT070TN92_beaglebone();
 	else if(ScreenRander->LcdType == S035Q01) return pin_mux_lcd_LCD3_beaglebone();
 	else if(ScreenRander->LcdType == TFT43AB_OMAP35x) return pin_mux_lcd_LCD3_beaglebone();
+	else if(ScreenRander->LcdType == HD) return pin_mux_lcd_AT070TN92_beaglebone();
+	else if(ScreenRander->LcdType == FHD) return pin_mux_lcd_AT070TN92_beaglebone();
 	else return 0;
 }
 /**********************************************/

@@ -23,7 +23,7 @@
 
 #ifdef test1
 
-#define USE_BACK_SCREEN
+//#define USE_BACK_SCREEN
 
 #include "sys/plat_properties.h"
 #include "board_init.h"
@@ -90,7 +90,7 @@ void *picture_box_refresh_callback(struct PictureBox_s *settings, tControlComman
 	src_rectangle.sYMin = 0;
 	src_rectangle.sYMax = 96;
 
-	picturebox_copy_rectangle(settings, PictureBoxbackBuff, 8, 0, &dest_rectangle, &src_rectangle, 128, 96);
+	picturebox_copy_rectangle(settings, PictureBoxbackBuff, 0, &dest_rectangle, &src_rectangle, 128, 96);
 #ifdef USE_BACK_SCREEN
 	ScreenReRefreshCnt = 2;
 #endif
@@ -115,7 +115,7 @@ void *picture_box_callback(struct PictureBox_s *settings, tControlCommandData *c
 	src_rectangle.sYMin = 0;
 	src_rectangle.sYMax = 96;
 
-	picturebox_copy_rectangle(settings, PictureBoxbackBuff, 8, 0, &dest_rectangle, &src_rectangle, 128, 96);
+	picturebox_copy_rectangle(settings, PictureBoxbackBuff, 0, &dest_rectangle, &src_rectangle, 128, 96);
 	return NULL;
 }
 /*#####################################################*/
@@ -191,12 +191,16 @@ int main(void) {
             if(ScreenBuff)
 #endif
             {
-                if(TouchScreen->TouchScreen_Type == TouchScreen_Type_Int) TouchIdle(TouchScreen);
-                else if(TouchScreen->TouchScreen_Type == TouchScreen_Type_FT5x06) ft5x06_TouchIdle(TouchScreen);
-                memset(&control_comand, 0, sizeof(tControlCommandData));
-                control_comand.X = TouchScreen->TouchResponse.x1;
-                control_comand.Y = TouchScreen->TouchResponse.y1;
-                control_comand.Cursor = (CursorState)TouchScreen->TouchResponse.touch_event1;
+    			if(ScreenBuff->LcdType != VGA && ScreenBuff->LcdType != LVDS && ScreenBuff->LcdType != HD && ScreenBuff->LcdType != FHD)
+    			{
+					if(TouchScreen->TouchScreen_Type == TouchScreen_Type_Int) TouchIdle(TouchScreen);
+					else if(TouchScreen->TouchScreen_Type == TouchScreen_Type_FT5x06) ft5x06_TouchIdle(TouchScreen);
+					memset(&control_comand, 0, sizeof(tControlCommandData));
+					control_comand.X = TouchScreen->TouchResponse.x1;
+					control_comand.Y = TouchScreen->TouchResponse.y1;
+					control_comand.Cursor = (CursorState)TouchScreen->TouchResponse.touch_event1;
+    			}
+				memset(&control_comand, 0, sizeof(tControlCommandData));
                 MainWindow->idle(MainWindow, &control_comand);
 #ifdef USE_BACK_SCREEN
                 if(control_comand.CursorCoordonateUsed) ScreenReRefreshCnt = 2;
