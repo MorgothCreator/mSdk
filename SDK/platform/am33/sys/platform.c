@@ -51,7 +51,7 @@
 //#include "bl.h"
 #include "include/gpmc.h"
 //#include "bl_copy.h"
-#include "bl_platform.h"
+#include "platform.h"
 //#include "uartStdio.h"
 #include "include/watchdog.h"
 #include "include/hsi2c.h"
@@ -437,7 +437,7 @@ unsigned int BootMaxOppGet(void)
  * \return none
  *
  */
-void CorePLLInit(void)
+void CorePLLInit(unsigned int RefClk, unsigned int COREPLL_M, unsigned int COREPLL_N, unsigned int COREPLL_HSD_M4, unsigned int COREPLL_HSD_M5, unsigned int COREPLL_HSD_M6)
 {
     volatile unsigned int regVal = 0;
 
@@ -500,7 +500,7 @@ void CorePLLInit(void)
  * \return none
  *
  */
-void DisplayPLLInit(void)
+void DisplayPLLInit(unsigned int RefClk, unsigned int DISPLL_M, unsigned int DISPLL_N, unsigned int DISPLL_M2)
 {
     volatile unsigned int regVal = 0;
 
@@ -550,7 +550,7 @@ void DisplayPLLInit(void)
  * \return none
  *
  */
-void PerPLLInit(void)
+void PerPLLInit(unsigned int RefClk, unsigned int PERPLL_M, unsigned int PERPLL_N, unsigned int PERPLL_M2)
 {
     volatile unsigned int regVal = 0;
 
@@ -601,7 +601,7 @@ void PerPLLInit(void)
  * \return none
  *
  */
-void DDRPLLInit(unsigned int freqMult)
+void DDRPLLInit(unsigned int RefClk, unsigned int DDRPLL_M, unsigned int DDRPLL_N, unsigned int DDRPLL_M2)
 {
     volatile unsigned int regVal = 0;
 
@@ -621,7 +621,7 @@ void DDRPLLInit(unsigned int freqMult)
                            CM_WKUP_CM_CLKSEL_DPLL_DDR_DPLL_DIV);
 
     HWREG(SOC_CM_WKUP_REGS + CM_WKUP_CM_CLKSEL_DPLL_DDR) |=
-                     ((freqMult << CM_WKUP_CM_CLKSEL_DPLL_DDR_DPLL_MULT_SHIFT) |
+                     ((DDRPLL_M << CM_WKUP_CM_CLKSEL_DPLL_DDR_DPLL_MULT_SHIFT) |
                       (DDRPLL_N << CM_WKUP_CM_CLKSEL_DPLL_DDR_DPLL_DIV_SHIFT));
 
     regVal = HWREG(SOC_CM_WKUP_REGS + CM_WKUP_CM_DIV_M2_DPLL_DDR);
@@ -650,7 +650,7 @@ void DDRPLLInit(unsigned int freqMult)
  *
  * \return none
  */
-void MPUPLLInit(unsigned int freqMult)
+void MPUPLLInit(unsigned int RefClk, unsigned int MPUPLL_M, unsigned int MPUPLL_N, unsigned int MPUPLL_M2)
 {
     volatile unsigned int regVal = 0;
 
@@ -673,7 +673,7 @@ void MPUPLLInit(unsigned int freqMult)
 
     /* Set the multiplier and divider values for the PLL */
     HWREG(SOC_CM_WKUP_REGS + CM_WKUP_CM_CLKSEL_DPLL_MPU) |=
-                     ((freqMult << CM_WKUP_CM_CLKSEL_DPLL_MPU_DPLL_MULT_SHIFT) |
+                     ((MPUPLL_M << CM_WKUP_CM_CLKSEL_DPLL_MPU_DPLL_MULT_SHIFT) |
                       (MPUPLL_N << CM_WKUP_CM_CLKSEL_DPLL_MPU_DPLL_DIV_SHIFT));
 
     regVal = HWREG(SOC_CM_WKUP_REGS + CM_WKUP_CM_DIV_M2_DPLL_MPU);
@@ -778,7 +778,7 @@ void PowerDomainTransitionInit(void)
  *
  * \return none
  */
-void PLLInit(void)
+/*void PLLInit(void)
 {
     MPUPLLInit(oppTable[oppMaxIdx].pllMult);
     CorePLLInit();
@@ -787,7 +787,7 @@ void PLLInit(void)
     InterfaceClkInit();
     PowerDomainTransitionInit();
     DisplayPLLInit();
-}
+}*/
 
 #ifdef beaglebone
 
@@ -1586,79 +1586,6 @@ void BlPlatformSPISetup(void)
 }
 #endif
 
-/*
- * \brief This function Initializes Pll, DDR and Uart
- *
- * \param  none
- *
- * \return none
-*/
-void BlPlatformConfig(new_twi* TwiStruct)
-{
-    //BoardInfoInit();
-    deviceVersion = DeviceVersionGet();
-    ConfigVddOpVoltage(TwiStruct);
-
-    oppMaxIdx = BootMaxOppGet();
-
-    SetVdd1OpVoltage(TwiStruct, oppTable[oppMaxIdx].pmicVolt);
-
-    HWREG(SOC_WDT_1_REGS + WDT_WSPR) = 0xAAAAu;
-    while(HWREG(SOC_WDT_1_REGS + WDT_WWPS) != 0x00);
-
-    HWREG(SOC_WDT_1_REGS + WDT_WSPR) = 0x5555u;
-    while(HWREG(SOC_WDT_1_REGS + WDT_WWPS) != 0x00);
-
-    /* Configure DDR frequency */
-#ifdef evmskAM335x
-    freqMultDDR = DDRPLL_M_DDR3;
-#elif evmAM335x
-    if(BOARD_ID_EVM_DDR3 == BoardIdGet())
-    {
-        freqMultDDR = DDRPLL_M_DDR3;
-    }
-    else if(BOARD_ID_EVM_DDR2 == BoardIdGet())
-    {
-        freqMultDDR = DDRPLL_M_DDR2;
-    }
-#else
-    freqMultDDR = DDRPLL_M_DDR2;
-#endif
-
-    /* Set the PLL0 to generate 300MHz for ARM */
-    PLLInit();
-
-    /* Enable the control module */
-    HWREG(SOC_CM_WKUP_REGS + CM_WKUP_CONTROL_CLKCTRL) =
-            CM_WKUP_CONTROL_CLKCTRL_MODULEMODE_ENABLE;
-
-    /* EMIF Initialization */
-    EMIFInit();
-
-    /* DDR Initialization */
-
-#ifdef evmskAM335x
-    /* Enable DDR_VTT */
-    DDRVTTEnable();
-    DDR3Init();
-#elif evmAM335x
-    if(BOARD_ID_EVM_DDR3 == BoardIdGet())
-    {
-        DDR3Init();
-    }
-    else if(BOARD_ID_EVM_DDR2 == BoardIdGet())
-    {
-        DDR2Init();
-    }
-#else
-    DDR2Init();
-#endif
-
-
-
-    /* UART Initialization */
-    //UARTSetup();
-}
 
 /*
 ** Enable DDR_VTT.

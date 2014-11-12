@@ -148,36 +148,36 @@
 ** HSDM4 = 200MHz, HSDM5 = 250MHz
 ** HSDM6 = 500MHz
 */
-#define COREPLL_M                          1000
-#define COREPLL_N                          23
-#define COREPLL_HSD_M4                     10
-#define COREPLL_HSD_M5                     8
-#define COREPLL_HSD_M6                     4
+//#define COREPLL_M                          1000
+//#define COREPLL_N                          23
+//#define COREPLL_HSD_M4                     10
+//#define COREPLL_HSD_M5                     8
+//#define COREPLL_HSD_M6                     4
 
 /* Setting the  PER PLL values at OPP100:
 ** OSCIN = 24MHz, Fdpll = 960MHz
 ** CLKLDO = 960MHz, CLKOUT = 192MHz
 */
-#define PERPLL_M                           960
-#define PERPLL_N                           23
-#define PERPLL_M2                          5
+//#define PERPLL_M                           960
+//#define PERPLL_N                           23
+//#define PERPLL_M2                          5
 
  /* Setting the Display CLKOUT at 300MHz independently
  ** This is required for full clock 150MHz for LCD
  ** OSCIN = 24MHz, Fdpll = 300MHz
  ** CLKOUT = 150MHz
  */
-#define DISPLL_M                           25
-#define DISPLL_N                           3
-#define DISPLL_M2                          1
+//#define DISPLL_M                           25
+//#define DISPLL_N                           3
+//#define DISPLL_M2                          1
 
 /* 
 **Setting the DDR2 frequency to 266MHz
 */
-#define DDRPLL_M_DDR2                     (266)
-#define DDRPLL_M_DDR3                     (303)
-#define DDRPLL_N		           23
-#define DDRPLL_M2		           1
+//#define DDRPLL_M_DDR2                     (266)
+//#define DDRPLL_M_DDR3                     (303)
+//#define DDRPLL_N		           23
+//#define DDRPLL_M2		           1
 
 /*
 ** MACROS to configure SEL bit filed in VDD1_OP_REG of PMIC.
@@ -217,6 +217,11 @@ typedef struct oppConfig
 /******************************************************************************
 **                    External Function Declararions 
 *******************************************************************************/
+void CorePLLInit(unsigned int RefClk, unsigned int COREPLL_M, unsigned int COREPLL_N, unsigned int COREPLL_HSD_M4, unsigned int COREPLL_HSD_M5, unsigned int COREPLL_HSD_M6);
+void DisplayPLLInit(unsigned int RefClk, unsigned int DISPLL_M, unsigned int DISPLL_N, unsigned int DISPLL_M2);
+void PerPLLInit(unsigned int RefClk, unsigned int PERPLL_M, unsigned int PERPLL_N, unsigned int PERPLL_M2);
+void DDRPLLInit(unsigned int RefClk, unsigned int DDRPLL_M, unsigned int DDRPLL_N, unsigned int DDRPLL_M2);
+void MPUPLLInit(unsigned int RefClk, unsigned int MPUPLL_M, unsigned int MPUPLL_N, unsigned int MPUPLL_M2);
 
 void BlPlatformConfigPostBoot( new_twi* TwiStruct );
 void BlPlatformConfig( new_twi* TwiStruct );
