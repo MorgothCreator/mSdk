@@ -533,14 +533,14 @@ void _mmcsd_idle(void *SdCtrlStruct)
                 g_s_mmcFatFs[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr].drv_rw_func.DriveStruct = SdCtrlStruct;
                 g_s_mmcFatFs[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr].drv_rw_func.drv_r_func = MMCSDReadCmdSend;
                 g_s_mmcFatFs[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr].drv_rw_func.drv_w_func = MMCSDWriteCmdSend;
-                if(!f_mount(0, &g_s_mmcFatFs[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr]))
+                if(!f_mount(((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr, &g_s_mmcFatFs[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr]))
                 {
                     if(f_opendir(&g_sDirObject, g_cCwdBuf) == FR_OK)
                     {
 						if(DebugCom)
 						{
-																				UARTPuts(DebugCom,   "MMCSD0 drive 0 mounted\n\r" , -1);
-																				UARTPuts(DebugCom,   "MMCSD0 Fat fs detected\n\r" , -1);
+																				UARTprintf(DebugCom,   "MMCSD%d drive 0 mounted\n\r" , ((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr);
+																				UARTprintf(DebugCom,   "MMCSD%d Fat fs detected\n\r" , ((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr);
 																				UARTprintf(DebugCom, "MMCSD0 Fs type:                 ");
 							if(g_s_mmcFatFs[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr].fs_type == FS_FAT12)	{ 				UARTprintf(DebugCom, "Fat12");}
 							else if(g_s_mmcFatFs[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr].fs_type == FS_FAT16){ 				UARTprintf(DebugCom, "Fat16");}
@@ -548,19 +548,19 @@ void _mmcsd_idle(void *SdCtrlStruct)
 							else								{ 				UARTprintf(DebugCom, "None");}
 																				UARTprintf(DebugCom, "\n\r");
 																				//UARTprintf(DebugCom, "MMCSD0 BootSectorAddress:       %u \n\r",(unsigned int)g_sFatFs.);
-																				UARTprintf(DebugCom, "MMCSD0 BytesPerSector:          %d \n\r",/*(int)g_sFatFs.s_size*/512);
-																				UARTprintf(DebugCom, "MMCSD0 SectorsPerCluster:       %d \n\r",(int)g_s_mmcFatFs[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr].csize);
+																				UARTprintf(DebugCom, "MMCSD%d BytesPerSector:          %d \n\r",((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr, /*(int)g_sFatFs.s_size*/512);
+																				UARTprintf(DebugCom, "MMCSD%d SectorsPerCluster:       %d \n\r",((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr, (int)g_s_mmcFatFs[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr].csize);
 																				//UARTprintf(DebugCom, "MMCSD0 AllocTable1Begin:        %u \n\r",(unsigned int)g_sFatFs.fatbase);
-																				UARTprintf(DebugCom, "MMCSD0 NumberOfFats:            %d \n\r",(int)g_s_mmcFatFs[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr].n_fats);
+																				UARTprintf(DebugCom, "MMCSD%d NumberOfFats:            %d \n\r",((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr, (int)g_s_mmcFatFs[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr].n_fats);
 																				//UARTprintf(DebugCom, "MMCSD0 MediaType:               %d \n\r",Drives_Table[0]->DiskInfo_MediaType);
 																				//UARTprintf(DebugCom, "MMCSD0 AllocTableSize:          %u \n\r",Drives_Table[0]->DiskInfo_AllocTableSize);
-																				UARTprintf(DebugCom, "MMCSD0 DataSectionBegin:        %d \n\r",(int)g_s_mmcFatFs[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr].fatbase);
-																				UARTprintf(DebugCom, "MMCSD0 uSD DiskCapacity:        %uMB\n\r",(unsigned long)((unsigned long long)((unsigned long long)g_s_mmcFatFs[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr].max_clust * (unsigned long long)g_s_mmcFatFs[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr].csize * (unsigned long long)/*g_sFatFs.s_size*/512) / 1000000));
+																				UARTprintf(DebugCom, "MMCSD%d DataSectionBegin:        %d \n\r",((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr, (int)g_s_mmcFatFs[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr].fatbase);
+																				UARTprintf(DebugCom, "MMCSD%d uSD DiskCapacity:        %uMB\n\r",((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr, (unsigned long)((unsigned long long)((unsigned long long)g_s_mmcFatFs[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr].max_clust * (unsigned long long)g_s_mmcFatFs[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr].csize * (unsigned long long)/*g_sFatFs.s_size*/512) / 1000000));
 						}
-                    } else  if(DebugCom)										UARTPuts(DebugCom,   "MMCSD0 ERROR oppening path\n\r" , -1);
+                    } else  if(DebugCom)										UARTprintf(DebugCom,   "MMCSD%d ERROR oppening path\n\r" , ((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr);
 #endif
                 }
-                else if(DebugCom)												UARTPuts(DebugCom,   "MMCSD0 ERROR mounting disk\n\r" , -1);
+                else if(DebugCom)												UARTprintf(DebugCom,   "MMCSD%d ERROR mounting disk\n\r" , ((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr);
         	}
         }
     }
@@ -574,6 +574,9 @@ void _mmcsd_idle(void *SdCtrlStruct)
         	if(_FatData_CloseSesion(FILE1) == 1 && DebugCom != NULL)						UARTPuts(DebugCom, "MMCSD0 Session closed\n\r" , -1);
         	FILE1 = NULL;
         	if(_Fat_Unmount(0) == 1 && DebugCom != NULL)									UARTPuts(DebugCom, "MMCSD0 unmount\n\r" , -1);
+
+#else
+        	UARTprintf(DebugCom,   "MMCSD%d Disconnected\n\r" , ((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr);
 #endif
         	/* Reinitialize all the state variables */
             callbackOccured[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr] = 0;
