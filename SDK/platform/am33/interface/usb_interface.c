@@ -66,8 +66,8 @@ void USBHCDEvents(void *pvData);
 //
 //*****************************************************************************
 #define PATH_BUF_SIZE   4
-static char g_cCwdBuf1[PATH_BUF_SIZE] = "1:/";
-static char g_cCwdBuf2[PATH_BUF_SIZE] = "2:/";
+static char g_cCwdBuf1[PATH_BUF_SIZE] = "3:/";
+static char g_cCwdBuf2[PATH_BUF_SIZE] = "4:/";
 
 FATFS g_sFatFs1;
 FATFS g_sFatFs2;
@@ -957,9 +957,11 @@ void _usb_host_idle(unsigned int instance)
     	            }
     	            else
     	            {
-    					//UARTPuts(DebugCom, "USB1 Fat dismount\n\r" , -1);
-    					//_Fat_Unmount(8);
-    					//UARTPuts(DebugCom, "USB1 Fat dismount OK\n\r" , -1);
+#ifndef thirdpartyfatfs
+    					UARTPuts(DebugCom, "USB1 Fat dismount\n\r" , -1);
+    					_Fat_Unmount(8);
+    					UARTPuts(DebugCom, "USB1 Fat dismount OK\n\r" , -1);
+#endif
     	            	UARTprintf(DebugCom, "\nMass storage device disconnected.\n");
     	            }
     	         //ulPrompt = 1;
@@ -1140,9 +1142,11 @@ void _usb_host_idle(unsigned int instance)
 		            }
 		            else
 		            {
+#ifndef thirdpartyfatfs
 						UARTPuts(DebugCom, "USB0 Fat dismount\n\r" , -1);
 						_Fat_Unmount(4);
 						UARTPuts(DebugCom, "USB0 Fat dismount OK\n\r" , -1);
+#endif
 		            	UARTprintf(DebugCom, "\nMass storage device disconnected.\n");
 		            }
 		         //ulPrompt = 1;
