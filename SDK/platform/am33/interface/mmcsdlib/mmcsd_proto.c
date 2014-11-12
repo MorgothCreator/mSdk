@@ -645,6 +645,22 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
             return 0;
         }
 
+        if (SD_CARD_CSD_VERSION(card) == 1 || SD_CARD_CSD_VERSION(card) == 2)
+        {
+            card->tranSpeed = SD_CARD1_TRANSPEED(card);
+            card->blkLen = 1 << (SD_CARD1_RDBLKLEN(card));
+
+            card->size = SD_CARD1_SIZE(card);
+            card->nBlks = card->size / card->blkLen;
+        }
+        else if(SD_CARD_CSD_VERSION(card) == 0)
+        {
+            card->tranSpeed = SD_CARD0_TRANSPEED(card);
+            card->blkLen = 1 << (SD_CARD0_RDBLKLEN(card));
+            card->nBlks = SD_CARD0_NUMBLK(card);
+            card->size = SD_CARD0_SIZE(card);
+
+        }
         /* Select the card */
         cmd.idx = SD_CMD(7);
         cmd.flags = SD_CMDRSP_BUSY;
@@ -657,42 +673,37 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
             return 0;
         }
 
-        ctrl->xferSetup(ctrl, 1, dataBuffer, 512, 1);
-
-        cmd.idx = SD_CMD(8);
-        cmd.flags = SD_CMDRSP_READ | SD_CMDRSP_DATA;
-        cmd.arg = 0;
-        cmd.nblks = 1;
-        cmd.data = (signed char*)dataBuffer;
-
-        status = MMCSDCmdSend(ctrl,&cmd);
-        if (status == 0)
+        if(SD_CARD_CSD_VERSION(card) == 3)
         {
-            return 0;
-        }
 
-        status = ctrl->xferStatusGet(ctrl);
-
-        if (status == 0)
-        {
-            return 0;
-        }
-
-        if (SD_CARD_CSD_VERSION(card))
-        {
-            card->tranSpeed = SD_CARD1_TRANSPEED(card);
-            card->blkLen = 1 << (SD_CARD1_RDBLKLEN(card));
-            card->size = SD_CARD1_SIZE(card);
-            card->nBlks = card->size / card->blkLen;
-        }
-        else
-        {
             card->tranSpeed = SD_CARD0_TRANSPEED(card);
             card->blkLen = 1 << (SD_CARD0_RDBLKLEN(card));
-            card->nBlks = SD_CARD0_NUMBLK(card);
-            card->size = SD_CARD0_SIZE(card);
 
+            ctrl->xferSetup(ctrl, 1, dataBuffer, 512, 1);
+
+			cmd.idx = SD_CMD(8);
+			cmd.flags = SD_CMDRSP_READ | SD_CMDRSP_DATA;
+			cmd.arg = card->rca << 16;
+			cmd.nblks = 1;
+			cmd.data = (signed char*)dataBuffer;
+
+			status = MMCSDCmdSend(ctrl,&cmd);
+			if (status == 0)
+			{
+				return 0;
+			}
+
+			status = ctrl->xferStatusGet(ctrl);
+
+			if (status == 0)
+			{
+				return 0;
+			}
+            //card->nBlks = SD_CARD0_NUMBLK(card);
+            //card->size = SD_CARD0_SIZE(card);
+	        /* Select the card */
         }
+
 
 
         /* Invalidate the data cache. */
