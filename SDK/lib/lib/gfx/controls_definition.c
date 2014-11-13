@@ -149,18 +149,23 @@ unsigned int controlls_change_color(unsigned int color, double value)
 }
 #endif
 //#######################################################################################
-bool screen_copy(tDisplay *pDisplayTo, tDisplay *pDisplayFrom)
+bool screen_copy(tDisplay *pDisplayTo, tDisplay *pDisplayFrom, bool put_cursor, signed int X, signed int Y, unsigned int color)
 {
-	if(pDisplayTo->Height != pDisplayFrom->Height || pDisplayTo->Width != pDisplayFrom->Width) return false;
+	if(pDisplayTo->raster_timings->X != pDisplayFrom->raster_timings->X || pDisplayTo->raster_timings->Y != pDisplayFrom->raster_timings->Y) return false;
 	//memcpy((void *)pDisplayTo->DisplayData, (void *)pDisplayFrom->DisplayData, (sizeof(unsigned int) * pDisplayFrom->Height * pDisplayFrom->Width) + 32);
 	//box_cache_clean(pDisplayTo, 0, 0, pDisplayFrom->Width, pDisplayFrom->Height);
 	signed int LineCnt = 0;
-	volatile unsigned int* ScreenBuff = pDisplayTo->DisplayData + 8;
-	volatile unsigned int* _ScreenBuff = pDisplayFrom->DisplayData + 8;
-	for(; LineCnt < pDisplayTo->Height; LineCnt ++)
+	volatile unsigned int* ScreenBuff = pDisplayTo->DisplayData + pDisplayTo->raster_timings->palete_len;
+	volatile unsigned int* _ScreenBuff = pDisplayFrom->DisplayData + pDisplayTo->raster_timings->palete_len;
+	for(; LineCnt < pDisplayTo->raster_timings->Y; LineCnt ++)
 	{
-		memcpy((void *)(ScreenBuff + (pDisplayFrom->Width * LineCnt)), (void *)(_ScreenBuff + (pDisplayFrom->Width * LineCnt)), (sizeof(ScreenBuff[0]) * pDisplayTo->Width));
-		CacheDataCleanInvalidateBuff((unsigned int)((unsigned int*)(ScreenBuff + (pDisplayFrom->Width * LineCnt))), (sizeof(ScreenBuff[0]) * pDisplayTo->Width) + 64);
+		memcpy((void *)(ScreenBuff + (pDisplayFrom->raster_timings->X * LineCnt)), (void *)(_ScreenBuff + (pDisplayFrom->raster_timings->X * LineCnt)), (sizeof(ScreenBuff[0]) * pDisplayTo->raster_timings->X));
+		if(put_cursor == true && LineCnt >= Y && LineCnt <= Y + 2)
+		{
+			unsigned int cnt_x = X;
+			for(;cnt_x < X + 2; cnt_x++) put_pixel(pDisplayTo, cnt_x, LineCnt, color);
+		}
+		CacheDataCleanInvalidateBuff((unsigned int)((unsigned int*)(ScreenBuff + (pDisplayFrom->raster_timings->X * LineCnt))), (sizeof(ScreenBuff[0]) * pDisplayTo->raster_timings->X) + 64);
 	}
 	return true;
 }

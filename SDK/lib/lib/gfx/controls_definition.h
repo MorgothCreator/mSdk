@@ -399,7 +399,7 @@ static const unsigned char CharTable6x8[] =
 	free(name)
 /*#####################################################*/
 unsigned int controlls_change_color(unsigned int color, double value);
-bool screen_copy(tDisplay *pDisplayTo, tDisplay *pDisplayFrom);
+bool screen_copy(tDisplay *pDisplayTo, tDisplay *pDisplayFrom, bool put_cursor, signed int X, signed int Y, unsigned int color);
 void clip_limit(tRectangle *limited, tRectangle *limits);
 void TouchPaintPoint(tDisplay *pDisplay, signed int X, signed int Y, unsigned int color);
 bool check_if_inside_box(signed int x_start, signed int y_start, signed int x_len, signed int y_len, signed int x_point, signed int y_point);
