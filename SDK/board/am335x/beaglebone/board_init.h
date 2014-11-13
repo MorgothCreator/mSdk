@@ -38,6 +38,9 @@
 #define BOARD_MESSAGE "Beaglebone"
 /*-----------------------------------------------------*/
 #define lcd
+//#define touch
+//#define usb_1_msc
+#define usb_1_mouse
 /*#####################################################*/
 extern new_uart* Uart[];
 extern new_uart* DebugCom;

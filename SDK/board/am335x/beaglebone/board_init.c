@@ -19,7 +19,7 @@
 #include "api/pmic_api.h"
 #include "api/gpio_api.h"
 #include "api/touchscreen_def.h"
-#include "api/usb_msc_host_api.h"
+#include "api/usb_host_api.h"
 #include "api/mmcsd_api.h"
 #include "device/24c.h"
 #include "device/ADXL345.h"
@@ -29,7 +29,8 @@
 #include "lib/fs/fat.h"
 #include "sys/plat_properties.h"
 #include "sys/sysdelay.h"
-#include "interface/usb_interface.h"
+#include "interface/usb_host_msc_interface.h"
+#include "interface/usb_host_mouse_interface.h"
 #include "interface/rtc_interface.h"
 #include "pinmux/pin_mux_uart.h"
 #include "pinmux/pin_mux_spi.h"
@@ -157,16 +158,23 @@ bool board_init()
 /*-----------------------------------------------------*/
 	eMMC_Res = gpio_assign(1, 20, GPIO_DIR_OUTPUT, false);
 	gpio_out(eMMC_Res, 0);
-	Sysdelay(10);
+	//Sysdelay(10);
 	gpio_out(eMMC_Res, 1);
 	UARTPuts(DebugCom, "Init MMCSD1 Host.......", -1);
 	sdCtrl[1].SdNr = 1;
 	mmcsd_init(&sdCtrl[1], -1, -1, LED[0]);
 	UARTPuts(DebugCom, "OK.\n\r", -1);
 /*-----------------------------------------------------*/
+#ifdef usb_1_msc
 	UARTPuts(DebugCom, "Init USBMSC1 Host.......", -1);
-	usb_host_init(1, LED[2]);
+	usb_msc_host_init(1, LED[2]);
 	UARTPuts(DebugCom, "OK.\n\r", -1);
+#endif
+#ifdef usb_1_mouse
+	UARTPuts(DebugCom, "Init USBMOUSE1 Host.......", -1);
+	usb_mouse_host_init(1);
+	UARTPuts(DebugCom, "OK.\n\r", -1);
+#endif
 /*-----------------------------------------------------*/
 #ifdef lcd
 	TouchScreen = new_(new_touchscreen);
@@ -191,21 +199,21 @@ bool board_init()
 /*-----------------------------------------------------*/
 #ifdef lcd
 		ScreenBuff = new_(new_screen);
-		ScreenBuff->LcdType = S035Q01;
+		ScreenBuff->raster_timings = &lcd_S035Q01_beaglebone_exp;
 		ScreenBuff->BackLightLevel = 60;
 		ScreenBuff->PmicTwiModuleStruct = TWI[0];
 		screen_init(ScreenBuff);
-		UARTprintf(DebugCom, "LCD display initialize successful for %dx%d resolution, 16 Bit bus.\n\r" , ScreenBuff->Width, ScreenBuff->Height);
+		UARTprintf(DebugCom, "LCD display initialize successful for %dx%d resolution, %d Bit bus.\n\r" , ScreenBuff->raster_timings->X, ScreenBuff->raster_timings->Y, ScreenBuff->raster_timings->bus_size);
 
-		TouchScreen->screen_max_x = (double)ScreenBuff->Width;
-		TouchScreen->screen_max_y = (double)ScreenBuff->Height;
+		TouchScreen->screen_max_x = (double)ScreenBuff->raster_timings->X;
+		TouchScreen->screen_max_y = (double)ScreenBuff->raster_timings->Y;
 		TouchScreen->pDisplay = ScreenBuff;
 		InitTouchScreen(TouchScreen);
 		UARTPuts(DebugCom, "Init calibration of LCD resistive touch screen....." , -1);
 		TouchCalibrate(TouchScreen, ScreenBuff);
 		UARTPuts(DebugCom, "OK.\n\r" , -1);
-		put_rectangle(ScreenBuff, 0, 0, ScreenBuff->Width, ScreenBuff->Height, true, controls_color.Scren);
-		box_cache_clean(ScreenBuff, 0, 0, ScreenBuff->Width, ScreenBuff->Height);
+		put_rectangle(ScreenBuff, 0, 0, ScreenBuff->raster_timings->X, ScreenBuff->raster_timings->Y, true, controls_color.Scren);
+		box_cache_clean(ScreenBuff, 0, 0, ScreenBuff->raster_timings->X, ScreenBuff->raster_timings->Y);
 #endif
 	}
 	else
@@ -225,16 +233,16 @@ bool board_init()
 /*-----------------------------------------------------*/
 #ifdef lcd
 			ScreenBuff = new_(new_screen);
-			ScreenBuff->LcdType = AT070TN92;
+			ScreenBuff->raster_timings = &lcd_AT070TN92_beaglebone_exp;
 			ScreenBuff->BackLightPort = 1;
 			ScreenBuff->BackLightPin = 18;
 			screen_init(ScreenBuff);
-			TouchScreen->screen_max_x = ScreenBuff->Width;
-			TouchScreen->screen_max_y = ScreenBuff->Height;
+			TouchScreen->screen_max_x = ScreenBuff->raster_timings->X;
+			TouchScreen->screen_max_y = ScreenBuff->raster_timings->Y;
 			TouchScreen->pDisplay = ScreenBuff;
-			UARTprintf(DebugCom, "LCD display initialize successful for %dx%d resolution, 24 Bit bus.\n\r" , ScreenBuff->Width, ScreenBuff->Height);
-			put_rectangle(ScreenBuff, 0, 0, ScreenBuff->Width, ScreenBuff->Height, true, controls_color.Scren);
-			box_cache_clean(ScreenBuff, 0, 0, ScreenBuff->Width, ScreenBuff->Height);
+			UARTprintf(DebugCom, "LCD display initialize successful for %dx%d resolution, %d Bit bus.\n\r" , ScreenBuff->raster_timings->X, ScreenBuff->raster_timings->Y, ScreenBuff->raster_timings->bus_size);
+			put_rectangle(ScreenBuff, 0, 0, ScreenBuff->raster_timings->X, ScreenBuff->raster_timings->Y, true, controls_color.Scren);
+			box_cache_clean(ScreenBuff, 0, 0, ScreenBuff->raster_timings->X, ScreenBuff->raster_timings->Y);
 			backlight_on(ScreenBuff);
 		}
 		else
@@ -250,23 +258,22 @@ bool board_init()
 			HARDBTN[4] = gpio_assign(1, 3, GPIO_DIR_INPUT, false);
 /*-----------------------------------------------------*/
 			ScreenBuff = new_(new_screen);
-			ScreenBuff->LcdType = FHD;
+			ScreenBuff->raster_timings = &lcd_720p_50hz_beaglebone_exp;
 			ScreenBuff->BackLightPort = 1;
 			ScreenBuff->BackLightPin = 18;
 			screen_init(ScreenBuff);
-			if(ScreenBuff->LcdType != VGA && ScreenBuff->LcdType != LVDS && ScreenBuff->LcdType != HD && ScreenBuff->LcdType != FHD)
-			{
-				TouchScreen->screen_max_x = ScreenBuff->Width;
-				TouchScreen->screen_max_y = ScreenBuff->Height;
-				TouchScreen->pDisplay = ScreenBuff;
-				InitTouchScreen(TouchScreen);
-				UARTPuts(DebugCom, "Init calibration of LCD resistive touch screen....." , -1);
-				TouchCalibrate(TouchScreen, ScreenBuff);
-				UARTPuts(DebugCom, "OK.\n\r" , -1);
-			}
-			UARTprintf(DebugCom, "LCD display initialize successful for %dx%d resolution, 24 Bit bus.\n\r" , ScreenBuff->Width, ScreenBuff->Height);
-			put_rectangle(ScreenBuff, 0, 0, ScreenBuff->Width, ScreenBuff->Height, true, controls_color.Scren);
-			box_cache_clean(ScreenBuff, 0, 0, ScreenBuff->Width, ScreenBuff->Height);
+#ifdef touch
+			TouchScreen->screen_max_x = ScreenBuff->raster_timings->X;
+			TouchScreen->screen_max_y = ScreenBuff->raster_timings->Y;
+			TouchScreen->pDisplay = ScreenBuff;
+			InitTouchScreen(TouchScreen);
+			UARTPuts(DebugCom, "Init calibration of LCD resistive touch screen....." , -1);
+			TouchCalibrate(TouchScreen, ScreenBuff);
+			UARTPuts(DebugCom, "OK.\n\r" , -1);
+#endif
+			UARTprintf(DebugCom, "LCD display initialize successful for %dx%d resolution, %d Bit bus.\n\r" , ScreenBuff->raster_timings->X, ScreenBuff->raster_timings->Y, ScreenBuff->raster_timings->bus_size);
+			put_rectangle(ScreenBuff, 0, 0, ScreenBuff->raster_timings->X, ScreenBuff->raster_timings->Y, true, controls_color.Scren);
+			box_cache_clean(ScreenBuff, 0, 0, ScreenBuff->raster_timings->X, ScreenBuff->raster_timings->Y);
 			backlight_on(ScreenBuff);
 		}
 #endif

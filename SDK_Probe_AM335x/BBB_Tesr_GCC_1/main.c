@@ -23,13 +23,15 @@
 
 #ifdef test1
 
-//#define USE_BACK_SCREEN
+#define USE_BACK_SCREEN
 
 #include "sys/plat_properties.h"
 #include "board_init.h"
 #include "interface/lcd_interface.h"
+#include "interface/usb_host_msc_interface.h"
+#include "interface/usb_host_mouse_interface.h"
 #include "api/timer_api.h"
-#include "api/usb_msc_host_api.h"
+#include "api/usb_host_api.h"
 #include "device/ft5x06.h"
 
 #include "lib/gfx/controls_definition.h"
@@ -129,9 +131,9 @@ int main(void) {
     BackScreen = new_(new_screen);
     memcpy((void *)BackScreen, (void *)ScreenBuff, sizeof(new_screen));
 #ifdef gcc
-    BackScreen->DisplayData = malloc((BackScreen->Width * BackScreen->Height * sizeof(BackScreen->DisplayData[0])) + 32);
+    BackScreen->DisplayData = malloc((BackScreen->raster_timings->X * BackScreen->raster_timings->Y * sizeof(BackScreen->DisplayData[0])) + (BackScreen->raster_timings->palete_len * sizeof(BackScreen->DisplayData[0])));
 #else
-    BackScreen->DisplayData = memalign(sizeof(BackScreen->DisplayData[0]) << 3, (BackScreen->Width * BackScreen->Height * sizeof(BackScreen->DisplayData[0])) + 32);
+    BackScreen->DisplayData = memalign(sizeof(BackScreen->DisplayData[0]) << 3, (BackScreen->raster_timings->X * BackScreen->raster_timings->Y * sizeof(BackScreen->DisplayData[0])) + (BackScreen->raster_timings->palete_len * sizeof(BackScreen->DisplayData[0])));
 #endif
     MainWindow = new_window(BackScreen);
 #else
@@ -184,6 +186,7 @@ int main(void) {
     {
         if(timer_tick(&TimerScanTouch))
         {
+    		//UARTprintf(DebugCom, "X= %d, Y= %d, But= %d, Whel= %d.\n\r" , MouseXPosition, MouseYPosition, g_ulButtons, MouseWheel);
 #ifdef lcd
 #ifdef USE_BACK_SCREEN
             if(BackScreen)
@@ -191,30 +194,37 @@ int main(void) {
             if(ScreenBuff)
 #endif
             {
-    			if(ScreenBuff->LcdType != VGA && ScreenBuff->LcdType != LVDS && ScreenBuff->LcdType != HD && ScreenBuff->LcdType != FHD)
-    			{
-					if(TouchScreen->TouchScreen_Type == TouchScreen_Type_Int) TouchIdle(TouchScreen);
-					else if(TouchScreen->TouchScreen_Type == TouchScreen_Type_FT5x06) ft5x06_TouchIdle(TouchScreen);
-					memset(&control_comand, 0, sizeof(tControlCommandData));
-					control_comand.X = TouchScreen->TouchResponse.x1;
-					control_comand.Y = TouchScreen->TouchResponse.y1;
-					control_comand.Cursor = (CursorState)TouchScreen->TouchResponse.touch_event1;
-    			}
 				memset(&control_comand, 0, sizeof(tControlCommandData));
+#ifdef touch
+				if(TouchScreen->TouchScreen_Type == TouchScreen_Type_Int) TouchIdle(TouchScreen);
+				else if(TouchScreen->TouchScreen_Type == TouchScreen_Type_FT5x06) ft5x06_TouchIdle(TouchScreen);
+				control_comand.X = TouchScreen->TouchResponse.x1;
+				control_comand.Y = TouchScreen->TouchResponse.y1;
+				control_comand.Cursor = (CursorState)TouchScreen->TouchResponse.touch_event1;
+#endif
+#ifdef usb_1_mouse
+	            usb_mouse_host_idle(1, &control_comand);
+				//control_comand.X = MouseXPosition;
+				//control_comand.Y = MouseYPosition;
+				//control_comand.Cursor = (CursorState)TouchScreen->TouchResponse.touch_event1;
+#elif defined(usb_1_msc)
+	            usb_msc_host_idle(1);
+#endif
                 MainWindow->idle(MainWindow, &control_comand);
 #ifdef USE_BACK_SCREEN
-                if(control_comand.CursorCoordonateUsed) ScreenReRefreshCnt = 2;
+                if(/*control_comand.CursorCoordonateUsed || */control_comand.WindowRefresh) ScreenReRefreshCnt = 2;
                 if(ScreenReRefreshCnt)
                 {
                     ScreenReRefreshCnt--;
-                    screen_copy(ScreenBuff, BackScreen);
+                    screen_copy(ScreenBuff, BackScreen, true, control_comand.X, control_comand.Y, 0x00000000);
+                    //put_rectangle(ScreenBuff, control_comand.X, control_comand.Y, 2, 2, true, 0x00000000);
+                    //box_cache_clean(ScreenBuff, control_comand.X, control_comand.Y, 2, 2);
                 }
 #endif
             }
 #endif
             mmcsd_idle(&sdCtrl[0]);
             mmcsd_idle(&sdCtrl[1]);
-            usb_host_idle(1);
         }
         signed int R_Chr = UARTGetcNoBlocking(DebugCom);
         argv[1] = (char *)R_Chr;
