@@ -199,21 +199,21 @@ static bool ar1020_calibrate(new_touchscreen* structure, tDisplay *pDisplay)
 	if(!SetupI2CReception(twistruct, 5, 4)) return false;
 	if(twistruct->TxBuff[0] != 0x55 && twistruct->TxBuff[0] != 0x02 && twistruct->TxBuff[0] != AR1020_Response_Success && twistruct->TxBuff[0] != 0x14) return false;
 	
-	TouchPaintPoint(pDisplay, (((double)pDisplay->Width * (double)12.5) / (double)100), (((double)pDisplay->Height * (double)12.5) / (double)100), 0x0000);
+	TouchPaintPoint(pDisplay, (((double)pDisplay->raster_timings->X * (double)12.5) / (double)100), (((double)pDisplay->raster_timings->Y * (double)12.5) / (double)100), 0x0000);
 	while(ar1020_touch(structure) == false);
-	TouchPaintPoint(pDisplay, (((double)pDisplay->Width * (double)12.5) / (double)100), (((double)pDisplay->Height * (double)12.5) / (double)100), controls_color.Scren);
+	TouchPaintPoint(pDisplay, (((double)pDisplay->raster_timings->X * (double)12.5) / (double)100), (((double)pDisplay->raster_timings->Y * (double)12.5) / (double)100), controls_color.Scren);
 
-	TouchPaintPoint(pDisplay, (double)pDisplay->Width - (((double)pDisplay->Width * (double)12.5) / (double)100), (((double)pDisplay->Height * (double)12.5) / (double)100), 0x0000);
+	TouchPaintPoint(pDisplay, (double)pDisplay->raster_timings->X - (((double)pDisplay->raster_timings->X * (double)12.5) / (double)100), (((double)pDisplay->raster_timings->Y * (double)12.5) / (double)100), 0x0000);
 	while(ar1020_touch(structure) == false);
-	TouchPaintPoint(pDisplay, (double)pDisplay->Width - (((double)pDisplay->Width * (double)12.5) / (double)100), (((double)pDisplay->Height * (double)12.5) / (double)100), controls_color.Scren);
+	TouchPaintPoint(pDisplay, (double)pDisplay->raster_timings->X - (((double)pDisplay->raster_timings->X * (double)12.5) / (double)100), (((double)pDisplay->raster_timings->Y * (double)12.5) / (double)100), controls_color.Scren);
 
-	TouchPaintPoint(pDisplay, (double)pDisplay->Width - (((double)pDisplay->Width * (double)12.5) / (double)100), (double)pDisplay->Height - (((double)pDisplay->Height * (double)12.5) / (double)100), 0x0000);
+	TouchPaintPoint(pDisplay, (double)pDisplay->raster_timings->X - (((double)pDisplay->raster_timings->X * (double)12.5) / (double)100), (double)pDisplay->raster_timings->Y - (((double)pDisplay->raster_timings->Y * (double)12.5) / (double)100), 0x0000);
 	while(ar1020_touch(structure) == false);
-	TouchPaintPoint(pDisplay, (double)pDisplay->Width - (((double)pDisplay->Width * (double)12.5) / (double)100), (double)pDisplay->Height - (((double)pDisplay->Height * (double)12.5) / (double)100), controls_color.Scren);
+	TouchPaintPoint(pDisplay, (double)pDisplay->raster_timings->X - (((double)pDisplay->raster_timings->X * (double)12.5) / (double)100), (double)pDisplay->raster_timings->Y - (((double)pDisplay->raster_timings->Y * (double)12.5) / (double)100), controls_color.Scren);
 
-	TouchPaintPoint(pDisplay,  (((double)pDisplay->Width * (double)12.5) / (double)100), (double)pDisplay->Height - (((double)pDisplay->Height * (double)12.5) / (double)100), 0x0000);
+	TouchPaintPoint(pDisplay,  (((double)pDisplay->raster_timings->X * (double)12.5) / (double)100), (double)pDisplay->raster_timings->Y - (((double)pDisplay->raster_timings->Y * (double)12.5) / (double)100), 0x0000);
 	while(ar1020_touch(structure) == false);
-	TouchPaintPoint(pDisplay,  (((double)pDisplay->Width * (double)12.5) / (double)100), (double)pDisplay->Height - (((double)pDisplay->Height * (double)12.5) / (double)100), controls_color.Scren);
+	TouchPaintPoint(pDisplay,  (((double)pDisplay->raster_timings->X * (double)12.5) / (double)100), (double)pDisplay->raster_timings->Y - (((double)pDisplay->raster_timings->Y * (double)12.5) / (double)100), controls_color.Scren);
 	return true;
 }
 //#####################################################

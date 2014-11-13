@@ -473,7 +473,7 @@ void picturebox_copy_rectangle(tPictureBox* settings, unsigned int *src_buff, un
 	for(; Y_cnt < dest_rectangle->sYMax; Y_cnt++)
 	{
 		//if(Y_cnt >= pDisplay->sClipRegion.sYMax) break;
-		memcpy((void *)(pDisplay->DisplayData + palete_raster_len + (Y_cnt * pDisplay->Width) + dest_X_StartBox), (void *)((char *)(src_buff + src_buff_data_offset + (((Y_cnt - settings->Internals.PictureWindowLimits.sYMin + Y_Start_Src_Buff) + src_rectangle->sYMin) * src_width) + src_rectangle->sXMin + X_Start_Src_Buff) - 1), x_line_len * sizeof(pDisplay->DisplayData[0]));
+		memcpy((void *)(pDisplay->DisplayData + pDisplay->raster_timings->palete_len + (Y_cnt * pDisplay->raster_timings->X) + dest_X_StartBox), (void *)((char *)(src_buff + src_buff_data_offset + (((Y_cnt - settings->Internals.PictureWindowLimits.sYMin + Y_Start_Src_Buff) + src_rectangle->sYMin) * src_width) + src_rectangle->sXMin + X_Start_Src_Buff) - 1), x_line_len * sizeof(pDisplay->DisplayData[0]));
 		//CacheDataCleanInvalidateBuff((unsigned int)(void *)(pDisplay->DisplayData + 8 + ((Y_cnt + settings->Position.Y + 2) * pDisplay->Width) + settings->Position.X + 2), X_len * sizeof(pDisplay->DisplayData[0]) + 64);
 	}
 	//pDisplay->sClipRegion = back_up_clip;

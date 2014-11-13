@@ -760,8 +760,8 @@ tWindow *new_window(tDisplay *ScreenDisplay)
 
 	//settings->Position.X = settings->PositionFullScreen.X;
 	//settings->Position.Y = settings->PositionFullScreen.Y;
-	settings->Size.X = ScreenDisplay->Width;
-	settings->Size.Y = ScreenDisplay->Height;
+	settings->Size.X = ScreenDisplay->raster_timings->X;
+	settings->Size.Y = ScreenDisplay->raster_timings->Y;
 	settings->Size.ScrollBarSize = 20;
 	//settings->SizeFullScreen.X = ScreenDisplay->Width;
 	//settings->SizeFullScreen.Y = ScreenDisplay->Height;
@@ -772,9 +772,9 @@ tWindow *new_window(tDisplay *ScreenDisplay)
 	settings->Enabled = true;
 
 	settings->WindowMoveLimits.sXMin = 0;
-	settings->WindowMoveLimits.sXMax = ScreenDisplay->Width;
+	settings->WindowMoveLimits.sXMax = ScreenDisplay->raster_timings->X;
 	settings->WindowMoveLimits.sYMin = 0;
-	settings->WindowMoveLimits.sYMax = ScreenDisplay->Height;
+	settings->WindowMoveLimits.sYMax = ScreenDisplay->raster_timings->Y;
 
 
 	settings->Internals.Header.Size.Y = 20;

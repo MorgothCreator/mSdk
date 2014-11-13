@@ -116,14 +116,20 @@ static void TouchScreenIsr(void)
               prevVal_y = ready1;
               wordsLeft = TSCADCFIFOWordCountRead(SOC_ADC_TSC_0_REGS, TSCADC_FIFO_1);
          }
-         if(ScreenRander->LcdType == TFT43AB_OMAP35x)
+         if(ScreenRander->touch_invert_x)
          {
 			 x_data[dbidx] = 4095 - xdata;
-			 y_data[dbidx] = 4095 - ydata;
          }
          else
          {
 			 x_data[dbidx] = xdata;
+         }
+         if(ScreenRander->touch_invert_y)
+         {
+			 y_data[dbidx] = 4095 - ydata;
+         }
+         else
+         {
 			 y_data[dbidx] = ydata;
          }
          dbidx = (dbidx + 1) & (analog_touch_filter_level - 1);

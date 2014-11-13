@@ -97,93 +97,17 @@ void _RasterDMAConfig(unsigned int baseAddr, unsigned int frmMode,
 bool SetUpLCD(tDisplay* LcdStruct)
 {
 	ScreenRander = LcdStruct;
-	int disp_clk = 0;
-	int unit_clock = 0;
-	switch(LcdStruct->LcdType)
-	{
-		case S035Q01:
-			LcdStruct->Width = 320;
-			LcdStruct->Height = 240;
-			pmic_backlight_enable(LcdStruct->PmicTwiModuleStruct);
-			//LcdStruct->BackLightLevel = 80;
-			pmic_backlight_level(LcdStruct->PmicTwiModuleStruct, LcdStruct->BackLightLevel);
-			//disp_clk = LcdStruct->Width * LcdStruct->Height * 60;
-			disp_clk = 64000000;
-			unit_clock = 192000000;
-			break;
-		case AT070TN92:
-			LcdStruct->Width = 800;
-			LcdStruct->Height = 480;
-			LcdStruct->BackLight = gpio_assign(LcdStruct->BackLightPort, LcdStruct->BackLightPin, GPIO_DIR_OUTPUT, false);
-			//disp_clk = LcdStruct->Width * LcdStruct->Height * 60;
-			disp_clk = 64000000;
-			unit_clock = 192000000;
-			break;
-		case TFT43AB_OMAP35x:
-			LcdStruct->Width = 480;
-			LcdStruct->Height = 272;
-			LcdStruct->BackLight = gpio_assign(LcdStruct->BackLightPort, LcdStruct->BackLightPin, GPIO_DIR_OUTPUT, false);
-			//disp_clk = LcdStruct->Width * LcdStruct->Height * 60;
-			disp_clk = 64000000;
-			unit_clock = 192000000;
-			break;
-		case VGA:
-			LcdStruct->Width = 1024;
-			LcdStruct->Height = 768;
-			LcdStruct->BackLight = gpio_assign(LcdStruct->BackLightPort, LcdStruct->BackLightPin, GPIO_DIR_OUTPUT, false);
-			//disp_clk = LcdStruct->Width * LcdStruct->Height * 60;
-			disp_clk = 64000000;
-			unit_clock = 192000000;
-			break;
-		case LVDS:
-			LcdStruct->Width = 800;
-			LcdStruct->Height = 600;
-			LcdStruct->BackLight = gpio_assign(LcdStruct->BackLightPort, LcdStruct->BackLightPin, GPIO_DIR_OUTPUT, false);
-			unit_clock = 192000000;
-			disp_clk = 64000000;
-			break;
-		case HD:
-			LcdStruct->Width = 1280;
-			LcdStruct->Height = 720;
-			LcdStruct->BackLight = gpio_assign(LcdStruct->BackLightPort, LcdStruct->BackLightPin, GPIO_DIR_OUTPUT, false);
-			unit_clock = 129000000;
-			disp_clk = 64500000;
-			palete_raster_len = 25;
-			break;
-		case FHD:
-			LcdStruct->Width = 1920;
-			LcdStruct->Height = 1080;
-			LcdStruct->BackLight = gpio_assign(LcdStruct->BackLightPort, LcdStruct->BackLightPin, GPIO_DIR_OUTPUT, false);
-			//unit_clock = 148376250;
-			unit_clock = 121000000;
-			disp_clk = 60500000;
-			palete_raster_len = 25;
-			break;
-		default:
-			return false;
-	}
-	LcdStruct->sClipRegion.sXMax = LcdStruct->Width;
-	LcdStruct->sClipRegion.sYMax = LcdStruct->Height;
+
+	LcdStruct->sClipRegion.sXMax = LcdStruct->raster_timings->X;
+	LcdStruct->sClipRegion.sYMax = LcdStruct->raster_timings->Y;
 #ifdef gcc
-	LcdStruct->DisplayData = (volatile unsigned int *)malloc((LcdStruct->Width * LcdStruct->Height * sizeof(LcdStruct->DisplayData[0])) + (palete_raster_len * sizeof(LcdStruct->DisplayData[0])));
+	LcdStruct->DisplayData = (volatile unsigned int *)malloc((LcdStruct->raster_timings->X * LcdStruct->raster_timings->Y * sizeof(LcdStruct->DisplayData[0])) + (LcdStruct->raster_timings->palete_len * sizeof(LcdStruct->DisplayData[0])));
 #else
 	LcdStruct->DisplayData = (volatile unsigned int *)memalign(sizeof(LcdStruct->DisplayData[0]) << 3, (LcdStruct->Width * LcdStruct->Height * sizeof(LcdStruct->DisplayData[0])) +  + (palete_raster_len * sizeof(LcdStruct->DisplayData[0])));
 #endif
     LCDAINTCConfigure();
 
-
-    switch(unit_clock)
-    {
-    case (192000000):
-    	    DisplayPLLInit(0, 31, 3, 1);
-    		break;
-    case (129000000):
-    	    DisplayPLLInit(0, 124, 22, 1);
-    		break;
-    case (121000000):
-    	    DisplayPLLInit(0, 116, 22, 1);
-    		break;
-    }
+    DisplayPLLInit(LcdStruct->raster_timings->ref_clk, LcdStruct->raster_timings->pll_m, LcdStruct->raster_timings->pll_n, LcdStruct->raster_timings->pll_m2);
     /* Enable clock for LCD Module */
     LCDModuleClkConfig();
 
@@ -200,7 +124,7 @@ bool SetUpLCD(tDisplay* LcdStruct)
     RasterDisable(SOC_LCDC_0_REGS);
 
     /* Configure the pclk */
-    RasterClkConfig(SOC_LCDC_0_REGS, disp_clk, unit_clock);
+    RasterClkConfig(SOC_LCDC_0_REGS, LcdStruct->raster_timings->raster_clk, ((LcdStruct->raster_timings->ref_clk / LcdStruct->raster_timings->pll_n) * LcdStruct->raster_timings->pll_m) * LcdStruct->raster_timings->pll_m2);
 
     /* Configuring DMA of LCD controller */
     _RasterDMAConfig(SOC_LCDC_0_REGS, RASTER_DOUBLE_FRAME_BUFFER,
@@ -222,70 +146,23 @@ bool SetUpLCD(tDisplay* LcdStruct)
                                             RASTER_SYNC_CTRL_ACTIVE|
                                             RASTER_AC_BIAS_HIGH     , 0, 255);
 
-	switch(LcdStruct->LcdType)
-	{
-		case S035Q01:
-			/* Configuring horizontal timing parameter */
-			RasterHparamConfig(SOC_LCDC_0_REGS, 320, 48, 40, 22);
+	/* Configuring horizontal timing parameter */
+			RasterHparamConfig(SOC_LCDC_0_REGS, LcdStruct->raster_timings->X, LcdStruct->raster_timings->hsw, LcdStruct->raster_timings->hfp, LcdStruct->raster_timings->hbp);
 
-			/* Configuring vertical timing parameters */
-			RasterVparamConfig(SOC_LCDC_0_REGS, 240, 3, 13, 11);
-		   	break;
-		case AT070TN92:
-			/* Configuring horizontal timing parameter */
-			RasterHparamConfig(SOC_LCDC_0_REGS, 800, 40, 255, 6);
-
-			/* Configuring vertical timing parameters */
-			RasterVparamConfig(SOC_LCDC_0_REGS, 480, 9, 22, 15);
-			break;
-		case TFT43AB_OMAP35x:
-			/* Configuring horizontal timing parameter */
-			RasterHparamConfig(SOC_LCDC_0_REGS, 480, 40, 255, 6);
-
-			/* Configuring vertical timing parameters */
-			RasterVparamConfig(SOC_LCDC_0_REGS, 272, 9, 22, 15);
-			break;
-		case VGA:
-			/* Configuring horizontal timing parameter */
-			RasterHparamConfig(SOC_LCDC_0_REGS, 1024, 144, 168, 8);
-
-			/* Configuring vertical timing parameters */
-			RasterVparamConfig(SOC_LCDC_0_REGS, 768, 4, 29, 3);
-			break;
-		case LVDS:
-			/* Configuring horizontal timing parameter */
-			RasterHparamConfig(SOC_LCDC_0_REGS, 800, 80, 16, 160);
-
-			/* Configuring vertical timing parameters */
-			RasterVparamConfig(SOC_LCDC_0_REGS, 600, 3, 1, 21);
-			break;
-		case HD:
-			/* Configuring horizontal timing parameter */
-			RasterHparamConfig(SOC_LCDC_0_REGS, 1280, 40, 220, 440);
-
-			/* Configuring vertical timing parameters */
-			RasterVparamConfig(SOC_LCDC_0_REGS, 720, 6, 4, 20);
-			break;
-		case FHD:
-			/* Configuring horizontal timing parameter */
-			RasterHparamConfig(SOC_LCDC_0_REGS, 1920, 44, 148, 638);
-
-			/* Configuring vertical timing parameters */
-			RasterVparamConfig(SOC_LCDC_0_REGS, 1080, 5, 4, 36);
-			break;
-   }
+	/* Configuring vertical timing parameters */
+			RasterVparamConfig(SOC_LCDC_0_REGS, LcdStruct->raster_timings->Y, LcdStruct->raster_timings->vsw, LcdStruct->raster_timings->vfp, LcdStruct->raster_timings->vbp);
 
     RasterFIFODMADelayConfig(SOC_LCDC_0_REGS, 128);
 
     /* Configuring the base ceiling */
     RasterDMAFBConfig(SOC_LCDC_0_REGS,
                       (unsigned int)LcdStruct->DisplayData,
-                      (unsigned int)LcdStruct->DisplayData + (LcdStruct->Height * LcdStruct->Width * sizeof(LcdStruct->DisplayData[0])) + (palete_raster_len * sizeof(LcdStruct->DisplayData[0])) - 2,
+                      (unsigned int)LcdStruct->DisplayData + (LcdStruct->raster_timings->X * LcdStruct->raster_timings->Y * sizeof(LcdStruct->DisplayData[0])) + (LcdStruct->raster_timings->palete_len * sizeof(LcdStruct->DisplayData[0])) - 2,
                       0);
 
     RasterDMAFBConfig(SOC_LCDC_0_REGS,
                       (unsigned int)LcdStruct->DisplayData,
-                      (unsigned int)LcdStruct->DisplayData + (LcdStruct->Height * LcdStruct->Width * sizeof(LcdStruct->DisplayData[0])) + (palete_raster_len * sizeof(LcdStruct->DisplayData[0])) - 2,
+                      (unsigned int)LcdStruct->DisplayData + (LcdStruct->raster_timings->X * LcdStruct->raster_timings->Y * sizeof(LcdStruct->DisplayData[0])) + (LcdStruct->raster_timings->palete_len * sizeof(LcdStruct->DisplayData[0])) - 2,
                       1);
 
     /* Enable End of frame0/frame1 interrupt */
@@ -310,34 +187,29 @@ void _lcd_disable()
 //#######################################################################################
 void _screen_backlight_on(tDisplay *pDisplay)
 {
-	switch(pDisplay->LcdType)
+	if(pDisplay->pmic_back_light)
 	{
-	case S035Q01:
 		pmic_backlight_enable(pDisplay->PmicTwiModuleStruct);
 		pmic_backlight_level(pDisplay->PmicTwiModuleStruct, pDisplay->BackLightLevel);
-		return;
-	case AT070TN92:
-		gpio_out(pDisplay->BackLight, 0);
-		return;
-	case TFT43AB_OMAP35x:
-		gpio_out(pDisplay->BackLight, 1);
-		return;
+	}
+	else
+	{
+		if(pDisplay->invert_backlight) gpio_out(pDisplay->BackLight, 0);
+		else gpio_out(pDisplay->BackLight, 1);
 	}
 }
 //#######################################################################################
 void _screen_backlight_off(tDisplay *pDisplay)
 {
-	switch(pDisplay->LcdType)
+	if(pDisplay->pmic_back_light)
 	{
-	case S035Q01:
+		pmic_backlight_enable(pDisplay->PmicTwiModuleStruct);
 		pmic_backlight_level(pDisplay->PmicTwiModuleStruct, 0);
-		return;
-	case AT070TN92:
-		gpio_out(pDisplay->BackLight, 1);
-		return;
-	case TFT43AB_OMAP35x:
-		gpio_out(pDisplay->BackLight, 0);
-		return;
+	}
+	else
+	{
+		if(pDisplay->invert_backlight) gpio_out(pDisplay->BackLight, 1);
+		else gpio_out(pDisplay->BackLight, 0);
 	}
 }
 //#######################################################################################
@@ -358,7 +230,7 @@ void _box_cache_clean(tDisplay *pDisplay, signed int x_start, signed int y_start
 	for(; LineCnt < y_end; LineCnt++)
 	{
 		if(LineCnt >= pDisplay->sClipRegion.sYMax) return;
-		CacheDataCleanInvalidateBuff((unsigned int)((unsigned int*)(ScreenBuff + (pDisplay->Width * LineCnt))), width_to_refresh);
+		CacheDataCleanInvalidateBuff((unsigned int)((unsigned int*)(ScreenBuff + (pDisplay->raster_timings->X * LineCnt))), width_to_refresh);
 	}
 }
 //#######################################################################################
@@ -367,7 +239,7 @@ void _put_rectangle(tDisplay *pDisplay, signed int x_start, signed int y_start, 
 	signed int x_end = x_start + x_len ,y_end = y_start + y_len;
 	if(x_start >= pDisplay->sClipRegion.sXMax || y_start >= pDisplay->sClipRegion.sYMax || x_end < pDisplay->sClipRegion.sXMin || y_end < pDisplay->sClipRegion.sYMin) return;
 	register signed int LineCnt = y_start;
-	volatile unsigned int* ScreenBuff = pDisplay->DisplayData + palete_raster_len;
+	volatile unsigned int* ScreenBuff = pDisplay->DisplayData + pDisplay->raster_timings->palete_len;
 	unsigned int _color = color<<8;
 	if(fill)
 	{
@@ -384,7 +256,7 @@ void _put_rectangle(tDisplay *pDisplay, signed int x_start, signed int y_start, 
 			register int x = _x_start;
 			for( ; x < _x_end ; x++)
 			{
-				ScreenBuff[x + (pDisplay->Width * LineCnt)] = _color;
+				ScreenBuff[x + (pDisplay->raster_timings->X * LineCnt)] = _color;
 			}
 		}
 		return;
@@ -398,7 +270,7 @@ void _put_rectangle(tDisplay *pDisplay, signed int x_start, signed int y_start, 
 	{
 		for(LineCnt = _x_start ; LineCnt < _x_end ; LineCnt++)
 		{
-			ScreenBuff[LineCnt + (pDisplay->Width * y_start)] = _color;
+			ScreenBuff[LineCnt + (pDisplay->raster_timings->X * y_start)] = _color;
 		}
 	}
 
@@ -406,7 +278,7 @@ void _put_rectangle(tDisplay *pDisplay, signed int x_start, signed int y_start, 
 	{
 		for(LineCnt = _x_start ; LineCnt < _x_end ; LineCnt++)
 		{
-			ScreenBuff[LineCnt + (pDisplay->Width * (y_end - 1))] = _color;
+			ScreenBuff[LineCnt + (pDisplay->raster_timings->X * (y_end - 1))] = _color;
 		}
 	}
 
@@ -418,7 +290,7 @@ void _put_rectangle(tDisplay *pDisplay, signed int x_start, signed int y_start, 
 	{
 		for(LineCnt = _y_start ; LineCnt < _y_end ; LineCnt++)
 		{
-			ScreenBuff[x_start + (pDisplay->Width * LineCnt)] = _color;
+			ScreenBuff[x_start + (pDisplay->raster_timings->X * LineCnt)] = _color;
 		}
 	}
 
@@ -426,7 +298,7 @@ void _put_rectangle(tDisplay *pDisplay, signed int x_start, signed int y_start, 
 	{
 		for(LineCnt = _y_start ; LineCnt < _y_end ; LineCnt++)
 		{
-			ScreenBuff[(x_end - 1) + (pDisplay->Width * LineCnt)] = _color;
+			ScreenBuff[(x_end - 1) + (pDisplay->raster_timings->X * LineCnt)] = _color;
 		}
 	}
 
@@ -437,7 +309,7 @@ void _put_pixel(tDisplay *pDisplay, signed int X, signed int Y, unsigned int col
 {
 	if(X >= pDisplay->sClipRegion.sXMin && Y >= pDisplay->sClipRegion.sYMin && X < pDisplay->sClipRegion.sXMax && Y < pDisplay->sClipRegion.sYMax)
 	{
-		pDisplay->DisplayData[X + palete_raster_len + (pDisplay->Width * Y)] = color;
+		pDisplay->DisplayData[X + pDisplay->raster_timings->palete_len + (pDisplay->raster_timings->X * Y)] = color;
 	}
 }
 //#######################################################################################
@@ -464,7 +336,7 @@ void _screen_put_rgb_array_16(void *_pDisplay, unsigned short *rgb_buffer, unsig
 			color = RGB_TO_UINT((Tmp2<<3) & 0xF8, ((Tmp1<<5) | (Tmp2>>3)) & 0xFC, Tmp1 & 0xF8);
 			_put_pixel(pDisplay, x, y, color);
 		}
-		CacheDataCleanBuff((unsigned int)&pDisplay->DisplayData + palete_raster_len + x1 + (pDisplay->Width * y), width * 4);
+		CacheDataCleanBuff((unsigned int)&pDisplay->DisplayData + pDisplay->raster_timings->palete_len + x1 + (pDisplay->raster_timings->X * y), width * 4);
 	}
 	//lcd.dblbuf = dblbuf;
 }
@@ -479,14 +351,14 @@ void _screen_put_rgb_array_24(void *_pDisplay, unsigned char *rgb_buffer, unsign
 		if(y < pDisplay->sClipRegion.sYMin || y > pDisplay->sClipRegion.sYMax);
 		else
 		{
-			register unsigned int *DisplayStartLine = (unsigned int *)pDisplay->DisplayData + palete_raster_len + x1 + (pDisplay->Width * y);
+			register unsigned int *DisplayStartLine = (unsigned int *)pDisplay->DisplayData + pDisplay->raster_timings->palete_len + x1 + (pDisplay->raster_timings->X * y);
 			register unsigned int *DisplayEndLine = DisplayStartLine + width;
 			while(DisplayStartLine < DisplayEndLine)
 			{
 				*DisplayStartLine++= ((*Buff)<<24) | ((*(Buff+1))<<16) | ((*(Buff+2))<<8);
 				Buff+=3;
 			}
-			CacheDataCleanBuff((unsigned int)&pDisplay->DisplayData + palete_raster_len + x1 + (pDisplay->Width * y * 4), width * 4);
+			CacheDataCleanBuff((unsigned int)&pDisplay->DisplayData + pDisplay->raster_timings->palete_len + x1 + (pDisplay->raster_timings->X * y * 4), width * 4);
 		}
 	}
 }
@@ -504,11 +376,11 @@ void _screen_put_rgb_array_32(void *_pDisplay, unsigned char *rgb_buffer, unsign
 		if(y < pDisplay->sClipRegion.sYMin || y > pDisplay->sClipRegion.sYMax);
 		else
 		{
-			unsigned int *DisplayStartLine = (unsigned int *)pDisplay->DisplayData + palete_raster_len + x1 + (pDisplay->Width * y);
+			unsigned int *DisplayStartLine = (unsigned int *)pDisplay->DisplayData + pDisplay->raster_timings->palete_len + x1 + (pDisplay->raster_timings->X * y);
 			unsigned char *Buff = rgb_buffer + (width * _y * 4) - 1;
 			_y++;
 			memcpy((void*)(DisplayStartLine), (void*)(Buff), width * 4);
-			CacheDataCleanBuff((unsigned int)((unsigned int*)(pDisplay->DisplayData + palete_raster_len + x1 + (pDisplay->Width * y))), _width);
+			CacheDataCleanBuff((unsigned int)((unsigned int*)(pDisplay->DisplayData + pDisplay->raster_timings->palete_len + x1 + (pDisplay->raster_timings->X * y))), _width);
 		}
 	}
 }

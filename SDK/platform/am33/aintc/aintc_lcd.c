@@ -42,16 +42,16 @@ static void LCDIsr(void)
     if (status & RASTER_END_OF_FRAME0_INT_STAT)
     {
         RasterDMAFBConfig(SOC_LCDC_0_REGS,
-                          (unsigned int)ScreenRander->DisplayData,
-                          (unsigned int)ScreenRander->DisplayData + (ScreenRander->Height * ScreenRander->Width * sizeof(ScreenRander->DisplayData[0])) - 2,
+                (unsigned int)ScreenRander->DisplayData,
+                (unsigned int)ScreenRander->DisplayData + (ScreenRander->raster_timings->X * ScreenRander->raster_timings->Y * sizeof(ScreenRander->DisplayData[0])) - 2,
                           0);
     }
 
     if(status & RASTER_END_OF_FRAME1_INT_STAT)
     {
         RasterDMAFBConfig(SOC_LCDC_0_REGS,
-                          (unsigned int)ScreenRander->DisplayData,
-                          (unsigned int)ScreenRander->DisplayData + (ScreenRander->Height * ScreenRander->Width * sizeof(ScreenRander->DisplayData[0])) - 2,
+                (unsigned int)ScreenRander->DisplayData,
+                (unsigned int)ScreenRander->DisplayData + (ScreenRander->raster_timings->X * ScreenRander->raster_timings->Y * sizeof(ScreenRander->DisplayData[0])) - 2,
                           1);
     }
 

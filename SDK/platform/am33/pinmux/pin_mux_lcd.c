@@ -14,7 +14,7 @@
 
 extern new_screen* ScreenRander;
 /**********************************************/
-unsigned int pin_mux_lcd_LCD3_beaglebone(void)
+unsigned int pin_mux_lcd_16bit(void)
 {
     HWREG(SOC_CONTROL_REGS + CONTROL_CONF_LCD_DATA(0)) =
               (0 << CONTROL_CONF_LCD_DATA0_CONF_LCD_DATA0_MMODE_SHIFT)    |
@@ -158,7 +158,7 @@ unsigned int pin_mux_lcd_LCD3_beaglebone(void)
      return 1;
 }
 /**********************************************/
-unsigned int pin_mux_lcd_AT070TN92_beaglebone(void)
+unsigned int pin_mux_lcd_24bit(void)
 {
     HWREG(SOC_CONTROL_REGS + CONTROL_CONF_LCD_DATA(0)) =
               (0 << CONTROL_CONF_LCD_DATA0_CONF_LCD_DATA0_MMODE_SHIFT)    |
@@ -366,13 +366,8 @@ unsigned int pin_mux_lcd_AT070TN92_beaglebone(void)
 
 unsigned int LCDPinMuxSetup(void)
 {
-	if(ScreenRander->LcdType == AT070TN92) return pin_mux_lcd_AT070TN92_beaglebone();
-	else if(ScreenRander->LcdType == VGA) return pin_mux_lcd_AT070TN92_beaglebone();
-	else if(ScreenRander->LcdType == LVDS) return pin_mux_lcd_AT070TN92_beaglebone();
-	else if(ScreenRander->LcdType == S035Q01) return pin_mux_lcd_LCD3_beaglebone();
-	else if(ScreenRander->LcdType == TFT43AB_OMAP35x) return pin_mux_lcd_LCD3_beaglebone();
-	else if(ScreenRander->LcdType == HD) return pin_mux_lcd_AT070TN92_beaglebone();
-	else if(ScreenRander->LcdType == FHD) return pin_mux_lcd_AT070TN92_beaglebone();
+	if(ScreenRander->raster_timings->bus_size == 24) return pin_mux_lcd_24bit();
+	else if(ScreenRander->raster_timings->bus_size == 16) return pin_mux_lcd_16bit();
 	else return 0;
 }
 /**********************************************/

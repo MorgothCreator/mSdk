@@ -51,7 +51,7 @@ typedef struct
 {
 	unsigned int X;
 	unsigned int Y;
-	unsigned int pll_clk;
+	unsigned int ref_clk;
 	unsigned int pll_m;
 	unsigned int pll_n;
 	unsigned int pll_m2;
@@ -64,7 +64,13 @@ typedef struct
 	unsigned int vsw;
 	unsigned int vfp;
 	unsigned int vbp;
-}RASTER_TIMING_HD;
+}RASTER_TIMINGS;
+//*****************************************************************************
+RASTER_TIMINGS lcd_S035Q01_beaglebone_exp;
+RASTER_TIMINGS lcd_TFT43AB_OMAP35x_beaglebone_exp;
+RASTER_TIMINGS lcd_AT070TN92_beaglebone_exp;
+RASTER_TIMINGS lcd_720p_50hz_beaglebone_exp;
+RASTER_TIMINGS lcd_1080p_24hz_beaglebone_exp;
 //*****************************************************************************
 //
 //! This structure defines the extents of a rectangle.  All points greater than
@@ -143,9 +149,13 @@ tFont;
 typedef struct sDisplay
 {
 	unsigned short Orientation;
-	signed int Width;
-	signed int Height;
-	unsigned int LcdType;
+	//signed int Width;
+	//signed int Height;
+	//unsigned int LcdType;
+	bool touch_invert_x;
+	bool touch_invert_y;
+	bool pmic_back_light;
+	bool invert_backlight;
 	volatile unsigned int* DisplayData;
 	unsigned int BackLightPort;
 	unsigned int BackLightPin;
@@ -157,7 +167,8 @@ typedef struct sDisplay
     tRectangle sClipRegion;
 	Gpio_t* BackLight;
 	Twi_t* PmicTwiModuleStruct;
-	RASTER_TIMING_HD *raster_timings;
+	RASTER_TIMINGS *raster_timings;
+	RASTER_TIMINGS *old_raster_timings;
 	void *UserData;
 }tDisplay;
 //*****************************************************************************
