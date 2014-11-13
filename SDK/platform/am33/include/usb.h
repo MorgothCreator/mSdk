@@ -51,7 +51,7 @@
 extern "C"
 {
 #endif
-
+#include "include/hw/hw_types.h"
 //*****************************************************************************
 //
 // The following are values that can be passed to USBIntEnableControl() and
