@@ -1857,7 +1857,7 @@ USBDSCSIRead10(const tUSBDMSCDevice *psDevice, tMSCCBW *pSCSICBW,
     unsigned int usNumBlocks;
 
 #ifdef DMA_MODE
-    unsigned int txBuffer = 0;
+    unsigned char *txBuffer = NULL;
     unsigned int nBlocks = 0;
 #endif
 
@@ -1903,7 +1903,7 @@ USBDSCSIRead10(const tUSBDMSCDevice *psDevice, tMSCCBW *pSCSICBW,
         //
         //Allocate buffer for TX data
         //
-        txBuffer=(unsigned int)cppiDmaAllocnBuffer(nBlocks);
+        txBuffer=/*(unsigned int)*/cppiDmaAllocnBuffer(nBlocks);
         
         //
         // Read the next logical block from the storage device.

@@ -26,6 +26,7 @@
 #ifndef __USBDEVICE_H__
 #define __USBDEVICE_H__
 
+#include "usblib.h"
 //*****************************************************************************
 //
 // If building with a C++ compiler, make all of the definitions in this header
