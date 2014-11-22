@@ -152,27 +152,60 @@ bool board_init()
 #endif
 /*-----------------------------------------------------*/
 	UARTPuts(DebugCom, "Init MMCSD0 Host.......", -1);
-	sdCtrl[1].SdNr = 0;
+	sdCtrl[0].SdNr = 0;
 	mmcsd_init(&sdCtrl[0], 0, 6, LED[0]);
 	UARTPuts(DebugCom, "OK.\n\r", -1);
+    mmcsd_idle(&sdCtrl[0]);
 /*-----------------------------------------------------*/
 	eMMC_Res = gpio_assign(1, 20, GPIO_DIR_OUTPUT, false);
 	gpio_out(eMMC_Res, 0);
-	//Sysdelay(10);
+	Sysdelay(10);
 	gpio_out(eMMC_Res, 1);
 	UARTPuts(DebugCom, "Init MMCSD1 Host.......", -1);
 	sdCtrl[1].SdNr = 1;
 	mmcsd_init(&sdCtrl[1], -1, -1, LED[0]);
 	UARTPuts(DebugCom, "OK.\n\r", -1);
+    mmcsd_idle(&sdCtrl[1]);
 /*-----------------------------------------------------*/
 #ifdef usb_1_msc
 	UARTPuts(DebugCom, "Init USBMSC1 Host.......", -1);
 	usb_msc_host_init(1, LED[2]);
 	UARTPuts(DebugCom, "OK.\n\r", -1);
+    usb_msc_host_idle(1);
 #endif
+/*-----------------------------------------------------*/
 #ifdef usb_1_mouse
 	UARTPuts(DebugCom, "Init USBMOUSE1 Host.......", -1);
 	usb_mouse_host_init(1);
+	UARTPuts(DebugCom, "OK.\n\r", -1);
+#endif
+/*-----------------------------------------------------*/
+#if defined( usb_0_dev_msc ) && defined ( BridgeUsbDev0ToMmcSd0)
+	UARTPuts(DebugCom, "Bridge USBMSC0 Dev for MMCSD0 Interface.......", -1);
+	drv_rw_func.DriveStruct = &sdCtrl[0];
+	drv_rw_func.drv_ioctl_func = mmcsd_ioctl;
+	drv_rw_func.drv_r_func = mmcsd_read;
+	drv_rw_func.drv_w_func = mmcsd_write;
+	usb_msc_dev_init(0);
+	UARTPuts(DebugCom, "OK.\n\r", -1);
+/*-----------------------------------------------------*/
+#elif  defined( usb_0_dev_msc ) && defined ( BridgeUsbDev0ToMmcSd1)
+	UARTPuts(DebugCom, "Bridge USBMSC0 Dev for MMCSD1 Interface.......", -1);
+	drv_rw_func.DriveStruct = &sdCtrl[1];
+	drv_rw_func.drv_ioctl_func = mmcsd_ioctl;
+	drv_rw_func.drv_r_func = mmcsd_read;
+	drv_rw_func.drv_w_func = mmcsd_write;
+	usb_msc_dev_init(0);
+	UARTPuts(DebugCom, "OK.\n\r", -1);
+/*-----------------------------------------------------*/
+#elif  defined( usb_0_dev_msc ) && defined ( BridgeUsbDev0ToUsbHost1) && !defined(usb_1_mouse)
+extern unsigned int g_ulMSCInstance0Usb1;//UsbMsc driver
+	UARTPuts(DebugCom, "Bridge USBMSC0 Dev for USBMSC1Host Interface.......", -1);
+	drv_rw_func.DriveStruct = (void *)g_ulMSCInstance0Usb1;
+	drv_rw_func.drv_ioctl_func = usb_msc_host_ioctl;
+	drv_rw_func.drv_r_func = usb_msc_host_read;
+	drv_rw_func.drv_w_func = usb_msc_host_write;
+	usb_msc_dev_init(0);
 	UARTPuts(DebugCom, "OK.\n\r", -1);
 #endif
 /*-----------------------------------------------------*/
@@ -255,7 +288,7 @@ bool board_init()
 			HARDBTN[1] = gpio_assign(1, 16, GPIO_DIR_INPUT, false);
 			HARDBTN[2] = gpio_assign(1, 17, GPIO_DIR_INPUT, false);
 			HARDBTN[3] = gpio_assign(0, 7, GPIO_DIR_INPUT, false);
-			HARDBTN[4] = gpio_assign(1, 3, GPIO_DIR_INPUT, false);
+			//HARDBTN[4] = gpio_assign(1, 3, GPIO_DIR_INPUT, false);
 /*-----------------------------------------------------*/
 			ScreenBuff = new_(new_screen);
 			ScreenBuff->raster_timings = &lcd_720p_50hz_beaglebone_exp;

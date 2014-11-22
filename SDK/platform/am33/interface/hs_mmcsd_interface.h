@@ -17,6 +17,7 @@
 /*#####################################################*/
 void _mmcsd_init(void *SdCtrlStruct, signed int CardDetectPortNr, signed int CardDetectPinNr, new_gpio* StatusLed);
 void _mmcsd_idle(void *SdCtrlStruct);
+void _mmcsd_ioctl(void *SdCtrlStruct, unsigned int  command,  unsigned int *buffer);
 /*#####################################################*/
 #ifdef HEADER_INCLUDE_C_FILES
 #include "hs_mmcsd_interface.c"
