@@ -23,12 +23,19 @@
 #define USB_MSC_HOST_API_H_
 
 #include "gpio_api.h"
+#include "interface/usb_dev_msc_interface.h"
 #include "lib/gfx/controls_definition.h"
+
+extern USBD_DRV_RW_FUNC drv_rw_func;
 
 void usb_msc_host_init(unsigned int instance, new_gpio* StatusLed);
 void usb_msc_host_idle(unsigned int instance);
+unsigned int usb_msc_host_read(void *_ctrl, void *ptr, unsigned long block, unsigned int nblks);
+unsigned int usb_msc_host_write(void *_ctrl, void *ptr, unsigned long block, unsigned int nblks);
+void usb_msc_host_ioctl(void *_ctrl, unsigned int  command,  unsigned int *buffer);
 void usb_mouse_host_init(unsigned int instance);
 void usb_mouse_host_idle(unsigned int instance, tControlCommandData *control_comand);
+void usb_msc_dev_init(unsigned int instance);
 
 #ifdef HEADER_INCLUDE_C_FILES
 #include "usb_msc_host_api.c"

@@ -34,6 +34,7 @@
 #include "interface/usblib/host/usbhscsi.c"
 #endif
 
+#include "driver/cpu.h"
 
 #include "api/gpio_api.h"
 
@@ -197,7 +198,7 @@ endpointInfo epInfo[]=
 		USB_EP_TO_INDEX(USB_EP_1),
 		CPDMA_DIR_TX,
 		CPDMA_MODE_SET_GRNDIS,
-	},
+	}/*,
 
 	{
 		USB_EP_TO_INDEX(USB_EP_2),
@@ -209,11 +210,11 @@ endpointInfo epInfo[]=
 		USB_EP_TO_INDEX(USB_EP_2),
 		CPDMA_DIR_TX,
 		CPDMA_MODE_SET_GRNDIS,
-	}
+	}*/
 
 };
 
-#define NUMBER_OF_ENDPOINTS 4
+#define NUMBER_OF_ENDPOINTS 2
 
 #endif
 
@@ -441,70 +442,73 @@ MSCCallback(unsigned int ulInstance, unsigned int ulEvent, void *pvData)
 }
 
 
-unsigned int USBMSCReadBlock0(void *_ctrl, void *ptr, unsigned long block,
+unsigned int USBMSCReadBlock(void *_ctrl, void *ptr, unsigned long block,
                               unsigned int nblks)
 {
+	unsigned int status = CPUIntStatus();
+	CPUirqe();
 	if(LedStatusUsb0) gpio_out(LedStatusUsb0, 1);
 	if(USBHMSCBlockRead((unsigned int)_ctrl, block, ptr, nblks) == 0)
 	{
 		if(LedStatusUsb0) gpio_out(LedStatusUsb0, 0);
+		if(status & 0x80) CPUirqd();
 		return 1;
 	}
 	else
 	{
 		if(LedStatusUsb0) gpio_out(LedStatusUsb0, 0);
+		if(status & 0x80) CPUirqd();
 		return 0;
 	}
 }
 
-unsigned int USBMSCWriteBlock0(void *_ctrl, void *ptr, unsigned long block,
+unsigned int USBMSCWriteBlock(void *_ctrl, void *ptr, unsigned long block,
                               unsigned int nblks)
 {
+	unsigned int status = CPUIntStatus();
+	CPUirqe();
 	if(LedStatusUsb0) gpio_out(LedStatusUsb0, 1);
 	if(USBHMSCBlockWrite((unsigned int)_ctrl, block, ptr, nblks) == 0)
 	{
 		if(LedStatusUsb0) gpio_out(LedStatusUsb0, 0);
+		if(status & 0x80) CPUirqd();
 		return 1;
 	}
 	else
 	{
 		if(LedStatusUsb0) gpio_out(LedStatusUsb0, 0);
+		if(status & 0x80) CPUirqd();
 		return 0;
 	}
 
 }
-unsigned int USBMSCReadBlock1(void *_ctrl, void *ptr, unsigned long block,
-                              unsigned int nblks)
+
+void _usb_msc_host_ioctl(void *ctrl, unsigned int  command,  unsigned int *buffer)
 {
-	if(LedStatusUsb1) gpio_out(LedStatusUsb1, 1);
-	if(USBHMSCBlockRead((unsigned int)_ctrl, block, ptr, nblks) == 0)
-	{
-		if(LedStatusUsb1) gpio_out(LedStatusUsb1, 0);
-		return 1;
-	}
-	else
-	{
-		if(LedStatusUsb1) gpio_out(LedStatusUsb1, 0);
-		return 0;
-	}
+	tUSBHMSCInstance * _ctrl = (tUSBHMSCInstance *)ctrl;
+    switch(command)
+    {
+
+        case GET_SECTOR_COUNT:
+        {
+           *buffer = _ctrl->ulNumBlocks;
+            break;
+        }
+        case GET_SECTOR_SIZE:
+        {
+            *buffer = _ctrl->ulBlockSize;
+
+            break;
+        }
+        default:
+        {
+            *buffer = 0;
+            break;
+        }
+
+    }
 }
 
-unsigned int USBMSCWriteBlock1(void *_ctrl, void *ptr, unsigned long block,
-                              unsigned int nblks)
-{
-	if(LedStatusUsb1) gpio_out(LedStatusUsb1, 1);
-	if(USBHMSCBlockWrite((unsigned int)_ctrl, block, ptr, nblks) == 0)
-	{
-		if(LedStatusUsb1) gpio_out(LedStatusUsb1, 0);
-		return 1;
-	}
-	else
-	{
-		if(LedStatusUsb1) gpio_out(LedStatusUsb1, 0);
-		return 0;
-	}
-
-}
 
 
 void _usb_msc_host_init(unsigned int instance, new_gpio* StatusLed)
@@ -609,8 +613,8 @@ void _usb_msc_host_idle(unsigned int instance)
     		Drives_Table[8] = new_(new_fat_disk);
     		Drives_Table[8]->DiskInfo_SdDriverStructAddr = (void*)g_ulMSCInstance0Usb1;
     		//Drives_Table[4]->drive_init = MMCSD_CardInit;
-    		Drives_Table[8]->drive_read_page = USBMSCReadBlock1;
-    		Drives_Table[8]->drive_write_page = USBMSCWriteBlock1;
+    		Drives_Table[8]->drive_read_page = USBMSCReadBlock;
+    		Drives_Table[8]->drive_write_page = USBMSCWriteBlock;
     		if(_Fat_Mount(8))
     		{
 																	UARTPuts(DebugCom,   "USB1 drive 8 mounted\n\r" , -1);
@@ -636,8 +640,8 @@ void _usb_msc_host_idle(unsigned int instance)
     		else 													UARTPuts(DebugCom,   "USB1 Fat not detected\n\r" , -1);
 #else
             g_sFatFs2.drv_rw_func.DriveStruct = (void*)g_ulMSCInstance0Usb1;
-            g_sFatFs2.drv_rw_func.drv_r_func = USBMSCReadBlock1;
-            g_sFatFs2.drv_rw_func.drv_w_func = USBMSCWriteBlock1;
+            g_sFatFs2.drv_rw_func.drv_r_func = USBMSCReadBlock;
+            g_sFatFs2.drv_rw_func.drv_w_func = USBMSCWriteBlock;
             if(!f_mount(4, &g_sFatFs2))
             {
                 if(f_opendir(&g_sDirObject, g_cCwdBuf2) == FR_OK)
@@ -821,8 +825,8 @@ void _usb_msc_host_idle(unsigned int instance)
 			else 													UARTPuts(DebugCom,   "USB0 Fat not detected\n\r" , -1);
 #else
             g_sFatFs1.drv_rw_func.DriveStruct = (void*)g_ulMSCInstance0Usb0;
-            g_sFatFs1.drv_rw_func.drv_r_func = USBMSCReadBlock0;
-            g_sFatFs1.drv_rw_func.drv_w_func = USBMSCWriteBlock0;
+            g_sFatFs1.drv_rw_func.drv_r_func = USBMSCReadBlock;
+            g_sFatFs1.drv_rw_func.drv_w_func = USBMSCWriteBlock;
             if(!f_mount(3, &g_sFatFs1))
             {
                 if(f_opendir(&g_sDirObject, g_cCwdBuf1) == FR_OK)

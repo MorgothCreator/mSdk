@@ -22,6 +22,7 @@
 #include "usb_host_api.h"
 #include "interface/usb_host_msc_interface.h"
 #include "interface/usb_host_mouse_interface.h"
+#include "interface/usb_dev_msc_interface.h"
 #include "api/gpio_api.h"
 #include "lib/gfx/controls_definition.h"
 
@@ -35,6 +36,21 @@ void usb_msc_host_idle(unsigned int instance)
 	_usb_msc_host_idle(instance);
 }
 
+unsigned int usb_msc_host_read(void *_ctrl, void *ptr, unsigned long block, unsigned int nblks)
+{
+	return USBMSCReadBlock(_ctrl, ptr, block, nblks);
+}
+
+unsigned int usb_msc_host_write(void *_ctrl, void *ptr, unsigned long block, unsigned int nblks)
+{
+	return USBMSCWriteBlock(_ctrl, ptr, block, nblks);
+}
+
+void usb_msc_host_ioctl(void *_ctrl, unsigned int  command,  unsigned int *buffer)
+{
+	_usb_msc_host_ioctl(_ctrl, command, buffer);
+}
+
 void usb_mouse_host_init(unsigned int instance)
 {
 	_usb_mouse_host_init(instance);
@@ -43,6 +59,11 @@ void usb_mouse_host_init(unsigned int instance)
 void usb_mouse_host_idle(unsigned int instance, tControlCommandData *control_comand)
 {
 	_usb_mouse_host_idle(instance, control_comand);
+}
+
+void usb_msc_dev_init(unsigned int instance)
+{
+	_usb_msc_dev_init(instance);
 }
 
 

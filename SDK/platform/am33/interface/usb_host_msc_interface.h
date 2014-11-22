@@ -15,6 +15,11 @@
 
 void _usb_msc_host_init(unsigned int instance, new_gpio* StatusLed);
 void _usb_msc_host_idle(unsigned int instance);
+void _usb_msc_host_ioctl(void *ctrl, unsigned int  command,  unsigned int *buffer);
+unsigned int USBMSCReadBlock(void *_ctrl, void *ptr, unsigned long block,
+                              unsigned int nblks);
+unsigned int USBMSCWriteBlock(void *_ctrl, void *ptr, unsigned long block,
+                              unsigned int nblks);
 
 #ifdef HEADER_INCLUDE_C_FILES
 #include "usb_interface.c"
