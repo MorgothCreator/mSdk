@@ -33,3 +33,18 @@ void mmcsd_idle(void *SdStruct)
 	_mmcsd_idle(SdStruct);
 }
 /*#####################################################*/
+void mmcsd_ioctl(void *_ctrl, unsigned int  command,  unsigned int *buffer)
+{
+	_mmcsd_ioctl(_ctrl, command,  buffer);
+}
+/*#####################################################*/
+unsigned int mmcsd_write(void *_ctrl, void *ptr, unsigned long block, unsigned int nblks)
+{
+	return MMCSDWriteCmdSend(_ctrl, ptr, block, nblks);
+}
+/*#####################################################*/
+unsigned int mmcsd_read(void *_ctrl, void *ptr, unsigned long block, unsigned int nblks)
+{
+	return MMCSDReadCmdSend(_ctrl, ptr, block, nblks);
+}
+/*#####################################################*/

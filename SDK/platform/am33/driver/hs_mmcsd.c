@@ -629,7 +629,7 @@ void HSMMCSDCommandSend(unsigned int baseAddr, unsigned int cmd,
 {
     if (NULL != data)
     {
-        if(nblks > 1) cmd |= (MMCHS_CMD_BCE | MMCHS_CMD_MSBS);
+        /*if(nblks > 1) */cmd |= (MMCHS_CMD_BCE | MMCHS_CMD_MSBS);
     	cmd |= (MMCHS_CMD_DP);
     }
 
@@ -637,14 +637,14 @@ void HSMMCSDCommandSend(unsigned int baseAddr, unsigned int cmd,
     {
         cmd |= MMCHS_CMD_DE;
     }
-    switch((cmd & MMCHS_CMD_INDX) >> MMCHS_CMD_INDX_SHIFT)
+    /*switch((cmd & MMCHS_CMD_INDX) >> MMCHS_CMD_INDX_SHIFT)
     {
     case (MMCHS_CMD_INDX_CMD1):
     case (MMCHS_CMD_INDX_CMD2):
     case (MMCHS_CMD_INDX_CMD3):
     case (MMCHS_CMD_INDX_CMD40):
     	HWREG(baseAddr + MMCHS_CON) |= MMCHS_CON_OD;
-    }
+    }*/
 
     /* Set the block information; block length is specified separately */
     HWREG(baseAddr + MMCHS_BLK) &= ~MMCHS_BLK_NBLK;

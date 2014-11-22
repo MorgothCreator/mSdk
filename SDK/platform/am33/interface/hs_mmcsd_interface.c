@@ -88,7 +88,9 @@ DIR g_sDirObject;
 //
 //*****************************************************************************
 #define PATH_BUF_SIZE   4
-static char g_cCwdBuf[PATH_BUF_SIZE] = "0:/";
+static char g_cCwdBuf0[PATH_BUF_SIZE] = "0:/";
+static char g_cCwdBuf1[PATH_BUF_SIZE] = "1:/";
+char *g_cCwdBuf[2] = {g_cCwdBuf0, g_cCwdBuf1};
 
 /******************************************************************************
 **                      INTERNAL MACRO DEFINITIONS
@@ -205,7 +207,7 @@ static unsigned int HSMMCSDCmdStatusGet(mmcsdCtrlInfo *ctrl)
 static unsigned int HSMMCSDXferStatusGet(mmcsdCtrlInfo *ctrl)
 {
     unsigned int status = 0;
-    volatile unsigned int timeOut = 0xFFFF;
+    volatile unsigned int timeOut = 0xFFFFFF;
 
     /*do
     {
@@ -277,9 +279,22 @@ void HSMMCSDRxDmaConfig(mmcsdCtrlInfo *ctrl, void *ptr, unsigned int blkSize, un
     paramSet.bCntReload = 0x0;
     paramSet.linkAddr   = 0xffff;
     paramSet.opt        = 0;
+    int dma_channel = 0;
+    switch(ctrl->SdNr)
+    {
+	case 0:
+		dma_channel = EDMA3_CHA_MMCSD0_RX;
+		break;
+	case 1:
+		dma_channel = EDMA3_CHA_MMCSD1_RX;
+		break;
+	case 2:
+		dma_channel = EDMA3_CHA_MMCSD2_RX;
+		break;
+    }
 
     /* Set OPT */
-    paramSet.opt |= ((MMCSD_RX_EDMA_CHAN << EDMA3CC_OPT_TCC_SHIFT) & EDMA3CC_OPT_TCC);
+    paramSet.opt |= ((dma_channel << EDMA3CC_OPT_TCC_SHIFT) & EDMA3CC_OPT_TCC);
 
     /* 1. Transmission complition interrupt enable */
     paramSet.opt |= (1 << EDMA3CC_OPT_TCINTEN_SHIFT);
@@ -294,10 +309,10 @@ void HSMMCSDRxDmaConfig(mmcsdCtrlInfo *ctrl, void *ptr, unsigned int blkSize, un
     paramSet.opt |= (1 << 2);
 
     /* configure PaRAM Set */
-    EDMA3SetPaRAM(EDMA_INST_BASE, MMCSD_RX_EDMA_CHAN, &paramSet);
+    EDMA3SetPaRAM(EDMA_INST_BASE, dma_channel, &paramSet);
 
     /* Enable the transfer */
-    EDMA3EnableTransfer(EDMA_INST_BASE, MMCSD_RX_EDMA_CHAN, EDMA3_TRIG_MODE_EVENT);
+    EDMA3EnableTransfer(EDMA_INST_BASE, dma_channel, EDMA3_TRIG_MODE_EVENT);
 }
 
 void HSMMCSDTxDmaConfig(mmcsdCtrlInfo *ctrl, void *ptr, unsigned int blkSize, unsigned int blks)
@@ -316,9 +331,21 @@ void HSMMCSDTxDmaConfig(mmcsdCtrlInfo *ctrl, void *ptr, unsigned int blkSize, un
     paramSet.bCntReload = 0x0;
     paramSet.linkAddr   = 0xffff;
     paramSet.opt        = 0;
-
+    int dma_channel = 0;
+    switch(ctrl->SdNr)
+    {
+	case 0:
+		dma_channel = EDMA3_CHA_MMCSD0_TX;
+		break;
+	case 1:
+		dma_channel = EDMA3_CHA_MMCSD1_TX;
+		break;
+	case 2:
+		dma_channel = EDMA3_CHA_MMCSD2_TX;
+		break;
+    }
     /* Set OPT */
-    paramSet.opt |= ((MMCSD_TX_EDMA_CHAN << EDMA3CC_OPT_TCC_SHIFT) & EDMA3CC_OPT_TCC);
+    paramSet.opt |= ((dma_channel << EDMA3CC_OPT_TCC_SHIFT) & EDMA3CC_OPT_TCC);
 
     /* 1. Transmission complition interrupt enable */
     paramSet.opt |= (1 << EDMA3CC_OPT_TCINTEN_SHIFT);
@@ -333,10 +360,10 @@ void HSMMCSDTxDmaConfig(mmcsdCtrlInfo *ctrl, void *ptr, unsigned int blkSize, un
     paramSet.opt |= (1 << 2);
 
     /* configure PaRAM Set */
-    EDMA3SetPaRAM(EDMA_INST_BASE, MMCSD_TX_EDMA_CHAN, &paramSet);
+    EDMA3SetPaRAM(EDMA_INST_BASE, dma_channel, &paramSet);
 
     /* Enable the transfer */
-    EDMA3EnableTransfer(EDMA_INST_BASE, MMCSD_TX_EDMA_CHAN, EDMA3_TRIG_MODE_EVENT);
+    EDMA3EnableTransfer(EDMA_INST_BASE, dma_channel, EDMA3_TRIG_MODE_EVENT);
 }
 
 static void HSMMCSDXferSetup(mmcsdCtrlInfo *ctrl, unsigned char rwFlag, void *ptr,
@@ -406,6 +433,9 @@ void HSMMCSD2Isr(void)
 {
 	HSMMCSDIsrGen(ctrlInfo[2]);
 }
+
+
+
 /*
 ** Initialize the MMCSD controller structure for use
 */
@@ -467,6 +497,36 @@ static void HSMMCSDControllerSetup(mmcsdCtrlInfo* SdCtrlStruct, signed int CardD
     cmdTimeout[SdCtrlStruct->SdNr] = 0;
 }
 
+extern MMC_extCsd extCsd;
+
+void _mmcsd_ioctl(void *SdCtrlStruct, unsigned int  command,  unsigned int *buffer)
+{
+	mmcsdCtrlInfo* _SdCtrlStruct = (mmcsdCtrlInfo*)SdCtrlStruct;
+    switch(command)
+    {
+
+        case GET_SECTOR_COUNT:
+        {
+           if(_SdCtrlStruct->card->cardType == MMCSD_CARD_SD) *buffer = _SdCtrlStruct->card->nBlks;
+           else if(_SdCtrlStruct->card->cardType == MMCSD_CARD_MMC) *buffer = extCsd.sec_count;
+           else *buffer = 0;
+
+            break;
+        }
+        case GET_SECTOR_SIZE:
+        {
+            *buffer = _SdCtrlStruct->card->blkLen;
+
+            break;
+        }
+        default:
+        {
+            *buffer = 0;
+            break;
+        }
+
+    }
+}
 
 void _mmcsd_init(void *SdCtrlStruct, signed int CardDetectPortNr, signed int CardDetectPinNr, new_gpio* StatusLed)
 {
@@ -535,11 +595,11 @@ void _mmcsd_idle(void *SdCtrlStruct)
                 g_s_mmcFatFs[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr].drv_rw_func.drv_w_func = MMCSDWriteCmdSend;
                 if(!f_mount(((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr, &g_s_mmcFatFs[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr]))
                 {
-                    if(f_opendir(&g_sDirObject, g_cCwdBuf) == FR_OK)
+                    if(f_opendir(&g_sDirObject, g_cCwdBuf[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr]) == FR_OK)
                     {
 						if(DebugCom)
 						{
-																				UARTprintf(DebugCom,   "MMCSD%d drive 0 mounted\n\r" , ((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr);
+																				UARTprintf(DebugCom,   "MMCSD%d drive %d mounted\n\r" , ((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr , ((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr);
 																				UARTprintf(DebugCom,   "MMCSD%d Fat fs detected\n\r" , ((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr);
 																				UARTprintf(DebugCom, "MMCSD0 Fs type:                 ");
 							if(g_s_mmcFatFs[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr].fs_type == FS_FAT12)	{ 				UARTprintf(DebugCom, "Fat12");}

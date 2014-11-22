@@ -26,6 +26,9 @@
 /*#####################################################*/
 void mmcsd_init(void *SdStruct, signed int CardDetectPortNr, signed int CardDetectPinNr, new_gpio* StatusLed);
 void mmcsd_idle(void *SdStruct);
+void mmcsd_ioctl(void *_ctrl, unsigned int  command,  unsigned int *buffer);
+unsigned int mmcsd_write(void *_ctrl, void *ptr, unsigned long block, unsigned int nblks);
+unsigned int mmcsd_read(void *_ctrl, void *ptr, unsigned long block, unsigned int nblks);
 /*#####################################################*/
 #ifdef HEADER_INCLUDE_C_FILES
 #include "mmcsd_api.c"
