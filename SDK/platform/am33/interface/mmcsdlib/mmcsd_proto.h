@@ -55,6 +55,106 @@ extern "C" {
 
 struct _mmcsdCtrlInfo;
 
+/*
+ * EXT_CSD struct
+ */
+typedef struct _extCsd {
+	// [511:505] Reserved
+	char s_cmd_set;		 					// [504] Supported Command Sets
+	char hpi_features;						// [503] HPI features
+	char bkops_support; 					// [502] Background operations support
+	// [501:247] Reserved
+	char bkops_status;						// [246] Background operations status
+	unsigned int correctly_prg_sectors_num;	// [245:242] Number of correctly programmed sectors
+	char ini_timeout_ap;					// [241] 1st initialization time after partitioning
+	// [240] Reserved
+	char pwr_cl_ddr_52_360;					// [239] Power class for 52MHz, DDR at 3.6V
+	char pwr_cl_ddr_52_195;					// [238] Power class for 52MHz, DDR at 1.95V
+	// [237:236]
+	char min_perf_ddr_w_8_52;				// [235] Minimum Write Performance for 8bit at 52MHz in DDR mode
+	char min_perf_ddr_r_8_52;				// [234] Minimum Read Performance for 8bit at 52MHz in DDR mode
+	// [233]
+	char trim_mult;							// [232] TRIM Multiplier
+	char sec_feature_support;				// [231] Secure Feature support
+	char sec_erase_mult;					// [230] Secure Erase Multiplier
+	char sec_trim_mult;						// [229] Secure TRIM Multiplier
+	char boot_info;							// [228] Boot information
+	// [227] Reserved
+	char boot_size_multi;					// [226] Boot partition size
+	char acc_size;							// [225] Access size;
+	char hc_erase_grp_size;					// [224] High-capacity erase unit size
+	char erase_timeout_mult;				// [223] High-capacity erase timeout
+	char rel_wr_sec_c; 						// [222] Reliable write sector count
+	char hc_wp_grp_size;					// [221] High-capacity write protect group size
+	char s_c_vcc;							// [220] Sleep current (VCC)
+	char s_c_vccq;							// [219] Sleep current (VCCQ)
+	// [218] Reserved
+	char s_a_timeout;						// [217] Sleep/awake timeout
+	// [216] Reserved
+	unsigned int sec_count;					// [215:212] Sector Count
+	// [211] Reserved
+	char min_perf_w_8_52;					// [210] Minimum Write Performance for 8bit at 52MHz
+	char min_perf_r_8_52;					// [209] Minimum Read Performance for 8bit at 52MHz
+	char min_perf_w_8_26_4_52;				// [208] Minimum Write Performance for 8bit at 26MHz, for 4bit at 52MHz
+	char min_perf_r_8_26_4_52;				// [207] Minimum Read Performance for 8bit at 26MHz, for 4bit at 52MHz
+	char min_perf_w_4_26;					// [206] Minimum Write Performance for 4bit at 26MHz
+	char min_perf_r_4_26;					// [205] Minimum Read Performance for 4bit at 26MHz
+	// [211] Reserved
+	char pwr_cl_26_360;						// [203] Power class for 26MHz at 3.6V
+	char pwr_cl_52_360;						// [202] Power class for 52MHz at 3.6V
+	char pwr_cl_26_195;						// [201] Power class for 26MHz at 1.95V
+	char pwr_cl_52_195;						// [200] Power class for 52MHz at 1.95V
+	char partition_switch_time;				// [199] Partition switching timing
+	char out_of_interrupt_time;				// [198] Out-of-interrupt busy timing
+	// [197] Reserved
+	char card_type;							// [196] Card type
+	// [195] Reserved
+	char csd_structure;						// [194] CSD structure version
+	// [193] Reserved
+	char ext_csd_rev;						// [192] Extended CSD revision
+	char cmd_set;							// [191] Command set
+	// [190] Reserved
+	char cmd_set_rev;						// [189] Command set revision
+	// [188] Reserved
+	char power_class;						// [187] Power class
+	// [186] Reserved
+	char hs_timing;							// [185] High-speed interface timing
+	// [184] Reserved
+	char bus_width;							// [183] Bus width mode
+	// [182] Reserved
+	char erased_mem_cont;					// [181] Erased memory content
+	// [180] Reserved
+	char partition_config;					// [179] Partition configuration
+	char boot_config_prot;					// [178] Boot config protection
+	char boot_bus_width;					// [177] Boot bus width1
+	// [176] Reserved
+	char erase_group_def;					// [175] High-density erase group definition
+	// [174] Reserved;
+	char boot_wp;							// [173] Boot area write protection register
+	// [172] Reserved;
+	char user_wp;							// [171] User area write protection register
+	// [170] Reserved;
+	char fw_config;							// [169] FW configuration
+	char rpmb_size_mult;					// [168] RPMB Size
+	char wr_rel_set; 						// [167] Write reliability setting register
+	char wr_rel_param;						// [166] Write reliability parameter register
+	// [165] Reserved;
+	char bkops_start;						// [164] Manually start background operations
+	char bkops_en;							// [163] Enable background operations handshake
+	char rst_n_function;					// [162] H/W reset function
+	char hpi_mgmt;							// [161] HPI management
+	char partitioning_support;				// [160] Partitioning Support
+	unsigned char max_enh_size_mult; 		// [159:157] Max Enhanced Area Size
+	char partitions_attribute;				// [156] Partitions attribute
+	char partition_setting_completed; 		// [155] Paritioning Setting
+	unsigned int gp_size_mult[4];			// [154:143] General Purpose Partition Size
+	unsigned int enh_size_mult; 			// [142:140] Enhanced User Data Area Size
+	unsigned int enh_start_addr;			// [139:136] Enhanced User Data Start Address
+	// [135] Reserved;
+	char sec_bad_blk_mgmnt;			// [134] Bad Block Management mode
+	// [133:0] Reserved
+}MMC_extCsd;
+
 /* Structure for SD Card information */
 typedef struct _mmcsdCardInfo {
     struct _mmcsdCtrlInfo *ctrl;
@@ -70,7 +170,7 @@ typedef struct _mmcsdCardInfo {
 	unsigned char highCap;
 	unsigned int blkLen;
 	unsigned int nBlks;
-	unsigned int size;
+	unsigned long long size;
 }mmcsdCardInfo;
 
 /* Structure for command */
@@ -122,6 +222,12 @@ typedef struct _mmcsdCtrlInfo {
 #define SD_CMDRSP_DATA			BIT(6)
 #define SD_CMDRSP_READ			BIT(7)
 #define SD_CMDRSP_WRITE			BIT(8)
+
+
+#define SD_CMDRSP_R1			(0)
+#define SD_CMDRSP_R1b			(0 | SD_CMDRSP_BUSY)
+#define SD_CMDRSP_R2			(SD_CMDRSP_136BITS)
+#define SD_CMDRSP_R3			(SD_CMDRSP_R1)
 
 
 
@@ -185,6 +291,7 @@ typedef struct _mmcsdCtrlInfo {
 #define SD_VERSION_2P0		2
 #define SD_BUS_WIDTH_1BIT	1
 #define SD_BUS_WIDTH_4BIT	4
+#define SD_BUS_WIDTH_8BIT	8
 
 /* Helper macros */
 /* Note card registers are big endian */

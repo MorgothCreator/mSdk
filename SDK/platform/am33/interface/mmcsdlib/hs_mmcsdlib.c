@@ -108,8 +108,10 @@ unsigned int HSMMCSDControllerInit(mmcsdCtrlInfo *ctrl)
     HSMMCSDLinesReset(ctrl->memBase, HS_MMCSD_ALL_RESET);
 
     /* Set supported voltage list */
-    HSMMCSDSupportedVoltSet(ctrl->memBase, HS_MMCSD_SUPPORT_VOLT_1P8 |
-                                                HS_MMCSD_SUPPORT_VOLT_3P0);
+    //HSMMCSDSupportedVoltSet(ctrl->memBase, HS_MMCSD_SUPPORT_VOLT_1P8 |
+    //                                            HS_MMCSD_SUPPORT_VOLT_3P0);
+
+    HSMMCSDSupportedVoltSet(ctrl->memBase, HS_MMCSD_SUPPORT_VOLT_1P8 |HS_MMCSD_SUPPORT_VOLT_3P3);
 
     HSMMCSDSystemConfig(ctrl->memBase, HS_MMCSD_AUTOIDLE_ENABLE);
 
@@ -117,7 +119,7 @@ unsigned int HSMMCSDControllerInit(mmcsdCtrlInfo *ctrl)
     HSMMCSDBusWidthSet(ctrl->memBase, HS_MMCSD_BUS_WIDTH_1BIT );
 
     /* Set the bus voltage */
-    HSMMCSDBusVoltSet(ctrl->memBase, HS_MMCSD_BUS_VOLT_3P0);
+    HSMMCSDBusVoltSet(ctrl->memBase, HS_MMCSD_BUS_VOLT_3P3);
 
     /* Bus power on */
     status = HSMMCSDBusPower(ctrl->memBase, HS_MMCSD_BUS_POWER_ON);
@@ -219,7 +221,7 @@ unsigned int HSMMCSDCmdSend(mmcsdCtrlInfo *ctrl, mmcsdCmd *c)
         HSMMCSDResponseGet(ctrl->memBase, c->rsp);
     }
 
-	HWREG(ctrl->memBase + MMCHS_CON) &= ~MMCHS_CON_OD;
+	//HWREG(ctrl->memBase + MMCHS_CON) &= ~MMCHS_CON_OD;
     return status;
 }
 
@@ -243,9 +245,14 @@ void HSMMCSDBusWidthConfig(mmcsdCtrlInfo *ctrl, unsigned int busWidth)
     {
            HSMMCSDBusWidthSet(ctrl->memBase, HS_MMCSD_BUS_WIDTH_1BIT);
     }
-    else
+
+    else if (busWidth == SD_BUS_WIDTH_4BIT)
     {
            HSMMCSDBusWidthSet(ctrl->memBase, HS_MMCSD_BUS_WIDTH_4BIT);
+    }
+    else
+    {
+    	HSMMCSDBusWidthSet(ctrl->memBase, HS_MMCSD_BUS_WIDTH_8BIT);
     }
 }
 /**

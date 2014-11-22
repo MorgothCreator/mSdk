@@ -42,12 +42,235 @@
 
 #include <string.h>
 #include "mmcsd_proto.h"
+#include "board_init.h"
 //#include "uartStdio.h"
 #include "../../sys/cache.h"
 #include "api/gpio_def.h"
 #include "api/gpio_api.h"
+#include "api/uart_api.h"
+#include "include/hs_mmcsd.h"
 
 #define DATA_RESPONSE_WIDTH       (512)
+
+/*
+ * EXT_CSD switch cmd macros
+ */
+
+#define EXT_CSD_FLUSH_CACHE             32      /* W */
+#define EXT_CSD_CACHE_CTRL              33      /* R/W */
+#define EXT_CSD_POWER_OFF_NOTIFICATION  34      /* R/W */
+#define EXT_CSD_PACKED_FAILURE_INDEX    35      /* RO */
+#define EXT_CSD_PACKED_CMD_STATUS       36      /* RO */
+#define EXT_CSD_EXP_EVENTS_STATUS       54      /* RO, 2 bytes */
+#define EXT_CSD_EXP_EVENTS_CTRL         56      /* R/W, 2 bytes */
+#define EXT_CSD_DATA_SECTOR_SIZE        61      /* R */
+#define EXT_CSD_GP_SIZE_MULT            143     /* R/W */
+#define EXT_CSD_PARTITION_ATTRIBUTE     156     /* R/W */
+#define EXT_CSD_PARTITION_SUPPORT       160     /* RO */
+#define EXT_CSD_HPI_MGMT                161     /* R/W */
+#define EXT_CSD_RST_N_FUNCTION          162     /* R/W */
+#define EXT_CSD_BKOPS_EN                163     /* R/W */
+#define EXT_CSD_BKOPS_START             164     /* W */
+#define EXT_CSD_SANITIZE_START          165     /* W */
+#define EXT_CSD_WR_REL_PARAM            166     /* RO */
+#define EXT_CSD_RPMB_MULT               168     /* RO */
+#define EXT_CSD_BOOT_WP                 173     /* R/W */
+#define EXT_CSD_ERASE_GROUP_DEF         175     /* R/W */
+#define EXT_CSD_PART_CONFIG             179     /* R/W */
+#define EXT_CSD_ERASED_MEM_CONT         181     /* RO */
+#define EXT_CSD_BUS_WIDTH               183     /* R/W */
+#define EXT_CSD_HS_TIMING               185     /* R/W */
+#define EXT_CSD_POWER_CLASS             187     /* R/W */
+#define EXT_CSD_REV                     192     /* RO */
+#define EXT_CSD_STRUCTURE               194     /* RO */
+#define EXT_CSD_CARD_TYPE               196     /* RO */
+#define EXT_CSD_OUT_OF_INTERRUPT_TIME   198     /* RO */
+#define EXT_CSD_PART_SWITCH_TIME        199     /* RO */
+#define EXT_CSD_PWR_CL_52_195           200     /* RO */
+#define EXT_CSD_PWR_CL_26_195           201     /* RO */
+#define EXT_CSD_PWR_CL_52_360           202     /* RO */
+#define EXT_CSD_PWR_CL_26_360           203     /* RO */
+#define EXT_CSD_SEC_CNT                 212     /* RO, 4 bytes */
+#define EXT_CSD_S_A_TIMEOUT             217     /* RO */
+#define EXT_CSD_REL_WR_SEC_C            222     /* RO */
+#define EXT_CSD_HC_WP_GRP_SIZE          221     /* RO */
+#define EXT_CSD_ERASE_TIMEOUT_MULT      223     /* RO */
+#define EXT_CSD_HC_ERASE_GRP_SIZE       224     /* RO */
+#define EXT_CSD_BOOT_MULT               226     /* RO */
+#define EXT_CSD_SEC_TRIM_MULT           229     /* RO */
+#define EXT_CSD_SEC_ERASE_MULT          230     /* RO */
+#define EXT_CSD_SEC_FEATURE_SUPPORT     231     /* RO */
+#define EXT_CSD_TRIM_MULT               232     /* RO */
+#define EXT_CSD_PWR_CL_200_195          236     /* RO */
+#define EXT_CSD_PWR_CL_200_360          237     /* RO */
+#define EXT_CSD_PWR_CL_DDR_52_195       238     /* RO */
+#define EXT_CSD_PWR_CL_DDR_52_360       239     /* RO */
+#define EXT_CSD_BKOPS_STATUS            246     /* RO */
+#define EXT_CSD_POWER_OFF_LONG_TIME     247     /* RO */
+#define EXT_CSD_GENERIC_CMD6_TIME       248     /* RO */
+#define EXT_CSD_CACHE_SIZE              249     /* RO, 4 bytes */
+#define EXT_CSD_TAG_UNIT_SIZE           498     /* RO */
+#define EXT_CSD_DATA_TAG_SUPPORT        499     /* RO */
+#define EXT_CSD_MAX_PACKED_WRITES       500     /* RO */
+#define EXT_CSD_MAX_PACKED_READS        501     /* RO */
+#define EXT_CSD_BKOPS_SUPPORT           502     /* RO */
+#define EXT_CSD_HPI_FEATURES            503     /* RO */
+
+/*
+ * EXT_CSD field definitions
+ */
+
+#define EXT_CSD_WR_REL_PARAM_EN         (1<<2)
+
+#define EXT_CSD_BOOT_WP_B_PWR_WP_DIS    (0x40)
+#define EXT_CSD_BOOT_WP_B_PERM_WP_DIS   (0x10)
+#define EXT_CSD_BOOT_WP_B_PERM_WP_EN    (0x04)
+#define EXT_CSD_BOOT_WP_B_PWR_WP_EN     (0x01)
+
+#define EXT_CSD_PART_CONFIG_ACC_MASK    (0x7)
+#define EXT_CSD_PART_CONFIG_ACC_BOOT0   (0x1)
+#define EXT_CSD_PART_CONFIG_ACC_RPMB    (0x3)
+#define EXT_CSD_PART_CONFIG_ACC_GP0     (0x4)
+
+#define EXT_CSD_PART_SUPPORT_PART_EN    (0x1)
+
+#define EXT_CSD_CMD_SET_NORMAL          (1<<0)
+#define EXT_CSD_CMD_SET_SECURE          (1<<1)
+#define EXT_CSD_CMD_SET_CPSECURE        (1<<2)
+
+#define EXT_CSD_CARD_TYPE_26    (1<<0)  /* Card can run at 26MHz */
+#define EXT_CSD_CARD_TYPE_52    (1<<1)  /* Card can run at 52MHz */
+#define EXT_CSD_CARD_TYPE_MASK  0x3F    /* Mask out reserved bits */
+#define EXT_CSD_CARD_TYPE_DDR_1_8V  (1<<2)   /* Card can run at 52MHz */
+                                              /* DDR mode @1.8V or 3V I/O */
+#define EXT_CSD_CARD_TYPE_DDR_1_2V  (1<<3)   /* Card can run at 52MHz */
+                                              /* DDR mode @1.2V I/O */
+#define EXT_CSD_CARD_TYPE_DDR_52       (EXT_CSD_CARD_TYPE_DDR_1_8V  \
+                                         | EXT_CSD_CARD_TYPE_DDR_1_2V)
+ #define EXT_CSD_CARD_TYPE_SDR_1_8V      (1<<4)  /* Card can run at 200MHz */
+#define EXT_CSD_CARD_TYPE_SDR_1_2V      (1<<5)  /* Card can run at 200MHz */
+                                                 /* SDR mode @1.2V I/O */
+
+#define EXT_CSD_BUS_WIDTH_1     0       /* Card is in 1 bit mode */
+#define EXT_CSD_BUS_WIDTH_4     1       /* Card is in 4 bit mode */
+#define EXT_CSD_BUS_WIDTH_8     2       /* Card is in 8 bit mode */
+#define EXT_CSD_DDR_BUS_WIDTH_4 5       /* Card is in 4 bit DDR mode */
+#define EXT_CSD_DDR_BUS_WIDTH_8 6       /* Card is in 8 bit DDR mode */
+
+#define EXT_CSD_SEC_ER_EN       BIT(0)
+#define EXT_CSD_SEC_BD_BLK_EN   BIT(2)
+#define EXT_CSD_SEC_GB_CL_EN    BIT(4)
+#define EXT_CSD_SEC_SANITIZE    BIT(6)  /* v4.5 only */
+
+#define EXT_CSD_RST_N_EN_MASK   0x3
+#define EXT_CSD_RST_N_ENABLED   1       /* RST_n is enabled on card */
+
+#define EXT_CSD_NO_POWER_NOTIFICATION   0
+#define EXT_CSD_POWER_ON                1
+#define EXT_CSD_POWER_OFF_SHORT         2
+#define EXT_CSD_POWER_OFF_LONG          3
+
+#define EXT_CSD_PWR_CL_8BIT_MASK        0xF0    /* 8 bit PWR CLS */
+#define EXT_CSD_PWR_CL_4BIT_MASK        0x0F    /* 8 bit PWR CLS */
+#define EXT_CSD_PWR_CL_8BIT_SHIFT       4
+#define EXT_CSD_PWR_CL_4BIT_SHIFT       0
+
+#define EXT_CSD_PACKED_EVENT_EN BIT(3)
+
+/*
+ * EXCEPTION_EVENT_STATUS field
+ */
+#define EXT_CSD_URGENT_BKOPS            BIT(0)
+#define EXT_CSD_DYNCAP_NEEDED           BIT(1)
+#define EXT_CSD_SYSPOOL_EXHAUSTED       BIT(2)
+#define EXT_CSD_PACKED_FAILURE          BIT(3)
+
+#define EXT_CSD_PACKED_GENERIC_ERROR    BIT(0)
+#define EXT_CSD_PACKED_INDEXED_ERROR    BIT(1)
+
+
+/*
+ * MMC_SWITCH access modes
+ *
+ * The SWITCH command response is of type R1b, therefore, the host should read the card status, using
+ * SEND_STATUS command, after the busy signal is de-asserted, to check the result of the SWITCH
+ * operation.
+ */
+#define MMC_SWITCH_MODE_CMD_SET         0x00    /* The command set is changed according to the Cmd Set field of the argument */
+#define MMC_SWITCH_MODE_SET_BITS        0x01    /* The bits in the pointed byte are set, according to the ‘1’ bits in the Value field. */
+#define MMC_SWITCH_MODE_CLEAR_BITS      0x02    /* The bits in the pointed byte are cleared, according to the ‘1’ bits in the Value field. */
+#define MMC_SWITCH_MODE_WRITE_BYTE      0x03    /* The Value field is written into the pointed byte. */
+
+
+unsigned int unstuffBits(unsigned int *resp,unsigned int start,unsigned int size)
+{
+	const int __size = size;
+	const unsigned int __mask = (__size < 32 ? 1 << __size : 0) - 1;
+	const int __off = 3 - ((start) / 32);
+	const int __shft = (start) & 31;
+	unsigned int __res;
+
+	__res = resp[__off] >> __shft;
+	if (__size + __shft > 32)
+	{
+		__res |= resp[__off-1] << ((32 - __shft) % 32);
+	}
+
+	return(__res & __mask);
+}
+
+MMC_extCsd extCsd;
+
+
+struct cardCSD
+{
+	char csd_structure;
+	char spec_vers;
+	char taac;
+	char nsac;
+	char tran_speed;
+	unsigned short ccc;
+	char read_bl_len;
+	char read_bl_partial;
+	char write_blk_misalign;
+	char read_blk_misalign;
+	char dsr_imp;
+	unsigned short c_size;
+	char vdd_r_curr_min;
+	char vdd_r_curr_max;
+	char vdd_w_curr_min;
+	char vdd_w_curr_max;
+	char c_size_mult;
+	char erase_grp_size;
+	char erase_grp_mult;
+	char wp_grp_size;
+	char wp_grp_enable;
+	char default_ecc;
+	char r2w_factor;
+	char write_bl_len;
+	char write_bl_partial;
+	char content_prot_app;
+	char file_format_grp;
+	char copy;
+	char perm_write_protect;
+	char tmp_write_protect;
+	char file_format;
+	char ecc;
+	char crc;
+} CSDInfo;
+
+
+struct cardCid {
+	char mid; 					/* Manufacturer ID */
+	char cbx;					/* Device/BGA */
+	char oid;					/* OEM/Application ID */
+	unsigned long int pnm;		/* Product name */
+	char prv;					/* Product revision  */
+	unsigned int psn;			/* Product serial number */
+	char mdt;					/* Manufacturing date */
+	char crc;					/* crc7 checksum */
+}cardCid;
+
 
 /* Cache size aligned data buffer (minimum of 64 bytes) for command response */
 #ifdef __TMS470__
@@ -59,7 +282,7 @@ static unsigned char dataBuffer[DATA_RESPONSE_WIDTH];
 static unsigned char dataBuffer[DATA_RESPONSE_WIDTH];
 
 #elif defined(gcc)
-static unsigned char dataBuffer[DATA_RESPONSE_WIDTH]
+unsigned char dataBuffer[DATA_RESPONSE_WIDTH]
                                __attribute__((aligned(SOC_CACHELINE_SIZE)));
 
 #else
@@ -67,6 +290,197 @@ static unsigned char dataBuffer[DATA_RESPONSE_WIDTH]
 #endif
 
 extern new_gpio *LedStatusMmcSd[];
+
+int mmc_switch(mmcsdCtrlInfo *ctrl, char set, char index, char value);
+int mmc_send_status(mmcsdCtrlInfo *ctrl, unsigned int *status);
+unsigned int MMCSDCardTypeCheck(mmcsdCtrlInfo * ctrl);
+
+void decodeExtCsd(mmcsdCtrlInfo *ctrl, unsigned char *buffer)
+{
+	extCsd.s_cmd_set		 			= buffer[504];
+	extCsd.hpi_features					= buffer[503];// [503] HPI features
+	extCsd.bkops_support 				= buffer[502];// [502] Background operations support
+	// [501:247] Reserved
+	extCsd.bkops_status					= buffer[246]; // [246] Background operations status
+	extCsd.correctly_prg_sectors_num	=(buffer[245] << 24) | (buffer[244] << 16) | (buffer[243] << 8) | buffer[242];	// [245:242] Number of correctly programmed sectors
+	extCsd.ini_timeout_ap				= buffer[241]; // [241] 1st initialization time after partitioning
+	// [240] Reserved
+	extCsd.pwr_cl_ddr_52_360			= buffer[239];	// [239] Power class for 52MHz, DDR at 3.6V
+	extCsd.pwr_cl_ddr_52_195			= buffer[238];	// [238] Power class for 52MHz, DDR at 1.95V
+	// [237:236]
+	extCsd.min_perf_ddr_w_8_52			= buffer[235];// [235] Minimum Write Performance for 8bit at 52MHz in DDR mode
+	extCsd.min_perf_ddr_r_8_52			= buffer[234];// [234] Minimum Read Performance for 8bit at 52MHz in DDR mode
+	// [233]
+	extCsd.trim_mult					= buffer[232];	// [232] TRIM Multiplier
+	extCsd.sec_feature_support			= buffer[231];  // [231] Secure Feature support
+	extCsd.sec_erase_mult				= buffer[230];// [230] Secure Erase Multiplier
+	extCsd.sec_trim_mult				= buffer[229];	// [229] Secure TRIM Multiplier
+	extCsd.boot_info					= buffer[228];	// [228] Boot information
+	// [227] Reserved
+	extCsd.boot_size_multi				= buffer[226];// [226] Boot partition size
+	extCsd.acc_size						= buffer[225];// [225] Access size;
+	extCsd.hc_erase_grp_size			= buffer[224];	// [224] High-capacity erase unit size
+	extCsd.erase_timeout_mult			= buffer[223];// [223] High-capacity erase timeout
+	extCsd.rel_wr_sec_c 				= buffer[222];	// [222] Reliable write sector count
+	extCsd.hc_wp_grp_size				= buffer[221];// [221] High-capacity write protect group size
+	extCsd.s_c_vcc						= buffer[220];// [220] Sleep current (VCC)
+	extCsd.s_c_vccq						= buffer[219];// [219] Sleep current (VCCQ)
+	// [218] Reserved
+	extCsd.s_a_timeout					= buffer[217];// [217] Sleep/awake timeout
+	// [216] Reserved
+	extCsd.sec_count					= (buffer[215] << 24) | (buffer[214] << 16) | (buffer[213] << 8) | buffer[212];	// [215:212] Sector Count
+	// [211] Reserved
+	extCsd.min_perf_w_8_52				= buffer[210];// [210] Minimum Write Performance for 8bit at 52MHz
+	extCsd.min_perf_r_8_52				= buffer[209];// [209] Minimum Read Performance for 8bit at 52MHz
+	extCsd.min_perf_w_8_26_4_52			= buffer[208];// [208] Minimum Write Performance for 8bit at 26MHz, for 4bit at 52MHz
+	extCsd.min_perf_r_8_26_4_52			= buffer[207];// [207] Minimum Read Performance for 8bit at 26MHz, for 4bit at 52MHz
+	extCsd.min_perf_w_4_26				= buffer[206];// [206] Minimum Write Performance for 4bit at 26MHz
+	extCsd.min_perf_r_4_26				= buffer[205];// [205] Minimum Read Performance for 4bit at 26MHz
+	// [211] Reserved
+	extCsd.pwr_cl_26_360				= buffer[203];	// [203] Power class for 26MHz at 3.6V
+	extCsd.pwr_cl_52_360				= buffer[202];	// [202] Power class for 52MHz at 3.6V
+	extCsd.pwr_cl_26_195				= buffer[201];	// [201] Power class for 26MHz at 1.95V
+	extCsd.pwr_cl_52_195				= buffer[200];	// [200] Power class for 52MHz at 1.95V
+	extCsd.partition_switch_time		= buffer[199];	// [199] Partition switching timing
+	extCsd.out_of_interrupt_time		= buffer[198];	// [198] Out-of-interrupt busy timing
+	// [197] Reserved
+	extCsd.card_type					= buffer[196];	// [196] Card type
+	// [195] Reserved
+	extCsd.csd_structure				= buffer[194];	// [194] CSD structure version
+	// [193] Reserved
+	extCsd.ext_csd_rev					= buffer[192];// [192] Extended CSD revision
+	extCsd.cmd_set						= buffer[191];// [191] Command set
+	// [190] Reserved
+	extCsd.cmd_set_rev					= buffer[189];// [189] Command set revision
+	// [188] Reserved
+	extCsd.power_class					= buffer[187];// [187] Power class
+	// [186] Reserved
+	extCsd.hs_timing					= buffer[185];	// [185] High-speed interface timing
+	// [184] Reserved
+	extCsd.bus_width					= buffer[183];	// [183] Bus width mode
+	// [182] Reserved
+	extCsd.erased_mem_cont				= buffer[181];// [181] Erased memory content
+	// [180] Reserved
+	extCsd.partition_config				= buffer[179];// [179] Partition configuration
+	extCsd.boot_config_prot				= buffer[178];// [178] Boot config protection
+	extCsd.boot_bus_width				= buffer[177];// [177] Boot bus width1
+	// [176] Reserved
+	extCsd.erase_group_def				= buffer[175];// [175] High-density erase group definition
+	// [174] Reserved
+	extCsd.boot_wp						= buffer[173];// [173] Boot area write protection register
+	// [172] Reserved
+	extCsd.user_wp						= buffer[171];// [171] User area write protection register
+	// [170] Reserved
+	extCsd.fw_config					= buffer[169];	// [169] FW configuration
+	extCsd.rpmb_size_mult				= buffer[168];// [168] RPMB Size
+	extCsd.wr_rel_set 					= buffer[167];// [167] Write reliability setting register
+	extCsd.wr_rel_param					= buffer[166];// [166] Write reliability parameter register
+	// [165] Reserved
+	extCsd.bkops_start					= buffer[164];// [164] Manually start background operations
+	extCsd.bkops_en						= buffer[163];// [163] Enable background operations handshake
+	extCsd.rst_n_function				= buffer[162];// [162] H/W reset function
+	extCsd.hpi_mgmt						= buffer[161];// [161] HPI management
+	extCsd.partitioning_support			= buffer[160];// [160] Partitioning Support
+	extCsd.max_enh_size_mult 			= (buffer[159] << 16) | (buffer[158] << 8) | buffer[157]; // [159:157] Max Enhanced Area Size
+	extCsd.partitions_attribute			= buffer[156];// [156] Partitions attribute
+	extCsd.partition_setting_completed 	= buffer[155];// [155] Paritioning Setting
+	extCsd.gp_size_mult[0]				= (buffer[154] << 24) | (buffer[153] << 16) | (buffer[152] << 8) | buffer[151];// [154:143] General Purpose Partition Size
+	extCsd.gp_size_mult[1]				= (buffer[150] << 24) | (buffer[149] << 16) | (buffer[148] << 8) | buffer[147];// [154:143] General Purpose Partition Size
+	extCsd.gp_size_mult[2]				= (buffer[146] << 24) | (buffer[145] << 16) | (buffer[144] << 8) | buffer[143];// [154:143] General Purpose Partition Size
+	extCsd.enh_size_mult 				= (buffer[142] << 16) | (buffer[141] << 8) | buffer[140];// [142:140] Enhanced User Data Area Size
+	extCsd.enh_start_addr				= (buffer[139] << 24) | (buffer[138] << 16) | (buffer[137] << 8) | buffer[136];// [139:136] Enhanced User Data Start Address
+	// [135] Reserved;
+	extCsd.sec_bad_blk_mgmnt			= buffer[134];	// [134] Bad Block Management mode
+	// [133:0] Reserved
+
+	//ctrl->card->cardType = extCsd.card_type;
+	ctrl->card->busWidth = extCsd.bus_width;
+}
+
+
+
+void GetCSDParameters(mmcsdCtrlInfo *ctrl)
+{
+	unsigned int blockNr = 0;
+	unsigned int mult = 0;
+
+	/* Describes the version of the CSD structure. */
+	CSDInfo.csd_structure = ((ctrl->card->raw_csd[3] & 0xC0000000) >> 30); // [127:126]
+	CSDInfo.spec_vers = ((ctrl->card->raw_csd[3] & 0x3C000000) >> 26); // [125:122] everything above 4 is reserved
+	// [121:120] reserved
+	CSDInfo.taac = ((ctrl->card->raw_csd[3] & 0x00FF0000) >> 16); // [119:112] Data read access-time 1
+	CSDInfo.nsac = ((ctrl->card->raw_csd[3] & 0x0000FF00) >> 8); // [111:104] Data read access-time 2 in CLK cycles (NSAC*100)
+	CSDInfo.tran_speed = (ctrl->card->raw_csd[3] & 0x000000FF); // [103:96] Max. bus clock frequency
+
+	CSDInfo.ccc = ((ctrl->card->raw_csd[2] & 0xFF000000) >> 20) | ((ctrl->card->raw_csd[2] & 0x00F00000) >> 20); // [95:84] Card command classes
+	CSDInfo.read_bl_len = ((ctrl->card->raw_csd[2] & 0x000F0000) >> 16); // [83:80] Max. read data block length
+	CSDInfo.read_bl_partial = ((ctrl->card->raw_csd[2] & 0x00008000) >> 15); // [79:79] Partial blocks for read allowed
+	CSDInfo.write_blk_misalign = ((ctrl->card->raw_csd[2] & 0x00004000) >> 14); // [78:78] WRITE_BLK_MISALIGN
+	CSDInfo.read_blk_misalign = ((ctrl->card->raw_csd[2] & 0x00002000) >> 13); // [77:77] READ_BLK_MISALIGN
+	CSDInfo.dsr_imp = ((ctrl->card->raw_csd[2] & 0x00001000) >> 12); // [76:76] DSR implemented
+	// [75:74] reserved
+	CSDInfo.c_size = ((ctrl->card->raw_csd[2] & 0x000003FF) << 2) | ((ctrl->card->raw_csd[1] & 0xC0000000) >> 30); // [73:62] Device size
+	CSDInfo.vdd_r_curr_min = ((ctrl->card->raw_csd[1] & 0x38000000) >> 27); // [61:59] Max. read current @ VDD min
+	CSDInfo.vdd_r_curr_max = ((ctrl->card->raw_csd[1] & 0x07000000) >> 24); // [58:56] Max. read current @ VDD max
+	CSDInfo.vdd_w_curr_min = ((ctrl->card->raw_csd[1] & 0x00E00000) >> 21); // [55:53] Max. write current @ VDD min
+	CSDInfo.vdd_w_curr_max = ((ctrl->card->raw_csd[1] & 0x001C0000) >> 18); // [52:50] Max. write current @ VDD max
+	CSDInfo.c_size_mult = ((ctrl->card->raw_csd[1] & 0x00038000) >> 15); // [49:47] Device size multiplier
+	CSDInfo.erase_grp_size = ((ctrl->card->raw_csd[1] & 0x00007C00) >> 10); // [46:42] Erase group size
+	CSDInfo.erase_grp_mult = ((ctrl->card->raw_csd[1] & 0x000003E0) >> 5); // [41:37] Erase group size multiplier
+	CSDInfo.wp_grp_size = (ctrl->card->raw_csd[1] & 0x0000001F); // [36:32] Write protect group size
+	CSDInfo.wp_grp_enable = ((ctrl->card->raw_csd[0] & 0x80000000) >> 31); // [31:31] WP_GRP_ENABLE
+	CSDInfo.default_ecc = ((ctrl->card->raw_csd[0] & 0x60000000) >> 29); // [30:29] Manufacturer default ECC
+	CSDInfo.r2w_factor = ((ctrl->card->raw_csd[0] & 0x1C000000) >> 26); // [28:26] Write speed factor
+	CSDInfo.write_bl_len = ((ctrl->card->raw_csd[0] & 0x03C00000) >> 22); // [25:22] Max. write data block length
+	CSDInfo.write_bl_partial = ((ctrl->card->raw_csd[0] & 0x00200000) >> 21); // [21:21] Partial blocks for write allowed
+	// [20:17]
+	CSDInfo.content_prot_app = ((ctrl->card->raw_csd[0] & 0x00010000) >> 16); // [16:16] Content protection application
+	CSDInfo.file_format_grp = ((ctrl->card->raw_csd[0] & 0x00008000) >> 13); // [15:15] File format group
+	CSDInfo.copy = ((ctrl->card->raw_csd[0] & 0x00004000) >> 12); // [14:14] Copy flag (OTP)
+	CSDInfo.perm_write_protect = ((ctrl->card->raw_csd[0] & 0x00002000) >> 11); // [13:13] Permanent write protection
+	CSDInfo.tmp_write_protect = ((ctrl->card->raw_csd[0] & 0x00001000) >> 10); // [12:12] Temporary write protection
+	CSDInfo.file_format = ((ctrl->card->raw_csd[0] & 0x00000C00) >> 10); // [11:10] File format
+	CSDInfo.ecc = ((ctrl->card->raw_csd[0] & 0x00000300) >> 8); // [9:8] ECC code
+	CSDInfo.crc = (ctrl->card->raw_csd[0] & 0x000000FE); // [7:1] CRC
+	// [0:0] Not used, always’1’
+
+
+	mult = 2^(CSDInfo.c_size + 2);
+	blockNr = (CSDInfo.c_size + 1) * mult;
+	ctrl->card->size = blockNr * mult;
+
+
+	//ctrl->card->blkLen = 1 << (CSDInfo.read_bl_len);
+	ctrl->card->blkLen = 1 << (CSDInfo.read_bl_len - 1); // Set it to 512 /////////////////////////////////////////////////////////
+
+	ctrl->card->nBlks = ctrl->card->size/ctrl->card->blkLen;
+
+	ctrl->card->tranSpeed = CSDInfo.tran_speed ;
+}
+
+
+void getCID(mmcsdCtrlInfo *ctrl)
+{
+	unsigned int temp[4];
+	int i;
+
+	// UNSTUFF_BITS() read in a reverse order so use a temp buffer
+	for(i=0; i<4; i++)
+	{
+		temp[3-i] = ctrl->card->raw_cid[i];
+	}
+
+	unsigned int *resp = temp;
+
+	cardCid.mid	= (char)unstuffBits(resp,120,8);
+	cardCid.cbx	= (char)unstuffBits(resp,112,2);
+	cardCid.oid	= (char)unstuffBits(resp,102,8);
+	cardCid.pnm	= unstuffBits(resp,56,48); // This value is not correct!
+	cardCid.prv	= (char)unstuffBits(resp,48,8);
+	cardCid.psn	= unstuffBits(resp,16,32);
+	cardCid.mdt	= (char)unstuffBits(resp,8,8);
+	cardCid.crc	= (char)unstuffBits(resp,1,7);
+}
 
 /**
  * \brief   This function sends the command to MMCSD.
@@ -148,6 +562,15 @@ unsigned int MMCSDBusWidthSet(mmcsdCtrlInfo *ctrl)
         }
     }
 
+    else if(ctrl->busWidth & SD_BUS_WIDTH_8BIT)
+    {
+    	if (card->busWidth & SD_BUS_WIDTH_8BIT)
+		{
+			capp.arg = SD_BUS_WIDTH_8BIT;
+		}
+    }
+
+
     capp.arg = capp.arg >> 1;
 
     status = MMCSDAppCmdSend(ctrl, &capp);
@@ -157,6 +580,10 @@ unsigned int MMCSDBusWidthSet(mmcsdCtrlInfo *ctrl)
         if (capp.arg == 0)
         {
             ctrl->busWidthConfig(ctrl, SD_BUS_WIDTH_1BIT);
+        }
+        else if (capp.arg == SD_BUS_WIDTH_8BIT)
+        {
+        	ctrl->busWidthConfig(ctrl, SD_BUS_WIDTH_8BIT);
         }
         else
         {
@@ -347,6 +774,86 @@ void MMCSDIntEnable(mmcsdCtrlInfo *ctrl)
     return;
 }
 
+/**
+ *    mmc_switch - modify EXT_CSD register
+ *    card: the MMC card associated with the data transfer
+ *    set: cmd set values
+ *    index: EXT_CSD register index
+ *    value: value to program into EXT_CSD register
+ *
+ *
+ *    Modifies the EXT_CSD register for selected card.
+ */
+int mmc_switch(mmcsdCtrlInfo *ctrl, char set, char index, char value)
+{
+	mmcsdCmd cmd;
+	unsigned int status = 0;
+	int err;
+    cmd.idx = SD_CMD(6);
+    cmd.arg = (MMC_SWITCH_MODE_WRITE_BYTE << 24) |
+          (index << 16) |
+          (value << 8) |
+          set;
+    cmd.flags = SD_CMDRSP_R1b;
+
+    err = MMCSDCmdSend(ctrl,&cmd);
+
+	if (err == 0)
+	{
+		UARTPuts(DebugCom, "error CMD6 \n", -1);
+		return 0;
+	}
+
+    /* Must check status to be sure of no errors */
+    do
+    {
+        err = mmc_send_status(ctrl, &status);
+        if (err == 0)
+        {
+        	UARTPuts(DebugCom, "error status failed\n", -1);
+            //return 0;
+        }
+
+        if(status & (BIT(7)))
+        {
+        	// switch error
+        	UARTPuts(DebugCom, "switch error\n", -1);
+        	return 0;
+        }
+
+        if(status & (BIT(22)))
+	   {
+        	// Illegal command
+        	UARTPuts(DebugCom, "Illegal command\n", -1);
+        	return 0;
+	   }
+
+    } while (!(status & BIT(8)) & (!err)); // run while the card is not ready
+
+
+    return 1;
+}
+
+
+int mmc_send_status(mmcsdCtrlInfo *ctrl, unsigned int *status)
+{
+    int err;
+    mmcsdCmd cmd;
+
+    cmd.idx = SD_CMD(13);
+    cmd.arg = ctrl->card->rca << 16;
+    cmd.flags = SD_CMDRSP_R1;
+
+    err = MMCSDCmdSend(ctrl, &cmd);
+	if (err == 0)
+	{
+		return 0;
+	}
+
+    *status = cmd.rsp[0];
+
+    return 1;
+}
 /**
  * \brief   This function intializes the MMCSD Card.
  *
@@ -570,16 +1077,22 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
 
         card->sd_ver = SD_CARD_VERSION(card);
         card->busWidth = SD_CARD_BUSWIDTH(card);
+
+        MMCSDBusWidthSet(ctrl);
+        MMCSDTranSpeedSet(ctrl);
     }
     else
     {
         ctrl->card->cardType = MMCSD_CARD_MMC;
+    	ctrl->busWidthConfig(ctrl, HS_MMCSD_BUS_WIDTH_1BIT);
+    	ctrl->card->busWidth = 1;
 
         /* CMD0 - reset card */
         status = MMCSDCardReset(ctrl);
 
         if (status == 0)
         {
+			UARTPuts(DebugCom, "error GO_IDLE_STATE \n", -1);
             return 0;
         }
 
@@ -587,15 +1100,21 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
         do {
                 cmd.idx = SD_CMD(1);
                 cmd.flags = 0;
-                cmd.arg = SD_OCR_HIGH_CAPACITY | SD_OCR_VDD_WILDCARD | 1<<7;
+                cmd.arg = 0x40FF8000;//SD_OCR_HIGH_CAPACITY | SD_OCR_VDD_WILDCARD | 1<<7;
 
-                MMCSDCmdSend(ctrl,&cmd);
+                status = MMCSDCmdSend(ctrl,&cmd);
+    			if (status == 0)
+    			{
+    				UARTPuts(DebugCom, "error CMD1 \n", -1);
+    				return 0;
+    			}
 
         } while (!(cmd.rsp[0] & ((unsigned int)BIT(31))) && --retry);
 
         if (retry == 0)
         {
             /* No point in continuing */
+			UARTPuts(DebugCom, "Timeout\n", -1);
             return 0;
         }
 
@@ -614,20 +1133,22 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
 
         if (status == 0)
         {
+			UARTPuts(DebugCom, "error CMD2 \n", -1);
             return 0;
         }
 
         /* Send CMD3, to set the card relative address */
         cmd.idx = SD_CMD(3);
         cmd.flags = 0;
-        cmd.arg = 0xFFFF << 16;
+        cmd.arg = 0x1 << 16;
 
         status = MMCSDCmdSend(ctrl,&cmd);
 
-        card->rca = 0xFFFF;//SD_RCA_ADDR(cmd.rsp[0]);
+        card->rca = 0x1;//SD_RCA_ADDR(cmd.rsp[0]);
 
         if (status == 0)
         {
+			UARTPuts(DebugCom, "error CMD3 \n", -1);
             return 0;
         }
 
@@ -642,6 +1163,7 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
 
         if (status == 0)
         {
+			UARTPuts(DebugCom, "error CMD9 \n", -1);
             return 0;
         }
 
@@ -663,21 +1185,20 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
         }
         /* Select the card */
         cmd.idx = SD_CMD(7);
-        cmd.flags = SD_CMDRSP_BUSY;
+        cmd.flags = 0;
         cmd.arg = card->rca << 16;
 
         status = MMCSDCmdSend(ctrl,&cmd);
 
         if (status == 0)
         {
+			UARTPuts(DebugCom, "error CMD7 \n", -1);
             return 0;
         }
 
         if(SD_CARD_CSD_VERSION(card) == 3)
         {
 
-            card->tranSpeed = SD_CARD0_TRANSPEED(card);
-            card->blkLen = 1 << (SD_CARD0_RDBLKLEN(card));
 
             ctrl->xferSetup(ctrl, 1, dataBuffer, 512, 1);
 
@@ -690,6 +1211,7 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
 			status = MMCSDCmdSend(ctrl,&cmd);
 			if (status == 0)
 			{
+				UARTPuts(DebugCom, "error CMD8 \n", -1);
 				return 0;
 			}
 
@@ -697,6 +1219,7 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
 
 			if (status == 0)
 			{
+				UARTPuts(DebugCom, "error xferStatusGet \n", -1);
 				return 0;
 			}
             //card->nBlks = SD_CARD0_NUMBLK(card);
@@ -704,19 +1227,29 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
 	        /* Select the card */
         }
 
+		/* Invalidate the data cache. */
+		CacheDataInvalidateBuff((unsigned int)dataBuffer, 512);
 
+		decodeExtCsd(ctrl,dataBuffer);
 
-        /* Invalidate the data cache. */
-        /*CacheDataCleanInvalidateBuff((unsigned int)dataBuffer, DATA_RESPONSE_WIDTH);
+        card->tranSpeed = SD_CARD0_TRANSPEED(card);
+        card->blkLen = 1 << (SD_CARD0_RDBLKLEN(card));
+        card->nBlks = extCsd.sec_count;
+        card->size = card->nBlks * card->blkLen;
 
-        card->raw_scr[0] = (dataBuffer[3] << 24) | (dataBuffer[2] << 16) | \
-		                   (dataBuffer[1] << 8) | (dataBuffer[0]);
-        card->raw_scr[1] = (dataBuffer[7] << 24) | (dataBuffer[6] << 16) | \
-                                   (dataBuffer[5] << 8) | (dataBuffer[4]);
+        /* enable High speed */
+		if(mmc_switch(ctrl,MMC_SWITCH_MODE_WRITE_BYTE,EXT_CSD_HS_TIMING,0x1))
+		{
+			ctrl->highspeed = 1;
+		}
 
-        card->sd_ver = SD_CARD_VERSION(card);
-        card->busWidth = SD_CARD_BUSWIDTH(card);*/
-        return 0;
+		/* Set the bus width to 8 */
+		if(mmc_switch(ctrl,MMC_SWITCH_MODE_WRITE_BYTE,EXT_CSD_BUS_WIDTH,EXT_CSD_BUS_WIDTH_8))
+		{
+			card->busWidth = 8;
+			ctrl->busWidthConfig(ctrl, HS_MMCSD_BUS_WIDTH_8BIT);
+		}
+
     }
 
     return 1;
