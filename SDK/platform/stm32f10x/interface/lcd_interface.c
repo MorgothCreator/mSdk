@@ -6,7 +6,7 @@
  */
 
 #include <stdbool.h>
-#include "board_properties.h"
+#include "sys/plat_properties.h"
 #include "lcd_interface.h"
 #include "sys/cache.h"
 #include "lib/gfx/controls_definition.h"
@@ -31,22 +31,26 @@ void _lcd_disable()
 //#######################################################################################
 void _screen_backlight_on(tDisplay *pDisplay)
 {
-	switch(pDisplay->LcdType)
+	/*switch(pDisplay->LcdType)
 	{
 	case MI0283:
 			gpio_out(pDisplay->BackLight, 1);
 			return;
-	}
+	}*/
+	if(pDisplay->invert_backlight) gpio_out(pDisplay->BackLight, 0);
+			else gpio_out(pDisplay->BackLight, 1);
 }
 //#######################################################################################
 void _screen_backlight_off(tDisplay *pDisplay)
 {
-	switch(pDisplay->LcdType)
+	/*switch(pDisplay->LcdType)
 	{
 	case MI0283:
 		gpio_out(pDisplay->BackLight, 0);
 		return;
-	}
+	}*/
+	if(pDisplay->invert_backlight) gpio_out(pDisplay->BackLight, 1);
+			else gpio_out(pDisplay->BackLight, 0);
 }
 //#######################################################################################
 void _box_cache_clean(tDisplay *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len)

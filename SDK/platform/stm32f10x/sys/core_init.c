@@ -7,7 +7,7 @@
 
 #include <stdbool.h>
 #include "core_init.h"
-#include "board_properties.h"
+#include "sys/plat_properties.h"
 #include "api/gpio_api.h"
 #include "sys/system_stm32f10x.h"
 #include "driver/stm32f10x_rcc.h"

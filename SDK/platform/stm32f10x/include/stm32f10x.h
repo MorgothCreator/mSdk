@@ -308,8 +308,8 @@ typedef enum IRQn
   * @}
   */
 
-#include "core_cm3.h"
-#include "system_stm32f10x.h"
+#include "sys/core_cm3.h"
+#include "sys/system_stm32f10x.h"
 #include <stdint.h>
 
 /** @addtogroup Exported_types

@@ -4,6 +4,8 @@
  *  Created on: Mar 21, 2013
  *      Author: XxXx
  */
+#include "stdio.h"
+#include "stdlib.h"
 #include "stm32f10x_conf.h"
 #include "gpio_interface.h"
 #include "driver/stm32f10x_gpio.h"
@@ -42,7 +44,7 @@ void _gpio_init(unsigned int GpioModuleNr)
 	RCC_APB2PeriphClockCmd(BaseAddr, ENABLE);
 }
 /*#####################################################*/
-new_gpio *_gpio_assign(unsigned int PortNr, unsigned int PinNr, unsigned int Direction)
+new_gpio *_gpio_assign(unsigned int PortNr, unsigned int PinNr, unsigned int Direction, bool Multipin)
 {
 	GPIO_InitTypeDef  GPIO_InitStructure;
 	new_gpio* GpioStruct = new_(new_gpio);
@@ -75,7 +77,7 @@ new_gpio *_gpio_assign(unsigned int PortNr, unsigned int PinNr, unsigned int Dir
 		return NULL;
 	}
 	GpioStruct->BaseAddr = BaseAddr;
-	GpioStruct->PinNr = PinNr;
+	GpioStruct->Pin = PinNr;
 	GpioStruct->Direction = Direction;
 	GPIO_InitStructure.GPIO_Pin = 1 << PinNr;
 	if(Direction == GPIO_DIR_OUTPUT) GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
@@ -98,8 +100,8 @@ bool _gpio_out(new_gpio *gpio_struct, unsigned int State)
 {
 	if(!gpio_struct) return false;
 	GPIO_TypeDef *BaseAddr = (GPIO_TypeDef *)gpio_struct->BaseAddr;
-	if(State) BaseAddr->BSRR = 1 << gpio_struct->PinNr;
-	else  BaseAddr->BRR = 1 << gpio_struct->PinNr;
+	if(State) BaseAddr->BSRR = 1 << gpio_struct->Pin;
+	else  BaseAddr->BRR = 1 << gpio_struct->Pin;
 	return true;
 }
 /*#####################################################*/
@@ -108,7 +110,7 @@ bool _gpio_direction(new_gpio *gpio_struct, unsigned int Direction)
 	if(!gpio_struct) return false;
 	GPIO_TypeDef *BaseAddr = (GPIO_TypeDef *)gpio_struct->BaseAddr;
 	GPIO_InitTypeDef  GPIO_InitStructure;
-	GPIO_InitStructure.GPIO_Pin = 1 << gpio_struct->PinNr;
+	GPIO_InitStructure.GPIO_Pin = 1 << gpio_struct->Pin;
 	if(Direction == GPIO_DIR_OUTPUT) GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
 	else if(Direction == GPIO_DIR_INPUT) GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
@@ -120,7 +122,7 @@ signed int _gpio_in(new_gpio *gpio_struct)
 {
 	if(!gpio_struct) return -1;
 	GPIO_TypeDef *BaseAddr = (GPIO_TypeDef *)gpio_struct->BaseAddr;
-	return GPIO_ReadInputDataBit(BaseAddr, 1 << gpio_struct->PinNr);
+	return GPIO_ReadInputDataBit(BaseAddr, 1 << gpio_struct->Pin);
 }
 /*#####################################################*/
 bool _gpio_up_dn_enable(new_gpio *gpio_struct, bool enable)
@@ -135,7 +137,7 @@ bool _gpio_up_dn(new_gpio *gpio_struct, unsigned char value)
 	GPIO_TypeDef *BaseAddr = (GPIO_TypeDef *)gpio_struct->BaseAddr;
 
 	GPIO_InitTypeDef  GPIO_InitStructure;
-	GPIO_InitStructure.GPIO_Pin = 1 << gpio_struct->PinNr;
+	GPIO_InitStructure.GPIO_Pin = 1 << gpio_struct->Pin;
 	if(value == 0) GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPD;
 	else if(value == 1) GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
