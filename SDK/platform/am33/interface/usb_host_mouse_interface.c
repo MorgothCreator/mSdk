@@ -409,25 +409,25 @@ void _usb_mouse_host_idle(unsigned int instance, tControlCommandData *control_co
     USBHCDMain(USB_INSTANCE_Host_Mouse, g_ulMouseInstance);
 	control_comand->X = MouseXPosition;
 	control_comand->Y = MouseYPosition;
-	if(MouseClkDrLastState == Gfx_ft5x06_Touch_MouseNoAction && (g_ulButtons & 0x1))
+	if(MouseClkDrLastState == Cursor_NoAction && (g_ulButtons & 0x1))
 	{
-		MouseClkDrLastState = Gfx_ft5x06_MouseDn;
-		control_comand->Cursor = Gfx_ft5x06_MouseDn;
+		MouseClkDrLastState = Cursor_Down;
+		control_comand->Cursor = Cursor_Down;
 	}
-	else if((MouseClkDrLastState == Gfx_ft5x06_MouseDn || MouseClkDrLastState == Gfx_ft5x06_MouseMove) && (g_ulButtons & 0x1))
+	else if((MouseClkDrLastState == Cursor_Down || MouseClkDrLastState == Cursor_Move) && (g_ulButtons & 0x1))
 	{
-		MouseClkDrLastState = Gfx_ft5x06_MouseMove;
-		control_comand->Cursor = Gfx_ft5x06_MouseMove;
+		MouseClkDrLastState = Cursor_Move;
+		control_comand->Cursor = Cursor_Move;
 	}
-	else if((MouseClkDrLastState == Gfx_ft5x06_MouseDn || MouseClkDrLastState == Gfx_ft5x06_MouseMove) && (~g_ulButtons & 0x1))
+	else if((MouseClkDrLastState == Cursor_Down || MouseClkDrLastState == Cursor_Move) && (~g_ulButtons & 0x1))
 	{
-		MouseClkDrLastState = Gfx_ft5x06_MouseUp;
-		control_comand->Cursor = Gfx_ft5x06_MouseUp;
+		MouseClkDrLastState = Cursor_Up;
+		control_comand->Cursor = Cursor_Up;
 	}
-	else if(MouseClkDrLastState == Gfx_ft5x06_MouseUp && (~g_ulButtons & 0x1))
+	else if(MouseClkDrLastState == Cursor_Up && (~g_ulButtons & 0x1))
 	{
-		MouseClkDrLastState = Gfx_ft5x06_Touch_MouseNoAction;
-		control_comand->Cursor = Gfx_ft5x06_Touch_MouseNoAction;
+		MouseClkDrLastState = Cursor_NoAction;
+		control_comand->Cursor = Cursor_NoAction;
 	}
 	if(MousePositionChange)
 	{

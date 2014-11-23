@@ -11,14 +11,6 @@
 #include "api/touchscreen_def.h"
 #include "clk/clk_tsc_adc.h"
 #include "api/lcd_def.h"
-//#####################################################
-typedef enum gfx_ft5x06_mouse_state_Enum
-{
-	Gfx_ft5x06_Touch_MouseNoAction = 0x0,
-	Gfx_ft5x06_MouseUp,
-	Gfx_ft5x06_MouseDn,
-	Gfx_ft5x06_MouseMove
-}gfx_ft5x06_mouse_state_t;
 /*#####################################################*/
 void InitTouchScreen(new_touchscreen* structure);
 bool TouchIdle(new_touchscreen* structure);

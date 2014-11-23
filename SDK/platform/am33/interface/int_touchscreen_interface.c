@@ -211,7 +211,7 @@ bool TouchIdle(LcdTouch_t* structure)
 #endif
 	if(!structure) return false;
 	//TouchScreen_Data_t* TouchReport = &structure->TouchResponse;
-	unsigned char State1 = Gfx_ft5x06_Touch_MouseNoAction;
+	unsigned char State1 = Cursor_NoAction;
 	bool Return = false;
     signed int TouchX = -1, TouchY = -1;
     if(IsTSPress)
@@ -219,7 +219,7 @@ bool TouchIdle(LcdTouch_t* structure)
     	if(ignore_cnt > 1)
     	{
 			IsTSPress = 0;
-			State1 = Gfx_ft5x06_MouseMove;
+			State1 = Cursor_Move;
 			TouchCoOrdGet(structure, &TouchX, &TouchY);
 			structure->TouchResponse.x1 = TouchX;
 			structure->TouchResponse.y1 = TouchY;
@@ -230,27 +230,27 @@ bool TouchIdle(LcdTouch_t* structure)
     		IsTSPress = 0;
     	}
     }else ignore_cnt = 0;
-	if(structure->LastState1 == Gfx_ft5x06_Touch_MouseNoAction && State1 == Gfx_ft5x06_MouseMove)
+	if(structure->LastState1 == Cursor_NoAction && State1 == Cursor_Move)
 	{
-		structure->LastState1 = Gfx_ft5x06_MouseDn;
-		structure->TouchResponse.touch_event1 = Gfx_ft5x06_MouseDn;
+		structure->LastState1 = Cursor_Down;
+		structure->TouchResponse.touch_event1 = Cursor_Down;
 	}
-	else if((structure->LastState1 == Gfx_ft5x06_MouseDn || structure->LastState1 == Gfx_ft5x06_MouseMove) && State1 == Gfx_ft5x06_MouseMove)
+	else if((structure->LastState1 == Cursor_Down || structure->LastState1 == Cursor_Move) && State1 == Cursor_Move)
 	{
-		structure->LastState1 = Gfx_ft5x06_MouseMove;
-		structure->TouchResponse.touch_event1 = Gfx_ft5x06_MouseMove;
+		structure->LastState1 = Cursor_Move;
+		structure->TouchResponse.touch_event1 = Cursor_Move;
 	}
-	else if((structure->LastState1 == Gfx_ft5x06_MouseDn || structure->LastState1 == Gfx_ft5x06_MouseMove) && State1 == Gfx_ft5x06_Touch_MouseNoAction)
+	else if((structure->LastState1 == Cursor_Down || structure->LastState1 == Cursor_Move) && State1 == Cursor_NoAction)
 	{
-		structure->LastState1 = Gfx_ft5x06_MouseUp;
-		structure->TouchResponse.touch_event1 = Gfx_ft5x06_MouseUp;
+		structure->LastState1 = Cursor_Up;
+		structure->TouchResponse.touch_event1 = Cursor_Up;
 		ignored_touch = analog_touch_filter_level;
 		dbidx = 0;
 	}
-	else if(structure->LastState1 == Gfx_ft5x06_MouseUp && State1 == Gfx_ft5x06_Touch_MouseNoAction)
+	else if(structure->LastState1 == Cursor_Up && State1 == Cursor_NoAction)
 	{
-		structure->LastState1 = Gfx_ft5x06_Touch_MouseNoAction;
-		structure->TouchResponse.touch_event1 = Gfx_ft5x06_Touch_MouseNoAction;
+		structure->LastState1 = Cursor_NoAction;
+		structure->TouchResponse.touch_event1 = Cursor_NoAction;
 		ignored_touch = analog_touch_filter_level;
 		dbidx = 0;
 		structure->TouchResponse.x1 = -1;
@@ -301,13 +301,13 @@ void TouchCalibrate(LcdTouch_t* structure, tDisplay *pDisplay)
 		if(timer_tick(&TimerTouchCalibrate))
 		{
 			TouchIdle(structure);
-			if(Cnt < FilterTouchCalibrateSize && structure->TouchResponse.touch_event1 == Gfx_ft5x06_MouseMove)
+			if(Cnt < FilterTouchCalibrateSize && structure->TouchResponse.touch_event1 == Cursor_Move)
 			{
 				Xbuffer[Cnt] = structure->TouchResponse.x1;
 				Ybuffer[Cnt] = structure->TouchResponse.y1;
 				Cnt++;
 			}
-			else if(structure->TouchResponse.touch_event1 == Gfx_ft5x06_MouseUp)
+			else if(structure->TouchResponse.touch_event1 == Cursor_Up)
 			{
 				for(Cnt1 = 1; Cnt1 < Cnt; Cnt1++)
 				{
@@ -341,13 +341,13 @@ void TouchCalibrate(LcdTouch_t* structure, tDisplay *pDisplay)
 		if(timer_tick(&TimerTouchCalibrate))
 		{
 			TouchIdle(structure);
-			if(Cnt < FilterTouchCalibrateSize && structure->TouchResponse.touch_event1 == Gfx_ft5x06_MouseMove)
+			if(Cnt < FilterTouchCalibrateSize && structure->TouchResponse.touch_event1 == Cursor_Move)
 			{
 				Xbuffer[Cnt] = structure->TouchResponse.x1;
 				Ybuffer[Cnt] = structure->TouchResponse.y1;
 				Cnt++;
 			}
-			else if(structure->TouchResponse.touch_event1 == Gfx_ft5x06_MouseUp)
+			else if(structure->TouchResponse.touch_event1 == Cursor_Up)
 			{
 				for(Cnt1 = 1; Cnt1 < Cnt; Cnt1++)
 				{
@@ -381,13 +381,13 @@ void TouchCalibrate(LcdTouch_t* structure, tDisplay *pDisplay)
 		if(timer_tick(&TimerTouchCalibrate))
 		{
 			TouchIdle(structure);
-			if(Cnt < FilterTouchCalibrateSize && structure->TouchResponse.touch_event1 == Gfx_ft5x06_MouseMove)
+			if(Cnt < FilterTouchCalibrateSize && structure->TouchResponse.touch_event1 == Cursor_Move)
 			{
 				Xbuffer[Cnt] = structure->TouchResponse.x1;
 				Ybuffer[Cnt] = structure->TouchResponse.y1;
 				Cnt++;
 			}
-			else if(structure->TouchResponse.touch_event1 == Gfx_ft5x06_MouseUp)
+			else if(structure->TouchResponse.touch_event1 == Cursor_Up)
 			{
 				for(Cnt1 = 1; Cnt1 < Cnt; Cnt1++)
 				{
@@ -421,13 +421,13 @@ void TouchCalibrate(LcdTouch_t* structure, tDisplay *pDisplay)
 		if(timer_tick(&TimerTouchCalibrate))
 		{
 			TouchIdle(structure);
-			if(Cnt < FilterTouchCalibrateSize && structure->TouchResponse.touch_event1 == Gfx_ft5x06_MouseMove)
+			if(Cnt < FilterTouchCalibrateSize && structure->TouchResponse.touch_event1 == Cursor_Move)
 			{
 				Xbuffer[Cnt] = structure->TouchResponse.x1;
 				Ybuffer[Cnt] = structure->TouchResponse.y1;
 				Cnt++;
 			}
-			else if(structure->TouchResponse.touch_event1 == Gfx_ft5x06_MouseUp)
+			else if(structure->TouchResponse.touch_event1 == Cursor_Up)
 			{
 				for(Cnt1 = 1; Cnt1 < Cnt; Cnt1++)
 				{
