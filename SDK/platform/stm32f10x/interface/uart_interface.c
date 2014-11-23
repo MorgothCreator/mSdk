@@ -55,23 +55,23 @@
   * @retval None
   */
 
-#define COMn                             5
+#define COMn                             3
 
-USART_TypeDef* COM_USART[COMn] = { USART1, USART2, USART3, UART4, UART5};
+USART_TypeDef* COM_USART[COMn] = { USART1, USART2, USART3};
 
-GPIO_TypeDef* COM_TX_PORT[COMn] = {GPIOB,  GPIOD,  GPIOD,  GPIOC, GPIOD};
+GPIO_TypeDef* COM_TX_PORT[COMn] = {GPIOA,  GPIOA,  GPIOB};
 
-GPIO_TypeDef* COM_RX_PORT[COMn] = {GPIOB,  GPIOD,  GPIOD,  GPIOC, GPIOC};
+GPIO_TypeDef* COM_RX_PORT[COMn] = {GPIOA,  GPIOA,  GPIOB};
 
-const uint32_t COM_USART_CLK[COMn] = {RCC_APB2Periph_USART1, RCC_APB1Periph_USART2, RCC_APB1Periph_USART3, RCC_APB1Periph_UART4, RCC_APB1Periph_UART5};
+const uint32_t COM_USART_CLK[COMn] = {RCC_APB2Periph_USART1, RCC_APB1Periph_USART2, RCC_APB1Periph_USART3};
 
-const uint32_t COM_TX_PORT_CLK[COMn] = {RCC_APB2Periph_GPIOB, RCC_APB2Periph_GPIOD, RCC_APB2Periph_GPIOD, RCC_APB2Periph_GPIOC, RCC_APB2Periph_GPIOD};
+const uint32_t COM_TX_PORT_CLK[COMn] = {RCC_APB2Periph_GPIOA, RCC_APB2Periph_GPIOA, RCC_APB2Periph_GPIOB};
 
-const uint32_t COM_RX_PORT_CLK[COMn] = {RCC_APB2Periph_GPIOB, RCC_APB2Periph_GPIOD, RCC_APB2Periph_GPIOD, RCC_APB2Periph_GPIOC, RCC_APB2Periph_GPIOC};
+const uint32_t COM_RX_PORT_CLK[COMn] = {RCC_APB2Periph_GPIOA, RCC_APB2Periph_GPIOA, RCC_APB2Periph_GPIOB};
 
-const uint16_t COM_TX_PIN[COMn] = {GPIO_Pin_6, GPIO_Pin_5, GPIO_Pin_8, GPIO_Pin_10, GPIO_Pin_2};
+const uint16_t COM_TX_PIN[COMn] = {GPIO_Pin_9, GPIO_Pin_2, GPIO_Pin_10};
 
-const uint16_t COM_RX_PIN[COMn] = {GPIO_Pin_7, GPIO_Pin_6, GPIO_Pin_9, GPIO_Pin_11, GPIO_Pin_12};
+const uint16_t COM_RX_PIN[COMn] = {GPIO_Pin_10, GPIO_Pin_3, GPIO_Pin_11};
 
 //const uint16_t COM_TX_PIN_REMAP[COMn] = {GPIO_Remap_USART1, GPIO_Remap_USART2, GPIO_FullRemap_USART3, GPIO_PinSource10, GPIO_PinSource2};
 
