@@ -36,15 +36,6 @@
 #define USE_ADXL345 1
 /*-----------------------------------------------------*/
 #define BOARD_MESSAGE "Beaglebone"
-/*-----------------------------------------------------*/
-#define lcd
-//#define touch
-//#define usb_1_msc
-#define usb_1_mouse
-#define usb_0_dev_msc
-//#define BridgeUsbDev0ToMmcSd0
-#define BridgeUsbDev0ToMmcSd1
-//#define BridgeUsbDev0ToUsbHost1
 /*#####################################################*/
 extern new_uart* Uart[];
 extern new_uart* DebugCom;

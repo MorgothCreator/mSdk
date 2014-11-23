@@ -24,7 +24,7 @@
 */
 //#define test2
 
-#define UseLwip
+//#define UseLwip
 
 //#define UseMpeg12
 
