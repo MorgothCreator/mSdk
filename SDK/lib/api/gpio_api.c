@@ -20,7 +20,7 @@
  */
 
 #include <stdbool.h>
-#include <stdlib.h>
+//#include <stdlib.h>
 #include <stdio.h>
 #include "gpio_def.h"
 #include "gpio_api.h"
