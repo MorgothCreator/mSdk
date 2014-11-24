@@ -178,6 +178,7 @@ unsigned char data[HSMMCSD_DATA_SIZE]
 static unsigned int HSMMCSDCmdStatusGet(mmcsdCtrlInfo *ctrl)
 {
     unsigned int status = 0;
+    volatile unsigned int timeOut = 0xFFFF;
 
     /*do
     {
@@ -187,7 +188,12 @@ static unsigned int HSMMCSDCmdStatusGet(mmcsdCtrlInfo *ctrl)
     		break;
     	}
     }*/
-    while ((cmdCompFlag[ctrl->SdNr] == 0) && (cmdTimeout[ctrl->SdNr] == 0));
+    while ((cmdCompFlag[ctrl->SdNr] == 0) && (cmdTimeout[ctrl->SdNr] == 0) && (timeOut--));
+
+    if(timeOut == 0)
+    {
+        status = 0;
+    }
 
     if (cmdCompFlag[ctrl->SdNr])
     {
@@ -560,6 +566,7 @@ void _mmcsd_idle(void *SdCtrlStruct)
             initFlg[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr] = 0;
         	if(MMCSDCardInit((mmcsdCtrlInfo*)SdCtrlStruct))
         	{
+        		((mmcsdCtrlInfo*)SdCtrlStruct)->connected = true;
 #ifndef thirdpartyfatfs
                 Drives_Table[0] = new_(new_fat_disk);
                 Drives_Table[0]->DiskInfo_SdDriverStructAddr = &ctrlInfo;
@@ -629,7 +636,8 @@ void _mmcsd_idle(void *SdCtrlStruct)
         Sysdelay(1);
         if(initFlg[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr] != 1)
         {
-            initFlg[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr] = 1;
+        	((mmcsdCtrlInfo*)SdCtrlStruct)->connected = false;
+        	initFlg[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr] = 1;
 #ifndef thirdpartyfatfs
         	if(_FatData_CloseSesion(FILE1) == 1 && DebugCom != NULL)						UARTPuts(DebugCom, "MMCSD0 Session closed\n\r" , -1);
         	FILE1 = NULL;
