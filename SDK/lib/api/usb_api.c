@@ -19,13 +19,14 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "usb_host_api.h"
+#include "usb_api.h"
 #include "interface/usb_host_msc_interface.h"
 #include "interface/usb_host_mouse_interface.h"
 #include "interface/usb_dev_msc_interface.h"
+#include "interface/usb_dev_com_interface.h"
 #include "api/gpio_api.h"
 #include "lib/gfx/controls_definition.h"
-
+/*-----------------------------------------------------------*/
 void usb_msc_host_init(unsigned int instance, new_gpio* StatusLed)
 {
 	_usb_msc_host_init(instance, StatusLed);
@@ -50,7 +51,7 @@ void usb_msc_host_ioctl(void *_ctrl, unsigned int  command,  unsigned int *buffe
 {
 	_usb_msc_host_ioctl(_ctrl, command, buffer);
 }
-
+/*-----------------------------------------------------------*/
 void usb_mouse_host_init(unsigned int instance)
 {
 	_usb_mouse_host_init(instance);
@@ -60,10 +61,31 @@ void usb_mouse_host_idle(unsigned int instance, tControlCommandData *control_com
 {
 	_usb_mouse_host_idle(instance, control_comand);
 }
-
+/*-----------------------------------------------------------*/
 void usb_msc_dev_init(unsigned int instance)
 {
 	_usb_msc_dev_init(instance);
 }
+
+void usb_msc_dev_media_change_state(unsigned int instance, bool media_is_present)
+{
+	_usb_msc_dev_media_change_state(instance, media_is_present);
+}
+/*-----------------------------------------------------------*/
+void usb_com_dev_init(unsigned int instance)
+{
+	_usb_com_dev_init(instance);
+}
+
+unsigned int usb_com_dev_receive(unsigned char* buff)
+{
+	return _usb_com_dev_receive(buff);
+}
+
+unsigned int usb_com_dev_send(unsigned char* buff, unsigned int nbytes)
+{
+	return _usb_com_dev_send(buff, nbytes);
+}
+/*-----------------------------------------------------------*/
 
 
