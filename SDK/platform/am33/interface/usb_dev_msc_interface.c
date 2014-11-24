@@ -74,8 +74,8 @@ unsigned char *dataBuffer;
 // DMA Configuration.
 //
 //*****************************************************************************
-#define NUMBER_OF_ENDPOINTS     2 //Total number of send points(RX +TX) used in this USB configuration
-#define USB_MSC_BUFER_SIZE      512
+#define NUMBER_OF_ENDPOINTS     4 //Total number of send points(RX +TX) used in this USB configuration
+#define USB_MSC_BUFER_SIZE      65536
 
 //*****************************************************************************
 //
@@ -205,7 +205,7 @@ static void _USB0AINTCConfigure_(void)
     IntRegister(SYS_INT_USB0, USB0DeviceIntHandler);
 
     /* Setting the priority for the system interrupt in AINTC. */
-    IntPrioritySet(SYS_INT_USB0, 0, AINTC_HOSTINT_ROUTE_IRQ);
+    IntPrioritySet(SYS_INT_USB0, 1, AINTC_HOSTINT_ROUTE_IRQ);
 
     /* Enabling the system interrupt in AINTC. */
     IntSystemEnable(SYS_INT_USB0);
@@ -218,7 +218,7 @@ static void _CPDMAAINTCConfigure_(void)
     IntRegister(SYS_INT_USBSSINT, USB0DeviceIntHandler);
 
     /* Setting the priority for the system interrupt in AINTC. */
-    IntPrioritySet(SYS_INT_USBSSINT, 0, AINTC_HOSTINT_ROUTE_IRQ);
+    IntPrioritySet(SYS_INT_USBSSINT, 1, AINTC_HOSTINT_ROUTE_IRQ);
 
     /* Enabling the system interrupt in AINTC. */
     IntSystemEnable(SYS_INT_USBSSINT);
@@ -305,6 +305,13 @@ USBDMSCEventCallback(void *pvCBData, unsigned int ulEvent,
     return(0);
 }
 
+void _usb_msc_dev_media_change_state(unsigned int instance, bool media_is_present)
+{
+	//tUSBDMSCMediaStatus eMediaStatus = USBDMSC_MEDIA_UNKNOWN;
+	if(media_is_present == true)  USBDevConnect(g_USBInstance[0].uiBaseAddr);//eMediaStatus = USBDMSC_MEDIA_PRESENT;
+	else if(media_is_present == false) USBDevDisconnect(g_USBInstance[0].uiBaseAddr);//eMediaStatus = USBDMSC_MEDIA_NOTPRESENT;
+	//USBDMSCMediaChange((tUSBDMSCDevice *)&g_sMSCDevice, eMediaStatus);
+}
 
 void _usb_msc_dev_init(unsigned int instance)
 {
