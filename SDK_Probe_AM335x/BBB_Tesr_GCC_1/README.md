@@ -20,11 +20,14 @@ On this example can be tested some interfaces like:
 
 6) LCD and HDMI interface:
 
-	BeagleBone Expansion 320x240 3.5 inch display with touchscreen (autodetected by software) if LCD 3 cape is present.
+	BeagleBone Expansion 320x240 3.5 inch display with touchscreen 
+		(autodetected by software) if LCD 3 cape is present.
 	
-	BeagleBone Expansion 800x480 7inch display with capacitive touchscreen (autodetected by software throught ft5x06 circuitry).
+	BeagleBone Expansion 800x480 7inch display with capacitive touchscreen 
+		(autodetected by software throught ft5x06 circuitry).
 	
-	If last two displays has not been detected the software initiate the LCD controler for one of two presetted HDMI settings.
+	If last two displays has not been detected the software 
+		initiate the LCD controler for one of two presetted HDMI settings.
 	
 7) Test some GUY libraryes integrated in a sizeable window like:
 
