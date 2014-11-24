@@ -94,8 +94,8 @@ int main(void)
 /*-----------------------------------------------------*/
 	while(1)
 	{
-        mmcsd_idle(&sdCtrl[0]);
 #ifdef BridgeUsbDev0ToMmcSd0
+        mmcsd_idle(&sdCtrl[0]);
         if(old_connected == false && sdCtrl[0].connected == true)
         {
         	old_connected = true;
