@@ -10,6 +10,7 @@
 #include "board_init.h"
 #include "main.h"
 #ifdef test1
+#ifdef test1
 #include "example1.h"
 #endif
 #include "board/boards.h"
@@ -23,7 +24,7 @@
 #include "api/pmic_api.h"
 #include "api/gpio_api.h"
 #include "api/touchscreen_def.h"
-#include "api/usb_host_api.h"
+#include "api/usb_api.h"
 #include "api/mmcsd_api.h"
 #include "device/24c.h"
 #include "device/ADXL345.h"
@@ -201,7 +202,7 @@ bool board_init()
 	usb_msc_dev_init(0);
 	UARTPuts(DebugCom, "OK.\n\r", -1);
 /*-----------------------------------------------------*/
-#elif  defined( usb_0_dev_msc ) && defined ( BridgeUsbDev0ToUsbHost1) && !defined(usb_1_msc) && !defined(usb_1_mouse)
+#elif  defined( usb_0_dev_msc ) && defined ( BridgeUsbDev0ToUsbHost1) && defined(usb_1_msc) && !defined(usb_1_mouse)
 extern unsigned int g_ulMSCInstance0Usb1;//UsbMsc driver
 	UARTPuts(DebugCom, "Bridge USBMSC0 Dev for USBMSC1Host Interface.......", -1);
 	drv_rw_func.DriveStruct = (void *)g_ulMSCInstance0Usb1;
@@ -316,3 +317,4 @@ extern unsigned int g_ulMSCInstance0Usb1;//UsbMsc driver
 	}
 	return true;
 }
+#endif
