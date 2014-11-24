@@ -12,8 +12,8 @@
  * Inside window is displayed one button, one check box, one progress bar, one horizontal scroll bar,
  * one text box, one list box and one picture box with back-ground buffer.
 */
-#define test1
-
+//#define test1
+#define bridge_eMMC_MMCSD1_to_USB0
 
 /* This example will display one Window that can be in full screen
  * (remain a 10 pix band on up of screen, and 70 pix on down of screen to display a keyboard)
