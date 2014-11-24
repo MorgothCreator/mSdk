@@ -198,7 +198,7 @@ endpointInfo epInfo[]=
 		USB_EP_TO_INDEX(USB_EP_1),
 		CPDMA_DIR_TX,
 		CPDMA_MODE_SET_GRNDIS,
-	}/*,
+	},
 
 	{
 		USB_EP_TO_INDEX(USB_EP_2),
@@ -210,11 +210,11 @@ endpointInfo epInfo[]=
 		USB_EP_TO_INDEX(USB_EP_2),
 		CPDMA_DIR_TX,
 		CPDMA_MODE_SET_GRNDIS,
-	}*/
+	}
 
 };
 
-#define NUMBER_OF_ENDPOINTS 2
+#define NUMBER_OF_ENDPOINTS 4
 
 #endif
 
