@@ -34,6 +34,7 @@
 #include <time.h>
 #include <sys/time.h>
 #include <sys/times.h>
+#include "sys/core_cm3.h"
 
 
 /* Variables */

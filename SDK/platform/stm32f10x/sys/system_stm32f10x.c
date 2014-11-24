@@ -318,7 +318,7 @@ void SystemInit_ExtMemCtl(void)
   */
 static void SetSysClockToHSE(void)
 {
-  __IO uint32_t StartUpCounter = 0, HSEStatus = 0;
+  volatile uint32_t StartUpCounter = 0, HSEStatus = 0;
   
   /* SYSCLK, HCLK, PCLK2 and PCLK1 configuration ---------------------------*/    
   /* Enable HSE */    
@@ -399,7 +399,7 @@ static void SetSysClockToHSE(void)
   */
 static void SetSysClockTo24(void)
 {
-  __IO uint32_t StartUpCounter = 0, HSEStatus = 0;
+  volatile uint32_t StartUpCounter = 0, HSEStatus = 0;
   
   /* SYSCLK, HCLK, PCLK2 and PCLK1 configuration ---------------------------*/    
   /* Enable HSE */    
@@ -515,7 +515,7 @@ static void SetSysClockTo24(void)
   */
 static void SetSysClockTo36(void)
 {
-  __IO uint32_t StartUpCounter = 0, HSEStatus = 0;
+  volatile uint32_t StartUpCounter = 0, HSEStatus = 0;
   
   /* SYSCLK, HCLK, PCLK2 and PCLK1 configuration ---------------------------*/    
   /* Enable HSE */    
@@ -634,7 +634,7 @@ static void SetSysClockTo36(void)
   */
 static void SetSysClockTo48(void)
 {
-  __IO uint32_t StartUpCounter = 0, HSEStatus = 0;
+  volatile uint32_t StartUpCounter = 0, HSEStatus = 0;
   
   /* SYSCLK, HCLK, PCLK2 and PCLK1 configuration ---------------------------*/    
   /* Enable HSE */    
@@ -744,7 +744,7 @@ static void SetSysClockTo48(void)
   */
 static void SetSysClockTo56(void)
 {
-  __IO uint32_t StartUpCounter = 0, HSEStatus = 0;
+  volatile uint32_t StartUpCounter = 0, HSEStatus = 0;
   
   /* SYSCLK, HCLK, PCLK2 and PCLK1 configuration ---------------------------*/   
   /* Enable HSE */    
@@ -851,7 +851,7 @@ static void SetSysClockTo56(void)
   */
 static void SetSysClockTo72(void)
 {
-  __IO uint32_t StartUpCounter = 0, HSEStatus = 0;
+  volatile uint32_t StartUpCounter = 0, HSEStatus = 0;
   
   /* SYSCLK, HCLK, PCLK2 and PCLK1 configuration ---------------------------*/    
   /* Enable HSE */    

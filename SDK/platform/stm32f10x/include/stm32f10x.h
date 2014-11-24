@@ -325,13 +325,13 @@ typedef const int32_t sc32;  /*!< Read Only */
 typedef const int16_t sc16;  /*!< Read Only */
 typedef const int8_t sc8;   /*!< Read Only */
 
-typedef __IO int32_t  vs32;
-typedef __IO int16_t  vs16;
-typedef __IO int8_t   vs8;
+typedef volatile int32_t  vs32;
+typedef volatile int16_t  vs16;
+typedef volatile int8_t   vs8;
 
-typedef __I int32_t vsc32;  /*!< Read Only */
-typedef __I int16_t vsc16;  /*!< Read Only */
-typedef __I int8_t vsc8;   /*!< Read Only */
+typedef volatile const int32_t vsc32;  /*!< Read Only */
+typedef volatile const int16_t vsc16;  /*!< Read Only */
+typedef volatile const int8_t vsc8;   /*!< Read Only */
 
 typedef uint32_t  u32;
 typedef uint16_t u16;
@@ -341,13 +341,13 @@ typedef const uint32_t uc32;  /*!< Read Only */
 typedef const uint16_t uc16;  /*!< Read Only */
 typedef const uint8_t uc8;   /*!< Read Only */
 
-typedef __IO uint32_t  vu32;
-typedef __IO uint16_t vu16;
-typedef __IO uint8_t  vu8;
+typedef volatile uint32_t  vu32;
+typedef volatile uint16_t vu16;
+typedef volatile uint8_t  vu8;
 
-typedef __I uint32_t vuc32;  /*!< Read Only */
-typedef __I uint16_t vuc16;  /*!< Read Only */
-typedef __I uint8_t vuc8;   /*!< Read Only */
+typedef volatile const uint32_t vuc32;  /*!< Read Only */
+typedef volatile const uint16_t vuc16;  /*!< Read Only */
+typedef volatile const uint8_t vuc8;   /*!< Read Only */
 
 #ifdef MOD_MTHOMAS_STMLIB
 
@@ -388,26 +388,26 @@ typedef enum {ERROR = 0, SUCCESS = !ERROR} ErrorStatus;
 
 typedef struct
 {
-  __IO uint32_t SR;
-  __IO uint32_t CR1;
-  __IO uint32_t CR2;
-  __IO uint32_t SMPR1;
-  __IO uint32_t SMPR2;
-  __IO uint32_t JOFR1;
-  __IO uint32_t JOFR2;
-  __IO uint32_t JOFR3;
-  __IO uint32_t JOFR4;
-  __IO uint32_t HTR;
-  __IO uint32_t LTR;
-  __IO uint32_t SQR1;
-  __IO uint32_t SQR2;
-  __IO uint32_t SQR3;
-  __IO uint32_t JSQR;
-  __IO uint32_t JDR1;
-  __IO uint32_t JDR2;
-  __IO uint32_t JDR3;
-  __IO uint32_t JDR4;
-  __IO uint32_t DR;
+  volatile uint32_t SR;
+  volatile uint32_t CR1;
+  volatile uint32_t CR2;
+  volatile uint32_t SMPR1;
+  volatile uint32_t SMPR2;
+  volatile uint32_t JOFR1;
+  volatile uint32_t JOFR2;
+  volatile uint32_t JOFR3;
+  volatile uint32_t JOFR4;
+  volatile uint32_t HTR;
+  volatile uint32_t LTR;
+  volatile uint32_t SQR1;
+  volatile uint32_t SQR2;
+  volatile uint32_t SQR3;
+  volatile uint32_t JSQR;
+  volatile uint32_t JDR1;
+  volatile uint32_t JDR2;
+  volatile uint32_t JDR3;
+  volatile uint32_t JDR4;
+  volatile uint32_t DR;
 } ADC_TypeDef;
 
 /**
@@ -417,95 +417,95 @@ typedef struct
 typedef struct
 {
   uint32_t  RESERVED0;
-  __IO uint16_t DR1;
+  volatile uint16_t DR1;
   uint16_t  RESERVED1;
-  __IO uint16_t DR2;
+  volatile uint16_t DR2;
   uint16_t  RESERVED2;
-  __IO uint16_t DR3;
+  volatile uint16_t DR3;
   uint16_t  RESERVED3;
-  __IO uint16_t DR4;
+  volatile uint16_t DR4;
   uint16_t  RESERVED4;
-  __IO uint16_t DR5;
+  volatile uint16_t DR5;
   uint16_t  RESERVED5;
-  __IO uint16_t DR6;
+  volatile uint16_t DR6;
   uint16_t  RESERVED6;
-  __IO uint16_t DR7;
+  volatile uint16_t DR7;
   uint16_t  RESERVED7;
-  __IO uint16_t DR8;
+  volatile uint16_t DR8;
   uint16_t  RESERVED8;
-  __IO uint16_t DR9;
+  volatile uint16_t DR9;
   uint16_t  RESERVED9;
-  __IO uint16_t DR10;
+  volatile uint16_t DR10;
   uint16_t  RESERVED10;
-  __IO uint16_t RTCCR;
+  volatile uint16_t RTCCR;
   uint16_t  RESERVED11;
-  __IO uint16_t CR;
+  volatile uint16_t CR;
   uint16_t  RESERVED12;
-  __IO uint16_t CSR;
+  volatile uint16_t CSR;
   uint16_t  RESERVED13[5];
-  __IO uint16_t DR11;
+  volatile uint16_t DR11;
   uint16_t  RESERVED14;
-  __IO uint16_t DR12;
+  volatile uint16_t DR12;
   uint16_t  RESERVED15;
-  __IO uint16_t DR13;
+  volatile uint16_t DR13;
   uint16_t  RESERVED16;
-  __IO uint16_t DR14;
+  volatile uint16_t DR14;
   uint16_t  RESERVED17;
-  __IO uint16_t DR15;
+  volatile uint16_t DR15;
   uint16_t  RESERVED18;
-  __IO uint16_t DR16;
+  volatile uint16_t DR16;
   uint16_t  RESERVED19;
-  __IO uint16_t DR17;
+  volatile uint16_t DR17;
   uint16_t  RESERVED20;
-  __IO uint16_t DR18;
+  volatile uint16_t DR18;
   uint16_t  RESERVED21;
-  __IO uint16_t DR19;
+  volatile uint16_t DR19;
   uint16_t  RESERVED22;
-  __IO uint16_t DR20;
+  volatile uint16_t DR20;
   uint16_t  RESERVED23;
-  __IO uint16_t DR21;
+  volatile uint16_t DR21;
   uint16_t  RESERVED24;
-  __IO uint16_t DR22;
+  volatile uint16_t DR22;
   uint16_t  RESERVED25;
-  __IO uint16_t DR23;
+  volatile uint16_t DR23;
   uint16_t  RESERVED26;
-  __IO uint16_t DR24;
+  volatile uint16_t DR24;
   uint16_t  RESERVED27;
-  __IO uint16_t DR25;
+  volatile uint16_t DR25;
   uint16_t  RESERVED28;
-  __IO uint16_t DR26;
+  volatile uint16_t DR26;
   uint16_t  RESERVED29;
-  __IO uint16_t DR27;
+  volatile uint16_t DR27;
   uint16_t  RESERVED30;
-  __IO uint16_t DR28;
+  volatile uint16_t DR28;
   uint16_t  RESERVED31;
-  __IO uint16_t DR29;
+  volatile uint16_t DR29;
   uint16_t  RESERVED32;
-  __IO uint16_t DR30;
+  volatile uint16_t DR30;
   uint16_t  RESERVED33;
-  __IO uint16_t DR31;
+  volatile uint16_t DR31;
   uint16_t  RESERVED34;
-  __IO uint16_t DR32;
+  volatile uint16_t DR32;
   uint16_t  RESERVED35;
-  __IO uint16_t DR33;
+  volatile uint16_t DR33;
   uint16_t  RESERVED36;
-  __IO uint16_t DR34;
+  volatile uint16_t DR34;
   uint16_t  RESERVED37;
-  __IO uint16_t DR35;
+  volatile uint16_t DR35;
   uint16_t  RESERVED38;
-  __IO uint16_t DR36;
+  volatile uint16_t DR36;
   uint16_t  RESERVED39;
-  __IO uint16_t DR37;
+  volatile uint16_t DR37;
   uint16_t  RESERVED40;
-  __IO uint16_t DR38;
+  volatile uint16_t DR38;
   uint16_t  RESERVED41;
-  __IO uint16_t DR39;
+  volatile uint16_t DR39;
   uint16_t  RESERVED42;
-  __IO uint16_t DR40;
+  volatile uint16_t DR40;
   uint16_t  RESERVED43;
-  __IO uint16_t DR41;
+  volatile uint16_t DR41;
   uint16_t  RESERVED44;
-  __IO uint16_t DR42;
+  volatile uint16_t DR42;
   uint16_t  RESERVED45;
 } BKP_TypeDef;
 
@@ -515,10 +515,10 @@ typedef struct
 
 typedef struct
 {
-  __IO uint32_t TIR;
-  __IO uint32_t TDTR;
-  __IO uint32_t TDLR;
-  __IO uint32_t TDHR;
+  volatile uint32_t TIR;
+  volatile uint32_t TDTR;
+  volatile uint32_t TDLR;
+  volatile uint32_t TDHR;
 } CAN_TxMailBox_TypeDef;
 
 /**
@@ -527,10 +527,10 @@ typedef struct
 
 typedef struct
 {
-  __IO uint32_t RIR;
-  __IO uint32_t RDTR;
-  __IO uint32_t RDLR;
-  __IO uint32_t RDHR;
+  volatile uint32_t RIR;
+  volatile uint32_t RDTR;
+  volatile uint32_t RDLR;
+  volatile uint32_t RDHR;
 } CAN_FIFOMailBox_TypeDef;
 
 /**
@@ -539,8 +539,8 @@ typedef struct
 
 typedef struct
 {
-  __IO uint32_t FR1;
-  __IO uint32_t FR2;
+  volatile uint32_t FR1;
+  volatile uint32_t FR2;
 } CAN_FilterRegister_TypeDef;
 
 /**
@@ -549,26 +549,26 @@ typedef struct
 
 typedef struct
 {
-  __IO uint32_t MCR;
-  __IO uint32_t MSR;
-  __IO uint32_t TSR;
-  __IO uint32_t RF0R;
-  __IO uint32_t RF1R;
-  __IO uint32_t IER;
-  __IO uint32_t ESR;
-  __IO uint32_t BTR;
+  volatile uint32_t MCR;
+  volatile uint32_t MSR;
+  volatile uint32_t TSR;
+  volatile uint32_t RF0R;
+  volatile uint32_t RF1R;
+  volatile uint32_t IER;
+  volatile uint32_t ESR;
+  volatile uint32_t BTR;
   uint32_t  RESERVED0[88];
   CAN_TxMailBox_TypeDef sTxMailBox[3];
   CAN_FIFOMailBox_TypeDef sFIFOMailBox[2];
   uint32_t  RESERVED1[12];
-  __IO uint32_t FMR;
-  __IO uint32_t FM1R;
+  volatile uint32_t FMR;
+  volatile uint32_t FM1R;
   uint32_t  RESERVED2;
-  __IO uint32_t FS1R;
+  volatile uint32_t FS1R;
   uint32_t  RESERVED3;
-  __IO uint32_t FFA1R;
+  volatile uint32_t FFA1R;
   uint32_t  RESERVED4;
-  __IO uint32_t FA1R;
+  volatile uint32_t FA1R;
   uint32_t  RESERVED5[8];
 #ifndef STM32F10X_CL
   CAN_FilterRegister_TypeDef sFilterRegister[14];
@@ -583,11 +583,11 @@ typedef struct
 
 typedef struct
 {
-  __IO uint32_t DR;
-  __IO uint8_t  IDR;
+  volatile uint32_t DR;
+  volatile uint8_t  IDR;
   uint8_t   RESERVED0;
   uint16_t  RESERVED1;
-  __IO uint32_t CR;
+  volatile uint32_t CR;
 } CRC_TypeDef;
 
 /**
@@ -596,19 +596,19 @@ typedef struct
 
 typedef struct
 {
-  __IO uint32_t CR;
-  __IO uint32_t SWTRIGR;
-  __IO uint32_t DHR12R1;
-  __IO uint32_t DHR12L1;
-  __IO uint32_t DHR8R1;
-  __IO uint32_t DHR12R2;
-  __IO uint32_t DHR12L2;
-  __IO uint32_t DHR8R2;
-  __IO uint32_t DHR12RD;
-  __IO uint32_t DHR12LD;
-  __IO uint32_t DHR8RD;
-  __IO uint32_t DOR1;
-  __IO uint32_t DOR2;
+  volatile uint32_t CR;
+  volatile uint32_t SWTRIGR;
+  volatile uint32_t DHR12R1;
+  volatile uint32_t DHR12L1;
+  volatile uint32_t DHR8R1;
+  volatile uint32_t DHR12R2;
+  volatile uint32_t DHR12L2;
+  volatile uint32_t DHR8R2;
+  volatile uint32_t DHR12RD;
+  volatile uint32_t DHR12LD;
+  volatile uint32_t DHR8RD;
+  volatile uint32_t DOR1;
+  volatile uint32_t DOR2;
 } DAC_TypeDef;
 
 /**
@@ -617,8 +617,8 @@ typedef struct
 
 typedef struct
 {
-  __IO uint32_t IDCODE;
-  __IO uint32_t CR;
+  volatile uint32_t IDCODE;
+  volatile uint32_t CR;
 }DBGMCU_TypeDef;
 
 /**
@@ -627,16 +627,16 @@ typedef struct
 
 typedef struct
 {
-  __IO uint32_t CCR;
-  __IO uint32_t CNDTR;
-  __IO uint32_t CPAR;
-  __IO uint32_t CMAR;
+  volatile uint32_t CCR;
+  volatile uint32_t CNDTR;
+  volatile uint32_t CPAR;
+  volatile uint32_t CMAR;
 } DMA_Channel_TypeDef;
 
 typedef struct
 {
-  __IO uint32_t ISR;
-  __IO uint32_t IFCR;
+  volatile uint32_t ISR;
+  volatile uint32_t IFCR;
 } DMA_TypeDef;
 
 /**
@@ -645,69 +645,69 @@ typedef struct
 
 typedef struct
 {
-  __IO uint32_t MACCR;
-  __IO uint32_t MACFFR;
-  __IO uint32_t MACHTHR;
-  __IO uint32_t MACHTLR;
-  __IO uint32_t MACMIIAR;
-  __IO uint32_t MACMIIDR;
-  __IO uint32_t MACFCR;
-  __IO uint32_t MACVLANTR;             /*    8 */
+  volatile uint32_t MACCR;
+  volatile uint32_t MACFFR;
+  volatile uint32_t MACHTHR;
+  volatile uint32_t MACHTLR;
+  volatile uint32_t MACMIIAR;
+  volatile uint32_t MACMIIDR;
+  volatile uint32_t MACFCR;
+  volatile uint32_t MACVLANTR;             /*    8 */
        uint32_t RESERVED0[2];
-  __IO uint32_t MACRWUFFR;             /*   11 */
-  __IO uint32_t MACPMTCSR;
+  volatile uint32_t MACRWUFFR;             /*   11 */
+  volatile uint32_t MACPMTCSR;
        uint32_t RESERVED1[2];
-  __IO uint32_t MACSR;                 /*   15 */
-  __IO uint32_t MACIMR;
-  __IO uint32_t MACA0HR;
-  __IO uint32_t MACA0LR;
-  __IO uint32_t MACA1HR;
-  __IO uint32_t MACA1LR;
-  __IO uint32_t MACA2HR;
-  __IO uint32_t MACA2LR;
-  __IO uint32_t MACA3HR;
-  __IO uint32_t MACA3LR;               /*   24 */
+  volatile uint32_t MACSR;                 /*   15 */
+  volatile uint32_t MACIMR;
+  volatile uint32_t MACA0HR;
+  volatile uint32_t MACA0LR;
+  volatile uint32_t MACA1HR;
+  volatile uint32_t MACA1LR;
+  volatile uint32_t MACA2HR;
+  volatile uint32_t MACA2LR;
+  volatile uint32_t MACA3HR;
+  volatile uint32_t MACA3LR;               /*   24 */
        uint32_t RESERVED2[40];
-  __IO uint32_t MMCCR;                 /*   65 */
-  __IO uint32_t MMCRIR;
-  __IO uint32_t MMCTIR;
-  __IO uint32_t MMCRIMR;
-  __IO uint32_t MMCTIMR;               /*   69 */
+  volatile uint32_t MMCCR;                 /*   65 */
+  volatile uint32_t MMCRIR;
+  volatile uint32_t MMCTIR;
+  volatile uint32_t MMCRIMR;
+  volatile uint32_t MMCTIMR;               /*   69 */
        uint32_t RESERVED3[14];
-  __IO uint32_t MMCTGFSCCR;            /*   84 */
-  __IO uint32_t MMCTGFMSCCR;
+  volatile uint32_t MMCTGFSCCR;            /*   84 */
+  volatile uint32_t MMCTGFMSCCR;
        uint32_t RESERVED4[5];
-  __IO uint32_t MMCTGFCR;
+  volatile uint32_t MMCTGFCR;
        uint32_t RESERVED5[10];
-  __IO uint32_t MMCRFCECR;
-  __IO uint32_t MMCRFAECR;
+  volatile uint32_t MMCRFCECR;
+  volatile uint32_t MMCRFAECR;
        uint32_t RESERVED6[10];
-  __IO uint32_t MMCRGUFCR;
+  volatile uint32_t MMCRGUFCR;
        uint32_t RESERVED7[334];
-  __IO uint32_t PTPTSCR;
-  __IO uint32_t PTPSSIR;
-  __IO uint32_t PTPTSHR;
-  __IO uint32_t PTPTSLR;
-  __IO uint32_t PTPTSHUR;
-  __IO uint32_t PTPTSLUR;
-  __IO uint32_t PTPTSAR;
-  __IO uint32_t PTPTTHR;
-  __IO uint32_t PTPTTLR;
+  volatile uint32_t PTPTSCR;
+  volatile uint32_t PTPSSIR;
+  volatile uint32_t PTPTSHR;
+  volatile uint32_t PTPTSLR;
+  volatile uint32_t PTPTSHUR;
+  volatile uint32_t PTPTSLUR;
+  volatile uint32_t PTPTSAR;
+  volatile uint32_t PTPTTHR;
+  volatile uint32_t PTPTTLR;
        uint32_t RESERVED8[567];
-  __IO uint32_t DMABMR;
-  __IO uint32_t DMATPDR;
-  __IO uint32_t DMARPDR;
-  __IO uint32_t DMARDLAR;
-  __IO uint32_t DMATDLAR;
-  __IO uint32_t DMASR;
-  __IO uint32_t DMAOMR;
-  __IO uint32_t DMAIER;
-  __IO uint32_t DMAMFBOCR;
+  volatile uint32_t DMABMR;
+  volatile uint32_t DMATPDR;
+  volatile uint32_t DMARPDR;
+  volatile uint32_t DMARDLAR;
+  volatile uint32_t DMATDLAR;
+  volatile uint32_t DMASR;
+  volatile uint32_t DMAOMR;
+  volatile uint32_t DMAIER;
+  volatile uint32_t DMAMFBOCR;
        uint32_t RESERVED9[9];
-  __IO uint32_t DMACHTDR;
-  __IO uint32_t DMACHRDR;
-  __IO uint32_t DMACHTBAR;
-  __IO uint32_t DMACHRBAR;
+  volatile uint32_t DMACHTDR;
+  volatile uint32_t DMACHRDR;
+  volatile uint32_t DMACHTBAR;
+  volatile uint32_t DMACHRBAR;
 } ETH_TypeDef;
 
 /**
@@ -716,12 +716,12 @@ typedef struct
 
 typedef struct
 {
-  __IO uint32_t IMR;
-  __IO uint32_t EMR;
-  __IO uint32_t RTSR;
-  __IO uint32_t FTSR;
-  __IO uint32_t SWIER;
-  __IO uint32_t PR;
+  volatile uint32_t IMR;
+  volatile uint32_t EMR;
+  volatile uint32_t RTSR;
+  volatile uint32_t FTSR;
+  volatile uint32_t SWIER;
+  volatile uint32_t PR;
 } EXTI_TypeDef;
 
 /**
@@ -730,15 +730,15 @@ typedef struct
 
 typedef struct
 {
-  __IO uint32_t ACR;
-  __IO uint32_t KEYR;
-  __IO uint32_t OPTKEYR;
-  __IO uint32_t SR;
-  __IO uint32_t CR;
-  __IO uint32_t AR;
-  __IO uint32_t RESERVED;
-  __IO uint32_t OBR;
-  __IO uint32_t WRPR;
+  volatile uint32_t ACR;
+  volatile uint32_t KEYR;
+  volatile uint32_t OPTKEYR;
+  volatile uint32_t SR;
+  volatile uint32_t CR;
+  volatile uint32_t AR;
+  volatile uint32_t RESERVED;
+  volatile uint32_t OBR;
+  volatile uint32_t WRPR;
 } FLASH_TypeDef;
 
 /**
@@ -747,14 +747,14 @@ typedef struct
 
 typedef struct
 {
-  __IO uint16_t RDP;
-  __IO uint16_t USER;
-  __IO uint16_t Data0;
-  __IO uint16_t Data1;
-  __IO uint16_t WRP0;
-  __IO uint16_t WRP1;
-  __IO uint16_t WRP2;
-  __IO uint16_t WRP3;
+  volatile uint16_t RDP;
+  volatile uint16_t USER;
+  volatile uint16_t Data0;
+  volatile uint16_t Data1;
+  volatile uint16_t WRP0;
+  volatile uint16_t WRP1;
+  volatile uint16_t WRP2;
+  volatile uint16_t WRP3;
 } OB_TypeDef;
 
 /**
@@ -763,7 +763,7 @@ typedef struct
 
 typedef struct
 {
-  __IO uint32_t BTCR[8];
+  volatile uint32_t BTCR[8];
 } FSMC_Bank1_TypeDef;
 
 /**
@@ -772,7 +772,7 @@ typedef struct
 
 typedef struct
 {
-  __IO uint32_t BWTR[7];
+  volatile uint32_t BWTR[7];
 } FSMC_Bank1E_TypeDef;
 
 /**
@@ -781,12 +781,12 @@ typedef struct
 
 typedef struct
 {
-  __IO uint32_t PCR2;
-  __IO uint32_t SR2;
-  __IO uint32_t PMEM2;
-  __IO uint32_t PATT2;
+  volatile uint32_t PCR2;
+  volatile uint32_t SR2;
+  volatile uint32_t PMEM2;
+  volatile uint32_t PATT2;
   uint32_t  RESERVED0;
-  __IO uint32_t ECCR2;
+  volatile uint32_t ECCR2;
 } FSMC_Bank2_TypeDef;
 
 /**
@@ -795,12 +795,12 @@ typedef struct
 
 typedef struct
 {
-  __IO uint32_t PCR3;
-  __IO uint32_t SR3;
-  __IO uint32_t PMEM3;
-  __IO uint32_t PATT3;
+  volatile uint32_t PCR3;
+  volatile uint32_t SR3;
+  volatile uint32_t PMEM3;
+  volatile uint32_t PATT3;
   uint32_t  RESERVED0;
-  __IO uint32_t ECCR3;
+  volatile uint32_t ECCR3;
 } FSMC_Bank3_TypeDef;
 
 /**
@@ -809,11 +809,11 @@ typedef struct
 
 typedef struct
 {
-  __IO uint32_t PCR4;
-  __IO uint32_t SR4;
-  __IO uint32_t PMEM4;
-  __IO uint32_t PATT4;
-  __IO uint32_t PIO4;
+  volatile uint32_t PCR4;
+  volatile uint32_t SR4;
+  volatile uint32_t PMEM4;
+  volatile uint32_t PATT4;
+  volatile uint32_t PIO4;
 } FSMC_Bank4_TypeDef;
 
 /**
@@ -822,13 +822,13 @@ typedef struct
 
 typedef struct
 {
-  __IO uint32_t CRL;
-  __IO uint32_t CRH;
-  __IO uint32_t IDR;
-  __IO uint32_t ODR;
-  __IO uint32_t BSRR;
-  __IO uint32_t BRR;
-  __IO uint32_t LCKR;
+  volatile uint32_t CRL;
+  volatile uint32_t CRH;
+  volatile uint32_t IDR;
+  volatile uint32_t ODR;
+  volatile uint32_t BSRR;
+  volatile uint32_t BRR;
+  volatile uint32_t LCKR;
 } GPIO_TypeDef;
 
 /**
@@ -837,9 +837,9 @@ typedef struct
 
 typedef struct
 {
-  __IO uint32_t EVCR;
-  __IO uint32_t MAPR;
-  __IO uint32_t EXTICR[4];
+  volatile uint32_t EVCR;
+  volatile uint32_t MAPR;
+  volatile uint32_t EXTICR[4];
 } AFIO_TypeDef;
 /**
   * @brief Inter-integrated Circuit Interface
@@ -847,23 +847,23 @@ typedef struct
 
 typedef struct
 {
-  __IO uint16_t CR1;
+  volatile uint16_t CR1;
   uint16_t  RESERVED0;
-  __IO uint16_t CR2;
+  volatile uint16_t CR2;
   uint16_t  RESERVED1;
-  __IO uint16_t OAR1;
+  volatile uint16_t OAR1;
   uint16_t  RESERVED2;
-  __IO uint16_t OAR2;
+  volatile uint16_t OAR2;
   uint16_t  RESERVED3;
-  __IO uint16_t DR;
+  volatile uint16_t DR;
   uint16_t  RESERVED4;
-  __IO uint16_t SR1;
+  volatile uint16_t SR1;
   uint16_t  RESERVED5;
-  __IO uint16_t SR2;
+  volatile uint16_t SR2;
   uint16_t  RESERVED6;
-  __IO uint16_t CCR;
+  volatile uint16_t CCR;
   uint16_t  RESERVED7;
-  __IO uint16_t TRISE;
+  volatile uint16_t TRISE;
   uint16_t  RESERVED8;
 } I2C_TypeDef;
 
@@ -873,10 +873,10 @@ typedef struct
 
 typedef struct
 {
-  __IO uint32_t KR;
-  __IO uint32_t PR;
-  __IO uint32_t RLR;
-  __IO uint32_t SR;
+  volatile uint32_t KR;
+  volatile uint32_t PR;
+  volatile uint32_t RLR;
+  volatile uint32_t SR;
 } IWDG_TypeDef;
 
 /**
@@ -885,8 +885,8 @@ typedef struct
 
 typedef struct
 {
-  __IO uint32_t CR;
-  __IO uint32_t CSR;
+  volatile uint32_t CR;
+  volatile uint32_t CSR;
 } PWR_TypeDef;
 
 /**
@@ -895,19 +895,19 @@ typedef struct
 
 typedef struct
 {
-  __IO uint32_t CR;
-  __IO uint32_t CFGR;
-  __IO uint32_t CIR;
-  __IO uint32_t APB2RSTR;
-  __IO uint32_t APB1RSTR;
-  __IO uint32_t AHBENR;
-  __IO uint32_t APB2ENR;
-  __IO uint32_t APB1ENR;
-  __IO uint32_t BDCR;
-  __IO uint32_t CSR;
+  volatile uint32_t CR;
+  volatile uint32_t CFGR;
+  volatile uint32_t CIR;
+  volatile uint32_t APB2RSTR;
+  volatile uint32_t APB1RSTR;
+  volatile uint32_t AHBENR;
+  volatile uint32_t APB2ENR;
+  volatile uint32_t APB1ENR;
+  volatile uint32_t BDCR;
+  volatile uint32_t CSR;
 #ifdef STM32F10X_CL
-  __IO uint32_t AHBRSTR;
-  __IO uint32_t CFGR2;
+  volatile uint32_t AHBRSTR;
+  volatile uint32_t CFGR2;
 #endif /* STM32F10X_CL */
 } RCC_TypeDef;
 
@@ -917,25 +917,25 @@ typedef struct
 
 typedef struct
 {
-  __IO uint16_t CRH;
+  volatile uint16_t CRH;
   uint16_t  RESERVED0;
-  __IO uint16_t CRL;
+  volatile uint16_t CRL;
   uint16_t  RESERVED1;
-  __IO uint16_t PRLH;
+  volatile uint16_t PRLH;
   uint16_t  RESERVED2;
-  __IO uint16_t PRLL;
+  volatile uint16_t PRLL;
   uint16_t  RESERVED3;
-  __IO uint16_t DIVH;
+  volatile uint16_t DIVH;
   uint16_t  RESERVED4;
-  __IO uint16_t DIVL;
+  volatile uint16_t DIVL;
   uint16_t  RESERVED5;
-  __IO uint16_t CNTH;
+  volatile uint16_t CNTH;
   uint16_t  RESERVED6;
-  __IO uint16_t CNTL;
+  volatile uint16_t CNTL;
   uint16_t  RESERVED7;
-  __IO uint16_t ALRH;
+  volatile uint16_t ALRH;
   uint16_t  RESERVED8;
-  __IO uint16_t ALRL;
+  volatile uint16_t ALRL;
   uint16_t  RESERVED9;
 } RTC_TypeDef;
 
@@ -945,26 +945,26 @@ typedef struct
 
 typedef struct
 {
-  __IO uint32_t POWER;
-  __IO uint32_t CLKCR;
-  __IO uint32_t ARG;
-  __IO uint32_t CMD;
-  __I uint32_t RESPCMD;
-  __I uint32_t RESP1;
-  __I uint32_t RESP2;
-  __I uint32_t RESP3;
-  __I uint32_t RESP4;
-  __IO uint32_t DTIMER;
-  __IO uint32_t DLEN;
-  __IO uint32_t DCTRL;
-  __I uint32_t DCOUNT;
-  __I uint32_t STA;
-  __IO uint32_t ICR;
-  __IO uint32_t MASK;
+  volatile uint32_t POWER;
+  volatile uint32_t CLKCR;
+  volatile uint32_t ARG;
+  volatile uint32_t CMD;
+  volatile const uint32_t RESPCMD;
+  volatile const uint32_t RESP1;
+  volatile const uint32_t RESP2;
+  volatile const uint32_t RESP3;
+  volatile const uint32_t RESP4;
+  volatile uint32_t DTIMER;
+  volatile uint32_t DLEN;
+  volatile uint32_t DCTRL;
+  volatile const uint32_t DCOUNT;
+  volatile const uint32_t STA;
+  volatile uint32_t ICR;
+  volatile uint32_t MASK;
   uint32_t  RESERVED0[2];
-  __I uint32_t FIFOCNT;
+  volatile const uint32_t FIFOCNT;
   uint32_t  RESERVED1[13];
-  __IO uint32_t FIFO;
+  volatile uint32_t FIFO;
 } SDIO_TypeDef;
 
 /**
@@ -973,23 +973,23 @@ typedef struct
 
 typedef struct
 {
-  __IO uint16_t CR1;
+  volatile uint16_t CR1;
   uint16_t  RESERVED0;
-  __IO uint16_t CR2;
+  volatile uint16_t CR2;
   uint16_t  RESERVED1;
-  __IO uint16_t SR;
+  volatile uint16_t SR;
   uint16_t  RESERVED2;
-  __IO uint16_t DR;
+  volatile uint16_t DR;
   uint16_t  RESERVED3;
-  __IO uint16_t CRCPR;
+  volatile uint16_t CRCPR;
   uint16_t  RESERVED4;
-  __IO uint16_t RXCRCR;
+  volatile uint16_t RXCRCR;
   uint16_t  RESERVED5;
-  __IO uint16_t TXCRCR;
+  volatile uint16_t TXCRCR;
   uint16_t  RESERVED6;
-  __IO uint16_t I2SCFGR;
+  volatile uint16_t I2SCFGR;
   uint16_t  RESERVED7;
-  __IO uint16_t I2SPR;
+  volatile uint16_t I2SPR;
   uint16_t  RESERVED8;
 } SPI_TypeDef;
 
@@ -999,45 +999,45 @@ typedef struct
 
 typedef struct
 {
-  __IO uint16_t CR1;
+  volatile uint16_t CR1;
   uint16_t  RESERVED0;
-  __IO uint16_t CR2;
+  volatile uint16_t CR2;
   uint16_t  RESERVED1;
-  __IO uint16_t SMCR;
+  volatile uint16_t SMCR;
   uint16_t  RESERVED2;
-  __IO uint16_t DIER;
+  volatile uint16_t DIER;
   uint16_t  RESERVED3;
-  __IO uint16_t SR;
+  volatile uint16_t SR;
   uint16_t  RESERVED4;
-  __IO uint16_t EGR;
+  volatile uint16_t EGR;
   uint16_t  RESERVED5;
-  __IO uint16_t CCMR1;
+  volatile uint16_t CCMR1;
   uint16_t  RESERVED6;
-  __IO uint16_t CCMR2;
+  volatile uint16_t CCMR2;
   uint16_t  RESERVED7;
-  __IO uint16_t CCER;
+  volatile uint16_t CCER;
   uint16_t  RESERVED8;
-  __IO uint16_t CNT;
+  volatile uint16_t CNT;
   uint16_t  RESERVED9;
-  __IO uint16_t PSC;
+  volatile uint16_t PSC;
   uint16_t  RESERVED10;
-  __IO uint16_t ARR;
+  volatile uint16_t ARR;
   uint16_t  RESERVED11;
-  __IO uint16_t RCR;
+  volatile uint16_t RCR;
   uint16_t  RESERVED12;
-  __IO uint16_t CCR1;
+  volatile uint16_t CCR1;
   uint16_t  RESERVED13;
-  __IO uint16_t CCR2;
+  volatile uint16_t CCR2;
   uint16_t  RESERVED14;
-  __IO uint16_t CCR3;
+  volatile uint16_t CCR3;
   uint16_t  RESERVED15;
-  __IO uint16_t CCR4;
+  volatile uint16_t CCR4;
   uint16_t  RESERVED16;
-  __IO uint16_t BDTR;
+  volatile uint16_t BDTR;
   uint16_t  RESERVED17;
-  __IO uint16_t DCR;
+  volatile uint16_t DCR;
   uint16_t  RESERVED18;
-  __IO uint16_t DMAR;
+  volatile uint16_t DMAR;
   uint16_t  RESERVED19;
 } TIM_TypeDef;
 
@@ -1047,19 +1047,19 @@ typedef struct
 
 typedef struct
 {
-  __IO uint16_t SR;
+  volatile uint16_t SR;
   uint16_t  RESERVED0;
-  __IO uint16_t DR;
+  volatile uint16_t DR;
   uint16_t  RESERVED1;
-  __IO uint16_t BRR;
+  volatile uint16_t BRR;
   uint16_t  RESERVED2;
-  __IO uint16_t CR1;
+  volatile uint16_t CR1;
   uint16_t  RESERVED3;
-  __IO uint16_t CR2;
+  volatile uint16_t CR2;
   uint16_t  RESERVED4;
-  __IO uint16_t CR3;
+  volatile uint16_t CR3;
   uint16_t  RESERVED5;
-  __IO uint16_t GTPR;
+  volatile uint16_t GTPR;
   uint16_t  RESERVED6;
 } USART_TypeDef;
 
@@ -1069,9 +1069,9 @@ typedef struct
 
 typedef struct
 {
-  __IO uint32_t CR;
-  __IO uint32_t CFR;
-  __IO uint32_t SR;
+  volatile uint32_t CR;
+  volatile uint32_t CFR;
+  volatile uint32_t SR;
 } WWDG_TypeDef;
 
 /**

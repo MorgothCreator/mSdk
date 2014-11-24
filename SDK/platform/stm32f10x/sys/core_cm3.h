@@ -83,7 +83,7 @@
 
 
 #include <stdint.h>                           /* Include standard types */
-
+#include "include/stm32f10x.h"
 #if defined (__ICCARM__)
   #include <intrinsics.h>                     /* IAR Intrinsics   */
 #endif
@@ -133,92 +133,92 @@
 /* memory mapping struct for Nested Vectored Interrupt Controller (NVIC) */
 typedef struct
 {
-  __IO uint32_t ISER[8];                      /*!< Interrupt Set Enable Register            */
+  volatile uint32_t ISER[8];                      /*!< Interrupt Set Enable Register            */
        uint32_t RESERVED0[24];
-  __IO uint32_t ICER[8];                      /*!< Interrupt Clear Enable Register          */
+  volatile uint32_t ICER[8];                      /*!< Interrupt Clear Enable Register          */
        uint32_t RSERVED1[24];
-  __IO uint32_t ISPR[8];                      /*!< Interrupt Set Pending Register           */
+  volatile uint32_t ISPR[8];                      /*!< Interrupt Set Pending Register           */
        uint32_t RESERVED2[24];
-  __IO uint32_t ICPR[8];                      /*!< Interrupt Clear Pending Register         */
+  volatile uint32_t ICPR[8];                      /*!< Interrupt Clear Pending Register         */
        uint32_t RESERVED3[24];
-  __IO uint32_t IABR[8];                      /*!< Interrupt Active bit Register            */
+  volatile uint32_t IABR[8];                      /*!< Interrupt Active bit Register            */
        uint32_t RESERVED4[56];
-  __IO uint8_t  IP[240];                      /*!< Interrupt Priority Register, 8Bit wide   */
+  volatile uint8_t  IP[240];                      /*!< Interrupt Priority Register, 8Bit wide   */
        uint32_t RESERVED5[644];
-  __O  uint32_t STIR;                         /*!< Software Trigger Interrupt Register      */
+  volatile  uint32_t STIR;                         /*!< Software Trigger Interrupt Register      */
 }  NVIC_Type;
 
 
 /* memory mapping struct for System Control Block */
 typedef struct
 {
-  __I  uint32_t CPUID;                        /*!< CPU ID Base Register                                     */
-  __IO uint32_t ICSR;                         /*!< Interrupt Control State Register                         */
-  __IO uint32_t VTOR;                         /*!< Vector Table Offset Register                             */
-  __IO uint32_t AIRCR;                        /*!< Application Interrupt / Reset Control Register           */
-  __IO uint32_t SCR;                          /*!< System Control Register                                  */
-  __IO uint32_t CCR;                          /*!< Configuration Control Register                           */
-  __IO uint8_t  SHP[12];                      /*!< System Handlers Priority Registers (4-7, 8-11, 12-15)    */
-  __IO uint32_t SHCSR;                        /*!< System Handler Control and State Register                */
-  __IO uint32_t CFSR;                         /*!< Configurable Fault Status Register                       */
-  __IO uint32_t HFSR;                         /*!< Hard Fault Status Register                               */
-  __IO uint32_t DFSR;                         /*!< Debug Fault Status Register                              */
-  __IO uint32_t MMFAR;                        /*!< Mem Manage Address Register                              */
-  __IO uint32_t BFAR;                         /*!< Bus Fault Address Register                               */
-  __IO uint32_t AFSR;                         /*!< Auxiliary Fault Status Register                          */
-  __I  uint32_t PFR[2];                       /*!< Processor Feature Register                               */
-  __I  uint32_t DFR;                          /*!< Debug Feature Register                                   */
-  __I  uint32_t ADR;                          /*!< Auxiliary Feature Register                               */
-  __I  uint32_t MMFR[4];                      /*!< Memory Model Feature Register                            */
-  __I  uint32_t ISAR[5];                      /*!< ISA Feature Register                                     */
+  volatile const  uint32_t CPUID;                        /*!< CPU ID Base Register                                     */
+  volatile uint32_t ICSR;                         /*!< Interrupt Control State Register                         */
+  volatile uint32_t VTOR;                         /*!< Vector Table Offset Register                             */
+  volatile uint32_t AIRCR;                        /*!< Application Interrupt / Reset Control Register           */
+  volatile uint32_t SCR;                          /*!< System Control Register                                  */
+  volatile uint32_t CCR;                          /*!< Configuration Control Register                           */
+  volatile uint8_t  SHP[12];                      /*!< System Handlers Priority Registers (4-7, 8-11, 12-15)    */
+  volatile uint32_t SHCSR;                        /*!< System Handler Control and State Register                */
+  volatile uint32_t CFSR;                         /*!< Configurable Fault Status Register                       */
+  volatile uint32_t HFSR;                         /*!< Hard Fault Status Register                               */
+  volatile uint32_t DFSR;                         /*!< Debug Fault Status Register                              */
+  volatile uint32_t MMFAR;                        /*!< Mem Manage Address Register                              */
+  volatile uint32_t BFAR;                         /*!< Bus Fault Address Register                               */
+  volatile uint32_t AFSR;                         /*!< Auxiliary Fault Status Register                          */
+  volatile const  uint32_t PFR[2];                       /*!< Processor Feature Register                               */
+  volatile const  uint32_t DFR;                          /*!< Debug Feature Register                                   */
+  volatile const  uint32_t ADR;                          /*!< Auxiliary Feature Register                               */
+  volatile const  uint32_t MMFR[4];                      /*!< Memory Model Feature Register                            */
+  volatile const  uint32_t ISAR[5];                      /*!< ISA Feature Register                                     */
 } SCB_Type;
 
 
 /* memory mapping struct for SysTick */
 typedef struct
 {
-  __IO uint32_t CTRL;                         /*!< SysTick Control and Status Register */
-  __IO uint32_t LOAD;                         /*!< SysTick Reload Value Register       */
-  __IO uint32_t VAL;                          /*!< SysTick Current Value Register      */
-  __I  uint32_t CALIB;                        /*!< SysTick Calibration Register        */
+  volatile uint32_t CTRL;                         /*!< SysTick Control and Status Register */
+  volatile uint32_t LOAD;                         /*!< SysTick Reload Value Register       */
+  volatile uint32_t VAL;                          /*!< SysTick Current Value Register      */
+  volatile const  uint32_t CALIB;                        /*!< SysTick Calibration Register        */
 } SysTick_Type;
 
 
 /* memory mapping structur for ITM */
 typedef struct
 {
-  __O  union
+  volatile  union
   {
-    __O  uint8_t    u8;                       /*!< ITM Stimulus Port 8-bit               */
-    __O  uint16_t   u16;                      /*!< ITM Stimulus Port 16-bit              */
-    __O  uint32_t   u32;                      /*!< ITM Stimulus Port 32-bit              */
+    volatile  uint8_t    u8;                       /*!< ITM Stimulus Port 8-bit               */
+    volatile  uint16_t   u16;                      /*!< ITM Stimulus Port 16-bit              */
+    volatile  uint32_t   u32;                      /*!< ITM Stimulus Port 32-bit              */
   }  PORT [32];                               /*!< ITM Stimulus Port Registers           */
        uint32_t RESERVED0[864];
-  __IO uint32_t TER;                          /*!< ITM Trace Enable Register             */
+  volatile uint32_t TER;                          /*!< ITM Trace Enable Register             */
        uint32_t RESERVED1[15];
-  __IO uint32_t TPR;                          /*!< ITM Trace Privilege Register          */
+  volatile uint32_t TPR;                          /*!< ITM Trace Privilege Register          */
        uint32_t RESERVED2[15];
-  __IO uint32_t TCR;                          /*!< ITM Trace Control Register            */
+  volatile uint32_t TCR;                          /*!< ITM Trace Control Register            */
        uint32_t RESERVED3[29];
-  __IO uint32_t IWR;                          /*!< ITM Integration Write Register        */
-  __IO uint32_t IRR;                          /*!< ITM Integration Read Register         */
-  __IO uint32_t IMCR;                         /*!< ITM Integration Mode Control Register */
+  volatile uint32_t IWR;                          /*!< ITM Integration Write Register        */
+  volatile uint32_t IRR;                          /*!< ITM Integration Read Register         */
+  volatile uint32_t IMCR;                         /*!< ITM Integration Mode Control Register */
        uint32_t RESERVED4[43];
-  __IO uint32_t LAR;                          /*!< ITM Lock Access Register              */
-  __IO uint32_t LSR;                          /*!< ITM Lock Status Register              */
+  volatile uint32_t LAR;                          /*!< ITM Lock Access Register              */
+  volatile uint32_t LSR;                          /*!< ITM Lock Status Register              */
        uint32_t RESERVED5[6];
-  __I  uint32_t PID4;                         /*!< ITM Product ID Registers              */
-  __I  uint32_t PID5;
-  __I  uint32_t PID6;
-  __I  uint32_t PID7;
-  __I  uint32_t PID0;
-  __I  uint32_t PID1;
-  __I  uint32_t PID2;
-  __I  uint32_t PID3;
-  __I  uint32_t CID0;
-  __I  uint32_t CID1;
-  __I  uint32_t CID2;
-  __I  uint32_t CID3;
+  volatile const  uint32_t PID4;                         /*!< ITM Product ID Registers              */
+  volatile const  uint32_t PID5;
+  volatile const  uint32_t PID6;
+  volatile const  uint32_t PID7;
+  volatile const  uint32_t PID0;
+  volatile const  uint32_t PID1;
+  volatile const  uint32_t PID2;
+  volatile const  uint32_t PID3;
+  volatile const  uint32_t CID0;
+  volatile const  uint32_t CID1;
+  volatile const  uint32_t CID2;
+  volatile const  uint32_t CID3;
 } ITM_Type;
 
 
@@ -226,9 +226,9 @@ typedef struct
 typedef struct
 {
        uint32_t RESERVED0;
-  __I  uint32_t ICTR;                         /*!< Interrupt Control Type Register  */
+  volatile const  uint32_t ICTR;                         /*!< Interrupt Control Type Register  */
 #if ((defined __CM3_REV) && (__CM3_REV >= 0x200))
-  __IO uint32_t ACTLR;                        /*!< Auxiliary Control Register       */
+  volatile uint32_t ACTLR;                        /*!< Auxiliary Control Register       */
 #else
        uint32_t RESERVED1;
 #endif
@@ -239,17 +239,17 @@ typedef struct
 #if defined (__MPU_PRESENT) && (__MPU_PRESENT == 1)
 typedef struct
 {
-  __I  uint32_t TYPE;                         /*!< MPU Type Register                               */
-  __IO uint32_t CTRL;                         /*!< MPU Control Register                            */
-  __IO uint32_t RNR;                          /*!< MPU Region RNRber Register                      */
-  __IO uint32_t RBAR;                         /*!< MPU Region Base Address Register                */
-  __IO uint32_t RASR;                         /*!< MPU Region Attribute and Size Register          */
-  __IO uint32_t RBAR_A1;                      /*!< MPU Alias 1 Region Base Address Register        */
-  __IO uint32_t RASR_A1;                      /*!< MPU Alias 1 Region Attribute and Size Register  */
-  __IO uint32_t RBAR_A2;                      /*!< MPU Alias 2 Region Base Address Register        */
-  __IO uint32_t RASR_A2;                      /*!< MPU Alias 2 Region Attribute and Size Register  */
-  __IO uint32_t RBAR_A3;                      /*!< MPU Alias 3 Region Base Address Register        */
-  __IO uint32_t RASR_A3;                      /*!< MPU Alias 3 Region Attribute and Size Register  */
+  volatile const  uint32_t TYPE;                         /*!< MPU Type Register                               */
+  volatile uint32_t CTRL;                         /*!< MPU Control Register                            */
+  volatile uint32_t RNR;                          /*!< MPU Region RNRber Register                      */
+  volatile uint32_t RBAR;                         /*!< MPU Region Base Address Register                */
+  volatile uint32_t RASR;                         /*!< MPU Region Attribute and Size Register          */
+  volatile uint32_t RBAR_A1;                      /*!< MPU Alias 1 Region Base Address Register        */
+  volatile uint32_t RASR_A1;                      /*!< MPU Alias 1 Region Attribute and Size Register  */
+  volatile uint32_t RBAR_A2;                      /*!< MPU Alias 2 Region Base Address Register        */
+  volatile uint32_t RASR_A2;                      /*!< MPU Alias 2 Region Attribute and Size Register  */
+  volatile uint32_t RBAR_A3;                      /*!< MPU Alias 3 Region Base Address Register        */
+  volatile uint32_t RASR_A3;                      /*!< MPU Alias 3 Region Attribute and Size Register  */
 } MPU_Type;
 #endif
 
@@ -257,10 +257,10 @@ typedef struct
 /* Core Debug Register */
 typedef struct
 {
-  __IO uint32_t DHCSR;                        /*!< Debug Halting Control and Status Register       */
-  __O  uint32_t DCRSR;                        /*!< Debug Core Register Selector Register           */
-  __IO uint32_t DCRDR;                        /*!< Debug Core Register Data Register               */
-  __IO uint32_t DEMCR;                        /*!< Debug Exception and Monitor Control Register    */
+  volatile uint32_t DHCSR;                        /*!< Debug Halting Control and Status Register       */
+  volatile  uint32_t DCRSR;                        /*!< Debug Core Register Selector Register           */
+  volatile uint32_t DCRDR;                        /*!< Debug Core Register Data Register               */
+  volatile uint32_t DEMCR;                        /*!< Debug Exception and Monitor Control Register    */
 } CoreDebug_Type;
 
 
