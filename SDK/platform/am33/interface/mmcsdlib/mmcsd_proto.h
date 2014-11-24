@@ -44,7 +44,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
+#include <stdbool.h>
 #define BIT(x) (1 << x)
 
 /**
@@ -207,6 +207,7 @@ typedef struct _mmcsdCtrlInfo {
         unsigned int wpPinNum;
 	mmcsdCardInfo *card;
 	unsigned int SdNr;
+	bool connected;
 }mmcsdCtrlInfo;
 
 /* SD Commands enumeration */
@@ -275,7 +276,7 @@ typedef struct _mmcsdCtrlInfo {
 #define SD_CARD1_DEV_SIZE(crd) SD_CSD1_DEV_SIZE((crd)->raw_csd[3], (crd)->raw_csd[2], (crd)->raw_csd[1], (crd)->raw_csd[0])
 #define SD_CARD1_RDBLKLEN(crd) SD_CSD1_RDBLKLEN((crd)->raw_csd[3], (crd)->raw_csd[2], (crd)->raw_csd[1], (crd)->raw_csd[0])
 #define SD_CARD1_TRANSPEED(crd) SD_CSD1_TRANSPEED((crd)->raw_csd[3], (crd)->raw_csd[2], (crd)->raw_csd[1], (crd)->raw_csd[0])
-#define SD_CARD1_SIZE(crd) ((SD_CARD1_DEV_SIZE((crd)) + 1) * (512 * 1024))
+#define SD_CARD1_SIZE(crd) ((unsigned long long)(SD_CARD1_DEV_SIZE((crd)) + 1) * (unsigned long long)(512 * 1024))
 
 
 /* Check RCA/status */
