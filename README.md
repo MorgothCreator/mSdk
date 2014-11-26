@@ -23,7 +23,7 @@ At this moment is supported the next platforms:
   
 4) ATxmega (Atmel Studio).
 
-  <a href="http://shop.devboardshop.com/en/home/9-xmegamediaplayer.html">XmegaMediaPlayer Board.</a>
+  <a href="http://devboardshop.com/en/media-development-boards/9-xmegamediaplayer-v1.html">XmegaMediaPlayer Board.</a>
   
 5) AT32UC3L (Atmel Studio).
 
@@ -47,7 +47,7 @@ At this moment is supported the next platforms:
   
   Mikromedia board.
   
-I added the settings for all example projects to help beginners to understand how it work, is necessary to clone mSdk into "C:\GitHub\" directory.
+I added the settings for all example projects to help beginners to understand how it works, is necessary to clone mSdk into "C:\GitHub\" directory.
 
 <a href="http://forum.devboardshop.com/">Detalied description link.</a>
 
