@@ -56,20 +56,30 @@ Done API's for every platform:
 	AM335x:
 		EDMA.
 		GPIO.
-		MMCSD.
-		Internal AD touchscreen.
+		MMCSD:
+			uSD.
+			MMC.
+			eMMC.
+		Touchscreen:
+			Internal AD touchscreen.
+			FT5x06 capacitive touchscreen.
 		LCD.
 		SPI.
 		RTC.
 		TWI.
+			FT5x06 capacitive touchscreen.
 		UART.
-		USB.
+		USB:
+			DEV MSC.
+			HOST MSC.
+			HOST Mouse.
 	AT32AP7000:
 		GPIO.
 		MMCSD.
 		LCD.
 		RTC.
 		TWI.
+			FT5x06 capacitive touchscreen.
 		UART.
 	AT32UC3L:
 		ADC.
@@ -80,10 +90,12 @@ Done API's for every platform:
 		MMCSD using USART in SPI mode.
 		SPI.
 		TWI.
+			FT5x06 capacitive touchscreen.
 		USART.
 	OMAP4:
 		GPIO.
 		TWI.
+			FT5x06 capacitive touchscreen.
 		UART.
 	STM32F0:
 		In development.
