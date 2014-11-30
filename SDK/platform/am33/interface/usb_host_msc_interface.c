@@ -644,7 +644,8 @@ void _usb_msc_host_idle(unsigned int instance)
             g_sFatFs2.drv_rw_func.drv_w_func = USBMSCWriteBlock;
             if(!f_mount(4, &g_sFatFs2))
             {
-                if(f_opendir(&g_sDirObject, g_cCwdBuf2) == FR_OK)
+#ifdef usb_host_msc_debug
+            	if(f_opendir(&g_sDirObject, g_cCwdBuf2) == FR_OK)
                 {
 					if(DebugCom)
 					{
@@ -667,6 +668,7 @@ void _usb_msc_host_idle(unsigned int instance)
 																			UARTprintf(DebugCom, "USB1 uSD DiskCapacity:        %uMB\n\r",(unsigned long)((unsigned long long)((unsigned long long)g_sFatFs2.max_clust * (unsigned long long)g_sFatFs2.csize * (unsigned long long)/*g_sFatFs.s_size*/512) / 1000000));
 					}
                 } else  if(DebugCom)										UARTPuts(DebugCom,   "USB1 ERROR oppening path\n\r" , -1);
+#endif
             }else if(DebugCom)												UARTPuts(DebugCom,   "USB1 ERROR mounting disk\n\r" , -1);
 #endif
     	    g_eState1 = STATE_DEVICE_READY;
@@ -712,12 +714,14 @@ void _usb_msc_host_idle(unsigned int instance)
     	            }
     	            else
     	            {
+#ifdef usb_host_msc_debug
 #ifndef thirdpartyfatfs
     					UARTPuts(DebugCom, "USB1 Fat dismount\n\r" , -1);
     					_Fat_Unmount(8);
     					UARTPuts(DebugCom, "USB1 Fat dismount OK\n\r" , -1);
 #endif
     	            	UARTprintf(DebugCom, "\nMass storage device disconnected.\n");
+#endif
     	            }
     	         //ulPrompt = 1;
     	         break;
@@ -829,6 +833,7 @@ void _usb_msc_host_idle(unsigned int instance)
             g_sFatFs1.drv_rw_func.drv_w_func = USBMSCWriteBlock;
             if(!f_mount(3, &g_sFatFs1))
             {
+#ifdef usb_host_msc_debug
                 if(f_opendir(&g_sDirObject, g_cCwdBuf1) == FR_OK)
                 {
 					if(DebugCom)
@@ -854,6 +859,7 @@ void _usb_msc_host_idle(unsigned int instance)
                 } else  if(DebugCom)										UARTPuts(DebugCom,   "USB0 ERROR oppening path\n\r" , -1);
 #endif
             }else if(DebugCom)												UARTPuts(DebugCom,   "USB0 ERROR mounting disk\n\r" , -1);
+#endif
 			g_eState0 = STATE_DEVICE_READY;
 			//}
 		}
@@ -897,12 +903,14 @@ void _usb_msc_host_idle(unsigned int instance)
 		            }
 		            else
 		            {
+#ifdef usb_host_msc_debug
 #ifndef thirdpartyfatfs
 						UARTPuts(DebugCom, "USB0 Fat dismount\n\r" , -1);
 						_Fat_Unmount(4);
 						UARTPuts(DebugCom, "USB0 Fat dismount OK\n\r" , -1);
 #endif
 		            	UARTprintf(DebugCom, "\nMass storage device disconnected.\n");
+#endif
 		            }
 		         //ulPrompt = 1;
 		         break;
