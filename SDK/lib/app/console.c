@@ -17,6 +17,7 @@
 #include "app_util/path_util.h"
 #include "board_init.h"
 
+extern new_uart* DebugCom;
 //extern new_uart* ConsoleCom;
 //static char *console_rx_data;
 //#######################################################################################
