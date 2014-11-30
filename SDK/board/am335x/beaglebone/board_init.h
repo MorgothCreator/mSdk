@@ -8,6 +8,8 @@
 #ifndef BOARD_INIT_H_
 #define BOARD_INIT_H_
 /*#####################################################*/
+#include "main.h"
+#ifdef test1
 #include <stdbool.h>
 #include <string.h>
 #include "sys/plat_properties.h"
@@ -36,6 +38,9 @@
 #define USE_ADXL345 1
 /*-----------------------------------------------------*/
 #define BOARD_MESSAGE "Beaglebone"
+/*-----------------------------------------------------*/
+#define usb_host_msc_debug
+#define mmcsd_debug
 /*#####################################################*/
 extern new_uart* Uart[];
 extern new_uart* DebugCom;
@@ -55,6 +60,8 @@ bool board_init();
 /*#####################################################*/
 #ifdef HEADER_INCLUDE_C_FILES
 #include "board_init.c"
+#endif
+/*#####################################################*/
 #endif
 /*#####################################################*/
 #endif /* BOARD_INIT_H_ */
