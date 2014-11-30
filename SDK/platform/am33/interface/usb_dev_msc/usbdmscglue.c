@@ -144,10 +144,10 @@ unsigned int USBDMSCStorageRead(void * pvDrive,
 
 
     //disk_read(ulSector, pucData, ulNumBlocks);
-	//unsigned int status = CPUIntStatus();
-	//CPUirqe();
+	unsigned int status = CPUIntStatus();
+	CPUirqe();
     drv_rw_func.drv_r_func(drv_rw_func.DriveStruct, pucData, ulSector, ulNumBlocks);
-	//if(status & 0x80) CPUirqd();
+	if(status & 0x80) CPUirqd();
 
     return(ulNumBlocks * 512);
 }
@@ -178,10 +178,10 @@ unsigned int USBDMSCStorageWrite(void * pvDrive,
     //ASSERT(pvDrive != 0);
 
     //disk_write(ulSector, pucData, ulNumBlocks);
-	//unsigned int status = CPUIntStatus();
-	//CPUirqe();
+	unsigned int status = CPUIntStatus();
+	CPUirqe();
 	if(drv_rw_func.drv_w_func) drv_rw_func.drv_w_func(drv_rw_func.DriveStruct, pucData, ulSector, ulNumBlocks);
-	//if(status & 0x80) CPUirqd();
+	if(status & 0x80) CPUirqd();
 
     return(ulNumBlocks * 512);
 }
