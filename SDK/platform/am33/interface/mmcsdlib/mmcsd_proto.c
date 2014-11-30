@@ -48,7 +48,11 @@
 #include "api/gpio_def.h"
 #include "api/gpio_api.h"
 #include "api/uart_api.h"
+#include "api/uart_def.h"
 #include "include/hs_mmcsd.h"
+#include "sys/sysdelay.h"
+
+extern new_uart* DebugCom;
 
 #define DATA_RESPONSE_WIDTH       (512)
 
@@ -609,55 +613,54 @@ unsigned int MMCSDTranSpeedSet(mmcsdCtrlInfo *ctrl)
     unsigned int cmdStatus = 0;
     mmcsdCmd cmd;
 
-    ctrl->xferSetup(ctrl, 1, dataBuffer, 64, 1);
+		ctrl->xferSetup(ctrl, 1, dataBuffer, 64, 1);
 
-    cmd.idx = SD_CMD(6);
-    cmd.arg = ((SD_SWITCH_MODE & SD_CMD6_GRP1_SEL) | (SD_CMD6_GRP1_HS));
-    cmd.flags = SD_CMDRSP_READ | SD_CMDRSP_DATA;
-    cmd.nblks = 1;
-    cmd.data = (signed char*)dataBuffer;
+		cmd.idx = SD_CMD(6);
+		cmd.arg = ((SD_SWITCH_MODE & SD_CMD6_GRP1_SEL) | (SD_CMD6_GRP1_HS));
+		cmd.flags = SD_CMDRSP_READ | SD_CMDRSP_DATA;
+		cmd.nblks = 1;
+		cmd.data = (signed char*)dataBuffer;
 
-    cmdStatus = MMCSDCmdSend(ctrl, &cmd);
+		cmdStatus = MMCSDCmdSend(ctrl, &cmd);
 
-    if (cmdStatus == 0)
-    {
-        return 0;
-    }
+		if (cmdStatus == 0)
+		{
+			return 0;
+		}
 
-    cmdStatus = ctrl->xferStatusGet(ctrl);
+		cmdStatus = ctrl->xferStatusGet(ctrl);
 
-    if (cmdStatus == 0)
-    {
-        return 0;
-    }
+		if (cmdStatus == 0)
+		{
+			return 0;
+		}
 
-    /* Invalidate the data cache. */
-    CacheDataCleanInvalidateBuff((unsigned int) dataBuffer, DATA_RESPONSE_WIDTH);
+		/* Invalidate the data cache. */
+		CacheDataCleanInvalidateBuff((unsigned int) dataBuffer, DATA_RESPONSE_WIDTH);
 
-    speed = card->tranSpeed;
+		speed = card->tranSpeed;
 
-    if ((dataBuffer[16] & 0xF) == SD_CMD6_GRP1_HS)
-    {
-        card->tranSpeed = SD_TRANSPEED_50MBPS;
-    }
+		if ((dataBuffer[16] & 0xF) == SD_CMD6_GRP1_HS)
+		{
+			card->tranSpeed = SD_TRANSPEED_50MBPS;
+		}
 
-    if (speed == SD_TRANSPEED_50MBPS)
-    {
-        status = ctrl->busFreqConfig(ctrl, 50000000);
-        ctrl->opClk = 50000000;
-    }
-    else
-    {
-        status = ctrl->busFreqConfig(ctrl, 25000000);
-        ctrl->opClk = 25000000;
-    }
+		if (speed == SD_TRANSPEED_50MBPS)
+		{
+			status = ctrl->busFreqConfig(ctrl, 50000000);
+			ctrl->opClk = 50000000;
+		}
+		else
+		{
+			status = ctrl->busFreqConfig(ctrl, 25000000);
+			ctrl->opClk = 25000000;
+		}
 
-    if (status != 0)
-    {
-        return 0;
-    }
-
-    return 1;
+		if (status != 0)
+		{
+			return 0;
+		}
+	    return 1;
 }
 
 /**
@@ -879,6 +882,7 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
 
     if (status == 0)
     {
+    	UARTPuts(DebugCom, "error CMD0 \n", -1);
         return 0;
     }
 
@@ -1252,13 +1256,6 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
         card->nBlks = extCsd.sec_count;
         card->size = card->nBlks * card->blkLen;
 
-        /* enable High speed */
-		if(mmc_switch(ctrl,MMC_SWITCH_MODE_WRITE_BYTE,EXT_CSD_HS_TIMING,0x1))
-		{
-			ctrl->highspeed = 1;
-		}
-		else UARTPuts(DebugCom, "error eMMC setup high speed \n", -1);
-
 		/* Set the bus width to 8 */
 		if(mmc_switch(ctrl,MMC_SWITCH_MODE_WRITE_BYTE,EXT_CSD_BUS_WIDTH,EXT_CSD_BUS_WIDTH_8))
 		{
@@ -1266,6 +1263,69 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
 			ctrl->busWidthConfig(ctrl, HS_MMCSD_BUS_WIDTH_8BIT);
 		}
 		else UARTPuts(DebugCom, "error eMMC setup 8bit bus \n", -1);
+
+        /* enable High speed */
+		if(mmc_switch(ctrl,MMC_SWITCH_MODE_WRITE_BYTE,EXT_CSD_HS_TIMING,0x1))
+		{
+		    //unsigned int speed;
+			ctrl->highspeed = 1;
+			/* eMMC */
+
+			ctrl->xferSetup(ctrl, 1, dataBuffer, 512, 1);
+
+			cmd.idx = SD_CMD(8);
+			cmd.flags = SD_CMDRSP_DATA | SD_CMDRSP_READ;
+			cmd.arg = 0;
+			cmd.nblks = 1;
+			cmd.data = (signed char*)dataBuffer;
+
+			status = MMCSDCmdSend(ctrl,&cmd);
+			if (status == 0)
+			{
+				UARTPuts(DebugCom, "error CMD8 \n", -1);
+				return 0;
+			}
+
+
+			status = ctrl->xferStatusGet(ctrl);
+
+			if (status == 0)
+			{
+				UARTPuts(DebugCom, "error xferStatusGet \n", -1);
+				return 0;
+			}
+
+			/* Invalidate the data cache. */
+			CacheDataInvalidateBuff((unsigned int)dataBuffer, 512);
+
+			//speed = card->tranSpeed;
+
+			// If high speed is enabled
+			if ((dataBuffer[185]) == SD_CMD6_GRP1_HS)
+			{
+				card->tranSpeed = SD_TRANSPEED_50MBPS;
+				status = ctrl->busFreqConfig(ctrl, 52000000);
+				ctrl->opClk = 52000000;
+			}
+
+			else if(card->tranSpeed == SD_TRANSPEED_25MBPS)
+			{
+				status = ctrl->busFreqConfig(ctrl, 26000000);
+				ctrl->opClk = 26000000;
+			}
+
+			else
+			{
+				// unknown bus speed
+				return 0;
+			}
+
+			if (status != 0)
+			{
+				return 0;
+			}
+		}
+		else UARTPuts(DebugCom, "error eMMC setup high speed \n", -1);
 
     }
 

@@ -43,7 +43,6 @@
 #include "sys/plat_properties.h"
 #include "hs_mmcsd_interface.h"
 #include "edma3_interface.h"
-#include "api/edma_api.h"
 #include "mmcsdlib/mmcsd_proto.h"
 #include "mmcsdlib/hs_mmcsdlib.h"
 //#include "include/armv7a/am335x/evmAM335x.h"
@@ -61,7 +60,10 @@
 #include "../pinmux/pin_mux_mmcsd.h"
 #include "lib/fs/fat.h"
 #include "lib/fat_fs/inc/ff.h"
+#include "api/edma_api.h"
 #include "api/gpio_api.h"
+#include "api/uart_api.h"
+#include "api/uart_def.h"
 #include "board_init.h"
 #ifdef MMCSD_PERF
 #include "perf.h"
@@ -602,6 +604,7 @@ void _mmcsd_idle(void *SdCtrlStruct)
                 g_s_mmcFatFs[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr].drv_rw_func.drv_w_func = MMCSDWriteCmdSend;
                 if(!f_mount(((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr, &g_s_mmcFatFs[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr]))
                 {
+#ifdef mmcsd_debug
                     if(f_opendir(&g_sDirObject, g_cCwdBuf[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr]) == FR_OK)
                     {
 						if(DebugCom)
@@ -627,6 +630,7 @@ void _mmcsd_idle(void *SdCtrlStruct)
                     } else  if(DebugCom)										UARTprintf(DebugCom,   "MMCSD%d ERROR oppening path\n\r" , ((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr);
 #endif
                 }
+#endif
                 else if(DebugCom)												UARTprintf(DebugCom,   "MMCSD%d ERROR mounting disk\n\r" , ((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr);
         	}
         }
@@ -638,6 +642,7 @@ void _mmcsd_idle(void *SdCtrlStruct)
         {
         	((mmcsdCtrlInfo*)SdCtrlStruct)->connected = false;
         	initFlg[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr] = 1;
+#ifdef mmcsd_debug
 #ifndef thirdpartyfatfs
         	if(_FatData_CloseSesion(FILE1) == 1 && DebugCom != NULL)						UARTPuts(DebugCom, "MMCSD0 Session closed\n\r" , -1);
         	FILE1 = NULL;
@@ -645,6 +650,7 @@ void _mmcsd_idle(void *SdCtrlStruct)
 
 #else
         	UARTprintf(DebugCom,   "MMCSD%d Disconnected\n\r" , ((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr);
+#endif
 #endif
         	/* Reinitialize all the state variables */
             callbackOccured[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr] = 0;

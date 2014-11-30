@@ -46,6 +46,8 @@
 //#include "uartStdio.h"
 #include "mmcsd_proto.h"
 #include "board_init.h"
+#include "api/uart_api.h"
+#include "api/uart_def.h"
 #include "../../include/hs_mmcsd.h"
 
 extern new_uart* DebugCom;
