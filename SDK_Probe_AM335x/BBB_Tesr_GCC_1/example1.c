@@ -32,7 +32,7 @@
 #include "interface/usb_host_msc_interface.h"
 #include "interface/usb_host_mouse_interface.h"
 #include "api/timer_api.h"
-#include "api/usb_host_api.h"
+#include "api/usb_api.h"
 #include "device/ft5x06.h"
 
 #include "lib/gfx/controls_definition.h"
