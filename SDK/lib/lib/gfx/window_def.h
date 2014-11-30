@@ -151,6 +151,11 @@ typedef struct Window_s
 			signed int X;
 			signed int Y;
 		}NormalScreenPosition;
+		struct
+		{
+			signed int X;
+			signed int Y;
+		}PositionOffset;
 		//struct
 		//{
 		//	signed int X;

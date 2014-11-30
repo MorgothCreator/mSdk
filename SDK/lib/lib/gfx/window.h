@@ -39,8 +39,9 @@
 #define WindowScrollbarChildren		5
 #define WindowTextboxChildren		6
 #define WindowPictureboxChildren	7
+#define WindowWindowChildren		8
 //#######################################################################################
-tWindow *new_window(tDisplay *ScreenDisplay);
+tWindow *new_window(void *ParentWindow, tDisplay *ScreenDisplay);
 
 void window(struct Window_s *settings, tControlCommandData *control_comand);
 void* window_add_children(struct Window_s *settings, unsigned int children_type, char *children_name);
@@ -68,6 +69,9 @@ bool window_set_list_of_childrens(struct Window_s *settings, window_children_t *
 
 #define window_new_picturebox(window_addr, picturebox_name)\
 			tPictureBox *picturebox_name = (tPictureBox *)window_add_children(window_addr, WindowPictureboxChildren, #picturebox_name)
+
+#define window_new_window(window_addr, window_name)\
+		tWindow *window_name = (tWindow *)window_add_children(window_addr, WindowWindowChildren, #window_name)
 
 
 //#######################################################################################

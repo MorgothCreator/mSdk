@@ -44,17 +44,32 @@ void window_set_children_settings(tWindow *settings, bool call_childrens, bool t
 {
 	unsigned int Tmp_Children_Cnt = 0;
 	tRectangle sClipRegion;
-	//if(call_childrens == true && settings->Internals.ChildrensNr != 0)
-	if(settings->Internals.V_ScrollBar && settings->Internals.H_ScrollBar)
+	tWindow *ParentWindow = (tWindow *)settings->Internals.ParentWindow;
+	if(ParentWindow != NULL && settings != ParentWindow)
 	{
-		sClipRegion = settings->Internals.pDisplay->sClipRegion;
-		settings->Internals.pDisplay->sClipRegion.sXMin = settings->Position.X + 2;
-		/*if(settings->Internals.V_ScrollBar->Visible) */settings->Internals.pDisplay->sClipRegion.sXMax = (settings->Position.X + settings->Size.X) - 3 - settings->Internals.V_ScrollBar->Size.X;//settings->Internals.Size.ScrollBarSize;
-		/*else  settings->Internals.pDisplay->sClipRegion.sXMax = (settings->Position.X + settings->Size.X) - 3;//settings->Internals.Size.ScrollBarSize;*/
-		settings->Internals.pDisplay->sClipRegion.sYMin = settings->Position.Y + 1 + settings->Internals.Header.Size.Y;
-		/*if(settings->Internals.H_ScrollBar->Visible) */settings->Internals.pDisplay->sClipRegion.sYMax = (settings->Position.Y + settings->Size.Y) - 3 - settings->Internals.H_ScrollBar->Size.Y;//settings->Internals.Size.ScrollBarSize;
-		/*else  settings->Internals.pDisplay->sClipRegion.sYMax = (settings->Position.Y + settings->Size.Y) - 3;//settings->Internals.Size.ScrollBarSize;*/
-		clip_limit(&settings->Internals.pDisplay->sClipRegion, &sClipRegion);
+		if(settings->Internals.V_ScrollBar && settings->Internals.H_ScrollBar)
+		{
+			sClipRegion = settings->Internals.pDisplay->sClipRegion;
+			settings->Internals.pDisplay->sClipRegion.sXMin = (settings->Position.X + 2 + ParentWindow->Internals.Position.X) - ParentWindow->Internals.H_ScrollBar->Value;
+			settings->Internals.pDisplay->sClipRegion.sXMax = (settings->Position.X + settings->Size.X + ParentWindow->Internals.Position.X + 1) - 0 - settings->Internals.V_ScrollBar->Size.X - ParentWindow->Internals.H_ScrollBar->Value;
+			settings->Internals.pDisplay->sClipRegion.sYMin = (settings->Position.Y + 1 + settings->Internals.Header.Size.Y + ParentWindow->Internals.Position.Y) - ParentWindow->Internals.V_ScrollBar->Value;
+			settings->Internals.pDisplay->sClipRegion.sYMax = (settings->Position.Y + settings->Internals.Header.Size.Y + settings->Size.Y + ParentWindow->Internals.Position.Y) - 0 - settings->Internals.H_ScrollBar->Size.Y - ParentWindow->Internals.V_ScrollBar->Value;
+			clip_limit(&settings->Internals.pDisplay->sClipRegion, &sClipRegion);
+			settings->Internals.pDisplay->sClipRegion.sXMin += 2;
+			settings->Internals.pDisplay->sClipRegion.sYMin += settings->Internals.Header.Size.Y;
+		}
+	}
+	else
+	{
+		if(settings->Internals.V_ScrollBar && settings->Internals.H_ScrollBar)
+		{
+			sClipRegion = settings->Internals.pDisplay->sClipRegion;
+			settings->Internals.pDisplay->sClipRegion.sXMin = settings->Position.X + 2;
+			settings->Internals.pDisplay->sClipRegion.sXMax = (settings->Position.X + settings->Size.X) - 2 - settings->Internals.V_ScrollBar->Size.X;
+			settings->Internals.pDisplay->sClipRegion.sYMin = settings->Position.Y + 1 + settings->Internals.Header.Size.Y;
+			settings->Internals.pDisplay->sClipRegion.sYMax = (settings->Position.Y + settings->Size.Y) - 2 - settings->Internals.H_ScrollBar->Size.Y;
+			clip_limit(&settings->Internals.pDisplay->sClipRegion, &sClipRegion);
+		}
 	}
 	ChildrenWindowSize->X = 0;
 	ChildrenWindowSize->Y = 0;
@@ -236,11 +251,34 @@ void window_set_children_settings(tWindow *settings, bool call_childrens, bool t
 					settings->Internals.Childrens[Tmp_Children_Cnt]->Internals.OldStateVisible = PictureBox_settings->Visible;
 				}
 			}
+			else if(WindowWindowChildren == children_type)
+			{
+				tWindow *Window_settings = (tWindow *)children;
+				if(Window_settings->Visible)
+				{
+					if(ChildrenWindowSize->X < (Window_settings->Position.X + Window_settings->Size.X)) ChildrenWindowSize->X = Window_settings->Position.X + Window_settings->Size.X;
+					if(ChildrenWindowSize->Y < (Window_settings->Position.Y + Window_settings->Size.Y)) ChildrenWindowSize->Y = Window_settings->Position.Y + Window_settings->Size.Y;
+				}
+				if(refresh_childrens) Window_settings->Internals.NeedEntireRefresh = true;
+				if(transfer_settings)
+				{
+					Window_settings->Internals.PositionOffset.X = 3 + settings->Internals.Position.ChildrenPosition_X;
+					Window_settings->Internals.PositionOffset.Y = settings->Internals.Header.Size.Y + 1 + settings->Internals.Position.ChildrenPosition_Y;
+					//Window_settings->Internals.NoPaintBackGround = true;
+				}
+				if(call_childrens)
+				{
+					if(Window_settings->Visible == settings->Internals.Childrens[Tmp_Children_Cnt]->Internals.OldStateVisible || Window_settings->Visible == false)
+					{
+						window(Window_settings, control_comand);
+					}
+					settings->Internals.Childrens[Tmp_Children_Cnt]->Internals.OldStateVisible = Window_settings->Visible;
+				}
+			}
 		}
 		Tmp_Children_Cnt++;
 	}
 	if(control_comand) control_comand->Cursor = back;
-	/*if(call_childrens == true && settings->Internals.ChildrensNr != 0)*/
 	if(settings->Internals.V_ScrollBar && settings->Internals.H_ScrollBar) settings->Internals.pDisplay->sClipRegion = sClipRegion;
 }
 //#######################################################################################
@@ -285,18 +323,30 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 			return;
 		}
 	}
+	tWindow *ParentWindow = (tWindow *)settings->Internals.ParentWindow;
 	if(settings->Internals.Control.Initiated == false)
 	{
 		settings->Internals.WindowMoveLimits.sXMin = settings->WindowMoveLimits.sXMin;
 		settings->Internals.WindowMoveLimits.sYMin = settings->WindowMoveLimits.sYMin;
 		settings->Internals.WindowMoveLimits.sXMax = settings->WindowMoveLimits.sXMax;
 		settings->Internals.WindowMoveLimits.sYMax = settings->WindowMoveLimits.sYMax;
-		settings->Position.X = settings->Internals.WindowMoveLimits.sXMin;
-		settings->Position.Y = settings->Internals.WindowMoveLimits.sYMin;
-		settings->Size.X = settings->WindowMoveLimits.sXMax - settings->Internals.WindowMoveLimits.sXMin;
-		settings->Size.Y = settings->WindowMoveLimits.sYMax - settings->Internals.WindowMoveLimits.sYMin;
-		settings->Internals.Position.X = settings->Position.X;
-		settings->Internals.Position.Y = settings->Position.Y;
+		if(settings->Internals.FullScreen)
+		{
+			settings->Position.X = settings->Internals.WindowMoveLimits.sXMin;
+			settings->Position.Y = settings->Internals.WindowMoveLimits.sYMin;
+			settings->Size.X = settings->WindowMoveLimits.sXMax - settings->Internals.WindowMoveLimits.sXMin;
+			settings->Size.Y = settings->WindowMoveLimits.sYMax - settings->Internals.WindowMoveLimits.sYMin;
+		}
+		if(ParentWindow != NULL && settings != ParentWindow)
+		{
+			settings->Internals.Position.X = settings->Position.X + ParentWindow->Internals.Position.X + settings->Internals.PositionOffset.X;
+			settings->Internals.Position.Y = settings->Position.Y + ParentWindow->Internals.Position.Y + settings->Internals.PositionOffset.Y;
+		}
+		else
+		{
+			settings->Internals.Position.X = settings->Position.X;
+			settings->Internals.Position.Y = settings->Position.Y;
+		}
 		settings->Internals.Size.X = settings->Size.X;
 		settings->Internals.Size.Y = settings->Size.Y;
 		settings->Internals.NormalScreenPosition.X = settings->Position.X;
@@ -317,25 +367,49 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 
 		/*settings->Internals.Header.Resize = new_button(settings->Internals.ParentWindow);
 		if(!settings->Internals.Header.Resize) return;*/
+		if(settings->Internals.FullScreen == false)
+		{
+			settings->SizeNormalScreen.X = settings->Size.X;
+			settings->SizeNormalScreen.Y = settings->Size.Y;
+		}
 
 		ChildrenWindowSize_t ChildrenWindowSize;
 		window_set_children_settings(settings, false, true, control_comand, false, &ChildrenWindowSize);
 		settings->Internals.NeedEntireRefresh = true;
 	}
 	/* Verify if position on size has been modified */
-	if(settings->Position.X != settings->Internals.Position.X ||
-			settings->Position.Y != settings->Internals.Position.Y ||
-				settings->Size.X != settings->Internals.Size.X ||
-					settings->Size.Y != settings->Internals.Size.Y ||
-						settings->Internals.Caption.Font != settings->Caption.Font ||
-							settings->Internals.Caption.Text != settings->Caption.Text ||
-								settings->Internals.Caption.TextAlign != settings->Caption.TextAlign ||
-									settings->Internals.Caption.WordWrap != settings->Caption.WordWrap ||
-										settings->Internals.WindowMoveLimits.sXMin != settings->WindowMoveLimits.sXMin ||
-											settings->Internals.WindowMoveLimits.sYMin != settings->WindowMoveLimits.sYMin ||
-												settings->Internals.WindowMoveLimits.sXMax != settings->WindowMoveLimits.sXMax ||
-													settings->Internals.WindowMoveLimits.sYMax != settings->WindowMoveLimits.sYMax)
-																settings->Internals.NeedEntireRefresh = true;
+	if(ParentWindow != NULL && settings != ParentWindow)
+	{
+		if((settings->Position.X + ParentWindow->Internals.Position.X + settings->Internals.PositionOffset.X) != settings->Internals.Position.X ||
+				(settings->Position.Y + ParentWindow->Internals.Position.Y + settings->Internals.PositionOffset.Y) != settings->Internals.Position.Y ||
+					settings->Size.X != settings->Internals.Size.X ||
+						settings->Size.Y != settings->Internals.Size.Y ||
+							settings->Internals.Caption.Font != settings->Caption.Font ||
+								settings->Internals.Caption.Text != settings->Caption.Text ||
+									settings->Internals.Caption.TextAlign != settings->Caption.TextAlign ||
+										settings->Internals.Caption.WordWrap != settings->Caption.WordWrap ||
+											settings->Internals.WindowMoveLimits.sXMin != settings->WindowMoveLimits.sXMin ||
+												settings->Internals.WindowMoveLimits.sYMin != settings->WindowMoveLimits.sYMin ||
+													settings->Internals.WindowMoveLimits.sXMax != settings->WindowMoveLimits.sXMax ||
+														settings->Internals.WindowMoveLimits.sYMax != settings->WindowMoveLimits.sYMax)
+																	settings->Internals.NeedEntireRefresh = true;
+	}
+	else
+	{
+		if(settings->Position.X != settings->Internals.Position.X ||
+				settings->Position.Y != settings->Internals.Position.Y ||
+					settings->Size.X != settings->Internals.Size.X ||
+						settings->Size.Y != settings->Internals.Size.Y ||
+							settings->Internals.Caption.Font != settings->Caption.Font ||
+								settings->Internals.Caption.Text != settings->Caption.Text ||
+									settings->Internals.Caption.TextAlign != settings->Caption.TextAlign ||
+										settings->Internals.Caption.WordWrap != settings->Caption.WordWrap ||
+											settings->Internals.WindowMoveLimits.sXMin != settings->WindowMoveLimits.sXMin ||
+												settings->Internals.WindowMoveLimits.sYMin != settings->WindowMoveLimits.sYMin ||
+													settings->Internals.WindowMoveLimits.sXMax != settings->WindowMoveLimits.sXMax ||
+														settings->Internals.WindowMoveLimits.sYMax != settings->WindowMoveLimits.sYMax)
+																	settings->Internals.NeedEntireRefresh = true;
+	}
 
 	//if(settings->Internals.Caption.Text != NULL && settings->Caption.Text != NULL && strcmp(settings->Internals.Caption.Text, settings->Caption.Text) == NULL)
 		//settings->Internals.NeedEntireRefresh = true;
@@ -374,8 +448,16 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 								settings->Internals.Size.ScrollBarSize != settings->Size.ScrollBarSize))
 	{
 		/* Copy new locations and dimensions to actual locations and dimensions */
-		settings->Internals.Position.X = settings->Position.X;
-		settings->Internals.Position.Y = settings->Position.Y;
+		if(ParentWindow != NULL && settings != ParentWindow)
+		{
+			settings->Internals.Position.X = settings->Position.X + ParentWindow->Internals.Position.X + settings->Internals.PositionOffset.X;
+			settings->Internals.Position.Y = settings->Position.Y + ParentWindow->Internals.Position.Y + settings->Internals.PositionOffset.Y;
+		}
+		else
+		{
+			settings->Internals.Position.X = settings->Position.X;
+			settings->Internals.Position.Y = settings->Position.Y;
+		}
 		settings->Internals.Size.X = settings->Size.X;
 		settings->Internals.Size.Y = settings->Size.Y;
 		settings->Internals.Caption.Font = settings->Caption.Font;
@@ -399,52 +481,80 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 
 		settings->Internals.Header.Close->Size.X = header_btn_size;
 		settings->Internals.Header.Close->Size.Y = header_btn_size;
-		settings->Internals.Header.Close->Position.X = (settings->Internals.Size.X) - header_btn_space - 1;
-		settings->Internals.Header.Close->Position.Y = 2;
+		if(ParentWindow != NULL && settings != ParentWindow)
+		{
+			settings->Internals.Header.Close->Position.X = (settings->Internals.Size.X + settings->Internals.Position.X) - ParentWindow->Internals.Position.X - header_btn_space - 1;
+			settings->Internals.Header.Close->Position.Y = (2 + settings->Internals.Position.Y) - ParentWindow->Internals.Position.Y;
+		}
+		else
+		{
+			settings->Internals.Header.Close->Position.X = (settings->Internals.Size.X) - header_btn_space - 1;
+			settings->Internals.Header.Close->Position.Y = 2;
+		}
 		settings->Internals.Header.Close->Caption.Text = NULL;
 		settings->Internals.Header.Close->Internals.IsChildren = true;
 		settings->Internals.Header.Close->Internals.NoPaintBackGround = true;
+		settings->Internals.Header.Close->Internals.NeedEntireRefresh = true;
 
 		settings->Internals.Header.MaxMin->Size.X = header_btn_size;
 		settings->Internals.Header.MaxMin->Size.Y = header_btn_size;
-		settings->Internals.Header.MaxMin->Position.X = (settings->Internals.Size.X) - (header_btn_space << 1) - 1;
-		settings->Internals.Header.MaxMin->Position.Y = 2;
+		if(ParentWindow != NULL && settings != ParentWindow)
+		{
+			settings->Internals.Header.MaxMin->Position.X = (settings->Internals.Size.X + settings->Internals.Position.X) - ParentWindow->Internals.Position.X - (header_btn_space << 1) - 1;
+			settings->Internals.Header.MaxMin->Position.Y = (2 + settings->Internals.Position.Y) - ParentWindow->Internals.Position.Y;
+		}
+		else
+		{
+			settings->Internals.Header.MaxMin->Position.X = (settings->Internals.Size.X) - (header_btn_space << 1) - 1;
+			settings->Internals.Header.MaxMin->Position.Y = 2;
+		}
 		settings->Internals.Header.MaxMin->Caption.Text = NULL;
 		settings->Internals.Header.MaxMin->Internals.NoPaintBackGround = true;
+		settings->Internals.Header.MaxMin->Internals.NeedEntireRefresh = true;
 
 		settings->Internals.Header.Minimize->Size.X = header_btn_size;
 		settings->Internals.Header.Minimize->Size.Y = header_btn_size;
-		settings->Internals.Header.Minimize->Position.X = (settings->Internals.Size.X) - ((header_btn_space << 1) + header_btn_space) - 1;
-		settings->Internals.Header.Minimize->Position.Y = 2;
+		if(ParentWindow != NULL && settings != ParentWindow)
+		{
+			settings->Internals.Header.Minimize->Position.X = (settings->Internals.Size.X + settings->Internals.Position.X) - ParentWindow->Internals.Position.X - ((header_btn_space << 1) + header_btn_space) - 1;
+			settings->Internals.Header.Minimize->Position.Y = (2 + settings->Internals.Position.Y) - ParentWindow->Internals.Position.Y;
+		}
+		else
+		{
+			settings->Internals.Header.Minimize->Position.X = (settings->Internals.Size.X) - ((header_btn_space << 1) + header_btn_space) - 1;
+			settings->Internals.Header.Minimize->Position.Y = 2;
+		}
 		settings->Internals.Header.Minimize->Caption.Text = NULL;
 		settings->Internals.Header.Minimize->Internals.NoPaintBackGround = true;
 		settings->Internals.Header.Minimize->Internals.IsChildren = true;
+		settings->Internals.Header.Minimize->Internals.NeedEntireRefresh = true;
 
-		if(settings->Internals.CursorDownOnResizeBtn)
+		if(ParentWindow != NULL && settings != ParentWindow)
 		{
-			settings->Internals.Header.Close->Internals.NeedEntireRefresh = true;
-			settings->Internals.Header.MaxMin->Internals.NeedEntireRefresh = true;
-			settings->Internals.Header.Minimize->Internals.NeedEntireRefresh = true;
+			settings->Internals.H_ScrollBar->Position.X = (3 + settings->Internals.Position.X) - ParentWindow->Internals.Position.X;
+			settings->Internals.H_ScrollBar->Position.Y = (settings->Internals.Size.Y + settings->Internals.Position.Y) - ParentWindow->Internals.Position.Y - settings->Internals.Size.ScrollBarSize - 1;
+			settings->Internals.H_ScrollBar->Internals.NeedEntireRefresh = true;
+		}
+		else
+		{
+			settings->Internals.H_ScrollBar->Position.X = 3;
+			settings->Internals.H_ScrollBar->Position.Y = (settings->Internals.Size.Y) - settings->Internals.Size.ScrollBarSize - 2;
 		}
 
-		/*settings->Internals.Header.Resize->Size.X = settings->Internals.Size.ScrollBarSize - 4;
-		settings->Internals.Header.Resize->Size.Y = settings->Internals.Size.ScrollBarSize - 4;
-		settings->Internals.Header.Resize->Position.X = settings->Internals.Size.X - (settings->Internals.Size.ScrollBarSize);
-		settings->Internals.Header.Resize->Position.Y = settings->Internals.Size.Y - (settings->Internals.Size.ScrollBarSize);
-		settings->Internals.Header.Resize->Caption.Text = "*";
-		settings->Internals.Header.Resize->Internals.NoPaintBackGround = true;
-		settings->Internals.Header.Resize->Internals.IsChildren = true;*/
-
-		settings->Internals.H_ScrollBar->Position.X = /*settings->Internals.Position.X +*/ 3;
-		settings->Internals.H_ScrollBar->Position.Y = (/*settings->Internals.Position.Y + */settings->Internals.Size.Y) - settings->Internals.Size.ScrollBarSize - 2;
-		settings->Internals.H_ScrollBar->Size.X = settings->Internals.Size.X - 4 - settings->Internals.Size.ScrollBarSize;
-		settings->Internals.H_ScrollBar->Size.Y = settings->Internals.Size.ScrollBarSize;
 		settings->Internals.H_ScrollBar->Internals.NoPaintBackGround = true;
 
-		settings->Internals.V_ScrollBar->Position.X = (/*settings->Internals.Position.X + */settings->Internals.Size.X) - settings->Internals.Size.ScrollBarSize - 2;
-		settings->Internals.V_ScrollBar->Position.Y = /*settings->Internals.Position.Y + */settings->Internals.Header.Size.Y;
-		settings->Internals.V_ScrollBar->Size.X = settings->Internals.Size.ScrollBarSize;
-		settings->Internals.V_ScrollBar->Size.Y = settings->Internals.Size.Y - 1 - settings->Internals.Size.ScrollBarSize - settings->Internals.Header.Size.Y;
+		if(ParentWindow != NULL && settings != ParentWindow)
+		{
+			settings->Internals.V_ScrollBar->Position.X = (settings->Internals.Size.X + settings->Internals.Position.X) - ParentWindow->Internals.Position.X - settings->Internals.Size.ScrollBarSize - 2;
+			settings->Internals.V_ScrollBar->Position.Y = (settings->Internals.Header.Size.Y + settings->Internals.Position.Y) - ParentWindow->Internals.Position.Y;
+			settings->Internals.V_ScrollBar->Internals.NeedEntireRefresh = true;
+		}
+		else
+		{
+			settings->Internals.V_ScrollBar->Position.X = (settings->Internals.Size.X) - settings->Internals.Size.ScrollBarSize - 2;
+			settings->Internals.V_ScrollBar->Position.Y = settings->Internals.Header.Size.Y;
+		}
+
 		settings->Internals.V_ScrollBar->Internals.NoPaintBackGround = true;
 
 		tRectangle back_up_clip = pDisplay->sClipRegion;
@@ -455,8 +565,8 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 		clip_limit(&pDisplay->sClipRegion, &back_up_clip);
 		clip_limit(&pDisplay->sClipRegion, &settings->WindowMoveLimits);
 		put_rectangle(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, false, settings->WindowColor.Enabled.WindowBorder/*controlls_change_color(controls_color.Control_Color_Enabled_Border_Pull, - 3)*/);
-		put_rectangle(pDisplay, X_StartBox + 1, Y_StartBox + 1, X_LenBox - 2, settings->Internals.Header.Size.Y - 2, true, settings->WindowColor.Enabled.WindowHeader /*controlls_change_color(controls_color.Control_Color_Enabled_Buton_Pull, - 2)*/);
-		put_rectangle(pDisplay, X_StartBox + 1, Y_StartBox + settings->Internals.Header.Size.Y, X_LenBox - 2, Y_LenBox - settings->Internals.Header.Size.Y - 1, true, /*controlls_change_color(*/controls_color.Scren/*, 1.2)*/);
+		put_rectangle(pDisplay, X_StartBox + 1, Y_StartBox + 1, X_LenBox - 2, settings->Internals.Header.Size.Y - 1, true, settings->WindowColor.Enabled.WindowHeader /*controlls_change_color(controls_color.Control_Color_Enabled_Buton_Pull, - 2)*/);
+		put_rectangle(pDisplay, X_StartBox + 1, (Y_StartBox + settings->Internals.Header.Size.Y) - 1, X_LenBox - 2, Y_LenBox - settings->Internals.Header.Size.Y - 0, true, /*controlls_change_color(*/controls_color.Scren/*, 1.2)*/);
 		box_cache_clean(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox);
 
 
@@ -467,47 +577,33 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 		window_set_children_settings(settings, false, false, control_comand, false, &ChildrenWindowSize);
 		settings->Internals.ChildrenWindowSize.X = ChildrenWindowSize.X;
 		settings->Internals.ChildrenWindowSize.Y = ChildrenWindowSize.Y;
-		//settings->Internals.H_ScrollBar->Maximum = ChildrenWindowSize.X - (settings->Size.X - 3/* - settings->Internals.Size.ScrollBarSize*/);
-		//settings->Internals.V_ScrollBar->Maximum = ChildrenWindowSize.Y - (settings->Size.Y - 3/* - settings->Internals.Size.ScrollBarSize - settings->Internals.Header.Size.Y*/);
-		/*if(settings->Internals.V_ScrollBar->Maximum <= 0 && settings->Internals.H_ScrollBar->Maximum <= 0)
+
+		settings->Internals.H_ScrollBar->Maximum = ChildrenWindowSize.X - (settings->Size.X - 8 - settings->Internals.Size.ScrollBarSize);
+		settings->Internals.V_ScrollBar->Maximum = ChildrenWindowSize.Y - (settings->Size.Y - 6 - settings->Internals.Size.ScrollBarSize - settings->Internals.Header.Size.Y);
+		if(settings->Internals.V_ScrollBar->Maximum <= 0)
 		{
-			//settings->Internals.V_ScrollBar->Maximum = 0;
-			//settings->Internals.V_ScrollBar->Size.X = 0;
-			settings->Internals.V_ScrollBar->Visible = false;
-			//settings->Internals.H_ScrollBar->Maximum = 0;
-			//settings->Internals.H_ScrollBar->Size.Y = 0;
-			settings->Internals.H_ScrollBar->Visible = false;
+			settings->Internals.V_ScrollBar->Maximum = 0;
+			settings->Internals.V_ScrollBar->Value = 0;
+			settings->Internals.V_ScrollBar->Size.X = 0;
 		}
 		else
-		{*/
-			settings->Internals.H_ScrollBar->Maximum = ChildrenWindowSize.X - (settings->Size.X - 4 - settings->Internals.Size.ScrollBarSize);
-			settings->Internals.V_ScrollBar->Maximum = ChildrenWindowSize.Y - (settings->Size.Y - 4 - settings->Internals.Size.ScrollBarSize - settings->Internals.Header.Size.Y);
-			if(settings->Internals.V_ScrollBar->Maximum <= 0)
-			{
-				settings->Internals.V_ScrollBar->Maximum = 0;
-				settings->Internals.V_ScrollBar->Size.X = 0;
-				//settings->Internals.V_ScrollBar->Visible = false;
-			}
-			else
-			{
-				settings->Internals.V_ScrollBar->Size.X = settings->Internals.Size.ScrollBarSize;
-				//settings->Internals.V_ScrollBar->Visible = true;
-			}
-			if(settings->Internals.H_ScrollBar->Maximum <= 0)
-			{
-				settings->Internals.H_ScrollBar->Maximum = 0;
-				settings->Internals.H_ScrollBar->Size.Y = 0;
-				//settings->Internals.H_ScrollBar->Visible = false;
-			}
-			else
-			{
-				settings->Internals.H_ScrollBar->Size.Y = settings->Internals.Size.ScrollBarSize;
-				//settings->Internals.H_ScrollBar->Visible = true;
-			}
-		//}
+		{
+			settings->Internals.V_ScrollBar->Size.X = settings->Internals.Size.ScrollBarSize;
+		}
+		if(settings->Internals.H_ScrollBar->Maximum <= 0)
+		{
+			settings->Internals.H_ScrollBar->Maximum = 0;
+			settings->Internals.H_ScrollBar->Value = 0;
+			settings->Internals.H_ScrollBar->Size.Y = 0;
+		}
+		else
+		{
+			settings->Internals.H_ScrollBar->Size.Y = settings->Internals.Size.ScrollBarSize;
+		}
 
-		settings->Internals.V_ScrollBar->Size.Y = settings->Internals.Size.Y - 3 - settings->Internals.Size.ScrollBarSize - settings->Internals.Header.Size.Y;
-		settings->Internals.H_ScrollBar->Size.X = settings->Internals.Size.X - 6 - settings->Internals.Size.ScrollBarSize;
+		settings->Internals.V_ScrollBar->Size.Y = settings->Internals.Size.Y - 2 - settings->Internals.Size.ScrollBarSize - settings->Internals.Header.Size.Y;
+		settings->Internals.H_ScrollBar->Size.X = settings->Internals.Size.X - 5 - settings->Internals.Size.ScrollBarSize;
+
 
 		control_comand->Cursor = Cursor_Up;
 		window_set_children_settings(settings, true, true, control_comand, true, &ChildrenWindowSize);
@@ -550,10 +646,8 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 		settings->Position.X = settings->Internals.NormalScreenPosition.X;
 		settings->Position.Y = settings->Internals.NormalScreenPosition.Y;
 		settings->Internals.FullScreen = false;
-		//if(settings->Position.X < settings->WindowMoveLimits.sXMin) settings->Position.X = settings->WindowMoveLimits.sXMin;
-		//if(settings->Position.Y < settings->WindowMoveLimits.sYMin) settings->Position.Y = settings->WindowMoveLimits.sYMin;
-		//if(settings->Position.X + settings->Size.X >= settings->WindowMoveLimits.sXMax) settings->Position.X = settings->WindowMoveLimits.sXMax - settings->Size.X;
-		//if(settings->Position.Y + settings->Size.Y >= settings->WindowMoveLimits.sYMax) settings->Position.Y = settings->WindowMoveLimits.sYMax - settings->Size.Y;
+		settings->Internals.Position.ChildrenPosition_X = 0;
+		settings->Internals.Position.ChildrenPosition_Y = 0;
 		full_screen_has_changed_state = true;
 	}
 	else if(settings->Internals.Header.MaxMin->Events.UnChecked)
@@ -580,68 +674,59 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 	{
 		settings->Internals.ChildrenWindowSize.X = ChildrenWindowSize.X;
 		settings->Internals.ChildrenWindowSize.Y = ChildrenWindowSize.Y;
-		//settings->Internals.H_ScrollBar->Maximum = ChildrenWindowSize.X - (settings->Size.X - 3/* - settings->Internals.Size.ScrollBarSize*/);
-		//settings->Internals.V_ScrollBar->Maximum = ChildrenWindowSize.Y - (settings->Size.Y - 3/* - settings->Internals.Size.ScrollBarSize - settings->Internals.Header.Size.Y*/);
-		/*if(settings->Internals.V_ScrollBar->Maximum <= 0 && settings->Internals.H_ScrollBar->Maximum <= 0)
+		settings->Internals.H_ScrollBar->Maximum = ChildrenWindowSize.X - (settings->Size.X - 8 - settings->Internals.Size.ScrollBarSize);
+		settings->Internals.V_ScrollBar->Maximum = ChildrenWindowSize.Y - (settings->Size.Y - 6 - settings->Internals.Size.ScrollBarSize - settings->Internals.Header.Size.Y);
+		if(settings->Internals.V_ScrollBar->Maximum <= 0)
 		{
 			settings->Internals.V_ScrollBar->Maximum = 0;
+			settings->Internals.V_ScrollBar->Value = 0;
 			settings->Internals.V_ScrollBar->Size.X = 0;
-			settings->Internals.V_ScrollBar->Visible = false;
-			settings->Internals.H_ScrollBar->Maximum = 0;
-			settings->Internals.H_ScrollBar->Size.Y = 0;
-			settings->Internals.H_ScrollBar->Visible = false;
 		}
 		else
-		{*/
-			settings->Internals.H_ScrollBar->Maximum = ChildrenWindowSize.X - (settings->Size.X - 4 - settings->Internals.Size.ScrollBarSize);
-			settings->Internals.V_ScrollBar->Maximum = ChildrenWindowSize.Y - (settings->Size.Y - 4 - settings->Internals.Size.ScrollBarSize - settings->Internals.Header.Size.Y);
-			if(settings->Internals.V_ScrollBar->Maximum <= 0)
-			{
-				settings->Internals.V_ScrollBar->Maximum = 0;
-				settings->Internals.V_ScrollBar->Size.X = 0;
-				//settings->Internals.V_ScrollBar->Visible = false;
-			}
-			else
-			{
-				settings->Internals.V_ScrollBar->Size.X = settings->Internals.Size.ScrollBarSize;
-				//settings->Internals.V_ScrollBar->Visible = true;
-			}
-			if(settings->Internals.H_ScrollBar->Maximum <= 0)
-			{
-				settings->Internals.H_ScrollBar->Maximum = 0;
-				settings->Internals.H_ScrollBar->Size.Y = 0;
-				//settings->Internals.H_ScrollBar->Visible = false;
-			}
-			else
-			{
-				settings->Internals.H_ScrollBar->Size.Y = settings->Internals.Size.ScrollBarSize;
-				//settings->Internals.H_ScrollBar->Visible = true;
-			}
-		//}
+		{
+			settings->Internals.V_ScrollBar->Size.X = settings->Internals.Size.ScrollBarSize;
+		}
+		if(settings->Internals.H_ScrollBar->Maximum <= 0)
+		{
+			settings->Internals.H_ScrollBar->Maximum = 0;
+			settings->Internals.H_ScrollBar->Value = 0;
+			settings->Internals.H_ScrollBar->Size.Y = 0;
+		}
+		else
+		{
+			settings->Internals.H_ScrollBar->Size.Y = settings->Internals.Size.ScrollBarSize;
+		}
 
-		settings->Internals.V_ScrollBar->Size.Y = settings->Internals.Size.Y - 3 - settings->Internals.Size.ScrollBarSize - settings->Internals.Header.Size.Y;
-		settings->Internals.H_ScrollBar->Size.X = settings->Internals.Size.X - 6 - settings->Internals.Size.ScrollBarSize;
+		settings->Internals.V_ScrollBar->Size.Y = settings->Internals.Size.Y - 2 - settings->Internals.Size.ScrollBarSize - settings->Internals.Header.Size.Y;
+		settings->Internals.H_ScrollBar->Size.X = settings->Internals.Size.X - 5 - settings->Internals.Size.ScrollBarSize;
 
 
-		//if(settings->Internals.V_ScrollBar->Size.X)
-		//{
-			settings->Internals.V_ScrollBar->Internals.NoPaintBackGround = false;
-			scrollbar(settings->Internals.V_ScrollBar, control_comand);
-			settings->Internals.V_ScrollBar->Internals.NoPaintBackGround = true;
-		//}
+		settings->Internals.V_ScrollBar->Internals.NoPaintBackGround = false;
+		scrollbar(settings->Internals.V_ScrollBar, control_comand);
+		settings->Internals.V_ScrollBar->Internals.NoPaintBackGround = true;
 
-		//if(settings->Internals.H_ScrollBar->Size.Y)
-		//{
-			settings->Internals.H_ScrollBar->Internals.NoPaintBackGround = false;
-			scrollbar(settings->Internals.H_ScrollBar, control_comand);
-			settings->Internals.H_ScrollBar->Internals.NoPaintBackGround = true;
-		//}
+
+		settings->Internals.H_ScrollBar->Internals.NoPaintBackGround = false;
+		scrollbar(settings->Internals.H_ScrollBar, control_comand);
+		settings->Internals.H_ScrollBar->Internals.NoPaintBackGround = true;
+		if(settings->Internals.V_ScrollBar->Size.X == 0 && settings->Internals.V_ScrollBar->Value != 0)
+		{
+			settings->Internals.V_ScrollBar->Events.ValueChanged = true;
+			settings->Internals.V_ScrollBar->Value = 0;
+		}
+
+		if(settings->Internals.H_ScrollBar->Size.Y == 0 && settings->Internals.H_ScrollBar->Value != 0)
+		{
+			settings->Internals.H_ScrollBar->Events.ValueChanged = true;
+			settings->Internals.H_ScrollBar->Value = 0;
+		}
+
 	}
 	if(settings->Internals.H_ScrollBar->Events.ValueChanged || settings->Internals.V_ScrollBar->Events.ValueChanged)
 	{
 		settings->Internals.H_ScrollBar->Events.ValueChanged = false;
 		settings->Internals.V_ScrollBar->Events.ValueChanged = false;
-		put_rectangle(pDisplay, X_StartBox + 1, Y_StartBox + settings->Internals.Header.Size.Y, X_LenBox - 3 - settings->Internals.V_ScrollBar->Size.X, Y_LenBox - settings->Internals.H_ScrollBar->Size.Y - 2 - settings->Internals.Header.Size.Y, true, /*controlls_change_color(*/controls_color.Scren/*, 1.2)*/);
+		put_rectangle(pDisplay, X_StartBox + 1, (Y_StartBox + settings->Internals.Header.Size.Y) - 1, X_LenBox - 3 - settings->Internals.V_ScrollBar->Size.X, Y_LenBox - settings->Internals.H_ScrollBar->Size.Y - 1 - settings->Internals.Header.Size.Y, true, /*controlls_change_color(*/controls_color.Scren/*, 1.2)*/);
 		box_cache_clean(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox);
 		settings->Internals.Position.ChildrenPosition_X = -settings->Internals.H_ScrollBar->Value;
 		settings->Internals.Position.ChildrenPosition_Y = -settings->Internals.V_ScrollBar->Value;
@@ -704,9 +789,7 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 			{
 				settings->Position.X = settings->Internals.WindowTouchDownPointX + (control_comand->X - settings->Internals.HeaderTouchDownPointX);
 				settings->Position.Y = settings->Internals.WindowTouchDownPointY + (control_comand->Y - settings->Internals.HeaderTouchDownPointY);
-				//if(settings->Position.X < settings->WindowMoveLimits.sXMin) settings->Position.X = settings->WindowMoveLimits.sXMin;
 				if(settings->Position.Y < settings->WindowMoveLimits.sYMin) settings->Position.Y = settings->WindowMoveLimits.sYMin;
-				//if(settings->Position.X >= settings->WindowMoveLimits.sXMax) settings->Position.X = settings->WindowMoveLimits.sXMax;
 				if(settings->Position.Y + settings->Internals.Header.Size.Y >= settings->WindowMoveLimits.sYMax) settings->Position.Y = settings->WindowMoveLimits.sYMax - settings->Internals.Header.Size.Y;
 				control_comand->CursorCoordonateUsed = true;
 			}
@@ -719,11 +802,13 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 	}
 }
 //#######################################################################################
-tWindow *new_window(tDisplay *ScreenDisplay)
+tWindow *new_window(void *ParentWindow, tDisplay *ScreenDisplay)
 {
+	tWindow *_ParentWindow = (tWindow *)ParentWindow;
 	struct Window_s* settings = (struct Window_s*)calloc(1, sizeof(struct Window_s));
-
-	if(!settings || !ScreenDisplay) return NULL;
+	tDisplay *_ScreenDisplay = ScreenDisplay;
+	if(!settings || (!_ScreenDisplay && !ParentWindow)) return NULL;
+	if(ParentWindow) _ScreenDisplay = _ParentWindow->Internals.pDisplay;
 
 	/*settings->Internals.Childrens = (window_children_t **)calloc(1, sizeof(settings->Internals.Childrens));
 	if(!settings->Internals.Childrens)
@@ -731,8 +816,9 @@ tWindow *new_window(tDisplay *ScreenDisplay)
 		if(settings) free(settings);
 		return NULL;
 	}*/
-	settings->Internals.ParentWindow = settings;
-	settings->Internals.pDisplay = ScreenDisplay;
+	if(ParentWindow) settings->Internals.ParentWindow = ParentWindow;
+	else settings->Internals.ParentWindow = settings;
+	settings->Internals.pDisplay = _ScreenDisplay;
 	settings->Caption.TextAlign = Align_Center;
 	settings->Caption.WordWrap = false;
 	settings->Caption.Font = controls_color.DefaultFont;
@@ -760,8 +846,8 @@ tWindow *new_window(tDisplay *ScreenDisplay)
 
 	//settings->Position.X = settings->PositionFullScreen.X;
 	//settings->Position.Y = settings->PositionFullScreen.Y;
-	settings->Size.X = ScreenDisplay->raster_timings->X;
-	settings->Size.Y = ScreenDisplay->raster_timings->Y;
+	settings->Size.X = _ScreenDisplay->raster_timings->X;
+	settings->Size.Y = _ScreenDisplay->raster_timings->Y;
 	settings->Size.ScrollBarSize = 20;
 	//settings->SizeFullScreen.X = ScreenDisplay->Width;
 	//settings->SizeFullScreen.Y = ScreenDisplay->Height;
@@ -771,12 +857,17 @@ tWindow *new_window(tDisplay *ScreenDisplay)
 	settings->Visible = true;
 	settings->Enabled = true;
 
-	settings->WindowMoveLimits.sXMin = 0;
-	settings->WindowMoveLimits.sXMax = ScreenDisplay->raster_timings->X;
-	settings->WindowMoveLimits.sYMin = 0;
-	settings->WindowMoveLimits.sYMax = ScreenDisplay->raster_timings->Y;
-
-
+	if(ParentWindow)
+	{
+		settings->WindowMoveLimits = _ParentWindow->WindowMoveLimits;
+	}
+	else
+	{
+		settings->WindowMoveLimits.sXMin = 0;
+		settings->WindowMoveLimits.sXMax = _ScreenDisplay->raster_timings->X;
+		settings->WindowMoveLimits.sYMin = 0;
+		settings->WindowMoveLimits.sYMax = _ScreenDisplay->raster_timings->Y;
+	}
 	settings->Internals.Header.Size.Y = 20;
 	settings->Internals.FullScreen = true;
 
@@ -815,6 +906,9 @@ void* window_add_children(struct Window_s *settings, unsigned int children_type,
 	case WindowPictureboxChildren:
 		children_addr = (void *)new_picturebox(settings);
 		break;
+	case WindowWindowChildren:
+		children_addr = (void *)new_window(settings, NULL);
+		break;
 	default:
 		return NULL;
 	}
@@ -839,8 +933,8 @@ void* window_add_children(struct Window_s *settings, unsigned int children_type,
 	switch(children_type)
 	{
 	case WindowButonChildren:
-		((tButton *)children_addr)->Position.X = settings->Position.X;
-		((tButton *)children_addr)->Position.Y = settings->Position.Y;
+		((tButton *)children_addr)->Position.X = /*settings->Position.X*/ 0;
+		((tButton *)children_addr)->Position.Y = /*settings->Position.Y*/ 0;
 		((tButton *)children_addr)->Size.X = 40;
 		((tButton *)children_addr)->Size.Y = 20;
 		((tButton *)children_addr)->StateChangedOn = settings->StateChangedOn;
@@ -855,8 +949,8 @@ void* window_add_children(struct Window_s *settings, unsigned int children_type,
 		((tButton *)children_addr)->Internals.ParentWindow = (void*)settings;
 		break;
 	case WindowCheckboxChildren:
-		((tCheckBox *)children_addr)->Position.X = settings->Position.X + 45;
-		((tCheckBox *)children_addr)->Position.Y = settings->Position.Y;
+		((tCheckBox *)children_addr)->Position.X = /*settings->Position.X*/ 0 + 45;
+		((tCheckBox *)children_addr)->Position.Y = /*settings->Position.Y*/ 0;
 		((tCheckBox *)children_addr)->Size.X = 60;
 		((tCheckBox *)children_addr)->Size.Y = 20;
 		((tCheckBox *)children_addr)->StateChangedOn = settings->StateChangedOn;
@@ -871,8 +965,8 @@ void* window_add_children(struct Window_s *settings, unsigned int children_type,
 		((tCheckBox *)children_addr)->Internals.ParentWindow = (void*)settings;
 		break;
 	case WindowListboxChildren:
-		((tListBox *)children_addr)->Position.X = settings->Position.X + 110;
-		((tListBox *)children_addr)->Position.Y = settings->Position.Y;
+		((tListBox *)children_addr)->Position.X = /*settings->Position.X*/ 0 + 110;
+		((tListBox *)children_addr)->Position.Y = /*settings->Position.Y*/ 0;
 		((tListBox *)children_addr)->Size.X = 200;
 		((tListBox *)children_addr)->Size.Y = 70;
 		((tListBox *)children_addr)->StateChangedOn = settings->StateChangedOn;
@@ -887,8 +981,8 @@ void* window_add_children(struct Window_s *settings, unsigned int children_type,
 		((tListBox *)children_addr)->Internals.ParentWindow = (void*)settings;
 		break;
 	case WindowProgressbarChildren:
-		((tProgressBar *)children_addr)->Position.X = settings->Position.X;
-		((tProgressBar *)children_addr)->Position.Y = settings->Position.Y + 25;
+		((tProgressBar *)children_addr)->Position.X = /*settings->Position.X*/ 0;
+		((tProgressBar *)children_addr)->Position.Y = /*settings->Position.Y*/ 0 + 25;
 		((tProgressBar *)children_addr)->Size.X = 105;
 		((tProgressBar *)children_addr)->Size.Y = 20;
 		((tProgressBar *)children_addr)->StateChangedOn = settings->StateChangedOn;
@@ -903,8 +997,8 @@ void* window_add_children(struct Window_s *settings, unsigned int children_type,
 		((tProgressBar *)children_addr)->Internals.ParentWindow = (void*)settings;
 		break;
 	case WindowScrollbarChildren:
-		((tScrollBar *)children_addr)->Position.X = settings->Position.X;
-		((tScrollBar *)children_addr)->Position.Y = settings->Position.Y + 50;
+		((tScrollBar *)children_addr)->Position.X = /*settings->Position.X*/ 0;
+		((tScrollBar *)children_addr)->Position.Y = /*settings->Position.Y*/ 0 + 50;
 		((tScrollBar *)children_addr)->Size.X = 105;
 		((tScrollBar *)children_addr)->Size.Y = 20;
 		((tScrollBar *)children_addr)->StateChangedOn = Cursor_Move;
@@ -914,8 +1008,8 @@ void* window_add_children(struct Window_s *settings, unsigned int children_type,
 		((tScrollBar *)children_addr)->Internals.ParentWindow = (void*)settings;
 		break;
 	case WindowTextboxChildren:
-		((tTextBox *)children_addr)->Position.X = settings->Position.X;
-		((tTextBox *)children_addr)->Position.Y = settings->Position.Y + 75;
+		((tTextBox *)children_addr)->Position.X = /*settings->Position.X*/ 0;
+		((tTextBox *)children_addr)->Position.Y = /*settings->Position.Y*/ 0 + 75;
 		((tTextBox *)children_addr)->Size.X = 310;
 		((tTextBox *)children_addr)->Size.Y = 160;
 		((tTextBox *)children_addr)->StateChangedOn = settings->StateChangedOn;
@@ -931,13 +1025,25 @@ void* window_add_children(struct Window_s *settings, unsigned int children_type,
 		((tTextBox *)children_addr)->Internals.ParentWindow = (void*)settings;
 		break;
 	case WindowPictureboxChildren:
-		((tPictureBox *)children_addr)->Position.X = settings->Position.X + 320;
-		((tPictureBox *)children_addr)->Position.Y = settings->Position.Y;
+		((tPictureBox *)children_addr)->Position.X = /*settings->Position.X*/ 0 + 320;
+		((tPictureBox *)children_addr)->Position.Y = /*settings->Position.Y*/ 0;
 		((tPictureBox *)children_addr)->Size.X = 128;
 		((tPictureBox *)children_addr)->Size.Y = 96;
 		((tPictureBox *)children_addr)->Enabled = settings->Enabled;
 		((tPictureBox *)children_addr)->Visible = settings->Visible;
 		((tPictureBox *)children_addr)->Color = settings->Color;
+		break;
+	case WindowWindowChildren:
+		((tWindow *)children_addr)->StateChangedOn = settings->StateChangedOn;
+		((tWindow *)children_addr)->Caption.Font = settings->Caption.Font;
+		((tWindow *)children_addr)->Caption.TextAlign = settings->Caption.TextAlign;
+		((tWindow *)children_addr)->Caption.WordWrap = settings->Caption.WordWrap;
+		((tWindow *)children_addr)->Enabled = settings->Enabled;
+		((tWindow *)children_addr)->Visible = settings->Visible;
+		((tWindow *)children_addr)->Color = settings->Color;
+		((tWindow *)children_addr)->Caption.Text = malloc(strlen(children_name) + 1);
+		strcpy(((tWindow *)children_addr)->Caption.Text, children_name);
+		((tWindow *)children_addr)->Internals.ParentWindow = (void*)settings;
 		break;
 	}
 	settings->Internals.ChildrensNr++;
@@ -968,6 +1074,9 @@ window_can_not_add_children:
 		break;
 	case WindowPictureboxChildren:
 		free_picturebox(children_addr);
+		break;
+	case WindowWindowChildren:
+		//free_window(children_addr);
 		break;
 	}
 	return NULL;
