@@ -147,6 +147,36 @@ int main(void) {
     window_new_scrollbar(MainWindow, ScrollBar1);
     window_new_textbox(MainWindow, TextBox1);
     window_new_picturebox(MainWindow, PictureBox1);
+    window_new_window(MainWindow, Window1);
+
+    Window1->Internals.FullScreen = false;
+    Window1->Position.X = 400;
+    Window1->Position.Y = 400;
+    Window1->Size.X = 400;
+    Window1->Size.Y = 300;
+
+    window_new_buton(Window1, Btn2);
+
+    window_new_window(Window1, Window2);
+
+    Window2->Internals.FullScreen = false;
+    Window2->Position.X = 10;
+    Window2->Position.Y = 50;
+    Window2->Size.X = 300;
+    Window2->Size.Y = 200;
+
+    window_new_buton(Window2, Btn3);
+
+    window_new_window(Window2, Window3);
+
+    Window3->Internals.FullScreen = false;
+    Window3->Position.X = 10;
+    Window3->Position.Y = 50;
+    Window3->Size.X = 200;
+    Window3->Size.Y = 100;
+
+    window_new_buton(Window3, Btn4);
+
 
     /* Enable clear background on refresh */
     PictureBox1->PaintBackground = true;
