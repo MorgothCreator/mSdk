@@ -85,7 +85,12 @@ void window_set_children_settings(tWindow *settings, bool call_childrens, bool t
 			if(WindowWindowChildren == children_type)
 			{
 				tWindow *Window_settings = (tWindow *)children;
-				if(control_comand->Cursor == Cursor_Down && check_if_inside_box(Window_settings->Internals.Position.X,Window_settings->Internals.Position.Y, Window_settings->Internals.Position.X +  Window_settings->Internals.Size.X,Window_settings->Internals.Position.Y + Window_settings->Internals.Size.Y, control_comand->X, control_comand->Y))
+				if(control_comand->Cursor == Cursor_Down &&
+						check_if_inside_box(Window_settings->Internals.Position.X,
+							Window_settings->Internals.Position.Y,
+								Window_settings->Internals.Position.X +  Window_settings->Internals.Size.X,
+									Window_settings->Internals.Position.Y + Window_settings->Internals.Size.Y,
+										control_comand->X, control_comand->Y))
 				{
 					settings->Internals.CursorDownInsideChildrenWindow = true;
 				}
@@ -617,7 +622,7 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 
 		settings->Internals.H_ScrollBar->Maximum = ChildrenWindowSize.X - (settings->Size.X - 8 - settings->Internals.Size.ScrollBarSize);
 		settings->Internals.V_ScrollBar->Maximum = ChildrenWindowSize.Y - (settings->Size.Y - 6 - settings->Internals.Size.ScrollBarSize - settings->Internals.Header.Size.Y);
-		if((settings->Internals.V_ScrollBar->Maximum > 0 || settings->ShowVScroll == true) && settings->AllowVScroll)
+		if((settings->Internals.V_ScrollBar->Maximum > 0/* || settings->ShowVScroll == true*/)/* && settings->AllowVScroll*/)
 		{
 			settings->Internals.V_ScrollBar->Size.X = settings->Internals.Size.ScrollBarSize;
 		}
@@ -627,7 +632,7 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 			settings->Internals.V_ScrollBar->Value = 0;
 			settings->Internals.V_ScrollBar->Size.X = 0;
 		}
-		if((settings->Internals.H_ScrollBar->Maximum > 0 || settings->ShowHScroll == true) && settings->AllowHScroll)
+		if((settings->Internals.H_ScrollBar->Maximum > 0/* || settings->ShowHScroll == true*/)/* && settings->AllowHScroll*/)
 		{
 			settings->Internals.H_ScrollBar->Size.Y = settings->Internals.Size.ScrollBarSize;
 		}
@@ -718,14 +723,25 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 	scrollbar(settings->Internals.V_ScrollBar, control_comand);
 	ChildrenWindowSize_t ChildrenWindowSize;
 	if(check_if_inside_box(X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, control_comand->X, control_comand->Y) && control_comand->Cursor == Cursor_Down) settings->Internals.CursorDownInsideBox = true;
+	bool _back_coordonate_used = control_comand->CursorCoordonateUsed;
+	if(settings->Internals.FullScreen == false && control_comand->CursorCoordonateUsed == false)
+	{
+		int Resize_Position_X = (settings->Internals.Position.X + settings->Internals.Size.X) - (settings->Internals.Size.ScrollBarSize);
+		int Resize_Position_Y = (settings->Internals.Position.Y + settings->Internals.Size.Y) - (settings->Internals.Size.ScrollBarSize);
+		int Resize_Size_X = settings->Internals.Size.ScrollBarSize - 4;
+		int Resize_Size_Y = settings->Internals.Size.ScrollBarSize - 4;
+
+		if(check_if_inside_box(Resize_Position_X, Resize_Position_Y, Resize_Size_X, Resize_Size_Y, control_comand->X, control_comand->Y) && control_comand->Cursor == Cursor_Down && control_comand->CursorCoordonateUsed == false) control_comand->CursorCoordonateUsed = true;
+	}
 	window_set_children_settings(settings, true, false, control_comand, false, &ChildrenWindowSize);
+	control_comand->CursorCoordonateUsed = _back_coordonate_used;
 	if(settings->Internals.ChildrenWindowSize.X != ChildrenWindowSize.X || settings->Internals.ChildrenWindowSize.Y != ChildrenWindowSize.Y)
 	{
 		settings->Internals.ChildrenWindowSize.X = ChildrenWindowSize.X;
 		settings->Internals.ChildrenWindowSize.Y = ChildrenWindowSize.Y;
 		settings->Internals.H_ScrollBar->Maximum = ChildrenWindowSize.X - (settings->Size.X - 8 - settings->Internals.Size.ScrollBarSize);
 		settings->Internals.V_ScrollBar->Maximum = ChildrenWindowSize.Y - (settings->Size.Y - 6 - settings->Internals.Size.ScrollBarSize - settings->Internals.Header.Size.Y);
-		if((settings->Internals.V_ScrollBar->Maximum > 0 || settings->ShowVScroll == true)/* && settings->AllowVScroll*/)
+		if((settings->Internals.V_ScrollBar->Maximum > 0/* || settings->ShowVScroll == true*/)/* && settings->AllowVScroll*/)
 		{
 			settings->Internals.V_ScrollBar->Size.X = settings->Internals.Size.ScrollBarSize;
 		}
@@ -735,7 +751,7 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 			settings->Internals.V_ScrollBar->Value = 0;
 			settings->Internals.V_ScrollBar->Size.X = 0;
 		}
-		if((settings->Internals.H_ScrollBar->Maximum > 0 || settings->ShowHScroll == true)/* && settings->AllowHScroll*/)
+		if((settings->Internals.H_ScrollBar->Maximum > 0 /*|| settings->ShowHScroll == true*/)/* && settings->AllowHScroll*/)
 		{
 			settings->Internals.H_ScrollBar->Size.Y = settings->Internals.Size.ScrollBarSize;
 		}
