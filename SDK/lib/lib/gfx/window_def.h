@@ -196,6 +196,8 @@ typedef struct Window_s
 		bool CursorDownInsideBox;
 		bool FullScreen;
 		bool OneChildrenHasBeenModified;
+		bool NoPaintBackGround;
+		bool CursorDownInsideChildrenWindow;
 		volatile unsigned int ChildrensNr;
 		window_children_t **Childrens;
 		CursorState OldStateCursor;
@@ -214,6 +216,10 @@ typedef struct Window_s
 	bool MaxMinVisible;
 	bool MinimizeButonEnabled;
 	bool MinimizeButonVisible;
+	bool AllowVScroll;
+	bool AllowHScroll;
+	bool ShowVScroll;
+	bool ShowHScroll;
 	CursorState StateChangedOn;
 	tRectangle WindowMoveLimits;
 	//tControlCommandData*(*Idle)(void*, tControlCommandData*);
