@@ -258,7 +258,15 @@ void checkbox(tCheckBox *settings, tControlCommandData* control_comand)
 	bool _inside_window = check_if_inside_box(pDisplay->sClipRegion.sXMin, pDisplay->sClipRegion.sYMin, pDisplay->sClipRegion.sXMax - pDisplay->sClipRegion.sXMin, pDisplay->sClipRegion.sYMax - pDisplay->sClipRegion.sYMin, control_comand->X, control_comand->Y);
 	if(!_inside_window) inside_window = false;
 
-	if(((control_comand->Cursor == Cursor_Up || control_comand->Cursor == Cursor_Down) &&
+	/*if((control_comand->Cursor == Cursor_Up || control_comand->Cursor == Cursor_Down) &&
+			settings->Internals.OldStateCursor != control_comand->Cursor &&
+				(inside_window == true || settings->Internals.CursorDownInsideBox == true) &&
+				settings->Internals.OldStateCheched != settings->Cheched &&
+					settings->Enabled == true &&
+						settings->Visible == true &&
+							control_comand->CursorCoordonateUsed == false)*/
+
+		if(((control_comand->Cursor == Cursor_Up || control_comand->Cursor == Cursor_Down) &&
 			settings->Internals.OldStateCursor != control_comand->Cursor &&
 				(inside_window == true || settings->Internals.CursorDownInsideBox == true) &&
 					settings->Visible == true) ||

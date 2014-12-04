@@ -50,6 +50,13 @@ static void paint_textbox(tTextBox* settings, tDisplay *pDisplay, signed int x_s
 		put_rectangle(pDisplay, x_start + 1, y_start + 1, x_len - 2, y_len - 2, false, controlls_change_color(color, -2));
 		put_rectangle(pDisplay, x_start + 2, y_start + 2, x_len - 4 - settings->Internals.Size.ScrollSize, y_len - 4 - settings->Internals.Size.ScrollSize, true, color);
 		control_comand->WindowRefresh |= true;
+		pDisplay->sClipRegion.sXMin = x_start;
+		pDisplay->sClipRegion.sYMin = y_start;
+		pDisplay->sClipRegion.sXMax = x_start + x_len;
+		pDisplay->sClipRegion.sYMax = y_start + y_len;
+		clip_limit(&pDisplay->sClipRegion, &back_up_clip);
+		box_cache_clean(pDisplay, x_start, y_start, x_len, y_len);
+		pDisplay->sClipRegion = back_up_clip;
 	}
 	if(settings->Internals.Caption.Text)
 	{
@@ -69,7 +76,7 @@ static void paint_textbox(tTextBox* settings, tDisplay *pDisplay, signed int x_s
 
 		if(settings->Internals.CursorDownInsideTextBox || settings->Internals.NeedEntireRefresh)
 		{
-			if(settings->Internals.CursorDownInsideTextBox) string_select_get(pDisplay, settings->Internals.Caption.Font, settings->Internals.Caption.Text, settings->Internals.Caption.WordWrap, -1, &settings->Internals.Start, &Start, &Len, settings->Internals.PenPushX, settings->Internals.PenPushY, control_comand->X, control_comand->Y, x_str_location - settings->Internals.Hscrollbar->Value, y_str_location - settings->Internals.Vscrollbar->Value, &command_return);
+			if(settings->Internals.CursorDownInsideTextBox && settings->Internals.NeedEntireRefresh == false) string_select_get(pDisplay, settings->Internals.Caption.Font, settings->Internals.Caption.Text, settings->Internals.Caption.WordWrap, -1, &settings->Internals.Start, &Start, &Len, settings->Internals.PenPushX, settings->Internals.PenPushY, control_comand->X, control_comand->Y, x_str_location - settings->Internals.Hscrollbar->Value, y_str_location - settings->Internals.Vscrollbar->Value, &command_return);
 
 			if((command_return & ReturnCommand_gm) == ReturnCommand_GoLeft && (((command_return & (~ReturnCommand_gm)) >> 1) != 0))
 			{
@@ -172,15 +179,15 @@ static void paint_textbox(tTextBox* settings, tDisplay *pDisplay, signed int x_s
 			settings->SelLen = Len;
 			put_rectangle(pDisplay, x_start + 2, y_start + 2, x_len - 4 - settings->Internals.Size.ScrollSize, y_len - 4 - settings->Internals.Size.ScrollSize, true, color);
 			put_string(pDisplay, settings->Internals.Caption.Font, settings->Internals.Caption.Text, -1, settings->Color.Enabled.Ink.Pull, controlls_change_color(color, -2), false, true, settings->Internals.Caption.WordWrap, x_str_location - settings->Internals.Hscrollbar->Value, y_str_location - settings->Internals.Vscrollbar->Value, settings->SelStart, settings->SelLen);
+			control_comand->WindowRefresh |= true;
+			pDisplay->sClipRegion.sXMin = x_start;
+			pDisplay->sClipRegion.sYMin = y_start;
+			pDisplay->sClipRegion.sXMax = x_start + x_len;
+			pDisplay->sClipRegion.sYMax = y_start + y_len;
+			clip_limit(&pDisplay->sClipRegion, &back_up_clip);
+			box_cache_clean(pDisplay, x_start, y_start, x_len, y_len);
 		}
-		control_comand->WindowRefresh |= true;
 	}
-	pDisplay->sClipRegion.sXMin = x_start;
-	pDisplay->sClipRegion.sYMin = y_start;
-	pDisplay->sClipRegion.sXMax = x_start + x_len;
-	pDisplay->sClipRegion.sYMax = y_start + y_len;
-	clip_limit(&pDisplay->sClipRegion, &back_up_clip);
-	box_cache_clean(pDisplay, x_start, y_start, x_len, y_len);
 	pDisplay->sClipRegion = back_up_clip;
 }
 //#######################################################################################
@@ -397,7 +404,10 @@ void textbox(tTextBox *settings, tControlCommandData* control_comand)
 		//control_comand->Comand = Control_Entire_Refresh;
 		//CursorState cursor = control_comand->Cursor;
 		//if(!settings->Internals.IsChildren) control_comand->Cursor = Cursor_Up;
+		CursorState _back = control_comand->Cursor;
+		if(control_comand->CursorCoordonateUsed) control_comand->Cursor = Cursor_NoAction;
 		paint_textbox(settings, pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, control_comand);
+		control_comand->Cursor = _back;
 		pDisplay->sClipRegion = back_up_clip;
 		//control_comand->Cursor = cursor;
 		//control_comand->Comand = ComandBeck;
@@ -475,7 +485,7 @@ void textbox(tTextBox *settings, tControlCommandData* control_comand)
 		paint_textbox(settings, pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, control_comand);
 		pDisplay->sClipRegion = back_up_clip;
 	}
-	if(control_comand->Cursor && inside_window && (settings->Internals.CursorDownInsideBox || settings->Internals.CursorDownInsideTextBox)) control_comand->CursorCoordonateUsed |= true;
+	if(control_comand->Cursor != Cursor_NoAction && inside_window && (settings->Internals.CursorDownInsideBox/* || settings->Internals.CursorDownInsideTextBox*/)) control_comand->CursorCoordonateUsed |= true;
 	if(settings->Internals.CursorDownInsideBox == true && (control_comand->Cursor == Cursor_Up || control_comand->Cursor == Cursor_NoAction)) settings->Internals.CursorDownInsideBox = false;
 
 	if(control_comand->Cursor == Cursor_Up) settings->Internals.CursorDownInsideTextBox = false;

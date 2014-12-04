@@ -319,16 +319,16 @@ void listbox(tListBox *settings, tControlCommandData* control_comand)
 	bool inside_window = check_if_inside_box(X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, control_comand->X, control_comand->Y);
 	bool _inside_window = check_if_inside_box(pDisplay->sClipRegion.sXMin, pDisplay->sClipRegion.sYMin, pDisplay->sClipRegion.sXMax - pDisplay->sClipRegion.sXMin, pDisplay->sClipRegion.sYMax - pDisplay->sClipRegion.sYMin, control_comand->X, control_comand->Y);
 	if(!_inside_window) inside_window = false;
+	if(control_comand->Cursor == Cursor_Down && inside_window == true) settings->Internals.CursorDownInsideBox = true;
 
 	if(((control_comand->Cursor == Cursor_Up || control_comand->Cursor == Cursor_Down) &&
 			settings->Internals.OldStateCursor != control_comand->Cursor &&
-				(inside_window == true || settings->Internals.CursorDownInsideBox == true) &&
+				settings->Internals.CursorDownInsideBox == true &&
 					settings->Enabled == true &&
 						settings->Visible == true &&
 							control_comand->CursorCoordonateUsed == false) ||
 								settings->Internals.ItemStartOnBox != settings->Internals.OldItemStartOnBox)
 	{
-		if(control_comand->Cursor == Cursor_Down && inside_window == true) settings->Internals.CursorDownInsideBox = true;
 		settings->Internals.OldStateCursor = control_comand->Cursor;
 
 		unsigned int CntDisplayItems;
@@ -357,7 +357,7 @@ void listbox(tListBox *settings, tControlCommandData* control_comand)
 			}
 			else
 			{
-				if(paint_listbox_item(settings, settings->Items[CntDisplayItems], pDisplay, X_StartBox + 2, Y_StartBox + 2 + ((CntDisplayItems - settings->Internals.ItemStartOnBox) * settings->Size.ItemSizeY), control_comand, false, false))
+				if( control_comand->Cursor == settings->StateChangedOn && paint_listbox_item(settings, settings->Items[CntDisplayItems], pDisplay, X_StartBox + 2, Y_StartBox + 2 + ((CntDisplayItems - settings->Internals.ItemStartOnBox) * settings->Size.ItemSizeY), control_comand, false, false))
 				{
 					unsigned int _CntDisplayItems = CntDisplayItems;
 					if(settings->SelectedItem < EndDisplayedItems && settings->SelectedItem >= settings->Internals.ItemStartOnBox)
@@ -389,7 +389,7 @@ void listbox(tListBox *settings, tControlCommandData* control_comand)
 	}
 
 	if(control_comand->Cursor && settings->Internals.CursorDownInsideBox) control_comand->CursorCoordonateUsed |= true;
-	if(settings->Internals.CursorDownInsideBox == true && (control_comand->Cursor == Cursor_Up || control_comand->Cursor == Cursor_NoAction)) settings->Internals.CursorDownInsideBox = false;
+	if(control_comand->Cursor == Cursor_Up || control_comand->Cursor == Cursor_NoAction) settings->Internals.CursorDownInsideBox = false;
 	//control_comand->CursorCoordonateUsed = settings->Internals.CursorDownInsideBox;
 	//control_comand->WindowRefresh |= true;
 	return;

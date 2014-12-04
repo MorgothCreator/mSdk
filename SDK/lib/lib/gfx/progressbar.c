@@ -288,7 +288,7 @@ void progressbar(tProgressBar *settings, tControlCommandData* control_comand)
 	bool _inside_window = check_if_inside_box(pDisplay->sClipRegion.sXMin, pDisplay->sClipRegion.sYMin, pDisplay->sClipRegion.sXMax - pDisplay->sClipRegion.sXMin, pDisplay->sClipRegion.sYMax - pDisplay->sClipRegion.sYMin, control_comand->X, control_comand->Y);
 	if(!_inside_window) inside_window = false;
 
-	if((control_comand->Cursor == Cursor_Up || control_comand->Cursor == Cursor_Move || control_comand->Cursor == Cursor_Down) &&
+	if(control_comand->Cursor != Cursor_NoAction &&
 			/*settings->Internals.OldStateCursor != control_comand->Cursor &&*/
 				(inside_window == true || settings->Internals.CursorDownInsideBox == true) &&
 					settings->Enabled == true &&
@@ -329,7 +329,7 @@ void progressbar(tProgressBar *settings, tControlCommandData* control_comand)
 		pDisplay->sClipRegion.sXMax = X_StartBox + X_LenBox;
 		pDisplay->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
 		clip_limit(&pDisplay->sClipRegion, &back_up_clip);
-		paint_progressbar(settings, pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, control_comand);
+		if(settings->Internals.CursorDownInsideBox) paint_progressbar(settings, pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, control_comand);
 		pDisplay->sClipRegion = back_up_clip;
 	}
 	if(control_comand->Cursor && settings->Internals.CursorDownInsideBox) control_comand->CursorCoordonateUsed |= true;
