@@ -51,11 +51,11 @@ typedef struct
 {
 	unsigned int X;
 	unsigned int Y;
-	unsigned int ref_clk;
+	unsigned long ref_clk;
 	unsigned int pll_m;
 	unsigned int pll_n;
 	unsigned int pll_m2;
-	unsigned int raster_clk;
+	unsigned long raster_clk;
 	unsigned int palete_len;
 	unsigned int bus_size;
 	unsigned int hsw;
