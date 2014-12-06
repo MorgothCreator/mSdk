@@ -111,9 +111,9 @@ void screen_open(tDisplay* LcdStruct)
 {
 	
 	LcdStruct->sClipRegion.sXMin = 0;
-	LcdStruct->sClipRegion.sXMax = LcdStruct->Width;
+	LcdStruct->sClipRegion.sXMax = LcdStruct->raster_timings->X;
 	LcdStruct->sClipRegion.sYMin = 0;
-	LcdStruct->sClipRegion.sYMax = LcdStruct->Height;
+	LcdStruct->sClipRegion.sYMax = LcdStruct->raster_timings->Y;
 	
 	LcdStruct->DisplayData = (void*)malloc(60);
 	LcdStruct->UserData = (void*)malloc(60);
@@ -213,13 +213,13 @@ void screen_fill_area(tDisplay* LcdStruct, signed int x1, signed int y1, signed 
 {
 	int16_t _x1 = x1, _x2 = (x1 + x2), _y1 = y1, _y2 = (y1 + y2);
 	if(_x1 < 0) _x1 = 0;
-	if(_x1 > (int16_t)LcdStruct->Width) _x1 = (int16_t)LcdStruct->Width;
+	if(_x1 > (int16_t)LcdStruct->raster_timings->X) _x1 = (int16_t)LcdStruct->raster_timings->X;
 	if(_x2 < 0) _x2 = 0;
-	if(_x2 > (int16_t)LcdStruct->Width) _x2 = (int16_t)LcdStruct->Width;
+	if(_x2 > (int16_t)LcdStruct->raster_timings->X) _x2 = (int16_t)LcdStruct->raster_timings->X;
 	if(_y1 < 0) _y1 = 0;
-	if(_y1 > (int16_t)LcdStruct->Height) _y1 = (int16_t)LcdStruct->Height;
+	if(_y1 > (int16_t)LcdStruct->raster_timings->Y) _y1 = (int16_t)LcdStruct->raster_timings->Y;
 	if(_y2 < 0) _y2 = 0;
-	if(_y2 > (int16_t)LcdStruct->Height) _y2 = (int16_t)LcdStruct->Height;
+	if(_y2 > (int16_t)LcdStruct->raster_timings->Y) _y2 = (int16_t)LcdStruct->raster_timings->Y;
 	unsigned char Y_Cnt = 0;
 	for(Y_Cnt = _y1; Y_Cnt < _y2; Y_Cnt++)
 	{
@@ -233,7 +233,7 @@ void screen_fill_area(tDisplay* LcdStruct, signed int x1, signed int y1, signed 
 //#######################################################################################
 void screen_clear(tDisplay* LcdStruct, unsigned int color)
 {
-	screen_fill_area(LcdStruct, 0, 0, LcdStruct->Width, LcdStruct->Height, color);
+	screen_fill_area(LcdStruct, 0, 0, LcdStruct->raster_timings->X, LcdStruct->raster_timings->Y, color);
 }
 //#######################################################################################
 void screen_draw_rectangle(tDisplay* LcdStruct, signed int x1, signed int y1, signed int x2, signed int y2, bool fill, unsigned int color)
@@ -246,26 +246,26 @@ void screen_draw_rectangle(tDisplay* LcdStruct, signed int x1, signed int y1, si
 	{
 		int16_t _x1 = x1, _x2 = (x1 + x2)-1, _y1 = y1, _y2 = (y1 + y2)-1;
 		if(_x1 < 0) _x1 = 0;
-		if(_x1 > (int16_t)LcdStruct->Width) _x1 = (int16_t)LcdStruct->Width;
+		if(_x1 > (int16_t)LcdStruct->raster_timings->X) _x1 = (int16_t)LcdStruct->raster_timings->X;
 		if(_x2 < 0) _x2 = 0;
-		if(_x2 > (int16_t)LcdStruct->Width) _x2 = (int16_t)LcdStruct->Width;
+		if(_x2 > (int16_t)LcdStruct->raster_timings->X) _x2 = (int16_t)LcdStruct->raster_timings->X;
 		if(_y1 < 0) _y1 = 0;
-		if(_y1 > (int16_t)LcdStruct->Height) _y1 = (int16_t)LcdStruct->Height;
+		if(_y1 > (int16_t)LcdStruct->raster_timings->Y) _y1 = (int16_t)LcdStruct->raster_timings->Y;
 		if(_y2 < 0) _y2 = 0;
-		if(_y2 > (int16_t)LcdStruct->Height) _y2 = (int16_t)LcdStruct->Height;
+		if(_y2 > (int16_t)LcdStruct->raster_timings->Y) _y2 = (int16_t)LcdStruct->raster_timings->Y;
 	}
 }
 //#######################################################################################
 void screen_put_horizontal_line(tDisplay *LcdStruct, signed int X1, signed int X2, signed int Y, unsigned char width, unsigned int color)
 {
 	if(Y < 0) return;
-	if(Y > (int16_t)LcdStruct->Height) return;
+	if(Y > (int16_t)LcdStruct->raster_timings->Y) return;
 	if(X1 < 0 && X2 < 0) return;
 	int16_t _x1 = X1, _x2 = (X1 + X2), _y = Y;
 	if(_x1 < 0) _x1 = 0;
-	if(_x1 > (int16_t)LcdStruct->Width) _x1 = (int16_t)LcdStruct->Width;
+	if(_x1 > (int16_t)LcdStruct->raster_timings->X) _x1 = (int16_t)LcdStruct->raster_timings->X;
 	if(_x2 < 0) _x2 = 0;
-	if(_x2 > (int16_t)LcdStruct->Width) _x2 = (int16_t)LcdStruct->Width;
+	if(_x2 > (int16_t)LcdStruct->raster_timings->X) _x2 = (int16_t)LcdStruct->raster_timings->X;
 	signed short ScanX;
 	signed short Half_width1 = (width>>1);
 	signed short Half_width2 = width-Half_width1;
@@ -281,13 +281,13 @@ void screen_put_horizontal_line(tDisplay *LcdStruct, signed int X1, signed int X
 void screen_put_vertical_line(tDisplay *LcdStruct, signed int Y1, signed int Y2, signed int X, unsigned char width, unsigned int color)
 {
 	if(X < 0) return;
-	if(X > (int16_t)LcdStruct->Width) return;
+	if(X > (int16_t)LcdStruct->raster_timings->X) return;
 	if(Y1 < 0 && Y2 < 0) return;
 	int16_t _y1 = Y1, _y2 = (Y1 + Y2), _x = X;
 	if(_y1 < 0) _y1 = 0;
-	if(_y1 > (int16_t)LcdStruct->Height) _y1 = (int16_t)LcdStruct->Height;
+	if(_y1 > (int16_t)LcdStruct->raster_timings->Y) _y1 = (int16_t)LcdStruct->raster_timings->Y;
 	if(_y2 < 0) _y2 = 0;
-	if(_y2 > (int16_t)LcdStruct->Height) _y2 = (int16_t)LcdStruct->Height;
+	if(_y2 > (int16_t)LcdStruct->raster_timings->Y) _y2 = (int16_t)LcdStruct->raster_timings->Y;
 	signed short ScanY;
 	signed short Half_width1 = (width>>1);
 	signed short Half_width2 = width-Half_width1;
