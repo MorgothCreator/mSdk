@@ -38,21 +38,37 @@ void _lcd_disable()
 //#######################################################################################
 void _screen_backlight_on(tDisplay *pDisplay)
 {
-	switch(pDisplay->LcdType)
+	if(pDisplay->pmic_back_light)
 	{
-	case MI0283:
-			gpio_out(pDisplay->BackLight, 1);
-			return;
+#ifdef pmic_backlight_enable
+		pmic_backlight_enable(pDisplay->PmicTwiModuleStruct);
+#endif
+#ifdef pmic_backlight_level
+		pmic_backlight_level(pDisplay->PmicTwiModuleStruct, pDisplay->BackLightLevel);
+#endif
+	}
+	else
+	{
+		if(pDisplay->invert_backlight) gpio_out(pDisplay->BackLight, 0);
+		else gpio_out(pDisplay->BackLight, 1);
 	}
 }
 //#######################################################################################
 void _screen_backlight_off(tDisplay *pDisplay)
 {
-	switch(pDisplay->LcdType)
+	if(pDisplay->pmic_back_light)
 	{
-	case MI0283:
-		gpio_out(pDisplay->BackLight, 0);
-		return;
+#ifdef pmic_backlight_enable
+		pmic_backlight_enable(pDisplay->PmicTwiModuleStruct);
+#endif
+#ifdef pmic_backlight_level
+		pmic_backlight_level(pDisplay->PmicTwiModuleStruct, 0);
+#endif
+	}
+	else
+	{
+		if(pDisplay->invert_backlight) gpio_out(pDisplay->BackLight, 1);
+		else gpio_out(pDisplay->BackLight, 0);
 	}
 }
 //#######################################################################################
