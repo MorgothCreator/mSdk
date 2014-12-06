@@ -611,7 +611,7 @@ void _mmcsd_idle(void *SdCtrlStruct)
 						{
 																				UARTprintf(DebugCom,   "MMCSD%d drive %d mounted\n\r" , ((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr , ((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr);
 																				UARTprintf(DebugCom,   "MMCSD%d Fat fs detected\n\r" , ((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr);
-																				UARTprintf(DebugCom, "MMCSD0 Fs type:                 ");
+																				UARTprintf(DebugCom, "MMCSD%d Fs type:                 " , ((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr);
 							if(g_s_mmcFatFs[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr].fs_type == FS_FAT12)	{ 				UARTprintf(DebugCom, "Fat12");}
 							else if(g_s_mmcFatFs[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr].fs_type == FS_FAT16){ 				UARTprintf(DebugCom, "Fat16");}
 							else if(g_s_mmcFatFs[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr].fs_type == FS_FAT32){ 				UARTprintf(DebugCom, "Fat32");}
