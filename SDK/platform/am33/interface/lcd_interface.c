@@ -11,6 +11,7 @@
 #include "../include/hw/hw_lcdc.h"
 #include "lcd_interface.h"
 #include "../include/raster.h"
+#include "../include/edma.h"
 #include "../clk/clk_lcd.h"
 #include "../aintc/aintc_lcd.h"
 #include "../pinmux/pin_mux_lcd.h"
@@ -19,13 +20,23 @@
 #include "api/gpio_def.h"
 #include "api/gpio_api.h"
 #include "api/pmic_api.h"
+#include "api/uart_api.h"
 #include "lib/gfx/gfx_util.h"
 #include "../sys/cache.h"
 #include "sys/platform.h"
+
+#define EDMA_INST_BASE                 (SOC_EDMA30CC_0_REGS)/* EDMA3 Event queue number. */
+#define EVT_QUEUE_NUM                  (0)
+#define LCD_DMA_TRANSFER_CHANNEL		12
+extern void (*cb_Fxn[EDMA3_NUM_TCC]) (unsigned int tcc, unsigned int status);
+extern new_uart* DebugCom;
+
 /**********************************************/
 new_screen* ScreenRander;
 /**********************************************/
+//#define LCD_USE_DMA
 unsigned int palete_raster_len = 8;
+volatile bool LcdTransfer_callbackOccured = false;
 /**
  * \brief  This API returns a unique number which identifies itself
  *         with the LCDC IP in AM335x SoC.
@@ -89,6 +100,15 @@ void _RasterDMAConfig(unsigned int baseAddr, unsigned int frmMode,
                      unsigned int endian, unsigned int byteswap)
 {
     HWREG(baseAddr + LCDC_LCDDMA_CTRL) = frmMode | bustSz | fifoTh | endian | byteswap;
+}
+/**********************************************/
+/*
+** This function is used as a callback from EDMA3 Completion Handler.
+*/
+void callbackLcdTransfer(unsigned int tccNum, unsigned int status)
+{
+	LcdTransfer_callbackOccured = true;
+    EDMA3DisableTransfer(EDMA_INST_BASE, tccNum, EDMA3_TRIG_MODE_MANUAL);
 }
 /**********************************************/
 /*
@@ -171,6 +191,18 @@ bool SetUpLCD(tDisplay* LcdStruct)
 
     /* Enable raster */
     RasterEnable(SOC_LCDC_0_REGS);
+    unsigned int retVal = 0u;
+#if 1
+	/* Request DMA Channel and TCC for MMCSD Transmit*/
+    retVal = EDMA3RequestChannel(EDMA_INST_BASE, EDMA3_CHANNEL_TYPE_DMA,
+			LCD_DMA_TRANSFER_CHANNEL, LCD_DMA_TRANSFER_CHANNEL,
+						EVT_QUEUE_NUM);
+
+	/* Registering Callback Function for TX*/
+	cb_Fxn[LCD_DMA_TRANSFER_CHANNEL] = &callbackLcdTransfer;
+
+	if(!retVal) UARTPuts(DebugCom, "Failed to register LCD DMA Transfer.\n\r" , -1);
+#endif
 
     return true;
 }
@@ -213,6 +245,64 @@ void _screen_backlight_off(tDisplay *pDisplay)
 	}
 }
 //#######################################################################################
+bool _screen_copy(tDisplay *pDisplayTo, tDisplay *pDisplayFrom, bool put_cursor, signed int X, signed int Y, unsigned int color)
+{
+	if(pDisplayTo->raster_timings->X != pDisplayFrom->raster_timings->X || pDisplayTo->raster_timings->Y != pDisplayFrom->raster_timings->Y) return false;
+	CacheDataCleanBuff((unsigned int)pDisplayFrom->DisplayData, (pDisplayFrom->raster_timings->X * pDisplayFrom->raster_timings->Y * sizeof(pDisplayFrom->DisplayData[0])) + (pDisplayFrom->raster_timings->palete_len * sizeof(pDisplayFrom->DisplayData[0])));
+	signed int LineCnt = 0;
+	volatile unsigned int* ScreenBuff = pDisplayTo->DisplayData + pDisplayTo->raster_timings->palete_len;
+	volatile unsigned int* _ScreenBuff = pDisplayFrom->DisplayData + pDisplayTo->raster_timings->palete_len;
+
+#if 0
+	for(; LineCnt < pDisplayTo->raster_timings->Y; LineCnt ++)
+	{
+		memcpy((void *)(ScreenBuff + (pDisplayFrom->raster_timings->X * LineCnt)), (void *)(_ScreenBuff + (pDisplayFrom->raster_timings->X * LineCnt)), (sizeof(ScreenBuff[0]) * pDisplayTo->raster_timings->X));
+		if(put_cursor == true && LineCnt >= Y && LineCnt <= Y + 2)
+		{
+			unsigned int cnt_x = X;
+			for(;cnt_x < X + 2; cnt_x++) _put_pixel(pDisplayTo, cnt_x, LineCnt, color);
+		}
+		CacheDataCleanInvalidateBuff((unsigned int)((unsigned int*)(ScreenBuff + (pDisplayFrom->raster_timings->X * LineCnt))), (sizeof(ScreenBuff[0]) * pDisplayTo->raster_timings->X) + 64);
+	}
+#else
+
+	EDMA3CCPaRAMEntry paramSet;
+
+    paramSet.srcAddr    = (unsigned int)_ScreenBuff;
+    paramSet.destAddr   = (unsigned int)ScreenBuff;
+    paramSet.srcBIdx    = (pDisplayFrom->raster_timings->X * sizeof(pDisplayFrom->DisplayData[0]));
+    paramSet.srcCIdx    = pDisplayFrom->raster_timings->Y;
+    paramSet.destBIdx   = (pDisplayFrom->raster_timings->X * sizeof(pDisplayFrom->DisplayData[0]));
+    paramSet.destCIdx   = pDisplayFrom->raster_timings->Y;
+    paramSet.aCnt       = (pDisplayFrom->raster_timings->X * sizeof(pDisplayFrom->DisplayData[0]));
+    paramSet.bCnt       = pDisplayFrom->raster_timings->Y;
+    paramSet.cCnt       = 1;
+    paramSet.bCntReload = 0x0;
+    paramSet.linkAddr   = 0xffff;
+    paramSet.opt        = 0x00000000;
+    /* 4.  AB-Sync mode */
+    int dma_channel = LCD_DMA_TRANSFER_CHANNEL;
+
+    paramSet.opt |= (1 << 2) | (1 << 3) | (1 << EDMA3CC_OPT_TCINTEN_SHIFT) | ((dma_channel << EDMA3CC_OPT_TCC_SHIFT) & EDMA3CC_OPT_TCC);
+
+    /* configure PaRAM Set */
+    EDMA3SetPaRAM(EDMA_INST_BASE, dma_channel, &paramSet);
+    /* Enable the transfer */
+    LcdTransfer_callbackOccured = false;
+    EDMA3EnableTransfer(EDMA_INST_BASE, dma_channel, EDMA3_TRIG_MODE_MANUAL);
+
+    while(!LcdTransfer_callbackOccured);
+    LineCnt = Y;
+	for(; LineCnt < Y + 2; LineCnt ++)
+	{
+		unsigned int cnt_x = X;
+		for(;cnt_x < X + 2; cnt_x++) _put_pixel(pDisplayTo, cnt_x, LineCnt, color);
+		CacheDataCleanInvalidateBuff((unsigned int)((unsigned int*)(ScreenBuff + (pDisplayFrom->raster_timings->X * LineCnt))), (sizeof(ScreenBuff[0]) * pDisplayTo->raster_timings->X) + 64);
+	}
+#endif
+	return true;
+}
+//#######################################################################################
 void _box_cache_clean(tDisplay *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len)
 {
 	signed int x_end = x_start + x_len ,y_end = y_start + y_len;
@@ -250,6 +340,7 @@ void _put_rectangle(tDisplay *pDisplay, signed int x_start, signed int y_start, 
 		if(_x_end > pDisplay->sClipRegion.sXMax) _x_end = pDisplay->sClipRegion.sXMax;
 		unsigned int width_to_refresh = (_x_end - _x_start)+ 64;
 		if((width_to_refresh + _x_start) > pDisplay->sClipRegion.sXMax) width_to_refresh = (pDisplay->sClipRegion.sXMax - _x_start) + 64;
+#if 1
 		for( ; LineCnt < y_end; LineCnt++)
 		{
 			if(LineCnt >= pDisplay->sClipRegion.sYMax) return;
@@ -259,6 +350,72 @@ void _put_rectangle(tDisplay *pDisplay, signed int x_start, signed int y_start, 
 				ScreenBuff[x + (pDisplay->raster_timings->X * LineCnt)] = _color;
 			}
 		}
+#else
+#if 0
+	    EDMA3CCPaRAMEntry paramSet;
+	    //unsigned int _color = color << 8;
+	    CacheDataCleanBuff((unsigned int)&_color, sizeof(_color));
+
+	    paramSet.srcAddr    = (unsigned int)&_color;
+	    paramSet.destAddr   = (unsigned int)ScreenBuff + (_x_start * sizeof(pDisplay->DisplayData[0])) + (pDisplay->raster_timings->X * LineCnt * sizeof(pDisplay->DisplayData[0]));
+	    paramSet.srcBIdx    = 0;
+	    paramSet.srcCIdx    = 0;
+	    paramSet.destBIdx   = sizeof(pDisplay->DisplayData[0]);
+	    paramSet.destCIdx   = pDisplay->raster_timings->X * sizeof(pDisplay->DisplayData[0]);
+	    paramSet.aCnt       = sizeof(pDisplay->DisplayData[0]);
+	    paramSet.bCnt       = _x_end - _x_start;
+	    paramSet.cCnt       = y_end - LineCnt;
+	    paramSet.bCntReload = 0;
+	    paramSet.linkAddr   = 0xffff;
+	    paramSet.opt        = 0x00000000;
+	    int dma_channel = LCD_DMA_TRANSFER_CHANNEL;
+	    /* 4.  AB-Sync mode */
+	    paramSet.opt |= /*(1 << 0) | (2 << 8) | */(1 << 2) | (1 << 3) | (1 << EDMA3CC_OPT_TCINTEN_SHIFT) | ((dma_channel << EDMA3CC_OPT_TCC_SHIFT) & EDMA3CC_OPT_TCC);
+	    /* 2. Read FIFO : SRC Constant addr mode */
+	    //paramSet.opt |= (1 << 0);
+	    /* 3. DST FIFO width is 32 bit */
+	    //paramSet.opt |= (2 << 8);
+	    /* 1. Transmission complition interrupt enable */
+	    //paramSet.opt |= (1 << EDMA3CC_OPT_TCINTEN_SHIFT);
+
+	    /* configure PaRAM Set */
+	    EDMA3SetPaRAM(EDMA_INST_BASE, dma_channel, &paramSet);
+	    /* Enable the transfer */
+	    LcdTransfer_callbackOccured = false;
+#else
+	    EDMA3CCPaRAMEntry paramSet;
+	    //unsigned int _color = color << 8;
+	    CacheDataCleanBuff((unsigned int)&_color, sizeof(_color));
+
+	    paramSet.srcAddr    = (unsigned int)&_color;
+	    paramSet.srcBIdx    = 0;
+	    paramSet.srcCIdx    = 0;
+	    paramSet.destBIdx   = sizeof(pDisplay->DisplayData[0]);
+	    paramSet.destCIdx   = pDisplay->raster_timings->X * sizeof(pDisplay->DisplayData[0]);
+	    paramSet.aCnt       = sizeof(pDisplay->DisplayData[0]);
+	    paramSet.bCnt       = _x_end - _x_start;
+	    paramSet.cCnt       = 1;//y_end - LineCnt;
+	    paramSet.bCntReload = 0;
+	    paramSet.linkAddr   = 0xffff;
+	    paramSet.opt        = 0x00000000;
+	    int dma_channel = LCD_DMA_TRANSFER_CHANNEL;
+	    /* 4.  AB-Sync mode */
+	    paramSet.opt |= /*(1 << 0) | (2 << 8) | */(1 << 2) | (1 << 3) | (1 << EDMA3CC_OPT_TCINTEN_SHIFT) | ((dma_channel << EDMA3CC_OPT_TCC_SHIFT) & EDMA3CC_OPT_TCC);
+
+	    for( ; LineCnt < y_end; LineCnt++)
+		{
+			if(LineCnt >= pDisplay->sClipRegion.sYMax) return;
+		    paramSet.destAddr   = (unsigned int)ScreenBuff + ((_x_start - 1) * sizeof(pDisplay->DisplayData[0])) + (pDisplay->raster_timings->X * LineCnt * sizeof(pDisplay->DisplayData[0]));
+		    /* configure PaRAM Set */
+		    EDMA3SetPaRAM(EDMA_INST_BASE, dma_channel, &paramSet);
+		    /* Enable the transfer */
+		    LcdTransfer_callbackOccured = false;
+	    	EDMA3EnableTransfer(EDMA_INST_BASE, dma_channel, EDMA3_TRIG_MODE_MANUAL);
+		    while(!LcdTransfer_callbackOccured);
+		    CacheDataCleanInvalidateBuff((unsigned int)paramSet.destAddr - 64, ((_x_end - _x_start) * sizeof(pDisplay->DisplayData[0])) + 128);
+	    }
+#endif
+#endif
 		return;
 	}
 
