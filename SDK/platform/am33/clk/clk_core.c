@@ -172,9 +172,9 @@ void L3L4_init(void)
 			** Waiting for CLKACTIVITY_UART0_GFCLK field in CM_WKUP_CLKSTCTRL
 			** register to attain desired value.
 			*/
-			while(CM_WKUP_CLKSTCTRL_CLKACTIVITY_UART0_GFCLK !=
+			/*while(CM_WKUP_CLKSTCTRL_CLKACTIVITY_UART0_GFCLK !=
 				  (HWREG(SOC_CM_WKUP_REGS + CM_WKUP_CLKSTCTRL) &
-				   CM_WKUP_CLKSTCTRL_CLKACTIVITY_UART0_GFCLK));
+				   CM_WKUP_CLKSTCTRL_CLKACTIVITY_UART0_GFCLK));*/
 
 			/*
 			** Waiting for IDLEST field in CM_WKUP_UART0_CLKCTRL register to attain
