@@ -26,6 +26,12 @@
 #include "controls_definition.h"
 //#include "window_def.h"
 //#######################################################################################
+typedef enum
+{
+	checkbox_style_normal = 0,
+	checkbox_style_radio_btn
+}CHECK_BOX_STYLE;
+//#######################################################################################
 typedef struct
 {
 	struct
@@ -112,6 +118,7 @@ typedef struct
 		void *ParentWindow;
 		bool ParentWindowStateEnabled;
 	}Internals;
+	CHECK_BOX_STYLE Style;
 	bool Visible;
 	bool Enabled;
 	bool Cheched;

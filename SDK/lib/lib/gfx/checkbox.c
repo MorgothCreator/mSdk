@@ -34,52 +34,112 @@ static void paint_checkbox(tCheckBox* settings, tDisplay *pDisplay, signed int x
 	unsigned int color = 0;
 	tWindow *ParentWindow = (tWindow*)settings->Internals.ParentWindow;
 	tRectangle back_up_clip = pDisplay->sClipRegion;
-	pDisplay->sClipRegion.sXMin = x_start;
-	pDisplay->sClipRegion.sYMin = y_start;
-	pDisplay->sClipRegion.sXMax = x_start + y_len;
-	pDisplay->sClipRegion.sYMax = y_start + y_len;
-	clip_limit(&pDisplay->sClipRegion, &back_up_clip);
 	CursorState cursor = control_comand->Cursor;
-	if(cursor == Cursor_Down) color = controls_color.Control_Color_Enabled_Border_Push;
-	else if(cursor == Cursor_Move) color = controls_color.Control_Color_Enabled_Border_Push;
-	else if(cursor == Cursor_Up) color = controls_color.Control_Color_Enabled_Border_Pull;
-	else color = controls_color.Control_Color_Enabled_Border_Pull;
-	if(!settings->Enabled || !ParentWindow->Internals.OldStateEnabled) color = settings->Color.Disabled.Border;
-	put_rectangle(pDisplay, x_start, y_start, y_len, y_len, false, controlls_change_color(color, -3));
-	put_rectangle(pDisplay, x_start + 1, y_start + 1, y_len - 2, y_len - 2, false, controlls_change_color(color, -2));
-	if(cursor == Cursor_Down) color = controls_color.Control_Color_Enabled_Buton_Push;
-	else if(cursor == Cursor_Move) color = controls_color.Control_Color_Enabled_Buton_Push;
-	else if(cursor == Cursor_Up) color = controls_color.Control_Color_Enabled_Buton_Pull;
-	else color = controls_color.Control_Color_Enabled_Buton_Pull;
-	if(!settings->Enabled || !ParentWindow->Internals.OldStateEnabled) color = settings->Color.Disabled.Buton;
-	put_rectangle(pDisplay, x_start + 2, y_start + 2, y_len - 4, y_len - 4, true, color);
-	if(settings->Cheched == true) put_rectangle(pDisplay, x_start + 4, y_start + 4, y_len - 8, y_len - 8, true, controlls_change_color(color, -3));
+	if(settings->Style == checkbox_style_normal)
+	{
+		pDisplay->sClipRegion.sXMin = x_start;
+		pDisplay->sClipRegion.sYMin = y_start;
+		pDisplay->sClipRegion.sXMax = x_start + y_len;
+		pDisplay->sClipRegion.sYMax = y_start + y_len;
+		clip_limit(&pDisplay->sClipRegion, &back_up_clip);
+		if(cursor == Cursor_Down)
+			color = controls_color.Control_Color_Enabled_Border_Push;
+		else if(cursor == Cursor_Move)
+			color = controls_color.Control_Color_Enabled_Border_Push;
+		else if(cursor == Cursor_Up)
+			color = controls_color.Control_Color_Enabled_Border_Pull;
+		else
+			color = controls_color.Control_Color_Enabled_Border_Pull;
+		if(!settings->Enabled || !ParentWindow->Internals.OldStateEnabled)
+			color = settings->Color.Disabled.Border;
+		put_rectangle(pDisplay, x_start, y_start, y_len, y_len, false, controlls_change_color(color, -3));
+		put_rectangle(pDisplay, x_start + 1, y_start + 1, y_len - 2, y_len - 2, false, controlls_change_color(color, -2));
+		if(cursor == Cursor_Down)
+			color = controls_color.Control_Color_Enabled_Buton_Push;
+		else if(cursor == Cursor_Move)
+			color = controls_color.Control_Color_Enabled_Buton_Push;
+		else if(cursor == Cursor_Up)
+			color = controls_color.Control_Color_Enabled_Buton_Pull;
+		else
+			color = controls_color.Control_Color_Enabled_Buton_Pull;
+		if(!settings->Enabled || !ParentWindow->Internals.OldStateEnabled)
+			color = settings->Color.Disabled.Buton;
+		put_rectangle(pDisplay, x_start + 2, y_start + 2, y_len - 4, y_len - 4, true, color);
+		if(settings->Cheched == true)
+			put_rectangle(pDisplay, x_start + 4, y_start + 4, y_len - 8, y_len - 8, true, controlls_change_color(color, -3));
+	}
+	else
+	{
+		pDisplay->sClipRegion.sXMin = x_start;
+		pDisplay->sClipRegion.sYMin = y_start;
+		pDisplay->sClipRegion.sXMax = x_start + x_len;
+		pDisplay->sClipRegion.sYMax = y_start + y_len;
+		clip_limit(&pDisplay->sClipRegion, &back_up_clip);
+		if(settings->Cheched == true)
+			color = controls_color.Control_Color_Enabled_Buton_Push;
+		else
+			color = controls_color.Control_Color_Enabled_Buton_Pull;
+		put_rectangle(pDisplay, x_start, y_start, x_len, y_len, false, controlls_change_color(color, -3));
+		put_rectangle(pDisplay, x_start + 1, y_start + 1, x_len - 2, y_len - 2, false, controlls_change_color(color, -2));
+		put_rectangle(pDisplay, x_start + 2, y_start + 2, x_len - 4, y_len - 4, true, color);
+	}
 	if(settings->Internals.Caption.Text)
 	{
-		pDisplay->sClipRegion.sXMin = x_start + y_len + 2;
-		pDisplay->sClipRegion.sYMin = y_start + 4;
-		pDisplay->sClipRegion.sXMax = ((x_start + x_len) - 4);
-		pDisplay->sClipRegion.sYMax = ((y_start + y_len) - 4);
-		clip_limit(&pDisplay->sClipRegion, &back_up_clip);
 		signed int x_str_location;
 		signed int y_str_location;
+
 		if(settings->Internals.Caption.WordWrap)
 		{
 			StringProperties_t str_properties = string_properties_get(pDisplay, settings->Internals.Caption.Font, settings->Internals.Caption.Text, settings->Internals.Caption.WordWrap, -1);
-			x_str_location = x_start + (((x_len - y_len)>>1)-(str_properties.StringRowsMaxLength_Pixels>>1));
+			if(settings->Style == checkbox_style_normal) {
+				pDisplay->sClipRegion.sXMin = x_start + y_len + 4;
+				pDisplay->sClipRegion.sYMin = y_start + 4;
+				pDisplay->sClipRegion.sXMax = ((x_start + x_len) - 4);
+				pDisplay->sClipRegion.sYMax = ((y_start + y_len) - 4);
+				clip_limit(&pDisplay->sClipRegion, &back_up_clip);
+				x_str_location = x_start + (((x_len - y_len)>>1)-(str_properties.StringRowsMaxLength_Pixels>>1));
+			}
+			else {
+				pDisplay->sClipRegion.sXMin = x_start + 4;
+				pDisplay->sClipRegion.sYMin = y_start + 4;
+				pDisplay->sClipRegion.sXMax = ((x_start + x_len) - 4);
+				pDisplay->sClipRegion.sYMax = ((y_start + y_len) - 4);
+				clip_limit(&pDisplay->sClipRegion, &back_up_clip);
+				x_str_location = x_start + ((x_len>>1)-(str_properties.StringRowsMaxLength_Pixels>>1));
+			}
 			y_str_location = y_start + ((y_len>>1)-(str_properties.StringColsHeight_Pixels>>1));
 		}else
 		{
-			x_str_location = x_start + y_len + 2;
-			unsigned char CharHeight = char_height_get(settings->Internals.Caption.Font);
-			y_str_location = y_start + ((settings->Internals.Size.Y>>1)-(CharHeight>>1));
+			if(settings->Style == checkbox_style_normal) {
+				pDisplay->sClipRegion.sXMin = x_start + y_len + 4;
+				pDisplay->sClipRegion.sYMin = y_start + 4;
+				pDisplay->sClipRegion.sXMax = ((x_start + x_len) - 4);
+				pDisplay->sClipRegion.sYMax = ((y_start + y_len) - 4);
+				clip_limit(&pDisplay->sClipRegion, &back_up_clip);
+				x_str_location = x_start + y_len + 4;
+				unsigned char CharHeight = char_height_get(settings->Internals.Caption.Font);
+				y_str_location = y_start + ((settings->Internals.Size.Y>>1)-(CharHeight>>1));
+			}
+			else {
+				pDisplay->sClipRegion.sXMin = x_start + 4;
+				pDisplay->sClipRegion.sYMin = y_start + 4;
+				pDisplay->sClipRegion.sXMax = ((x_start + x_len) - 4);
+				pDisplay->sClipRegion.sYMax = ((y_start + y_len) - 4);
+				clip_limit(&pDisplay->sClipRegion, &back_up_clip);
+				x_str_location = x_start + 4;
+				y_str_location = y_start + 4;
+			}
 		}
 		if(settings->Enabled == true)
 		{
-			if(cursor == Cursor_Down) put_string(pDisplay, settings->Internals.Caption.Font, settings->Internals.Caption.Text, -1, settings->Color.Enabled.Ink.Push, settings->Color.Enabled.Buton.Push, false, true, settings->Internals.Caption.WordWrap, x_str_location, y_str_location, 0, 0);
-			else if(cursor == Cursor_Move) put_string(pDisplay, settings->Internals.Caption.Font, settings->Internals.Caption.Text, -1, settings->Color.Enabled.Ink.Push, settings->Color.Enabled.Buton.Push, false, true, settings->Internals.Caption.WordWrap, x_str_location, y_str_location, 0, 0);
-			else if(cursor == Cursor_Up) put_string(pDisplay, settings->Internals.Caption.Font, settings->Internals.Caption.Text, -1, settings->Color.Enabled.Ink.Pull, settings->Color.Enabled.Buton.Pull, false, true, settings->Internals.Caption.WordWrap, x_str_location, y_str_location, 0, 0);
-			else put_string(pDisplay, settings->Internals.Caption.Font, settings->Internals.Caption.Text, -1, settings->Color.Enabled.Ink.Pull, settings->Color.Enabled.Buton.Pull, false, true, settings->Internals.Caption.WordWrap, x_str_location, y_str_location, 0, 0);
+			if(cursor == Cursor_Down)
+				put_string(pDisplay, settings->Internals.Caption.Font, settings->Internals.Caption.Text, -1, settings->Color.Enabled.Ink.Push, settings->Color.Enabled.Buton.Push, false, true, settings->Internals.Caption.WordWrap, x_str_location, y_str_location, 0, 0);
+			else if(cursor == Cursor_Move)
+				put_string(pDisplay, settings->Internals.Caption.Font, settings->Internals.Caption.Text, -1, settings->Color.Enabled.Ink.Push, settings->Color.Enabled.Buton.Push, false, true, settings->Internals.Caption.WordWrap, x_str_location, y_str_location, 0, 0);
+			else if(cursor == Cursor_Up)
+				put_string(pDisplay, settings->Internals.Caption.Font, settings->Internals.Caption.Text, -1, settings->Color.Enabled.Ink.Pull, settings->Color.Enabled.Buton.Pull, false, true, settings->Internals.Caption.WordWrap, x_str_location, y_str_location, 0, 0);
+			else
+				put_string(pDisplay, settings->Internals.Caption.Font, settings->Internals.Caption.Text, -1, settings->Color.Enabled.Ink.Pull, settings->Color.Enabled.Buton.Pull, false, true, settings->Internals.Caption.WordWrap, x_str_location, y_str_location, 0, 0);
 		}
 		else
 		{
@@ -158,15 +218,15 @@ void checkbox(tCheckBox *settings, tControlCommandData* control_comand)
 	{
 		if((settings->Position.X + ParentWindow->Internals.Position.X + settings->Internals.PositionOffset.X) != settings->Internals.Position.X ||
 				(settings->Position.Y + ParentWindow->Internals.Position.Y + settings->Internals.PositionOffset.Y) != settings->Internals.Position.Y ||
-				settings->Size.X != settings->Internals.Size.X ||
-					settings->Size.Y != settings->Internals.Size.Y ||
-						settings->Internals.Caption.Font != settings->Caption.Font ||
-							settings->Internals.Caption.TextAlign != settings->Caption.TextAlign ||
-								settings->Internals.Caption.Text != settings->Caption.Text ||
-									settings->Internals.Caption.WordWrap != settings->Caption.WordWrap ||
-										settings->Internals.OldStateEnabled != settings->Enabled ||
-											ParentWindow->Internals.OldStateEnabled != settings->Internals.ParentWindowStateEnabled)
-												settings->Internals.NeedEntireRefresh = true;
+					settings->Size.X != settings->Internals.Size.X ||
+						settings->Size.Y != settings->Internals.Size.Y ||
+							settings->Internals.Caption.Font != settings->Caption.Font ||
+								settings->Internals.Caption.TextAlign != settings->Caption.TextAlign ||
+									settings->Internals.Caption.Text != settings->Caption.Text ||
+										settings->Internals.Caption.WordWrap != settings->Caption.WordWrap ||
+											settings->Internals.OldStateEnabled != settings->Enabled ||
+												ParentWindow->Internals.OldStateEnabled != settings->Internals.ParentWindowStateEnabled)
+													settings->Internals.NeedEntireRefresh = true;
 	}
 	else
 	{
@@ -231,7 +291,8 @@ void checkbox(tCheckBox *settings, tControlCommandData* control_comand)
 		//settings->Internals.Caption.Text = settings->Caption.Text;
 		settings->Internals.Caption.TextAlign = settings->Caption.TextAlign;
 		settings->Internals.Caption.WordWrap = settings->Caption.WordWrap;
-		if(settings->Size.X == 0 || settings->Size.Y == 0) return;
+		if(settings->Size.X == 0 || settings->Size.Y == 0)
+			return;
 		X_StartBox = settings->Internals.Position.X;
 		Y_StartBox = settings->Internals.Position.Y;
 		X_LenBox = settings->Internals.Size.X;
@@ -277,9 +338,12 @@ void checkbox(tCheckBox *settings, tControlCommandData* control_comand)
 		//if(settings->Internals.OldStateCheched != settings->Cheched) //control_comand->WindowRefresh |= true;
 		if(control_comand->Cursor == Cursor_Down && inside_window == true) settings->Internals.CursorDownInsideBox = true;
 		settings->Internals.OldStateCursor = control_comand->Cursor;
-		if(control_comand->Cursor == Cursor_Down && inside_window == true && settings->Internals.CursorDownInsideBox == true)settings->Events.CursorDown = true;
-		if(control_comand->Cursor == Cursor_Up && inside_window == true && settings->Internals.CursorDownInsideBox == true)settings->Events.CursorUp = true;
-		if(control_comand->Cursor == Cursor_Move && inside_window == true && settings->Internals.CursorDownInsideBox == true)settings->Events.CursorMove = true;
+		if(control_comand->Cursor == Cursor_Down && inside_window == true && settings->Internals.CursorDownInsideBox == true)
+			settings->Events.CursorDown = true;
+		if(control_comand->Cursor == Cursor_Up && inside_window == true && settings->Internals.CursorDownInsideBox == true)
+			settings->Events.CursorUp = true;
+		if(control_comand->Cursor == Cursor_Move && inside_window == true && settings->Internals.CursorDownInsideBox == true)
+			settings->Events.CursorMove = true;
 		if(settings->Events.OnDown.CallBack && control_comand->Cursor == Cursor_Down && inside_window == true && settings->Internals.CursorDownInsideBox == true)
 		{
 			settings->Events.CursorDown = true;
@@ -295,14 +359,17 @@ void checkbox(tCheckBox *settings, tControlCommandData* control_comand)
 		{
 			if(settings->Cheched == true)
 			{
-				settings->Cheched = false;
-				if(settings->Events.OnUnCheched.CallBack) settings->Events.OnUnCheched.CallbackReturnData = settings->Events.OnUnCheched.CallBack(settings->Events.OnUnCheched.CallbackData);
+				if(settings->Style == checkbox_style_normal)
+					settings->Cheched = false;
+				if(settings->Events.OnUnCheched.CallBack)
+					settings->Events.OnUnCheched.CallbackReturnData = settings->Events.OnUnCheched.CallBack(settings->Events.OnUnCheched.CallbackData);
 				settings->Events.UnChecked = true;
 			}
 			else
 			{
 				settings->Cheched = true;
-				if(settings->Events.OnCheched.CallBack) settings->Events.OnCheched.CallbackReturnData = settings->Events.OnCheched.CallBack(settings->Events.OnCheched.CallbackData);
+				if(settings->Events.OnCheched.CallBack)
+					settings->Events.OnCheched.CallbackReturnData = settings->Events.OnCheched.CallBack(settings->Events.OnCheched.CallbackData);
 				settings->Events.Checked = true;
 			}
 		}
@@ -310,14 +377,17 @@ void checkbox(tCheckBox *settings, tControlCommandData* control_comand)
 		{
 			if(settings->Cheched == true)
 			{
-				settings->Cheched = false;
-				if(settings->Events.OnUnCheched.CallBack) settings->Events.OnUnCheched.CallbackReturnData = settings->Events.OnUnCheched.CallBack(settings->Events.OnUnCheched.CallbackData);
+				if(settings->Style == checkbox_style_normal)
+					settings->Cheched = false;
+				if(settings->Events.OnUnCheched.CallBack)
+					settings->Events.OnUnCheched.CallbackReturnData = settings->Events.OnUnCheched.CallBack(settings->Events.OnUnCheched.CallbackData);
 				settings->Events.UnChecked = true;
 			}
 			else
 			{
 				settings->Cheched = true;
-				if(settings->Events.OnCheched.CallBack) settings->Events.OnCheched.CallbackReturnData = settings->Events.OnCheched.CallBack(settings->Events.OnCheched.CallbackData);
+				if(settings->Events.OnCheched.CallBack)
+					settings->Events.OnCheched.CallbackReturnData = settings->Events.OnCheched.CallBack(settings->Events.OnCheched.CallbackData);
 				settings->Events.Checked = true;
 			}
 		}
@@ -336,8 +406,10 @@ void checkbox(tCheckBox *settings, tControlCommandData* control_comand)
 		settings->Events.CursorMove = true;
 		settings->Events.OnMove.CallbackReturnData = settings->Events.OnMove.CallBack(settings->Events.OnMove.CallbackData);
 	}
-	if(control_comand->Cursor && settings->Internals.CursorDownInsideBox) control_comand->CursorCoordonateUsed |= true;
-	if(settings->Internals.CursorDownInsideBox == true && (control_comand->Cursor == Cursor_Up || control_comand->Cursor == Cursor_NoAction)) settings->Internals.CursorDownInsideBox = false;
+	if(control_comand->Cursor && settings->Internals.CursorDownInsideBox)
+		control_comand->CursorCoordonateUsed |= true;
+	if(settings->Internals.CursorDownInsideBox == true && (control_comand->Cursor == Cursor_Up || control_comand->Cursor == Cursor_NoAction))
+		settings->Internals.CursorDownInsideBox = false;
 	return;
 }
 //#######################################################################################
