@@ -12,7 +12,9 @@
 
 #define board_type_beaglebone
 
-#define USE_FONT_CMSS14B
+#define DEFAULT_FONT g_sFontCmss14b
+//#define USE_FONT_CMSS14B
+#define USE_ALL_FONTS
 /*#####################################################*/
 #define ASCII_NUM_IDX                      (48u)
 #define START_ADDR_DDR                     (0x80000000)
