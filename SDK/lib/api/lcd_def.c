@@ -64,6 +64,25 @@ RASTER_TIMINGS lcd_AT070TN92_beaglebone_exp =
 /*vbp*/			21
 };
 
+RASTER_TIMINGS lcd_720p_480_60hz_beaglebone_exp =
+{
+/*X size*/		720,
+/*Y size*/		480,
+/*ref clk*/		24000000,
+/*pll M*/		54,
+/*pll N*/		23,
+/*pll M2*/		1,
+/*raster clk*/	27000000,
+/*palete len*/	25,
+/*bus size*/	24,
+/*hsw*/			62,
+/*hfp*/			60,
+/*hbp*/			16,
+/*vsw*/			6,
+/*vfp*/			30,
+/*vbp*/			9
+};
+
 RASTER_TIMINGS lcd_720p_50hz_beaglebone_exp =
 {
 /*X size*/		1280,
