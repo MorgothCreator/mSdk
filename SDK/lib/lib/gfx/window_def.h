@@ -20,27 +20,13 @@ typedef struct
 {
 	struct
 	{
-		signed int X;
-		signed int Y;
-	}Position;
-	struct
-	{
-		signed int X;
-		signed int Y;
-	}Size;
-	controls_caption_t Caption;
-	struct
-	{
-		bool ChildrenModified;
 		bool OldStateVisible;
 	}Internals;
 	bool Visible;
-	bool Enabled;
 	char *ChildrenName;
 	void *Children;
-	controls_color_struct_t Color;
 	unsigned int Type;
-	CursorState StateChangedOn;
+	unsigned int TabLocNr;
 }window_children_t;
 //#######################################################################################
 typedef struct
@@ -112,9 +98,16 @@ typedef struct Window_s
 			void* CallbackReturnData;
 			void*(*CallBack)(void*);
 		}OnDown;
+		struct
+		{
+			void* CallbackData;
+			void* CallbackReturnData;
+			void*(*CallBack)(void*);
+		}OnTabChange;
 		bool CursorUp;
 		bool CursorDown;
 		bool CursorMove;
+		bool TabChanged;
 	}Events;
 	struct
 	{
@@ -140,11 +133,19 @@ typedef struct Window_s
 			struct
 			{
 				signed int Y;
+				signed int TabGroupSelectorSize;
 			}Size;
+			signed int TabGroupSelectorPosition;
 			tButton *Close;
 			tCheckBox *MaxMin;
 			tButton *Minimize;
 			tButton *Resize;
+			tButton *TabGroupScrollLeft;
+			tButton *TabGroupScrollRight;
+			tCheckBox **TabGroupTabsList;
+			int TabGroupTabsListNr;
+			int OldTabGroupTabsListNr;
+
 		}Header;
 		struct
 		{
@@ -198,6 +199,9 @@ typedef struct Window_s
 		bool OneChildrenHasBeenModified;
 		bool NoPaintBackGround;
 		bool CursorDownInsideChildrenWindow;
+		bool TabGroupMode;
+		bool OldTabGroupMode;
+		//bool TabChanged;
 		volatile unsigned int ChildrensNr;
 		window_children_t **Childrens;
 		CursorState OldStateCursor;
@@ -220,6 +224,7 @@ typedef struct Window_s
 	bool AllowHScroll;
 	bool ShowVScroll;
 	bool ShowHScroll;
+	unsigned int SelectedTab;
 	CursorState StateChangedOn;
 	tRectangle WindowMoveLimits;
 	//tControlCommandData*(*Idle)(void*, tControlCommandData*);
