@@ -266,6 +266,46 @@ bool _screen_copy(tDisplay *pDisplayTo, tDisplay *pDisplayFrom, bool put_cursor,
 	}
 #else
 
+#if 1
+	EDMA3CCPaRAMEntry paramSet;
+
+    paramSet.srcBIdx    = (pDisplayFrom->raster_timings->X * sizeof(pDisplayFrom->DisplayData[0]));
+    paramSet.srcCIdx    = 1;
+    paramSet.destBIdx   = (pDisplayFrom->raster_timings->X * sizeof(pDisplayFrom->DisplayData[0]));
+    paramSet.destCIdx   = 1;
+    paramSet.aCnt       = (pDisplayFrom->raster_timings->X * sizeof(pDisplayFrom->DisplayData[0]));
+    paramSet.bCnt       = 1;
+    paramSet.cCnt       = 1;
+    paramSet.bCntReload = 0x0;
+    paramSet.linkAddr   = 0xffff;
+    paramSet.opt        = 0x00000000;
+    /* 4.  AB-Sync mode */
+    int dma_channel = LCD_DMA_TRANSFER_CHANNEL;
+
+    paramSet.opt |= (1 << 2) | (1 << 3) | (1 << EDMA3CC_OPT_TCINTEN_SHIFT) | ((dma_channel << EDMA3CC_OPT_TCC_SHIFT) & EDMA3CC_OPT_TCC);
+	for(; LineCnt < pDisplayTo->raster_timings->Y; LineCnt ++)
+	{
+		//memcpy((void *)(ScreenBuff + (pDisplayFrom->raster_timings->X * LineCnt)), (void *)(_ScreenBuff + (pDisplayFrom->raster_timings->X * LineCnt)), (sizeof(ScreenBuff[0]) * pDisplayTo->raster_timings->X));
+	    paramSet.srcAddr    = (unsigned int)(_ScreenBuff + (pDisplayFrom->raster_timings->X * LineCnt));
+	    paramSet.destAddr   = (unsigned int)(ScreenBuff + (pDisplayFrom->raster_timings->X * LineCnt));
+	    /* configure PaRAM Set */
+	    EDMA3SetPaRAM(EDMA_INST_BASE, dma_channel, &paramSet);
+	    /* Enable the transfer */
+	    LcdTransfer_callbackOccured = false;
+	    EDMA3EnableTransfer(EDMA_INST_BASE, dma_channel, EDMA3_TRIG_MODE_MANUAL);
+
+	    /* Wait for transfer complete*/
+	    while(!LcdTransfer_callbackOccured);
+	    /* Paint cursor on screen*/
+		if(put_cursor == true && LineCnt >= Y && LineCnt <= Y + 2)
+		{
+			unsigned int cnt_x = X;
+			for(;cnt_x < X + 2; cnt_x++) _put_pixel(pDisplayTo, cnt_x, LineCnt, color);
+			CacheDataCleanInvalidateBuff((unsigned int)((unsigned int*)(ScreenBuff + (pDisplayFrom->raster_timings->X * LineCnt))), (sizeof(ScreenBuff[0]) * pDisplayTo->raster_timings->X) + 64);
+		}
+	}
+#else
+
 	EDMA3CCPaRAMEntry paramSet;
 
     paramSet.srcAddr    = (unsigned int)_ScreenBuff;
@@ -291,7 +331,9 @@ bool _screen_copy(tDisplay *pDisplayTo, tDisplay *pDisplayFrom, bool put_cursor,
     LcdTransfer_callbackOccured = false;
     EDMA3EnableTransfer(EDMA_INST_BASE, dma_channel, EDMA3_TRIG_MODE_MANUAL);
 
+    /* Wait for transfer complete*/
     while(!LcdTransfer_callbackOccured);
+    /* Paint cursor on screen*/
     LineCnt = Y;
 	for(; LineCnt < Y + 2; LineCnt ++)
 	{
@@ -299,6 +341,7 @@ bool _screen_copy(tDisplay *pDisplayTo, tDisplay *pDisplayFrom, bool put_cursor,
 		for(;cnt_x < X + 2; cnt_x++) _put_pixel(pDisplayTo, cnt_x, LineCnt, color);
 		CacheDataCleanInvalidateBuff((unsigned int)((unsigned int*)(ScreenBuff + (pDisplayFrom->raster_timings->X * LineCnt))), (sizeof(ScreenBuff[0]) * pDisplayTo->raster_timings->X) + 64);
 	}
+#endif
 #endif
 	return true;
 }
@@ -360,11 +403,11 @@ void _put_rectangle(tDisplay *pDisplay, signed int x_start, signed int y_start, 
 	    paramSet.destAddr   = (unsigned int)ScreenBuff + (_x_start * sizeof(pDisplay->DisplayData[0])) + (pDisplay->raster_timings->X * LineCnt * sizeof(pDisplay->DisplayData[0]));
 	    paramSet.srcBIdx    = 0;
 	    paramSet.srcCIdx    = 0;
-	    paramSet.destBIdx   = sizeof(pDisplay->DisplayData[0]);
-	    paramSet.destCIdx   = pDisplay->raster_timings->X * sizeof(pDisplay->DisplayData[0]);
-	    paramSet.aCnt       = sizeof(pDisplay->DisplayData[0]);
-	    paramSet.bCnt       = _x_end - _x_start;
-	    paramSet.cCnt       = y_end - LineCnt;
+	    paramSet.destBIdx   = pDisplay->raster_timings->X * sizeof(pDisplay->DisplayData[0]);
+	    paramSet.destCIdx   = 0;
+	    paramSet.aCnt       = sizeof(pDisplay->DisplayData[0]) * (_x_end - _x_start);
+	    paramSet.bCnt       = y_end - LineCnt;
+	    paramSet.cCnt       = 1;//y_end - LineCnt;
 	    paramSet.bCntReload = 0;
 	    paramSet.linkAddr   = 0xffff;
 	    paramSet.opt        = 0x00000000;
@@ -382,6 +425,8 @@ void _put_rectangle(tDisplay *pDisplay, signed int x_start, signed int y_start, 
 	    EDMA3SetPaRAM(EDMA_INST_BASE, dma_channel, &paramSet);
 	    /* Enable the transfer */
 	    LcdTransfer_callbackOccured = false;
+    	EDMA3EnableTransfer(EDMA_INST_BASE, dma_channel, EDMA3_TRIG_MODE_MANUAL);
+	    while(!LcdTransfer_callbackOccured);
 #else
 	    EDMA3CCPaRAMEntry paramSet;
 	    //unsigned int _color = color << 8;

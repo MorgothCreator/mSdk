@@ -196,6 +196,7 @@ static void _Edma3CCErrorIsr(void)
 extern void HSMMCSD0Isr(void);
 extern void HSMMCSD1Isr(void);
 extern void HSMMCSD2Isr(void);
+
 /*
 ** This function configures the AINTC to receive EDMA3 interrupts.
 */
@@ -254,7 +255,6 @@ static void _EDMA3AINTCConfigure(int SdNr)
 		IntSystemEnable(SYS_INT_MMCSD2INT);
     break;
     }
-
     /* Enabling IRQ in CPSR of ARM processor. */
     IntMasterIRQEnable();
 }
