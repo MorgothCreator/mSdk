@@ -53,8 +53,8 @@ controlscolor controls_color =
 	0x989CB6,//((0x37<<16)  )|((0x37<<8)  )|((0x37)  ),
 	0x989CB6,//((0x37<<16)  )|((0x37<<8)  )|((0x37)  ),
 	0x989CB6,
-#ifdef USE_FONT_CMSS14B
-	(tFont*)&g_sFontCmss14b
+#ifdef DEFAULT_FONT
+	(tFont*)&DEFAULT_FONT
 #else
 	(tFont*)NULL
 #endif
