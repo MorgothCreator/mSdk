@@ -102,8 +102,7 @@ char *str_clear(char* dest)
 char *str_copy(char* str)
 {
 	if(!str) return NULL;
-	unsigned int LenSrc = strlen(str);
-	char *Return = (char *)realloc(str, LenSrc + 1);
+	char *Return = (char *)malloc(strlen(str) + 1);
 	strcpy(Return, str);
 	return Return;
 }
