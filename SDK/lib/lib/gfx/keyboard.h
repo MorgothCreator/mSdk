@@ -96,6 +96,11 @@ typedef struct
 		{
 			signed int X;
 			signed int Y;
+		}PositionOffset;
+		struct
+		{
+			signed int X;
+			signed int Y;
 		}Size;
 		bool OldStateVisible;
 		bool OldStateEnabled;
@@ -123,6 +128,9 @@ typedef struct
 void v_keyboard(tVKbd_Qwerty *settings, tControlCommandData* control_comand);
 tVKbd_Qwerty *new_v_keyboard(void *ParentWindow);
 bool free_v_keyboard(tVKbd_Qwerty* settings);
+//#######################################################################################
+#define _new_vqkbd(name) tVKbd_Qwerty *name = NULL
+//#define free_vqkbd(address) free(address);
 //#######################################################################################
 #ifdef HEADER_INCLUDE_C_FILES
 #include "keyboard.c"

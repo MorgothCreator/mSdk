@@ -31,7 +31,7 @@
 #include "controls_definition.h"
 //#######################################################################################
 #ifdef FLASH_DEVICE
-const unsigned char kbd_qwerty_keys_little_return[1375]  PROGMEM =
+const unsigned char kbd_qwerty_keys_little_return[38]  PROGMEM =
 #else
 static const unsigned int kbd_qwerty_keys_little_return[38] =
 #endif
@@ -42,7 +42,7 @@ static const unsigned int kbd_qwerty_keys_little_return[38] =
 };
 //#######################################################################################
 #ifdef FLASH_DEVICE
-const unsigned char kbd_qwerty_keys_big_return[1375]  PROGMEM =
+const unsigned char kbd_qwerty_keys_big_return[38]  PROGMEM =
 #else
 static const unsigned int kbd_qwerty_keys_big_return[38] =
 #endif
@@ -53,7 +53,7 @@ static const unsigned int kbd_qwerty_keys_big_return[38] =
 };
 //#######################################################################################
 #ifdef FLASH_DEVICE
-const unsigned char kbd_qwerty_keys_numeric_return[1375]  PROGMEM =
+const unsigned char kbd_qwerty_keys_numeric_return[38]  PROGMEM =
 #else
 static const unsigned int kbd_qwerty_keys_numeric_return[38] =
 #endif
@@ -99,7 +99,7 @@ static const unsigned char kbd_qwerty_keys_numeric[][6] =
 static void paint_v_keyboard(tVKbd_Qwerty* settings, tDisplay *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len, tControlCommandData* control_comand, bool refrash)
 {
 	unsigned int color = 0;
-	//tWindow *ParentWindow = (tWindow*)settings->Internals.ParentWindow;
+	tWindow *ParentWindow = (tWindow*)settings->Internals.ParentWindow;
 	tRectangle back_up_clip = pDisplay->sClipRegion;
 	pDisplay->sClipRegion.sXMin = x_start;
 	pDisplay->sClipRegion.sYMin = y_start;
@@ -117,8 +117,8 @@ static void paint_v_keyboard(tVKbd_Qwerty* settings, tDisplay *pDisplay, signed 
 		signed int key_size_x = ((settings->Size.X-(settings->kbd_border_size << 1))/13) - settings->key_space_size;
 		signed int key_size_y = ((settings->Size.Y - 4 - (settings->kbd_border_size << 1))/3) - settings->key_space_size;
 
-		signed int KeyboardLocationX = ((settings->Position.X + settings->kbd_border_size) + ((settings->Size.X>>1) - settings->kbd_border_size)) - (((key_size_x + settings->key_space_size) * 13)>>1);
-		signed int KeyLocationY =      ((settings->Position.Y + settings->kbd_border_size) + ((settings->Size.Y>>1) - settings->kbd_border_size)) - (((key_size_y + settings->key_space_size) *  3)>>1);
+		signed int KeyboardLocationX = ((/*settings->Internals.Position.X + */settings->kbd_border_size) + ((settings->Internals.Size.X>>1) - settings->kbd_border_size)) - (((key_size_x + settings->key_space_size) * 13)>>1);
+		signed int KeyLocationY =      ((/*settings->Internals.Position.Y + */settings->kbd_border_size) + ((settings->Internals.Size.Y>>1) - settings->kbd_border_size)) - (((key_size_y + settings->key_space_size) *  3)>>1);
 		signed int KeyLocationX = KeyboardLocationX;
 
 		signed int CntInitKeys = 0;
@@ -154,13 +154,15 @@ static void paint_v_keyboard(tVKbd_Qwerty* settings, tDisplay *pDisplay, signed 
 				case 35:
 				KeyTmpPtr->Size.X = key_size_x;
 				KeyTmpPtr->Size.Y = key_size_y;
-				KeyLocationX += (key_size_x + (settings->key_space_size << 1));
+				KeyLocationX += ((key_size_x << 1) + (settings->key_space_size << 1));
 				break;
 				default:
 				KeyTmpPtr->Size.X = key_size_x;
 				KeyTmpPtr->Size.Y = key_size_y;
 				KeyLocationX += key_size_x + settings->key_space_size;
 			}
+			KeyTmpPtr->Internals.PositionOffset.X = x_start - ParentWindow->Internals.Position.X;
+			KeyTmpPtr->Internals.PositionOffset.Y = y_start - ParentWindow->Internals.Position.Y;
 			KeyTmpPtr->Position.X = KeyLocationX;
 			KeyTmpPtr->Position.Y = KeyLocationY;
 			KeyTmpPtr->Caption.Font = settings->Caption.Font;
@@ -232,7 +234,7 @@ static void paint_v_keyboard(tVKbd_Qwerty* settings, tDisplay *pDisplay, signed 
 //#######################################################################################
 void v_keyboard(tVKbd_Qwerty *settings, tControlCommandData* control_comand)
 {
-	if((control_comand->CursorCoordonateUsed == true && settings->Internals.NeedEntireRefresh == false) || settings == NULL) return;
+	if(settings == NULL) return;
 	if(control_comand->Comand != Control_Nop)
 	{
 		/* Parse commands */
@@ -267,7 +269,7 @@ void v_keyboard(tVKbd_Qwerty *settings, tControlCommandData* control_comand)
 			return;
 		}
 	}
-	//tWindow *ParentWindow = (tWindow*)settings->Internals.ParentWindow;
+	tWindow *ParentWindow = (tWindow*)settings->Internals.ParentWindow;
 	if(settings->Internals.Control.Initiated == false)
 	{
 		settings->Internals.Position.X = settings->Position.X;
@@ -276,12 +278,22 @@ void v_keyboard(tVKbd_Qwerty *settings, tControlCommandData* control_comand)
 		settings->Internals.Size.Y = settings->Size.Y;
 	}
 	/* Verify if position on size has been modified */
-	if(settings->Position.X != settings->Internals.Position.X ||
-			settings->Position.Y != settings->Internals.Position.Y ||
-				settings->Size.X != settings->Internals.Size.X ||
-					settings->Size.Y != settings->Internals.Size.Y ||
-					settings->Internals.keboard_type != settings->Internals.old_keboard_type)
-										settings->Internals.NeedEntireRefresh = true;
+	if(ParentWindow) {
+		if(settings->Position.X + ParentWindow->Internals.Position.X + settings->Internals.PositionOffset.X != settings->Internals.Position.X ||
+				settings->Position.Y + ParentWindow->Internals.Position.Y + settings->Internals.PositionOffset.Y != settings->Internals.Position.Y ||
+					settings->Size.X != settings->Internals.Size.X ||
+						settings->Size.Y != settings->Internals.Size.Y ||
+							settings->Internals.keboard_type != settings->Internals.old_keboard_type)
+			settings->Internals.NeedEntireRefresh = true;
+	}
+	else {
+		if(settings->Position.X != settings->Internals.Position.X ||
+				settings->Position.Y != settings->Internals.Position.Y ||
+					settings->Size.X != settings->Internals.Size.X ||
+						settings->Size.Y != settings->Internals.Size.Y ||
+							settings->Internals.keboard_type != settings->Internals.old_keboard_type)
+			settings->Internals.NeedEntireRefresh = true;
+	}
 
 	signed int X_StartBox = settings->Internals.Position.X;
 	signed int Y_StartBox = settings->Internals.Position.Y;
@@ -316,8 +328,16 @@ void v_keyboard(tVKbd_Qwerty *settings, tControlCommandData* control_comand)
 							settings->Visible == true)
 	{
 		/* Copy new locations and dimensions to actual locations and dimensions */
-		settings->Internals.Position.X = settings->Position.X;
-		settings->Internals.Position.Y = settings->Position.Y;
+		if(ParentWindow)
+		{
+			settings->Internals.Position.X = settings->Position.X + ParentWindow->Internals.Position.X + settings->Internals.PositionOffset.X;
+			settings->Internals.Position.Y = settings->Position.Y + ParentWindow->Internals.Position.Y + settings->Internals.PositionOffset.Y;
+		}
+		else
+		{
+			settings->Internals.Position.X = settings->Position.X;
+			settings->Internals.Position.Y = settings->Position.Y;
+		}
 		settings->Internals.Size.X = settings->Size.X;
 		settings->Internals.Size.Y = settings->Size.Y;
 		settings->Internals.old_keboard_type = settings->Internals.keboard_type;
