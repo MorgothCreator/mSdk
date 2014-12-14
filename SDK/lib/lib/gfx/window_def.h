@@ -15,6 +15,7 @@
 #include "scrollbar.h"
 #include "textbox.h"
 #include "picturebox.h"
+#include "keyboard.h"
 //#######################################################################################
 typedef struct
 {
@@ -201,6 +202,7 @@ typedef struct Window_s
 		bool CursorDownInsideChildrenWindow;
 		bool TabGroupMode;
 		bool OldTabGroupMode;
+		bool HideHeader;
 		//bool TabChanged;
 		volatile unsigned int ChildrensNr;
 		window_children_t **Childrens;
@@ -222,8 +224,9 @@ typedef struct Window_s
 	bool MinimizeButonVisible;
 	bool AllowVScroll;
 	bool AllowHScroll;
-	bool ShowVScroll;
-	bool ShowHScroll;
+	bool HideVScroll;
+	bool HideHScroll;
+	bool HideHeader;
 	unsigned int SelectedTab;
 	CursorState StateChangedOn;
 	tRectangle WindowMoveLimits;
