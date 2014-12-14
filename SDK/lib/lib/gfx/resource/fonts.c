@@ -18,7 +18,7 @@
 // The compressed data for the 12 point Cm font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM12
+#if defined(USE_FONT_CM12) || defined(USE_ALL_FONTS)
 
 #ifdef FLASH_DEVICE
 const unsigned char g_pucCm12Data[1375]  PROGMEM =
@@ -215,7 +215,7 @@ const tFont g_sFontCm12 =
 // The compressed data for the 12 point Cm bold font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM12B
+#if defined(USE_FONT_CM12B) || defined(USE_ALL_FONTS)
 
 #ifdef FLASH_DEVICE
 const unsigned char g_pucCm12bData[1328]  PROGMEM =
@@ -407,7 +407,7 @@ const tFont g_sFontCm12b =
 // The compressed data for the 12 point Cm italic font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM12I
+#if defined(USE_FONT_CM12I) || defined(USE_ALL_FONTS)
 
 #ifdef FLASH_DEVICE
 const unsigned char g_pucCm12iData[1396]  PROGMEM =
@@ -604,7 +604,7 @@ const tFont g_sFontCm12i =
 // The compressed data for the 14 point Cm font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM14
+#if defined(USE_FONT_CM14) || defined(USE_ALL_FONTS)
 
 #ifdef FLASH_DEVICE
 const unsigned char g_pucCm14Data[1626]  PROGMEM =
@@ -821,7 +821,7 @@ const tFont g_sFontCm14 =
 // The compressed data for the 14 point Cm bold font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM14B
+#if defined(USE_FONT_CM14B) || defined(USE_ALL_FONTS)
 
 #ifdef FLASH_DEVICE
 const unsigned char g_pucCm14bData[1566]  PROGMEM =
@@ -1033,7 +1033,7 @@ const tFont g_sFontCm14b =
 // The compressed data for the 14 point Cm italic font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM14I
+#if defined(USE_FONT_CM14I) || defined(USE_ALL_FONTS)
 
 #ifdef FLASH_DEVICE
 const unsigned char g_pucCm14iData[1665]  PROGMEM =
@@ -1253,7 +1253,7 @@ const tFont g_sFontCm14i =
 // The compressed data for the 16 point Cm font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM16
+#if defined(USE_FONT_CM16) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm16Data[1881] =
 {
@@ -1483,7 +1483,7 @@ const tFont g_sFontCm16 =
 // The compressed data for the 16 point Cm bold font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM16B
+#if defined(USE_FONT_CM16B) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm16bData[1877] =
 {
@@ -1713,7 +1713,7 @@ const tFont g_sFontCm16b =
 // The compressed data for the 16 point Cm italic font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM16I
+#if defined(USE_FONT_CM16I) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm16iData[1931] =
 {
@@ -1947,7 +1947,7 @@ const tFont g_sFontCm16i =
 // The compressed data for the 18 point Cm font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM18
+#if defined(USE_FONT_CM18) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm18Data[2158] =
 {
@@ -2200,7 +2200,7 @@ const tFont g_sFontCm18 =
 // The compressed data for the 18 point Cm bold font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM18B
+#if defined(USE_FONT_CM18B) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm18bData[2099] =
 {
@@ -2448,7 +2448,7 @@ const tFont g_sFontCm18b =
 // The compressed data for the 18 point Cm italic font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM18I
+#if defined(USE_FONT_CM18I) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm18iData[2234] =
 {
@@ -2708,7 +2708,7 @@ const tFont g_sFontCm18i =
 // The compressed data for the 20 point Cm font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM20
+#if defined(USE_FONT_CM20) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm20Data[2398] =
 {
@@ -2981,7 +2981,7 @@ const tFont g_sFontCm20 =
 // The compressed data for the 20 point Cm bold font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM20B
+#if defined(USE_FONT_CM20B) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm20bData[2381] =
 {
@@ -3253,7 +3253,7 @@ const tFont g_sFontCm20b =
 // The compressed data for the 20 point Cm italic font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM20I
+#if defined(USE_FONT_CM20I) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm20iData[2448] =
 {
@@ -3529,7 +3529,7 @@ const tFont g_sFontCm20i =
 // The compressed data for the 22 point Cm font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM22
+#if defined(USE_FONT_CM22) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm22Data[2400] =
 {
@@ -3801,7 +3801,7 @@ const tFont g_sFontCm22 =
 // The compressed data for the 22 point Cm bold font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM22B
+#if defined(USE_FONT_CM22B) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm22bData[2601] =
 {
@@ -4091,7 +4091,7 @@ const tFont g_sFontCm22b =
 // The compressed data for the 22 point Cm italic font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM22I
+#if defined(USE_FONT_CM22I) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm22iData[2453] =
 {
@@ -4369,7 +4369,7 @@ const tFont g_sFontCm22i =
 // The compressed data for the 24 point Cm font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM24
+#if defined(USE_FONT_CM24) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm24Data[2656] =
 {
@@ -4664,7 +4664,7 @@ const tFont g_sFontCm24 =
 // The compressed data for the 24 point Cm bold font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM24B
+#if defined(USE_FONT_CM24B) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm24bData[2841] =
 {
@@ -4974,7 +4974,7 @@ const tFont g_sFontCm24b =
 // The compressed data for the 24 point Cm italic font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM24I
+#if defined(USE_FONT_CM24I) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm24iData[2735] =
 {
@@ -5275,7 +5275,7 @@ const tFont g_sFontCm24i =
 // The compressed data for the 26 point Cm font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM26
+#if defined(USE_FONT_CM26) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm26Data[2912] =
 {
@@ -5591,7 +5591,7 @@ const tFont g_sFontCm26 =
 // The compressed data for the 26 point Cm bold font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM26B
+#if defined(USE_FONT_CM26B) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm26bData[3064] =
 {
@@ -5920,7 +5920,7 @@ const tFont g_sFontCm26b =
 // The compressed data for the 26 point Cm italic font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM26I
+#if defined(USE_FONT_CM26I) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm26iData[3017] =
 {
@@ -6245,7 +6245,7 @@ const tFont g_sFontCm26i =
 // The compressed data for the 28 point Cm font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM28
+#if defined(USE_FONT_CM28) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm28Data[3158] =
 {
@@ -6582,7 +6582,7 @@ const tFont g_sFontCm28 =
 // The compressed data for the 28 point Cm bold font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM28B
+#if defined(USE_FONT_CM28B) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm28bData[3087] =
 {
@@ -6913,7 +6913,7 @@ const tFont g_sFontCm28b =
 // The compressed data for the 28 point Cm italic font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM28I
+#if defined(USE_FONT_CM28I) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm28iData[3336] =
 {
@@ -7263,7 +7263,7 @@ const tFont g_sFontCm28i =
 // The compressed data for the 30 point Cm font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM30
+#if defined(USE_FONT_CM30) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm30Data[3500] =
 {
@@ -7628,7 +7628,7 @@ const tFont g_sFontCm30 =
 // The compressed data for the 30 point Cm bold font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM30B
+#if defined(USE_FONT_CM30B) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm30bData[3372] =
 {
@@ -7981,7 +7981,7 @@ const tFont g_sFontCm30b =
 // The compressed data for the 30 point Cm italic font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM30I
+#if defined(USE_FONT_CM30I) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm30iData[3722] =
 {
@@ -8365,7 +8365,7 @@ const tFont g_sFontCm30i =
 // The compressed data for the 32 point Cm font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM32
+#if defined(USE_FONT_CM32) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm32Data[3769] =
 {
@@ -8753,7 +8753,7 @@ const tFont g_sFontCm32 =
 // The compressed data for the 32 point Cm bold font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM32B
+#if defined(USE_FONT_CM32B) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm32bData[3681] =
 {
@@ -9133,7 +9133,7 @@ const tFont g_sFontCm32b =
 // The compressed data for the 32 point Cm italic font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM32I
+#if defined(USE_FONT_CM32I) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm32iData[3964] =
 {
@@ -9537,7 +9537,7 @@ const tFont g_sFontCm32i =
 // The compressed data for the 34 point Cm font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM34
+#if defined(USE_FONT_CM34) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm34Data[4113] =
 {
@@ -9953,7 +9953,7 @@ const tFont g_sFontCm34 =
 // The compressed data for the 34 point Cm bold font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM34B
+#if defined(USE_FONT_CM34B) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm34bData[3903] =
 {
@@ -10352,7 +10352,7 @@ const tFont g_sFontCm34b =
 // The compressed data for the 34 point Cm italic font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM34I
+#if defined(USE_FONT_CM34I) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm34iData[4290] =
 {
@@ -10783,7 +10783,7 @@ const tFont g_sFontCm34i =
 // The compressed data for the 36 point Cm font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM36
+#if defined(USE_FONT_CM36) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm36Data[4127] =
 {
@@ -11200,7 +11200,7 @@ const tFont g_sFontCm36 =
 // The compressed data for the 36 point Cm bold font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM36B
+#if defined(USE_FONT_CM36B) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm36bData[4207] =
 {
@@ -11624,7 +11624,7 @@ const tFont g_sFontCm36b =
 // The compressed data for the 36 point Cm italic font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM36I
+#if defined(USE_FONT_CM36I) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm36iData[4619] =
 {
@@ -12082,7 +12082,7 @@ const tFont g_sFontCm36i =
 // The compressed data for the 38 point Cm font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM38
+#if defined(USE_FONT_CM38) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm38Data[4372] =
 {
@@ -12520,7 +12520,7 @@ const tFont g_sFontCm38 =
 // The compressed data for the 38 point Cm bold font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM38B
+#if defined(USE_FONT_CM38B) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm38bData[4426] =
 {
@@ -12962,7 +12962,7 @@ const tFont g_sFontCm38b =
 // The compressed data for the 38 point Cm italic font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM38I
+#if defined(USE_FONT_CM38I) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm38iData[4693] =
 {
@@ -13427,7 +13427,7 @@ const tFont g_sFontCm38i =
 // The compressed data for the 40 point Cm font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM40
+#if defined(USE_FONT_CM40) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm40Data[4844] =
 {
@@ -13904,7 +13904,7 @@ const tFont g_sFontCm40 =
 // The compressed data for the 40 point Cm bold font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM40B
+#if defined(USE_FONT_CM40B) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm40bData[4855] =
 {
@@ -14382,7 +14382,7 @@ const tFont g_sFontCm40b =
 // The compressed data for the 40 point Cm italic font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM40I
+#if defined(USE_FONT_CM40I) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm40iData[5260] =
 {
@@ -14894,7 +14894,7 @@ const tFont g_sFontCm40i =
 // The compressed data for the 42 point Cm font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM42
+#if defined(USE_FONT_CM42) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm42Data[5210] =
 {
@@ -15402,7 +15402,7 @@ const tFont g_sFontCm42 =
 // The compressed data for the 42 point Cm bold font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM42B
+#if defined(USE_FONT_CM42B) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm42bData[5083] =
 {
@@ -15899,7 +15899,7 @@ const tFont g_sFontCm42b =
 // The compressed data for the 42 point Cm italic font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM42I
+#if defined(USE_FONT_CM42I) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm42iData[5643] =
 {
@@ -16443,7 +16443,7 @@ const tFont g_sFontCm42i =
 // The compressed data for the 44 point Cm font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM44
+#if defined(USE_FONT_CM44) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm44Data[5568] =
 {
@@ -16979,7 +16979,7 @@ const tFont g_sFontCm44 =
 // The compressed data for the 44 point Cm bold font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM44B
+#if defined(USE_FONT_CM44B) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm44bData[5489] =
 {
@@ -17510,7 +17510,7 @@ const tFont g_sFontCm44b =
 // The compressed data for the 44 point Cm italic font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM44I
+#if defined(USE_FONT_CM44I) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm44iData[6090] =
 {
@@ -18091,7 +18091,7 @@ const tFont g_sFontCm44i =
 // The compressed data for the 46 point Cm font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM46
+#if defined(USE_FONT_CM46) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm46Data[5959] =
 {
@@ -18661,7 +18661,7 @@ const tFont g_sFontCm46 =
 // The compressed data for the 46 point Cm bold font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM46B
+#if defined(USE_FONT_CM46B) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm46bData[5540] =
 {
@@ -19196,7 +19196,7 @@ const tFont g_sFontCm46b =
 // The compressed data for the 46 point Cm italic font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM46I
+#if defined(USE_FONT_CM46I) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm46iData[6570] =
 {
@@ -19817,7 +19817,7 @@ const tFont g_sFontCm46i =
 // The compressed data for the 48 point Cm font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM48
+#if defined(USE_FONT_CM48) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm48Data[6367] =
 {
@@ -20421,7 +20421,7 @@ const tFont g_sFontCm48 =
 // The compressed data for the 48 point Cm bold font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM48B
+#if defined(USE_FONT_CM48B) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm48bData[5829] =
 {
@@ -20980,7 +20980,7 @@ const tFont g_sFontCm48b =
 // The compressed data for the 48 point Cm italic font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CM48I
+#if defined(USE_FONT_CM48I) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCm48iData[6944] =
 {
@@ -21632,7 +21632,7 @@ const tFont g_sFontCm48i =
 // The compressed data for the 12 point Cmsc font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSC12
+#if defined(USE_FONT_CMSC12) || defined(USE_ALL_FONTS)
 
 #ifdef FLASH_DEVICE
 const unsigned char g_pucCmsc12Data[1434]  PROGMEM =
@@ -21833,7 +21833,7 @@ const tFont g_sFontCmsc12 =
 // The compressed data for the 14 point Cmsc font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSC14
+#if defined(USE_FONT_CMSC14) || defined(USE_ALL_FONTS)
 
 #ifdef FLASH_DEVICE
 const unsigned char g_pucCmsc14Data[1648]  PROGMEM =
@@ -22052,7 +22052,7 @@ const tFont g_sFontCmsc14 =
 // The compressed data for the 16 point Cmsc font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSC16
+#if defined(USE_FONT_CMSC16) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmsc16Data[1919] =
 {
@@ -22285,7 +22285,7 @@ const tFont g_sFontCmsc16 =
 // The compressed data for the 18 point Cmsc font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSC18
+#if defined(USE_FONT_CMSC18) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmsc18Data[2112] =
 {
@@ -22533,7 +22533,7 @@ const tFont g_sFontCmsc18 =
 // The compressed data for the 20 point Cmsc font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSC20
+#if defined(USE_FONT_CMSC20) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmsc20Data[2279] =
 {
@@ -22796,7 +22796,7 @@ const tFont g_sFontCmsc20 =
 // The compressed data for the 22 point Cmsc font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSC22
+#if defined(USE_FONT_CMSC22) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmsc22Data[2583] =
 {
@@ -23085,7 +23085,7 @@ const tFont g_sFontCmsc22 =
 // The compressed data for the 24 point Cmsc font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSC24
+#if defined(USE_FONT_CMSC24) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmsc24Data[2782] =
 {
@@ -23390,7 +23390,7 @@ const tFont g_sFontCmsc24 =
 // The compressed data for the 26 point Cmsc font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSC26
+#if defined(USE_FONT_CMSC26) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmsc26Data[2991] =
 {
@@ -23713,7 +23713,7 @@ const tFont g_sFontCmsc26 =
 // The compressed data for the 28 point Cmsc font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSC28
+#if defined(USE_FONT_CMSC28) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmsc28Data[3260] =
 {
@@ -24058,7 +24058,7 @@ const tFont g_sFontCmsc28 =
 // The compressed data for the 30 point Cmsc font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSC30
+#if defined(USE_FONT_CMSC30) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmsc30Data[3512] =
 {
@@ -24424,7 +24424,7 @@ const tFont g_sFontCmsc30 =
 // The compressed data for the 32 point Cmsc font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSC32
+#if defined(USE_FONT_CMSC32) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmsc32Data[3783] =
 {
@@ -24813,7 +24813,7 @@ const tFont g_sFontCmsc32 =
 // The compressed data for the 34 point Cmsc font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSC34
+#if defined(USE_FONT_CMSC34) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmsc34Data[4069] =
 {
@@ -25226,7 +25226,7 @@ const tFont g_sFontCmsc34 =
 // The compressed data for the 36 point Cmsc font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSC36
+#if defined(USE_FONT_CMSC36) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmsc36Data[4564] =
 {
@@ -25680,7 +25680,7 @@ const tFont g_sFontCmsc36 =
 // The compressed data for the 38 point Cmsc font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSC38
+#if defined(USE_FONT_CMSC38) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmsc38Data[4920] =
 {
@@ -26162,7 +26162,7 @@ const tFont g_sFontCmsc38 =
 // The compressed data for the 40 point Cmsc font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSC40
+#if defined(USE_FONT_CMSC40) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmsc40Data[5238] =
 {
@@ -26672,7 +26672,7 @@ const tFont g_sFontCmsc40 =
 // The compressed data for the 42 point Cmsc font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSC42
+#if defined(USE_FONT_CMSC42) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmsc42Data[5595] =
 {
@@ -27212,7 +27212,7 @@ const tFont g_sFontCmsc42 =
 // The compressed data for the 44 point Cmsc font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSC44
+#if defined(USE_FONT_CMSC44) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmsc44Data[6087] =
 {
@@ -27793,7 +27793,7 @@ const tFont g_sFontCmsc44 =
 // The compressed data for the 46 point Cmsc font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSC46
+#if defined(USE_FONT_CMSC46) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmsc46Data[6441] =
 {
@@ -28403,7 +28403,7 @@ const tFont g_sFontCmsc46 =
 // The compressed data for the 48 point Cmsc font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSC48
+#if defined(USE_FONT_CMSC48) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmsc48Data[6709] =
 {
@@ -29036,7 +29036,7 @@ const tFont g_sFontCmsc48 =
 // The compressed data for the 12 point Cmss font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS12
+#if defined(USE_FONT_CMSS12) || defined(USE_ALL_FONTS)
 
 #ifdef FLASH_DEVICE
 const unsigned char g_pucCmss12Data[1300]  PROGMEM =
@@ -29226,7 +29226,7 @@ const tFont g_sFontCmss12 =
 // The compressed data for the 12 point Cmss bold font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS12B
+#if defined(USE_FONT_CMSS12B) || defined(USE_ALL_FONTS)
 
 #ifdef FLASH_DEVICE
 const unsigned char g_pucCmss12bData[1479]  PROGMEM =
@@ -29431,7 +29431,7 @@ const tFont g_sFontCmss12b =
 // The compressed data for the 12 point Cmss italic font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS12I
+#if defined(USE_FONT_CMSS12I) || defined(USE_ALL_FONTS)
 
 #ifdef FLASH_DEVICE
 const unsigned char g_pucCmss12iData[1332]  PROGMEM =
@@ -29622,7 +29622,7 @@ const tFont g_sFontCmss12i =
 // The compressed data for the 14 point Cmss font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS14
+#if defined(USE_FONT_CMSS14) || defined(USE_ALL_FONTS)
 
 #ifdef FLASH_DEVICE
 const unsigned char g_pucCmss14Data[1545]  PROGMEM =
@@ -29832,7 +29832,7 @@ const tFont g_sFontCmss14 =
 // The compressed data for the 14 point Cmss bold font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS14B
+#if defined(USE_FONT_CMSS14B) || defined(USE_ALL_FONTS)
 
 #ifdef FLASH_DEVICE
 const unsigned char g_pucCmss14bData[1503]  PROGMEM =
@@ -30039,7 +30039,7 @@ const tFont g_sFontCmss14b =
 // The compressed data for the 14 point Cmss italic font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS14I
+#if defined(USE_FONT_CMSS14I) || defined(USE_ALL_FONTS)
 
 #ifdef FLASH_DEVICE
 const unsigned char g_pucCmss14iData[1586]  PROGMEM =
@@ -30253,7 +30253,7 @@ const tFont g_sFontCmss14i =
 // The compressed data for the 16 point Cmss font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS16
+#if defined(USE_FONT_CMSS16) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss16Data[1741] =
 {
@@ -30472,7 +30472,7 @@ const tFont g_sFontCmss16 =
 // The compressed data for the 16 point Cmss bold font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS16B
+#if defined(USE_FONT_CMSS16B) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss16bData[1738] =
 {
@@ -30690,7 +30690,7 @@ const tFont g_sFontCmss16b =
 // The compressed data for the 16 point Cmss italic font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS16I
+#if defined(USE_FONT_CMSS16I) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss16iData[1789] =
 {
@@ -30913,7 +30913,7 @@ const tFont g_sFontCmss16i =
 // The compressed data for the 18 point Cmss font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS18
+#if defined(USE_FONT_CMSS18) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss18Data[2021] =
 {
@@ -31155,7 +31155,7 @@ const tFont g_sFontCmss18 =
 // The compressed data for the 18 point Cmss bold font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS18B
+#if defined(USE_FONT_CMSS18B) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss18bData[1922] =
 {
@@ -31389,7 +31389,7 @@ const tFont g_sFontCmss18b =
 // The compressed data for the 18 point Cmss italic font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS18I
+#if defined(USE_FONT_CMSS18I) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss18iData[2060] =
 {
@@ -31634,7 +31634,7 @@ const tFont g_sFontCmss18i =
 // The compressed data for the 20 point Cmss font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS20
+#if defined(USE_FONT_CMSS20) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss20Data[2241] =
 {
@@ -31894,7 +31894,7 @@ const tFont g_sFontCmss20 =
 // The compressed data for the 20 point Cmss bold font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS20B
+#if defined(USE_FONT_CMSS20B) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss20bData[2192] =
 {
@@ -32150,7 +32150,7 @@ const tFont g_sFontCmss20b =
 // The compressed data for the 20 point Cmss italic font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS20I
+#if defined(USE_FONT_CMSS20I) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss20iData[2271] =
 {
@@ -32413,7 +32413,7 @@ const tFont g_sFontCmss20i =
 // The compressed data for the 22 point Cmss font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS22
+#if defined(USE_FONT_CMSS22) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss22Data[2248] =
 {
@@ -32674,7 +32674,7 @@ const tFont g_sFontCmss22 =
 // The compressed data for the 22 point Cmss bold font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS22B
+#if defined(USE_FONT_CMSS22B) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss22bData[2334] =
 {
@@ -32942,7 +32942,7 @@ const tFont g_sFontCmss22b =
 // The compressed data for the 22 point Cmss italic font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS22I
+#if defined(USE_FONT_CMSS22I) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss22iData[2285] =
 {
@@ -33206,7 +33206,7 @@ const tFont g_sFontCmss22i =
 // The compressed data for the 24 point Cmss font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS24
+#if defined(USE_FONT_CMSS24) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss24Data[2469] =
 {
@@ -33485,7 +33485,7 @@ const tFont g_sFontCmss24 =
 // The compressed data for the 24 point Cmss bold font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS24B
+#if defined(USE_FONT_CMSS24B) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss24bData[2607] =
 {
@@ -33776,7 +33776,7 @@ const tFont g_sFontCmss24b =
 // The compressed data for the 24 point Cmss italic font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS24I
+#if defined(USE_FONT_CMSS24I) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss24iData[2494] =
 {
@@ -34057,7 +34057,7 @@ const tFont g_sFontCmss24i =
 // The compressed data for the 26 point Cmss font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS26
+#if defined(USE_FONT_CMSS26) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss26Data[2696] =
 {
@@ -34355,7 +34355,7 @@ const tFont g_sFontCmss26 =
 // The compressed data for the 26 point Cmss bold font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS26B
+#if defined(USE_FONT_CMSS26B) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss26bData[2773] =
 {
@@ -34660,7 +34660,7 @@ const tFont g_sFontCmss26b =
 // The compressed data for the 26 point Cmss italic font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS26I
+#if defined(USE_FONT_CMSS26I) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss26iData[2751] =
 {
@@ -34963,7 +34963,7 @@ const tFont g_sFontCmss26i =
 // The compressed data for the 28 point Cmss font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS28
+#if defined(USE_FONT_CMSS28) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss28Data[2860] =
 {
@@ -35275,7 +35275,7 @@ const tFont g_sFontCmss28 =
 // The compressed data for the 28 point Cmss bold font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS28B
+#if defined(USE_FONT_CMSS28B) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss28bData[3039] =
 {
@@ -35602,7 +35602,7 @@ const tFont g_sFontCmss28b =
 // The compressed data for the 28 point Cmss italic font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS28I
+#if defined(USE_FONT_CMSS28I) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss28iData[2907] =
 {
@@ -35918,7 +35918,7 @@ const tFont g_sFontCmss28i =
 // The compressed data for the 30 point Cmss font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS30
+#if defined(USE_FONT_CMSS30) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss30Data[3151] =
 {
@@ -36254,7 +36254,7 @@ const tFont g_sFontCmss30 =
 // The compressed data for the 30 point Cmss bold font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS30B
+#if defined(USE_FONT_CMSS30B) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss30bData[3252] =
 {
@@ -36597,7 +36597,7 @@ const tFont g_sFontCmss30b =
 // The compressed data for the 30 point Cmss italic font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS30I
+#if defined(USE_FONT_CMSS30I) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss30iData[3303] =
 {
@@ -36946,7 +36946,7 @@ const tFont g_sFontCmss30i =
 // The compressed data for the 32 point Cmss font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS32
+#if defined(USE_FONT_CMSS32) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss32Data[3399] =
 {
@@ -37303,7 +37303,7 @@ const tFont g_sFontCmss32 =
 // The compressed data for the 32 point Cmss bold font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS32B
+#if defined(USE_FONT_CMSS32B) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss32bData[3516] =
 {
@@ -37668,7 +37668,7 @@ const tFont g_sFontCmss32b =
 // The compressed data for the 32 point Cmss italic font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS32I
+#if defined(USE_FONT_CMSS32I) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss32iData[3579] =
 {
@@ -38040,7 +38040,7 @@ const tFont g_sFontCmss32i =
 // The compressed data for the 34 point Cmss font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS34
+#if defined(USE_FONT_CMSS34) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss34Data[3618] =
 {
@@ -38415,7 +38415,7 @@ const tFont g_sFontCmss34 =
 // The compressed data for the 34 point Cmss bold font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS34B
+#if defined(USE_FONT_CMSS34B) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss34bData[3734] =
 {
@@ -38800,7 +38800,7 @@ const tFont g_sFontCmss34b =
 // The compressed data for the 34 point Cmss italic font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS34I
+#if defined(USE_FONT_CMSS34I) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss34iData[3793] =
 {
@@ -39190,7 +39190,7 @@ const tFont g_sFontCmss34i =
 // The compressed data for the 36 point Cmss font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS36
+#if defined(USE_FONT_CMSS36) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss36Data[3652] =
 {
@@ -39568,7 +39568,7 @@ const tFont g_sFontCmss36 =
 // The compressed data for the 36 point Cmss bold font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS36B
+#if defined(USE_FONT_CMSS36B) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss36bData[3787] =
 {
@@ -39957,7 +39957,7 @@ const tFont g_sFontCmss36b =
 // The compressed data for the 36 point Cmss italic font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS36I
+#if defined(USE_FONT_CMSS36I) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss36iData[3855] =
 {
@@ -40352,7 +40352,7 @@ const tFont g_sFontCmss36i =
 // The compressed data for the 38 point Cmss font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS38
+#if defined(USE_FONT_CMSS38) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss38Data[3930] =
 {
@@ -40753,7 +40753,7 @@ const tFont g_sFontCmss38 =
 // The compressed data for the 38 point Cmss bold font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS38B
+#if defined(USE_FONT_CMSS38B) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss38bData[4086] =
 {
@@ -41167,7 +41167,7 @@ const tFont g_sFontCmss38b =
 // The compressed data for the 38 point Cmss italic font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS38I
+#if defined(USE_FONT_CMSS38I) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss38iData[4164] =
 {
@@ -41586,7 +41586,7 @@ const tFont g_sFontCmss38i =
 // The compressed data for the 40 point Cmss font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS40
+#if defined(USE_FONT_CMSS40) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss40Data[4351] =
 {
@@ -42022,7 +42022,7 @@ const tFont g_sFontCmss40 =
 // The compressed data for the 40 point Cmss bold font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS40B
+#if defined(USE_FONT_CMSS40B) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss40bData[4485] =
 {
@@ -42469,7 +42469,7 @@ const tFont g_sFontCmss40b =
 // The compressed data for the 40 point Cmss italic font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS40I
+#if defined(USE_FONT_CMSS40I) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss40iData[4546] =
 {
@@ -42921,7 +42921,7 @@ const tFont g_sFontCmss40i =
 // The compressed data for the 42 point Cmss font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS42
+#if defined(USE_FONT_CMSS42) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss42Data[4635] =
 {
@@ -43381,7 +43381,7 @@ const tFont g_sFontCmss42 =
 // The compressed data for the 42 point Cmss bold font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS42B
+#if defined(USE_FONT_CMSS42B) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss42bData[4752] =
 {
@@ -43849,7 +43849,7 @@ const tFont g_sFontCmss42b =
 // The compressed data for the 42 point Cmss italic font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS42I
+#if defined(USE_FONT_CMSS42I) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss42iData[4908] =
 {
@@ -44330,7 +44330,7 @@ const tFont g_sFontCmss42i =
 // The compressed data for the 44 point Cmss font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS44
+#if defined(USE_FONT_CMSS44) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss44Data[5013] =
 {
@@ -44821,7 +44821,7 @@ const tFont g_sFontCmss44 =
 // The compressed data for the 44 point Cmss bold font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS44B
+#if defined(USE_FONT_CMSS44B) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss44bData[5066] =
 {
@@ -45317,7 +45317,7 @@ const tFont g_sFontCmss44b =
 // The compressed data for the 44 point Cmss italic font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS44I
+#if defined(USE_FONT_CMSS44I) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss44iData[5328] =
 {
@@ -45833,7 +45833,7 @@ const tFont g_sFontCmss44i =
 // The compressed data for the 46 point Cmss font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS46
+#if defined(USE_FONT_CMSS46) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss46Data[5289] =
 {
@@ -46347,7 +46347,7 @@ const tFont g_sFontCmss46 =
 // The compressed data for the 46 point Cmss bold font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS46B
+#if defined(USE_FONT_CMSS46B) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss46bData[5434] =
 {
@@ -46873,7 +46873,7 @@ const tFont g_sFontCmss46b =
 // The compressed data for the 46 point Cmss italic font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS46I
+#if defined(USE_FONT_CMSS46I) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss46iData[5701] =
 {
@@ -47422,7 +47422,7 @@ const tFont g_sFontCmss46i =
 // The compressed data for the 48 point Cmss font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS48
+#if defined(USE_FONT_CMSS48) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss48Data[5766] =
 {
@@ -47976,7 +47976,7 @@ const tFont g_sFontCmss48 =
 // The compressed data for the 48 point Cmss bold font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS48B
+#if defined(USE_FONT_CMSS48B) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss48bData[5849] =
 {
@@ -48537,7 +48537,7 @@ const tFont g_sFontCmss48b =
 // The compressed data for the 48 point Cmss italic font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMSS48I
+#if defined(USE_FONT_CMSS48I) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmss48iData[6118] =
 {
@@ -49120,7 +49120,7 @@ const tFont g_sFontCmss48i =
 // The compressed data for the 12 point Cmtt font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMTT12
+#if defined(USE_FONT_CMTT12) || defined(USE_ALL_FONTS)
 
 #ifdef FLASH_DEVICE
 const unsigned char g_pucCmtt12Data[1313]  PROGMEM =
@@ -49311,7 +49311,7 @@ const tFont g_sFontCmtt12 =
 // The compressed data for the 14 point Cmtt font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMTT14
+#if defined(USE_FONT_CMTT14) || defined(USE_ALL_FONTS)
 
 #ifdef FLASH_DEVICE
 const unsigned char g_pucCmtt14Data[1557]  PROGMEM =
@@ -49522,7 +49522,7 @@ const tFont g_sFontCmtt14 =
 // The compressed data for the 16 point Cmtt font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMTT16
+#if defined(USE_FONT_CMTT16) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmtt16Data[1802] =
 {
@@ -49746,7 +49746,7 @@ const tFont g_sFontCmtt16 =
 // The compressed data for the 18 point Cmtt font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMTT18
+#if defined(USE_FONT_CMTT18) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmtt18Data[2027] =
 {
@@ -49988,7 +49988,7 @@ const tFont g_sFontCmtt18 =
 // The compressed data for the 20 point Cmtt font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMTT20
+#if defined(USE_FONT_CMTT20) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmtt20Data[2201] =
 {
@@ -50245,7 +50245,7 @@ const tFont g_sFontCmtt20 =
 // The compressed data for the 22 point Cmtt font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMTT22
+#if defined(USE_FONT_CMTT22) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmtt22Data[2213] =
 {
@@ -50503,7 +50503,7 @@ const tFont g_sFontCmtt22 =
 // The compressed data for the 24 point Cmtt font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMTT24
+#if defined(USE_FONT_CMTT24) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmtt24Data[2415] =
 {
@@ -50778,7 +50778,7 @@ const tFont g_sFontCmtt24 =
 // The compressed data for the 26 point Cmtt font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMTT26
+#if defined(USE_FONT_CMTT26) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmtt26Data[2574] =
 {
@@ -51066,7 +51066,7 @@ const tFont g_sFontCmtt26 =
 // The compressed data for the 28 point Cmtt font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMTT28
+#if defined(USE_FONT_CMTT28) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmtt28Data[2757] =
 {
@@ -51369,7 +51369,7 @@ const tFont g_sFontCmtt28 =
 // The compressed data for the 30 point Cmtt font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMTT30
+#if defined(USE_FONT_CMTT30) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmtt30Data[2952] =
 {
@@ -51687,7 +51687,7 @@ const tFont g_sFontCmtt30 =
 // The compressed data for the 32 point Cmtt font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMTT32
+#if defined(USE_FONT_CMTT32) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmtt32Data[3765] =
 {
@@ -52074,7 +52074,7 @@ const tFont g_sFontCmtt32 =
 // The compressed data for the 34 point Cmtt font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMTT34
+#if defined(USE_FONT_CMTT34) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmtt34Data[3954] =
 {
@@ -52477,7 +52477,7 @@ const tFont g_sFontCmtt34 =
 // The compressed data for the 36 point Cmtt font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMTT36
+#if defined(USE_FONT_CMTT36) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmtt36Data[4321] =
 {
@@ -52911,7 +52911,7 @@ const tFont g_sFontCmtt36 =
 // The compressed data for the 38 point Cmtt font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMTT38
+#if defined(USE_FONT_CMTT38) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmtt38Data[4325] =
 {
@@ -53345,7 +53345,7 @@ const tFont g_sFontCmtt38 =
 // The compressed data for the 40 point Cmtt font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMTT40
+#if defined(USE_FONT_CMTT40) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmtt40Data[4607] =
 {
@@ -53802,7 +53802,7 @@ const tFont g_sFontCmtt40 =
 // The compressed data for the 42 point Cmtt font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMTT42
+#if defined(USE_FONT_CMTT42) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmtt42Data[4876] =
 {
@@ -54282,7 +54282,7 @@ const tFont g_sFontCmtt42 =
 // The compressed data for the 44 point Cmtt font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMTT44
+#if defined(USE_FONT_CMTT44) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmtt44Data[5255] =
 {
@@ -54793,7 +54793,7 @@ const tFont g_sFontCmtt44 =
 // The compressed data for the 46 point Cmtt font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMTT46
+#if defined(USE_FONT_CMTT46) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmtt46Data[5407] =
 {
@@ -55317,7 +55317,7 @@ const tFont g_sFontCmtt46 =
 // The compressed data for the 48 point Cmtt font.
 //
 //*****************************************************************************
-#ifdef USE_FONT_CMTT48
+#if defined(USE_FONT_CMTT48) || defined(USE_ALL_FONTS)
 
 static const unsigned char g_pucCmtt48Data[5821] =
 {
