@@ -32,6 +32,13 @@ typedef enum{
 	STR_NOT_ALLOCATED
 }STR_RESULT;
 
+#define string(name, text)\
+	char *name = malloc(sizeof(text) + 1);\
+	strcpy(name, text);
+
+#define string_free(name)\
+		if(name) free(name);
+
 char* str_remove_new_line(char *string);
 char* str_to_upercase(char* string);
 char* str_to_lowercase(char* string);
