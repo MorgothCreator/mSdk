@@ -122,6 +122,9 @@ void progressbar(tProgressBar *settings, tControlCommandData* control_comand);
 tProgressBar *new_progressbar(void *ParentWindow);
 bool free_progressbar(tProgressBar* settings);
 //#######################################################################################
+#define _new_progressbar(name) tProgressBar *name = NULL
+//#define free_progressbar(address) free(address);
+//#######################################################################################
 #ifdef HEADER_INCLUDE_C_FILES
 #include "progressbar.c"
 #endif

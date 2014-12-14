@@ -56,6 +56,22 @@
 #define ReturnCommand_MaxValue  (unsigned)(0x08)
 #endif
 /*#####################################################*/
+typedef struct{
+	tDisplay *pDisplay;
+	tFont *pFont;
+	char *pcString;
+	signed int lLength;
+	unsigned int foreground_color;
+	unsigned int background_color;
+	bool ulOpaque;
+	bool ulVisible;
+	bool WordWrap;
+	signed int lX;
+	signed int lY;
+	signed int _SelStart;
+	signed int _SelLen;
+}print_string_properties;
+/*#####################################################*/
 typedef struct
 {
 	unsigned long long TimerScrollInterval;
@@ -73,8 +89,8 @@ typedef struct
 	char *Str;
 	char *Pstr;
 	signed int(*string_width_get_function)(tDisplay *, tFont *, char *, signed int);
-	signed int(*print_function)(tDisplay *, tFont *, char *, signed int, unsigned int, unsigned int, bool, bool, bool, signed int, signed int, signed int, signed int);
-}strings_t;
+	signed int(*print_function)(print_string_properties *);
+}graphic_strings_t;
 /*#####################################################*/
 typedef struct
 {
@@ -271,7 +287,7 @@ static const unsigned char CharTable6x8[] =
 #endif
 {
 	6                          ,0          ,6          ,8          ,32            ,128,
-	//OffsetOfBeginingCharTable ,0=Y-X|1=X-X,X-Dimension,Y-Dimension,BeginAsciiChar,EndAsciiChar
+/*  OffsetOfBeginingCharTable  ,0=Y-X|1=X-X,X-Dimension,Y-Dimension,BeginAsciiChar,EndAsciiChar*/
 	0x00,0x00,0x00,0x00,0x00,0x00,
 	0x5F,0x00,0x00,0x00,0x00,0x00,//   !		32,33
 	0x07,0x00,0x07,0x00,0x00,0x00,
@@ -370,34 +386,6 @@ static const unsigned char CharTable6x8[] =
 	0x08,0x1C,0x2A,0x08,0x00,0x00,// -> <-	126,127
 	0x14,0x36,0x77,0x36,0x14,0x00 };//			128								
 /*#####################################################*/
-#define new_panel(name)\
-	tPanel* name = (tPanel*)calloc(1, sizeof(tPanel));\
-	name->Children.ItemsNumber = 0;\
-	name->Color.Background = controls_color.Control_Color_Enabled_BackGround;\
-	name->Color.Scren = controls_color.Screen;\
-	name->Enabled = true;\
-	name->Position.X = 0;\
-	name->Position.Y = 0;\
-	name->Size.X = 100;\
-	name->Size.Y = 100;\
-	name->Visible = true
-/*#####################################################*/
-#define _new_panel(name)\
-	tPanel name;\
-	name.Children.ItemsNumber = 0;\
-	name.Color.Background = controls_color.Control_Color_Enabled_BackGround;\
-	name.Color.Scren = controls_color.Screen;\
-	name.Enabled = true;\
-	name.Position.X = 0;\
-	name.Position.Y = 0;\
-	name.Size.X = 100;\
-	name.Size.Y = 100;\
-	name.Visible = true
-/*#####################################################*/
-#define free_panel(name)\
-	if(name->Children.List) free(name->Children.List);\
-	free(name)
-/*#####################################################*/
 unsigned int controlls_change_color(unsigned int color, double value);
 bool screen_copy(tDisplay *pDisplayTo, tDisplay *pDisplayFrom, bool put_cursor, signed int X, signed int Y, unsigned int color);
 void clip_limit(tRectangle *limited, tRectangle *limits);
@@ -416,8 +404,8 @@ StringProperties_t string_properties_get(tDisplay *pDisplay, tFont *pFont, char 
 unsigned char char_height_get(tFont *pFont);
 signed int string_width_get(tDisplay *pDisplay, tFont *pFont, char *pcString, signed int lLength);
 signed int string_rows_get(char *pcString, signed int lLength);
-signed int put_string(tDisplay *pDisplay, tFont *pFont, char *pcString, signed int lLength, unsigned int foreground_color, unsigned int background_color, bool ulOpaque, bool ulVisible, bool TextAlign, signed int lX, signed int lY, signed int SelStart, signed int SelLen);
-signed int put_string_tiny_chr(tDisplay *pDisplay, tFont *pFont, char *pcString, signed int lLength, unsigned int foreground_color, unsigned int background_color, bool ulOpaque, bool ulVisible, bool WordWrap, signed int lX, signed int lY, signed int _SelStart, signed int _SelLen);
+signed int put_string(print_string_properties *properties);
+signed int put_string_tiny_chr(print_string_properties *properties);
 signed int string_width_get_tiny_chr(tDisplay *pDisplay, tFont *pFont, char *pcString, signed int lLength);
 /*#####################################################*/
 #ifdef HEADER_INCLUDE_C_FILES

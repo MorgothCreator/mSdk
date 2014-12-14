@@ -130,6 +130,9 @@ void checkbox(tCheckBox *settings, tControlCommandData* control_comand);
 tCheckBox *new_checkbox(void *ParentWindow);
 bool free_checkbox(tCheckBox* settings);
 //#######################################################################################
+#define _new_checkbox(name) tCheckBox *name = NULL
+//#define free_checkbox(address) free(address);
+//#######################################################################################
 #ifdef HEADER_INCLUDE_C_FILES
 #include "checkbox.c"
 #endif

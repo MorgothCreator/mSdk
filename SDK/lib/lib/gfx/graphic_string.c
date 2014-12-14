@@ -40,7 +40,7 @@ char *gfx_change_str(char *dest, char *src)
 	return dest;
 }
 //#######################################################################################
-bool _put_roll_string(tDisplay *pDisplay, strings_t *StringsStruct)
+bool _put_roll_string(tDisplay *pDisplay, graphic_strings_t *StringsStruct)
 {
 	if(!StringsStruct->TimerInitialized)
 	{
@@ -63,7 +63,21 @@ bool _put_roll_string(tDisplay *pDisplay, strings_t *StringsStruct)
 		{
 			
 			put_rectangle(pDisplay, pDisplay->sClipRegion.sXMin, pDisplay->sClipRegion.sYMin, pDisplay->sClipRegion.sXMax, pDisplay->sClipRegion.sYMax, true, StringsStruct->Background_Color);
-			StringsStruct->print_function(pDisplay, StringsStruct->pFont, StringsStruct->Str, -1, StringsStruct->Foreground_Color, StringsStruct->Background_Color, StringsStruct->ulOpaque, StringsStruct->ulVisible, StringsStruct->WordWrap, StringsStruct->X_Location, StringsStruct->Y_Location, 0, 0);
+			print_string_properties properties;
+			properties.pDisplay = pDisplay;
+			properties.pFont = StringsStruct->pFont;
+			properties.pcString = StringsStruct->Str;
+			properties.lLength = -1;
+			properties.foreground_color = StringsStruct->Foreground_Color;
+			properties.background_color = StringsStruct->Background_Color;
+			properties.ulOpaque = StringsStruct->ulOpaque;
+			properties.ulVisible = StringsStruct->ulVisible;
+			properties.WordWrap = StringsStruct->WordWrap;
+			properties.lX = StringsStruct->X_Location;
+			properties.lY = StringsStruct->Y_Location;
+			properties._SelStart = 0;
+			properties._SelLen = 0;
+			put_string(&properties);
 			box_cache_clean(pDisplay, pDisplay->sClipRegion.sXMin, pDisplay->sClipRegion.sYMin, pDisplay->sClipRegion.sXMax, pDisplay->sClipRegion.sYMax);
 			StringsStruct->X_Location--;
 		}
@@ -79,7 +93,7 @@ bool _put_roll_string(tDisplay *pDisplay, strings_t *StringsStruct)
 }
 //#######################################################################################
 #ifdef FLASH_DEVICE
-bool put_roll_string(tDisplay *pDisplay, strings_t *StringsStruct)
+bool put_roll_string(tDisplay *pDisplay, graphic_strings_t *StringsStruct)
 {
 	bool Return = false;
 	if(StringsStruct->Pstr)

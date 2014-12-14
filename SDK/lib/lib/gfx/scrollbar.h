@@ -129,6 +129,9 @@ void scrollbar(tScrollBar *settings, tControlCommandData* control_comand);
 tScrollBar *new_scrollbar(void *ParentWindow);
 bool free_scrollbar(tScrollBar* settings);
 //#######################################################################################
+#define _new_scrollbar(name) tScrollBar *name = NULL
+//#define free_scrollbar(address) free(address);
+//#######################################################################################
 #ifdef HEADER_INCLUDE_C_FILES
 #include "scrollbar.c"
 #endif

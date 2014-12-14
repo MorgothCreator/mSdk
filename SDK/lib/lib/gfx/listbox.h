@@ -156,6 +156,9 @@ void* listbox_item_add(void* _settings, char* text);
 bool listbox_item_remove(void* _settings, unsigned int location);
 bool listbox_item_remove_all(void* _settings);
 //#######################################################################################
+#define _new_listbox(name) tListBox *name = NULL
+//#define free_listbox(address) free(address);
+//#######################################################################################
 #ifdef HEADER_INCLUDE_C_FILES
 #include "listbox.c"
 #endif

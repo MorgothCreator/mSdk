@@ -130,21 +130,39 @@ static void paint_checkbox(tCheckBox* settings, tDisplay *pDisplay, signed int x
 				y_str_location = y_start + 4;
 			}
 		}
+		print_string_properties properties;
+		properties.pDisplay = pDisplay;
+		properties.pFont = settings->Internals.Caption.Font;
+		properties.pcString = settings->Internals.Caption.Text;
+		properties.lLength = -1;
+		//properties.foreground_color = settings->Color.Enabled.Ink.Push;
+		//properties.background_color = settings->Color.Enabled.Buton.Push;
+		properties.ulOpaque = false;
+		properties.ulVisible = true;
+		properties.WordWrap = settings->Internals.Caption.WordWrap;
+		properties.lX = x_str_location;
+		properties.lY = y_str_location;
+		properties._SelStart = 0;
+		properties._SelLen = 0;
 		if(settings->Enabled == true)
 		{
-			if(cursor == Cursor_Down)
-				put_string(pDisplay, settings->Internals.Caption.Font, settings->Internals.Caption.Text, -1, settings->Color.Enabled.Ink.Push, settings->Color.Enabled.Buton.Push, false, true, settings->Internals.Caption.WordWrap, x_str_location, y_str_location, 0, 0);
-			else if(cursor == Cursor_Move)
-				put_string(pDisplay, settings->Internals.Caption.Font, settings->Internals.Caption.Text, -1, settings->Color.Enabled.Ink.Push, settings->Color.Enabled.Buton.Push, false, true, settings->Internals.Caption.WordWrap, x_str_location, y_str_location, 0, 0);
-			else if(cursor == Cursor_Up)
-				put_string(pDisplay, settings->Internals.Caption.Font, settings->Internals.Caption.Text, -1, settings->Color.Enabled.Ink.Pull, settings->Color.Enabled.Buton.Pull, false, true, settings->Internals.Caption.WordWrap, x_str_location, y_str_location, 0, 0);
-			else
-				put_string(pDisplay, settings->Internals.Caption.Font, settings->Internals.Caption.Text, -1, settings->Color.Enabled.Ink.Pull, settings->Color.Enabled.Buton.Pull, false, true, settings->Internals.Caption.WordWrap, x_str_location, y_str_location, 0, 0);
+			if(cursor == Cursor_Down || cursor == Cursor_Move) {
+				properties.foreground_color = settings->Color.Enabled.Ink.Push;
+				properties.background_color = settings->Color.Enabled.Buton.Push;
+			}
+			else if(cursor == Cursor_Up) {
+				properties.foreground_color = settings->Color.Enabled.Ink.Pull;
+				properties.background_color = settings->Color.Enabled.Buton.Pull;
+			}
+			else {
+				properties.foreground_color = settings->Color.Enabled.Ink.Pull;
+				properties.background_color = settings->Color.Enabled.Buton.Pull;
+			}
+		} else {
+				properties.foreground_color = settings->Color.Disabled.Ink;
+				properties.background_color = settings->Color.Disabled.Buton;
 		}
-		else
-		{
-			put_string(pDisplay, settings->Internals.Caption.Font, settings->Internals.Caption.Text, -1, settings->Color.Disabled.Ink, settings->Color.Disabled.Buton, false, true, settings->Internals.Caption.WordWrap, x_str_location, y_str_location, 0, 0);
-		}
+		put_string(&properties);
 	}
 	pDisplay->sClipRegion.sXMin = x_start;
 	pDisplay->sClipRegion.sYMin = y_start;

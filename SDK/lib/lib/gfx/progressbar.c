@@ -69,8 +69,29 @@ static void paint_progressbar(tProgressBar* settings, tDisplay *pDisplay, signed
 			unsigned char CharHeight = char_height_get(settings->Internals.Caption.Font);
 			y_str_location = y_start + ((settings->Internals.Size.Y>>1)-(CharHeight>>1));
 		}
-		if(settings->Enabled == true) put_string(pDisplay, settings->Internals.Caption.Font, settings->Internals.Caption.Text, -1, settings->Color.Enabled.Ink.Pull, settings->Color.Enabled.Buton.Pull, false, true, settings->Internals.Caption.WordWrap, x_str_location, y_str_location, 0, 0);
-		else  put_string(pDisplay, settings->Internals.Caption.Font, settings->Internals.Caption.Text, -1, settings->Color.Disabled.Ink, settings->Color.Disabled.Buton, false, true, settings->Internals.Caption.WordWrap, x_str_location, y_str_location, 0, 0);
+		print_string_properties properties;
+		properties.pDisplay = pDisplay;
+		properties.pFont = settings->Caption.Font;
+		properties.pcString = settings->Caption.Text;
+		properties.lLength = -1;
+		//properties.foreground_color = settings->Color.Enabled.Ink.Push;
+		//properties.background_color = settings->Color.Enabled.Buton.Push;
+		properties.ulOpaque = false;
+		properties.ulVisible = true;
+		properties.WordWrap = settings->Caption.WordWrap;
+		properties.lX = x_str_location;
+		properties.lY = y_str_location;
+		properties._SelStart = 0;
+		properties._SelLen = 0;
+		if(settings->Enabled == true) {
+			properties.foreground_color = settings->Color.Enabled.Ink.Pull;
+			properties.background_color = settings->Color.Enabled.Buton.Pull;
+		}
+		else {
+			properties.foreground_color = settings->Color.Disabled.Ink;
+			properties.background_color = settings->Color.Disabled.Buton;
+		}
+		put_string(&properties);
 	}
 
 	pDisplay->sClipRegion.sXMin = x_start;

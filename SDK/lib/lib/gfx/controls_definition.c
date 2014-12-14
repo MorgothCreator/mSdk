@@ -1002,8 +1002,22 @@ signed int string_rows_get(char *pcString, signed int lLength)
     return(lRows);
 }
 //#######################################################################################
-signed int put_string(tDisplay *pDisplay, tFont *pFont, char *pcString, signed int lLength, unsigned int foreground_color, unsigned int background_color, bool ulOpaque, bool ulVisible, bool WordWrap, signed int lX, signed int lY, signed int _SelStart, signed int _SelLen)
+signed int put_string(print_string_properties *properties)
 {
+	tDisplay *pDisplay = properties->pDisplay;
+	tFont *pFont = properties->pFont;
+	char *pcString = properties->pcString;
+	signed int lLength = properties->lLength;
+	unsigned int foreground_color = properties->foreground_color;
+	unsigned int background_color = properties->background_color;
+	bool ulOpaque = properties->ulOpaque;
+	bool ulVisible = properties->ulVisible;
+	bool WordWrap = properties->WordWrap;
+	signed int lX = properties->lX;
+	signed int lY = properties->lY;
+	signed int _SelStart = properties->_SelStart;
+	signed int _SelLen = properties->_SelLen;
+
 	signed int lIdx, lX0, lY0, lCount, lOff, lOn, lBit;
 	signed int lXBackup = lX;
     const unsigned short *pusOffset;
@@ -1539,8 +1553,22 @@ signed int put_string(tDisplay *pDisplay, tFont *pFont, char *pcString, signed i
 	return ChCount;
 }
 //#######################################################################################
-signed int put_string_tiny_chr(tDisplay *pDisplay, tFont *pFont, char *pcString, signed int lLength, unsigned int foreground_color, unsigned int background_color, bool ulOpaque, bool ulVisible, bool WordWrap, signed int lX, signed int lY, signed int _SelStart, signed int _SelLen)
+signed int put_string_tiny_chr(print_string_properties *properties)
 {
+	tDisplay *pDisplay = properties->pDisplay;
+	tFont *pFont = properties->pFont;
+	char *pcString = properties->pcString;
+	signed int lLength = properties->lLength;
+	unsigned int foreground_color = properties->foreground_color;
+	unsigned int background_color = properties->background_color;
+	bool ulOpaque = properties->ulOpaque;
+	bool ulVisible = properties->ulVisible;
+	bool WordWrap = properties->WordWrap;
+	signed int lX = properties->lX;
+	signed int lY = properties->lY;
+	signed int _SelStart = properties->_SelStart;
+	signed int _SelLen = properties->_SelLen;
+
 	//struct Display_Struct* ScreenStruct = (struct Display_Struct*)ScreenFile->udata;
 	signed char chWidth = 0;
 	//signed char chWidth_Tmp = 0;

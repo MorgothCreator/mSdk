@@ -55,10 +55,10 @@ static void paint_button(tButton* settings, tDisplay *pDisplay, signed int x_sta
 	put_rectangle(pDisplay, x_start + 2, y_start + 2, x_len - 4, y_len - 4, true, color);
 	if(settings->Internals.Caption.Text)
 	{
-		pDisplay->sClipRegion.sXMin = x_start + 4;
-		pDisplay->sClipRegion.sYMin = y_start + 4;
-		pDisplay->sClipRegion.sXMax = ((x_start + x_len) - 4);
-		pDisplay->sClipRegion.sYMax = ((y_start + y_len) - 4);
+		pDisplay->sClipRegion.sXMin = x_start + 2;
+		pDisplay->sClipRegion.sYMin = y_start + 2;
+		pDisplay->sClipRegion.sXMax = ((x_start + x_len) - 2);
+		pDisplay->sClipRegion.sYMax = ((y_start + y_len) - 2);
 		clip_limit(&pDisplay->sClipRegion, &back_up_clip);
 
 		signed int x_str_location = pDisplay->sClipRegion.sXMin;
@@ -69,17 +69,39 @@ static void paint_button(tButton* settings, tDisplay *pDisplay, signed int x_sta
 			x_str_location = x_start + ((x_len>>1)-(str_properties.StringRowsMaxLength_Pixels>>1));
 			y_str_location = y_start + ((y_len>>1)-(str_properties.StringColsHeight_Pixels>>1));
 		}
-
+		print_string_properties properties;
+		properties.pDisplay = pDisplay;
+		properties.pFont = settings->Internals.Caption.Font;
+		properties.pcString = settings->Internals.Caption.Text;
+		properties.lLength = -1;
+		//properties.foreground_color = settings->Color.Enabled.Ink.Push;
+		//properties.background_color = settings->Color.Enabled.Buton.Push;
+		properties.ulOpaque = false;
+		properties.ulVisible = true;
+		properties.WordWrap = settings->Internals.Caption.WordWrap;
+		properties.lX = x_str_location;
+		properties.lY = y_str_location;
+		properties._SelStart = 0;
+		properties._SelLen = 0;
 		if(settings->Enabled == true)
 		{
-			if(cursor == Cursor_Down || cursor == Cursor_Move) put_string(pDisplay, settings->Internals.Caption.Font, settings->Internals.Caption.Text, -1, settings->Color.Enabled.Ink.Push, settings->Color.Enabled.Buton.Push, false, true, settings->Internals.Caption.WordWrap, x_str_location, y_str_location, 0, 0);
-			/*else if(cursor == Cursor_Move) put_string(pDisplay, settings->Internals.Caption.Font, settings->Internals.Caption.Text, -1, settings->Color.Enabled.Ink.Push, settings->Color.Enabled.Buton.Push, false, true, settings->Internals.Caption.WordWrap, x_str_location, y_str_location, 0, 0);*/
-			else if(cursor == Cursor_Up) put_string(pDisplay, settings->Internals.Caption.Font, settings->Internals.Caption.Text, -1, settings->Color.Enabled.Ink.Pull, settings->Color.Enabled.Buton.Pull, false, true, settings->Internals.Caption.WordWrap, x_str_location, y_str_location, 0, 0);
-			else put_string(pDisplay, settings->Internals.Caption.Font, settings->Internals.Caption.Text, -1, settings->Color.Enabled.Ink.Pull, settings->Color.Enabled.Buton.Pull, false, true, settings->Internals.Caption.WordWrap, x_str_location, y_str_location, 0, 0);
-		} else
-		{
-			put_string(pDisplay, settings->Internals.Caption.Font, settings->Internals.Caption.Text, -1, settings->Color.Disabled.Ink, settings->Color.Disabled.Buton, false, true, settings->Internals.Caption.WordWrap, x_str_location, y_str_location, 0, 0);
+			if(cursor == Cursor_Down || cursor == Cursor_Move) {
+				properties.foreground_color = settings->Color.Enabled.Ink.Push;
+				properties.background_color = settings->Color.Enabled.Buton.Push;
+			}
+			else if(cursor == Cursor_Up) {
+				properties.foreground_color = settings->Color.Enabled.Ink.Pull;
+				properties.background_color = settings->Color.Enabled.Buton.Pull;
+			}
+			else {
+				properties.foreground_color = settings->Color.Enabled.Ink.Pull;
+				properties.background_color = settings->Color.Enabled.Buton.Pull;
+			}
+		} else {
+				properties.foreground_color = settings->Color.Disabled.Ink;
+				properties.background_color = settings->Color.Disabled.Buton;
 		}
+		put_string(&properties);
 	}
 	pDisplay->sClipRegion.sXMin = x_start;
 	pDisplay->sClipRegion.sYMin = y_start;
@@ -237,17 +259,13 @@ void button(tButton *settings, tControlCommandData* control_comand)
 		Y_LenBox = settings->Internals.Size.Y;
 		settings->Internals.Caption.Text = gfx_change_str(settings->Internals.Caption.Text, settings->Caption.Text);
 		settings->Caption.Text = settings->Internals.Caption.Text;
-		//CursorState back = control_comand->Cursor;
-		//control_comand->Cursor = Cursor_Up;
 		paint_button(settings, pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, control_comand);
-		//control_comand->Cursor = back;
 		settings->Internals.ParentWindowStateEnabled = ParentWindow->Internals.OldStateEnabled;
 		settings->Internals.OldStateVisible = settings->Visible;
 		settings->Internals.OldStateEnabled = settings->Enabled;
 		settings->Internals.Control.Initiated = true;
 		settings->Internals.NeedEntireRefresh = false;
 		settings->Internals.NeedEntireRepaint = false;
-		//control_comand->Cursor = cursor;
 		control_comand->WindowRefresh |= true;
 		return;
 	}

@@ -111,6 +111,9 @@ void button(tButton *settings, tControlCommandData* control_comand);
 tButton *new_button(void *ParentWindow);
 bool free_button(tButton* settings);
 //#######################################################################################
+#define _new_button(name) tButton *name = NULL
+//#define free_button(address) free(address);
+//#######################################################################################
 #ifdef HEADER_INCLUDE_C_FILES
 #include "button.c"
 #endif

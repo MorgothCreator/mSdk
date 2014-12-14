@@ -549,13 +549,22 @@ void picturebox_put_triangle(tPictureBox* settings, signed int  Ax,signed int  A
 	pDisplay->sClipRegion = back_up_clip;
 }
 //#######################################################################################
-void picturebox_put_string(tPictureBox* settings, tFont *pFont, char *pcString, signed int lLength, unsigned int foreground_color, unsigned int background_color, bool ulOpaque, bool ulVisible, bool WordWrap, signed int lX, signed int lY, signed int _SelStart, signed int _SelLen)
+void picturebox_put_string(tPictureBox* settings, print_string_properties *properties)
 {
 	//tWindow *ParentWindow = (tWindow*)settings->Internals.ParentWindow;
 	tDisplay *pDisplay = settings->Internals.pDisplay;
 	tRectangle back_up_clip = pDisplay->sClipRegion;
 	pDisplay->sClipRegion = settings->Internals.PictureWindowLimits;
-	put_string(pDisplay, pFont, pcString, lLength, foreground_color, background_color, ulOpaque, ulVisible, WordWrap, lX + settings->Internals.Position.X + 2, lY + settings->Internals.Position.Y + 2, _SelStart, _SelLen);
+	tDisplay *_pDisplay = properties->pDisplay;
+	signed int lX = properties->lX;
+	signed int lY = properties->lY;
+	properties->pDisplay = settings->Internals.pDisplay;
+	properties->lX += settings->Internals.Position.X + 2;
+	properties->lY += settings->Internals.Position.Y + 2;
+	put_string(properties);
+	properties->pDisplay = _pDisplay;
+	properties->lX = lX;
+	properties->lY = lY;
 	pDisplay->sClipRegion = back_up_clip;
 }
 //#######################################################################################

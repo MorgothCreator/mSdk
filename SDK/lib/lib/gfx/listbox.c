@@ -74,8 +74,29 @@ static bool paint_listbox_item(tListBox *_settings, listbox_item* settings, tDis
 				y_str_location = y_start + ((settings->Size.Y>>1)-(str_properties.StringColsHeight_Pixels>>1));
 			}
 
-			if(Pushed == true) put_string(pDisplay, settings->Caption.Font, settings->Caption.Text, -1, settings->Color.Enabled.Ink.Push, settings->Color.Enabled.Buton.Push, false, true, settings->Caption.WordWrap, x_str_location, y_str_location, 0, 0);
-			else put_string(pDisplay, settings->Caption.Font, settings->Caption.Text, -1, settings->Color.Enabled.Ink.Pull, settings->Color.Enabled.Buton.Pull, false, true, settings->Caption.WordWrap, x_str_location, y_str_location, 0, 0);
+			print_string_properties properties;
+			properties.pDisplay = pDisplay;
+			properties.pFont = settings->Caption.Font;
+			properties.pcString = settings->Caption.Text;
+			properties.lLength = -1;
+			//properties.foreground_color = settings->Color.Enabled.Ink.Push;
+			//properties.background_color = settings->Color.Enabled.Buton.Push;
+			properties.ulOpaque = false;
+			properties.ulVisible = true;
+			properties.WordWrap = settings->Caption.WordWrap;
+			properties.lX = x_str_location;
+			properties.lY = y_str_location;
+			properties._SelStart = 0;
+			properties._SelLen = 0;
+			if(Pushed == true) {
+				properties.foreground_color = settings->Color.Enabled.Ink.Push;
+				properties.background_color = settings->Color.Enabled.Buton.Push;
+			}
+			else {
+				properties.foreground_color = settings->Color.Enabled.Ink.Pull;
+				properties.background_color = settings->Color.Enabled.Buton.Pull;
+			}
+			put_string(&properties);
 		}
 		pDisplay->sClipRegion.sXMin = x_start;
 		pDisplay->sClipRegion.sYMin = y_start;
