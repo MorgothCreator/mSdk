@@ -20,6 +20,7 @@
 
 #include <math.h>
 #include "main.h"
+#include "example1.h"
 
 #ifdef test1
 
@@ -27,7 +28,6 @@
 
 #include "sys/plat_properties.h"
 #include "board_init.h"
-#include "example1.h"
 #include "interface/lcd_interface.h"
 #include "interface/usb_host_msc_interface.h"
 #include "interface/usb_host_mouse_interface.h"
@@ -43,10 +43,17 @@
 #include "lib/gfx/textbox.h"
 #include "lib/gfx/listbox.h"
 #include "lib/gfx/window.h"
+#include "lib/gfx/keyboard.h"
+
+#include "lib/string_lib.h"
+
+#include "lib/gfx/resource/fonts.h"
 
 #include "app/console.h"
 
-tWindow *MainWindow = NULL;
+_new_window(HeaderWindow);
+_new_window(MainWindow);
+_new_window(KbdWindow);
 
 #ifdef USE_BACK_SCREEN
 tDisplay *BackScreen = NULL;
@@ -57,6 +64,8 @@ signed int picture_old_x = 0;
 signed int picture_old_y = 0;
 
 unsigned int PictureBoxbackBuff[128*96];
+
+//textbox_static_item(test_static_textbox, NULL, NULL);
 /*#####################################################*/
 timer(TimerScanTouch);
 /*#####################################################*/
@@ -136,11 +145,11 @@ int main(void) {
 #else
     BackScreen->DisplayData = memalign(sizeof(BackScreen->DisplayData[0]) << 3, (BackScreen->raster_timings->X * BackScreen->raster_timings->Y * sizeof(BackScreen->DisplayData[0])) + (BackScreen->raster_timings->palete_len * sizeof(BackScreen->DisplayData[0])));
 #endif
-    MainWindow = new_window(BackScreen);
+    MainWindow = new_window(NULL, BackScreen);
 #else
-    MainWindow = new_window(ScreenBuff);
+    MainWindow = new_window(NULL, ScreenBuff);
 #endif
-    window_new_buton(MainWindow, Btn1);
+    window_new_button(MainWindow, Btn1);
     window_new_checkbox(MainWindow, CB1);
     window_new_listbox(MainWindow, ListBox1);
     window_new_progressbar(MainWindow, PBar1);
@@ -149,13 +158,49 @@ int main(void) {
     window_new_picturebox(MainWindow, PictureBox1);
     window_new_window(MainWindow, Window1);
 
+    MainWindow->WindowMoveLimits.sXMin = 0;
+    MainWindow->WindowMoveLimits.sXMax = ScreenBuff->raster_timings->X;
+    MainWindow->WindowMoveLimits.sYMin = 20;
+    MainWindow->WindowMoveLimits.sYMax = ScreenBuff->raster_timings->Y - 100;
+
+#ifdef USE_BACK_SCREEN
+    KbdWindow = new_window(NULL, BackScreen);
+    window_new_keyboard(KbdWindow, Kbd);
+    HeaderWindow = new_window(NULL, BackScreen);
+#else
+    KbdWindow = new_window(NULL, ScreenBuff);
+    window_new_keyboard(KbdWindow, Kbd);
+    HeaderWindow = new_window(NULL, ScreenBuff);
+#endif
+    HeaderWindow->WindowMoveLimits.sXMin = 0;
+    HeaderWindow->WindowMoveLimits.sXMax = ScreenBuff->raster_timings->X;
+    HeaderWindow->WindowMoveLimits.sYMin = 0;
+    HeaderWindow->WindowMoveLimits.sYMax = 20;
+    HeaderWindow->HideHeader = true;
+    HeaderWindow->HideHScroll = true;
+    HeaderWindow->HideVScroll = true;
+
+    KbdWindow->WindowMoveLimits.sXMin = 0;
+    KbdWindow->WindowMoveLimits.sXMax = ScreenBuff->raster_timings->X;
+    KbdWindow->WindowMoveLimits.sYMin = ScreenBuff->raster_timings->Y - 100;
+    KbdWindow->WindowMoveLimits.sYMax = ScreenBuff->raster_timings->Y;
+    KbdWindow->HideHeader = true;
+    KbdWindow->HideHScroll = true;
+    KbdWindow->HideVScroll = true;
+    KbdWindow->Caption.Font = (tFont *)&g_sFontCmss18b;
+/* Set location and size of virtual keyboard */
+    Kbd->Position.X = 0;
+    Kbd->Position.Y = 0;
+    Kbd->Size.X = ScreenBuff->raster_timings->X - 6;
+    Kbd->Size.Y = 98;
+
     Window1->Internals.FullScreen = false;
     Window1->Position.X = 400;
     Window1->Position.Y = 400;
     Window1->Size.X = 400;
     Window1->Size.Y = 300;
 
-    window_new_buton(Window1, Btn2);
+    window_new_button(Window1, Btn2);
 
     window_new_window(Window1, Window2);
 
@@ -165,18 +210,34 @@ int main(void) {
     Window2->Size.X = 300;
     Window2->Size.Y = 200;
 
-    window_new_buton(Window2, Btn3);
+    window_new_button(Window2, Btn3);
 
-    window_new_window(Window2, Window3);
+    window_new_tab_group(Window2, TabGroup1);
+    //TabGroup1->Internals.FullScreen = false;
+    TabGroup1->Position.X = 10;
+    TabGroup1->Position.Y = 50;
+    TabGroup1->Size.X = 200;
+    TabGroup1->Size.Y = 100;
 
-    Window3->Internals.FullScreen = false;
-    Window3->Position.X = 10;
-    Window3->Position.Y = 50;
-    Window3->Size.X = 200;
-    Window3->Size.Y = 100;
+    tab_group_new_tab(TabGroup1, "Tab1");
+    tab_group_new_tab(TabGroup1, "Tab2");
+    tab_group_new_tab(TabGroup1, "Tab3");
+    tab_group_new_tab(TabGroup1, "Tab4");
+    tab_group_new_tab(TabGroup1, "Tab5");
+    tab_group_new_tab(TabGroup1, "Tab6");
+    tab_group_new_tab(TabGroup1, "Tab7");
+    tab_group_new_tab(TabGroup1, "Tab8");
 
-    window_new_buton(Window3, Btn4);
+    tab_group_new_button(TabGroup1, Btn4, 0);
+    tab_group_new_button(TabGroup1, Btn5, 1);
+    tab_group_new_button(TabGroup1, Btn6, 2);
+    tab_group_new_button(TabGroup1, Btn7, 3);
+    tab_group_new_button(TabGroup1, Btn8, 4);
+    tab_group_new_button(TabGroup1, Btn9, 5);
+    tab_group_new_button(TabGroup1, Btn10, 6);
+    tab_group_new_button(TabGroup1, Btn11, 7);
 
+    Btn5->Position.X = 30;
 
     /* Enable clear background on refresh */
     PictureBox1->PaintBackground = true;
@@ -204,6 +265,11 @@ int main(void) {
     listbox_item_remove(ListBox1, 3);
 
 
+    string(TextBoxString, "Multiplatform SDK to create standalone applications\n\r1\n\r2\n\r3\n\r4\n\r5\n\r6\n\r7\n\r8\n\r9\n\r10\n\r11\n\r12\n\r13\n\r14\n\r15\n\r16\n\r17\n\r18");
+    TextBox1->text(TextBox1, TextBoxString);
+    TextBox1->text(TextBox1, TextBox1->to_uper(TextBox1));
+
+
     tControlCommandData control_comand;
     control_comand.Comand = Control_Nop;
     control_comand.CursorCoordonateUsed = true;
@@ -212,6 +278,13 @@ int main(void) {
 /*arg's for console*/
     char *argv[2];
     argv[0] = NULL;
+/*******************************************************/
+	bool old_connected = false;
+#ifdef BridgeUsbDev0ToMmcSd0
+	if(sdCtrl[0].connected == false) usb_msc_dev_media_change_state(0, false);
+#elif defined(BridgeUsbDev0ToMmcSd1)
+	if(sdCtrl[1].connected == false) usb_msc_dev_media_change_state(0, false);
+#endif
 /*******************************************************/
     while(1)
     {
@@ -235,15 +308,14 @@ int main(void) {
 #endif
 #ifdef usb_1_mouse
 	            usb_mouse_host_idle(1, &control_comand);
-				//control_comand.X = MouseXPosition;
-				//control_comand.Y = MouseYPosition;
-				//control_comand.Cursor = (CursorState)TouchScreen->TouchResponse.touch_event1;
 #elif defined(usb_1_msc)
 	            usb_msc_host_idle(1);
 #endif
+                HeaderWindow->idle(HeaderWindow, &control_comand);
                 MainWindow->idle(MainWindow, &control_comand);
+                KbdWindow->idle(KbdWindow, &control_comand);
 #ifdef USE_BACK_SCREEN
-                if(/*control_comand.CursorCoordonateUsed || */control_comand.WindowRefresh) ScreenReRefreshCnt = 2;
+                if(control_comand.WindowRefresh) ScreenReRefreshCnt = 2;
                 if(ScreenReRefreshCnt)
                 {
                     ScreenReRefreshCnt--;
@@ -251,11 +323,38 @@ int main(void) {
                     //put_rectangle(ScreenBuff, control_comand.X, control_comand.Y, 2, 2, true, 0x00000000);
                     //box_cache_clean(ScreenBuff, control_comand.X, control_comand.Y, 2, 2);
                 }
+#else
+                put_rectangle(ScreenBuff, control_comand.X, control_comand.Y, 2, 2, true, 0x00000000);
+                box_cache_clean(ScreenBuff, control_comand.X, control_comand.Y, 2, 2);
 #endif
             }
 #endif
-            mmcsd_idle(&sdCtrl[0]);
-            mmcsd_idle(&sdCtrl[1]);
+#ifdef BridgeUsbDev0ToMmcSd0
+        mmcsd_idle(&sdCtrl[0]);
+        if(old_connected == false && sdCtrl[0].connected == true)
+        {
+        	old_connected = true;
+        	usb_msc_dev_media_change_state(0, true);
+        }
+        else if(old_connected == true && sdCtrl[0].connected == false)
+        {
+        	old_connected = false;
+        	usb_msc_dev_media_change_state(0, false);
+        }
+
+#elif defined(BridgeUsbDev0ToMmcSd1)
+        mmcsd_idle(&sdCtrl[1]);
+        if(old_connected == false && sdCtrl[1].connected == true)
+        {
+        	old_connected = true;
+        	usb_msc_dev_media_change_state(1, true);
+        }
+        else if(old_connected == true && sdCtrl[1].connected == false)
+        {
+        	old_connected = false;
+        	usb_msc_dev_media_change_state(1, false);
+        }
+#endif
         }
         signed int R_Chr = UARTGetcNoBlocking(DebugCom);
         argv[1] = (char *)R_Chr;
