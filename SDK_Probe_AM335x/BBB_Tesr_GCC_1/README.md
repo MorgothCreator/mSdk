@@ -39,7 +39,7 @@ On this example can be tested some interfaces like:
 		initiate the LCD controler for one of two presetted HDMI settings:
 			1) 720p 50hz.
 			2) 1080 24hz.
-			3) 720*480 60hz.
+			3) 720*480 60hz ( some monitors will cut the edges at this resolution ).
 	
 7) Test some GUY libraryes integrated in a sizeable window like:
 
