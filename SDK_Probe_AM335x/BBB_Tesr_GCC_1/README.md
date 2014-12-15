@@ -1,4 +1,6 @@
-On this example can be tested some interfaces like ( this application will work on all beaglebone boards BB, BBB2GB and BBB4GB, but the project is setup to be compiled for BBB ):
+This application will work on all beaglebone boards BB, BBB2GB and BBB4GB, but the project is setup to be compiled for BBB.
+
+On this example can be tested some interfaces like:
 
 1) USB device MSC.
 	Allow to bridge the USB0 device to MMCSD0, MMCSD1 or USB1 MSC host.
