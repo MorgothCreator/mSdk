@@ -1,4 +1,4 @@
-On this example can be tested some interfaces like:
+On this example can be tested some interfaces like ( this application will work on all beaglebone boards BB, BBB2GB and BBB4GB, but the project is setup to be compiled for BBB ):
 
 1) USB device MSC.
 	Allow to bridge the USB0 device to MMCSD0, MMCSD1 or USB1 MSC host.
@@ -36,7 +36,9 @@ On this example can be tested some interfaces like:
 		(autodetected by software throught ft5x06 circuitry).
 	
 	If last two displays has not been detected the software 
-		initiate the LCD controler for one of two presetted HDMI settings:
+		initiate the LCD controler for one of three presetted HDMI settings 
+		( attention the settings will work only with BeagleBone Expansion board from CHIPSEE, 
+		at this moment can't be used the onboard HDMI adapter ):
 			1) 720p 50hz.
 			2) 1080 24hz.
 			3) 720*480 60hz ( some monitors will cut the edges at this resolution ).
