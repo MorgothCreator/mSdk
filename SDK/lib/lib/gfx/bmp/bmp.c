@@ -188,7 +188,7 @@ bm_info_header_t *bitmap_properties_get(unsigned char *file)
 	return return_data;
 }
 //-----------------------------------------------------
-FRESULT put_fbitmap(tDisplay *pDisplay, unsigned char *path, signed int X, signed int Y, bool use_transparency)
+FRESULT put_fbitmap(tDisplay *pDisplay, char *path, signed int X, signed int Y, bool use_transparency)
 {
     FRESULT fresult;
     FIL g_sFilObject;
@@ -204,7 +204,7 @@ FRESULT put_fbitmap(tDisplay *pDisplay, unsigned char *path, signed int X, signe
 	return fill_bitmap(pDisplay, NULL, &g_sFilObject, &bm_info_header, (unsigned char *)bm_file_header.bfOffBits, X, Y, use_transparency, bm_file_header.bfSize, 0, 0);
 }
 //-----------------------------------------------------
-FRESULT put_fbbitmap(unsigned int *dest_buff, unsigned int dest_buff_x_len, unsigned int dest_buff_y_len, unsigned char *path, signed int X, signed int Y, bool use_transparency)
+FRESULT put_fbbitmap(unsigned int *dest_buff, unsigned int dest_buff_x_len, unsigned int dest_buff_y_len, char *path, signed int X, signed int Y, bool use_transparency)
 {
     FRESULT fresult;
     FIL g_sFilObject;

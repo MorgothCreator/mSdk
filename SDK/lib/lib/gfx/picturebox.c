@@ -631,7 +631,7 @@ bool picturebox_put_bitmap(tPictureBox* settings, unsigned char *file, signed in
 	return put_bitmap(pDisplay, file, settings->Internals.Position.X + X + 2, settings->Internals.Position.Y + Y + 2, use_transparency);
 }
 //#######################################################################################
-bool picturebox_put_fbitmap(tPictureBox* settings, unsigned char *path, signed int X, signed int Y, bool use_transparency, bool scale)
+bool picturebox_put_fbitmap(tPictureBox* settings, char *path, signed int X, signed int Y, bool use_transparency, bool scale)
 {
 	tDisplay *pDisplay = settings->Internals.pDisplay;
 	return put_fbitmap(pDisplay, path, settings->Internals.Position.X + X + 2, settings->Internals.Position.Y + Y + 2, use_transparency);

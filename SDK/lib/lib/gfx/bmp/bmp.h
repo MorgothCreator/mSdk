@@ -80,8 +80,8 @@ typedef struct bm_file_header_s {
 bool put_bitmap(tDisplay *pDisplay, unsigned char *file, signed int X, signed int Y, bool use_transparency);
 bool put_bbitmap(unsigned int *dest_buff, unsigned int dest_buff_x_len, unsigned int dest_buff_y_len, unsigned char *file, signed int X, signed int Y, bool use_transparency);
 bm_info_header_t *bitmap_properties_get(unsigned char *file);
-FRESULT put_fbitmap(tDisplay *pDisplay, unsigned char *path, signed int X, signed int Y, bool use_transparency);
-FRESULT put_fbbitmap(unsigned int *dest_buff, unsigned int dest_buff_x_len, unsigned int dest_buff_y_len, unsigned char *path, signed int X, signed int Y, bool use_transparency);
+FRESULT put_fbitmap(tDisplay *pDisplay, char *path, signed int X, signed int Y, bool use_transparency);
+FRESULT put_fbbitmap(unsigned int *dest_buff, unsigned int dest_buff_x_len, unsigned int dest_buff_y_len, char *path, signed int X, signed int Y, bool use_transparency);
 bm_info_header_t *fbitmap_properties_get(unsigned char *file);
 //#####################################################
 #ifdef HEADER_INCLUDE_C_FILES
