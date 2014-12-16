@@ -326,7 +326,7 @@ DWORD get_fat (	/* 0xFFFFFFFF:Disk error, 1:Internal error, Else:Cluster status 
 	DWORD clst	/* Cluster# to get the link information */
 )
 {
-	UINT wc, bc;
+	DWORD wc, bc;
 	DWORD fsect;
 
 
@@ -369,7 +369,7 @@ FRESULT put_fat (
 	DWORD val	/* New value to mark the cluster */
 )
 {
-	UINT bc;
+	DWORD bc;
 	BYTE *p;
 	DWORD fsect;
 	FRESULT res;
@@ -1400,7 +1400,7 @@ FRESULT follow_path (	/* FR_OK(0): successful, !=0: error code */
 	dj->sclust = 0;						/* Start from the root dir */
 #endif
 
-	if ((UINT)*path < ' ') {			/* Null path means the start directory itself */
+	if ((DWORD)*path < ' ') {			/* Null path means the start directory itself */
 		res = dir_seek(dj, 0);
 		dj->dir = NULL;
 
@@ -1468,7 +1468,7 @@ FRESULT chk_mounted (	/* FR_OK(0): successful, !=0: any error occurred */
 )
 {
 	BYTE fmt, *tbl;
-	UINT vol = 0;
+	DWORD vol = 0;
 	DSTATUS stat;
 	DWORD bsect, fsize, tsect, mclst;
 	const XCHAR *p = *path;
@@ -1763,13 +1763,13 @@ FRESULT f_open (
 FRESULT f_read (
 	FIL *fp, 		/* Pointer to the file object */
 	void *buff,		/* Pointer to data buffer */
-	UINT btr,		/* Number of bytes to read */
-	UINT *br		/* Pointer to number of bytes read */
+	DWORD btr,		/* Number of bytes to read */
+	DWORD *br		/* Pointer to number of bytes read */
 )
 {
 	FRESULT res;
 	DWORD clst, sect, remain;
-	UINT rcnt, cc;
+	DWORD rcnt, cc;
 	BYTE *rbuff = buff;
 
 
@@ -1782,7 +1782,7 @@ FRESULT f_read (
 	if (!(fp->flag & FA_READ)) 						/* Check access mode */
 		LEAVE_FF(fp->fs, FR_DENIED);
 	remain = fp->fsize - fp->fptr;
-	if (btr > remain) btr = (UINT)remain;			/* Truncate btr by remaining bytes */
+	if (btr > remain) btr = (DWORD)remain;			/* Truncate btr by remaining bytes */
 
 	for ( ;  btr;									/* Repeat until all data transferred */
 		rbuff += rcnt, fp->fptr += rcnt, *br += rcnt, btr -= rcnt) {
@@ -1858,13 +1858,13 @@ FRESULT f_read (
 FRESULT f_write (
 	FIL *fp,			/* Pointer to the file object */
 	const void *buff,	/* Pointer to the data to be written */
-	UINT btw,			/* Number of bytes to write */
-	UINT *bw			/* Pointer to number of bytes written */
+	DWORD btw,			/* Number of bytes to write */
+	DWORD *bw			/* Pointer to number of bytes written */
 )
 {
 	FRESULT res;
 	DWORD clst, sect;
-	UINT wcnt, cc;
+	DWORD wcnt, cc;
 	const BYTE *wbuff = buff;
 
 
@@ -2319,7 +2319,7 @@ FRESULT f_getfree (
 {
 	FRESULT res;
 	DWORD n, clst, sect, stat;
-	UINT i;
+	DWORD i;
 	BYTE fat, *p;
 
 
@@ -2713,14 +2713,14 @@ FRESULT f_rename (
 
 FRESULT f_forward (
 	FIL *fp, 						/* Pointer to the file object */
-	UINT (*func)(const BYTE*,UINT),	/* Pointer to the streaming function */
-	UINT btr,						/* Number of bytes to forward */
-	UINT *bf						/* Pointer to number of bytes forwarded */
+	DWORD (*func)(const BYTE*,DWORD),	/* Pointer to the streaming function */
+	DWORD btr,						/* Number of bytes to forward */
+	DWORD *bf						/* Pointer to number of bytes forwarded */
 )
 {
 	FRESULT res;
 	DWORD remain, clst, sect;
-	UINT rcnt;
+	DWORD rcnt;
 
 
 	*bf = 0;
@@ -2733,7 +2733,7 @@ FRESULT f_forward (
 		LEAVE_FF(fp->fs, FR_DENIED);
 
 	remain = fp->fsize - fp->fptr;
-	if (btr > remain) btr = (UINT)remain;			/* Truncate btr by remaining bytes */
+	if (btr > remain) btr = (DWORD)remain;			/* Truncate btr by remaining bytes */
 
 	for ( ;  btr && (*func)(NULL, 0);				/* Repeat until all data transferred or stream becomes busy */
 		fp->fptr += rcnt, *bf += rcnt, btr -= rcnt) {
@@ -3000,7 +3000,7 @@ char* f_gets (
 {
 	int i = 0;
 	char *p = buff;
-	UINT rc;
+	DWORD rc;
 
 
 	while (i < len - 1) {			/* Read bytes until buffer gets filled */
@@ -3028,7 +3028,7 @@ int f_putc (
 	FIL* fil	/* Pointer to the file object */
 )
 {
-	UINT bw;
+	DWORD bw;
 	char c;
 
 

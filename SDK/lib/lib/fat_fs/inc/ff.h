@@ -419,8 +419,8 @@ typedef enum {
 
 FRESULT f_mount (BYTE, FATFS*);						/* Mount/Unmount a logical drive */
 FRESULT f_open (FIL*, const XCHAR*, BYTE);			/* Open or create a file */
-FRESULT f_read (FIL*, void*, UINT, UINT*);			/* Read data from a file */
-FRESULT f_write (FIL*, const void*, UINT, UINT*);	/* Write data to a file */
+FRESULT f_read (FIL*, void*, DWORD, DWORD*);			/* Read data from a file */
+FRESULT f_write (FIL*, const void*, DWORD, DWORD*);	/* Write data to a file */
 FRESULT f_lseek (FIL*, DWORD);						/* Move file pointer of a file object */
 FRESULT f_close (FIL*);								/* Close an open file object */
 FRESULT f_opendir (DIR*, const XCHAR*);				/* Open an existing directory */
@@ -434,7 +434,7 @@ FRESULT	f_mkdir (const XCHAR*);						/* Create a new directory */
 FRESULT f_chmod (const XCHAR*, BYTE, BYTE);			/* Change attribute of the file/dir */
 FRESULT f_utime (const XCHAR*, const FILINFO*);		/* Change time-stamp of the file/dir */
 FRESULT f_rename (const XCHAR*, const XCHAR*);		/* Rename/Move a file or directory */
-FRESULT f_forward (FIL*, UINT(*)(const BYTE*,UINT), UINT, UINT*);	/* Forward data to the stream */
+FRESULT f_forward (FIL*, DWORD(*)(const BYTE*,DWORD), DWORD, DWORD*);	/* Forward data to the stream */
 FRESULT f_mkfs (BYTE, BYTE, WORD);					/* Create a file system on the drive */
 FRESULT f_chdir (const XCHAR*);						/* Change current directory */
 FRESULT f_chdrive (BYTE);							/* Change current drive */
@@ -464,7 +464,7 @@ DWORD get_fattime (void);	/* 31-25: Year(0-127 org.1980), 24-21: Month(1-12), 20
 
 /* Unicode - OEM code conversion */
 #if _USE_LFN
-WCHAR ff_convert (WCHAR, UINT);
+WCHAR ff_convert (WCHAR, DWORD);
 WCHAR ff_wtoupper (WCHAR);
 #endif
 
