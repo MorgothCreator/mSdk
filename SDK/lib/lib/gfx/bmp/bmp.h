@@ -29,41 +29,21 @@
 #include <stdlib.h>
 #include "../gfx_util.h"
 #include "../controls_definition.h"
+#include "lib/fat_fs/inc/ff.h"
 
 //#####################################################
-#ifndef False
-#define False	0
-#endif
-
-#ifndef True
-#define True	1
-#endif
-
-#ifndef Null
-#define Null	-1
-#endif
-//#####################################################
-
-typedef enum
-{
-	BMP_FromRamMemory = 0,
-	BMP_FromFlashMemory,
-	BMP_FromFileSystemMemory
-}BMP_Source_MemoryType;
-
-
 typedef struct bm_info_header_s {
 	/*! \brief Size of the information header */
- 	unsigned int biSize;
+ 	unsigned long biSize;
  	/*! \brief Width of the bitmap in pixels */
-	signed int biWidth;
+ 	unsigned long biWidth;
 	/*! \brief Height of the bitmap in pixels
 	 * 	If this value is positiv -> "bottom-up"-bitmap (picture data starts with the bottom
 	 * line and ends with the top line)
      * If this value is negativ ->"top-down"-Bitmap (picture data starts with the top line
      * and ends with the bottom line)
 	 */
-	signed int biHeight;
+ 	unsigned long biHeight;
 	/*! \brief Number of color planes being used. Not often used. */
 	unsigned short 	biPlanes;
 	/*! \brief Number of bits per pixel, which is the color depth of the image.
@@ -76,39 +56,36 @@ typedef struct bm_info_header_s {
 	 *  2 (BI_RLE4):
 	 *  3 (BI_BITFIELDS):
 	 */
-	unsigned int 	biCompression;
+	unsigned long 	biCompression;
 	/*! \brief Image size. This is the size of the raw bitmap data. */
-	unsigned int 	biSizeImage;
+	unsigned long 	biSizeImage;
 	/*! \brief Horizontale resolution */
-	unsigned int 	biXPelsPerMeter;
+	unsigned long 	biXPelsPerMeter;
 	/*! \brief Vertical resolution */
-	unsigned int 	biYPelsPerMeter;
- 	unsigned int 	biClrUsed;
-	unsigned int 	biClrImportant;
-}/*__attribute__((__packed__))*/ bm_info_header_t;
-
+	unsigned long 	biYPelsPerMeter;
+ 	unsigned long 	biClrUsed;
+	unsigned long 	biClrImportant;
+}__attribute__((__packed__))bm_info_header_t;
+//#####################################################
 typedef struct bm_file_header_s {
 	unsigned short bfType;
 	/*! \brief Size of the bitmap file */
-	unsigned int bfSize;
+	unsigned long bfSize;
 	/*! \brief Reserved. May be used by some software */
-	unsigned int bfReserved;
+	unsigned long bfReserved;
 	/*! \brief Offset in bytes where the bitmap data can be found */
-	unsigned int bfOffBits;
-} /*__attribute__((__packed__))*/ bm_file_header_t ;
-//-----------------------------------------------------
-typedef struct bmp_return_struct
-{
-	unsigned short HeightBmp;
-	unsigned short WidthBmp;
-	unsigned char BitCount;
-} bmp_return_t;
-//-----------------------------------------------------
-//unsigned char fill_frame_buffer(struct bm_info_header_s *bm_info_header, /*put_str_t *BmpLimits,*/ unsigned char* data_start, signed short X, signed short Y, unsigned char SourceMemory);
-bmp_return_t paint_bitmap(tDisplay *pDisplay, unsigned char *file_start, /*struct put_str_t *BmpLimits,*/ signed short X, signed short Y, unsigned char Paint);
-
+	unsigned long bfOffBits;
+}__attribute__((__packed__))bm_file_header_t;
+//#####################################################
+bool put_bitmap(tDisplay *pDisplay, unsigned char *file, signed int X, signed int Y, bool use_transparency);
+bool put_bbitmap(unsigned int *dest_buff, unsigned int dest_buff_x_len, unsigned int dest_buff_y_len, unsigned char *file, signed int X, signed int Y, bool use_transparency);
+bm_info_header_t *bitmap_properties_get(unsigned char *file);
+FRESULT put_fbitmap(tDisplay *pDisplay, unsigned char *path, signed int X, signed int Y, bool use_transparency);
+FRESULT put_fbbitmap(unsigned int *dest_buff, unsigned int dest_buff_x_len, unsigned int dest_buff_y_len, unsigned char *path, signed int X, signed int Y, bool use_transparency);
+bm_info_header_t *fbitmap_properties_get(unsigned char *file);
+//#####################################################
 #ifdef HEADER_INCLUDE_C_FILES
 #include "bmp.c"
 #endif
-
+//#####################################################
 #endif /* BMP_C_ */

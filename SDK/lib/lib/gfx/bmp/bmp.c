@@ -22,166 +22,114 @@
 #include <stdbool.h>
 #include "../../../api/lcd_api.h"
 #include "bmp.h"
+#include "ffconf.h"		/* FatFs configuration options */
+#include "lib/fat_fs/inc/ff.h"
 
-static bool fill_frame_buffer(tDisplay *pDisplay, struct bm_info_header_s *bm_info_header, /*put_str_t *BmpLimits,*/ unsigned char* data_start, signed short X, signed short Y, unsigned char SourceMemory)
+#define	BYTE_PER_PIXEL  3
+
+static bool fill_bitmap(tDisplay *pDisplay, unsigned int *dest_buff, FIL *g_sFilObject, bm_info_header_t *bm_info_header, unsigned char* data, signed int X, signed int Y, bool use_transparency, unsigned long bm_size, unsigned int X_len, unsigned int Y_len)
 {
-
 	unsigned int k = 0,l = 0;
-	unsigned char  *bm = data_start;
-//	unsigned char red = 0,green = 0,blue = 0;
+	unsigned char  *bm = data;
 	signed short X_Coordinate = 0;
 	signed short Y_Coordinate = 0;
-	unsigned int Tmp2 = bm_info_header->biWidth&0x3;
-	unsigned int Tmp3 = (0 - ((unsigned char)bm_info_header->biWidth &0x3)) & 0x3;
 	volatile unsigned short BitCount = bm_info_header->biBitCount;
 	unsigned int Temp;
-	unsigned int  *mask;
+	unsigned char  *mask;
 	unsigned int BitColourUsed;
-	//struct rgb_8 color;
 	unsigned int color;
-	switch(BitCount)
-	{
+	int	i, j, pos = 0;
+	int	row = bm_info_header->biHeight;
+	int	col = bm_info_header->biWidth;
+	unsigned char			blue, red, green;
+	unsigned short int		rowMultiplier;
+	unsigned char*			pData;
+    FRESULT fresult;
+    unsigned long bytes_read = 0;
+    bool return_status = true;
+    unsigned char *file;
+    unsigned int *destination_buffer = dest_buff;
+	switch(BitCount) {
 		case(32):
 		case(24):
-#ifdef LcdArea_Integrated
-			lcd_area(X, Y, X+bm_info_header->biWidth-1, Y+bm_info_header->biHeight-1);
-			lcd_drawstart();
-#endif
-			Y_Coordinate = Y;
-			if(bm_info_header->biHeight > 0)
+
+			pos = bm_info_header->biSizeImage;
+			rowMultiplier = col * 3;
+			if(BitCount == 32)
+				rowMultiplier = col * 4;
+			else
+				rowMultiplier = col * 3;
+			if(rowMultiplier%4)				/*If not a multilier of 4 then pad rowMultiplier with zeros */
 			{
-				bm += ((BitCount * bm_info_header->biWidth * (bm_info_header->biHeight - 1)) / 8);//    (((bm_info_header->biWidth) * (Y+bm_info_header->biHeight-1)) * BitCount >> 3) - ((bm_info_header->biWidth-1) * BitCount >> 3) ;
-				bm += Tmp2*(bm_info_header->biHeight - 1);
+				int extraZeros = 4 - ((col*BYTE_PER_PIXEL)%4);
+				rowMultiplier += extraZeros;
 			}
-			for (l = 0 ; l < bm_info_header->biHeight; l++)
-			{
-				X_Coordinate = X;
-				for (k = 0; k < bm_info_header->biWidth; k++)
-				{
-#ifdef Dx_UseMarginLimits
-#ifndef LcdArea_Integrated
-					if(X_Coordinate >= BmpLimits->LeftEdgeLimit && X_Coordinate <= (BmpLimits->LeftEdgeLimit + BmpLimits->RightEdgeLimit) && Y_Coordinate >= BmpLimits->UpEdgeLimit && Y_Coordinate <= (BmpLimits->UpEdgeLimit + BmpLimits->DownEdgeLimit))
-					{
-#endif
-#endif
-						//color.red = (*bm);// >> 3;
-						//color.green = (*(bm +1));// >> 2;
-						//color.blue = (*(bm + 2));// >> 3;
-						color = RGB_TO_UINT((*bm), (*(bm +1)), (*(bm + 2)));
-#ifdef LcdArea_Integrated
-						unsigned short TempColor = ((red>>3)&0b11111) | ((green<<3)&0b11111100000) | ((blue<<8)&0b1111100000000000);
-						lcd_rw_data(TempColor);
-#else
-						//pContext->ulForeground = color;
-						put_pixel(pDisplay, X_Coordinate,Y_Coordinate, color);
-#endif
-#ifdef Dx_UseMarginLimits
-#ifndef LcdArea_Integrated
-					}
-#endif
-#endif
-					X_Coordinate++;
-					bm += BitCount >> 3;
-				}
-				Y_Coordinate++;
-				if(bm_info_header->biHeight < 0)
-				{
-					if(BitCount == 24)
-					{
-						bm += Tmp2;
-					}
-				}
-				else
-				{
-					if(BitCount == 24)
-					{
-						bm -= Tmp2;
-					}
-					bm -= BitCount * 2 * bm_info_header->biWidth / 8;//bm_info_header->biBitCount *2* bm_info_header->biWidth / 8;
-				}
+			if(!g_sFilObject) {
+			pData = data;
+			} else {
+				pData = malloc(rowMultiplier);
 			}
-#ifdef LcdArea_Integrated
-			lcd_drawstop();
-#endif
+			for(i = (row - 1); i >= 0; i--) {
+				pos = 0;
+				fresult = f_read(g_sFilObject, pData, rowMultiplier, &bytes_read);
+				if(fresult) return false;
+				for(j = 0; j < col; j++) {
+					blue = pData[pos++];
+					green = pData[pos++];
+					red = pData[pos++];
+					color = BGR_TO_UINT(blue, green, red);
+					if(!dest_buff)
+						put_pixel(pDisplay, X + j, Y + i, color << 8);
+					else
+						*destination_buffer++ = color;
+					if(BitCount == 32)
+						pos++;
+				}
+				if(!g_sFilObject)
+					pData += rowMultiplier;
+			}
+			if(g_sFilObject)
+				if(pData) free(pData);
 			break;
 		case(8):
-			Y_Coordinate = Y;
+			Y_Coordinate = Y + (row - 1);
+			if(g_sFilObject) {
+				file = bm = malloc(bm_size - (sizeof(bm_info_header_t) + sizeof(bm_file_header_t)));
+				fresult = f_read(g_sFilObject, bm, bm_size - (sizeof(bm_info_header_t) + sizeof(bm_file_header_t)), &bytes_read);
+				bm += (unsigned int)data - 54;
+			}
 			BitColourUsed = bm_info_header->biClrUsed;
-			if ((unsigned char)bm_info_header->biClrUsed == 0)
-			{
+			if ((unsigned char)bm_info_header->biClrUsed == 0){
 				BitColourUsed = 256;
 			}
 			Temp = 0;
-			mask = (unsigned int*)(bm - (BitColourUsed * 4));
-			if(bm_info_header->biHeight > 0)
-			{
-				bm += (bm_info_header->biWidth - 1) * (bm_info_header->biHeight - 1);//    (((bm_info_header->biWidth) * (Y+bm_info_header->biHeight-1)) * BitCount >> 3) - ((bm_info_header->biWidth-1) * BitCount >> 3) ;
-				bm += ((Tmp3 & 0x3)+1) * (bm_info_header->biHeight - 1);
-			}
-			//if(SourceMemory == BMP_FromFileSystemMemory)
-			//{
-			//	_FatData_GoToIndex(fileinfo, (unsigned int)(unsigned short)bm);
-			///	memcpy(IndexBuffer, fileinfo->FileInfo_BufferAddr, 512);
-			//	memcpy(DataBuffer, fileinfo->FileInfo_BufferAddr, 512);
-			//}
-#ifdef LcdArea_Integrated
-			lcd_area(X, Y, (X+bm_info_header->biWidth), (Y+bm_info_header->biHeight-1));
-			lcd_drawstart();
-#endif
-			for (l = 0 ; l < bm_info_header->biHeight; l++)
-			{
+			mask = (unsigned char*)(bm - (BitColourUsed * 4));
+			for (l = 0; l < row; l++) {
 				X_Coordinate = X;
-				for (k = 0; k <= bm_info_header->biWidth; k++)
-				{
-#ifdef Dx_UseMarginLimits
-#ifdef Dx_UseMarginLimits
-					if(X_Coordinate >= BmpLimits->LeftEdgeLimit && X_Coordinate <= (BmpLimits->LeftEdgeLimit + BmpLimits->RightEdgeLimit) && Y_Coordinate >= BmpLimits->UpEdgeLimit && Y_Coordinate <= (BmpLimits->UpEdgeLimit + BmpLimits->DownEdgeLimit))
-					{
-#endif
-#endif
-						Temp = *bm;
-						Temp = Temp<<2;
-						//color.red = *(mask + Temp);
-						//color.green = *(mask + Temp + 1);
-						//color.blue = *(mask + Temp + 2);
-						color = RGB_TO_UINT(*(mask + Temp), *(mask + Temp + 1), *(mask + Temp + 2));
-#ifdef LcdArea_Integrated
-						unsigned short TempColor = ((blue>>3)&0b11111) | ((green<<3)&0b11111100000) | ((red<<8)&0b1111100000000000);
-						lcd_rw_data(TempColor);
-#else
-						//pContext->ulForeground = color;
-						put_pixel(pDisplay, X_Coordinate,Y_Coordinate, color);
-#endif
-#ifdef Dx_UseMarginLimits
-#ifdef Dx_UseMarginLimits
-					}
-#endif
-#endif
+				for (k = 0; k < col; k++) {
+					Temp = *bm;
+					Temp = Temp<<2;
+					color = BGR_TO_UINT(*(mask + Temp), *(mask + Temp + 1), *(mask + Temp + 2));
+					if(!dest_buff)
+						put_pixel(pDisplay, X_Coordinate, Y_Coordinate, color << 8);
+					else
+						*destination_buffer++ = color;
 					X_Coordinate++;
 					bm++;
 				}
-				Y_Coordinate++;
-				if(bm_info_header->biHeight < 0) bm += Tmp3;
-				else
-				{
-					bm -= Tmp3+1;
-					bm -= 2 * bm_info_header->biWidth;
-				}
-
-
-				//bm += Tmp3;
+				Y_Coordinate--;
+				bm += 4 - (col%4);				/*If not a multilier of 4 then pad rowMultiplier with zeros */
 			}
-#ifdef LcdArea_Integrated
-			lcd_drawstop();
-#endif
+			if(g_sFilObject)
+				if(file) free(file);
 			break;
 		default:
-			return false;
+			return_status = false;
 	}
-	return true;
+	return return_status;
 }
 //-----------------------------------------------------
-void swap_endian_blk(unsigned char *pblock, int size)
+void bitmap_swap_endian_blk(unsigned char *pblock, int size)
 {
         unsigned char *pend = &pblock[size - 1];
         unsigned char temp;
@@ -195,34 +143,87 @@ void swap_endian_blk(unsigned char *pblock, int size)
         }
 }
 //-----------------------------------------------------
-bmp_return_t paint_bitmap(tDisplay *pDisplay, unsigned char *file_start, /*struct put_str_t *BmpLimits,*/ signed short X, signed short Y, unsigned char Paint)
+bool put_bitmap(tDisplay *pDisplay, unsigned char *file, signed int X, signed int Y, bool use_transparency)
 {
-	struct bm_file_header_s bm_file_header;
-	struct bm_info_header_s bm_info_header;
+	bm_file_header_t bm_file_header;
+	bm_info_header_t bm_info_header;
 	unsigned char* data_start;
-
 	/* get file header and header information */
-	memcpy(&bm_info_header, file_start + 14, sizeof(bm_info_header_t));
-	if(Paint)
-	{
-		memcpy(&bm_file_header, file_start, sizeof(bm_file_header_t));
-		swap_endian_blk((unsigned char *) &bm_file_header.bfType, 2);
-		swap_endian_blk((unsigned char *) &bm_file_header.bfSize, 4);
-		swap_endian_blk((unsigned char *) &bm_file_header.bfOffBits, 4);
-		swap_endian_blk((unsigned char *) &bm_info_header.biWidth, 4);
-		swap_endian_blk((unsigned char *) &bm_info_header.biHeight, 4);
-		swap_endian_blk((unsigned char *) &bm_info_header.biBitCount, 2);
-		swap_endian_blk((unsigned char *) &bm_info_header.biCompression, 4);
-		//fill_frame_buffer_bm( &bm_info_header, data_start);
-		data_start = file_start + bm_file_header.bfOffBits;
-		fill_frame_buffer(pDisplay, &bm_info_header, /*BmpLimits,*/ data_start, X, Y, BMP_FromRamMemory);
-	}
-	struct bmp_return_struct BmpReturn;
-	BmpReturn.HeightBmp = bm_info_header.biHeight & 0x7FFF;//0b0111111111111111;
-	BmpReturn.WidthBmp = bm_info_header.biWidth & 0x7FFF;//0b0111111111111111;
-	BmpReturn.BitCount = bm_info_header.biBitCount;
-	if((unsigned char)bm_info_header.biBitCount == 8) BmpReturn.WidthBmp++;
-	return BmpReturn;
+	memcpy(&bm_info_header, file + 14, sizeof(bm_info_header_t));
+	memcpy(&bm_file_header, file, sizeof(bm_file_header_t));
+	//bitmap_swap_endian_blk((unsigned char *) &bm_file_header.bfType, 2);
+	//bitmap_swap_endian_blk((unsigned char *) &bm_file_header.bfSize, 4);
+	//bitmap_swap_endian_blk((unsigned char *) &bm_file_header.bfOffBits, 4);
+	//bitmap_swap_endian_blk((unsigned char *) &bm_info_header.biWidth, 4);
+	//bitmap_swap_endian_blk((unsigned char *) &bm_info_header.biHeight, 4);
+	//bitmap_swap_endian_blk((unsigned char *) &bm_info_header.biBitCount, 2);
+	//bitmap_swap_endian_blk((unsigned char *) &bm_info_header.biCompression, 4);
+	data_start = file + bm_file_header.bfOffBits;
+	return fill_bitmap(pDisplay, NULL, NULL, &bm_info_header, data_start, X, Y, use_transparency, bm_file_header.bfSize, 0, 0);
 }
 //-----------------------------------------------------
+bool put_bbitmap(unsigned int *dest_buff, unsigned int dest_buff_x_len, unsigned int dest_buff_y_len, unsigned char *file, signed int X, signed int Y, bool use_transparency)
+{
+	bm_file_header_t bm_file_header;
+	bm_info_header_t bm_info_header;
+	unsigned char* data_start;
+	/* get file header and header information */
+	memcpy(&bm_info_header, file + 14, sizeof(bm_info_header_t));
+	memcpy(&bm_file_header, file, sizeof(bm_file_header_t));
+	//bitmap_swap_endian_blk((unsigned char *) &bm_file_header.bfType, 2);
+	//bitmap_swap_endian_blk((unsigned char *) &bm_file_header.bfSize, 4);
+	//bitmap_swap_endian_blk((unsigned char *) &bm_file_header.bfOffBits, 4);
+	//bitmap_swap_endian_blk((unsigned char *) &bm_info_header.biWidth, 4);
+	//bitmap_swap_endian_blk((unsigned char *) &bm_info_header.biHeight, 4);
+	//bitmap_swap_endian_blk((unsigned char *) &bm_info_header.biBitCount, 2);
+	//bitmap_swap_endian_blk((unsigned char *) &bm_info_header.biCompression, 4);
+	data_start = file + bm_file_header.bfOffBits;
+	return fill_bitmap(NULL, dest_buff, NULL, &bm_info_header, data_start, X, Y, use_transparency, bm_file_header.bfSize, dest_buff_x_len, dest_buff_y_len);
+}
+//-----------------------------------------------------
+bm_info_header_t *bitmap_properties_get(unsigned char *file)
+{
+	bm_info_header_t *return_data = malloc(sizeof(bm_info_header_t));
+	memcpy(&return_data, file + 14, sizeof(bm_info_header_t));
+	return return_data;
+}
+//-----------------------------------------------------
+FRESULT put_fbitmap(tDisplay *pDisplay, unsigned char *path, signed int X, signed int Y, bool use_transparency)
+{
+    FRESULT fresult;
+    FIL g_sFilObject;
+	fresult = f_open(&g_sFilObject, (char *)path, FA_READ);
+	bm_file_header_t bm_file_header;
+	bm_info_header_t bm_info_header;
+	/* get file header and header information */
+    unsigned long bytes_read = 0;
+	fresult = f_read(&g_sFilObject, &bm_file_header, sizeof(bm_file_header_t), &bytes_read);
+	if(fresult) return fresult;
+	fresult = f_read(&g_sFilObject, &bm_info_header, sizeof(bm_info_header_t), &bytes_read);
+	if(fresult) return fresult;
+	return fill_bitmap(pDisplay, NULL, &g_sFilObject, &bm_info_header, (unsigned char *)bm_file_header.bfOffBits, X, Y, use_transparency, bm_file_header.bfSize, 0, 0);
+}
+//-----------------------------------------------------
+FRESULT put_fbbitmap(unsigned int *dest_buff, unsigned int dest_buff_x_len, unsigned int dest_buff_y_len, unsigned char *path, signed int X, signed int Y, bool use_transparency)
+{
+    FRESULT fresult;
+    FIL g_sFilObject;
+	fresult = f_open(&g_sFilObject, (char *)path, FA_READ);
+	bm_file_header_t bm_file_header;
+	bm_info_header_t bm_info_header;
+	/* get file header and header information */
+    unsigned long bytes_read = 0;
+	fresult = f_read(&g_sFilObject, &bm_file_header, sizeof(bm_file_header_t), &bytes_read);
+	if(fresult) return fresult;
+	fresult = f_read(&g_sFilObject, &bm_info_header, sizeof(bm_info_header_t), &bytes_read);
+	if(fresult) return fresult;
+	return fill_bitmap(NULL, dest_buff, &g_sFilObject, &bm_info_header, (unsigned char *)bm_file_header.bfOffBits, X, Y, use_transparency, bm_file_header.bfSize, dest_buff_x_len, dest_buff_y_len);
+}
+//-----------------------------------------------------
+bm_info_header_t *fbitmap_properties_get(unsigned char *file)
+{
+	bm_info_header_t *return_data = malloc(sizeof(bm_info_header_t));
+	memcpy(&return_data, file + 14, sizeof(bm_info_header_t));
+	return return_data;
+}
 //#####################################################
