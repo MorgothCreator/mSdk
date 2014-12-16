@@ -88,6 +88,7 @@ void *picture_box_callback_on_down(struct PictureBox_s *settings, tControlComman
 	return NULL;
 }
 /*#####################################################*/
+#include "lib/gfx/bmp/test_bmp.h"
 void *picture_box_refresh_callback(struct PictureBox_s *settings, tControlCommandData *control_comand)
 {
 	tRectangle dest_rectangle;
@@ -103,6 +104,8 @@ void *picture_box_refresh_callback(struct PictureBox_s *settings, tControlComman
 	src_rectangle.sYMax = 96;
 
 	picturebox_copy_rectangle(settings, PictureBoxbackBuff, 0, &dest_rectangle, &src_rectangle, 128, 96);
+	//picturebox_put_bitmap(settings, (unsigned char *)ButtonOk, 0, 0, false, false);
+	picturebox_put_fbitmap(settings, "0:test.bmp", 0, 0, false, false);
 #ifdef USE_BACK_SCREEN
 	ScreenReRefreshCnt = 2;
 #endif
@@ -128,6 +131,8 @@ void *picture_box_callback(struct PictureBox_s *settings, tControlCommandData *c
 	src_rectangle.sYMax = 96;
 
 	picturebox_copy_rectangle(settings, PictureBoxbackBuff, 0, &dest_rectangle, &src_rectangle, 128, 96);
+	//picturebox_put_bitmap(settings, (unsigned char *)ButtonOk, 0, 0, false, false);
+	picturebox_put_fbitmap(settings, "0:test.bmp", 0, 0, false, false);
 	return NULL;
 }
 /*#####################################################*/
