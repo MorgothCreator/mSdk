@@ -26,6 +26,7 @@
 #include "api/timer_api.h"
 #include "3d.h"
 #include "controls_definition.h"
+#include "bmp/bmp.h"
 extern unsigned int palete_raster_len;
 //#######################################################################################
 static void paint_picturebox(tPictureBox* settings, tDisplay *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len, tControlCommandData* control_comand)
@@ -448,11 +449,6 @@ void picturebox_copy_rectangle(tPictureBox* settings, unsigned int *src_buff, un
 					dest_rectangle->sYMin >= settings->Internals.Position.Y + (settings->Internals.Size.Y - 4)) return;
 
 	//Limit the destination area to the picture box size.
-	/*if(dest_rectangle->sXMin < dest_X_StartBox) dest_rectangle->sXMin = dest_X_StartBox;
-	if(dest_rectangle->sYMin < dest_Y_StartBox) dest_rectangle->sYMin = dest_Y_StartBox;
-	if(dest_rectangle->sXMax >= dest_X_EndBox) dest_rectangle->sXMax = dest_X_EndBox;
-	if(dest_rectangle->sYMax >= dest_Y_EndBox) dest_rectangle->sYMax = dest_Y_EndBox;*/
-
 	clip_limit(dest_rectangle, &settings->Internals.PictureWindowLimits);
 
 	signed int x_line_len = dest_rectangle->sXMax - dest_rectangle->sXMin;
@@ -627,5 +623,17 @@ void picturebox_put_3d_rectangle(tPictureBox* settings, _3d_points *Points, sign
 	picturebox_put_line(settings, (signed int)screenPoints.x[7] + X_offset, (signed int)screenPoints.y[7] + Y_offset, (signed int)screenPoints.x[3] + X_offset, (signed int)screenPoints.y[3] + Y_offset, 1, Color);
 	picturebox_put_line(settings, (signed int)screenPoints.x[7] + X_offset, (signed int)screenPoints.y[7] + Y_offset, (signed int)screenPoints.x[4] + X_offset, (signed int)screenPoints.y[4] + Y_offset, 1, Color);
 	picturebox_put_line(settings, (signed int)screenPoints.x[7] + X_offset, (signed int)screenPoints.y[7] + Y_offset, (signed int)screenPoints.x[6] + X_offset, (signed int)screenPoints.y[6] + Y_offset, 1, Color);
+}
+//#######################################################################################
+bool picturebox_put_bitmap(tPictureBox* settings, unsigned char *file, signed int X, signed int Y, bool use_transparency, bool scale)
+{
+	tDisplay *pDisplay = settings->Internals.pDisplay;
+	return put_bitmap(pDisplay, file, settings->Internals.Position.X + X + 2, settings->Internals.Position.Y + Y + 2, use_transparency);
+}
+//#######################################################################################
+bool picturebox_put_fbitmap(tPictureBox* settings, unsigned char *path, signed int X, signed int Y, bool use_transparency, bool scale)
+{
+	tDisplay *pDisplay = settings->Internals.pDisplay;
+	return put_fbitmap(pDisplay, path, settings->Internals.Position.X + X + 2, settings->Internals.Position.Y + Y + 2, use_transparency);
 }
 //#######################################################################################

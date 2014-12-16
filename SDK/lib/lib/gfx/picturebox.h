@@ -104,6 +104,8 @@ void picturebox_put_triangle(tPictureBox* settings, signed int  Ax,signed int  A
 void picturebox_put_string(tPictureBox* settings, print_string_properties *properties);
 void picturebox_put_3d_triangle(tPictureBox* settings, _3d_points *Points, signed int X_offset, signed int Y_offset, double X_Angle, double Y_Angle, double Z_Angle, unsigned int Color);
 void picturebox_put_3d_rectangle(tPictureBox* settings, _3d_points *Points, signed int X_offset, signed int Y_offset, double X_Angle, double Y_Angle, double Z_Angle, unsigned int Color);
+bool picturebox_put_bitmap(tPictureBox* settings, unsigned char *file, signed int X, signed int Y, bool use_transparency, bool scale);
+bool picturebox_put_fbitmap(tPictureBox* settings, unsigned char *path, signed int X, signed int Y, bool use_transparency, bool scale);
 //#######################################################################################
 #define _new_picturebox(name) tPictureBox *name = NULL
 //#define free_picturebox(address) free(address);
