@@ -23,6 +23,7 @@
 #define __Gfx_Utility_H__
 //#######################################################
 #define RGB_TO_UINT(R,G,B) ((R)<<16) | ((G)<<8) | ((B))
+#define BGR_TO_UINT(R,G,B) ((R)) | ((G)<<8) | ((B<<16))
 //#######################################################
 // Utility to divide or multiply the base color
 //unsigned int gfx_modify_color(unsigned int color, signed char modify);
