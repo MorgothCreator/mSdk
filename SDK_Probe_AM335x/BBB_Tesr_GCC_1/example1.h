@@ -25,6 +25,7 @@
 /*-----------------------------------------------------*/
 #define HDMI_DISPLAY_MODE_STRUCT	lcd_720p_50hz_beaglebone_exp
 //#define HDMI_DISPLAY_MODE_STRUCT	lcd_1080p_24hz_beaglebone_exp
+//#define HDMI_DISPLAY_MODE_STRUCT	lcd_720p_480_60hz_beaglebone_exp
 #endif
 
 #endif /* EXAMPLE1_H_ */
