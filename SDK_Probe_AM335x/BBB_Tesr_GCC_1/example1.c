@@ -291,11 +291,14 @@ int main(void) {
 	if(sdCtrl[1].connected == false) usb_msc_dev_media_change_state(0, false);
 #endif
 /*******************************************************/
+	unsigned int PwrLoadCount = 0;
+/*******************************************************/
     while(1)
     {
         if(timer_tick(&TimerScanTouch))
         {
-    		//UARTprintf(DebugCom, "X= %d, Y= %d, But= %d, Whel= %d.\n\r" , MouseXPosition, MouseYPosition, g_ulButtons, MouseWheel);
+			if(PwrLoadCount) PwrLoadCount--;
+   		//UARTprintf(DebugCom, "X= %d, Y= %d, But= %d, Whel= %d.\n\r" , MouseXPosition, MouseYPosition, g_ulButtons, MouseWheel);
 #ifdef lcd
 #ifdef USE_BACK_SCREEN
             if(BackScreen)
@@ -332,7 +335,8 @@ int main(void) {
                 put_rectangle(ScreenBuff, control_comand.X, control_comand.Y, 2, 2, true, 0x00000000);
                 box_cache_clean(ScreenBuff, control_comand.X, control_comand.Y, 2, 2);
 #endif
-            }
+            } else PwrLoadCount++;
+
 #endif
 #ifdef BridgeUsbDev0ToMmcSd0
         mmcsd_idle(&sdCtrl[0]);
