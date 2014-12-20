@@ -120,7 +120,7 @@ int _cat(int argc, char *argv[])
 	/*
 	** Read an entry from the directory.
 	*/
-    unsigned int bytes_read = 0;
+    unsigned long bytes_read = 0;
 	fresult = f_read(&settings->g_sFilObject, settings->file, settings->g_sFilObject.fsize, &bytes_read);
 	/*
 	** Check for error and return if there is a problem.
