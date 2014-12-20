@@ -1556,7 +1556,7 @@ signed int put_string(print_string_properties *properties)
 signed int put_string_tiny_chr(print_string_properties *properties)
 {
 	tDisplay *pDisplay = properties->pDisplay;
-	tFont *pFont = properties->pFont;
+	//tFont *pFont = properties->pFont;
 	char *pcString = properties->pcString;
 	signed int lLength = properties->lLength;
 	unsigned int foreground_color = properties->foreground_color;
@@ -1566,8 +1566,8 @@ signed int put_string_tiny_chr(print_string_properties *properties)
 	bool WordWrap = properties->WordWrap;
 	signed int lX = properties->lX;
 	signed int lY = properties->lY;
-	signed int _SelStart = properties->_SelStart;
-	signed int _SelLen = properties->_SelLen;
+	//signed int _SelStart = properties->_SelStart;
+	//signed int _SelLen = properties->_SelLen;
 
 	//struct Display_Struct* ScreenStruct = (struct Display_Struct*)ScreenFile->udata;
 	signed char chWidth = 0;
