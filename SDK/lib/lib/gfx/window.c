@@ -91,14 +91,27 @@ void window_set_children_settings(tWindow *settings, bool call_childrens, bool t
 			if(WindowWindowChildren == children_type || WindowTabGroupChildren == children_type)
 			{
 				tWindow *Window_settings = (tWindow *)children;
-				if(control_comand->Cursor == Cursor_Down &&
+				/*if(control_comand->Cursor == Cursor_Down &&
 						check_if_inside_box(Window_settings->Internals.Position.X,
 							Window_settings->Internals.Position.Y,
 								Window_settings->Internals.Position.X +  Window_settings->Internals.Size.X,
 									Window_settings->Internals.Position.Y + Window_settings->Internals.Size.Y,
-										control_comand->X, control_comand->Y)) {
+										control_comand->X, control_comand->Y))
+					settings->Internals.CursorDownInsideChildrenWindow = true;*/
+				tRectangle sClipRegion;
+				sClipRegion.sXMin = Window_settings->Internals.Position.X;
+				sClipRegion.sYMin = Window_settings->Internals.Position.Y;
+				sClipRegion.sXMax = Window_settings->Internals.Position.X +  Window_settings->Internals.Size.X;
+				sClipRegion.sYMax = Window_settings->Internals.Position.Y +  Window_settings->Internals.Size.Y;
+				clip_limit(&sClipRegion, &Window_settings->WindowMoveLimits);
+				if(control_comand->Cursor == Cursor_Down &&
+						check_if_inside_box(sClipRegion.sXMin,
+							sClipRegion.sYMin,
+								sClipRegion.sXMax,
+									sClipRegion.sYMax,
+										control_comand->X,
+											control_comand->Y))
 					settings->Internals.CursorDownInsideChildrenWindow = true;
-				}
 			}
 		}
 		Tmp_Children_Cnt++;
@@ -1480,7 +1493,8 @@ signed int tab_group_new_tab(struct Window_s *settings, char *tab_name)
 		settings->Internals.Header.TabGroupTabsList[settings->Internals.Header.TabGroupTabsListNr]->Caption.Font = (tFont *)&g_sFontCm12b;
 		settings->Internals.Header.TabGroupTabsList[settings->Internals.Header.TabGroupTabsListNr]->Caption.Text = malloc(strlen(tab_name) + 1);
 		settings->Internals.Header.TabGroupTabsList[settings->Internals.Header.TabGroupTabsListNr]->Caption.WordWrap = false;
-		settings->Internals.Header.TabGroupTabsList[settings->Internals.Header.TabGroupTabsListNr]->Caption.TextAlign = Align_Left;
+		settings->Internals.Header.TabGroupTabsList[settings->Internals.Header.TabGroupTabsListNr]->Caption.TextAlign = Align_Center;
+		settings->Internals.Header.TabGroupTabsList[settings->Internals.Header.TabGroupTabsListNr]->Internals.NoPaintBackGround = true;
 		strcpy(settings->Internals.Header.TabGroupTabsList[settings->Internals.Header.TabGroupTabsListNr]->Caption.Text, tab_name);
 		//settings->Internals.Header.TabGroupTabsList[settings->Internals.Header.TabGroupTabsListNr]->Color.Scren = controls_color.Control_Color_Enabled_Buton_Pull;
 		//settings->Internals.Header.TabGroupTabsList[settings->Internals.Header.TabGroupTabsListNr]->Color.Enabled.Buton.Push = controls_color.Control_Color_Enabled_Buton_Push;
