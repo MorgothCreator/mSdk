@@ -285,10 +285,10 @@ void __Init_Data(void)
     *(pulDest++) = *(pulSrc++);
   }
   /* Zero fill the bss segment. */
-  for(pulDest = &_sbss; pulDest < &_ebss; )
-  {
-    *(pulDest++) = 0;
-  }
+  //for(pulDest = &_sbss; pulDest < &_ebss; )
+  //{
+  //  *(pulDest++) = 0;
+  //}
 }
 
 /*******************************************************************************
