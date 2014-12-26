@@ -66,7 +66,7 @@ typedef struct
 	unsigned short C7;
 }ms5611_prom_data;
 
-bool ms5611_read_preasure(ms5611_prom_data *prom_data, Twi_t *TwiStruct, unsigned char osr, signed int *Preasure, signed int *Temperature);
+bool ms5611_read(ms5611_prom_data *prom_data, Twi_t *TwiStruct, unsigned char osr, signed int *Preasure, signed int *Temperature);
 bool ms5611_display_preasure_result(ms5611_prom_data *prom_data, Twi_t *TwiStruct, unsigned char osr);
 bool ms5611_init(ms5611_prom_data *prom_data, Twi_t *TwiStruct);
 

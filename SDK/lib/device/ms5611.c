@@ -66,7 +66,7 @@ bool ms5611_reset_cmd_send(Twi_t *TwiStruct)
 bool ms5611_d1_cmd_send(Twi_t *TwiStruct, unsigned char osr, unsigned long *d1)
 {
 	TwiStruct->MasterSlaveAddr = MS5611_ADDR;
-	TwiStruct->TxBuff[0] = MS5611_CONVERT_D1_OSR_256_CMD | (osr & (0x07 << 1));
+	TwiStruct->TxBuff[0] = MS5611_CONVERT_D1_OSR_256_CMD | ((osr & 0x07) << 1);
 	if(!SetupI2CTransmit(TwiStruct, 1)) return false;
 	if(!ms5611_adc_get_cmd_send(TwiStruct, d1, osr)) return false;
 	return true;
@@ -74,7 +74,7 @@ bool ms5611_d1_cmd_send(Twi_t *TwiStruct, unsigned char osr, unsigned long *d1)
 bool ms5611_d2_cmd_send(Twi_t *TwiStruct, unsigned char osr, unsigned long *d2)
 {
 	TwiStruct->MasterSlaveAddr = MS5611_ADDR;
-	TwiStruct->TxBuff[0] = MS5611_CONVERT_D2_OSR_256_CMD | (osr & (0x07 << 1));
+	TwiStruct->TxBuff[0] = MS5611_CONVERT_D2_OSR_256_CMD | ((osr & 0x07) << 1);
 	if(!SetupI2CTransmit(TwiStruct, 1)) return false;
 	if(!ms5611_adc_get_cmd_send(TwiStruct, d2, osr)) return false;
 	return true;
@@ -111,7 +111,7 @@ bool ms5611_read_prom_cmd_send(ms5611_prom_data *prom_data, Twi_t *TwiStruct)
 	return true;
 }
 
-bool ms5611_read_preasure(ms5611_prom_data *prom_data, Twi_t *TwiStruct, unsigned char osr, signed int *Preasure, signed int *Temperature)
+bool ms5611_read(ms5611_prom_data *prom_data, Twi_t *TwiStruct, unsigned char osr, signed int *Preasure, signed int *Temperature)
 {
 	unsigned long D1 = 0, D2 = 0;
 	signed long dT = 0, TEMP = 0;
@@ -129,16 +129,17 @@ bool ms5611_read_preasure(ms5611_prom_data *prom_data, Twi_t *TwiStruct, unsigne
 	return true;
 }
 
-/*bool ms5611_display_preasure_result(ms5611_prom_data *prom_data, Twi_t *TwiStruct, unsigned char osr)
+bool ms5611_display_preasure_result(ms5611_prom_data *prom_data, Twi_t *TwiStruct, unsigned char osr)
 {
 	signed int Preasure = 0;
 	signed int Temperature = 0;
-	if(!ms5611_read_preasure(prom_data, TwiStruct, osr, &Preasure, &Temperature)) return false;
+	if(!ms5611_read_prom_cmd_send(prom_data, TwiStruct)) return false;
+	if(!ms5611_read(prom_data, TwiStruct, osr, &Preasure, &Temperature)) return false;
 	float PreasureInt = 0;
 	float PreasureDec = modff(((float)Preasure)/100.0, &PreasureInt);
 	UARTprintf(DebugCom, "Preasure = %d.%u\n\r", (signed int)PreasureInt, (unsigned int)(PreasureDec * 100.0));
 	return true;
-}*/
+}
 
 bool ms5611_init(ms5611_prom_data *prom_data, Twi_t *TwiStruct)
 {
