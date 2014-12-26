@@ -19,6 +19,8 @@
 #include "api/uart_api.h"
 #include "api/twi_def.h"
 #include "api/twi_api.h"
+#include "api/adc_def.h"
+#include "api/adc_api.h"
 //#include "api/lcd_def.h"
 //#include "api/lcd_api.h"
 //#include "api/mmcsd_api.h"
@@ -29,6 +31,7 @@
 new_uart* Uart[3] = {NULL,NULL,NULL};
 new_uart* DebugCom = NULL;
 new_twi* TWI[2] = {NULL,NULL};
+new_adc* ADC[2] = {NULL};
 new_gpio* LED1 = NULL;
 /*-----------------------------------------------------*/
 //new_touchscreen* TouchScreen = NULL;
@@ -74,6 +77,26 @@ bool board_init()
 	TWI[0]->TxBuffSize = 258;
 	twi_open(TWI[0]);
 	UARTPuts(DebugCom, "OK.\n\r" , -1);
+/*-----------------------------------------------------*/
+/* Set up the ADC 0 */
+	UARTPuts(DebugCom, "Setup ADC 0....." , -1);
+	ADC[0] = new_(new_adc);
+	ADC[0]->Align = ADC_ALIGN_RIGHT;
+	ADC[0]->ContinuousMode = ADC_CONTINUOUS_MODE_CONTINUOUS;
+	ADC[0]->ConvMode = ADC_CONV_MODE_MULTICHANNEL;
+	ADC[0]->DmaChannel = 0;
+	ADC[0]->DmaUnitNr = 0;
+	ADC[0]->EnCh[0] = 1;
+	ADC[0]->EnCh[1] = 2;
+	ADC[0]->EnCh[2] = 17;
+	ADC[0]->ExtTrig = ADC_EXT_TRIG_NONE;
+	ADC[0]->IntRefEn = true;
+	ADC[0]->Mode = ADC_MODE_INDEPENDENT;
+	ADC[0]->SampleTime = ADC_SAMPLE_TIME_5;
+	ADC[0]->TempSensorEn = true;
+	ADC[0]->UnitNr = 0;
+	if(adc_init(ADC[0])) UARTPuts(DebugCom, "OK.\n\r" , -1);
+	else  UARTPuts(DebugCom, "FAILED.\n\r" , -1);
 /*-----------------------------------------------------*/
 	LED1 = gpio_assign(2, 13, GPIO_DIR_OUTPUT, false);
 /*-----------------------------------------------------*/

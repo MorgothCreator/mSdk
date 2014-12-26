@@ -19,6 +19,8 @@
 #include "api/uart_api.h"
 #include "api/twi_def.h"
 #include "api/twi_api.h"
+#include "api/adc_def.h"
+#include "api/adc_api.h"
 //#include "api/lcd_def.h"
 //#include "api/lcd_api.h"
 //#include "api/mmcsd_api.h"
@@ -32,6 +34,7 @@
 extern new_uart* Uart[];
 extern new_uart* DebugCom;
 extern new_twi* TWI[];
+extern new_adc* ADC[];
 extern new_gpio* LED1;
 /*-----------------------------------------------------*/
 //extern new_touchscreen* TouchScreen;
