@@ -55,6 +55,7 @@ int main(void)
 			UARTprintf(DebugCom, "Preasure = %d, Temperature = %d\n", Preasure, Temperature);
 		}
 		ms5611_display_preasure_result(&ms5611_prom_data, TWI[0], MS5611_CONVERT_OSR_1024);
+		UARTprintf(DebugCom, "ADC1 CH0 = %d, ADC1 CH1 = %d, ADC1 TempSensor = %d\n", ADC[0]->ConvResult[0], ADC[0]->ConvResult[1], ADC[0]->ConvResult[2]);
 	}
 	return 0;
 }
