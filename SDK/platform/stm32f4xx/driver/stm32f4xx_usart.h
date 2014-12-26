@@ -35,6 +35,7 @@
 #endif
 
 /* Includes ------------------------------------------------------------------*/
+#include "stdbool.h"
 #include "../include/stm32f4xx.h"
 
 /** @addtogroup STM32F4xx_StdPeriph_Driver
@@ -380,7 +381,9 @@ void USART_OneBitMethodCmd(USART_TypeDef* USARTx, FunctionalState NewState);
 
 /* Data transfers functions ***************************************************/
 void USART_SendData(USART_TypeDef* USARTx, uint16_t Data);
+bool UARTCharPutNonBlocking(USART_TypeDef* USARTx, uint16_t Data);
 uint16_t USART_ReceiveData(USART_TypeDef* USARTx);
+uint16_t UARTCharGetNonBlocking(USART_TypeDef* USARTx);
 
 /* Multi-Processor Communication functions ************************************/
 void USART_SetAddress(USART_TypeDef* USARTx, uint8_t USART_Address);
