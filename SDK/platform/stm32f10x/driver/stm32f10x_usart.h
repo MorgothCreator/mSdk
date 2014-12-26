@@ -28,6 +28,7 @@
 #endif
 
 /* Includes ------------------------------------------------------------------*/
+#include "stdbool.h"
 #include "stm32f10x.h"
 
 /** @addtogroup STM32F10x_StdPeriph_Driver
@@ -375,7 +376,9 @@ void USART_ReceiverWakeUpCmd(USART_TypeDef* USARTx, FunctionalState NewState);
 void USART_LINBreakDetectLengthConfig(USART_TypeDef* USARTx, uint16_t USART_LINBreakDetectLength);
 void USART_LINCmd(USART_TypeDef* USARTx, FunctionalState NewState);
 void USART_SendData(USART_TypeDef* USARTx, uint16_t Data);
+bool UARTCharPutNonBlocking(USART_TypeDef* USARTx, uint16_t Data);
 uint16_t USART_ReceiveData(USART_TypeDef* USARTx);
+uint16_t UARTCharGetNonBlocking(USART_TypeDef* USARTx);
 void USART_SendBreak(USART_TypeDef* USARTx);
 void USART_SetGuardTime(USART_TypeDef* USARTx, uint8_t USART_GuardTime);
 void USART_SetPrescaler(USART_TypeDef* USARTx, uint8_t USART_Prescaler);
