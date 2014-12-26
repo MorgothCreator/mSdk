@@ -17,8 +17,8 @@
 #include "api/gpio_api.h"
 #include "api/uart_def.h"
 #include "api/uart_api.h"
-//#include "api/twi_def.h"
-//#include "api/twi_api.h"
+#include "api/twi_def.h"
+#include "api/twi_api.h"
 //#include "api/lcd_def.h"
 //#include "api/lcd_api.h"
 //#include "api/mmcsd_api.h"
@@ -27,14 +27,12 @@
 //#include "lib/fs/fat.h"
 //#include "device/mi0283.h"
 /*#####################################################*/
-#define BOARD_MESSAGE "STM32F407VGT6 Discovery"
+#define BOARD_MESSAGE "STM32F10x undefined"
 /*#####################################################*/
+extern new_uart* Uart[];
 extern new_uart* DebugCom;
-extern new_gpio* HARDBTN1;
+extern new_twi* TWI[];
 extern new_gpio* LED1;
-extern new_gpio* LED2;
-extern new_gpio* LED3;
-extern new_gpio* LED4;
 /*-----------------------------------------------------*/
 //extern new_touchscreen* TouchScreen;
 //extern new_screen* ScreenBuff;
