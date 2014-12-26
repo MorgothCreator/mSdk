@@ -81,7 +81,7 @@ const uint16_t COM_RX_PIN[COMn] = {GPIO_Pin_10, GPIO_Pin_3, GPIO_Pin_11};
 
 void STM_EVAL_COMInit(unsigned char COM, USART_InitTypeDef* USART_InitStruct)
 {
-	  GPIO_InitTypeDef GPIO_InitStructure;
+	GPIO_InitTypeDef GPIO_InitStructure;
 
 	  /* Enable GPIO clock */
 	  RCC_APB2PeriphClockCmd(COM_TX_PORT_CLK[COM], ENABLE);
@@ -136,6 +136,7 @@ void STM_EVAL_COMInit(unsigned char COM, USART_InitTypeDef* USART_InitStruct)
 /*#####################################################*/
 bool _uart_open(Uart_t* UartSettings)
 {
+	if(UartSettings->UartNr >= 3) return false;
 	//USART_DeInit(COM_USART[UartSettings->UartNr]);
 	//UART_nvic_config(UartSettings);
 	UartSettings->BaseAddr = (unsigned int)COM_USART[UartSettings->UartNr];
@@ -174,14 +175,14 @@ unsigned char _UARTCharGet(unsigned int BaseAddr)
 	return (signed char)USART_ReceiveData((USART_TypeDef*)BaseAddr);//UARTCharGet(BaseAddr);
 }
 /*#####################################################*/
-void _UARTCharPutNonBlocking(unsigned int BaseAddr, unsigned char byteTx)
+bool _UARTCharPutNonBlocking(unsigned int BaseAddr, unsigned char byteTx)
 {
-	//UARTCharPutNonBlocking(BaseAddr, byteTx);
+	return UARTCharPutNonBlocking((USART_TypeDef*)BaseAddr, (unsigned short)byteTx);
 }
 /*#####################################################*/
-signed char _UARTCharGetNonBlocking(unsigned int BaseAddr)
+signed short _UARTCharGetNonBlocking(unsigned int BaseAddr)
 {
-	return 0;//UARTCharGetNonBlocking(BaseAddr);
+	return UARTCharGetNonBlocking((USART_TypeDef*)BaseAddr);
 }
 /*#####################################################*/
 unsigned int _UARTRxErrorGet(unsigned int BaseAddr)
