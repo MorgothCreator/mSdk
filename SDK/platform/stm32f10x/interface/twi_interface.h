@@ -14,6 +14,11 @@
 /*! Transaction status defines. */
 #define TWIM_STATUS_READY              0
 #define TWIM_STATUS_BUSY               1
+#define sEE_DIRECTION_TX                 0
+#define sEE_DIRECTION_RX                 1
+//#####################################################
+#define sEE_FLAG_TIMEOUT         ((uint32_t)0x1000)
+#define sEE_LONG_TIMEOUT         ((uint32_t)(10 * sEE_FLAG_TIMEOUT))
 //#####################################################
 //#define TWIM_WRITE_BUFFER_SIZE         8
 //#define TWIM_READ_BUFFER_SIZE          8
