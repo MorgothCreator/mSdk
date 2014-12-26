@@ -43,13 +43,13 @@ unsigned char UARTGetc(Uart_t* UartSettings)
 	return (signed char)_UARTCharGet(UartSettings->BaseAddr);
 }
 /*#####################################################*/
-void UARTPutcNoBlocking(Uart_t* UartSettings, unsigned char byteTx)
+bool UARTPutcNoBlocking(Uart_t* UartSettings, unsigned char byteTx)
 {
-	if(!UartSettings) return;
-	_UARTCharPutNonBlocking(UartSettings->BaseAddr, byteTx);
+	if(!UartSettings) return false;
+	return _UARTCharPutNonBlocking(UartSettings->BaseAddr, byteTx);
 }
 /*#####################################################*/
-signed char UARTGetcNoBlocking(Uart_t* UartSettings)
+signed short UARTGetcNoBlocking(Uart_t* UartSettings)
 {
 	if(!UartSettings) return -1;
 	return _UARTCharGetNonBlocking(UartSettings->BaseAddr);

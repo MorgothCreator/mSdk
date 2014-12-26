@@ -28,8 +28,8 @@
 /*#####################################################*/
 void UARTPutc(Uart_t* UartSettings, unsigned char byteTx);
 unsigned char UARTGetc(Uart_t* UartSettings);
-void UARTPutcNoBlocking(Uart_t* UartSettings, unsigned char byteTx);
-signed char UARTGetcNoBlocking(Uart_t* UartSettings);
+bool UARTPutcNoBlocking(Uart_t* UartSettings, unsigned char byteTx);
+signed short UARTGetcNoBlocking(Uart_t* UartSettings);
 unsigned int UARTRxGetError(Uart_t* UartSettings);
 void UARTBaudRateSet(Uart_t* UartSettings, unsigned long BaudRate);
 unsigned int UARTPuts(Uart_t* UartSettings, char *pTxBuffer, int numBytesToWrite);
