@@ -40,18 +40,25 @@ static void paint_button(tButton* settings, tDisplay *pDisplay, signed int x_sta
 	pDisplay->sClipRegion.sYMax = y_start + y_len;
 	clip_limit(&pDisplay->sClipRegion, &back_up_clip);
 	CursorState cursor = control_comand->Cursor;
-	if(cursor == Cursor_Down || cursor == Cursor_Move) color = controls_color.Control_Color_Enabled_Border_Push;
-	/*else if(cursor == Cursor_Move) color = controls_color.Control_Color_Enabled_Border_Push;*/
-	else if(cursor == Cursor_Up) color = controls_color.Control_Color_Enabled_Border_Pull;
-	else color = controls_color.Control_Color_Enabled_Border_Pull;
-	if(!settings->Enabled || !ParentWindow->Internals.OldStateEnabled) color = settings->Color.Disabled.Border;
+	if(cursor == Cursor_Down || cursor == Cursor_Move)
+		color = controls_color.Control_Color_Enabled_Border_Push;
+	else if(cursor == Cursor_Up)
+		color = controls_color.Control_Color_Enabled_Border_Pull;
+	else
+		color = controls_color.Control_Color_Enabled_Border_Pull;
+	if(!settings->Enabled || !ParentWindow->Internals.OldStateEnabled)
+		color = settings->Color.Disabled.Border;
 	put_rectangle(pDisplay, x_start, y_start, x_len, y_len, false, controlls_change_color(color, -3));
 	put_rectangle(pDisplay, x_start + 1, y_start + 1, x_len - 2, y_len - 2, false, controlls_change_color(color, -2));
-	if(cursor == Cursor_Down || cursor == Cursor_Move) color = controls_color.Control_Color_Enabled_Buton_Push;
+	if(cursor == Cursor_Down || cursor == Cursor_Move)
+		color = controls_color.Control_Color_Enabled_Buton_Push;
 	/*else if(cursor == Cursor_Move) color = controls_color.Control_Color_Enabled_Buton_Push;*/
-	else if(cursor == Cursor_Up) color = controls_color.Control_Color_Enabled_Buton_Pull;
-	else color = controls_color.Control_Color_Enabled_Buton_Pull;
-	if(!settings->Enabled || !ParentWindow->Internals.OldStateEnabled) color = settings->Color.Disabled.Buton;
+	else if(cursor == Cursor_Up)
+		color = controls_color.Control_Color_Enabled_Buton_Pull;
+	else
+		color = controls_color.Control_Color_Enabled_Buton_Pull;
+	if(!settings->Enabled || !ParentWindow->Internals.OldStateEnabled)
+		color = settings->Color.Disabled.Buton;
 	put_rectangle(pDisplay, x_start + 2, y_start + 2, x_len - 4, y_len - 4, true, color);
 	if(settings->Internals.Caption.Text)
 	{
@@ -63,8 +70,7 @@ static void paint_button(tButton* settings, tDisplay *pDisplay, signed int x_sta
 
 		signed int x_str_location = pDisplay->sClipRegion.sXMin;
 		signed int y_str_location = pDisplay->sClipRegion.sYMin;
-		if(settings->Caption.TextAlign == Align_Center)
-		{
+		if(settings->Caption.TextAlign == Align_Center){
 			StringProperties_t str_properties = string_properties_get(pDisplay, settings->Internals.Caption.Font, settings->Internals.Caption.Text, settings->Internals.Caption.WordWrap, -1);
 			x_str_location = x_start + ((x_len>>1)-(str_properties.StringRowsMaxLength_Pixels>>1));
 			y_str_location = y_start + ((y_len>>1)-(str_properties.StringColsHeight_Pixels>>1));
@@ -83,8 +89,7 @@ static void paint_button(tButton* settings, tDisplay *pDisplay, signed int x_sta
 		properties.lY = y_str_location;
 		properties._SelStart = 0;
 		properties._SelLen = 0;
-		if(settings->Enabled == true)
-		{
+		if(settings->Enabled == true) {
 			if(cursor == Cursor_Down || cursor == Cursor_Move) {
 				properties.foreground_color = settings->Color.Enabled.Ink.Push;
 				properties.background_color = settings->Color.Enabled.Buton.Push;
