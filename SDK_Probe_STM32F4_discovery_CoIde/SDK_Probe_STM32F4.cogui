@@ -17,38 +17,43 @@
 <part id="4"/>
 <part id="5"/>
 <part id="6"/>
+<part id="7"/>
 </presentation>
 </folder>
 </info>
 </editorArea>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="main.c" partName="main.c" path="C:/GitHub/mSdk/SDK_Probe_STM32F4_discovery_CoIde/main.c" title="main.c" tooltip="C:/GitHub/mSdk/SDK_Probe_STM32F4_discovery_CoIde/main.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/main.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="323" selectionTopPixel="0"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="327" selectionTopPixel="0"/>
 </editor>
 <editor activePart="true" focus="true" id="org.coocox.builder.ui.editors.ConfigEditor" name="" partName="Configuration" title="Configuration" tooltip="" workbook="DefaultEditorWorkbook">
 <input factoryID="org.coocox.builder.ui.persistent.PersistentElementFactory">
-<org.coocox.builder.ui.editors.ConfigEditor horizontalPosition="0" subTagIndex="0" verticalPosition="0"/>
+<org.coocox.builder.ui.editors.ConfigEditor horizontalPosition="0" subTagIndex="1" verticalPosition="0"/>
 </input>
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="board_init.c" partName="board_init.c" path="C:/GitHub/mSdk/SDK/board/stm32f4xx/discovery_simple/board_init.c" title="board_init.c" tooltip="C:/GitHub/mSdk/SDK/board/stm32f4xx/discovery_simple/board_init.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/discovery_simple/board_init.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="0" selectionTopPixel="470"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="0" selectionTopPixel="129"/>
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="core_init.c" partName="core_init.c" path="C:/GitHub/mSdk/SDK/platform/stm32f4xx/sys/core_init.c" title="core_init.c" tooltip="C:/GitHub/mSdk/SDK/platform/stm32f4xx/sys/core_init.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/stm32f4xx/sys/core_init.c"/>
 <editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="0" selectionTopPixel="0"/>
 </editor>
-<editor id="org.eclipse.cdt.ui.editor.asm.AsmEditor" name="startup_stm32f40xx.S" partName="startup_stm32f40xx.S" path="C:/GitHub/mSdk/SDK/platform/stm32f4xx/sys/startup_stm32f40xx.S" title="startup_stm32f40xx.S" tooltip="C:/GitHub/mSdk/SDK/platform/stm32f4xx/sys/startup_stm32f40xx.S" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/stm32f4xx/sys/startup_stm32f40xx.S"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="4019" selectionTopPixel="954"/>
-</editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="system_stm32f4xx.c" partName="system_stm32f4xx.c" path="C:/GitHub/mSdk/SDK/platform/stm32f4xx/sys/system_stm32f4xx.c" title="system_stm32f4xx.c" tooltip="C:/GitHub/mSdk/SDK/platform/stm32f4xx/sys/system_stm32f4xx.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/stm32f4xx/sys/system_stm32f4xx.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="9491" selectionTopPixel="2673"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="9491" selectionTopPixel="2793"/>
 </editor>
-<editor id="org.eclipse.cdt.ui.editor.CEditor" name="lcd_interface.c" partName="lcd_interface.c" path="C:/GitHub/mSdk/SDK/platform/stm32f4xx/interface/lcd_interface.c" title="lcd_interface.c" tooltip="C:/GitHub/mSdk/SDK/platform/stm32f4xx/interface/lcd_interface.c" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/stm32f4xx/interface/lcd_interface.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="392" selectionTopPixel="270"/>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="stm32f4xx_usart.c" partName="stm32f4xx_usart.c" path="C:/GitHub/mSdk/SDK/platform/stm32f4xx/driver/stm32f4xx_usart.c" title="stm32f4xx_usart.c" tooltip="C:/GitHub/mSdk/SDK/platform/stm32f4xx/driver/stm32f4xx_usart.c" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/stm32f4xx/driver/stm32f4xx_usart.c"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="23620" selectionTopPixel="10049"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="stm32f4xx_usart.h" partName="stm32f4xx_usart.h" path="C:/GitHub/mSdk/SDK/platform/stm32f4xx/driver/stm32f4xx_usart.h" title="stm32f4xx_usart.h" tooltip="C:/GitHub/mSdk/SDK/platform/stm32f4xx/driver/stm32f4xx_usart.h" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/stm32f4xx/driver/stm32f4xx_usart.h"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="1478" selectionTopPixel="0"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="ff.h" partName="ff.h" title="ff.h" tooltip="C:\GitHub\mSdk\SDK\lib\lib\fat_fs\inc\ff.h" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" uri="file:/C:/GitHub/mSdk/SDK/lib/lib/fat_fs/inc/ff.h"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="524" selectionTopPixel="0"/>
 </editor>
 </editors>
 <views>
@@ -56,6 +61,7 @@
 <viewState CommonNavigator.LINKING_ENABLED="0" horizontalPosition="0" org.eclipse.ui.navigator.resources.workingSets.showTopLevelWorkingSets="0" verticalPosition="0">
 <expanded>
 <element path="/SDK_Probe_STM32F4"/>
+<element path="/SDK_Probe_STM32F4/discovery_simple"/>
 </expanded>
 <selection>
 <element path="/SDK_Probe_STM32F4"/>
@@ -267,13 +273,6 @@
 <workingSets/>
 <navigationHistory>
 <editors>
-<editor factoryID="org.coocox.builder.ui.persistent.PersistentElementFactory" id="org.coocox.builder.ui.editors.ConfigEditor">
-<org.coocox.builder.ui.editors.ConfigEditor horizontalPosition="0" subTagIndex="1" verticalPosition="0"/>
-</editor>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/main.c"/>
-<editor factoryID="org.coocox.builder.ui.persistent.PersistentElementFactory" id="org.coocox.builder.ui.editors.ConfigEditor">
-<org.coocox.builder.ui.editors.ConfigEditor horizontalPosition="0" subTagIndex="1" verticalPosition="0"/>
-</editor>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/discovery_simple/board_init.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/stm32f4xx/sys/core_init.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.asm.AsmEditor" path="/SDK_Probe_STM32F4/stm32f4xx/sys/startup_stm32f40xx.S"/>
@@ -294,53 +293,156 @@
 <org.coocox.builder.ui.editors.ConfigEditor horizontalPosition="0" subTagIndex="0" verticalPosition="0"/>
 </editor>
 <editor factoryID="org.coocox.builder.ui.persistent.PersistentElementFactory" id="org.coocox.builder.ui.editors.ConfigEditor">
-<org.coocox.builder.ui.editors.ConfigEditor horizontalPosition="0" subTagIndex="0" verticalPosition="0"/>
+<org.coocox.builder.ui.editors.ConfigEditor horizontalPosition="0" subTagIndex="1" verticalPosition="0"/>
+</editor>
+<editor factoryID="org.coocox.builder.ui.persistent.PersistentElementFactory" id="org.coocox.builder.ui.editors.ConfigEditor">
+<org.coocox.builder.ui.editors.ConfigEditor horizontalPosition="0" subTagIndex="1" verticalPosition="0"/>
+</editor>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/main.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.asm.AsmEditor" path="/SDK_Probe_STM32F4/stm32f4xx/sys/startup_stm32f40xx.S"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/stm32f4xx/sys/system_stm32f4xx.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/stm32f4xx/interface/lcd_interface.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/lib/api/uart_api.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/stm32f4xx/interface/uart_interface.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/stm32f4xx/interface/uart_interface.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/stm32f4xx/driver/stm32f4xx_usart.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/stm32f4xx/driver/stm32f4xx_usart.h"/>
+<editor factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" uri="file:/C:/GitHub/mSdk/SDK/lib/lib/fat_fs/inc/ff.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/discovery_simple/board_init.c"/>
+<editor factoryID="org.coocox.builder.ui.persistent.PersistentElementFactory" id="org.coocox.builder.ui.editors.ConfigEditor">
+<org.coocox.builder.ui.editors.ConfigEditor horizontalPosition="0" subTagIndex="1" verticalPosition="0"/>
 </editor>
 </editors>
-<item historyLabel="Configuration" index="0"/>
-<item historyLabel="main.c" index="1">
-<position info="not_deleted" x="400" y="0"/>
-</item>
-<item historyLabel="Configuration" index="2"/>
-<item historyLabel="main.c" index="1">
-<position info="not_deleted" x="323" y="0"/>
-</item>
-<item historyLabel="board_init.c" index="3">
+<item historyLabel="board_init.c" index="0">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="core_init.c" index="4">
+<item historyLabel="core_init.c" index="1">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="board_init.c" index="3">
+<item historyLabel="board_init.c" index="0">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="core_init.c" index="4">
+<item historyLabel="core_init.c" index="1">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="startup_stm32f40xx.S" index="5">
+<item historyLabel="startup_stm32f40xx.S" index="2">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="system_stm32f4xx.c" index="6">
+<item historyLabel="system_stm32f4xx.c" index="3">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="startup_stm32f40xx.S" index="7">
+<item historyLabel="startup_stm32f40xx.S" index="4">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="Configuration" index="8"/>
-<item historyLabel="startup_stm32f40xx.S" index="7">
+<item historyLabel="Configuration" index="5"/>
+<item historyLabel="startup_stm32f40xx.S" index="4">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="Configuration" index="9"/>
-<item historyLabel="Configuration" index="10"/>
-<item historyLabel="lcd_interface.c" index="11">
+<item historyLabel="Configuration" index="6"/>
+<item historyLabel="Configuration" index="7"/>
+<item historyLabel="lcd_interface.c" index="8">
 <position info="not_deleted" x="862" y="0"/>
 </item>
-<item historyLabel="startup_stm32f40xx.S" index="12">
+<item historyLabel="startup_stm32f40xx.S" index="9">
 <position info="not_deleted" x="4019" y="0"/>
 </item>
+<item historyLabel="Configuration" index="7"/>
 <item historyLabel="Configuration" index="10"/>
-<item historyLabel="Configuration" index="13"/>
-<item active="true" historyLabel="Configuration" index="14"/>
+<item historyLabel="Configuration" index="11"/>
+<item historyLabel="Configuration" index="12"/>
+<item historyLabel="main.c" index="13">
+<position info="not_deleted" x="323" y="0"/>
+</item>
+<item historyLabel="Configuration" index="12"/>
+<item historyLabel="main.c" index="13">
+<position info="not_deleted" x="323" y="0"/>
+</item>
+<item historyLabel="startup_stm32f40xx.S" index="14">
+<position info="not_deleted" x="4019" y="0"/>
+</item>
+<item historyLabel="main.c" index="13">
+<position info="not_deleted" x="327" y="0"/>
+</item>
+<item historyLabel="system_stm32f4xx.c" index="15">
+<position info="not_deleted" x="9491" y="0"/>
+</item>
+<item historyLabel="lcd_interface.c" index="16">
+<position info="not_deleted" x="392" y="0"/>
+</item>
+<item historyLabel="system_stm32f4xx.c" index="15">
+<position info="not_deleted" x="9491" y="0"/>
+</item>
+<item historyLabel="uart_api.c" index="17">
+<position info="not_deleted" x="1797" y="0"/>
+</item>
+<item historyLabel="uart_interface.c" index="18">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="uart_api.c" index="17">
+<position info="not_deleted" x="1797" y="0"/>
+</item>
+<item historyLabel="uart_interface.c" index="18">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="uart_interface.h" index="19">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="uart_interface.c" index="18">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="uart_api.c" index="17">
+<position info="not_deleted" x="1797" y="0"/>
+</item>
+<item historyLabel="uart_interface.c" index="18">
+<position info="not_deleted" x="6380" y="0"/>
+</item>
+<item historyLabel="uart_interface.h" index="19">
+<position info="not_deleted" x="638" y="0"/>
+</item>
+<item historyLabel="uart_interface.c" index="18">
+<position info="not_deleted" x="6694" y="0"/>
+</item>
+<item historyLabel="uart_interface.h" index="19">
+<position info="not_deleted" x="722" y="0"/>
+</item>
+<item historyLabel="uart_api.c" index="17">
+<position info="not_deleted" x="1797" y="0"/>
+</item>
+<item historyLabel="system_stm32f4xx.c" index="15">
+<position info="not_deleted" x="9491" y="0"/>
+</item>
+<item historyLabel="stm32f4xx_usart.c" index="20">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="stm32f4xx_usart.h" index="21">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="stm32f4xx_usart.c" index="20">
+<position info="not_deleted" x="22465" y="67"/>
+</item>
+<item historyLabel="stm32f4xx_usart.h" index="21">
+<position info="not_deleted" x="15685" y="0"/>
+</item>
+<item historyLabel="stm32f4xx_usart.c" index="20">
+<position info="not_deleted" x="23563" y="56"/>
+</item>
+<item historyLabel="stm32f4xx_usart.h" index="21">
+<position info="not_deleted" x="15794" y="0"/>
+</item>
+<item historyLabel="stm32f4xx_usart.c" index="20">
+<position info="not_deleted" x="23620" y="0"/>
+</item>
+<item historyLabel="stm32f4xx_usart.h" index="21">
+<position info="not_deleted" x="1478" y="0"/>
+</item>
+<item historyLabel="ff.h" index="22">
+<position info="not_deleted" x="969" y="56"/>
+</item>
+<item historyLabel="board_init.c" index="23">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="Configuration" index="12"/>
+<item active="true" historyLabel="Configuration" index="24"/>
 </navigationHistory>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
 </page>
@@ -348,50 +450,51 @@
 <actionBarAdvisor/>
 </window>
 <mruList>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="main.c" tooltip="SpectrumAnalyzer32x16FullColorSTM/main.c">
-<persistable path="/SpectrumAnalyzer32x16FullColorSTM/main.c"/>
+<file factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="ff.h" tooltip="C:\GitHub\mSdk\SDK\lib\lib\fat_fs\inc\ff.h">
+<persistable uri="file:/C:/GitHub/mSdk/SDK/lib/lib/fat_fs/inc/ff.h"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="board_init.h" tooltip="SpectrumAnalyzer32x16FullColorSTM/SpectrumAnalyzer32x16FullColorSTM_board/board_init.h">
-<persistable path="/SpectrumAnalyzer32x16FullColorSTM/SpectrumAnalyzer32x16FullColorSTM_board/board_init.h"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="stm32f4xx_usart.h" tooltip="SDK_Probe_STM32F4/stm32f4xx/driver/stm32f4xx_usart.h">
+<persistable path="/SDK_Probe_STM32F4/stm32f4xx/driver/stm32f4xx_usart.h"/>
 </file>
-<file factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="org.eclipse.ui.DefaultTextEditor" name="arm-gcc-link.ld" tooltip="A:\Projects\SpectrumAnalyzer32x16FullColor\Firmware\SpectrumAnalyzer32x16FullColorSTM\arm-gcc-link.ld">
-<persistable uri="file:/A:/Projects/SpectrumAnalyzer32x16FullColor/Firmware/SpectrumAnalyzer32x16FullColorSTM/arm-gcc-link.ld"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="stm32f4xx_usart.c" tooltip="SDK_Probe_STM32F4/stm32f4xx/driver/stm32f4xx_usart.c">
+<persistable path="/SDK_Probe_STM32F4/stm32f4xx/driver/stm32f4xx_usart.c"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="usb_host_msc_interface.c" tooltip="SpectrumAnalyzer32x16FullColorSTM/stm32f10x/interface/usb_host_msc_interface.c">
-<persistable path="/SpectrumAnalyzer32x16FullColorSTM/stm32f10x/interface/usb_host_msc_interface.c"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="uart_interface.h" tooltip="SDK_Probe_STM32F4/stm32f4xx/interface/uart_interface.h">
+<persistable path="/SDK_Probe_STM32F4/stm32f4xx/interface/uart_interface.h"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="hs_mmcsd_interface.c" tooltip="SpectrumAnalyzer32x16FullColorSTM/stm32f10x/interface/hs_mmcsd_interface.c">
-<persistable path="/SpectrumAnalyzer32x16FullColorSTM/stm32f10x/interface/hs_mmcsd_interface.c"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="uart_interface.c" tooltip="SDK_Probe_STM32F4/stm32f4xx/interface/uart_interface.c">
+<persistable path="/SDK_Probe_STM32F4/stm32f4xx/interface/uart_interface.c"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="hs_mmcsd_interface.h" tooltip="SpectrumAnalyzer32x16FullColorSTM/stm32f10x/interface/hs_mmcsd_interface.h">
-<persistable path="/SpectrumAnalyzer32x16FullColorSTM/stm32f10x/interface/hs_mmcsd_interface.h"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="uart_api.c" tooltip="SDK_Probe_STM32F4/lib/api/uart_api.c">
+<persistable path="/SDK_Probe_STM32F4/lib/api/uart_api.c"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="mmcsd_api.c" tooltip="SpectrumAnalyzer32x16FullColorSTM/lib/api/mmcsd_api.c">
-<persistable path="/SpectrumAnalyzer32x16FullColorSTM/lib/api/mmcsd_api.c"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="main.c" tooltip="SDK_Probe_STM32F10x/main.c">
+<persistable path="/SDK_Probe_STM32F10x/main.c"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="lcd_interface.c" tooltip="SpectrumAnalyzer32x16FullColorSTM/stm32f10x/interface/lcd_interface.c">
-<persistable path="/SpectrumAnalyzer32x16FullColorSTM/stm32f10x/interface/lcd_interface.c"/>
+<file factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="org.eclipse.ui.DefaultTextEditor" name="arm-gcc-link.ld" tooltip="C:\GitHub\mSdk\SDK_Probe_STM32F10x\arm-gcc-link.ld">
+<persistable uri="file:/C:/GitHub/mSdk/SDK_Probe_STM32F10x/arm-gcc-link.ld"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="core_init.c" tooltip="SpectrumAnalyzer32x16FullColorSTM/stm32f10x/sys/core_init.c">
-<persistable path="/SpectrumAnalyzer32x16FullColorSTM/stm32f10x/sys/core_init.c"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="stm32f10x_gpio.c" tooltip="SDK_Probe_STM32F10x/stm32f10x/driver/stm32f10x_gpio.c">
+<persistable path="/SDK_Probe_STM32F10x/stm32f10x/driver/stm32f10x_gpio.c"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="system_stm32f10x.c" tooltip="SpectrumAnalyzer32x16FullColorSTM/stm32f10x/sys/system_stm32f10x.c">
-<persistable path="/SpectrumAnalyzer32x16FullColorSTM/stm32f10x/sys/system_stm32f10x.c"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="startup_stm32f10x_md.c" tooltip="SDK_Probe_STM32F10x/stm32f10x/sys/startup_stm32f10x_md.c">
+<persistable path="/SDK_Probe_STM32F10x/stm32f10x/sys/startup_stm32f10x_md.c"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="plat_properties.h" tooltip="SpectrumAnalyzer32x16FullColorSTM/stm32f10x/sys/plat_properties.h">
-<persistable path="/SpectrumAnalyzer32x16FullColorSTM/stm32f10x/sys/plat_properties.h"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ui.DefaultTextEditor" name="CoIde_stm32f10x_flash.ld" tooltip="SDK_Probe_STM32F10x/stm32f10x/sys/CoIde_stm32f10x_flash.ld">
+<persistable path="/SDK_Probe_STM32F10x/stm32f10x/sys/CoIde_stm32f10x_flash.ld"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="ds1307.c" tooltip="SpectrumAnalyzer32x16FullColorSTM/lib/device/ds1307.c">
-<persistable path="/SpectrumAnalyzer32x16FullColorSTM/lib/device/ds1307.c"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="board_init.c" tooltip="SDK_Probe_STM32F10x/undefined_board/board_init.c">
+<persistable path="/SDK_Probe_STM32F10x/undefined_board/board_init.c"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="board_init.c" tooltip="SpectrumAnalyzer32x16FullColorSTM/SpectrumAnalyzer32x16FullColorSTM_board/board_init.c">
-<persistable path="/SpectrumAnalyzer32x16FullColorSTM/SpectrumAnalyzer32x16FullColorSTM_board/board_init.c"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="board_init.c" tooltip="SDK_Probe_STM32F4/discovery_simple/board_init.c">
+<persistable path="/SDK_Probe_STM32F4/discovery_simple/board_init.c"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="diskio.c" tooltip="SpectrumAnalyzer32x16FullColorSTM/lib/lib/fat_fs/src/diskio.c">
-<persistable path="/SpectrumAnalyzer32x16FullColorSTM/lib/lib/fat_fs/src/diskio.c"/>
+<file factoryID="org.coocox.component.ui.editors.repository.RepositoryElementFactory" id="org.coocox.builder.ui.editors.repository.RepositoryBrowser" name="Repository" tooltip="Repository">
+<persistable>&#x0A;<subPage/>
+</persistable>
 </file>
-<file factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="stm32f10x_can.h" tooltip="C:\github\msdk\sdk\platform\stm32f10x\driver\stm32f10x_can.h">
-<persistable uri="file:/C:/github/msdk/sdk/platform/stm32f10x/driver/stm32f10x_can.h"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="gpio_interface.c" tooltip="SDK_Probe_STM32F4/stm32f4xx/interface/gpio_interface.c">
+<persistable path="/SDK_Probe_STM32F4/stm32f4xx/interface/gpio_interface.c"/>
 </file>
 </mruList>
 </workbench>
