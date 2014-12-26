@@ -41,6 +41,7 @@
 *
 */
 
+#include "stdbool.h"
 #include "../include/uart_irda_cir.h"
 #include "../include/hw/hw_types.h"
 
@@ -1339,11 +1340,11 @@ unsigned int UARTCharsAvail(unsigned int baseAdd)
  *           was empty and the character was written. Else it returns FALSE.
  */
 
-unsigned int UARTCharPutNonBlocking(unsigned int baseAdd,
+bool UARTCharPutNonBlocking(unsigned int baseAdd,
                                     unsigned char byteWrite)
 {
     unsigned int lcrRegValue = 0;
-    unsigned int retVal = FALSE;
+    unsigned int retVal = false;
 
     /* Switching to Register Operational Mode of operation. */
     lcrRegValue = UARTRegConfigModeEnable(baseAdd, UART_REG_OPERATIONAL_MODE);
@@ -1355,7 +1356,7 @@ unsigned int UARTCharPutNonBlocking(unsigned int baseAdd,
     if(HWREG(baseAdd + UART_LSR) & (UART_LSR_TX_SR_E | UART_LSR_TX_FIFO_E))
     {
         HWREG(baseAdd + UART_THR) = byteWrite;
-        retVal = TRUE;
+        retVal = true;
     }
 
     /* Restoring the value of LCR. */
@@ -1376,7 +1377,7 @@ unsigned int UARTCharPutNonBlocking(unsigned int baseAdd,
  *           returns -1.
  */
 
-signed char UARTCharGetNonBlocking(unsigned int baseAdd)
+signed short UARTCharGetNonBlocking(unsigned int baseAdd)
 {
     unsigned int lcrRegValue = 0;
     signed char retVal = -1;

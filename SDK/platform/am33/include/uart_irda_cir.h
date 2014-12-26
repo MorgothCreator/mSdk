@@ -44,6 +44,7 @@
 #ifndef _UART_IRDA_CIR_H_
 #define _UART_IRDA_CIR_H_
 
+#include "stdbool.h"
 #include "hw/hw_uart_irda_cir.h"
 
 #ifdef __cplusplus
@@ -563,9 +564,9 @@ void UARTIntEnable(unsigned int baseAdd, unsigned int intFlag);
 void UARTIntDisable(unsigned int baseAdd, unsigned int intFlag);
 unsigned int UARTSpaceAvail(unsigned int baseAdd);
 unsigned int UARTCharsAvail(unsigned int baseAdd);
-unsigned int UARTCharPutNonBlocking(unsigned int baseAdd,
+bool UARTCharPutNonBlocking(unsigned int baseAdd,
                                            unsigned char byteWrite);
-signed char UARTCharGetNonBlocking(unsigned int baseAdd);
+signed short UARTCharGetNonBlocking(unsigned int baseAdd);
 signed char UARTCharGet(unsigned int baseAdd);
 
 void UARTCharPut(unsigned int baseAdd, unsigned char byteTx);

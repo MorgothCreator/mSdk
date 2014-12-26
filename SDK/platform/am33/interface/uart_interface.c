@@ -292,12 +292,12 @@ unsigned char _UARTCharGet(unsigned int BaseAddr)
 	return (signed char)UARTCharGet(BaseAddr);
 }
 /*#####################################################*/
-void _UARTCharPutNonBlocking(unsigned int BaseAddr, unsigned char byteTx)
+bool _UARTCharPutNonBlocking(unsigned int BaseAddr, unsigned char byteTx)
 {
-	UARTCharPutNonBlocking(BaseAddr, byteTx);
+	return UARTCharPutNonBlocking(BaseAddr, byteTx);
 }
 /*#####################################################*/
-signed char _UARTCharGetNonBlocking(unsigned int BaseAddr)
+signed short _UARTCharGetNonBlocking(unsigned int BaseAddr)
 {
 	return UARTCharGetNonBlocking(BaseAddr);
 }
