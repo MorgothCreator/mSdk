@@ -70,11 +70,12 @@ bool board_init()
 	UARTPuts(DebugCom, "Setup TWI 0 with RxBuff = 258, TxBuff = 258....." , -1);
 	TWI[0] = new_(new_twi);
 	TWI[0]->BaudRate = 100000;
-	TWI[0]->TwiNr = 0;
+	TWI[0]->TwiNr = 1;
 	TWI[0]->Priority = 0;
 	//TWI[0]->WithInterrupt = TRUE;
 	TWI[0]->RxBuffSize = 258;
 	TWI[0]->TxBuffSize = 258;
+	TWI[0]->BusyTimeOut = 1000;
 	twi_open(TWI[0]);
 	UARTPuts(DebugCom, "OK.\n\r" , -1);
 /*-----------------------------------------------------*/
