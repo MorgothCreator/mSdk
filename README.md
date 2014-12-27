@@ -29,19 +29,19 @@ At this moment is supported the next platforms:
 
   Xplained Board.
   
-6) STM32F0 (CoIde).
+6) STM32F0 (CoIDE).
 
   --
 
-7) STM32F1 (CoIde).
+7) STM32F10x (CoIDE).
+
+  Custom board.
+
+8) STM32F3 (CoIDE).
 
   --
 
-8) STM32F3 (CoIde).
-
-  --
-
-9) STM32F4xx (ODeV & CoIde).
+9) STM32F4xx (ODeV & CoIDE).
 
   Discovery Board.
   
@@ -100,7 +100,10 @@ Done API's for every platform:
 	STM32F0:
 		In development.
 	STM32F1:
-		In development.
+		GPIO.
+		USART.
+		TWI.
+		ADC.
 	STM32F3:
 		In development.
 	STM32F4:
