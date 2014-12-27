@@ -66,7 +66,24 @@ typedef enum
 	ADC_EXT_TRIG_5,
 	ADC_EXT_TRIG_6,
 	ADC_EXT_TRIG_7,
+	ADC_EXT_TRIG_8,
+	ADC_EXT_TRIG_9,
+	ADC_EXT_TRIG_10,
+	ADC_EXT_TRIG_11,
+	ADC_EXT_TRIG_12,
+	ADC_EXT_TRIG_13,
+	ADC_EXT_TRIG_14,
+	ADC_EXT_TRIG_15,
+	ADC_EXT_TRIG_16,
 }ADC_EXT_TRIG_en;
+/*#####################################################*/
+typedef enum
+{
+	ADC_EXT_TRIG_ADGE_NONE = 0,
+	ADC_EXT_TRIG_ADGE_RISING,
+	ADC_EXT_TRIG_ADGE_FALLING,
+	ADC_EXT_TRIG_ADGE_RIS_FAL,
+}ADC_EXT_TRIG_ADGE_en;
 /*#####################################################*/
 typedef struct
 {
@@ -80,15 +97,17 @@ typedef struct
 
 	ADC_CONTINUOUS_MODE_en ContinuousMode;	/*!< Specifies whether the conversion is performed in Continuous or Single mode. This parameter can be set to ENABLE or DISABLE. */
 
-	unsigned int ExtTrig;					/*!< Defines the external trigger used to start the analog to digital conversion of regular channels. */
+	ADC_EXT_TRIG_en ExtTrig;				/*!< Defines the external trigger used to start the analog to digital conversion of regular channels. */
+
+	unsigned int ExtTrigEdge;				/*!< Defines the trigger edge. */
 
 	ADC_ALIGN_en Align;						/*!< Specifies whether the ADC data alignment is ADC_ALIGN_LEFT or ADC_ALIGN_RIGHT. */
-
-	//unsigned char NrOfChannels;				/*!< Specifies the number of ADC channels that will be converted using the sequencer for regular channel group. */
 
 	ADC_SAMPLE_TIME_en SampleTime;			/*!< Sample time, watch the ADC controller documentation */
 
 	char EnCh[32];							/*!< Specifies whether the channel will be enabled. Here is a table with order of registration, the rank will be assigned in order. ChEn[n] = 0 signify that the channel 'n' is disabled, ChEn[n] = 1 signify Channel 0*/
+
+	unsigned int Prescaller;				/*!< Specifies the prescaller divider value */
 
 	bool IntRefEn;
 
