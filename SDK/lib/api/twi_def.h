@@ -47,6 +47,7 @@ typedef struct
 	unsigned long BaudRate;
 	unsigned char* RxBuff;
 	unsigned char* TxBuff;
+	unsigned long BusyTimeOut;
 }Twi_t;
 /*#####################################################*/
 #define new_twi Twi_t
