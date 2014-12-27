@@ -7,19 +7,21 @@ This SDK is intended to help the developers that he want to develop standalone a
 
 At this moment is supported the next platforms:
 
-1) TI AM335x (Code Composer Studio).
+1) TI AM335x (Code Composer Studio(GCC only)).
 
-  BeagleBone Board.
+  <a href="http://beagleboard.org/bone">BeagleBone Board.</a>
   
-  DevKit8600 Board.
+  <a href="http://beagleboard.org/black">BeagleBone Black Board.</a>
+  
+  <a href="http://www.embest-tech.com/product/evaluation-boards/devkit8600-evaluation-board.html">DevKit8600 Board.</a>
   
 2) TI OMAP4 (Code Composer Studio).
 
-  PandaBoardEs Board.
+  <a href="http://pandaboard.org/content/pandaboard-es">PandaBoardEs Board.</a>
   
 3) AVR32AP7000 (AVR32 Studio).
 
-  NGW100 Board.
+  <a href="http://www.atmel.com/tools/MATURENGW100NETWORKGATEWAYKIT.aspx">NGW100 Board.</a>
   
 4) ATxmega (Atmel Studio).
 
@@ -27,25 +29,25 @@ At this moment is supported the next platforms:
   
 5) AT32UC3L (Atmel Studio).
 
-  Xplained Board.
+  <a href="http://www.atmel.com/tools/UC3-L0XPLAINED.aspx">Xplained Board.</a>
   
-6) STM32F0 (CoIde).
+6) STM32F0 (CoIDE).
 
   --
 
-7) STM32F1 (CoIde).
+7) STM32F10x (CoIDE).
+
+  Custom board (see example app for details).
+
+8) STM32F3 (CoIDE).
 
   --
 
-8) STM32F3 (CoIde).
+9) STM32F4xx (ODeV & CoIDE).
 
-  --
-
-9) STM32F4xx (ODeV & CoIde).
-
-  Discovery Board.
+  <a href="http://www.st.com/web/catalog/tools/FM116/SC959/SS1532/PF252419">Discovery Board.</a>
   
-  Mikromedia board.
+  <a href="http://www.mikroe.com/mikromedia/stm32-m4/">Mikromedia board.</a>
   
 I added the settings for all example projects to help beginners to understand how it works, is necessary to clone mSdk into "C:\GitHub\" directory.
 
@@ -100,11 +102,26 @@ Done API's for every platform:
 	STM32F0:
 		In development.
 	STM32F1:
-		In development.
+		GPIO.
+		USART.
+		TWI.
+		ADC.
 	STM32F3:
 		In development.
 	STM32F4:
 		GPIO.
 		USART.
 
+Supported devices (this drivers works on all platforms that has API's for used communicatiun busses):
 
+	24c I2C EEProm device.
+	ADXL345 I2C accelerometer device.
+	AR1020 I2C touchscreen device.
+	DS1307 I2C RTC device.
+	FT5x06 I2C capacitive touchscreen device.
+	MHC5883 I2C compass device.
+	MPU60x0 I2C accelerometer & giroscope device.
+	MS5611 I2C preasure & temperature sensor device.
+	SST25VF SPI flash memory device.
+	TPS65217 I2C PMIC device.
+	TPS65910 I2C PMIC device.
