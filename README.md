@@ -113,6 +113,7 @@ Done API's for every platform:
 		USART.
 
 Supported devices (this drivers works on all platforms that has API's for used communicatiun busses):
+
 	24c I2C EEProm device.
 	ADXL345 I2C accelerometer device.
 	AR1020 I2C touchscreen device.
