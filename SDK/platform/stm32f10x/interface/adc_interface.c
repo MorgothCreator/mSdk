@@ -87,6 +87,8 @@ bool _adc_init(Adc_t *Adc_s)
 			case 6:
 				ext_trig = ADC_ExternalTrigConv_Ext_IT11_TIM8_TRGO;
 				break;
+			default:
+				break;
 		}
 	}
 	else if(Adc_s->UnitNr == 2) {
@@ -110,6 +112,8 @@ bool _adc_init(Adc_t *Adc_s)
 			case 6:
 				ext_trig = ADC_ExternalTrigConv_T5_CC3;
 				break;
+			default:
+				break;
 		}
 	}
 	switch(Adc_s->ExtTrig)
@@ -119,6 +123,8 @@ bool _adc_init(Adc_t *Adc_s)
 			break;
 		case 7:
 			ext_trig = ADC_ExternalTrigConv_T1_CC3;
+			break;
+		default:
 			break;
 	}
 
