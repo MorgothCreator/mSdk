@@ -12,8 +12,8 @@ extern unsigned long SystemCoreClock;
 /******************************************************************************
 **                      INTERNAL VARIABLE DEFINITIONS
 *******************************************************************************/
-static volatile unsigned long long flagIsr = 1;
-static volatile unsigned long long STimerCnt;
+volatile unsigned long long flagIsr = 1;
+volatile unsigned long long STimerCnt;
 //#####################################################
 void SysDelayTimerSetup(void)
 {
