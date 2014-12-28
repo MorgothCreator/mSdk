@@ -2,7 +2,7 @@
  * board_init.h
  *
  * Created: 2/8/2013 12:22:37 AM
- *  Author: XxXx
+ *  Iulian Gheorghiu <morgoth.creator@gmail.com>
  */
 /*#####################################################*/
 #ifndef BOARD_INIT_H_
@@ -17,8 +17,10 @@
 #include "api/gpio_api.h"
 #include "api/uart_def.h"
 #include "api/uart_api.h"
-//#include "api/twi_def.h"
-//#include "api/twi_api.h"
+#include "api/twi_def.h"
+#include "api/twi_api.h"
+#include "api/adc_def.h"
+#include "api/adc_api.h"
 //#include "api/lcd_def.h"
 //#include "api/lcd_api.h"
 //#include "api/mmcsd_api.h"
@@ -29,12 +31,12 @@
 /*#####################################################*/
 #define BOARD_MESSAGE "STM32F407VGT6 Discovery"
 /*#####################################################*/
+extern new_uart* Uart[];
 extern new_uart* DebugCom;
+extern new_twi* TWI[];
+extern new_adc* ADC[];
+extern new_gpio* LED[];
 extern new_gpio* HARDBTN1;
-extern new_gpio* LED1;
-extern new_gpio* LED2;
-extern new_gpio* LED3;
-extern new_gpio* LED4;
 /*-----------------------------------------------------*/
 //extern new_touchscreen* TouchScreen;
 //extern new_screen* ScreenBuff;
