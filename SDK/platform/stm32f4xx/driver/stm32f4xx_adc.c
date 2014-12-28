@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    stm32f4xx_adc.c
+  * @file    stm32f4xx_ADC.c
   * @author  MCD Application Team
   * @version V1.1.0
   * @date    11-January-2013
@@ -349,7 +349,7 @@ void ADC_CommonInit(ADC_CommonInitTypeDef* ADC_CommonInitStruct)
   assert_param(IS_ADC_SAMPLING_DELAY(ADC_CommonInitStruct->ADC_TwoSamplingDelay));
   /*---------------------------- ADC CCR Configuration -----------------*/
   /* Get the ADC CCR value */
-  tmpreg1 = ADC->CCR;
+  tmpreg1 = _ADC->CCR;
 
   /* Clear MULTI, DELAY, DMA and ADCPRE bits */
   tmpreg1 &= CR_CLEAR_MASK;
@@ -366,7 +366,7 @@ void ADC_CommonInit(ADC_CommonInitTypeDef* ADC_CommonInitStruct)
                         ADC_CommonInitStruct->ADC_TwoSamplingDelay);
 
   /* Write to ADC CCR */
-  ADC->CCR = tmpreg1;
+  _ADC->CCR = tmpreg1;
 }
 
 /**
@@ -594,12 +594,12 @@ void ADC_TempSensorVrefintCmd(FunctionalState NewState)
   if (NewState != DISABLE)
   {
     /* Enable the temperature sensor and Vrefint channel*/
-    ADC->CCR |= (uint32_t)ADC_CCR_TSVREFE;
+    _ADC->CCR |= (uint32_t)ADC_CCR_TSVREFE;
   }
   else
   {
     /* Disable the temperature sensor and Vrefint channel*/
-    ADC->CCR &= (uint32_t)(~ADC_CCR_TSVREFE);
+    _ADC->CCR &= (uint32_t)(~ADC_CCR_TSVREFE);
   }
 }
 
@@ -616,12 +616,12 @@ void ADC_VBATCmd(FunctionalState NewState)
   if (NewState != DISABLE)
   {
     /* Enable the VBAT channel*/
-    ADC->CCR |= (uint32_t)ADC_CCR_VBATE;
+    _ADC->CCR |= (uint32_t)ADC_CCR_VBATE;
   }
   else
   {
     /* Disable the VBAT channel*/
-    ADC->CCR &= (uint32_t)(~ADC_CCR_VBATE);
+    _ADC->CCR &= (uint32_t)(~ADC_CCR_VBATE);
   }
 }
 
@@ -1104,12 +1104,12 @@ void ADC_MultiModeDMARequestAfterLastTransferCmd(FunctionalState NewState)
   if (NewState != DISABLE)
   {
     /* Enable the selected ADC DMA request after last transfer */
-    ADC->CCR |= (uint32_t)ADC_CCR_DDS;
+    _ADC->CCR |= (uint32_t)ADC_CCR_DDS;
   }
   else
   {
     /* Disable the selected ADC DMA request after last transfer */
-    ADC->CCR &= (uint32_t)(~ADC_CCR_DDS);
+    _ADC->CCR &= (uint32_t)(~ADC_CCR_DDS);
   }
 }
 /**
