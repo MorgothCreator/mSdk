@@ -8,6 +8,8 @@
 #ifndef ADC_DEF_H_
 #define ADC_DEF_H_
 /*#####################################################*/
+#include "interface/adc_interface_def.h"
+/*#####################################################*/
 typedef enum
 {
 	ADC_ALIGN_LEFT = 0,
@@ -103,9 +105,7 @@ typedef struct
 
 	ADC_ALIGN_en Align;						/*!< Specifies whether the ADC data alignment is ADC_ALIGN_LEFT or ADC_ALIGN_RIGHT. */
 
-	ADC_SAMPLE_TIME_en SampleTime;			/*!< Sample time, watch the ADC controller documentation */
-
-	char EnCh[32];							/*!< Specifies whether the channel will be enabled. Here is a table with order of registration, the rank will be assigned in order. ChEn[n] = 0 signify that the channel 'n' is disabled, ChEn[n] = 1 signify Channel 0*/
+	char EnCh[ADC_CHANNELS_NR_PER_UNIT];	/*!< Specifies whether the channel will be enabled. Here is a table with order of registration, the rank will be assigned in order. ChEn[n] = 0 signify that the channel 'n' is disabled, ChEn[n] = 1 signify Channel 0*/
 
 	unsigned int Prescaller;				/*!< Specifies the prescaller divider value */
 
@@ -119,7 +119,9 @@ typedef struct
 
 	void *DmaChBaseAddr;
 
-	unsigned int ConvResult[32];
+	unsigned int ConvResult[ADC_CHANNELS_NR_PER_UNIT];
+
+	unsigned char SampleTime[ADC_CHANNELS_NR_PER_UNIT];/*!< Sample time, watch the ADC controller documentation */
 }Adc_t;
 
 
