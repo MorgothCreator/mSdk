@@ -24,7 +24,7 @@ int main(void)
 			ms5611_prom_data.C7);
 	while(1)
 	{
-		CntDelay = 3500000;
+		CntDelay = 6200000;
 		do {
 			if(!CntDelay) break;
 			CntDelay--;
@@ -34,7 +34,7 @@ int main(void)
 		gpio_out(LED[2], 1);
 		gpio_out(LED[3], 1);
 		//UARTprintf(DebugCom, "Str\n");
-	    CntDelay = 3500000;
+	    CntDelay = 6200000;
 	    do {
 			if(!CntDelay) break;
 			CntDelay--;
