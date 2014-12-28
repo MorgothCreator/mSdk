@@ -265,7 +265,7 @@ bool _adc_init(Adc_t *Adc_s)
 			case 17:
 				break;
 			}
-			ADC_RegularChannelConfig((ADC_TypeDef *)Adc_s->BaseAddr, Adc_s->EnCh[ChCnt] - 1, RankCnt, Adc_s->SampleTime);
+			ADC_RegularChannelConfig((ADC_TypeDef *)Adc_s->BaseAddr, Adc_s->EnCh[ChCnt] - 1, RankCnt, Adc_s->SampleTime[ChCnt]);
 			RankCnt++;
 		}
 	}
