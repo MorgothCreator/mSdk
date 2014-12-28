@@ -88,19 +88,20 @@ bool board_init()
 	ADC[0]->ConvMode = ADC_CONV_MODE_MULTICHANNEL;
 	ADC[0]->DmaChannel = 0;
 	ADC[0]->DmaUnitNr = 0;
-	ADC[0]->EnCh[0] = 1;
-	ADC[0]->EnCh[1] = 2;
-	ADC[0]->EnCh[2] = 17;
 	ADC[0]->ExtTrig = ADC_EXT_TRIG_NONE;
 	ADC[0]->ExtTrigEdge = ADC_EXT_TRIG_ADGE_NONE;
 	ADC[0]->IntRefEn = true;
 	ADC[0]->Mode = ADC_MODE_INDEPENDENT;
-	ADC[0]->SampleTime[0] = ADC_SAMPLE_TIME_5;
-	ADC[0]->SampleTime[1] = ADC_SAMPLE_TIME_5;
-	ADC[0]->SampleTime[2] = ADC_SAMPLE_TIME_6;
 	ADC[0]->TempSensorEn = true;
 	ADC[0]->UnitNr = 0;
 	ADC[0]->Prescaller = 2;
+	ADC[0]->ResolutionBits = 12;
+	ADC[0]->EnCh[0] = 1;
+	ADC[0]->EnCh[1] = 2;
+	ADC[0]->EnCh[2] = 17;
+	ADC[0]->SampleTime[0] = ADC_SAMPLE_TIME_5;
+	ADC[0]->SampleTime[1] = ADC_SAMPLE_TIME_5;
+	ADC[0]->SampleTime[2] = ADC_SAMPLE_TIME_6;
 	if(adc_init(ADC[0])) UARTPuts(DebugCom, "OK.\n\r" , -1);
 	else  UARTPuts(DebugCom, "FAILED.\n\r" , -1);
 /*-----------------------------------------------------*/
