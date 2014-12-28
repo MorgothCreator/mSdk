@@ -22,8 +22,10 @@ void SysDelayTimerSetup(void)
 //#####################################################
 void Sysdelay(unsigned int milliSec)
 {
-	flagIsr = STimerCnt + milliSec;
-	while(flagIsr < STimerCnt);
+	flagIsr = STimerCnt + (unsigned long long)milliSec;
+	while(1) {
+		if(flagIsr < STimerCnt) break;
+	}
 }
 //#####################################################
 void TimerCnt_Isr_Increment(void)
