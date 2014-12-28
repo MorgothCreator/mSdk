@@ -76,7 +76,7 @@ bool board_init()
 		//TWI[0]->WithInterrupt = TRUE;
 	TWI[0]->RxBuffSize = 258;
 	TWI[0]->TxBuffSize = 258;
-	TWI[0]->BusyTimeOut = 1000;
+	TWI[0]->BusyTimeOut = 10;
 	twi_open(TWI[0]);
 	UARTPuts(DebugCom, "OK.\n\r" , -1);
 /*-----------------------------------------------------*/
