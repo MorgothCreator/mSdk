@@ -93,7 +93,9 @@ bool board_init()
 	ADC[0]->ExtTrig = ADC_EXT_TRIG_NONE;
 	ADC[0]->IntRefEn = true;
 	ADC[0]->Mode = ADC_MODE_INDEPENDENT;
-	ADC[0]->SampleTime = ADC_SAMPLE_TIME_5;
+	ADC[0]->SampleTime[0] = ADC_SAMPLE_TIME_5;
+	ADC[0]->SampleTime[1] = ADC_SAMPLE_TIME_5;
+	ADC[0]->SampleTime[2] = ADC_SAMPLE_TIME_6;
 	ADC[0]->TempSensorEn = true;
 	ADC[0]->UnitNr = 0;
 	if(adc_init(ADC[0])) UARTPuts(DebugCom, "OK.\n\r" , -1);
