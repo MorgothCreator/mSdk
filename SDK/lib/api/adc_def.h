@@ -113,7 +113,11 @@ typedef struct
 
 	bool TempSensorEn;
 
+	bool VBatEn;
+
 	unsigned int DmaChannel;
+
+	unsigned int ResolutionBits;
 
 	unsigned char DmaUnitNr;
 
