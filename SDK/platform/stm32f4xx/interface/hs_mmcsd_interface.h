@@ -87,6 +87,9 @@
 /*#####################################################*/
 timer(sd_timer_delay);
 /*#####################################################*/
+unsigned int MMCSDWriteCmdSend(void *_ctrl, void *ptr, unsigned long block, unsigned int nblks);
+unsigned int MMCSDReadCmdSend(void *_ctrl, void *ptr, unsigned long block, unsigned int nblks);
+void _mmcsd_ioctl(void *_ctrl, unsigned int  command,  unsigned int *buffer);
 bool _mmcsd_init(void *SdStruct, signed int CardDetectPortNr, signed int CardDetectPinNr, new_gpio* StatusLed);
 void _mmcsd_idle(void *SdStruct);
 /*#####################################################*/
