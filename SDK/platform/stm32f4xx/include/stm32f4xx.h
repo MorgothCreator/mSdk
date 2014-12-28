@@ -1231,7 +1231,7 @@ typedef struct
 #define TIM8                ((TIM_TypeDef *) TIM8_BASE)
 #define USART1              ((USART_TypeDef *) USART1_BASE)
 #define USART6              ((USART_TypeDef *) USART6_BASE)
-#define ADC                 ((ADC_Common_TypeDef *) ADC_BASE)
+#define _ADC                 ((ADC_Common_TypeDef *) ADC_BASE)
 #define ADC1                ((ADC_TypeDef *) ADC1_BASE)
 #define ADC2                ((ADC_TypeDef *) ADC2_BASE)
 #define ADC3                ((ADC_TypeDef *) ADC3_BASE)
