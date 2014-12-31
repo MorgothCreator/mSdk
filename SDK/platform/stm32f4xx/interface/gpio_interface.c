@@ -13,6 +13,66 @@
 #include "api/gpio_def.h"
 #include "stm32f4xx_gpio.h"
 
+GPIO_TypeDef* GET_GPIO_PORT_ADDR[] = { GPIOA
+#ifdef GPIOB
+		,GPIOB
+#endif
+#ifdef GPIOC
+		,GPIOC
+#endif
+#ifdef GPIOD
+		,GPIOD
+#endif
+#ifdef GPIOE
+		,GPIOE
+#endif
+#ifdef GPIOF
+		,GPIOF
+#endif
+#ifdef GPIOG
+		,GPIOG
+#endif
+#ifdef GPIOH
+		,GPIOH
+#endif
+#ifdef GPIOI
+		,GPIOI
+#endif
+#ifdef GPIOJ
+		,GPIOJ
+#endif
+};
+
+const unsigned int GET_PORT_CLK_ADDR[] = {RCC_AHB1Periph_GPIOA
+#ifdef RCC_AHB1Periph_GPIOB
+		,RCC_AHB1Periph_GPIOB
+#endif
+#ifdef RCC_AHB1Periph_GPIOC
+		,RCC_AHB1Periph_GPIOC
+#endif
+#ifdef RCC_AHB1Periph_GPIOD
+		,RCC_AHB1Periph_GPIOD
+#endif
+#ifdef RCC_AHB1Periph_GPIOE
+		,RCC_AHB1Periph_GPIOE
+#endif
+#ifdef RCC_AHB1Periph_GPIOF
+		,RCC_AHB1Periph_GPIOF
+#endif
+#ifdef RCC_AHB1Periph_GPIOG
+		,RCC_AHB1Periph_GPIOG
+#endif
+#ifdef RCC_AHB1Periph_GPIOH
+		,RCC_AHB1Periph_GPIOH
+#endif
+#ifdef RCC_AHB1Periph_GPIOI
+		,RCC_AHB1Periph_GPIOI
+#endif
+#ifdef RCC_AHB1Periph_GPIOJ
+		,RCC_AHB1Periph_GPIOJ
+#endif
+};
+
 void _gpio_init(unsigned int GpioModuleNr)
 {
 	unsigned int BaseAddr = 0;

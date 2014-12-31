@@ -8,6 +8,7 @@
 #include "stm32f4xx_conf.h"
 #include "uart_interface.h"
 #include "driver/stm32f4xx_usart.h"
+#include "gpio_interface.h"
 //#include "driver/uart.h"
 //#include "int/int_uart.h"
 /**
@@ -58,35 +59,19 @@ void UART_nvic_config(Uart_t* UartSettings)
 
 USART_TypeDef* COM_USART[COMn] = { USART1, USART2, USART3, UART4, UART5, USART6};
 
-GPIO_TypeDef* COM_TX_PORT[COMn] = {GPIOB,  GPIOD,  GPIOD,  GPIOC, GPIOD, GPIOC};
-
-GPIO_TypeDef* COM_RX_PORT[COMn] = {GPIOB,  GPIOD,  GPIOD,  GPIOC, GPIOC, GPIOC};
-
 const uint32_t COM_USART_CLK[COMn] = {RCC_APB2Periph_USART1, RCC_APB1Periph_USART2, RCC_APB1Periph_USART3, RCC_APB1Periph_UART4, RCC_APB1Periph_UART5, RCC_APB2Periph_USART6};
-
-const uint32_t COM_TX_PORT_CLK[COMn] = {RCC_AHB1Periph_GPIOB, RCC_AHB1Periph_GPIOD, RCC_AHB1Periph_GPIOD, RCC_AHB1Periph_GPIOC, RCC_AHB1Periph_GPIOD, RCC_AHB1Periph_GPIOC};
-
-const uint32_t COM_RX_PORT_CLK[COMn] = {RCC_AHB1Periph_GPIOB, RCC_AHB1Periph_GPIOD, RCC_AHB1Periph_GPIOD, RCC_AHB1Periph_GPIOC, RCC_AHB1Periph_GPIOC, RCC_AHB1Periph_GPIOC};
-
-const uint16_t COM_TX_PIN[COMn] = {GPIO_Pin_6, GPIO_Pin_5, GPIO_Pin_8, GPIO_Pin_10, GPIO_Pin_2, GPIO_Pin_6};
-
-const uint16_t COM_RX_PIN[COMn] = {GPIO_Pin_7, GPIO_Pin_6, GPIO_Pin_9, GPIO_Pin_11, GPIO_Pin_12, GPIO_Pin_7};
-
-const uint16_t COM_TX_PIN_SOURCE[COMn] = {GPIO_PinSource6, GPIO_PinSource5, GPIO_PinSource8, GPIO_PinSource10, GPIO_PinSource2, GPIO_PinSource6};
-
-const uint16_t COM_RX_PIN_SOURCE[COMn] = {GPIO_PinSource7, GPIO_PinSource6, GPIO_PinSource9, GPIO_PinSource11, GPIO_PinSource12, GPIO_PinSource7};
 
 const uint16_t COM_TX_AF[COMn] = {GPIO_AF_USART1, GPIO_AF_USART2, GPIO_AF_USART3, GPIO_AF_UART4, GPIO_AF_UART5, GPIO_AF_USART6};
 
 const uint16_t COM_RX_AF[COMn] = {GPIO_AF_USART1, GPIO_AF_USART2, GPIO_AF_USART3, GPIO_AF_UART4, GPIO_AF_UART5, GPIO_AF_USART6};
 
-void STM_EVAL_COMInit(unsigned char COM, USART_InitTypeDef* USART_InitStruct)
+void STM_EVAL_COMInit(Uart_t* UartSettings, unsigned char COM, USART_InitTypeDef* USART_InitStruct)
 {
   GPIO_InitTypeDef GPIO_InitStructure;
 
   /* Enable GPIO clock */
-  RCC_AHB1PeriphClockCmd(COM_TX_PORT_CLK[COM], ENABLE);
-  RCC_AHB1PeriphClockCmd(COM_RX_PORT_CLK[COM], ENABLE);
+  RCC_AHB1PeriphClockCmd(GET_PORT_CLK_ADDR[UartSettings->TxPort], ENABLE);
+  RCC_AHB1PeriphClockCmd(GET_PORT_CLK_ADDR[UartSettings->RxPort], ENABLE);
 
   if (COM == 0 || COM == 5) RCC_APB2PeriphClockCmd(COM_USART_CLK[COM], ENABLE);
   else
@@ -96,24 +81,24 @@ void STM_EVAL_COMInit(unsigned char COM, USART_InitTypeDef* USART_InitStruct)
   }
 
   /* Connect PXx to USARTx_Tx*/
-  GPIO_PinAFConfig(COM_TX_PORT[COM], COM_TX_PIN_SOURCE[COM], COM_TX_AF[COM]);
+  GPIO_PinAFConfig(GET_GPIO_PORT_ADDR[UartSettings->TxPort], UartSettings->TxPin, COM_TX_AF[COM]);
 
   /* Connect PXx to USARTx_Rx*/
-  GPIO_PinAFConfig(COM_RX_PORT[COM], COM_RX_PIN_SOURCE[COM], COM_RX_AF[COM]);
+  GPIO_PinAFConfig(GET_GPIO_PORT_ADDR[UartSettings->RxPort], UartSettings->RxPin, COM_RX_AF[COM]);
 
   /* Configure USART Tx as alternate function  */
   GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
   GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
 
-  GPIO_InitStructure.GPIO_Pin = COM_TX_PIN[COM];
+  GPIO_InitStructure.GPIO_Pin = 1 << UartSettings->TxPin;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-  GPIO_Init(COM_TX_PORT[COM], &GPIO_InitStructure);
+  GPIO_Init(GET_GPIO_PORT_ADDR[UartSettings->TxPort], &GPIO_InitStructure);
 
   /* Configure USART Rx as alternate function  */
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
-  GPIO_InitStructure.GPIO_Pin = COM_RX_PIN[COM];
-  GPIO_Init(COM_RX_PORT[COM], &GPIO_InitStructure);
+  GPIO_InitStructure.GPIO_Pin = 1 << UartSettings->RxPin;
+  GPIO_Init(GET_GPIO_PORT_ADDR[UartSettings->RxPort], &GPIO_InitStructure);
 
   /* USART configuration */
   USART_Init(COM_USART[COM], USART_InitStruct);
@@ -135,7 +120,7 @@ bool _uart_open(Uart_t* UartSettings)
 	USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
 	USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
 	//UART_nvic_config(UartSettings);
-	STM_EVAL_COMInit(UartSettings->UartNr, &USART_InitStructure);
+	STM_EVAL_COMInit(UartSettings, UartSettings->UartNr, &USART_InitStructure);
 	  //while(1);
 	//USART_TypeDef* base_addr = (USART_TypeDef*)UartSettings->BaseAddr;
 	//base_addr->CR1 |= USART_Mode_Rx | USART_Mode_Tx;

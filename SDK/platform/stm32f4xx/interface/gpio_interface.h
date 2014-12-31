@@ -10,6 +10,9 @@
 /*#####################################################*/
 #include <stdbool.h>
 #include "api/gpio_def.h"
+#include "driver/stm32f4xx_gpio.h"
+extern GPIO_TypeDef* GET_GPIO_PORT_ADDR[];
+extern const unsigned int GET_PORT_CLK_ADDR[];
 /*#####################################################*/
 void _gpio_init(unsigned int GpioModuleNr);
 new_gpio *_gpio_assign(unsigned int PortNr, unsigned int Pin, unsigned int Direction, bool Multipin);

@@ -12,6 +12,7 @@
 #include "driver/stm32f4xx_i2c.h"
 #include "api/timer_api.h"
 #include "api/twi_def.h"
+#include "gpio_interface.h"
 
 #define USE_I2C_TX_DMA
 //#####################################################
@@ -20,23 +21,8 @@ I2C_TypeDef *sEE_I2C[3] = {I2C1, I2C2, I2C3};
 
 I2C_TypeDef* I2C[I2Cn] = { I2C1, I2C2, I2C3};
 
-GPIO_TypeDef* I2C_SCL_PORT[I2Cn] = {GPIOB,  GPIOH,  GPIOH};
-
-GPIO_TypeDef* I2C_SDA_PORT[I2Cn] = {GPIOB,  GPIOH,  GPIOH};
-
 const uint32_t I2C_CLK[I2Cn] = {RCC_APB1Periph_I2C1, RCC_APB1Periph_I2C2, RCC_APB1Periph_I2C3};
 
-const uint32_t I2C_SCL_PORT_CLK[I2Cn] = {RCC_AHB1Periph_GPIOB, RCC_AHB1Periph_GPIOH, RCC_AHB1Periph_GPIOH};
-
-const uint32_t I2C_SDA_PORT_CLK[I2Cn] = {RCC_AHB1Periph_GPIOB, RCC_AHB1Periph_GPIOH, RCC_AHB1Periph_GPIOH};
-
-const uint16_t I2C_SCL_PIN[I2Cn] = {GPIO_Pin_6, GPIO_Pin_4, GPIO_Pin_8};
-
-const uint16_t I2C_SDA_PIN[I2Cn] = {GPIO_Pin_7, GPIO_Pin_5, GPIO_Pin_9};
-
-const uint16_t I2C_SCL_PIN_SOURCE[I2Cn] = {GPIO_PinSource6, GPIO_PinSource4, GPIO_PinSource8};
-
-const uint16_t I2C_SDA_PIN_SOURCE[I2Cn] = {GPIO_PinSource7, GPIO_PinSource5, GPIO_PinSource9};
 
 /**
   * @brief  Start critical section: these callbacks should be typically used
@@ -87,13 +73,13 @@ void sEE_LowLevel_DeInit(new_twi* TwiStruct)
 
   /*!< GPIO configuration */
   /*!< Configure sEE_I2C pins: SCL */
-  GPIO_InitStructure.GPIO_Pin = I2C_SCL_PIN[TwiStruct->TwiNr];
+  GPIO_InitStructure.GPIO_Pin = 1 << TwiStruct->SclPin;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
-  GPIO_Init(I2C_SCL_PORT[TwiStruct->TwiNr], &GPIO_InitStructure);
+  GPIO_Init(GET_GPIO_PORT_ADDR[TwiStruct->SclPort], &GPIO_InitStructure);
 
   /*!< Configure sEE_I2C pins: SDA */
-  GPIO_InitStructure.GPIO_Pin = I2C_SDA_PIN[TwiStruct->TwiNr];
-  GPIO_Init(I2C_SDA_PORT[TwiStruct->TwiNr], &GPIO_InitStructure);
+  GPIO_InitStructure.GPIO_Pin = 1 << TwiStruct->SdaPin;
+  GPIO_Init(GET_GPIO_PORT_ADDR[TwiStruct->SdaPort], &GPIO_InitStructure);
 
 }
 //#####################################################
@@ -107,28 +93,28 @@ void sEE_LowLevel_Init(new_twi* TwiStruct)
   GPIO_InitTypeDef  GPIO_InitStructure;
 
   /*!< sEE_I2C_SCL_GPIO_CLK and sEE_I2C_SDA_GPIO_CLK Periph clock enable */
-  RCC_APB2PeriphClockCmd(I2C_SCL_PORT_CLK[TwiStruct->TwiNr] | I2C_SDA_PORT_CLK[TwiStruct->TwiNr], ENABLE);
+  RCC_APB2PeriphClockCmd(GET_PORT_CLK_ADDR[TwiStruct->SclPort] | GET_PORT_CLK_ADDR[TwiStruct->SdaPort], ENABLE);
 
   /*!< sEE_I2C Periph clock enable */
   RCC_APB1PeriphClockCmd(I2C_CLK[TwiStruct->TwiNr], ENABLE);
 
   /*!< GPIO configuration */
   /*!< Configure sEE_I2C pins: SCL */
-  GPIO_InitStructure.GPIO_Pin = I2C_SCL_PIN[TwiStruct->TwiNr];
+  GPIO_InitStructure.GPIO_Pin = 1 << TwiStruct->SclPin;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
   GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
 
   GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
-  GPIO_Init(I2C_SCL_PORT[TwiStruct->TwiNr], &GPIO_InitStructure);
+  GPIO_Init(GET_GPIO_PORT_ADDR[TwiStruct->SclPort], &GPIO_InitStructure);
 
   /*!< Configure sEE_I2C pins: SDA */
   GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;
-  GPIO_InitStructure.GPIO_Pin = I2C_SDA_PIN[TwiStruct->TwiNr];
-  GPIO_Init(I2C_SDA_PORT[TwiStruct->TwiNr], &GPIO_InitStructure);
+  GPIO_InitStructure.GPIO_Pin = 1 << TwiStruct->SdaPin;
+  GPIO_Init(GET_GPIO_PORT_ADDR[TwiStruct->SdaPort], &GPIO_InitStructure);
 
-  GPIO_PinAFConfig(I2C_SCL_PORT[TwiStruct->TwiNr], I2C_SCL_PIN_SOURCE[TwiStruct->TwiNr], GPIO_AF_I2C1);
-  GPIO_PinAFConfig(I2C_SDA_PORT[TwiStruct->TwiNr], I2C_SDA_PIN_SOURCE[TwiStruct->TwiNr], GPIO_AF_I2C1);
+  GPIO_PinAFConfig(GET_GPIO_PORT_ADDR[TwiStruct->SclPort], TwiStruct->SclPin, GPIO_AF_I2C1);
+  GPIO_PinAFConfig(GET_GPIO_PORT_ADDR[TwiStruct->SdaPort], TwiStruct->SdaPin, GPIO_AF_I2C1);
 
 }
 //#####################################################
