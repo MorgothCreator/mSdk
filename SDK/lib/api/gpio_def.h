@@ -31,6 +31,36 @@ typedef enum
 	GPIO_DIR_INPUT = 0x1u
 }gpio_dir_enum;
 /*#####################################################*/
+typedef enum
+{
+	IOA = 0x0u,
+	IOB,
+	IOC,
+	IOD,
+	IOE,
+	IOF,
+	IOG,
+	IOH,
+	IOI,
+	IOJ,
+	IOK,
+	IOL,
+	IOM,
+	ION,
+	IOO,
+	IOP,
+	IOQ,
+	IOR,
+	IOS,
+	IOT,
+	IOU,
+	IOV,
+	IOW,
+	IOX,
+	IOY,
+	IOZ
+}gpio_port_enum;
+/*#####################################################*/
 #define pin_mux_convert_to_pin(port, pin) ((port<<5) + pin)
 
 #define pin_mux_convert_to_port_pin(pin) (pin>>5), (pin - ((pin>>5)<<5))
@@ -41,7 +71,14 @@ typedef struct
 	unsigned int Pin;
 	unsigned char PortNr;
 	unsigned char Direction;
+	bool LastState;
 	bool Multipin;
+	struct {
+		void (*on_state_changed)(void *data, bool state);
+		void *on_state_changed_data;
+		bool state_up;
+		bool state_dn;
+	}event;
 }Gpio_t;
 /*#####################################################*/
 #define new_gpio Gpio_t
