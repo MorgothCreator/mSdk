@@ -9,6 +9,7 @@
 #include "include/stm32f10x.h"
 #include "uart_interface.h"
 #include "driver/stm32f10x_usart.h"
+#include "gpio_interface.h"
 //#include "driver/uart.h"
 //#include "int/int_uart.h"
 /**
@@ -57,21 +58,44 @@
 
 #define COMn                             3
 
-USART_TypeDef* COM_USART[COMn] = { USART1, USART2, USART3};
+USART_TypeDef* COM_USART[] = { USART1
+#ifdef USART2
+		, USART2
+#endif
+#ifdef USART3
+		, USART3
+#endif
+#ifdef USART4
+		, USART4
+#endif
+#ifdef USART5
+		, USART5
+#endif
+#ifdef USART6
+		, USART6
+#endif
+		};
 
-GPIO_TypeDef* COM_TX_PORT[COMn] = {GPIOA,  GPIOA,  GPIOB};
-
-GPIO_TypeDef* COM_RX_PORT[COMn] = {GPIOA,  GPIOA,  GPIOB};
-
-const uint32_t COM_USART_CLK[COMn] = {RCC_APB2Periph_USART1, RCC_APB1Periph_USART2, RCC_APB1Periph_USART3};
-
-const uint32_t COM_TX_PORT_CLK[COMn] = {RCC_APB2Periph_GPIOA, RCC_APB2Periph_GPIOA, RCC_APB2Periph_GPIOB};
-
-const uint32_t COM_RX_PORT_CLK[COMn] = {RCC_APB2Periph_GPIOA, RCC_APB2Periph_GPIOA, RCC_APB2Periph_GPIOB};
-
-const uint16_t COM_TX_PIN[COMn] = {GPIO_Pin_9, GPIO_Pin_2, GPIO_Pin_10};
-
-const uint16_t COM_RX_PIN[COMn] = {GPIO_Pin_10, GPIO_Pin_3, GPIO_Pin_11};
+const uint32_t COM_USART_CLK[] = {RCC_APB2Periph_USART1
+#ifdef RCC_APB1Periph_USART2
+		, RCC_APB1Periph_USART2
+#endif
+#ifdef RCC_APB1Periph_USART3
+		, RCC_APB1Periph_USART3
+#endif
+#ifdef RCC_APB1Periph_USART3
+		, RCC_APB1Periph_USART3
+#endif
+#ifdef RCC_APB1Periph_USART4
+		, RCC_APB1Periph_USART4
+#endif
+#ifdef RCC_APB2Periph_USART5
+		, RCC_APB2Periph_USART5
+#endif
+#ifdef RCC_APB1Periph_USART6
+		, RCC_APB1Periph_USART6
+#endif
+};
 
 //const uint16_t COM_TX_PIN_REMAP[COMn] = {GPIO_Remap_USART1, GPIO_Remap_USART2, GPIO_FullRemap_USART3, GPIO_PinSource10, GPIO_PinSource2};
 
@@ -79,13 +103,13 @@ const uint16_t COM_RX_PIN[COMn] = {GPIO_Pin_10, GPIO_Pin_3, GPIO_Pin_11};
 
 //const uint16_t COM_RX_AF[COMn] = {GPIO_AF_USART1, GPIO_AF_USART2, GPIO_AF_USART3, GPIO_AF_UART4, GPIO_AF_UART5};
 
-void STM_EVAL_COMInit(unsigned char COM, USART_InitTypeDef* USART_InitStruct)
+void STM_EVAL_COMInit(Uart_t* UartSettings, unsigned char COM, USART_InitTypeDef* USART_InitStruct)
 {
 	GPIO_InitTypeDef GPIO_InitStructure;
 
 	  /* Enable GPIO clock */
-	  RCC_APB2PeriphClockCmd(COM_TX_PORT_CLK[COM], ENABLE);
-	  RCC_APB2PeriphClockCmd(COM_RX_PORT_CLK[COM], ENABLE);
+	  RCC_APB2PeriphClockCmd(GET_PORT_CLK_ADDR[(int)UartSettings->TxPort], ENABLE);
+	  RCC_APB2PeriphClockCmd(GET_PORT_CLK_ADDR[(int)UartSettings->RxPort], ENABLE);
 
 	  if (COM == 0 || COM == 5) RCC_APB2PeriphClockCmd(COM_USART_CLK[COM], ENABLE);
 	  else
@@ -118,14 +142,14 @@ void STM_EVAL_COMInit(unsigned char COM, USART_InitTypeDef* USART_InitStruct)
 	  //GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
 	  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
 
-	  GPIO_InitStructure.GPIO_Pin = COM_TX_PIN[COM];
+	  GPIO_InitStructure.GPIO_Pin = 1 << UartSettings->TxPin;
 	  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	  GPIO_Init(COM_TX_PORT[COM], &GPIO_InitStructure);
+	  GPIO_Init(GET_GPIO_PORT_ADDR[(int)UartSettings->TxPort], &GPIO_InitStructure);
 
 	  /* Configure USART Rx as alternate function  */
 	  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
-	  GPIO_InitStructure.GPIO_Pin = COM_RX_PIN[COM];
-	  GPIO_Init(COM_RX_PORT[COM], &GPIO_InitStructure);
+	  GPIO_InitStructure.GPIO_Pin = 1 << UartSettings->RxPin;
+	  GPIO_Init(GET_GPIO_PORT_ADDR[(int)UartSettings->RxPort], &GPIO_InitStructure);
 
 	  /* USART configuration */
 	  USART_Init(COM_USART[COM], USART_InitStruct);
@@ -147,7 +171,7 @@ bool _uart_open(Uart_t* UartSettings)
 	USART_InitStructure.USART_Parity = USART_Parity_No;
 	USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
 	USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
-	STM_EVAL_COMInit(UartSettings->UartNr, &USART_InitStructure);
+	STM_EVAL_COMInit(UartSettings, UartSettings->UartNr, &USART_InitStructure);
 	  //while(1);
 	//USART_TypeDef* base_addr = (USART_TypeDef*)UartSettings->BaseAddr;
 	//base_addr->CR1 |= USART_Mode_Rx | USART_Mode_Tx;
