@@ -28,14 +28,16 @@
 #include "gpio_def.h"
 #include "interface/gpio_interface.h"
 /*#####################################################*/
-void gpio_init(unsigned int GpioModuleNr);
-new_gpio *gpio_assign(unsigned char PortNr, unsigned char PinNr, unsigned char Direction, bool Multipin);
+void gpio_init(gpio_port_enum GpioModuleNr);
+new_gpio *gpio_assign(gpio_port_enum PortNr, unsigned char PinNr, unsigned char Direction, bool Multipin);
 void gpio_free(new_gpio *gpio_struct);
 bool gpio_out(new_gpio *gpio_struct, unsigned char State);
 bool gpio_direction(new_gpio *gpio_struct, unsigned char Direction);
 signed int gpio_in(new_gpio *gpio_struct);
 bool gpio_up_dn_enable(new_gpio *gpio_struct, bool enable);
 bool gpio_up_dn(new_gpio *gpio_struct, unsigned char value);
+bool gpio_get_state(new_gpio *gpio_struct);
+void gpio_idle(new_gpio *gpio_struct);
 /*#####################################################*/
 #ifdef HEADER_INCLUDE_C_FILES
 #include "gpio_api.c"

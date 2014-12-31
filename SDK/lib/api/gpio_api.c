@@ -26,14 +26,14 @@
 #include "gpio_api.h"
 #include "interface/gpio_interface.h"
 /*#####################################################*/
-void gpio_init(unsigned int GpioModuleNr)
+void gpio_init(gpio_port_enum GpioModuleNr)
 {
 	_gpio_init(GpioModuleNr);
 }
 /*#####################################################*/
 //- GPIO_DIR_INPUT - to configure the pin as an input pin\n
 //- GPIO_DIR_OUTPUT - to configure the pin as an output pin\n
-new_gpio *gpio_assign(unsigned char PortNr, unsigned char PinNr, unsigned char Direction, bool Multipin)
+new_gpio *gpio_assign(gpio_port_enum PortNr, unsigned char PinNr, unsigned char Direction, bool Multipin)
 {
 	return _gpio_assign(PortNr, PinNr, Direction, Multipin);
 }
@@ -68,6 +68,22 @@ bool gpio_up_dn_enable(new_gpio *gpio_struct, bool enable)
 bool gpio_up_dn(new_gpio *gpio_struct, unsigned char value)
 {
 	return _gpio_up_dn(gpio_struct, value);
+}
+/*#####################################################*/
+bool gpio_get_state(new_gpio *gpio_struct)
+{
+	return gpio_struct->LastState;
+}
+/*#####################################################*/
+void gpio_idle(new_gpio *gpio_struct)
+{
+	if(gpio_in(gpio_struct) == 0 && gpio_struct->LastState == true) {
+		gpio_struct->LastState = false;
+		if(gpio_struct->event.on_state_changed) gpio_struct->event.on_state_changed(gpio_struct->event.on_state_changed_data, false);
+	} else if(gpio_in(gpio_struct) != 0 && gpio_struct->LastState == true) {
+		gpio_struct->LastState = true;
+		if(gpio_struct->event.on_state_changed) gpio_struct->event.on_state_changed(gpio_struct->event.on_state_changed_data, true);
+	}
 }
 /*#####################################################*/
 
