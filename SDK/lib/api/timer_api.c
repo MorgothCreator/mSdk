@@ -38,6 +38,7 @@ void timer_interval(STimer_t *S_Timer_Struct,unsigned long long _Value)
 #else
 	S_Timer_Struct->S_Timmer_Interval = _Value & (unsigned long long)INT64_MAX;
 #endif
+	timer_enable(S_Timer_Struct);
 }
 //#####################################################
 void timer_en(STimer_t *S_Timer_Struct,unsigned char Action)
