@@ -6,7 +6,7 @@
  */
 
 #include "sysdelay.h"
-#include "board_properties.h"
+#include "plat_properties.h"
 #include "sys/core_cm3.h"
 
 /******************************************************************************
