@@ -21,6 +21,8 @@
 
 #ifndef UART_DEF_H_
 #define UART_DEF_H_
+
+#include "gpio_def.h"
 /*#####################################################*/
 typedef enum 
 {
@@ -38,8 +40,10 @@ typedef enum
 /*#####################################################*/
 typedef struct
 {
-	unsigned int TxPin;
-	unsigned int RxPin;
+	unsigned char TxPin;
+	unsigned char RxPin;
+	gpio_port_enum TxPort;
+	gpio_port_enum RxPort;
 	unsigned char UartNr;
 	signed char Priority;
 	unsigned char WithInterrupt;

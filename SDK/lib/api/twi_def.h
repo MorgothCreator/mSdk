@@ -21,6 +21,7 @@
 
 #ifndef TWI_DEF_H_
 #define TWI_DEF_H_
+#include "gpio_def.h"
 /*#####################################################*/
 #define twi_timeout	500000
 /*#####################################################*/
@@ -34,8 +35,10 @@ typedef struct
 	unsigned char WithInterrupt;
 	volatile unsigned char result;
 	volatile unsigned char status;
-	unsigned int SdaPin;
-	unsigned int SclPin;
+	unsigned char SdaPin;
+	unsigned char SclPin;
+	gpio_port_enum SdaPort;
+	gpio_port_enum SclPort;
 	unsigned int BaseAddr;
 	unsigned int RxBuffSize;
 	unsigned int TxBuffSize;
