@@ -55,6 +55,10 @@ bool board_init()
 	//DebugCom->Mode = UsartCom_Mode_Asynchronus;
 	Uart[5]->Priority = 0;
 	Uart[5]->UartNr = 5;
+	Uart[5]->TxPort = IOC;
+	Uart[5]->RxPort = IOC;
+	Uart[5]->TxPin = 6;
+	Uart[5]->RxPin = 7;
 	uart_open(Uart[5]);
 	DebugCom = Uart[5];
 /*-----------------------------------------------------*/
@@ -77,6 +81,10 @@ bool board_init()
 	TWI[0]->RxBuffSize = 258;
 	TWI[0]->TxBuffSize = 258;
 	TWI[0]->BusyTimeOut = 10;
+	TWI[0]->SclPort = IOB;
+	TWI[0]->SdaPort = IOB;
+	TWI[0]->SclPin = 6;
+	TWI[0]->SdaPin = 7;
 	twi_open(TWI[0]);
 	UARTPuts(DebugCom, "OK.\n\r" , -1);
 /*-----------------------------------------------------*/
