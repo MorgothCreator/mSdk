@@ -360,7 +360,7 @@ bool mpu60x0_accelerometer_test(Twi_t *TwiStruct, unsigned char IcNr, double *Xt
 	return true;
 }
 
-/*bool mpu60x0_gyroscope_test_display_result(Twi_t *TwiStruct, unsigned char IcNr)
+bool mpu60x0_gyroscope_test_display_result(Twi_t *TwiStruct, unsigned char IcNr)
 {
 	double XtestResult = 0;
 	double YtestResult = 0;
@@ -420,7 +420,7 @@ bool mpu60x0_accelerometer_display_result(Twi_t *TwiStruct, unsigned char IcNr)
 	if(!mpu60x0_accel_data_get(TwiStruct, IcNr, &Xa, &Ya, &Za)) return false;
 	UARTprintf(DebugCom, "Accelerometer:\n\rXa = %d, Ya = %d, Za = %d\n\r", Xa, Ya, Za);
 	return true;
-}*/
+}
 
 bool mpu60x0_init(Twi_t *TwiStruct, unsigned char IcNr)
 {

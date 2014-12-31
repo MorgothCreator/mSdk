@@ -89,7 +89,7 @@ bool mhc5883_data_get(Twi_t *TwiStruct, signed short *X_Axis, signed short *Y_Ax
 	return true;
 }
 
-/*bool mhc5883_display_result(Twi_t *TwiStruct)
+bool mhc5883_display_result(Twi_t *TwiStruct)
 {
 	signed short Xc = 0;
 	signed short Yc = 0;
@@ -125,7 +125,7 @@ bool mhc5883_display_negative_test_result(Twi_t *TwiStruct)
 	if(!mhc5883_measurament_mode_set(TwiStruct, MHC5883_CONFIG_REG_A_MS_NORMAL)) return false;
 	Sysdelay(100);
 	return true;
-}*/
+}
 
 bool mhc5883_init(Twi_t *TwiStruct)
 {
