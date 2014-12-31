@@ -5,6 +5,7 @@
  *  Author: XxXx
  */ 
 
+#include "stdbool.h"
 #include "usb_interface.h"
 
 void _usb_host_init(unsigned int instance, new_gpio* StatusLed)
