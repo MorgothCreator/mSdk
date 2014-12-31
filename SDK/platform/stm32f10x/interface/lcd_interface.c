@@ -53,6 +53,11 @@ void _screen_backlight_off(tDisplay *pDisplay)
 			else gpio_out(pDisplay->BackLight, 0);
 }
 //#######################################################################################
+bool _screen_copy(tDisplay *pDisplayTo, tDisplay *pDisplayFrom, bool put_cursor, signed int X, signed int Y, unsigned int color)
+{
+	return false;
+}
+//#######################################################################################
 void _box_cache_clean(tDisplay *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len)
 {
 
