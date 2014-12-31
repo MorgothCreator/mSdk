@@ -9,6 +9,7 @@
 #include "core_init.h"
 #include "sys/plat_properties.h"
 #include "api/gpio_api.h"
+#include "api/gpio_def.h"
 #include "sys/system_stm32f10x.h"
 #include "driver/stm32f10x_rcc.h"
 //#include "driver/core.h"
@@ -21,13 +22,13 @@ void _core_init(void)
 	//SystemCoreClockUpdate();
 	//RCC_PCLK1Config(RCC_HCLK_Div4);
 	//RCC_PCLK2Config(RCC_HCLK_Div2);
-	gpio_init(0);
-	gpio_init(1);
-	gpio_init(2);
-	gpio_init(3);
-	gpio_init(4);
-	gpio_init(5);
-	gpio_init(6);
-	gpio_init(7);
-	gpio_init(8);
+	gpio_init(IOA);
+	gpio_init(IOB);
+	gpio_init(IOC);
+	gpio_init(IOD);
+	gpio_init(IOE);
+	gpio_init(IOF);
+	gpio_init(IOG);
+	gpio_init(IOH);
+	gpio_init(IOI);
 }
