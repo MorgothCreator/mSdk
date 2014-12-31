@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Project version="2G - 1.7.2" name="CM530_Bioloid">
+  <Target name="SDK_Probe_STM32F10x" isCurrent="1">
+    <Device manufacturerId="9" manufacturerName="ST" chipId="313" chipName="STM32F103RE" boardId="" boardName=""/>
+    <BuildOption>
+      <Compile>
+        <Option name="OptimizationLevel" value="0"/>
+        <Option name="UseFPU" value="0"/>
+        <Option name="UserEditCompiler" value="-c;-ffunction-sections;-fdata-sections;"/>
+        <Includepaths>
+          <Includepath path="."/>
+        </Includepaths>
+        <DefinedSymbols>
+          <Define name="STM32F103RE"/>
+          <Define name="STM32F10X_HD"/>
+        </DefinedSymbols>
+      </Compile>
+      <Link useDefault="0">
+        <Option name="DiscardUnusedSection" value="0"/>
+        <Option name="UserEditLinkder" value=""/>
+        <Option name="UseMemoryLayout" value="0"/>
+        <Option name="LTO" value="0"/>
+        <Option name="IsNewStartupCode" value="1"/>
+        <Option name="Library" value="Retarget"/>
+        <Option name="UserEditLinker" value="--entry=main; "/>
+        <Option name="nostartfiles" value="1"/>
+        <LinkedLibraries/>
+        <MemoryAreas debugInFlashNotRAM="1">
+          <Memory name="IROM1" type="ReadOnly" size="0x00080000" startValue="0x08000000"/>
+          <Memory name="IRAM1" type="ReadWrite" size="0x00010000" startValue="0x20000000"/>
+          <Memory name="IROM2" type="ReadOnly" size="" startValue=""/>
+          <Memory name="IRAM2" type="ReadWrite" size="" startValue=""/>
+        </MemoryAreas>
+        <LocateLinkFile path="../../sdk/platform/stm32f10x/sys/arm-gcc-link_f512k_r64k.ld" type="0"/>
+      </Link>
+      <Output>
+        <Option name="OutputFileType" value="0"/>
+        <Option name="Path" value="./"/>
+        <Option name="Name" value="CM530_Bioloid"/>
+        <Option name="HEX" value="1"/>
+        <Option name="BIN" value="1"/>
+      </Output>
+      <User>
+        <UserRun name="Run#1" type="Before" checked="0" value=""/>
+        <UserRun name="Run#1" type="After" checked="0" value=""/>
+      </User>
+    </BuildOption>
+    <DebugOption>
+      <Option name="org.coocox.codebugger.gdbjtag.core.adapter" value="ST-Link"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.debugMode" value="SWD"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.clockDiv" value="1M"/>
+      <Option name="org.coocox.codebugger.gdbjtag.corerunToMain" value="1"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.jlinkgdbserver" value=""/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.userDefineGDBScript" value=""/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.targetEndianess" value="0"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.jlinkResetMode" value="Type 0: Normal"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.resetMode" value="SYSRESETREQ"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.ifSemihost" value="0"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.ifCacheRom" value="1"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.ipAddress" value="127.0.0.1"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.portNumber" value="2009"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.autoDownload" value="1"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.verify" value="1"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.downloadFuction" value="Erase Effected"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.defaultAlgorithm" value="STM32F10x_HD_512.elf"/>
+      <Option name="org.coocox.codebugger.gdbjtag.coredebugInRamInitCommands" value="cd C:/GitHub/mSdk/SDK_Probe_STM32F10x/SDK_Probe_STM32F10x/Debug/bin restore SDK_Probe_STM32F10x.elf set {unsigned int*}0xE000ED08 = 0x20000000 set $sp = {unsigned int*}0x20000000 set $pc = {unsigned int*}0x20000004 "/>
+    </DebugOption>
+    <ExcludeFile/>
+  </Target>
+  <Components path="./"/>
+  <Files>
+    <File name="lib/lib/gfx/jpg/IJG/jfdctflt.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jfdctflt.c" type="1"/>
+    <File name="stm32f10x/interface/gpio_interface.h" path="../../SDK/platform/stm32f10x/interface/gpio_interface.h" type="1"/>
+    <File name="lib/lib/fat_fs/src/option/syncobj.c" path="../../SDK/lib/lib/fat_fs/src/option/syncobj.c" type="1"/>
+    <File name="lib/api/lcd_def.c" path="../../SDK/lib/api/lcd_def.c" type="1"/>
+    <File name="lib/lib/gfx/textbox.c" path="../../SDK/lib/lib/gfx/textbox.c" type="1"/>
+    <File name="lib/lib/fs/fat.c" path="../../SDK/lib/lib/fs/fat.c" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jcdctmgr.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jcdctmgr.c" type="1"/>
+    <File name="stm32f10x/interface/usb_host_mouse_interface.h" path="../../SDK/platform/stm32f10x/interface/usb_host_mouse_interface.h" type="1"/>
+    <File name="lib/lib/fft.c" path="../../SDK/lib/lib/fft.c" type="1"/>
+    <File name="stm32f10x/interface/usb" path="" type="2"/>
+    <File name="lib/lib/gfx/jpg/IJG/jerror.h" path="../../SDK/lib/lib/gfx/jpg/IJG/jerror.h" type="1"/>
+    <File name="robotis_bioloid_cm530_board/ffconf.h" path="../../SDK/board/stm32f10x/robotis_bioloid_cm530_board/ffconf.h" type="1"/>
+    <File name="stm32f10x/driver/stm32f10x_wwdg.c" path="../../SDK/platform/stm32f10x/driver/stm32f10x_wwdg.c" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jmorecfg.h" path="../../SDK/lib/lib/gfx/jpg/IJG/jmorecfg.h" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jcapimin.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jcapimin.c" type="1"/>
+    <File name="lib/device/mpu60x0.c" path="../../SDK/lib/device/mpu60x0.c" type="1"/>
+    <File name="stm32f10x/interface/usb/core/usb_sil.c" path="../../SDK/platform/stm32f10x/interface/usb/core/usb_sil.c" type="1"/>
+    <File name="stm32f10x/driver/stm32f10x_bkp.h" path="../../SDK/platform/stm32f10x/driver/stm32f10x_bkp.h" type="1"/>
+    <File name="lib/lib/fat_fs/src/fattime.c" path="../../SDK/lib/lib/fat_fs/src/fattime.c" type="1"/>
+    <File name="stm32f10x/interface/usb_dev_msc_interface.c" path="../../SDK/platform/stm32f10x/interface/usb_dev_msc_interface.c" type="1"/>
+    <File name="stm32f10x/driver/stm32f10x_pwr.c" path="../../SDK/platform/stm32f10x/driver/stm32f10x_pwr.c" type="1"/>
+    <File name="stm32f10x/interface/usb/core/usb_int.c" path="../../SDK/platform/stm32f10x/interface/usb/core/usb_int.c" type="1"/>
+    <File name="stm32f10x/stm32f10x_conf.h" path="../../SDK/platform/stm32f10x/stm32f10x_conf.h" type="1"/>
+    <File name="lib/api/gpio_api.c" path="../../SDK/lib/api/gpio_api.c" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jidctfst.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jidctfst.c" type="1"/>
+    <File name="lib/device/mpu60x0.h" path="../../SDK/lib/device/mpu60x0.h" type="1"/>
+    <File name="stm32f10x/interface/usb_host_mouse_interface.c" path="../../SDK/platform/stm32f10x/interface/usb_host_mouse_interface.c" type="1"/>
+    <File name="lib/api/twi_def.h" path="../../SDK/lib/api/twi_def.h" type="1"/>
+    <File name="lib/device/ds1307.c" path="../../SDK/lib/device/ds1307.c" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jmemmgr.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jmemmgr.c" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jcapistd.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jcapistd.c" type="1"/>
+    <File name="lib/lib/fat_fs/readme.txt" path="../../SDK/lib/lib/fat_fs/readme.txt" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jidctint.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jidctint.c" type="1"/>
+    <File name="stm32f10x/interface/usb/core/usb_int.h" path="../../SDK/platform/stm32f10x/interface/usb/core/usb_int.h" type="1"/>
+    <File name="stm32f10x/driver/stm32f10x_pwr.h" path="../../SDK/platform/stm32f10x/driver/stm32f10x_pwr.h" type="1"/>
+    <File name="lib/device/24c.c" path="../../SDK/lib/device/24c.c" type="1"/>
+    <File name="stm32f10x/sys/cp15.h" path="../../SDK/platform/stm32f10x/sys/cp15.h" type="1"/>
+    <File name="lib/api/edma_api.h" path="../../SDK/lib/api/edma_api.h" type="1"/>
+    <File name="stm32f10x/driver/stm32f10x_spi.h" path="../../SDK/platform/stm32f10x/driver/stm32f10x_spi.h" type="1"/>
+    <File name="lib/app/ls.h" path="../../SDK/lib/app/ls.h" type="1"/>
+    <File name="stm32f10x/driver/stm32f10x_dma.h" path="../../SDK/platform/stm32f10x/driver/stm32f10x_dma.h" type="1"/>
+    <File name="stm32f10x/sys/stm32f10x_it.h" path="../../SDK/platform/stm32f10x/sys/stm32f10x_it.h" type="1"/>
+    <File name="stm32f10x/driver/stm32f10x_dac.c" path="../../SDK/platform/stm32f10x/driver/stm32f10x_dac.c" type="1"/>
+    <File name="stm32f10x/interface/usb/core/usb_sil.h" path="../../SDK/platform/stm32f10x/interface/usb/core/usb_sil.h" type="1"/>
+    <File name="lib/protocols" path="" type="2"/>
+    <File name="lib/app/app_util" path="" type="2"/>
+    <File name="lib/lib/gfx/jpg/IJG/jdinput.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jdinput.c" type="1"/>
+    <File name="stm32f10x/interface/usb/dev_com/usb_conf.h" path="../../SDK/platform/stm32f10x/interface/usb/dev_com/usb_conf.h" type="1"/>
+    <File name="lib/api/timer_api.c" path="../../SDK/lib/api/timer_api.c" type="1"/>
+    <File name="lib/api/usb_api.h" path="../../SDK/lib/api/usb_api.h" type="1"/>
+    <File name="lib/device/ds1307.h" path="../../SDK/lib/device/ds1307.h" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jdcoefct.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jdcoefct.c" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jdmerge.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jdmerge.c" type="1"/>
+    <File name="lib/lib/string_lib.c" path="../../SDK/lib/lib/string_lib.c" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jcparam.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jcparam.c" type="1"/>
+    <File name="lib/app/app_result.h" path="../../SDK/lib/app/app_result.h" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jdpostct.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jdpostct.c" type="1"/>
+    <File name="lib/lib/gfx/files" path="" type="2"/>
+    <File name="lib/lib/generic.c" path="../../SDK/lib/lib/generic.c" type="1"/>
+    <File name="stm32f10x/driver/stm32f10x_spi.c" path="../../SDK/platform/stm32f10x/driver/stm32f10x_spi.c" type="1"/>
+    <File name="lib/api/lcd_def.h" path="../../SDK/lib/api/lcd_def.h" type="1"/>
+    <File name="lib/api/mcspi_def.h" path="../../SDK/lib/api/mcspi_def.h" type="1"/>
+    <File name="stm32f10x/driver/stm32f10x_usart.h" path="../../SDK/platform/stm32f10x/driver/stm32f10x_usart.h" type="1"/>
+    <File name="lib/lib/gfx/resource/fonts.h" path="../../SDK/lib/lib/gfx/resource/fonts.h" type="1"/>
+    <File name="stm32f10x/include" path="" type="2"/>
+    <File name="stm32f10x/interface/gpio_interface.c" path="../../SDK/platform/stm32f10x/interface/gpio_interface.c" type="1"/>
+    <File name="lib/api/timer_api.h" path="../../SDK/lib/api/timer_api.h" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jconfig.h" path="../../SDK/lib/lib/gfx/jpg/IJG/jconfig.h" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jccoefct.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jccoefct.c" type="1"/>
+    <File name="stm32f10x/driver/stm32f10x_bkp.c" path="../../SDK/platform/stm32f10x/driver/stm32f10x_bkp.c" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jccolor.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jccolor.c" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jcprepct.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jcprepct.c" type="1"/>
+    <File name="stm32f10x/sys/plat_properties.h" path="../../SDK/platform/stm32f10x/sys/plat_properties.h" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jutils.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jutils.c" type="1"/>
+    <File name="lib/lib/gfx/jpg" path="" type="2"/>
+    <File name="lib/api/usb_api.c" path="../../SDK/lib/api/usb_api.c" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jerror.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jerror.c" type="1"/>
+    <File name="lib/app/app_util/path_util.c" path="../../SDK/lib/app/app_util/path_util.c" type="1"/>
+    <File name="main.c" path="main.c" type="1"/>
+    <File name="lib/device/ft5x06.h" path="../../SDK/lib/device/ft5x06.h" type="1"/>
+    <File name="stm32f10x/interface/usb/dev_com/usb_prop.h" path="../../SDK/platform/stm32f10x/interface/usb/dev_com/usb_prop.h" type="1"/>
+    <File name="stm32f10x/driver/stm32f10x_exti.h" path="../../SDK/platform/stm32f10x/driver/stm32f10x_exti.h" type="1"/>
+    <File name="lib/lib/string_lib.h" path="../../SDK/lib/lib/string_lib.h" type="1"/>
+    <File name="stm32f10x/sys/core_init.c" path="../../SDK/platform/stm32f10x/sys/core_init.c" type="1"/>
+    <File name="stm32f10x/driver" path="" type="2"/>
+    <File name="lib/app/cd.c" path="../../SDK/lib/app/cd.c" type="1"/>
+    <File name="lib/device/mhc5883.h" path="../../SDK/lib/device/mhc5883.h" type="1"/>
+    <File name="lib/lib/fs" path="" type="2"/>
+    <File name="stm32f10x/driver/stm32f10x_rcc.h" path="../../SDK/platform/stm32f10x/driver/stm32f10x_rcc.h" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jcinit.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jcinit.c" type="1"/>
+    <File name="robotis_bioloid_cm530_board" path="" type="2"/>
+    <File name="lib/lib/gfx/jpg/IJG/jinclude.h" path="../../SDK/lib/lib/gfx/jpg/IJG/jinclude.h" type="1"/>
+    <File name="stm32f10x/interface/usb_host_msc_interface.c" path="../../SDK/platform/stm32f10x/interface/usb_host_msc_interface.c" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jcphuff.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jcphuff.c" type="1"/>
+    <File name="lib/api/mmcsd_api.c" path="../../SDK/lib/api/mmcsd_api.c" type="1"/>
+    <File name="lib/api/twi_api.c" path="../../SDK/lib/api/twi_api.c" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jfdctint.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jfdctint.c" type="1"/>
+    <File name="lib/lib/gfx/scrollbar.c" path="../../SDK/lib/lib/gfx/scrollbar.c" type="1"/>
+    <File name="stm32f10x/interface/lcd_interface.c" path="../../SDK/platform/stm32f10x/interface/lcd_interface.c" type="1"/>
+    <File name="lib/lib/fat_fs/inc/integer.h" path="../../SDK/lib/lib/fat_fs/inc/integer.h" type="1"/>
+    <File name="stm32f10x/interface/usb/core/usb_lib.h" path="../../SDK/platform/stm32f10x/interface/usb/core/usb_lib.h" type="1"/>
+    <File name="stm32f10x/driver/misc.c" path="../../SDK/platform/stm32f10x/driver/misc.c" type="1"/>
+    <File name="stm32f10x/interface/mcspi_interface.h" path="../../SDK/platform/stm32f10x/interface/mcspi_interface.h" type="1"/>
+    <File name="stm32f10x/driver/stm32f10x_adc.h" path="../../SDK/platform/stm32f10x/driver/stm32f10x_adc.h" type="1"/>
+    <File name="stm32f10x/interface/usb/core/usb_core.h" path="../../SDK/platform/stm32f10x/interface/usb/core/usb_core.h" type="1"/>
+    <File name="lib/api/touchscreen_def.h" path="../../SDK/lib/api/touchscreen_def.h" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jmemnobs.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jmemnobs.c" type="1"/>
+    <File name="lib/lib/gfx/jpg/jpegfile.h" path="../../SDK/lib/lib/gfx/jpg/jpegfile.h" type="1"/>
+    <File name="stm32f10x/interface/usb/dev_com/usb_prop.c" path="../../SDK/platform/stm32f10x/interface/usb/dev_com/usb_prop.c" type="1"/>
+    <File name="stm32f10x/interface/usb_host_msc_interface.h" path="../../SDK/platform/stm32f10x/interface/usb_host_msc_interface.h" type="1"/>
+    <File name="lib/lib/generic.h" path="../../SDK/lib/lib/generic.h" type="1"/>
+    <File name="lib/device/ms5611.h" path="../../SDK/lib/device/ms5611.h" type="1"/>
+    <File name="stm32f10x/sys/core_init.h" path="../../SDK/platform/stm32f10x/sys/core_init.h" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jcomapi.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jcomapi.c" type="1"/>
+    <File name="lib/api/mmcsd_api.h" path="../../SDK/lib/api/mmcsd_api.h" type="1"/>
+    <File name="stm32f10x/interface/adc_interface.c" path="../../SDK/platform/stm32f10x/interface/adc_interface.c" type="1"/>
+    <File name="stm32f10x/driver/stm32f10x_rcc.c" path="../../SDK/platform/stm32f10x/driver/stm32f10x_rcc.c" type="1"/>
+    <File name="lib/api/twi_api.h" path="../../SDK/lib/api/twi_api.h" type="1"/>
+    <File name="lib/api/adc_api.c" path="../../SDK/lib/api/adc_api.c" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jddctmgr.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jddctmgr.c" type="1"/>
+    <File name="robotis_bioloid_cm530_board/board_init.h" path="../../SDK/board/stm32f10x/robotis_bioloid_cm530_board/board_init.h" type="1"/>
+    <File name="stm32f10x/interface/usb/core/usb_regs.c" path="../../SDK/platform/stm32f10x/interface/usb/core/usb_regs.c" type="1"/>
+    <File name="stm32f10x/sys/system_stm32f10x.h" path="../../SDK/platform/stm32f10x/sys/system_stm32f10x.h" type="1"/>
+    <File name="lib/lib/gfx/window_def.h" path="../../SDK/lib/lib/gfx/window_def.h" type="1"/>
+    <File name="stm32f10x/driver/stm32f10x_exti.c" path="../../SDK/platform/stm32f10x/driver/stm32f10x_exti.c" type="1"/>
+    <File name="stm32f10x/interface/usb/core/usb_core.c" path="../../SDK/platform/stm32f10x/interface/usb/core/usb_core.c" type="1"/>
+    <File name="stm32f10x/driver/misc.h" path="../../SDK/platform/stm32f10x/driver/misc.h" type="1"/>
+    <File name="lib/lib/gfx/mpeg4" path="" type="2"/>
+    <File name="lib/lib/fat_fs/src" path="" type="2"/>
+    <File name="stm32f10x/sys" path="" type="2"/>
+    <File name="lib/api/gpio_def.h" path="../../SDK/lib/api/gpio_def.h" type="1"/>
+    <File name="lib/lib/gfx/controls_definition.h" path="../../SDK/lib/lib/gfx/controls_definition.h" type="1"/>
+    <File name="stm32f10x/interface/lcd_interface.h" path="../../SDK/platform/stm32f10x/interface/lcd_interface.h" type="1"/>
+    <File name="lib/api/cache_api.h" path="../../SDK/lib/api/cache_api.h" type="1"/>
+    <File name="lib/device/mhc5883.c" path="../../SDK/lib/device/mhc5883.c" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG" path="" type="2"/>
+    <File name="stm32f10x/interface/usb/core/usb_regs.h" path="../../SDK/platform/stm32f10x/interface/usb/core/usb_regs.h" type="1"/>
+    <File name="lib/device/ar1020.c" path="../../SDK/lib/device/ar1020.c" type="1"/>
+    <File name="stm32f10x/interface/usb/dev_com/platform_config.h" path="../../SDK/platform/stm32f10x/interface/usb/dev_com/platform_config.h" type="1"/>
+    <File name="stm32f10x/driver/stm32f10x_i2c.h" path="../../SDK/platform/stm32f10x/driver/stm32f10x_i2c.h" type="1"/>
+    <File name="lib/device/24c.h" path="../../SDK/lib/device/24c.h" type="1"/>
+    <File name="lib/device/ms5611.c" path="../../SDK/lib/device/ms5611.c" type="1"/>
+    <File name="lib/lib/fat_fs/src/diskio.c" path="../../SDK/lib/lib/fat_fs/src/diskio.c" type="1"/>
+    <File name="stm32f10x/driver/stm32f10x_i2c.c" path="../../SDK/platform/stm32f10x/driver/stm32f10x_i2c.c" type="1"/>
+    <File name="lib/app" path="" type="2"/>
+    <File name="lib/lib/gfx/jpg/IJG/jcsample.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jcsample.c" type="1"/>
+    <File name="lib/app/ls.c" path="../../SDK/lib/app/ls.c" type="1"/>
+    <File name="stm32f10x/driver/stm32f10x_dma.c" path="../../SDK/platform/stm32f10x/driver/stm32f10x_dma.c" type="1"/>
+    <File name="lib/lib/fat_fs/inc/fattime.h" path="../../SDK/lib/lib/fat_fs/inc/fattime.h" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jdmaster.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jdmaster.c" type="1"/>
+    <File name="lib/device/ft5x06.c" path="../../SDK/lib/device/ft5x06.c" type="1"/>
+    <File name="stm32f10x/interface/adc_interface.h" path="../../SDK/platform/stm32f10x/interface/adc_interface.h" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jquant2.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jquant2.c" type="1"/>
+    <File name="lib/api/edma_api.c" path="../../SDK/lib/api/edma_api.c" type="1"/>
+    <File name="stm32f10x/driver/stm32f10x_adc.c" path="../../SDK/platform/stm32f10x/driver/stm32f10x_adc.c" type="1"/>
+    <File name="lib/app/cd.h" path="../../SDK/lib/app/cd.h" type="1"/>
+    <File name="stm32f10x/driver/stm32f10x_fsmc.h" path="../../SDK/platform/stm32f10x/driver/stm32f10x_fsmc.h" type="1"/>
+    <File name="stm32f10x/include/stm32f10x.h" path="../../SDK/platform/stm32f10x/include/stm32f10x.h" type="1"/>
+    <File name="lib/api/gpio_api.h" path="../../SDK/lib/api/gpio_api.h" type="1"/>
+    <File name="lib/lib/fft.h" path="../../SDK/lib/lib/fft.h" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/cdjpeg.h" path="../../SDK/lib/lib/gfx/jpg/IJG/cdjpeg.h" type="1"/>
+    <File name="lib/app/console.c" path="../../SDK/lib/app/console.c" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jchuff.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jchuff.c" type="1"/>
+    <File name="lib/lib/gfx/jpg/jpeg_decoder.h" path="../../SDK/lib/lib/gfx/jpg/jpeg_decoder.h" type="1"/>
+    <File name="lib/lib/gfx/scrollbar.h" path="../../SDK/lib/lib/gfx/scrollbar.h" type="1"/>
+    <File name="lib/api/lcd_api.h" path="../../SDK/lib/api/lcd_api.h" type="1"/>
+    <File name="stm32f10x/interface/usb/core/usb_init.c" path="../../SDK/platform/stm32f10x/interface/usb/core/usb_init.c" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jpegint.h" path="../../SDK/lib/lib/gfx/jpg/IJG/jpegint.h" type="1"/>
+    <File name="stm32f10x/driver/stm32f10x_dbgmcu.c" path="../../SDK/platform/stm32f10x/driver/stm32f10x_dbgmcu.c" type="1"/>
+    <File name="lib/lib/gfx/resource" path="" type="2"/>
+    <File name="lib/lib/gfx/jpg/IJG/jdsample.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jdsample.c" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jdtrans.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jdtrans.c" type="1"/>
+    <File name="lib/lib/gfx/window.c" path="../../SDK/lib/lib/gfx/window.c" type="1"/>
+    <File name="lib/api/uart_api.h" path="../../SDK/lib/api/uart_api.h" type="1"/>
+    <File name="stm32f10x/interface/usb/core/usb_mem.c" path="../../SDK/platform/stm32f10x/interface/usb/core/usb_mem.c" type="1"/>
+    <File name="stm32f10x/driver/stm32f10x_rtc.c" path="../../SDK/platform/stm32f10x/driver/stm32f10x_rtc.c" type="1"/>
+    <File name="stm32f10x/interface/usb_interface.h" path="../../SDK/platform/stm32f10x/interface/usb_interface.h" type="1"/>
+    <File name="lib/lib/gfx/bmp/bmp.h" path="../../SDK/lib/lib/gfx/bmp/bmp.h" type="1"/>
+    <File name="stm32f10x/interface/usb/dev_com/hw_config.h" path="../../SDK/platform/stm32f10x/interface/usb/dev_com/hw_config.h" type="1"/>
+    <File name="stm32f10x/driver/stm32f10x_gpio.h" path="../../SDK/platform/stm32f10x/driver/stm32f10x_gpio.h" type="1"/>
+    <File name="stm32f10x/interface/twi_interface.c" path="../../SDK/platform/stm32f10x/interface/twi_interface.c" type="1"/>
+    <File name="stm32f10x/interface/usb/dev_com" path="" type="2"/>
+    <File name="stm32f10x/interface/usb/core/usb_def.h" path="../../SDK/platform/stm32f10x/interface/usb/core/usb_def.h" type="1"/>
+    <File name="lib/api/pmic_api.h" path="../../SDK/lib/api/pmic_api.h" type="1"/>
+    <File name="lib/protocols/nmea.h" path="../../SDK/lib/protocols/nmea.h" type="1"/>
+    <File name="lib/lib/gfx/3d.c" path="../../SDK/lib/lib/gfx/3d.c" type="1"/>
+    <File name="lib/app/console.h" path="../../SDK/lib/app/console.h" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jdapimin.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jdapimin.c" type="1"/>
+    <File name="lib/lib/fat_fs" path="" type="2"/>
+    <File name="lib/lib/gfx/button.h" path="../../SDK/lib/lib/gfx/button.h" type="1"/>
+    <File name="lib/api/cache_api.c" path="../../SDK/lib/api/cache_api.c" type="1"/>
+    <File name="lib/device/ar1020.h" path="../../SDK/lib/device/ar1020.h" type="1"/>
+    <File name="lib/device/sst25vf.h" path="../../SDK/lib/device/sst25vf.h" type="1"/>
+    <File name="stm32f10x/driver/stm32f10x_rtc.h" path="../../SDK/platform/stm32f10x/driver/stm32f10x_rtc.h" type="1"/>
+    <File name="lib/lib/gfx/files/stl.c" path="../../SDK/lib/lib/gfx/files/stl.c" type="1"/>
+    <File name="lib/api/uart_api.c" path="../../SDK/lib/api/uart_api.c" type="1"/>
+    <File name="lib/lib/gfx/png/png.h" path="../../SDK/lib/lib/gfx/png/png.h" type="1"/>
+    <File name="stm32f10x/interface/usb_dev_com_interface.c" path="../../SDK/platform/stm32f10x/interface/usb_dev_com_interface.c" type="1"/>
+    <File name="stm32f10x/driver/stm32f10x_gpio.c" path="../../SDK/platform/stm32f10x/driver/stm32f10x_gpio.c" type="1"/>
+    <File name="lib/api" path="" type="2"/>
+    <File name="stm32f10x/sys/cache.c" path="../../SDK/platform/stm32f10x/sys/cache.c" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jchuff.h" path="../../SDK/lib/lib/gfx/jpg/IJG/jchuff.h" type="1"/>
+    <File name="stm32f10x/interface/hs_mmcsd_interface.h" path="../../SDK/platform/stm32f10x/interface/hs_mmcsd_interface.h" type="1"/>
+    <File name="lib/lib/buffers/ring_buff.c" path="../../SDK/lib/lib/buffers/ring_buff.c" type="1"/>
+    <File name="lib/protocols/nmea.c" path="../../SDK/lib/protocols/nmea.c" type="1"/>
+    <File name="lib/lib" path="" type="2"/>
+    <File name="stm32f10x/interface/usb/dev_com/usb_pwr.h" path="../../SDK/platform/stm32f10x/interface/usb/dev_com/usb_pwr.h" type="1"/>
+    <File name="lib/lib/gfx/listbox.h" path="../../SDK/lib/lib/gfx/listbox.h" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jmemsys.h" path="../../SDK/lib/lib/gfx/jpg/IJG/jmemsys.h" type="1"/>
+    <File name="stm32f10x/interface/uart_interface.h" path="../../SDK/platform/stm32f10x/interface/uart_interface.h" type="1"/>
+    <File name="lib/lib/gfx/picturebox.h" path="../../SDK/lib/lib/gfx/picturebox.h" type="1"/>
+    <File name="lib/api/lcd_api.c" path="../../SDK/lib/api/lcd_api.c" type="1"/>
+    <File name="lib" path="" type="2"/>
+    <File name="stm32f10x/driver/stm32f10x_crc.c" path="../../SDK/platform/stm32f10x/driver/stm32f10x_crc.c" type="1"/>
+    <File name="lib/lib/gfx/window.h" path="../../SDK/lib/lib/gfx/window.h" type="1"/>
+    <File name="lib/device" path="" type="2"/>
+    <File name="lib/lib/gfx/3d.h" path="../../SDK/lib/lib/gfx/3d.h" type="1"/>
+    <File name="lib/lib/fat_fs/src/ff.c" path="../../SDK/lib/lib/fat_fs/src/ff.c" type="1"/>
+    <File name="lib/lib/gfx/png" path="" type="2"/>
+    <File name="lib/lib/gfx/bmp" path="" type="2"/>
+    <File name="stm32f10x/interface/usb/dev_com/usb_pwr.c" path="../../SDK/platform/stm32f10x/interface/usb/dev_com/usb_pwr.c" type="1"/>
+    <File name="lib/api/adc_api.h" path="../../SDK/lib/api/adc_api.h" type="1"/>
+    <File name="lib/app/cat.h" path="../../SDK/lib/app/cat.h" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jdhuff.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jdhuff.c" type="1"/>
+    <File name="stm32f10x/driver/stm32f10x_iwdg.c" path="../../SDK/platform/stm32f10x/driver/stm32f10x_iwdg.c" type="1"/>
+    <File name="lib/lib/gfx/button.c" path="../../SDK/lib/lib/gfx/button.c" type="1"/>
+    <File name="lib/lib/fat_fs/src/option/ccsbcs.c" path="../../SDK/lib/lib/fat_fs/src/option/ccsbcs.c" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jdmarker.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jdmarker.c" type="1"/>
+    <File name="lib/lib/gfx/gfx_util.c" path="../../SDK/lib/lib/gfx/gfx_util.c" type="1"/>
+    <File name="lib/api/core_init_api.c" path="../../SDK/lib/api/core_init_api.c" type="1"/>
+    <File name="lib/lib/gfx/keyboard.c" path="../../SDK/lib/lib/gfx/keyboard.c" type="1"/>
+    <File name="stm32f10x/interface/uart_interface.c" path="../../SDK/platform/stm32f10x/interface/uart_interface.c" type="1"/>
+    <File name="lib/api/pmic_api.c" path="../../SDK/lib/api/pmic_api.c" type="1"/>
+    <File name="stm32f10x/interface/mcspi_interface.c" path="../../SDK/platform/stm32f10x/interface/mcspi_interface.c" type="1"/>
+    <File name="lib/lib/buffers/ring_buff.h" path="../../SDK/lib/lib/buffers/ring_buff.h" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jversion.h" path="../../SDK/lib/lib/gfx/jpg/IJG/jversion.h" type="1"/>
+    <File name="lib/device/tps65217.c" path="../../SDK/lib/device/tps65217.c" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jfdctfst.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jfdctfst.c" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jdhuff.h" path="../../SDK/lib/lib/gfx/jpg/IJG/jdhuff.h" type="1"/>
+    <File name="stm32f10x/sys/system_stm32f10x.c" path="../../SDK/platform/stm32f10x/sys/system_stm32f10x.c" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/transupp.h" path="../../SDK/lib/lib/gfx/jpg/IJG/transupp.h" type="1"/>
+    <File name="stm32f10x/interface/usb/core/usb_init.h" path="../../SDK/platform/stm32f10x/interface/usb/core/usb_init.h" type="1"/>
+    <File name="lib/lib/gfx/jpg/conf_jpeg_decoder.h" path="../../SDK/lib/lib/gfx/jpg/conf_jpeg_decoder.h" type="1"/>
+    <File name="stm32f10x/interface/usb/dev_com/hw_config.c" path="../../SDK/platform/stm32f10x/interface/usb/dev_com/hw_config.c" type="1"/>
+    <File name="stm32f10x/interface/usb/core/usb_mem.h" path="../../SDK/platform/stm32f10x/interface/usb/core/usb_mem.h" type="1"/>
+    <File name="lib/lib/gfx/keyboard.h" path="../../SDK/lib/lib/gfx/keyboard.h" type="1"/>
+    <File name="lib/device/tps65910a.c" path="../../SDK/lib/device/tps65910a.c" type="1"/>
+    <File name="lib/lib/gfx/jpg/jdatasrc.c" path="../../SDK/lib/lib/gfx/jpg/jdatasrc.c" type="1"/>
+    <File name="lib/app/cat.c" path="../../SDK/lib/app/cat.c" type="1"/>
+    <File name="stm32f10x/driver/stm32f10x_iwdg.h" path="../../SDK/platform/stm32f10x/driver/stm32f10x_iwdg.h" type="1"/>
+    <File name="stm32f10x/driver/stm32f10x_fsmc.c" path="../../SDK/platform/stm32f10x/driver/stm32f10x_fsmc.c" type="1"/>
+    <File name="lib/lib/fat_fs/inc" path="" type="2"/>
+    <File name="lib/lib/gfx/jpg/IJG/jdct.h" path="../../SDK/lib/lib/gfx/jpg/IJG/jdct.h" type="1"/>
+    <File name="robotis_bioloid_cm530_board/board_init.c" path="../../SDK/board/stm32f10x/robotis_bioloid_cm530_board/board_init.c" type="1"/>
+    <File name="lib/lib/gfx/gfx_util.h" path="../../SDK/lib/lib/gfx/gfx_util.h" type="1"/>
+    <File name="lib/device/sst25vf.c" path="../../SDK/lib/device/sst25vf.c" type="1"/>
+    <File name="lib/lib/gfx/mpeg4/avconfig.h" path="../../SDK/lib/lib/gfx/mpeg4/avconfig.h" type="1"/>
+    <File name="stm32f10x/driver/stm32f10x_tim.c" path="../../SDK/platform/stm32f10x/driver/stm32f10x_tim.c" type="1"/>
+    <File name="stm32f10x/interface/hs_mmcsd_interface.c" path="../../SDK/platform/stm32f10x/interface/hs_mmcsd_interface.c" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jcmarker.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jcmarker.c" type="1"/>
+    <File name="stm32f10x/sys/cache.h" path="../../SDK/platform/stm32f10x/sys/cache.h" type="1"/>
+    <File name="stm32f10x/interface/usb_dev_com_interface.h" path="../../SDK/platform/stm32f10x/interface/usb_dev_com_interface.h" type="1"/>
+    <File name="lib/lib/gfx/png/png.c" path="../../SDK/lib/lib/gfx/png/png.c" type="1"/>
+    <File name="lib/api/mcspi_api.c" path="../../SDK/lib/api/mcspi_api.c" type="1"/>
+    <File name="lib/device/tps65217.h" path="../../SDK/lib/device/tps65217.h" type="1"/>
+    <File name="lib/lib/gfx/checkbox.h" path="../../SDK/lib/lib/gfx/checkbox.h" type="1"/>
+    <File name="stm32f10x/interface/usb/dev_com/stm32_it.c" path="../../SDK/platform/stm32f10x/interface/usb/dev_com/stm32_it.c" type="1"/>
+    <File name="lib/lib/gfx/resource/fonts.c" path="../../SDK/lib/lib/gfx/resource/fonts.c" type="1"/>
+    <File name="stm32f10x/sys/syscalls.c" path="../../SDK/platform/stm32f10x/sys/syscalls.c" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jcmaster.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jcmaster.c" type="1"/>
+    <File name="lib/lib/gfx/graphic_string.h" path="../../SDK/lib/lib/gfx/graphic_string.h" type="1"/>
+    <File name="lib/device/tps65910a.h" path="../../SDK/lib/device/tps65910a.h" type="1"/>
+    <File name="lib/lib/fs/fat.h" path="../../SDK/lib/lib/fs/fat.h" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jdcolor.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jdcolor.c" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jpeglib.h" path="../../SDK/lib/lib/gfx/jpg/IJG/jpeglib.h" type="1"/>
+    <File name="lib/lib/gfx" path="" type="2"/>
+    <File name="stm32f10x/sys/sysdelay.c" path="../../SDK/platform/stm32f10x/sys/sysdelay.c" type="1"/>
+    <File name="lib/device/adxl345.c" path="../../SDK/lib/device/adxl345.c" type="1"/>
+    <File name="stm32f10x/sys/startup_stm32f10x_md.c" path="../../SDK/platform/stm32f10x/sys/startup_stm32f10x_md.c" type="1"/>
+    <File name="lib/app/app_util/path_util.h" path="../../SDK/lib/app/app_util/path_util.h" type="1"/>
+    <File name="stm32f10x/driver/stm32f10x_can.h" path="../../SDK/platform/stm32f10x/driver/stm32f10x_can.h" type="1"/>
+    <File name="stm32f10x/interface/usb/dev_com/usb_istr.h" path="../../SDK/platform/stm32f10x/interface/usb/dev_com/usb_istr.h" type="1"/>
+    <File name="stm32f10x/driver/stm32f10x_tim.h" path="../../SDK/platform/stm32f10x/driver/stm32f10x_tim.h" type="1"/>
+    <File name="lib/lib/gfx/textbox.h" path="../../SDK/lib/lib/gfx/textbox.h" type="1"/>
+    <File name="stm32f10x/sys/stm32f10x_it.c" path="../../SDK/platform/stm32f10x/sys/stm32f10x_it.c" type="1"/>
+    <File name="lib/api/mcspi_api.h" path="../../SDK/lib/api/mcspi_api.h" type="1"/>
+    <File name="stm32f10x/driver/stm32f10x_flash.h" path="../../SDK/platform/stm32f10x/driver/stm32f10x_flash.h" type="1"/>
+    <File name="lib/lib/gfx/progressbar.h" path="../../SDK/lib/lib/gfx/progressbar.h" type="1"/>
+    <File name="lib/api/core_init_api.h" path="../../SDK/lib/api/core_init_api.h" type="1"/>
+    <File name="lib/lib/buffers" path="" type="2"/>
+    <File name="lib/device/adxl345.h" path="../../SDK/lib/device/adxl345.h" type="1"/>
+    <File name="lib/lib/gfx/bmp/test_bmp.h" path="../../SDK/lib/lib/gfx/bmp/test_bmp.h" type="1"/>
+    <File name="stm32f10x/interface/adc_interface_def.h" path="../../SDK/platform/stm32f10x/interface/adc_interface_def.h" type="1"/>
+    <File name="stm32f10x" path="" type="2"/>
+    <File name="lib/lib/gfx/graphic_string.c" path="../../SDK/lib/lib/gfx/graphic_string.c" type="1"/>
+    <File name="lib/lib/fat_fs/src/option" path="" type="2"/>
+    <File name="lib/lib/gfx/jpg/IJG/jidctflt.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jidctflt.c" type="1"/>
+    <File name="stm32f10x/driver/stm32f10x_can.c" path="../../SDK/platform/stm32f10x/driver/stm32f10x_can.c" type="1"/>
+    <File name="stm32f10x/interface/usb/dev_com/usb_istr.c" path="../../SDK/platform/stm32f10x/interface/usb/dev_com/usb_istr.c" type="1"/>
+    <File name="stm32f10x/sys/sysdelay.h" path="../../SDK/platform/stm32f10x/sys/sysdelay.h" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jquant1.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jquant1.c" type="1"/>
+    <File name="stm32f10x/driver/stm32f10x_wwdg.h" path="../../SDK/platform/stm32f10x/driver/stm32f10x_wwdg.h" type="1"/>
+    <File name="stm32f10x/sys/core_cm3.h" path="../../SDK/platform/stm32f10x/sys/core_cm3.h" type="1"/>
+    <File name="stm32f10x/driver/stm32f10x_dac.h" path="../../SDK/platform/stm32f10x/driver/stm32f10x_dac.h" type="1"/>
+    <File name="lib/lib/fat_fs/inc/ff.h" path="../../SDK/lib/lib/fat_fs/inc/ff.h" type="1"/>
+    <File name="lib/lib/gfx/controls_definition.c" path="../../SDK/lib/lib/gfx/controls_definition.c" type="1"/>
+    <File name="lib/lib/gfx/picturebox.c" path="../../SDK/lib/lib/gfx/picturebox.c" type="1"/>
+    <File name="stm32f10x/interface/usb/dev_com/stm32_it.h" path="../../SDK/platform/stm32f10x/interface/usb/dev_com/stm32_it.h" type="1"/>
+    <File name="stm32f10x/interface/usb/core/usb_type.h" path="../../SDK/platform/stm32f10x/interface/usb/core/usb_type.h" type="1"/>
+    <File name="lib/lib/gfx/mpeg4/config.h" path="../../SDK/lib/lib/gfx/mpeg4/config.h" type="1"/>
+    <File name="stm32f10x/driver/stm32f10x_dbgmcu.h" path="../../SDK/platform/stm32f10x/driver/stm32f10x_dbgmcu.h" type="1"/>
+    <File name="lib/lib/gfx/listbox.c" path="../../SDK/lib/lib/gfx/listbox.c" type="1"/>
+    <File name="stm32f10x/interface/usb_interface.c" path="../../SDK/platform/stm32f10x/interface/usb_interface.c" type="1"/>
+    <File name="stm32f10x/driver/stm32f10x_sdio.c" path="../../SDK/platform/stm32f10x/driver/stm32f10x_sdio.c" type="1"/>
+    <File name="lib/lib/gfx/bmp/bmp.c" path="../../SDK/lib/lib/gfx/bmp/bmp.c" type="1"/>
+    <File name="stm32f10x/interface/usb/core" path="" type="2"/>
+    <File name="stm32f10x/interface" path="" type="2"/>
+    <File name="stm32f10x/interface/usb_dev_msc_interface.h" path="../../SDK/platform/stm32f10x/interface/usb_dev_msc_interface.h" type="1"/>
+    <File name="stm32f10x/interface/usb/dev_com/usb_desc.h" path="../../SDK/platform/stm32f10x/interface/usb/dev_com/usb_desc.h" type="1"/>
+    <File name="stm32f10x/interface/usb/dev_com/usb_endp.c" path="../../SDK/platform/stm32f10x/interface/usb/dev_com/usb_endp.c" type="1"/>
+    <File name="lib/api/adc_def.h" path="../../SDK/lib/api/adc_def.h" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/cderror.h" path="../../SDK/lib/lib/gfx/jpg/IJG/cderror.h" type="1"/>
+    <File name="lib/lib/gfx/resource/grlib.h" path="../../SDK/lib/lib/gfx/resource/grlib.h" type="1"/>
+    <File name="lib/api/uart_def.h" path="../../SDK/lib/api/uart_def.h" type="1"/>
+    <File name="stm32f10x/interface/twi_interface.h" path="../../SDK/platform/stm32f10x/interface/twi_interface.h" type="1"/>
+    <File name="stm32f10x/driver/stm32f10x_crc.h" path="../../SDK/platform/stm32f10x/driver/stm32f10x_crc.h" type="1"/>
+    <File name="lib/lib/gfx/checkbox.c" path="../../SDK/lib/lib/gfx/checkbox.c" type="1"/>
+    <File name="stm32f10x/sys/core_cm3.c" path="../../SDK/platform/stm32f10x/sys/core_cm3.c" type="1"/>
+    <File name="lib/lib/fat_fs/inc/diskio.h" path="../../SDK/lib/lib/fat_fs/inc/diskio.h" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jdphuff.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jdphuff.c" type="1"/>
+    <File name="stm32f10x/driver/stm32f10x_usart.c" path="../../SDK/platform/stm32f10x/driver/stm32f10x_usart.c" type="1"/>
+    <File name="stm32f10x/interface/usb/dev_com/usb_desc.c" path="../../SDK/platform/stm32f10x/interface/usb/dev_com/usb_desc.c" type="1"/>
+    <File name="stm32f10x/driver/stm32f10x_sdio.h" path="../../SDK/platform/stm32f10x/driver/stm32f10x_sdio.h" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jctrans.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jctrans.c" type="1"/>
+    <File name="lib/lib/gfx/files/stl.h" path="../../SDK/lib/lib/gfx/files/stl.h" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jdapistd.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jdapistd.c" type="1"/>
+    <File name="stm32f10x/driver/stm32f10x_flash.c" path="../../SDK/platform/stm32f10x/driver/stm32f10x_flash.c" type="1"/>
+    <File name="lib/lib/gfx/progressbar.c" path="../../SDK/lib/lib/gfx/progressbar.c" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jcmainct.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jcmainct.c" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jdmainct.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jdmainct.c" type="1"/>
+    <File name="lib/sys" path="" type="2"/>
+    <File name="lib/lib/gfx/jpg/IJG/jidctred.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jidctred.c" type="1"/>
+  </Files>
+</Project>
