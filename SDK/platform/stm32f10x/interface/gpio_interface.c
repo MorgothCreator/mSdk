@@ -126,7 +126,7 @@ bool _gpio_init(gpio_port_enum GpioModuleNr)
 	return true;
 }
 /*#####################################################*/
-new_gpio *_gpio_assign(gpio_port_enum PortNr, unsigned int PinNr, unsigned int Direction, bool Multipin)
+new_gpio *_gpio_assign(gpio_port_enum PortNr, unsigned int PinNr, gpio_type_enum function, bool Multipin)
 {
 	GPIO_InitTypeDef  GPIO_InitStructure;
 	new_gpio* GpioStruct = new_(new_gpio);
@@ -184,11 +184,38 @@ new_gpio *_gpio_assign(gpio_port_enum PortNr, unsigned int PinNr, unsigned int D
 	}
 	GpioStruct->BaseAddr = BaseAddr;
 	GpioStruct->Pin = PinNr;
-	GpioStruct->Direction = Direction;
+	GpioStruct->Direction = function;
 	GPIO_InitStructure.GPIO_Pin = 1 << PinNr;
-	if(Direction == GPIO_DIR_OUTPUT) GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-	else if(Direction == GPIO_DIR_INPUT) GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
-	//GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+	switch(function)
+	{
+	case GPIO_AIN:
+		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;
+		break;
+	case GPIO_IN_FLOATING:
+		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+		break;
+	case GPIO_IN_PULL_DOWN:
+		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPD;
+		break;
+	case GPIO_IN_PULL_UP:
+		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+		break;
+	case GPIO_OUT_OPEN_DRAIN:
+		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_OD;
+		break;
+	case GPIO_OUT_PUSH_PULL:
+		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+		break;
+	case GPIO_ALTERNATIVE_OPEN_DRINE:
+		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_OD;
+		break;
+	case GPIO_ALTERNATIVE_PUSH_PULL:
+		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+		break;
+	default:
+		return false;
+
+	}
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	//GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
 	GPIO_Init((GPIO_TypeDef *)BaseAddr, &GPIO_InitStructure);
@@ -246,6 +273,48 @@ bool _gpio_up_dn(new_gpio *gpio_struct, unsigned char value)
 	GPIO_InitStructure.GPIO_Pin = 1 << gpio_struct->Pin;
 	if(value == 0) GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPD;
 	else if(value == 1) GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_Init((GPIO_TypeDef *)BaseAddr, &GPIO_InitStructure);
+	return true;
+}
+/*#####################################################*/
+bool _gpio_function_set(new_gpio *gpio_struct, gpio_type_enum function)
+{
+	if(!gpio_struct) return false;
+	GPIO_TypeDef *BaseAddr = (GPIO_TypeDef *)gpio_struct->BaseAddr;
+
+	GPIO_InitTypeDef  GPIO_InitStructure;
+	GPIO_InitStructure.GPIO_Pin = 1 << gpio_struct->Pin;
+	switch(function)
+	{
+	case GPIO_AIN:
+		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;
+		break;
+	case GPIO_IN_FLOATING:
+		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+		break;
+	case GPIO_IN_PULL_DOWN:
+		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPD;
+		break;
+	case GPIO_IN_PULL_UP:
+		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+		break;
+	case GPIO_OUT_OPEN_DRAIN:
+		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_OD;
+		break;
+	case GPIO_OUT_PUSH_PULL:
+		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+		break;
+	case GPIO_ALTERNATIVE_OPEN_DRINE:
+		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_OD;
+		break;
+	case GPIO_ALTERNATIVE_PUSH_PULL:
+		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+		break;
+	default:
+		return false;
+
+	}
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init((GPIO_TypeDef *)BaseAddr, &GPIO_InitStructure);
 	return true;

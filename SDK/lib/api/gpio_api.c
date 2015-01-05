@@ -33,9 +33,9 @@ void gpio_init(gpio_port_enum GpioModuleNr)
 /*#####################################################*/
 //- GPIO_DIR_INPUT - to configure the pin as an input pin\n
 //- GPIO_DIR_OUTPUT - to configure the pin as an output pin\n
-new_gpio *gpio_assign(gpio_port_enum PortNr, unsigned char PinNr, unsigned char Direction, bool Multipin)
+new_gpio *gpio_assign(gpio_port_enum PortNr, unsigned char PinNr, gpio_type_enum function, bool Multipin)
 {
-	return _gpio_assign(PortNr, PinNr, Direction, Multipin);
+	return _gpio_assign(PortNr, PinNr, function, Multipin);
 }
 /*#####################################################*/
 void gpio_free(new_gpio *gpio_struct)
@@ -73,6 +73,11 @@ bool gpio_up_dn(new_gpio *gpio_struct, unsigned char value)
 bool gpio_get_state(new_gpio *gpio_struct)
 {
 	return gpio_struct->LastState;
+}
+/*#####################################################*/
+bool gpio_function_set(new_gpio *gpio_struct, gpio_type_enum function)
+{
+	return _gpio_function_set(gpio_struct, function);
 }
 /*#####################################################*/
 void gpio_idle(new_gpio *gpio_struct)
