@@ -217,8 +217,7 @@ typedef enum
 	Gfx_ar1020_MouseMove = 0x03
 }gfx_ar1020_mouse_state_t;
 //#####################################################
-typedef struct
-{
+typedef struct AR1020_s {
 	unsigned short X_Coordonate;
 	unsigned short Y_Coordonate;
 	unsigned short X_ScreenSize;
@@ -227,7 +226,7 @@ typedef struct
 	unsigned char Pen;
 }AR1020_t;
 //#####################################################
-#define new_touch struct _AR1020_Struct
+#define new_touch AR1020_t
 #ifndef new_
 #define new_(structure) (structure*)calloc(1,sizeof(structure));
 #endif
