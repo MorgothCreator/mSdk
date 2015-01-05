@@ -125,7 +125,7 @@ unsigned int UARTPuts(Uart_t* UartSettings,
 			  if('\n' == *pTxBuffer)
 			  {
 				   /* Ensuring applicability to serial console.*/
-				   UARTPutc(UartSettings,'\r');
+				   //UARTPutc(UartSettings,'\r');
 				   UARTPutc(UartSettings,'\n');
 			  }
 			  else
@@ -641,7 +641,7 @@ unsigned int UARTwrite(Uart_t* UartSettings,
 			 * \n is translated to \n\r in the output. */
 			if(pcBuf[uIdx] == '\n')
 			{
-				UARTPutc(UartSettings,'\r');
+				//UARTPutc(UartSettings,'\r');
 			}
 
 			/* Send the character to the UART output. */
