@@ -56,8 +56,6 @@
   * @retval None
   */
 
-#define COMn                             3
-
 USART_TypeDef* COM_USART[] = { USART1
 #ifdef USART2
 		, USART2
@@ -147,7 +145,7 @@ void STM_EVAL_COMInit(Uart_t* UartSettings, unsigned char COM, USART_InitTypeDef
 	  GPIO_Init(GET_GPIO_PORT_ADDR[(int)UartSettings->TxPort], &GPIO_InitStructure);
 
 	  /* Configure USART Rx as alternate function  */
-	  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+	  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
 	  GPIO_InitStructure.GPIO_Pin = 1 << UartSettings->RxPin;
 	  GPIO_Init(GET_GPIO_PORT_ADDR[(int)UartSettings->RxPort], &GPIO_InitStructure);
 
