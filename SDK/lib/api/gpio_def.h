@@ -24,12 +24,42 @@
 /*#####################################################*/
 //#include <stdlib.h>
 #include <stdbool.h>
+#include "interface/gpio_interface_def.h"
 /*#####################################################*/
 typedef enum
 {
 	GPIO_DIR_OUTPUT = 0x0u,
 	GPIO_DIR_INPUT = 0x1u
 }gpio_dir_enum;
+/*#####################################################*/
+typedef enum
+{
+	GPIO_DEFAULT = 0x0u,
+#ifdef HAVE_GPIO_AIN
+	GPIO_AIN,
+#endif
+#ifdef HAVE_GPIO_IN_FLOATING
+	GPIO_IN_FLOATING,
+#endif
+#ifdef HAVE_GPIO_IN_PULL_DOWN
+	GPIO_IN_PULL_DOWN,
+#endif
+#ifdef HAVE_GPIO_IN_PULL_UP
+	GPIO_IN_PULL_UP,
+#endif
+#ifdef HAVE_GPIO_OUT_OPEN_DRAIN
+	GPIO_OUT_OPEN_DRAIN,
+#endif
+#ifdef HAVE_GPIO_OUT_PUSH_PULL
+	GPIO_OUT_PUSH_PULL,
+#endif
+#ifdef HAVE_GPIO_ALTERNATIVE_OPEN_DRINE
+	GPIO_ALTERNATIVE_OPEN_DRINE,
+#endif
+#ifdef HAVE_GPIO_ALTERNATIVE_PUSH_PULL
+	GPIO_ALTERNATIVE_PUSH_PULL,
+#endif
+}gpio_type_enum;
 /*#####################################################*/
 typedef enum
 {
@@ -70,7 +100,7 @@ typedef struct
 	unsigned int BaseAddr;
 	unsigned int Pin;
 	unsigned char PortNr;
-	unsigned char Direction;
+	gpio_type_enum Direction;
 	bool LastState;
 	bool Multipin;
 	struct {
