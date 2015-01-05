@@ -48,7 +48,7 @@ bool ft5x06_init(new_touchscreen* structure, unsigned char Port, unsigned char P
 	structure->touch_max_x = 1024;
 	structure->touch_max_y = 600;
     gpio_init(0);
-    structure->IrqStruct = gpio_assign(Port, Pin, GPIO_DIR_INPUT, false);
+    structure->IrqStruct = gpio_assign(Port, Pin, GPIO_IN_FLOATING, false);
     if(ft5x06_data_ready(structure))
     {
 		new_twi* twistruct = structure->TwiStruct;
