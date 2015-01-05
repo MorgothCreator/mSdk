@@ -1,11 +1,4 @@
 /*
- * adc_interface.c
- *
- *  Created on: Dec 30, 2014
- *      Author: Morgoth
- */
-
-/*
  *  interface/adc_interface.c
  *
  *  Copyright (C) 2014  Iulian Gheorghiu <morgoth.creator@gmail.com>

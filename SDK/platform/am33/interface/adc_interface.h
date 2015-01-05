@@ -2,7 +2,7 @@
  * adc_interface.h
  *
  *  Created on: Dec 30, 2014
- *      Author: Morgoth
+ *      Author: Iulian Gheorghiu (morgoth.creator@gmail.com)
  */
 
 #ifndef ADC_INTERFACE_H_
