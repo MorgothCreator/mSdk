@@ -10,6 +10,13 @@
 /*#####################################################*/
 #include <stdbool.h>
 #include <string.h>
+#include "project.h"
+#ifdef BIOLOID_TEST
+#include "bioloid_test.h"
+#endif
+#ifdef SENSORS_TEST
+#include "sensors_test.h"
+#endif
 #include "stm32f10x_conf.h"
 #include "sys/system_stm32f10x.h"
 #include "api/core_init_api.h"
@@ -28,6 +35,8 @@
 //#include "driver/dma.h"
 //#include "lib/fs/fat.h"
 //#include "device/mi0283.h"
+#include "device/dxl.h"
+#include "device/sht11.h"
 /*#####################################################*/
 #define BOARD_MESSAGE "STM32F10x undefined"
 /*#####################################################*/
@@ -36,6 +45,8 @@ extern new_uart* DebugCom;
 extern new_twi* TWI[];
 extern new_adc* ADC[];
 extern new_gpio* LED1;
+extern new_dxl_actuator *DXL;
+extern USE_SHT11;
 /*-----------------------------------------------------*/
 //extern new_touchscreen* TouchScreen;
 //extern new_screen* ScreenBuff;
