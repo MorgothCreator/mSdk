@@ -11,7 +11,7 @@
 #include "../include/hw/hw_control_AM335x.h"
 #include "../include/hw/hw_types.h"
 /*#####################################################*/
-void gpio_mux_setup(unsigned char PortNr, unsigned char PinNr, unsigned char Mode);
+void gpio_mux_setup(unsigned char PortNr, unsigned char PinNr, unsigned char Mode, unsigned char PUD_Enable, unsigned char PuTypeSel, unsigned char RxActive, unsigned char SlevCtrl);
 /*#####################################################*/
 #ifdef HEADER_INCLUDE_C_FILES
 #include "pin_mux_gpio.c"
