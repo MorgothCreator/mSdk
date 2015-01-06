@@ -20,7 +20,9 @@
  */
 
 #include "stdbool.h"
+#include "math.h"
 #include "sht11.h"
+#include "board_init.h"
 #include "api/gpio_def.h"
 #include "api/gpio_api.h"
 #include "api/timer_api.h"
@@ -28,16 +30,14 @@
 
 #ifdef HAVE_GPIO_OUT_OPEN_DRAIN
 
-void sht11_delay(SHT11_t *structure)
-{
+void sht11_delay(SHT11_t *structure) {
 	unsigned int delay = structure->state_delay;
 	while(1) {
 		if(!delay--) return;
 	}
 }
 
-bool sht11(SHT11_t *structure, unsigned char cmd, unsigned char *status_reg)
-{
+bool sht11_write(SHT11_t *structure, unsigned char cmd, unsigned char *status_reg) {
 	if(structure->busy) return true;
 	timer_interval(&structure->Timeout_Timer, 500);
 	structure->busy = true;
@@ -171,8 +171,7 @@ bool sht11(SHT11_t *structure, unsigned char cmd, unsigned char *status_reg)
 	return true;
 }
 
-bool sht11_read(SHT11_t *structure)
-{
+bool sht11_read(SHT11_t *structure) {
 	if(timer_tick(&structure->Timeout_Timer)) {
 		structure->busy = false;
 		return false;
@@ -248,6 +247,14 @@ bool sht11_read(SHT11_t *structure)
 		structure->humidity = -4 + 0.0405 * (float)data + -0.0000028 * ((float)data * (float)data);
 	}
 	return true;
+}
+
+void sht11_display_data(SHT11_t *structure) {
+	float Temp;
+	float FractTemp = modff(structure->temperature, &Temp) * 1000;
+	float Hum;
+	float FractHum = modff(structure->humidity, &Hum) * 1000;
+	UARTprintf(DebugCom, "SHT11: T = %d.%d, H = %d.%d\n\r", (signed long)Temp, (signed long)FractTemp, (signed long)Hum, (signed long)FractHum);
 }
 
 #endif

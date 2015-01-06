@@ -36,8 +36,9 @@ typedef struct SHT11_s{
 	Gpio_t *Sda;
 }SHT11_t;
 /*#####################################################*/
-bool sht11(SHT11_t *structure, unsigned char cmd, unsigned char *status_reg);
+bool sht11_write(SHT11_t *structure, unsigned char cmd, unsigned char *status_reg);
 bool sht11_read(SHT11_t *structure);
+void sht11_display_data(SHT11_t *structure);
 /*#####################################################*/
 #define new_sht11 SHT11_t
 #ifndef new_
