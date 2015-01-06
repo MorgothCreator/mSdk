@@ -16,6 +16,11 @@
 #include "device/mhc5883.h"
 #include "device/sht11.h"
 
+#include "stdio.h"
+
+FILE aa;
+
+
 
 int main(void)
 {
@@ -77,7 +82,7 @@ int main(void)
 			//UARTprintf(DebugCom, "SHT11: T = %u, H = %u\n\r", (unsigned long)_SHT11->temperature, (unsigned long)_SHT11->humidity);
 			sht11_display_data(SHT11);
 			srf02_display_data(SRF02);
-			UARTprintf(DebugCom, "ADC1 CH0 = %d, ADC1 CH1 = %d, ADC1 TempSensor = %d\n\r\n\r", ADC[0]->ConvResult[0], ADC[0]->ConvResult[1], ADC[0]->ConvResult[2]);
+			UARTprintf(DebugCom, "ADC1:\n\rCH0 = %d, CH1 = %d, TempSensor = %f\n\r\n\r", ADC[0]->ConvResult[0], ADC[0]->ConvResult[1], (float)(((float)1775 - (float)ADC[0]->ConvResult[2]) / 5.337) + (float)25);//Temperature (in °C) = {(V25 - VSENSE) / Avg_Slope} + 25.
 		}
 	}
 }
