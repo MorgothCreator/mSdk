@@ -37,6 +37,7 @@
 //#include "device/mi0283.h"
 #include "device/dxl.h"
 #include "device/sht11.h"
+#include "device/srf02.h"
 /*#####################################################*/
 #define BOARD_MESSAGE "STM32F10x undefined"
 /*#####################################################*/
@@ -47,6 +48,7 @@ extern new_adc* ADC[];
 extern new_gpio* LED1;
 extern new_dxl_actuator *DXL;
 extern USE_SHT11;
+extern USE_SRF02;
 /*-----------------------------------------------------*/
 //extern new_touchscreen* TouchScreen;
 //extern new_screen* ScreenBuff;
