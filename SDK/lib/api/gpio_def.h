@@ -34,12 +34,14 @@ typedef enum
 /*#####################################################*/
 typedef enum
 {
-	GPIO_DEFAULT = 0x0u,
-#ifdef HAVE_GPIO_AIN
-	GPIO_AIN,
+#ifdef HAVE_GPIO_OUT_PUSH_PULL
+	GPIO_OUT_PUSH_PULL,
 #endif
 #ifdef HAVE_GPIO_IN_FLOATING
 	GPIO_IN_FLOATING,
+#endif
+#ifdef HAVE_GPIO_AIN
+	GPIO_AIN,
 #endif
 #ifdef HAVE_GPIO_IN_PULL_DOWN
 	GPIO_IN_PULL_DOWN,
@@ -49,9 +51,6 @@ typedef enum
 #endif
 #ifdef HAVE_GPIO_OUT_OPEN_DRAIN
 	GPIO_OUT_OPEN_DRAIN,
-#endif
-#ifdef HAVE_GPIO_OUT_PUSH_PULL
-	GPIO_OUT_PUSH_PULL,
 #endif
 #ifdef HAVE_GPIO_ALTERNATIVE_OPEN_DRINE
 	GPIO_ALTERNATIVE_OPEN_DRINE,
