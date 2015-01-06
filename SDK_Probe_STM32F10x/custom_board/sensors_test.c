@@ -34,17 +34,27 @@ int main(void)
 	while(1)
 	{
 		if(sht11_read_mode) {
-			if(sht11(_SHT11, SHT11_START_MEASURE_TEMPERATURE, &sht11_status_reg)) {
-				if(sht11_read(_SHT11))
+			/* Send start temperature measure */
+			if(sht11_write(SHT11, SHT11_START_MEASURE_TEMPERATURE, &sht11_status_reg)) {
+				/* Pool SGT11 and read data if is ready */
+				if(sht11_read(SHT11))
+					/* Read complete */
 					sht11_read_mode = false;
-
 			}
 		} else {
-			if(sht11(_SHT11, SHT11_START_MEASURE_HUMIDITY, &sht11_status_reg)) {
-				if(sht11_read(_SHT11))
+			/* Send start humidity measure */
+			if(sht11_write(SHT11, SHT11_START_MEASURE_HUMIDITY, &sht11_status_reg)) {
+				/* Pool SGT11 and read data if is ready */
+				if(sht11_read(SHT11))
+					/* Read complete */
 					sht11_read_mode = true;
 			}
 		}
+		/* Send start ranging */
+		if(srf02_start(SRF02, SRF02_START_RANGING))
+			/* Pool SRF02 and read data if is ready */
+			srf02_read(SRF02);
+
 		if(timer_tick(&TimerBlinkLed)) {
 			if(Led1Status) {
 				gpio_out(LED1, 0);
@@ -64,7 +74,9 @@ int main(void)
 			mpu60x0_giroscope_display_result(TWI[0], 0);
 			mpu60x0_accelerometer_display_result(TWI[0], 0);
 			mhc5883_display_result(TWI[0]);
-			UARTprintf(DebugCom, "SHT11: T = %u, H = %u\n\r", (unsigned long)_SHT11->temperature, (unsigned long)_SHT11->humidity);
+			//UARTprintf(DebugCom, "SHT11: T = %u, H = %u\n\r", (unsigned long)_SHT11->temperature, (unsigned long)_SHT11->humidity);
+			sht11_display_data(SHT11);
+			srf02_display_data(SRF02);
 			UARTprintf(DebugCom, "ADC1 CH0 = %d, ADC1 CH1 = %d, ADC1 TempSensor = %d\n\r\n\r", ADC[0]->ConvResult[0], ADC[0]->ConvResult[1], ADC[0]->ConvResult[2]);
 		}
 	}

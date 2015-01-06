@@ -11,15 +11,24 @@
 #include "project.h"
 #ifdef SENSORS_TEST
 /*#####################################################*/
+#define USE_SRF02 \
+	new_srf02 *SRF02
+/*#####################################################*/
+#define SRF02_INIT \
+	SRF02 = new_(new_srf02);\
+	SRF02->measure_unit = SRF02_CENTIMETER;\
+	SRF02->addr = (0xE0 >> 1);/*the real address is 0x70*/\
+	SRF02->TWI = TWI[0];
+/*#####################################################*/
 #define USE_SHT11 \
-	new_sht11 *_SHT11
+	new_sht11 *SHT11
 /*#####################################################*/
 #define SHT11_INIT \
-	_SHT11 = new_(new_sht11);\
-	_SHT11->Scl = gpio_assign(IOB, 12, GPIO_OUT_OPEN_DRAIN, false); \
-	_SHT11->Sda = gpio_assign(IOB, 13, GPIO_OUT_OPEN_DRAIN, false); \
-	_SHT11->state_delay = 200;\
-	_SHT11->vdd_comp = SH11_VDD_3_5V;
+	SHT11 = new_(new_sht11);\
+	SHT11->Scl = gpio_assign(IOB, 12, GPIO_OUT_OPEN_DRAIN, false); \
+	SHT11->Sda = gpio_assign(IOB, 13, GPIO_OUT_OPEN_DRAIN, false); \
+	SHT11->state_delay = 200;\
+	SHT11->vdd_comp = SH11_VDD_3_5V;
 /*#####################################################*/
 #define UART_0_INIT \
 	Uart[0] = new_(new_uart);\
