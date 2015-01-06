@@ -8,7 +8,7 @@
 #ifndef AINTC_TWI_H_
 #define AINTC_TWI_H_
 /*#####################################################*/
-#include <stdbool.h>
+#include "stdbool.h"
 #include "api/twi_def.h"
 /*#####################################################*/
 typedef struct

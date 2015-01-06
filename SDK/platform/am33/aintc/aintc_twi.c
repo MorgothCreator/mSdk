@@ -5,7 +5,7 @@
  *      Author: XxXx
  */
 /*#####################################################*/
-#include <stdbool.h>
+#include "stdbool.h"
 #include "aintc_twi.h"
 #include "api/twi_def.h"
 #include "../include/hsi2c.h"
