@@ -19,8 +19,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdbool.h>
-#include <math.h>
+#include "stdbool.h"
+#include "math.h"
 #include "ms5611.h"
 #include "board_init.h"
 #include "../api/twi_api.h"
