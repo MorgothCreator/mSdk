@@ -41,7 +41,7 @@ void _gpio_init(unsigned int GpioModuleNr)
 	GPIOModuleEnable(BaseAddr);
 }
 /*#####################################################*/
-new_gpio *_gpio_assign(unsigned int PortNr, unsigned int Pin, unsigned int Direction, bool Multipin)
+new_gpio *_gpio_assign(unsigned int PortNr, unsigned int Pin, gpio_type_enum function, bool Multipin)
 {
     new_gpio* GpioStruct = new_(new_gpio);
     if(GpioStruct == NULL) return NULL;
@@ -65,7 +65,7 @@ new_gpio *_gpio_assign(unsigned int PortNr, unsigned int Pin, unsigned int Direc
 	}
 	GpioStruct->BaseAddr = BaseAddr;
 	GpioStruct->Pin = Pin;
-	GpioStruct->Direction = Direction;
+	GpioStruct->Direction = function;
 	GpioStruct->PortNr = PortNr;
 	GpioStruct->Multipin = Multipin;
 	unsigned char cnt = 0;
@@ -76,16 +76,40 @@ new_gpio *_gpio_assign(unsigned int PortNr, unsigned int Pin, unsigned int Direc
 		{
 			if(tmp & 1)
 			{
-				gpio_mux_setup(PortNr, cnt, 7);
-				GPIODirModeSet(BaseAddr, cnt, Direction);
+				if(function != GPIO_OUT_PUSH_PULL) {
+					gpio_mux_setup(PortNr, cnt, 7, 0, 0, 1, 1);
+					GPIODirModeSet(BaseAddr, cnt, GPIO_DIR_INPUT);
+					if(function != GPIO_IN_FLOATING) {
+						if(function == GPIO_IN_PULL_UP)
+							gpio_mux_setup(PortNr, cnt, 7, 1, 1, 1, 1);
+						else
+							gpio_mux_setup(PortNr, cnt, 7, 1, 0, 1, 1);
+					}
+				}
+				else {
+					gpio_mux_setup(PortNr, cnt, 7, 0, 0, 0, 1);
+					GPIODirModeSet(BaseAddr, cnt, GPIO_DIR_OUTPUT);
+				}
 			}
 			tmp = tmp >> 1;
 		}
 	}
 	else
 	{
-		gpio_mux_setup(PortNr, Pin, 7);
-		GPIODirModeSet(BaseAddr, Pin, Direction);
+		if(function != GPIO_OUT_PUSH_PULL) {
+			gpio_mux_setup(PortNr, Pin, 7, 0, 0, 1, 1);
+			GPIODirModeSet(BaseAddr, Pin, GPIO_DIR_INPUT);
+			if(function != GPIO_IN_FLOATING) {
+				if(function == GPIO_IN_PULL_UP)
+					gpio_mux_setup(PortNr, Pin, 7, 1, 1, 1, 1);
+				else
+					gpio_mux_setup(PortNr, Pin, 7, 1, 0, 1, 1);
+			}
+		}
+		else {
+			gpio_mux_setup(PortNr, Pin, 7, 0, 0, 0, 1);
+			GPIODirModeSet(BaseAddr, Pin, GPIO_DIR_OUTPUT);
+		}
 	}
 	return GpioStruct;
 }
@@ -96,16 +120,16 @@ void _gpio_free(new_gpio *gpio_struct)
 	switch (gpio_struct->BaseAddr)
 	{
 	case GPIO0_addr:
-		gpio_mux_setup(0, gpio_struct->Pin, 0);
+		gpio_mux_setup(0, gpio_struct->Pin, 0, 0, 0, 0, 1);
 		break;
 	case GPIO1_addr:
-		gpio_mux_setup(1, gpio_struct->Pin, 0);
+		gpio_mux_setup(1, gpio_struct->Pin, 0, 0, 0, 0, 1);
 		break;
 	case GPIO2_addr:
-		gpio_mux_setup(2, gpio_struct->Pin, 0);
+		gpio_mux_setup(2, gpio_struct->Pin, 0, 0, 0, 0, 1);
 		break;
 	case GPIO3_addr:
-		gpio_mux_setup(3, gpio_struct->Pin, 0);
+		gpio_mux_setup(3, gpio_struct->Pin, 0, 0, 0, 0, 1);
 		break;
 	}
 	free(gpio_struct);
@@ -159,5 +183,55 @@ bool _gpio_up_dn(new_gpio *gpio_struct, unsigned char value)
 {
 	if(!gpio_struct || gpio_struct == (new_gpio *)-1) return false;
 	return true;//GPIOUpDn(gpio_struct->BaseAddr, gpio_struct->PinNr, value);
+}
+/*#####################################################*/
+bool _gpio_function_set(new_gpio *gpio_struct, gpio_type_enum function)
+{
+	if(!gpio_struct) return false;
+	unsigned int BaseAddr = gpio_struct->BaseAddr;
+	unsigned char cnt = 0;
+	unsigned int tmp = gpio_struct->Pin;
+	if(gpio_struct->Multipin)
+	{
+		for(; cnt < 32; cnt++)
+		{
+			if(tmp & 1)
+			{
+				if(function != GPIO_OUT_PUSH_PULL) {
+					gpio_mux_setup(gpio_struct->PortNr, cnt, 7, 0, 0, 1, 1);
+					GPIODirModeSet(BaseAddr, cnt, GPIO_DIR_INPUT);
+					if(function != GPIO_IN_FLOATING) {
+						if(function == GPIO_IN_PULL_UP)
+							gpio_mux_setup(gpio_struct->PortNr, cnt, 7, 1, 1, 1, 1);
+						else
+							gpio_mux_setup(gpio_struct->PortNr, cnt, 7, 1, 0, 1, 1);
+					}
+				}
+				else {
+					gpio_mux_setup(gpio_struct->PortNr, cnt, 7, 0, 0, 0, 1);
+					GPIODirModeSet(BaseAddr, cnt, GPIO_DIR_OUTPUT);
+				}
+			}
+			tmp = tmp >> 1;
+		}
+	}
+	else
+	{
+		if(function != GPIO_OUT_PUSH_PULL) {
+			gpio_mux_setup(gpio_struct->PortNr, tmp, 7, 0, 0, 1, 1);
+			GPIODirModeSet(BaseAddr, tmp, GPIO_DIR_INPUT);
+			if(function != GPIO_IN_FLOATING) {
+				if(function == GPIO_IN_PULL_UP)
+					gpio_mux_setup(gpio_struct->PortNr, tmp, 7, 1, 1, 1, 1);
+				else
+					gpio_mux_setup(gpio_struct->PortNr, tmp, 7, 1, 0, 1, 1);
+			}
+		}
+		else {
+			gpio_mux_setup(gpio_struct->PortNr, tmp, 7, 0, 0, 0, 1);
+			GPIODirModeSet(BaseAddr, tmp, GPIO_DIR_OUTPUT);
+		}
+	}
+	return true;
 }
 /*#####################################################*/
