@@ -8,8 +8,8 @@
 #ifndef BOARD_INIT_H_
 #define BOARD_INIT_H_
 /*#####################################################*/
-#include <stdbool.h>
-#include <string.h>
+#include "stdbool.h"
+#include "string.h"
 #include "project.h"
 #ifdef BIOLOID_TEST
 #include "bioloid_test.h"
