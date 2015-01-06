@@ -19,8 +19,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdbool.h>
-#include <math.h>
+#include "stdbool.h"
+#include "math.h"
 #include "MPU60x0.h"
 #include "board_init.h"
 #include "../api/twi_api.h"
@@ -398,7 +398,7 @@ bool mpu60x0_temperature_display_result(Twi_t *TwiStruct, unsigned char IcNr)
 	if(!mpu60x0_temp_data_get(TwiStruct, IcNr , &Temperature)) return false;
 	float GrCelsius = 0;
 	float GrCelsiusMod = modff(Temperature, &GrCelsius);
-	UARTprintf(DebugCom, "Temperature:\n\r%d.%u Gr Celsius\n\r", (unsigned int)GrCelsius, (unsigned int)(GrCelsiusMod*1000));
+	UARTprintf(DebugCom, "Temperature:\n\r%f Gr Celsius\n\r", Temperature);
 	return true;
 }
 

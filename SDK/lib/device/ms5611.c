@@ -137,7 +137,7 @@ bool ms5611_display_preasure_result(ms5611_prom_data *prom_data, Twi_t *TwiStruc
 	if(!ms5611_read(prom_data, TwiStruct, osr, &Preasure, &Temperature)) return false;
 	float PreasureInt = 0;
 	float PreasureDec = modff(((float)Preasure)/100.0, &PreasureInt);
-	UARTprintf(DebugCom, "Preasure = %d.%u milibar\n\r", (signed int)PreasureInt, (unsigned int)(PreasureDec * 100.0));
+	UARTprintf(DebugCom, "Preasure:\n\r%f\n\r", ((float)Preasure)/100.0);
 	return true;
 }
 

@@ -71,13 +71,13 @@ void srf02_display_data(SRF02_t *structure) {
 	switch(structure->measure_unit)
 	{
 	case SRF02_INCH:
-		UARTprintf(DebugCom, "SRF02: Range = %u inch\n\r", (unsigned long)structure->range_value);
+		UARTprintf(DebugCom, "SRF02:\n\rRange = %u inch\n\r", (unsigned long)structure->range_value);
 		break;
 	case SRF02_CENTIMETER:
-		UARTprintf(DebugCom, "SRF02: Range = %u centimeters\n\r", (unsigned long)structure->range_value);
+		UARTprintf(DebugCom, "SRF02:\n\rRange = %u centimeters\n\r", (unsigned long)structure->range_value);
 		break;
 	case SRF02_MICROSECONDS:
-		UARTprintf(DebugCom, "SRF02: Range = %u microseconds\n\r", (unsigned long)structure->range_value);
+		UARTprintf(DebugCom, "SRF02:\n\rRange = %u microseconds\n\r", (unsigned long)structure->range_value);
 		break;
 	}
 }
