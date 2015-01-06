@@ -495,7 +495,7 @@ static void HSMMCSDControllerSetup(mmcsdCtrlInfo* SdCtrlStruct, signed int CardD
 	{
 		SdCtrlStruct->cdPinNum = (CardDetectPortNr<<5) + CardDetectPinNr;
 		//CardDetectPinMmcSd[0] = new_(new_gpio);
-		CardDetectPinMmcSd[SdCtrlStruct->SdNr] = gpio_assign(CardDetectPortNr, CardDetectPinNr, GPIO_DIR_INPUT, false);
+		CardDetectPinMmcSd[SdCtrlStruct->SdNr] = gpio_assign(CardDetectPortNr, CardDetectPinNr, GPIO_IN_PULL_UP, false);
 	}
 
     callbackOccured[SdCtrlStruct->SdNr] = 0;
