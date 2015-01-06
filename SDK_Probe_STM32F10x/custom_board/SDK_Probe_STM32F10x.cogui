@@ -18,21 +18,21 @@
 </folder>
 </info>
 </editorArea>
-<editor id="org.eclipse.cdt.ui.editor.CEditor" name="sht11.c" partName="sht11.c" path="C:/GitHub/mSdk/SDK/lib/device/sht11.c" title="sht11.c" tooltip="C:/GitHub/mSdk/SDK/lib/device/sht11.c" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F10x/lib/device/sht11.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="5190" selectionTopPixel="3023"/>
-</editor>
-<editor id="org.eclipse.cdt.ui.editor.CEditor" name="sht11.h" partName="sht11.h" path="C:/GitHub/mSdk/SDK/lib/device/sht11.h" title="sht11.h" tooltip="C:/GitHub/mSdk/SDK/lib/device/sht11.h" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F10x/lib/device/sht11.h"/>
-<editorState selectionHorizontalPixel="0" selectionLength="31" selectionOffset="278" selectionTopPixel="30"/>
-</editor>
 <editor activePart="true" focus="true" id="org.eclipse.cdt.ui.editor.CEditor" name="sensors_test.c" partName="sensors_test.c" path="C:/GitHub/mSdk/SDK_Probe_STM32F10x/custom_board/sensors_test.c" title="sensors_test.c" tooltip="C:/GitHub/mSdk/SDK_Probe_STM32F10x/custom_board/sensors_test.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F10x/sensors_test.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="1453" selectionTopPixel="740"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="1389" selectionTopPixel="316"/>
 </editor>
-<editor id="org.eclipse.cdt.ui.editor.CEditor" name="startup_stm32f10x_md.c" partName="startup_stm32f10x_md.c" path="C:/GitHub/mSdk/SDK/platform/stm32f10x/sys/startup_stm32f10x_md.c" title="startup_stm32f10x_md.c" tooltip="C:/GitHub/mSdk/SDK/platform/stm32f10x/sys/startup_stm32f10x_md.c" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F10x/stm32f10x/sys/startup_stm32f10x_md.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="0" selectionTopPixel="0"/>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="sensors_test.h" partName="sensors_test.h" path="C:/GitHub/mSdk/SDK_Probe_STM32F10x/custom_board/sensors_test.h" title="sensors_test.h" tooltip="C:/GitHub/mSdk/SDK_Probe_STM32F10x/custom_board/sensors_test.h" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F10x/sensors_test.h"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="541" selectionTopPixel="120"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="board_init.c" partName="board_init.c" path="C:/GitHub/mSdk/SDK/board/stm32f10x/undefined_board/board_init.c" title="board_init.c" tooltip="C:/GitHub/mSdk/SDK/board/stm32f10x/undefined_board/board_init.c" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F10x/undefined_board/board_init.c"/>
+<editorState selectionHorizontalPixel="0" selectionLength="12" selectionOffset="1178" selectionTopPixel="630"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="board_init.h" partName="board_init.h" path="C:/GitHub/mSdk/SDK/board/stm32f10x/undefined_board/board_init.h" title="board_init.h" tooltip="C:/GitHub/mSdk/SDK/board/stm32f10x/undefined_board/board_init.h" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F10x/undefined_board/board_init.h"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="1356" selectionTopPixel="330"/>
 </editor>
 </editors>
 <views>
@@ -40,10 +40,10 @@
 <viewState CommonNavigator.LINKING_ENABLED="0" horizontalPosition="0" org.eclipse.ui.navigator.resources.workingSets.showTopLevelWorkingSets="0" verticalPosition="0">
 <expanded>
 <element path="/SDK_Probe_STM32F10x"/>
-<element path="/SDK_Probe_STM32F10x/lib"/>
+<element path="/SDK_Probe_STM32F10x/undefined_board"/>
 </expanded>
 <selection>
-<element path="/SDK_Probe_STM32F10x/bioloid_test.c"/>
+<element path="/SDK_Probe_STM32F10x/undefined_board/board_init.h"/>
 </selection>
 </viewState>
 </view>
@@ -57,9 +57,6 @@
 <viewState/>
 </view>
 <view id="org.eclipse.debug.ui.VariableView" partName="Variables"/>
-<view id="org.coocox.component.ui.Help" partName="Help">
-<viewState/>
-</view>
 </views>
 <perspectives activePart="org.eclipse.cdt.ui.editor.CEditor" activePerspective="org.coocox.builder.perspective.CoBuilder">
 <perspective editorAreaTrimState="2" editorAreaVisible="1" fixed="0" version="0.016">
@@ -74,25 +71,24 @@
 <alwaysOnActionSet id="org.coocox.welcome.ui.actionSet"/>
 <alwaysOnActionSet id="org.eclipse.debug.ui.breakpointActionSet"/>
 <alwaysOnActionSet id="org.coocox.userspace.actionSet"/>
-<hide_menu_item_id id="org.coocox.codebugger.configuration.showConsoleAction"/>
-<hide_menu_item_id id="org.coocox.codebugger.configuration.showDebugAction"/>
+<hide_menu_item_id id="org.coocox.codebugger.configuration.showMemoryAction"/>
+<hide_menu_item_id id="org.eclipse.jdt.ui.refactoring.menu"/>
 <hide_menu_item_id id="org.coocox.codebugger.configuration.ShowDisassemblyAction"/>
 <hide_menu_item_id id="org.coocox.codebugger.configuration.showExpressionsAction"/>
-<hide_menu_item_id id="org.coocox.codebugger.trace.actions.ShowTraceControlAction"/>
-<hide_menu_item_id id="org.coocox.codebugger.configuration.showMemoryAction"/>
-<hide_menu_item_id id="org.coocox.codebugger.configuration.showMemoryBrowserAction"/>
-<hide_menu_item_id id="org.coocox.builder.ui.openProjectExplorerAction"/>
-<hide_menu_item_id id="org.coocox.codebugger.configuration.showRegistersAction"/>
-<hide_menu_item_id id="org.coocox.codebugger.configuration.showVariablesAction"/>
-<hide_menu_item_id id="org.eclipse.debug.ui.commands.TerminateAndRelaunch"/>
+<hide_menu_item_id id="org.coocox.codebugger.configuration.showDebugAction"/>
+<hide_menu_item_id id="org.coocox.codebugger.configuration.showConsoleAction"/>
 <hide_menu_item_id id="org.eclipse.cdt.debug.internal.ui.actions.ToggleInstructionStepModeAction"/>
-<hide_menu_item_id id="org.eclipse.jdt.ui.refactoring.menu"/>
 <hide_menu_item_id id="org.eclipse.jdt.ui.source.menu"/>
-<hide_toolbar_item_id id="org.eclipse.debug.ui.commands.TerminateAndRelaunch"/>
+<hide_menu_item_id id="org.coocox.codebugger.configuration.showMemoryBrowserAction"/>
+<hide_menu_item_id id="org.coocox.codebugger.configuration.showVariablesAction"/>
+<hide_menu_item_id id="org.coocox.builder.ui.openProjectExplorerAction"/>
+<hide_menu_item_id id="org.coocox.codebugger.trace.actions.ShowTraceControlAction"/>
+<hide_menu_item_id id="org.eclipse.debug.ui.commands.TerminateAndRelaunch"/>
+<hide_menu_item_id id="org.coocox.codebugger.configuration.showRegistersAction"/>
 <hide_toolbar_item_id id="org.eclipse.cdt.debug.internal.ui.actions.ToggleInstructionStepModeAction"/>
 <hide_toolbar_item_id id="org.eclipse.ui.edit.text.toggleShowSelectedElementOnly"/>
+<hide_toolbar_item_id id="org.eclipse.debug.ui.commands.TerminateAndRelaunch"/>
 <view id="org.coocox.builder.ui.views.ProjectView"/>
-<view id="org.coocox.component.ui.Help"/>
 <view id="org.eclipse.ui.console.ConsoleView"/>
 <fastViewBars/>
 <layout>
@@ -119,15 +115,13 @@
 </info>
 <info part="org.coocox.builder.ui.exampleView" ratio="0.21966527" ratioLeft="420" ratioRight="1492" relationship="2" relative="org.eclipse.ui.internal.ViewStack@1a12b41"/>
 <info folder="true" part="org.eclipse.ui.internal.ViewStack@148e089" ratio="0.71983916" ratioLeft="1074" ratioRight="418" relationship="2" relative="org.coocox.builder.ui.exampleView">
-<folder activePageID="org.coocox.component.ui.Help" appearance="2" expanded="2">
-<page content="org.coocox.component.ui.Help" label="Help"/>
+<folder appearance="2" expanded="2">
+<page content="org.coocox.component.ui.Help" label="LabelNotFound"/>
 <page content="org.eclipse.debug.ui.BreakpointView" label="LabelNotFound"/>
 <page content="org.eclipse.ui.views.ContentOutline" label="LabelNotFound"/>
 <page content="org.coocox.coassistant.view.CoAssistantView" label="LabelNotFound"/>
 <page content="org.coocox.builder.ui.MoreExampleView" label="LabelNotFound"/>
-<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
-<part id="0"/>
-</presentation>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
 </folder>
 </info>
 <info part="org.eclipse.ui.editorss" ratio="0.44908896" ratioLeft="419" ratioRight="514" relationship="4" relative="org.coocox.builder.ui.exampleView"/>
@@ -154,38 +148,38 @@
 <alwaysOnActionSet id="org.coocox.welcome.ui.actionSet"/>
 <alwaysOnActionSet id="org.eclipse.debug.ui.breakpointActionSet"/>
 <alwaysOnActionSet id="org.eclipse.debug.ui.debugActionSet"/>
-<hide_menu_item_id id="org.coocox.builder.ui.newFile"/>
 <hide_menu_item_id id="org.coocox.builder.ui.newFolder"/>
-<hide_menu_item_id id="org.coocox.builder.ui.openFile"/>
+<hide_menu_item_id id="org.coocox.welcome.ui.action.repository"/>
 <hide_menu_item_id id="org.eclipse.ui.file.save"/>
-<hide_menu_item_id id="org.eclipse.ui.file.saveAs"/>
+<hide_menu_item_id id="org.eclipse.jdt.ui.refactoring.menu"/>
 <hide_menu_item_id id="org.eclipse.ui.file.saveAll"/>
+<hide_menu_item_id id="org.coocox.builder.ui.rebuild"/>
+<hide_menu_item_id id="org.coocox.builder.ui.openFile"/>
+<hide_menu_item_id id="org.eclipse.ui.file.saveAs"/>
 <hide_menu_item_id id="org.coocox.builder.rcp.projectMenu"/>
 <hide_menu_item_id id="org.coocox.builder.rcp.flashMenu"/>
-<hide_menu_item_id id="org.coocox.builder.ui.showHelpViewAction"/>
-<hide_menu_item_id id="org.coocox.component.ui.ShowRepositoryAction"/>
 <hide_menu_item_id id="org.coocox.builder.ui.debug"/>
-<hide_menu_item_id id="org.coocox.builder.ui.build"/>
-<hide_menu_item_id id="org.coocox.builder.ui.rebuild"/>
-<hide_menu_item_id id="org.eclipse.jdt.ui.refactoring.menu"/>
-<hide_menu_item_id id="org.eclipse.jdt.ui.source.menu"/>
+<hide_menu_item_id id="org.coocox.builder.ui.showHelpViewAction"/>
+<hide_menu_item_id id="org.coocox.builder.ui.newFile"/>
 <hide_menu_item_id id="org.coocox.builder.ui.actions.ConfigurationAction"/>
+<hide_menu_item_id id="org.eclipse.jdt.ui.source.menu"/>
+<hide_menu_item_id id="org.coocox.builder.ui.build"/>
 <hide_menu_item_id id="org.coocox.welcome.ui.action.welcome"/>
-<hide_menu_item_id id="org.coocox.welcome.ui.action.repository"/>
-<hide_toolbar_item_id id="org.coocox.builder.ui.newProject"/>
-<hide_toolbar_item_id id="org.coocox.builder.ui.newFile"/>
-<hide_toolbar_item_id id="org.eclipse.ui.file.save"/>
-<hide_toolbar_item_id id="org.coocox.component.ui.ShowRepositoryAction"/>
-<hide_toolbar_item_id id="org.coocox.builder.ui.build"/>
-<hide_toolbar_item_id id="org.coocox.builder.ui.rebuild"/>
-<hide_toolbar_item_id id="org.coocox.builder.ui.debug"/>
-<hide_toolbar_item_id id="org.coocox.codebugger.configuration.coideProgramDownloadAction"/>
-<hide_toolbar_item_id id="org.coocox.codebugger.configuration.coideFlashEraseAction"/>
+<hide_menu_item_id id="org.coocox.component.ui.ShowRepositoryAction"/>
 <hide_toolbar_item_id id="org.coocox.builder.ui.actions.TargetManageAction"/>
-<hide_toolbar_item_id id="org.coocox.builder.ui.actions.ConfigurationAction"/>
-<hide_toolbar_item_id id="org.coocox.welcome.ui.action.welcome"/>
+<hide_toolbar_item_id id="org.coocox.builder.ui.newProject"/>
 <hide_toolbar_item_id id="org.coocox.welcome.ui.action.repository"/>
+<hide_toolbar_item_id id="org.eclipse.ui.file.save"/>
+<hide_toolbar_item_id id="org.coocox.builder.ui.rebuild"/>
+<hide_toolbar_item_id id="org.coocox.codebugger.configuration.coideFlashEraseAction"/>
+<hide_toolbar_item_id id="org.coocox.builder.ui.debug"/>
+<hide_toolbar_item_id id="org.coocox.builder.ui.newFile"/>
+<hide_toolbar_item_id id="org.coocox.builder.ui.actions.ConfigurationAction"/>
 <hide_toolbar_item_id id="org.eclipse.ui.edit.text.toggleShowSelectedElementOnly"/>
+<hide_toolbar_item_id id="org.coocox.builder.ui.build"/>
+<hide_toolbar_item_id id="org.coocox.welcome.ui.action.welcome"/>
+<hide_toolbar_item_id id="org.coocox.component.ui.ShowRepositoryAction"/>
+<hide_toolbar_item_id id="org.coocox.codebugger.configuration.coideProgramDownloadAction"/>
 <view id="org.eclipse.ui.console.ConsoleView"/>
 <view id="org.eclipse.debug.ui.DebugView"/>
 <view id="org.coocox.codebugger.trace.ui.traceview"/>
@@ -250,146 +244,167 @@
 <workingSets/>
 <navigationHistory>
 <editors>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F10x/lib/device/srf02.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F10x/lib/device/srf02.h"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F10x/lib/device/sht11.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F10x/lib/device/sht11.h"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F10x/sensors_test.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F10x/bioloid_test.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F10x/lib/device/sht11.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F10x/lib/api/twi_api.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F10x/sensors_test.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F10x/stm32f10x/driver/stm32f10x_i2c.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F10x/stm32f10x/sys/startup_stm32f10x_md.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F10x/undefined_board/board_init.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F10x/undefined_board/board_init.h"/>
 </editors>
-<item historyLabel="sht11.c" index="0">
-<position info="not_deleted" x="0" y="0"/>
+<item historyLabel="twi_api.h" index="5">
+<position info="not_deleted" x="1074" y="16"/>
 </item>
-<item historyLabel="sht11.h" index="1">
-<position info="not_deleted" x="0" y="0"/>
+<item historyLabel="sht11.h" index="4">
+<position info="not_deleted" x="793" y="28"/>
 </item>
-<item historyLabel="sensors_test.c" index="2">
-<position info="not_deleted" x="400" y="0"/>
+<item historyLabel="sht11.c" index="2">
+<position info="not_deleted" x="6953" y="347"/>
 </item>
-<item historyLabel="sht11.h" index="1">
-<position info="not_deleted" x="0" y="0"/>
+<item historyLabel="srf02.c" index="0">
+<position info="not_deleted" x="103" y="0"/>
 </item>
-<item historyLabel="sensors_test.c" index="2">
-<position info="not_deleted" x="400" y="0"/>
-</item>
-<item historyLabel="sensors_test.c" index="2">
-<position info="not_deleted" x="1254" y="0"/>
-</item>
-<item historyLabel="sensors_test.c" index="2">
-<position info="not_deleted" x="665" y="0"/>
-</item>
-<item historyLabel="sht11.h" index="1">
-<position info="not_deleted" x="0" y="0"/>
-</item>
-<item historyLabel="sensors_test.c" index="2">
-<position info="not_deleted" x="400" y="0"/>
-</item>
-<item historyLabel="bioloid_test.c" index="3">
-<position info="not_deleted" x="0" y="0"/>
-</item>
-<item historyLabel="sensors_test.c" index="2">
-<position info="not_deleted" x="353" y="0"/>
-</item>
-<item historyLabel="sht11.h" index="1">
-<position info="not_deleted" x="0" y="0"/>
-</item>
-<item historyLabel="sht11.c" index="0">
-<position info="not_deleted" x="2" y="0"/>
-</item>
-<item historyLabel="sensors_test.c" index="2">
+<item historyLabel="srf02.c" index="0">
 <position/>
 </item>
-<item historyLabel="sensors_test.c" index="2">
+<item historyLabel="srf02.h" index="1">
+<position info="not_deleted" x="582" y="10"/>
+</item>
+<item historyLabel="srf02.c" index="0">
+<position info="not_deleted" x="2095" y="0"/>
+</item>
+<item historyLabel="srf02.h" index="1">
+<position info="not_deleted" x="600" y="16"/>
+</item>
+<item historyLabel="srf02.c" index="0">
+<position info="not_deleted" x="1892" y="0"/>
+</item>
+<item historyLabel="srf02.h" index="1">
+<position info="not_deleted" x="620" y="18"/>
+</item>
+<item historyLabel="srf02.c" index="0">
+<position info="not_deleted" x="1662" y="47"/>
+</item>
+<item historyLabel="srf02.h" index="1">
+<position info="not_deleted" x="1031" y="18"/>
+</item>
+<item historyLabel="sensors_test.c" index="3">
+<position info="not_deleted" x="1492" y="0"/>
+</item>
+<item historyLabel="sensors_test.c" index="3">
+<position info="not_deleted" x="2340" y="0"/>
+</item>
+<item historyLabel="srf02.c" index="0">
+<position info="not_deleted" x="1662" y="47"/>
+</item>
+<item historyLabel="sht11.c" index="2">
+<position info="not_deleted" x="887" y="25"/>
+</item>
+<item historyLabel="srf02.c" index="0">
+<position info="not_deleted" x="258" y="0"/>
+</item>
+<item historyLabel="sensors_test.c" index="3">
+<position info="not_deleted" x="1387" y="0"/>
+</item>
+<item historyLabel="srf02.c" index="0">
+<position info="not_deleted" x="258" y="0"/>
+</item>
+<item historyLabel="sensors_test.h" index="6">
+<position info="not_deleted" x="759" y="0"/>
+</item>
+<item historyLabel="sensors_test.c" index="3">
 <position info="not_deleted" x="405" y="0"/>
 </item>
-<item historyLabel="sht11.c" index="0">
-<position info="not_deleted" x="6808" y="0"/>
+<item historyLabel="srf02.c" index="0">
+<position info="not_deleted" x="483" y="0"/>
 </item>
-<item historyLabel="sensors_test.c" index="2">
-<position/>
-</item>
-<item historyLabel="sht11.c" index="0">
-<position info="not_deleted" x="6650" y="0"/>
-</item>
-<item historyLabel="sensors_test.c" index="2">
-<position/>
-</item>
-<item historyLabel="sht11.c" index="0">
-<position info="not_deleted" x="6808" y="0"/>
-</item>
-<item historyLabel="sensors_test.c" index="2">
-<position/>
-</item>
-<item historyLabel="sht11.c" index="0">
-<position info="not_deleted" x="6650" y="0"/>
-</item>
-<item historyLabel="sensors_test.c" index="2">
-<position/>
-</item>
-<item historyLabel="sht11.c" index="0">
-<position/>
-</item>
-<item historyLabel="startup_stm32f10x_md.c" index="4">
-<position info="not_deleted" x="0" y="0"/>
-</item>
-<item historyLabel="sensors_test.c" index="2">
+<item historyLabel="sensors_test.c" index="3">
 <position info="not_deleted" x="405" y="0"/>
 </item>
-<item historyLabel="sht11.c" index="0">
-<position info="not_deleted" x="6650" y="0"/>
+<item historyLabel="stm32f10x_i2c.c" index="7">
+<position info="not_deleted" x="28349" y="0"/>
 </item>
-<item historyLabel="sensors_test.c" index="2">
-<position/>
-</item>
-<item historyLabel="sht11.c" index="0">
-<position info="not_deleted" x="6650" y="0"/>
-</item>
-<item historyLabel="sht11.h" index="1">
-<position info="not_deleted" x="1021" y="0"/>
-</item>
-<item historyLabel="sht11.c" index="0">
-<position info="not_deleted" x="6413" y="0"/>
-</item>
-<item historyLabel="sensors_test.c" index="2">
-<position/>
-</item>
-<item historyLabel="startup_stm32f10x_md.c" index="4">
-<position info="not_deleted" x="0" y="0"/>
-</item>
-<item historyLabel="sensors_test.c" index="2">
-<position/>
-</item>
-<item historyLabel="sensors_test.c" index="2">
-<position info="not_deleted" x="1083" y="0"/>
-</item>
-<item historyLabel="sht11.c" index="0">
-<position info="not_deleted" x="4782" y="0"/>
-</item>
-<item historyLabel="sht11.h" index="1">
-<position info="not_deleted" x="1268" y="0"/>
-</item>
-<item historyLabel="sht11.c" index="0">
-<position info="not_deleted" x="5190" y="0"/>
-</item>
-<item historyLabel="sensors_test.c" index="2">
-<position info="not_deleted" x="1458" y="0"/>
-</item>
-<item historyLabel="sht11.c" index="0">
-<position info="not_deleted" x="5190" y="0"/>
-</item>
-<item historyLabel="sht11.h" index="1">
-<position info="not_deleted" x="278" y="31"/>
-</item>
-<item historyLabel="sensors_test.c" index="2">
-<position/>
-</item>
-<item historyLabel="sensors_test.c" index="2">
-<position info="not_deleted" x="1096" y="0"/>
-</item>
-<item historyLabel="startup_stm32f10x_md.c" index="4">
-<position info="not_deleted" x="0" y="0"/>
-</item>
-<item active="true" historyLabel="sensors_test.c" index="2">
+<item historyLabel="sensors_test.c" index="3">
 <position info="not_deleted" x="405" y="0"/>
+</item>
+<item historyLabel="sensors_test.c" index="3">
+<position info="not_deleted" x="1389" y="0"/>
+</item>
+<item historyLabel="srf02.c" index="0">
+<position info="not_deleted" x="268" y="0"/>
+</item>
+<item historyLabel="srf02.c" index="0">
+<position info="not_deleted" x="875" y="0"/>
+</item>
+<item historyLabel="srf02.c" index="0">
+<position info="not_deleted" x="781" y="0"/>
+</item>
+<item historyLabel="srf02.c" index="0">
+<position info="not_deleted" x="919" y="0"/>
+</item>
+<item historyLabel="srf02.c" index="0">
+<position info="not_deleted" x="1014" y="0"/>
+</item>
+<item historyLabel="srf02.c" index="0">
+<position info="not_deleted" x="946" y="13"/>
+</item>
+<item historyLabel="srf02.c" index="0">
+<position info="not_deleted" x="1053" y="0"/>
+</item>
+<item historyLabel="srf02.c" index="0">
+<position info="not_deleted" x="1090" y="0"/>
+</item>
+<item historyLabel="srf02.c" index="0">
+<position info="not_deleted" x="1112" y="0"/>
+</item>
+<item historyLabel="srf02.c" index="0">
+<position info="not_deleted" x="1305" y="0"/>
+</item>
+<item historyLabel="startup_stm32f10x_md.c" index="8">
+<position info="not_deleted" x="9141" y="0"/>
+</item>
+<item historyLabel="sensors_test.c" index="3">
+<position info="not_deleted" x="405" y="0"/>
+</item>
+<item historyLabel="sensors_test.c" index="3">
+<position info="not_deleted" x="1389" y="0"/>
+</item>
+<item historyLabel="srf02.c" index="0">
+<position info="not_deleted" x="1340" y="0"/>
+</item>
+<item historyLabel="sensors_test.h" index="6">
+<position info="not_deleted" x="541" y="0"/>
+</item>
+<item historyLabel="startup_stm32f10x_md.c" index="8">
+<position info="not_deleted" x="9141" y="0"/>
+</item>
+<item historyLabel="sensors_test.h" index="6">
+<position info="not_deleted" x="541" y="0"/>
+</item>
+<item historyLabel="sensors_test.c" index="3">
+<position info="not_deleted" x="1389" y="0"/>
+</item>
+<item historyLabel="board_init.c" index="9">
+<position info="not_deleted" x="1178" y="12"/>
+</item>
+<item historyLabel="board_init.h" index="10">
+<position info="not_deleted" x="1356" y="0"/>
+</item>
+<item historyLabel="sensors_test.h" index="6">
+<position info="not_deleted" x="541" y="0"/>
+</item>
+<item historyLabel="sensors_test.c" index="3">
+<position info="not_deleted" x="1389" y="0"/>
+</item>
+<item historyLabel="sensors_test.h" index="6">
+<position info="not_deleted" x="541" y="0"/>
+</item>
+<item active="true" historyLabel="sensors_test.c" index="3">
+<position info="not_deleted" x="1389" y="0"/>
 </item>
 </navigationHistory>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
@@ -398,47 +413,47 @@
 <actionBarAdvisor/>
 </window>
 <mruList>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="startup_stm32f10x_md.c" tooltip="SDK_Probe_STM32F10x/stm32f10x/sys/startup_stm32f10x_md.c">
-<persistable path="/SDK_Probe_STM32F10x/stm32f10x/sys/startup_stm32f10x_md.c"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="stm32f10x_i2c.c" tooltip="SDK_Probe_STM32F10x/stm32f10x/driver/stm32f10x_i2c.c">
+<persistable path="/SDK_Probe_STM32F10x/stm32f10x/driver/stm32f10x_i2c.c"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="bioloid_test.c" tooltip="SDK_Probe_STM32F10x/bioloid_test.c">
-<persistable path="/SDK_Probe_STM32F10x/bioloid_test.c"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="board_init.h" tooltip="SDK_Probe_STM32F10x/undefined_board/board_init.h">
+<persistable path="/SDK_Probe_STM32F10x/undefined_board/board_init.h"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="sensors_test.c" tooltip="SDK_Probe_STM32F10x/sensors_test.c">
-<persistable path="/SDK_Probe_STM32F10x/sensors_test.c"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="board_init.c" tooltip="SDK_Probe_STM32F10x/undefined_board/board_init.c">
+<persistable path="/SDK_Probe_STM32F10x/undefined_board/board_init.c"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="sht11.h" tooltip="SDK_Probe_STM32F10x/lib/device/sht11.h">
-<persistable path="/SDK_Probe_STM32F10x/lib/device/sht11.h"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="sensors_test.h" tooltip="SDK_Probe_STM32F10x/sensors_test.h">
+<persistable path="/SDK_Probe_STM32F10x/sensors_test.h"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="24c.c" tooltip="SDK_Probe_STM32F10x/lib/device/24c.c">
+<persistable path="/SDK_Probe_STM32F10x/lib/device/24c.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="twi_api.h" tooltip="SDK_Probe_STM32F10x/lib/api/twi_api.h">
+<persistable path="/SDK_Probe_STM32F10x/lib/api/twi_api.h"/>
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="sht11.c" tooltip="SDK_Probe_STM32F10x/lib/device/sht11.c">
 <persistable path="/SDK_Probe_STM32F10x/lib/device/sht11.c"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="timer_api.c" tooltip="SDK_Probe_STM32F10x/lib/api/timer_api.c">
-<persistable path="/SDK_Probe_STM32F10x/lib/api/timer_api.c"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="twi_def.h" tooltip="SDK_Probe_STM32F10x/lib/api/twi_def.h">
+<persistable path="/SDK_Probe_STM32F10x/lib/api/twi_def.h"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="timer_api.h" tooltip="SDK_Probe_STM32F10x/lib/api/timer_api.h">
-<persistable path="/SDK_Probe_STM32F10x/lib/api/timer_api.h"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="sht11.h" tooltip="SDK_Probe_STM32F10x/lib/device/sht11.h">
+<persistable path="/SDK_Probe_STM32F10x/lib/device/sht11.h"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="stm32f10x_gpio.c" tooltip="SDK_Probe_STM32F10x/stm32f10x/driver/stm32f10x_gpio.c">
-<persistable path="/SDK_Probe_STM32F10x/stm32f10x/driver/stm32f10x_gpio.c"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="srf02.h" tooltip="SDK_Probe_STM32F10x/lib/device/srf02.h">
+<persistable path="/SDK_Probe_STM32F10x/lib/device/srf02.h"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="sysdelay.c" tooltip="SDK_Probe_STM32F10x/stm32f10x/sys/sysdelay.c">
-<persistable path="/SDK_Probe_STM32F10x/stm32f10x/sys/sysdelay.c"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="srf02.c" tooltip="SDK_Probe_STM32F10x/lib/device/srf02.c">
+<persistable path="/SDK_Probe_STM32F10x/lib/device/srf02.c"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="adc_def.h" tooltip="SDK_Probe_STM32F10x/lib/api/adc_def.h">
-<persistable path="/SDK_Probe_STM32F10x/lib/api/adc_def.h"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="ms5611.c" tooltip="SDK_Probe_STM32F10x/lib/device/ms5611.c">
+<persistable path="/SDK_Probe_STM32F10x/lib/device/ms5611.c"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="stm32f10x_it.c" tooltip="SDK_Probe_STM32F10x/stm32f10x/sys/stm32f10x_it.c">
-<persistable path="/SDK_Probe_STM32F10x/stm32f10x/sys/stm32f10x_it.c"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="mhc5883.c" tooltip="SDK_Probe_STM32F10x/lib/device/mhc5883.c">
+<persistable path="/SDK_Probe_STM32F10x/lib/device/mhc5883.c"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="gpio_interface.c" tooltip="SDK_Probe_STM32F10x/stm32f10x/interface/gpio_interface.c">
-<persistable path="/SDK_Probe_STM32F10x/stm32f10x/interface/gpio_interface.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="gpio_api.c" tooltip="SDK_Probe_STM32F10x/lib/api/gpio_api.c">
-<persistable path="/SDK_Probe_STM32F10x/lib/api/gpio_api.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="gpio_api.h" tooltip="SDK_Probe_STM32F10x/lib/api/gpio_api.h">
-<persistable path="/SDK_Probe_STM32F10x/lib/api/gpio_api.h"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="startup_stm32f10x_md.c" tooltip="SDK_Probe_STM32F10x/stm32f10x/sys/startup_stm32f10x_md.c">
+<persistable path="/SDK_Probe_STM32F10x/stm32f10x/sys/startup_stm32f10x_md.c"/>
 </file>
 </mruList>
 </workbench>
