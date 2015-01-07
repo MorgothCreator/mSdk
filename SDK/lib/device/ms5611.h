@@ -18,12 +18,13 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+/*#####################################################*/
 #ifndef MS5611_H_
 #define MS5611_H_
-
-#include "../api/twi_def.h"
-
+/*#####################################################*/
+#include "api/twi_def.h"
+#include "api/timer_api.h"
+/*#####################################################*/
 #define MS5611_ADDR								(0x77)
 
 #define MS5611_ADC_READ_CMD						(0x00)
@@ -52,8 +53,7 @@
 #define MS5611_CONVERT_OSR_1024					(0x2)
 #define MS5611_CONVERT_OSR_2048					(0x3)
 #define MS5611_CONVERT_OSR_4096					(0x4)
-
-
+/*#####################################################*/
 typedef struct
 {
 	unsigned short C0;
@@ -65,13 +65,28 @@ typedef struct
 	unsigned short C6;
 	unsigned short C7;
 }ms5611_prom_data;
-
-bool ms5611_read(ms5611_prom_data *prom_data, Twi_t *TwiStruct, unsigned char osr, signed int *Preasure, signed int *Temperature);
-bool ms5611_display_preasure_result(ms5611_prom_data *prom_data, Twi_t *TwiStruct, unsigned char osr);
-bool ms5611_init(ms5611_prom_data *prom_data, Twi_t *TwiStruct);
-
+/*#####################################################*/
+typedef struct MS5611_s{
+	STimer_t Timeout_Timer;
+	//MS5611_COMMANDS reg_inst;
+	bool prom_data_has_been_read;
+	ms5611_prom_data prom_data;
+	bool busy;
+	Twi_t* TWI;
+}MS5611_t;
+/*#####################################################*/
+bool ms5611_read(MS5611_t *structure, unsigned char osr, signed int *Preasure, signed int *Temperature);
+bool ms5611_display_preasure_result(MS5611_t *structure, unsigned char osr);
+/*#####################################################*/
+#define new_ms5611 MS5611_t
+#ifndef new_
+#define new_(structure) (structure*)calloc(1,sizeof(structure));
+#endif
+#define free_ms5611(address) free(address);
+/*#####################################################*/
 #ifdef HEADER_INCLUDE_C_FILES
 #include "ms5611.c"
 #endif
-
+/*#####################################################*/
 #endif /* MS5611_H_ */
+/*#####################################################*/
