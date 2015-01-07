@@ -396,9 +396,13 @@ bool mpu60x0_temperature_display_result(Twi_t *TwiStruct, unsigned char IcNr)
 {
 	float Temperature = 0;
 	if(!mpu60x0_temp_data_get(TwiStruct, IcNr , &Temperature)) return false;
+#ifndef _TINY_PRINT_
+	UARTprintf(DebugCom, "Temperature:\n\r%f Gr Celsius\n\r", Temperature);
+#else
 	float GrCelsius = 0;
 	float GrCelsiusMod = modff(Temperature, &GrCelsius);
-	UARTprintf(DebugCom, "Temperature:\n\r%f Gr Celsius\n\r", Temperature);
+	UARTprintf(DebugCom, "Temperature:\n\r%d.%u Gr Celsius\n\r", (unsigned int)GrCelsius, (unsigned int)(GrCelsiusMod*1000));
+#endif
 	return true;
 }
 
