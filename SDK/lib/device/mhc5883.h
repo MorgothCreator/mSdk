@@ -1,5 +1,5 @@
 /*
- *  lib/device/ms5611.c
+ *  lib/device/mhc5883.h
  *
  *  Copyright (C) 2013  Iulian Gheorghiu <morgoth.creator@gmail.com>
  *
@@ -18,12 +18,14 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+/*#####################################################*/
 #ifndef MHC5883_H_
 #define MHC5883_H_
-
-#include "../api/twi_def.h"
-
+/*#####################################################*/
+#include "stdbool.h"
+#include "api/twi_def.h"
+#include "api/timer_api.h"
+/*#####################################################*/
 #define MHC5883_ADDR								(0x1E)
 
 #define MHC5883_ID_A								(0x48)
@@ -89,20 +91,34 @@
 
 #define MHC5883_STATUS_REG_LOCK_bp					(1)
 #define MHC5883_STATUS_REG_LOCK_bm					(0x01 << MHC5883_STATUS_REG_LOCK_bp)
-
-bool mhc5883_sample_nr_set(Twi_t *TwiStruct, unsigned char Value);
-bool mhc5883_data_output_rate_set(Twi_t *TwiStruct, unsigned char Value);
-bool mhc5883_measurament_mode_set(Twi_t *TwiStruct, unsigned char Value);
-bool mhc5883_gain_set(Twi_t *TwiStruct, unsigned char Value);
-bool mhc5883_mode_set(Twi_t *TwiStruct, unsigned char Value);
-bool mhc5883_data_get(Twi_t *TwiStruct, signed short *X_Axis, signed short *Y_Axis, signed short *Z_Axis);
-bool mhc5883_display_result(Twi_t *TwiStruct);
-bool mhc5883_display_positive_test_result(Twi_t *TwiStruct);
-bool mhc5883_display_negative_test_result(Twi_t *TwiStruct);
-bool mhc5883_init(Twi_t *TwiStruct);
-
+/*#####################################################*/
+typedef struct MHC5883_s{
+	STimer_t Timeout_Timer;
+	//MHC5883_COMMANDS reg_inst;
+	bool busy;
+	Twi_t* TWI;
+}MHC5883_t;
+/*#####################################################*/
+bool mhc5883_sample_nr_set(MHC5883_t *structure, unsigned char Value);
+bool mhc5883_data_output_rate_set(MHC5883_t *structure, unsigned char Value);
+bool mhc5883_measurament_mode_set(MHC5883_t *structure, unsigned char Value);
+bool mhc5883_gain_set(MHC5883_t *structure, unsigned char Value);
+bool mhc5883_mode_set(MHC5883_t *structure, unsigned char Value);
+bool mhc5883_data_get(MHC5883_t *structure, signed short *X_Axis, signed short *Y_Axis, signed short *Z_Axis);
+bool mhc5883_display_result(MHC5883_t *structure);
+bool mhc5883_display_positive_test_result(MHC5883_t *structure);
+bool mhc5883_display_negative_test_result(MHC5883_t *structure);
+bool mhc5883_init(MHC5883_t *structure);
+/*#####################################################*/
+#define new_mhc5883 MHC5883_t
+#ifndef new_
+#define new_(structure) (structure*)calloc(1,sizeof(structure));
+#endif
+#define free_mhc5883(address) free(address);
+/*#####################################################*/
 #ifdef HEADER_INCLUDE_C_FILES
 #include "mhc5883.c"
 #endif
-
+/*#####################################################*/
 #endif /* MHC5883_H_ */
+/*#####################################################*/
