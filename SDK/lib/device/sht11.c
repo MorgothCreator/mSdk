@@ -251,7 +251,7 @@ bool sht11_read(SHT11_t *structure) {
 
 void sht11_display_data(SHT11_t *structure) {
 #ifndef _TINY_PRINT_
-	UARTprintf(DebugCom, "SHT11:\n\rT = %f, H = %f\n\r", structure->temperature, structure->humidity);
+	UARTprintf(DebugCom, "SHT11:\n\rT = %2.2f, H = %2.3f\n\r", structure->temperature, structure->humidity);
 #else
 	float Temp;
 	float FractTemp = modff(structure->temperature, &Temp) * 1000;
