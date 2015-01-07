@@ -23,14 +23,16 @@
 #include "math.h"
 #include "MPU60x0.h"
 #include "board_init.h"
-#include "../api/twi_api.h"
-#include "../api/twi_def.h"
-#include "../api/uart_api.h"
-#include "../api/uart_def.h"
+#include "api/twi_api.h"
+#include "api/twi_def.h"
+#include "api/uart_api.h"
+#include "api/uart_def.h"
+#include "api/timer_api.h"
 #include "sys/sysdelay.h"
 
-bool mpu60x0_sample_rate_divider_set(Twi_t *TwiStruct, unsigned char IcNr, unsigned char Value)
+bool mpu60x0_sample_rate_divider_set(MPU60x0_t *structure, unsigned char IcNr, unsigned char Value)
 {
+	Twi_t *TwiStruct = structure->TWI;
 	TwiStruct->MasterSlaveAddr = MPU60x0_ADDR | (IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_SMPLRT_DIV;
 	TwiStruct->TxBuff[1] = Value;
@@ -38,8 +40,9 @@ bool mpu60x0_sample_rate_divider_set(Twi_t *TwiStruct, unsigned char IcNr, unsig
 	return true;
 }
 
-bool mpu60x0_who_am_i_get(Twi_t *TwiStruct, unsigned char IcNr)
+bool mpu60x0_who_am_i_get(MPU60x0_t *structure, unsigned char IcNr)
 {
+	Twi_t *TwiStruct = structure->TWI;
 	TwiStruct->MasterSlaveAddr = MPU60x0_ADDR | (IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_WHO_AM_I;
 	if(!SetupI2CReception(TwiStruct, 1, 1)) return false;
@@ -50,8 +53,9 @@ bool mpu60x0_who_am_i_get(Twi_t *TwiStruct, unsigned char IcNr)
 	return false;
 }
 
-bool mpu60x0_dlpf_cfg_set(Twi_t *TwiStruct, unsigned char IcNr, unsigned char value)
+bool mpu60x0_dlpf_cfg_set(MPU60x0_t *structure, unsigned char IcNr, unsigned char value)
 {
+	Twi_t *TwiStruct = structure->TWI;
 	TwiStruct->MasterSlaveAddr = MPU60x0_ADDR | (IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_CONFIG;
 	if(!SetupI2CReception(TwiStruct, 1, 1)) return false;
@@ -60,8 +64,9 @@ bool mpu60x0_dlpf_cfg_set(Twi_t *TwiStruct, unsigned char IcNr, unsigned char va
 	return true;
 }
 
-bool mpu60x0_gyro_self_test_set(Twi_t *TwiStruct, unsigned char IcNr, bool X_test, bool Y_test, bool Z_test)
+bool mpu60x0_gyro_self_test_set(MPU60x0_t *structure, unsigned char IcNr, bool X_test, bool Y_test, bool Z_test)
 {
+	Twi_t *TwiStruct = structure->TWI;
 	TwiStruct->MasterSlaveAddr = MPU60x0_ADDR | (IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_GYRO_CONFIG;
 	if(!SetupI2CReception(TwiStruct, 1, 1)) return false;
@@ -70,8 +75,9 @@ bool mpu60x0_gyro_self_test_set(Twi_t *TwiStruct, unsigned char IcNr, bool X_tes
 	return true;
 }
 
-bool mpu60x0_gyro_full_scale_set(Twi_t *TwiStruct, unsigned char IcNr, unsigned int scale)
+bool mpu60x0_gyro_full_scale_set(MPU60x0_t *structure, unsigned char IcNr, unsigned int scale)
 {
+	Twi_t *TwiStruct = structure->TWI;
 	TwiStruct->MasterSlaveAddr = MPU60x0_ADDR | (IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_GYRO_CONFIG;
 	if(!SetupI2CReception(TwiStruct, 1, 1)) return false;
@@ -98,8 +104,9 @@ bool mpu60x0_gyro_full_scale_set(Twi_t *TwiStruct, unsigned char IcNr, unsigned 
 	return true;
 }
 
-bool mpu60x0_accel_self_test_set(Twi_t *TwiStruct, unsigned char IcNr, bool X_test, bool Y_test, bool Z_test)
+bool mpu60x0_accel_self_test_set(MPU60x0_t *structure, unsigned char IcNr, bool X_test, bool Y_test, bool Z_test)
 {
+	Twi_t *TwiStruct = structure->TWI;
 	TwiStruct->MasterSlaveAddr = MPU60x0_ADDR | (IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_ACCEL_CONFIG;
 	if(!SetupI2CReception(TwiStruct, 1, 1)) return false;
@@ -108,8 +115,9 @@ bool mpu60x0_accel_self_test_set(Twi_t *TwiStruct, unsigned char IcNr, bool X_te
 	return true;
 }
 
-bool mpu60x0_accel_full_scale_set(Twi_t *TwiStruct, unsigned char IcNr, unsigned int scale)
+bool mpu60x0_accel_full_scale_set(MPU60x0_t *structure, unsigned char IcNr, unsigned int scale)
 {
+	Twi_t *TwiStruct = structure->TWI;
 	TwiStruct->MasterSlaveAddr = MPU60x0_ADDR | (IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_ACCEL_CONFIG;
 	if(!SetupI2CReception(TwiStruct, 1, 1)) return false;
@@ -136,8 +144,9 @@ bool mpu60x0_accel_full_scale_set(Twi_t *TwiStruct, unsigned char IcNr, unsigned
 	return true;
 }
 
-bool mpu60x0_accel_data_get(Twi_t *TwiStruct, unsigned char IcNr, signed short *X_Axis, signed short *Y_Axis, signed short *Z_Axis)
+bool mpu60x0_accel_data_get(MPU60x0_t *structure, unsigned char IcNr, signed short *X_Axis, signed short *Y_Axis, signed short *Z_Axis)
 {
+	Twi_t *TwiStruct = structure->TWI;
 	TwiStruct->MasterSlaveAddr = MPU60x0_ADDR | (IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_ACCEL_XOUT_H;
 	if(!SetupI2CReception(TwiStruct, 1, 6)) return false;
@@ -147,8 +156,9 @@ bool mpu60x0_accel_data_get(Twi_t *TwiStruct, unsigned char IcNr, signed short *
 	return true;
 }
 
-bool mpu60x0_gyro_data_get(Twi_t *TwiStruct, unsigned char IcNr, signed short *X_Axis, signed short *Y_Axis, signed short *Z_Axis)
+bool mpu60x0_gyro_data_get(MPU60x0_t *structure, unsigned char IcNr, signed short *X_Axis, signed short *Y_Axis, signed short *Z_Axis)
 {
+	Twi_t *TwiStruct = structure->TWI;
 	TwiStruct->MasterSlaveAddr = MPU60x0_ADDR | (IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_GYRO_XOUT_H;
 	if(!SetupI2CReception(TwiStruct, 1, 6)) return false;
@@ -158,8 +168,9 @@ bool mpu60x0_gyro_data_get(Twi_t *TwiStruct, unsigned char IcNr, signed short *X
 	return true;
 }
 
-bool mpu60x0_temp_data_get(Twi_t *TwiStruct, unsigned char IcNr, float *Temperature)
+bool mpu60x0_temp_data_get(MPU60x0_t *structure, unsigned char IcNr, float *Temperature)
 {
+	Twi_t *TwiStruct = structure->TWI;
 	TwiStruct->MasterSlaveAddr = MPU60x0_ADDR | (IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_TEMP_OUT_H;
 	if(!SetupI2CReception(TwiStruct, 1, 2)) return false;
@@ -167,8 +178,9 @@ bool mpu60x0_temp_data_get(Twi_t *TwiStruct, unsigned char IcNr, float *Temperat
 	return true;
 }
 
-bool mpu60x0_clock_sel_set(Twi_t *TwiStruct, unsigned char IcNr, unsigned char Value)
+bool mpu60x0_clock_sel_set(MPU60x0_t *structure, unsigned char IcNr, unsigned char Value)
 {
+	Twi_t *TwiStruct = structure->TWI;
 	TwiStruct->MasterSlaveAddr = MPU60x0_ADDR | (IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_PWR_MGMT_1;
 	if(!SetupI2CReception(TwiStruct, 1, 1)) return false;
@@ -177,8 +189,9 @@ bool mpu60x0_clock_sel_set(Twi_t *TwiStruct, unsigned char IcNr, unsigned char V
 	return true;
 }
 
-bool mpu60x0_temp_dis_set(Twi_t *TwiStruct, unsigned char IcNr, bool Value)
+bool mpu60x0_temp_dis_set(MPU60x0_t *structure, unsigned char IcNr, bool Value)
 {
+	Twi_t *TwiStruct = structure->TWI;
 	TwiStruct->MasterSlaveAddr = MPU60x0_ADDR | (IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_PWR_MGMT_1;
 	if(!SetupI2CReception(TwiStruct, 1, 1)) return false;
@@ -187,8 +200,9 @@ bool mpu60x0_temp_dis_set(Twi_t *TwiStruct, unsigned char IcNr, bool Value)
 	return true;
 }
 
-bool mpu60x0_cycle_set(Twi_t *TwiStruct, unsigned char IcNr, bool Value)
+bool mpu60x0_cycle_set(MPU60x0_t *structure, unsigned char IcNr, bool Value)
 {
+	Twi_t *TwiStruct = structure->TWI;
 	TwiStruct->MasterSlaveAddr = MPU60x0_ADDR | (IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_PWR_MGMT_1;
 	if(!SetupI2CReception(TwiStruct, 1, 1)) return false;
@@ -197,8 +211,9 @@ bool mpu60x0_cycle_set(Twi_t *TwiStruct, unsigned char IcNr, bool Value)
 	return true;
 }
 
-bool mpu60x0_sleep_set(Twi_t *TwiStruct, unsigned char IcNr, bool Value)
+bool mpu60x0_sleep_set(MPU60x0_t *structure, unsigned char IcNr, bool Value)
 {
+	Twi_t *TwiStruct = structure->TWI;
 	TwiStruct->MasterSlaveAddr = MPU60x0_ADDR | (IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_PWR_MGMT_1;
 	if(!SetupI2CReception(TwiStruct, 1, 1)) return false;
@@ -207,8 +222,9 @@ bool mpu60x0_sleep_set(Twi_t *TwiStruct, unsigned char IcNr, bool Value)
 	return true;
 }
 
-bool mpu60x0_device_reset_set(Twi_t *TwiStruct, unsigned char IcNr, bool Value)
+bool mpu60x0_device_reset_set(MPU60x0_t *structure, unsigned char IcNr, bool Value)
 {
+	Twi_t *TwiStruct = structure->TWI;
 	TwiStruct->MasterSlaveAddr = MPU60x0_ADDR | (IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_PWR_MGMT_1;
 	if(!SetupI2CReception(TwiStruct, 1, 1)) return false;
@@ -217,8 +233,9 @@ bool mpu60x0_device_reset_set(Twi_t *TwiStruct, unsigned char IcNr, bool Value)
 	return true;
 }
 
-bool mpu60x0_stby_zg_set(Twi_t *TwiStruct, unsigned char IcNr, bool Value)
+bool mpu60x0_stby_zg_set(MPU60x0_t *structure, unsigned char IcNr, bool Value)
 {
+	Twi_t *TwiStruct = structure->TWI;
 	TwiStruct->MasterSlaveAddr = MPU60x0_ADDR | (IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_PWR_MGMT_2;
 	if(!SetupI2CReception(TwiStruct, 1, 1)) return false;
@@ -227,8 +244,9 @@ bool mpu60x0_stby_zg_set(Twi_t *TwiStruct, unsigned char IcNr, bool Value)
 	return true;
 }
 
-bool mpu60x0_stby_yg_set(Twi_t *TwiStruct, unsigned char IcNr, bool Value)
+bool mpu60x0_stby_yg_set(MPU60x0_t *structure, unsigned char IcNr, bool Value)
 {
+	Twi_t *TwiStruct = structure->TWI;
 	TwiStruct->MasterSlaveAddr = MPU60x0_ADDR | (IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_PWR_MGMT_2;
 	if(!SetupI2CReception(TwiStruct, 1, 1)) return false;
@@ -237,8 +255,9 @@ bool mpu60x0_stby_yg_set(Twi_t *TwiStruct, unsigned char IcNr, bool Value)
 	return true;
 }
 
-bool mpu60x0_stby_xg_set(Twi_t *TwiStruct, unsigned char IcNr, bool Value)
+bool mpu60x0_stby_xg_set(MPU60x0_t *structure, unsigned char IcNr, bool Value)
 {
+	Twi_t *TwiStruct = structure->TWI;
 	TwiStruct->MasterSlaveAddr = MPU60x0_ADDR | (IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_PWR_MGMT_2;
 	if(!SetupI2CReception(TwiStruct, 1, 1)) return false;
@@ -247,8 +266,9 @@ bool mpu60x0_stby_xg_set(Twi_t *TwiStruct, unsigned char IcNr, bool Value)
 	return true;
 }
 
-bool mpu60x0_stby_za_set(Twi_t *TwiStruct, unsigned char IcNr, bool Value)
+bool mpu60x0_stby_za_set(MPU60x0_t *structure, unsigned char IcNr, bool Value)
 {
+	Twi_t *TwiStruct = structure->TWI;
 	TwiStruct->MasterSlaveAddr = MPU60x0_ADDR | (IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_PWR_MGMT_2;
 	if(!SetupI2CReception(TwiStruct, 1, 1)) return false;
@@ -257,8 +277,9 @@ bool mpu60x0_stby_za_set(Twi_t *TwiStruct, unsigned char IcNr, bool Value)
 	return true;
 }
 
-bool mpu60x0_stby_ya_set(Twi_t *TwiStruct, unsigned char IcNr, bool Value)
+bool mpu60x0_stby_ya_set(MPU60x0_t *structure, unsigned char IcNr, bool Value)
 {
+	Twi_t *TwiStruct = structure->TWI;
 	TwiStruct->MasterSlaveAddr = MPU60x0_ADDR | (IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_PWR_MGMT_2;
 	if(!SetupI2CReception(TwiStruct, 1, 1)) return false;
@@ -267,8 +288,9 @@ bool mpu60x0_stby_ya_set(Twi_t *TwiStruct, unsigned char IcNr, bool Value)
 	return true;
 }
 
-bool mpu60x0_stby_xa_set(Twi_t *TwiStruct, unsigned char IcNr, bool Value)
+bool mpu60x0_stby_xa_set(MPU60x0_t *structure, unsigned char IcNr, bool Value)
 {
+	Twi_t *TwiStruct = structure->TWI;
 	TwiStruct->MasterSlaveAddr = MPU60x0_ADDR | (IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_PWR_MGMT_2;
 	if(!SetupI2CReception(TwiStruct, 1, 1)) return false;
@@ -277,8 +299,9 @@ bool mpu60x0_stby_xa_set(Twi_t *TwiStruct, unsigned char IcNr, bool Value)
 	return true;
 }
 
-bool mpu60x0_lp_wake_ctrl_set(Twi_t *TwiStruct, unsigned char IcNr, unsigned char Value)
+bool mpu60x0_lp_wake_ctrl_set(MPU60x0_t *structure, unsigned char IcNr, unsigned char Value)
 {
+	Twi_t *TwiStruct = structure->TWI;
 	TwiStruct->MasterSlaveAddr = MPU60x0_ADDR | (IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_PWR_MGMT_2;
 	if(!SetupI2CReception(TwiStruct, 1, 1)) return false;
@@ -287,8 +310,9 @@ bool mpu60x0_lp_wake_ctrl_set(Twi_t *TwiStruct, unsigned char IcNr, unsigned cha
 	return true;
 }
 
-bool mpu60x0_i2c_bypass_enable_set(Twi_t *TwiStruct, unsigned char IcNr, bool Value)
+bool mpu60x0_i2c_bypass_enable_set(MPU60x0_t *structure, unsigned char IcNr, bool Value)
 {
+	Twi_t *TwiStruct = structure->TWI;
 	TwiStruct->MasterSlaveAddr = MPU60x0_ADDR | (IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_INT_PIN_CFG;
 	if(!SetupI2CReception(TwiStruct, 1, 1)) return false;
@@ -297,25 +321,26 @@ bool mpu60x0_i2c_bypass_enable_set(Twi_t *TwiStruct, unsigned char IcNr, bool Va
 	return true;
 }
 
-bool mpu60x0_gyroscope_test(Twi_t *TwiStruct, unsigned char IcNr, double *XtestResult, double *YtestResult, double *ZtestResult)
+bool mpu60x0_gyroscope_test(MPU60x0_t *structure, unsigned char IcNr, double *XtestResult, double *YtestResult, double *ZtestResult)
 {
+	Twi_t *TwiStruct = structure->TWI;
 	signed short Xdata = 0;
 	signed short Ydata = 0;
 	signed short Zdata = 0;
 	signed short _Xdata = 0;
 	signed short _Ydata = 0;
 	signed short _Zdata = 0;
-	mpu60x0_gyro_data_get(TwiStruct, IcNr, &Xdata, &Ydata, &Zdata);
-	mpu60x0_gyro_self_test_set(TwiStruct, IcNr, true, true, true);
+	mpu60x0_gyro_data_get(structure, IcNr, &Xdata, &Ydata, &Zdata);
+	mpu60x0_gyro_self_test_set(structure, IcNr, true, true, true);
 	Sysdelay(100);
-	mpu60x0_gyro_data_get(TwiStruct, IcNr, &_Xdata, &_Ydata, &_Zdata);
+	mpu60x0_gyro_data_get(structure, IcNr, &_Xdata, &_Ydata, &_Zdata);
 	TwiStruct->MasterSlaveAddr = MPU60x0_ADDR | (IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_SELF_TEST_X;
 	if(!SetupI2CReception(TwiStruct, 1, 3)) return false;
 	double XG_TEST = (double)(TwiStruct->RxBuff[0] & 0x1F);
 	double YG_TEST = (double)(TwiStruct->RxBuff[1] & 0x1F);
 	double ZG_TEST = (double)(TwiStruct->RxBuff[2] & 0x1F);
-	mpu60x0_gyro_self_test_set(TwiStruct, IcNr, false, false, false);
+	mpu60x0_gyro_self_test_set(structure, IcNr, false, false, false);
 	*XtestResult = 0;
 	*YtestResult = 0;
 	*ZtestResult = 0;
@@ -328,18 +353,19 @@ bool mpu60x0_gyroscope_test(Twi_t *TwiStruct, unsigned char IcNr, double *XtestR
 	return true;
 }
 
-bool mpu60x0_accelerometer_test(Twi_t *TwiStruct, unsigned char IcNr, double *XtestResult, double *YtestResult, double *ZtestResult)
+bool mpu60x0_accelerometer_test(MPU60x0_t *structure, unsigned char IcNr, double *XtestResult, double *YtestResult, double *ZtestResult)
 {
+	Twi_t *TwiStruct = structure->TWI;
 	signed short Xdata = 0;
 	signed short Ydata = 0;
 	signed short Zdata = 0;
 	signed short _Xdata = 0;
 	signed short _Ydata = 0;
 	signed short _Zdata = 0;
-	mpu60x0_accel_data_get(TwiStruct, IcNr, &Xdata, &Ydata, &Zdata);
-	mpu60x0_accel_self_test_set(TwiStruct, IcNr, true, true, true);
+	mpu60x0_accel_data_get(structure, IcNr, &Xdata, &Ydata, &Zdata);
+	mpu60x0_accel_self_test_set(structure, IcNr, true, true, true);
 	Sysdelay(100);
-	mpu60x0_accel_data_get(TwiStruct, IcNr, &_Xdata, &_Ydata, &_Zdata);
+	mpu60x0_accel_data_get(structure, IcNr, &_Xdata, &_Ydata, &_Zdata);
 	TwiStruct->MasterSlaveAddr = MPU60x0_ADDR | (IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_SELF_TEST_X;
 	if(!SetupI2CReception(TwiStruct, 1, 4)) return false;
@@ -347,7 +373,7 @@ bool mpu60x0_accelerometer_test(Twi_t *TwiStruct, unsigned char IcNr, double *Xt
 	double YA_TEST = (double)(((TwiStruct->RxBuff[1] >> 4) & 0x0C) | ((TwiStruct->RxBuff[3] >> 2) & 0x03));
 	double ZA_TEST = (double)(((TwiStruct->RxBuff[2] >> 4) & 0x0C) | ((TwiStruct->RxBuff[3] >> 0) & 0x03));
 
-	mpu60x0_accel_self_test_set(TwiStruct, IcNr, false, false, false);
+	mpu60x0_accel_self_test_set(structure, IcNr, false, false, false);
 	*XtestResult = 0;
 	*YtestResult = 0;
 	*ZtestResult = 0;
@@ -360,78 +386,78 @@ bool mpu60x0_accelerometer_test(Twi_t *TwiStruct, unsigned char IcNr, double *Xt
 	return true;
 }
 
-bool mpu60x0_gyroscope_test_display_result(Twi_t *TwiStruct, unsigned char IcNr)
+bool mpu60x0_gyroscope_test_display_result(MPU60x0_t *structure, unsigned char IcNr)
 {
 	double XtestResult = 0;
 	double YtestResult = 0;
 	double ZtestResult = 0;
-	if(!mpu60x0_gyroscope_test(TwiStruct, IcNr , &XtestResult, &YtestResult, &ZtestResult)) return false;
+	if(!mpu60x0_gyroscope_test(structure, IcNr , &XtestResult, &YtestResult, &ZtestResult)) return false;
 	double XtestResultInt = 0;
 	double XtestResultDec = modf(((double)XtestResult), &XtestResultInt);
 	double YtestResultInt = 0;
 	double YtestResultDec = modf(((double)YtestResult), &YtestResultInt);
 	double ZtestResultInt = 0;
 	double ZtestResultDec = modf(((double)ZtestResult), &ZtestResultInt);
-	UARTprintf(DebugCom, "Giroscope calibration value:\n\rXg = %d.%u, Yg = %d.%u, Zg = %d.%u\n\r", (signed int)XtestResultInt, (unsigned int)(XtestResultDec * 10000), (signed int)YtestResultInt, (unsigned int)(YtestResultDec * 10000), (signed int)YtestResultInt, (unsigned int)(ZtestResultDec * 10000));
+	UARTprintf(DebugCom, "MPU60x0 Giroscope calibration value:\n\rXg = %d.%u, Yg = %d.%u, Zg = %d.%u\n\r", (signed int)XtestResultInt, (unsigned int)(XtestResultDec * 10000), (signed int)YtestResultInt, (unsigned int)(YtestResultDec * 10000), (signed int)YtestResultInt, (unsigned int)(ZtestResultDec * 10000));
 	return true;
 }
 
-bool mpu60x0_accelerometer_test_display_result(Twi_t *TwiStruct, unsigned char IcNr)
+bool mpu60x0_accelerometer_test_display_result(MPU60x0_t *structure, unsigned char IcNr)
 {
 	double XtestResult = 0;
 	double YtestResult = 0;
 	double ZtestResult = 0;
-	if(!mpu60x0_accelerometer_test(TwiStruct, IcNr , &XtestResult, &YtestResult, &ZtestResult)) return false;
+	if(!mpu60x0_accelerometer_test(structure, IcNr , &XtestResult, &YtestResult, &ZtestResult)) return false;
 	double XtestResultInt = 0;
 	double XtestResultDec = modf(((double)XtestResult), &XtestResultInt);
 	double YtestResultInt = 0;
 	double YtestResultDec = modf(((double)YtestResult), &YtestResultInt);
 	double ZtestResultInt = 0;
 	double ZtestResultDec = modf(((double)ZtestResult), &ZtestResultInt);
-	UARTprintf(DebugCom, "Accelerometer calibration value:\n\rXa = %d.%u, Ya = %d.%u, Za = %d.%u\n\r", (signed int)XtestResultInt, (unsigned int)(XtestResultDec * 10000), (signed int)YtestResultInt, (unsigned int)(YtestResultDec * 10000), (signed int)ZtestResultInt, (unsigned int)(ZtestResultDec * 10000));
+	UARTprintf(DebugCom, "MPU60x0 Accelerometer calibration value:\n\rXa = %d.%u, Ya = %d.%u, Za = %d.%u\n\r", (signed int)XtestResultInt, (unsigned int)(XtestResultDec * 10000), (signed int)YtestResultInt, (unsigned int)(YtestResultDec * 10000), (signed int)ZtestResultInt, (unsigned int)(ZtestResultDec * 10000));
 	return true;
 }
 
-bool mpu60x0_temperature_display_result(Twi_t *TwiStruct, unsigned char IcNr)
+bool mpu60x0_temperature_display_result(MPU60x0_t *structure, unsigned char IcNr)
 {
 	float Temperature = 0;
-	if(!mpu60x0_temp_data_get(TwiStruct, IcNr , &Temperature)) return false;
+	if(!mpu60x0_temp_data_get(structure, IcNr , &Temperature)) return false;
 #ifndef _TINY_PRINT_
-	UARTprintf(DebugCom, "Temperature:\n\r%f Gr Celsius\n\r", Temperature);
+	UARTprintf(DebugCom, "MPU60x0 Temperature:\n\r%2.2f Gr Celsius\n\r", Temperature);
 #else
 	float GrCelsius = 0;
 	float GrCelsiusMod = modff(Temperature, &GrCelsius);
-	UARTprintf(DebugCom, "Temperature:\n\r%d.%u Gr Celsius\n\r", (unsigned int)GrCelsius, (unsigned int)(GrCelsiusMod*1000));
+	UARTprintf(DebugCom, "MPU60x0 Temperature:\n\r%d.%u Gr Celsius\n\r", (unsigned int)GrCelsius, (unsigned int)(GrCelsiusMod*1000));
 #endif
 	return true;
 }
 
-bool mpu60x0_giroscope_display_result(Twi_t *TwiStruct, unsigned char IcNr)
+bool mpu60x0_giroscope_display_result(MPU60x0_t *structure, unsigned char IcNr)
 {
 	signed short Xg = 0;
 	signed short Yg = 0;
 	signed short Zg = 0;
-	if(!mpu60x0_gyro_data_get(TwiStruct, IcNr, &Xg, &Yg, &Zg)) return false;
-	UARTprintf(DebugCom, "Giroscope:\n\rXg = %d, Yg = %d, Zg = %d\n\r", Xg, Yg, Zg);
+	if(!mpu60x0_gyro_data_get(structure, IcNr, &Xg, &Yg, &Zg)) return false;
+	UARTprintf(DebugCom, "MPU60x0 Giroscope:\n\rXg = %d, Yg = %d, Zg = %d\n\r", Xg, Yg, Zg);
 	return true;
 }
 
-bool mpu60x0_accelerometer_display_result(Twi_t *TwiStruct, unsigned char IcNr)
+bool mpu60x0_accelerometer_display_result(MPU60x0_t *structure, unsigned char IcNr)
 {
 	signed short Xa = 0;
 	signed short Ya = 0;
 	signed short Za = 0;
-	if(!mpu60x0_accel_data_get(TwiStruct, IcNr, &Xa, &Ya, &Za)) return false;
-	UARTprintf(DebugCom, "Accelerometer:\n\rXa = %d, Ya = %d, Za = %d\n\r", Xa, Ya, Za);
+	if(!mpu60x0_accel_data_get(structure, IcNr, &Xa, &Ya, &Za)) return false;
+	UARTprintf(DebugCom, "MPU60x0 Accelerometer:\n\rXa = %d, Ya = %d, Za = %d\n\r", Xa, Ya, Za);
 	return true;
 }
 
-bool mpu60x0_init(Twi_t *TwiStruct, unsigned char IcNr)
+bool mpu60x0_init(MPU60x0_t *structure, unsigned char IcNr)
 {
-	if(!mpu60x0_who_am_i_get(TwiStruct, IcNr)) return false;
-	mpu60x0_sleep_set(TwiStruct, IcNr, false);
-	mpu60x0_clock_sel_set(TwiStruct, IcNr, MPU60X0_PWR_MGMT_1_CLKSEL_PLL_X_AX);
-	mpu60x0_gyro_full_scale_set(TwiStruct, IcNr, MPU60X0_GYRO_CONFIG_FS_SEL_2000);
-	mpu60x0_i2c_bypass_enable_set(TwiStruct, IcNr, true);
+	if(!mpu60x0_who_am_i_get(structure, IcNr)) return false;
+	mpu60x0_sleep_set(structure, IcNr, false);
+	mpu60x0_clock_sel_set(structure, IcNr, MPU60X0_PWR_MGMT_1_CLKSEL_PLL_X_AX);
+	mpu60x0_gyro_full_scale_set(structure, IcNr, MPU60X0_GYRO_CONFIG_FS_SEL_2000);
+	mpu60x0_i2c_bypass_enable_set(structure, IcNr, true);
 	return true;
 }

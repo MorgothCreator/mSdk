@@ -18,12 +18,13 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+/*#####################################################*/
 #ifndef MPU60X0_H_
 #define MPU60X0_H_
-
-#include "../api/twi_def.h"
-
+/*#####################################################*/
+#include "api/twi_def.h"
+#include "api/timer_api.h"
+/*#####################################################*/
 #define MPU60x0_ADDR				(0x68)
 
 /* Register table */
@@ -199,42 +200,51 @@
 #define MPU60X0_INT_PIN_CFG_I2C_BYPASS_EN_bp	(1)
 #define MPU60X0_INT_PIN_CFG_I2C_BYPASS_EN_bm	(0x01 << MPU60X0_INT_PIN_CFG_I2C_BYPASS_EN_bp)
 //----------------------------------------------------------------------------------------
-
-
-
-
-
-bool mpu60x0_sample_rate_divider_set(Twi_t *TwiStruct, unsigned char IcNr, unsigned char Value);
-bool mpu60x0_who_am_i_get(Twi_t *TwiStruct, unsigned char IcNr);
-bool mpu60x0_dlpf_cfg_set(Twi_t *TwiStruct, unsigned char IcNr, unsigned char value);
-bool mpu60x0_gyro_self_test_set(Twi_t *TwiStruct, unsigned char IcNr, bool X_test, bool Y_test, bool Z_test);
-bool mpu60x0_gyro_full_scale_set(Twi_t *TwiStruct, unsigned char IcNr, unsigned int scale);
-bool mpu60x0_accel_self_test_set(Twi_t *TwiStruct, unsigned char IcNr, bool X_test, bool Y_test, bool Z_test);
-bool mpu60x0_accel_full_scale_set(Twi_t *TwiStruct, unsigned char IcNr, unsigned int scale);
-bool mpu60x0_accel_data_get(Twi_t *TwiStruct, unsigned char IcNr, signed short *X_Axis, signed short *Y_Axis, signed short *Z_Axis);
-bool mpu60x0_gyro_data_get(Twi_t *TwiStruct, unsigned char IcNr, signed short *X_Axis, signed short *Y_Axis, signed short *Z_Axis);
-bool mpu60x0_temp_data_get(Twi_t *TwiStruct, unsigned char IcNr, float *Temperature);
-bool mpu60x0_clock_sel_set(Twi_t *TwiStruct, unsigned char IcNr, unsigned char Value);
-bool mpu60x0_temp_dis_set(Twi_t *TwiStruct, unsigned char IcNr, bool Value);
-bool mpu60x0_cycle_set(Twi_t *TwiStruct, unsigned char IcNr, bool Value);
-bool mpu60x0_sleep_set(Twi_t *TwiStruct, unsigned char IcNr, bool Value);
-bool mpu60x0_device_reset_set(Twi_t *TwiStruct, unsigned char IcNr, bool Value);
-bool mpu60x0_stby_zg_set(Twi_t *TwiStruct, unsigned char IcNr, bool Value);
-bool mpu60x0_stby_yg_set(Twi_t *TwiStruct, unsigned char IcNr, bool Value);
-bool mpu60x0_stby_xg_set(Twi_t *TwiStruct, unsigned char IcNr, bool Value);
-bool mpu60x0_stby_za_set(Twi_t *TwiStruct, unsigned char IcNr, bool Value);
-bool mpu60x0_stby_ya_set(Twi_t *TwiStruct, unsigned char IcNr, bool Value);
-bool mpu60x0_stby_xa_set(Twi_t *TwiStruct, unsigned char IcNr, bool Value);
-bool mpu60x0_lp_wake_ctrl_set(Twi_t *TwiStruct, unsigned char IcNr, unsigned char Value);
-bool mpu60x0_gyroscope_test(Twi_t *TwiStruct, unsigned char IcNr, double *XtestResult, double *YtestResult, double *ZtestResult);
-bool mpu60x0_accelerometer_test(Twi_t *TwiStruct, unsigned char IcNr, double *XtestResult, double *YtestResult, double *ZtestResult);
-bool mpu60x0_gyroscope_test_display_result(Twi_t *TwiStruct, unsigned char IcNr);
-bool mpu60x0_accelerometer_test_display_result(Twi_t *TwiStruct, unsigned char IcNr);
-bool mpu60x0_temperature_display_result(Twi_t *TwiStruct, unsigned char IcNr);
-bool mpu60x0_giroscope_display_result(Twi_t *TwiStruct, unsigned char IcNr);
-bool mpu60x0_accelerometer_display_result(Twi_t *TwiStruct, unsigned char IcNr);
-bool mpu60x0_init(Twi_t *TwiStruct, unsigned char IcNr);
-
+/*#####################################################*/
+typedef struct MPU60x0_s{
+	STimer_t Timeout_Timer;
+	//MS5611_COMMANDS reg_inst;
+	bool busy;
+	Twi_t* TWI;
+}MPU60x0_t;
+/*#####################################################*/
+bool mpu60x0_sample_rate_divider_set(MPU60x0_t *structure, unsigned char IcNr, unsigned char Value);
+bool mpu60x0_who_am_i_get(MPU60x0_t *structure, unsigned char IcNr);
+bool mpu60x0_dlpf_cfg_set(MPU60x0_t *structure, unsigned char IcNr, unsigned char value);
+bool mpu60x0_gyro_self_test_set(MPU60x0_t *structure, unsigned char IcNr, bool X_test, bool Y_test, bool Z_test);
+bool mpu60x0_gyro_full_scale_set(MPU60x0_t *structure, unsigned char IcNr, unsigned int scale);
+bool mpu60x0_accel_self_test_set(MPU60x0_t *structure, unsigned char IcNr, bool X_test, bool Y_test, bool Z_test);
+bool mpu60x0_accel_full_scale_set(MPU60x0_t *structure, unsigned char IcNr, unsigned int scale);
+bool mpu60x0_accel_data_get(MPU60x0_t *structure, unsigned char IcNr, signed short *X_Axis, signed short *Y_Axis, signed short *Z_Axis);
+bool mpu60x0_gyro_data_get(MPU60x0_t *structure, unsigned char IcNr, signed short *X_Axis, signed short *Y_Axis, signed short *Z_Axis);
+bool mpu60x0_temp_data_get(MPU60x0_t *structure, unsigned char IcNr, float *Temperature);
+bool mpu60x0_clock_sel_set(MPU60x0_t *structure, unsigned char IcNr, unsigned char Value);
+bool mpu60x0_temp_dis_set(MPU60x0_t *structure, unsigned char IcNr, bool Value);
+bool mpu60x0_cycle_set(MPU60x0_t *structure, unsigned char IcNr, bool Value);
+bool mpu60x0_sleep_set(MPU60x0_t *structure, unsigned char IcNr, bool Value);
+bool mpu60x0_device_reset_set(MPU60x0_t *structure, unsigned char IcNr, bool Value);
+bool mpu60x0_stby_zg_set(MPU60x0_t *structure, unsigned char IcNr, bool Value);
+bool mpu60x0_stby_yg_set(MPU60x0_t *structure, unsigned char IcNr, bool Value);
+bool mpu60x0_stby_xg_set(MPU60x0_t *structure, unsigned char IcNr, bool Value);
+bool mpu60x0_stby_za_set(MPU60x0_t *structure, unsigned char IcNr, bool Value);
+bool mpu60x0_stby_ya_set(MPU60x0_t *structure, unsigned char IcNr, bool Value);
+bool mpu60x0_stby_xa_set(MPU60x0_t *structure, unsigned char IcNr, bool Value);
+bool mpu60x0_lp_wake_ctrl_set(MPU60x0_t *structure, unsigned char IcNr, unsigned char Value);
+bool mpu60x0_gyroscope_test(MPU60x0_t *structure, unsigned char IcNr, double *XtestResult, double *YtestResult, double *ZtestResult);
+bool mpu60x0_accelerometer_test(MPU60x0_t *structure, unsigned char IcNr, double *XtestResult, double *YtestResult, double *ZtestResult);
+bool mpu60x0_gyroscope_test_display_result(MPU60x0_t *structure, unsigned char IcNr);
+bool mpu60x0_accelerometer_test_display_result(MPU60x0_t *structure, unsigned char IcNr);
+bool mpu60x0_temperature_display_result(MPU60x0_t *structure, unsigned char IcNr);
+bool mpu60x0_giroscope_display_result(MPU60x0_t *structure, unsigned char IcNr);
+bool mpu60x0_accelerometer_display_result(MPU60x0_t *structure, unsigned char IcNr);
+bool mpu60x0_init(MPU60x0_t *structure, unsigned char IcNr);
+/*#####################################################*/
+#define new_mpu60x0 MPU60x0_t
+#ifndef new_
+#define new_(structure) (structure*)calloc(1,sizeof(structure));
+#endif
+#define free_mpu60x0(address) free(address);
+/*#####################################################*/
 #ifdef HEADER_INCLUDE_C_FILES
 #include "MPU60x0.c"
 #endif
