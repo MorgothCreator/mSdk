@@ -16,12 +16,6 @@
 #include "device/mhc5883.h"
 #include "device/sht11.h"
 
-#include "stdio.h"
-
-FILE aa;
-
-
-
 int main(void)
 {
 	board_init();
