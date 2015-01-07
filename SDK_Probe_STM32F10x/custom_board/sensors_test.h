@@ -79,8 +79,6 @@
 	twi_open(TWI[0]);\
 	UARTPuts(DebugCom, "OK.\n\r" , -1);
 /*#####################################################*/
-#define DXL_INTERFACE_INIT
-/*#####################################################*/
 #define ADC_0_INIT \
 	UARTPuts(DebugCom, "Setup ADC 0....." , -1);\
 	ADC[0] = new_(new_adc);\
