@@ -1700,6 +1700,7 @@ int _vsnprintf_ (Uart_t* UartSettings, char *str, size_t count, const char *fmt,
 /* VARARGS3 */
 #ifdef HAVE_STDARGS
 /*
+ * Source of this description is : http://www.cplusplus.com/reference/cstdio/printf/
  * specifier	output
  *
  * d or i		Signed decimal integer																392

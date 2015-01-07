@@ -12,72 +12,42 @@
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
 <part id="0"/>
 <part id="1"/>
+<part id="5"/>
+<part id="6"/>
 <part id="2"/>
 <part id="3"/>
-<part id="5"/>
-<part id="7"/>
-<part id="10"/>
-<part id="8"/>
-<part id="9"/>
-<part id="6"/>
-<part id="11"/>
 <part id="4"/>
-<part id="12"/>
 </presentation>
 </folder>
 </info>
 </editorArea>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="sensors_test.c" partName="sensors_test.c" path="C:/GitHub/mSdk/SDK_Probe_STM32F10x/custom_board/sensors_test.c" title="sensors_test.c" tooltip="C:/GitHub/mSdk/SDK_Probe_STM32F10x/custom_board/sensors_test.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F10x/sensors_test.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="2116" selectionTopPixel="903"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="403" selectionTopPixel="153"/>
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="sensors_test.h" partName="sensors_test.h" path="C:/GitHub/mSdk/SDK_Probe_STM32F10x/custom_board/sensors_test.h" title="sensors_test.h" tooltip="C:/GitHub/mSdk/SDK_Probe_STM32F10x/custom_board/sensors_test.h" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F10x/sensors_test.h"/>
-<editorState selectionHorizontalPixel="0" selectionLength="7" selectionOffset="431" selectionTopPixel="15"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="2511" selectionTopPixel="579"/>
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="board_init.c" partName="board_init.c" path="C:/GitHub/mSdk/SDK/board/stm32f10x/undefined_board/board_init.c" title="board_init.c" tooltip="C:/GitHub/mSdk/SDK/board/stm32f10x/undefined_board/board_init.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F10x/undefined_board/board_init.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="2606" selectionTopPixel="1027"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="1872" selectionTopPixel="1186"/>
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="board_init.h" partName="board_init.h" path="C:/GitHub/mSdk/SDK/board/stm32f10x/undefined_board/board_init.h" title="board_init.h" tooltip="C:/GitHub/mSdk/SDK/board/stm32f10x/undefined_board/board_init.h" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F10x/undefined_board/board_init.h"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="1533" selectionTopPixel="420"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="1491" selectionTopPixel="643"/>
 </editor>
-<editor activePart="true" focus="true" id="org.eclipse.cdt.ui.editor.CEditor" name="mpu60x0.c" partName="mpu60x0.c" path="C:/GitHub/mSdk/SDK/lib/device/mpu60x0.c" title="mpu60x0.c" tooltip="C:/GitHub/mSdk/SDK/lib/device/mpu60x0.c" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F10x/lib/device/mpu60x0.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="970" selectionTopPixel="0"/>
+<editor activePart="true" focus="true" id="org.eclipse.cdt.ui.editor.CEditor" name="project.h" partName="project.h" path="C:/GitHub/mSdk/SDK_Probe_STM32F10x/custom_board/project.h" title="project.h" tooltip="C:/GitHub/mSdk/SDK_Probe_STM32F10x/custom_board/project.h" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F10x/project.h"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="469" selectionTopPixel="0"/>
 </editor>
-<editor id="org.eclipse.cdt.ui.editor.CEditor" name="sht11.c" partName="sht11.c" path="C:/GitHub/mSdk/SDK/lib/device/sht11.c" title="sht11.c" tooltip="C:/GitHub/mSdk/SDK/lib/device/sht11.c" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F10x/lib/device/sht11.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="7074" selectionTopPixel="3900"/>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="bioloid_test.c" partName="bioloid_test.c" path="C:/GitHub/mSdk/SDK_Probe_STM32F10x/custom_board/bioloid_test.c" title="bioloid_test.c" tooltip="C:/GitHub/mSdk/SDK_Probe_STM32F10x/custom_board/bioloid_test.c" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F10x/bioloid_test.c"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="10021" selectionTopPixel="4289"/>
 </editor>
-<editor id="org.eclipse.cdt.ui.editor.CEditor" name="ms5611.c" partName="ms5611.c" path="C:/GitHub/mSdk/SDK/lib/device/ms5611.c" title="ms5611.c" tooltip="C:/GitHub/mSdk/SDK/lib/device/ms5611.c" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F10x/lib/device/ms5611.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="1007" selectionTopPixel="135"/>
-</editor>
-<editor id="org.eclipse.cdt.ui.editor.CEditor" name="srf02.c" partName="srf02.c" path="C:/GitHub/mSdk/SDK/lib/device/srf02.c" title="srf02.c" tooltip="C:/GitHub/mSdk/SDK/lib/device/srf02.c" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F10x/lib/device/srf02.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="110" selectionTopPixel="0"/>
-</editor>
-<editor id="org.eclipse.cdt.ui.editor.CEditor" name="mhc5883.c" partName="mhc5883.c" path="C:/GitHub/mSdk/SDK/lib/device/mhc5883.c" title="mhc5883.c" tooltip="C:/GitHub/mSdk/SDK/lib/device/mhc5883.c" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F10x/lib/device/mhc5883.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="990" selectionTopPixel="0"/>
-</editor>
-<editor id="org.eclipse.cdt.ui.editor.CEditor" name="mhc5883.h" partName="mhc5883.h" path="C:/GitHub/mSdk/SDK/lib/device/mhc5883.h" title="mhc5883.h" tooltip="C:/GitHub/mSdk/SDK/lib/device/mhc5883.h" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F10x/lib/device/mhc5883.h"/>
-<editorState selectionHorizontalPixel="0" selectionLength="28" selectionOffset="1036" selectionTopPixel="80"/>
-</editor>
-<editor id="org.eclipse.cdt.ui.editor.CEditor" name="srf02.h" partName="srf02.h" path="C:/GitHub/mSdk/SDK/lib/device/srf02.h" title="srf02.h" tooltip="C:/GitHub/mSdk/SDK/lib/device/srf02.h" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F10x/lib/device/srf02.h"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="110" selectionTopPixel="0"/>
-</editor>
-<editor id="org.eclipse.cdt.ui.editor.CEditor" name="ms5611.h" partName="ms5611.h" path="C:/GitHub/mSdk/SDK/lib/device/ms5611.h" title="ms5611.h" tooltip="C:/GitHub/mSdk/SDK/lib/device/ms5611.h" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F10x/lib/device/ms5611.h"/>
-<editorState selectionHorizontalPixel="0" selectionLength="28" selectionOffset="1011" selectionTopPixel="179"/>
-</editor>
-<editor id="org.eclipse.cdt.ui.editor.CEditor" name="mpu60x0.h" partName="mpu60x0.h" path="C:/GitHub/mSdk/SDK/lib/device/mpu60x0.h" title="mpu60x0.h" tooltip="C:/GitHub/mSdk/SDK/lib/device/mpu60x0.h" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F10x/lib/device/mpu60x0.h"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="997" selectionTopPixel="0"/>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="bioloid_test.h" partName="bioloid_test.h" path="C:/GitHub/mSdk/SDK_Probe_STM32F10x/custom_board/bioloid_test.h" title="bioloid_test.h" tooltip="C:/GitHub/mSdk/SDK_Probe_STM32F10x/custom_board/bioloid_test.h" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F10x/bioloid_test.h"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="313" selectionTopPixel="69"/>
 </editor>
 </editors>
 <views>
@@ -86,11 +56,11 @@
 <expanded>
 <element path="/SDK_Probe_STM32F10x"/>
 <element path="/SDK_Probe_STM32F10x/lib"/>
-<element path="/SDK_Probe_STM32F10x/lib/device"/>
+<element path="/SDK_Probe_STM32F10x/lib/api"/>
 <element path="/SDK_Probe_STM32F10x/undefined_board"/>
 </expanded>
 <selection>
-<element path="/SDK_Probe_STM32F10x/lib/device/mpu60x0.h"/>
+<element path="/SDK_Probe_STM32F10x"/>
 </selection>
 </viewState>
 </view>
@@ -241,8 +211,8 @@
 <hide_toolbar_item_id id="org.eclipse.ui.edit.text.toggleShowSelectedElementOnly"/>
 <hide_toolbar_item_id id="org.coocox.builder.ui.build"/>
 <hide_toolbar_item_id id="org.coocox.welcome.ui.action.welcome"/>
-<hide_toolbar_item_id id="org.coocox.component.ui.ShowRepositoryAction"/>
 <hide_toolbar_item_id id="org.coocox.codebugger.configuration.coideProgramDownloadAction"/>
+<hide_toolbar_item_id id="org.coocox.component.ui.ShowRepositoryAction"/>
 <view id="org.eclipse.ui.console.ConsoleView"/>
 <view id="org.eclipse.debug.ui.DebugView"/>
 <view id="org.coocox.codebugger.trace.ui.traceview"/>
@@ -310,164 +280,173 @@
 <workingSets/>
 <navigationHistory>
 <editors>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F10x/lib/device/mhc5883.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F10x/lib/device/mhc5883.h"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F10x/sensors_test.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F10x/lib/device/mpu60x0.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F10x/sensors_test.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F10x/lib/device/ms5611.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F10x/lib/device/ms5611.h"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F10x/lib/device/mpu60x0.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F10x/lib/device/mpu60x0.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F10x/lib/device/mhc5883.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F10x/lib/device/srf02.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F10x/lib/device/sht11.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F10x/lib/device/srf02.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F10x/project.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F10x/bioloid_test.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F10x/sensors_test.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F10x/bioloid_test.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F10x/undefined_board/board_init.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F10x/undefined_board/board_init.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F10x/lib/api/uart_api.c"/>
+<editor factoryID="org.coocox.builder.ui.persistent.PersistentElementFactory" id="org.coocox.builder.ui.editors.ConfigEditor">
+<org.coocox.builder.ui.editors.ConfigEditor/>
+</editor>
+<editor factoryID="org.coocox.builder.ui.persistent.PersistentElementFactory" id="org.coocox.builder.ui.editors.ConfigEditor">
+<org.coocox.builder.ui.editors.ConfigEditor/>
+</editor>
 </editors>
-<item historyLabel="ms5611.c" index="4">
-<position info="not_deleted" x="4651" y="0"/>
+<item historyLabel="srf02.c" index="5">
+<position info="not_deleted" x="341" y="49"/>
 </item>
-<item historyLabel="ms5611.h" index="5">
-<position info="not_deleted" x="2750" y="8"/>
+<item historyLabel="ms5611.c" index="2">
+<position info="not_deleted" x="1463" y="0"/>
 </item>
-<item historyLabel="ms5611.c" index="4">
-<position info="not_deleted" x="6542" y="0"/>
+<item historyLabel="ms5611.h" index="3">
+<position info="not_deleted" x="1184" y="16"/>
 </item>
-<item historyLabel="ms5611.h" index="5">
-<position info="not_deleted" x="3127" y="0"/>
+<item historyLabel="sht11.c" index="6">
+<position info="not_deleted" x="7074" y="0"/>
 </item>
-<item historyLabel="sensors_test.h" index="2">
+<item historyLabel="ms5611.h" index="3">
+<position info="not_deleted" x="2664" y="0"/>
+</item>
+<item historyLabel="srf02.c" index="5">
+<position info="not_deleted" x="341" y="49"/>
+</item>
+<item historyLabel="ms5611.h" index="3">
+<position info="not_deleted" x="2664" y="0"/>
+</item>
+<item historyLabel="srf02.h" index="7">
+<position info="not_deleted" x="110" y="0"/>
+</item>
+<item historyLabel="ms5611.h" index="3">
+<position info="not_deleted" x="2664" y="0"/>
+</item>
+<item historyLabel="mhc5883.c" index="4">
+<position info="not_deleted" x="4216" y="0"/>
+</item>
+<item historyLabel="ms5611.c" index="2">
+<position info="not_deleted" x="6867" y="0"/>
+</item>
+<item historyLabel="mpu60x0.c" index="0">
 <position/>
 </item>
-<item historyLabel="ms5611.c" index="4">
-<position info="not_deleted" x="6542" y="0"/>
+<item historyLabel="mhc5883.c" index="4">
+<position info="not_deleted" x="4147" y="0"/>
 </item>
-<item historyLabel="sensors_test.h" index="2">
+<item historyLabel="mpu60x0.c" index="0">
 <position/>
 </item>
-<item historyLabel="sensors_test.c" index="3">
-<position info="not_deleted" x="634" y="0"/>
+<item historyLabel="sensors_test.c" index="1">
+<position info="not_deleted" x="403" y="0"/>
 </item>
-<item historyLabel="ms5611.h" index="5">
-<position info="not_deleted" x="2678" y="0"/>
+<item historyLabel="project.h" index="8">
+<position info="not_deleted" x="301" y="0"/>
 </item>
-<item historyLabel="mhc5883.h" index="1">
-<position info="not_deleted" x="1010" y="54"/>
-</item>
-<item historyLabel="ms5611.h" index="5">
-<position info="not_deleted" x="1039" y="0"/>
-</item>
-<item historyLabel="ms5611.c" index="4">
-<position info="not_deleted" x="6542" y="0"/>
-</item>
-<item historyLabel="mhc5883.c" index="0">
-<position info="not_deleted" x="4230" y="0"/>
-</item>
-<item historyLabel="ms5611.c" index="4">
-<position info="not_deleted" x="6542" y="0"/>
-</item>
-<item historyLabel="mhc5883.h" index="1">
-<position info="not_deleted" x="1036" y="28"/>
-</item>
-<item historyLabel="ms5611.c" index="4">
-<position info="not_deleted" x="1007" y="0"/>
-</item>
-<item historyLabel="ms5611.h" index="5">
-<position info="not_deleted" x="1039" y="0"/>
-</item>
-<item historyLabel="mhc5883.h" index="1">
-<position info="not_deleted" x="1036" y="28"/>
-</item>
-<item historyLabel="mhc5883.c" index="0">
-<position info="not_deleted" x="990" y="0"/>
-</item>
-<item historyLabel="mpu60x0.c" index="6">
-<position info="not_deleted" x="17533" y="0"/>
-</item>
-<item historyLabel="mpu60x0.h" index="7">
+<item historyLabel="bioloid_test.c" index="9">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="ms5611.c" index="4">
-<position info="not_deleted" x="1007" y="0"/>
+<item historyLabel="mpu60x0.c" index="0">
+<position info="not_deleted" x="18935" y="22"/>
 </item>
-<item historyLabel="ms5611.h" index="5">
-<position info="not_deleted" x="829" y="59"/>
+<item historyLabel="bioloid_test.c" index="9">
+<position info="not_deleted" x="15119" y="0"/>
 </item>
-<item historyLabel="mpu60x0.h" index="7">
-<position info="not_deleted" x="12123" y="0"/>
+<item historyLabel="sensors_test.h" index="10">
+<position info="not_deleted" x="335" y="1466"/>
 </item>
-<item historyLabel="ms5611.h" index="5">
-<position info="not_deleted" x="2581" y="180"/>
+<item historyLabel="bioloid_test.h" index="11">
+<position/>
 </item>
-<item historyLabel="mpu60x0.h" index="7">
-<position info="not_deleted" x="8961" y="0"/>
+<item historyLabel="board_init.c" index="12">
+<position info="not_deleted" x="1252" y="200"/>
 </item>
-<item historyLabel="ms5611.h" index="5">
-<position info="not_deleted" x="3131" y="221"/>
+<item historyLabel="board_init.h" index="13">
+<position info="not_deleted" x="1481" y="0"/>
 </item>
-<item historyLabel="mpu60x0.h" index="7">
-<position info="not_deleted" x="12038" y="0"/>
+<item historyLabel="board_init.c" index="12">
+<position info="not_deleted" x="1252" y="200"/>
 </item>
-<item historyLabel="sensors_test.h" index="2">
-<position info="not_deleted" x="429" y="6"/>
+<item historyLabel="board_init.h" index="13">
+<position info="not_deleted" x="1481" y="0"/>
 </item>
-<item historyLabel="mpu60x0.h" index="7">
-<position info="not_deleted" x="11911" y="7"/>
+<item historyLabel="bioloid_test.h" index="11">
+<position info="not_deleted" x="313" y="0"/>
 </item>
-<item historyLabel="sensors_test.h" index="2">
-<position info="not_deleted" x="429" y="0"/>
+<item historyLabel="board_init.c" index="12">
+<position info="not_deleted" x="1178" y="0"/>
 </item>
-<item historyLabel="mpu60x0.h" index="7">
-<position info="not_deleted" x="11919" y="7"/>
+<item historyLabel="board_init.h" index="13">
+<position info="not_deleted" x="1491" y="0"/>
 </item>
-<item historyLabel="sensors_test.h" index="2">
-<position info="not_deleted" x="562" y="0"/>
+<item historyLabel="board_init.c" index="12">
+<position info="not_deleted" x="1872" y="0"/>
 </item>
-<item historyLabel="mpu60x0.c" index="6">
-<position info="not_deleted" x="17533" y="0"/>
+<item historyLabel="sensors_test.h" index="10">
+<position info="not_deleted" x="2511" y="0"/>
 </item>
-<item historyLabel="mpu60x0.h" index="7">
-<position info="not_deleted" x="11919" y="7"/>
+<item historyLabel="board_init.h" index="13">
+<position info="not_deleted" x="1491" y="0"/>
 </item>
-<item historyLabel="sensors_test.c" index="3">
-<position info="not_deleted" x="572" y="0"/>
+<item historyLabel="project.h" index="8">
+<position info="not_deleted" x="301" y="0"/>
 </item>
-<item historyLabel="mpu60x0.c" index="6">
-<position info="not_deleted" x="17465" y="0"/>
+<item historyLabel="bioloid_test.c" index="9">
+<position info="not_deleted" x="7274" y="0"/>
 </item>
-<item historyLabel="mpu60x0.h" index="7">
-<position info="not_deleted" x="11796" y="20"/>
+<item historyLabel="uart_api.c" index="14">
+<position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="mpu60x0.c" index="6">
-<position info="not_deleted" x="1222" y="0"/>
+<item historyLabel="sensors_test.c" index="1">
+<position info="not_deleted" x="403" y="0"/>
 </item>
-<item historyLabel="mpu60x0.h" index="7">
-<position info="not_deleted" x="11796" y="20"/>
+<item historyLabel="bioloid_test.c" index="9">
+<position info="not_deleted" x="607" y="0"/>
 </item>
-<item historyLabel="mpu60x0.c" index="6">
-<position info="not_deleted" x="1222" y="0"/>
+<item historyLabel="uart_api.c" index="14">
+<position info="not_deleted" x="53568" y="0"/>
 </item>
-<item historyLabel="mpu60x0.h" index="7">
-<position info="not_deleted" x="11796" y="20"/>
+<item historyLabel="bioloid_test.c" index="9">
+<position info="not_deleted" x="550" y="0"/>
 </item>
-<item historyLabel="mpu60x0.c" index="6">
-<position info="not_deleted" x="14025" y="0"/>
+<item historyLabel="uart_api.c" index="14">
+<position info="not_deleted" x="53568" y="0"/>
 </item>
-<item historyLabel="sensors_test.c" index="3">
-<position info="not_deleted" x="572" y="0"/>
+<item historyLabel="bioloid_test.c" index="9">
+<position info="not_deleted" x="10021" y="0"/>
 </item>
-<item historyLabel="sensors_test.h" index="2">
-<position info="not_deleted" x="431" y="7"/>
+<item historyLabel="uart_api.c" index="14">
+<position info="not_deleted" x="47585" y="0"/>
 </item>
-<item historyLabel="sensors_test.c" index="3">
-<position info="not_deleted" x="2116" y="0"/>
+<item historyLabel="bioloid_test.c" index="9">
+<position info="not_deleted" x="10021" y="0"/>
 </item>
-<item historyLabel="mpu60x0.h" index="7">
-<position info="not_deleted" x="11796" y="20"/>
+<item historyLabel="bioloid_test.h" index="11">
+<position info="not_deleted" x="313" y="0"/>
 </item>
-<item historyLabel="ms5611.h" index="5">
-<position info="not_deleted" x="1011" y="28"/>
+<item historyLabel="bioloid_test.c" index="9">
+<position info="not_deleted" x="10021" y="0"/>
 </item>
-<item historyLabel="mpu60x0.h" index="7">
-<position info="not_deleted" x="997" y="0"/>
+<item historyLabel="bioloid_test.h" index="11">
+<position info="not_deleted" x="313" y="0"/>
 </item>
-<item active="true" historyLabel="mpu60x0.c" index="6">
-<position info="not_deleted" x="14025" y="0"/>
+<item historyLabel="project.h" index="8">
+<position info="not_deleted" x="469" y="0"/>
+</item>
+<item historyLabel="Configuration" index="15"/>
+<item historyLabel="project.h" index="8">
+<position info="not_deleted" x="469" y="0"/>
+</item>
+<item historyLabel="Configuration" index="16"/>
+<item active="true" historyLabel="project.h" index="8">
+<position info="not_deleted" x="469" y="0"/>
 </item>
 </navigationHistory>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
@@ -476,6 +455,34 @@
 <actionBarAdvisor/>
 </window>
 <mruList>
+<file factoryID="org.coocox.builder.ui.persistent.PersistentElementFactory" id="org.coocox.builder.ui.editors.ConfigEditor" name="" tooltip="">
+<persistable>
+<org.coocox.builder.ui.editors.ConfigEditor/>
+</persistable>
+</file>
+<file factoryID="org.coocox.builder.ui.persistent.PersistentElementFactory" id="org.coocox.builder.ui.editors.ConfigEditor" name="" tooltip="">
+<persistable>
+<org.coocox.builder.ui.editors.ConfigEditor/>
+</persistable>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="uart_api.c" tooltip="SDK_Probe_STM32F10x/lib/api/uart_api.c">
+<persistable path="/SDK_Probe_STM32F10x/lib/api/uart_api.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="bioloid_test.h" tooltip="SDK_Probe_STM32F10x/bioloid_test.h">
+<persistable path="/SDK_Probe_STM32F10x/bioloid_test.h"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="mpu60x0.c" tooltip="SDK_Probe_STM32F10x/lib/device/mpu60x0.c">
+<persistable path="/SDK_Probe_STM32F10x/lib/device/mpu60x0.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="bioloid_test.c" tooltip="SDK_Probe_STM32F10x/bioloid_test.c">
+<persistable path="/SDK_Probe_STM32F10x/bioloid_test.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="project.h" tooltip="SDK_Probe_STM32F10x/project.h">
+<persistable path="/SDK_Probe_STM32F10x/project.h"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="startup_stm32f10x_md.c" tooltip="SDK_Probe_STM32F10x/stm32f10x/sys/startup_stm32f10x_md.c">
+<persistable path="/SDK_Probe_STM32F10x/stm32f10x/sys/startup_stm32f10x_md.c"/>
+</file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="mpu60x0.h" tooltip="SDK_Probe_STM32F10x/lib/device/mpu60x0.h">
 <persistable path="/SDK_Probe_STM32F10x/lib/device/mpu60x0.h"/>
 </file>
@@ -493,32 +500,6 @@
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="mhc5883.c" tooltip="SDK_Probe_STM32F10x/lib/device/mhc5883.c">
 <persistable path="/SDK_Probe_STM32F10x/lib/device/mhc5883.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="startup_stm32f10x_md.c" tooltip="SDK_Probe_STM32F10x/stm32f10x/sys/startup_stm32f10x_md.c">
-<persistable path="/SDK_Probe_STM32F10x/stm32f10x/sys/startup_stm32f10x_md.c"/>
-</file>
-<file factoryID="org.eclipse.cdt.ui.ExternalEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="stdarg.h" tooltip="C:\Program Files\GNU Tools ARM Embedded\4.8 2014q2\lib\gcc\arm-none-eabi\4.8.4\include\stdarg.h">
-<persistable path="C:\Program Files\GNU Tools ARM Embedded\4.8 2014q2\lib\gcc\arm-none-eabi\4.8.4\include\stdarg.h" project="SDK_Probe_STM32F10x"/>
-</file>
-<file factoryID="org.eclipse.cdt.ui.ExternalEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="types.h" tooltip="C:\Program Files\GNU Tools ARM Embedded\4.8 2014q2\arm-none-eabi\include\sys\types.h">
-<persistable path="C:\Program Files\GNU Tools ARM Embedded\4.8 2014q2\arm-none-eabi\include\sys\types.h" project="SDK_Probe_STM32F10x"/>
-</file>
-<file factoryID="org.eclipse.cdt.ui.ExternalEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="ctype.h" tooltip="C:\Program Files\GNU Tools ARM Embedded\4.8 2014q2\arm-none-eabi\include\ctype.h">
-<persistable path="C:\Program Files\GNU Tools ARM Embedded\4.8 2014q2\arm-none-eabi\include\ctype.h" project="SDK_Probe_STM32F10x"/>
-</file>
-<file factoryID="org.coocox.builder.ui.persistent.PersistentElementFactory" id="org.coocox.builder.ui.editors.ConfigEditor" name="" tooltip="">
-<persistable>
-<org.coocox.builder.ui.editors.ConfigEditor/>
-</persistable>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="timer_api.c" tooltip="SDK_Probe_STM32F10x/lib/api/timer_api.c">
-<persistable path="/SDK_Probe_STM32F10x/lib/api/timer_api.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="srf02.c" tooltip="SDK_Probe_STM32F10x/lib/device/srf02.c">
-<persistable path="/SDK_Probe_STM32F10x/lib/device/srf02.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="ms5611.c" tooltip="SDK_Probe_STM32F10x/lib/device/ms5611.c">
-<persistable path="/SDK_Probe_STM32F10x/lib/device/ms5611.c"/>
 </file>
 </mruList>
 </workbench>
