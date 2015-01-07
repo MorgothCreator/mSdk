@@ -37,6 +37,9 @@ unsigned char dxl_id_table[] = {
 };
 
 void display_value(unsigned long value) {
+#ifndef _TINY_PRINT_
+	UARTprintf(DebugCom, "%*u|", 4, value);
+#else
 	if(value < 10) {
 		UARTprintf(DebugCom, "   %u|", value);
 	} else if(value < 100) {
@@ -46,6 +49,7 @@ void display_value(unsigned long value) {
 	} else {
 		UARTprintf(DebugCom,    "%u|", value);
 	}
+#endif
 }
 
 int main(void)
@@ -76,13 +80,6 @@ int main(void)
 			}
 		}
 		if(timer_tick(&TimerReadSensors)) {
-			/*ms5611_display_preasure_result(&ms5611_prom_data, TWI[0], MS5611_CONVERT_OSR_1024);
-			mpu60x0_temperature_display_result(TWI[0], 0);
-			mpu60x0_giroscope_display_result(TWI[0], 0);
-			mpu60x0_accelerometer_display_result(TWI[0], 0);
-			mhc5883_display_result(TWI[0]);*/
-			//UARTprintf(DebugCom, "ADC1 CH0 = %d, ADC1 CH1 = %d, ADC1 TempSensor = %d\n\n", ADC[0]->ConvResult[0], ADC[0]->ConvResult[1], ADC[0]->ConvResult[2]);
-			//dxl_ping(DXL, 1);
 			DXL_DATA_t buffer[18];
 			memset(&buffer, 0, sizeof(buffer));
 			unsigned char dxl_err[18];
@@ -91,10 +88,7 @@ int main(void)
 			memset(&err_ret, 0, sizeof(err_ret));
 			unsigned char dxl_cnt;
 			for(dxl_cnt = 0; dxl_cnt < sizeof(dxl_id_table); dxl_cnt++)
-			{
-				//if(dxl_cnt == 4)
-					err_ret[dxl_cnt]  = dxl_read(DXL, (unsigned char *)&buffer[dxl_cnt] , dxl_cnt  + 1 , 0, sizeof(buffer[0]), &dxl_err[dxl_cnt]);
-			}
+				err_ret[dxl_cnt]  = dxl_read(DXL, (unsigned char *)&buffer[dxl_cnt] , dxl_cnt  + 1 , 0, sizeof(buffer[0]), &dxl_err[dxl_cnt]);
 			UARTPuts(DebugCom,   "\n\r", -1);
 
 			UARTPuts(DebugCom, "DXL data:                   ", -1);
@@ -281,29 +275,9 @@ int main(void)
 			for(dxl_cnt = 0; dxl_cnt < sizeof(dxl_id_table); dxl_cnt++)
 				display_value(buffer[dxl_cnt].punch);
 			UARTPuts(DebugCom,   "\n\r\n\r", -1);
-
-
-			/*unsigned char tx_data[2];
-			tx_data[0] = 205;
-			tx_data[1] = 0;
-			unsigned char aditional_info[48];
-			unsigned char aditional_info_len;
-			err_ret = dxl_write_data(DXL,1, DXL_GOAL_POSITION_L ,tx_data, 2, aditional_info, &aditional_info_len, &dxl_err);
-			if(err_ret == DXL_COMM_TXSUCCESS)
-				UARTPuts(DebugCom, "DXL OK\n", -1);
-			else if(err_ret == DXL_COMM_RXTIMEOUT)
-				UARTPuts(DebugCom, "DXL timeout\n", -1);
-			else if(err_ret == DXL_COMM_RXCORRUPT)
-				UARTPuts(DebugCom, "DXL corrupt\n", -1);
-			tx_data[0] = 0;
-			tx_data[1] = 0;
-			err_ret = dxl_write_data(DXL,1, DXL_TORQUE_LIMIT_L ,tx_data, 2, aditional_info, &aditional_info_len, &dxl_err);
-			if(err_ret == DXL_COMM_TXSUCCESS)
-				UARTPuts(DebugCom, "DXL OK\n", -1);
-			else if(err_ret == DXL_COMM_RXTIMEOUT)
-				UARTPuts(DebugCom, "DXL timeout\n", -1);
-			else if(err_ret == DXL_COMM_RXCORRUPT)
-				UARTPuts(DebugCom, "DXL corrupt\n", -1);*/
+/*
+ * Send to each DXL the position and speed.
+ */
 			DXL_SYNK_IND_PACKET_t DXL_PACK[18];
 #define MOT1		270
 			DXL_PACK[0].id = 1;
@@ -413,10 +387,14 @@ int main(void)
 			DXL_PACK[17].data[1] = (unsigned char)((unsigned short)MOT18 >> 8);
 			DXL_PACK[17].data[2] = 0;// Speed
 			DXL_PACK[17].data[3] = 2;
-			//dxl_synk_write(DXL, DXL_GOAL_POSITION_L, DXL_PACK, 4, 8);
-			//dxl_synk_write(DXL, DXL_GOAL_POSITION_L, &DXL_PACK[8], 4, 8);
-			//dxl_synk_write(DXL, DXL_GOAL_POSITION_L, &DXL_PACK[16], 4, 2);
-			unsigned char aditional_info[48];
+			/*
+			 *  Send synk write to all 18 DXL's position and speed.
+			 */
+			dxl_synk_write(DXL, DXL_GOAL_POSITION_L, DXL_PACK, 4, 18);
+			/*
+			 *  Send position and speed for each DXL without synk.
+			 */
+			/*unsigned char aditional_info[48];
 			unsigned char aditional_info_len;
 			dxl_write_data(DXL, 1, DXL_GOAL_POSITION_L, (unsigned char *)&DXL_PACK[0].data, 4, aditional_info, &aditional_info_len, &dxl_err[0]);
 			dxl_write_data(DXL, 2, DXL_GOAL_POSITION_L, (unsigned char *)&DXL_PACK[1].data, 4, aditional_info, &aditional_info_len, &dxl_err[1]);
@@ -435,7 +413,7 @@ int main(void)
 			dxl_write_data(DXL, 15, DXL_GOAL_POSITION_L, (unsigned char *)&DXL_PACK[14].data, 4, aditional_info, &aditional_info_len, &dxl_err[14]);
 			dxl_write_data(DXL, 16, DXL_GOAL_POSITION_L, (unsigned char *)&DXL_PACK[15].data, 4, aditional_info, &aditional_info_len, &dxl_err[15]);
 			dxl_write_data(DXL, 17, DXL_GOAL_POSITION_L, (unsigned char *)&DXL_PACK[16].data, 4, aditional_info, &aditional_info_len, &dxl_err[16]);
-			dxl_write_data(DXL, 18, DXL_GOAL_POSITION_L, (unsigned char *)&DXL_PACK[17].data, 4, aditional_info, &aditional_info_len, &dxl_err[17]);
+			dxl_write_data(DXL, 18, DXL_GOAL_POSITION_L, (unsigned char *)&DXL_PACK[17].data, 4, aditional_info, &aditional_info_len, &dxl_err[17]);*/
 		}
 	}
 	return 0;
