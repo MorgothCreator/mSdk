@@ -2,16 +2,16 @@
  * srf02.h
  *
  *  Created on: Jan 6, 2015
- *      Author: Morgoth
+ *      Author:  Iulian Gheorghiu <morgoth.creator@gmail.com>
  */
-
+/*#####################################################*/
 #ifndef SRF02_H_
 #define SRF02_H_
-
+/*#####################################################*/
 #include "stdbool.h"
 #include "api/twi_def.h"
 #include "api/timer_api.h"
-
+/*#####################################################*/
 typedef enum {
 	SRF02_START_RANGING = 0x50,
 	SRF02_FAKE_RANGING = 0x56,
@@ -37,6 +37,7 @@ typedef struct SRF02_s{
 	bool busy;
 	Twi_t* TWI;
 }SRF02_t;
+/*#####################################################*/
 bool srf02_start(SRF02_t *structure, SRF02_COMMANDS command);
 bool srf02_read(SRF02_t *structure);
 void srf02_display_data(SRF02_t *structure);

@@ -2,7 +2,7 @@
  * srf02.c
  *
  *  Created on: Jan 6, 2015
- *      Author: Morgoth
+ *      Author:  Iulian Gheorghiu <morgoth.creator@gmail.com>
  */
 
 #include "stdbool.h"

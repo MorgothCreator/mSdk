@@ -1702,7 +1702,7 @@ int _vsnprintf_ (Uart_t* UartSettings, char *str, size_t count, const char *fmt,
 /*
  * specifier	output
  *
- * d or i		Signed decimal integer							392
+ * d or i		Signed decimal integer								392
  * u			Unsigned decimal integer							7235
  * o			Unsigned octal										610
  * x			Unsigned hexadecimal integer						7fa
