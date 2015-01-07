@@ -69,7 +69,6 @@ Done API's for every platform:
 		SPI.
 		RTC.
 		TWI.
-			FT5x06 capacitive touchscreen.
 		UART.
 		USB:
 			DEV MSC.
@@ -81,7 +80,6 @@ Done API's for every platform:
 		LCD.
 		RTC.
 		TWI.
-			FT5x06 capacitive touchscreen.
 		UART.
 	AT32UC3L:
 		ADC.
@@ -92,12 +90,10 @@ Done API's for every platform:
 		MMCSD using USART in SPI mode.
 		SPI.
 		TWI.
-			FT5x06 capacitive touchscreen.
 		USART.
 	OMAP4:
 		GPIO.
 		TWI.
-			FT5x06 capacitive touchscreen.
 		UART.
 	STM32F0:
 		In development.
@@ -110,7 +106,9 @@ Done API's for every platform:
 		In development.
 	STM32F4:
 		GPIO.
-		USART.
+		USART
+		TWI.
+		ADC (not ready).
 
 Supported devices (this drivers works on all platforms that has API's for used communicatiun busses):
 
@@ -121,7 +119,10 @@ Supported devices (this drivers works on all platforms that has API's for used c
 	FT5x06 I2C capacitive touchscreen device.
 	MHC5883 I2C compass device.
 	MPU60x0 I2C accelerometer & giroscope device.
-	MS5611 I2C preasure & temperature sensor device.
+	MS5611 I2C pressure & temperature sensor device.
+	SHT11 custom software interface humidity and temperature device.
+	SRF02 I2C ultrasonic range finder device.
 	SST25VF SPI flash memory device.
 	TPS65217 I2C PMIC device.
 	TPS65910 I2C PMIC device.
+	DXL actuators from Dynamixel.
