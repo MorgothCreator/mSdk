@@ -23,10 +23,8 @@ int main(void)
     timer_interval(&TimerReadSensors, 1000);
 	timer(TimerBlinkLed);
     timer_interval(&TimerBlinkLed, 1000);
-	ms5611_prom_data ms5611_prom_data;
-	ms5611_init(&ms5611_prom_data, TWI[0]);
-	mpu60x0_init(TWI[0], 0);
-	mhc5883_init(TWI[0]);
+	mpu60x0_init(MPU60x0, 0);
+	mhc5883_init(MHC5883);
     bool Led1Status = false;
 	unsigned char sht11_status_reg = 0;
 	bool sht11_read_mode = false;
@@ -68,15 +66,15 @@ int main(void)
 			}
 		}
 		if(timer_tick(&TimerReadSensors)) {
-			ms5611_display_preasure_result(&ms5611_prom_data, TWI[0], MS5611_CONVERT_OSR_1024);
-			mpu60x0_temperature_display_result(TWI[0], 0);
-			mpu60x0_giroscope_display_result(TWI[0], 0);
-			mpu60x0_accelerometer_display_result(TWI[0], 0);
-			mhc5883_display_result(TWI[0]);
+			ms5611_display_preasure_result(MS5611, MS5611_CONVERT_OSR_1024);
+			mpu60x0_temperature_display_result(MPU60x0, 0);
+			mpu60x0_giroscope_display_result(MPU60x0, 0);
+			mpu60x0_accelerometer_display_result(MPU60x0, 0);
+			mhc5883_display_result(MHC5883);
 			//UARTprintf(DebugCom, "SHT11: T = %u, H = %u\n\r", (unsigned long)_SHT11->temperature, (unsigned long)_SHT11->humidity);
 			sht11_display_data(SHT11);
 			srf02_display_data(SRF02);
-			UARTprintf(DebugCom, "ADC1:\n\rCH0 = %d, CH1 = %d, TempSensor = %f\n\r\n\r", ADC[0]->ConvResult[0], ADC[0]->ConvResult[1], (float)(((float)1775 - (float)ADC[0]->ConvResult[2]) / 5.337) + (float)25);//Temperature (in °C) = {(V25 - VSENSE) / Avg_Slope} + 25.
+			UARTprintf(DebugCom, "ADC1:\n\rCH0 = %d, CH1 = %d, TempSensor = %2.2f\n\r\n\r", ADC[0]->ConvResult[0], ADC[0]->ConvResult[1], (float)(((float)1775 - (float)ADC[0]->ConvResult[2]) / 5.337) + (float)25);//Temperature (in °C) = {(V25 - VSENSE) / Avg_Slope} + 25.
 		}
 	}
 }

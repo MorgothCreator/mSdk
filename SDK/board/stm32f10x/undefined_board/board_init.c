@@ -37,6 +37,9 @@
 #include "device/dxl.h"
 #include "device/sht11.h"
 #include "device/srf02.h"
+#include "device/mhc5883.h"
+#include "device/mpu60x0.h"
+#include "device/ms5611.h"
 /*#####################################################*/
 new_uart* Uart[3] = {NULL,NULL,NULL};
 new_uart* DebugCom = NULL;
@@ -47,6 +50,9 @@ new_gpio* ENTX = NULL;
 new_dxl_actuator *DXL;
 USE_SHT11;
 USE_SRF02;
+USE_MHC5883;
+USE_MS5611;
+USE_MPU60x0;
 /*-----------------------------------------------------*/
 //new_touchscreen* TouchScreen = NULL;
 //new_screen* ScreenBuff = NULL;
@@ -80,6 +86,12 @@ bool board_init()
 	SHT11_INIT
 /*-----------------------------------------------------*/
 	SRF02_INIT
+/*-----------------------------------------------------*/
+	MHC5883_INIT
+/*-----------------------------------------------------*/
+	MS5611_INIT
+/*-----------------------------------------------------*/
+	MPU60x0_INIT
 /*-----------------------------------------------------*/
 	LED1 = gpio_assign(IOC, 13, GPIO_OUT_PUSH_PULL, false);
 	return true;

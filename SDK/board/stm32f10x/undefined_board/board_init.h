@@ -2,7 +2,7 @@
  * board_init.h
  *
  * Created: 2/8/2013 12:22:37 AM
- *  Author: XxXx
+ *  Author: Iulian Gheorghiu <morgoth.creator@gmail.com>
  */
 /*#####################################################*/
 #ifndef BOARD_INIT_H_
@@ -38,6 +38,9 @@
 #include "device/dxl.h"
 #include "device/sht11.h"
 #include "device/srf02.h"
+#include "device/mhc5883.h"
+#include "device/mpu60x0.h"
+#include "device/ms5611.h"
 /*#####################################################*/
 #define BOARD_MESSAGE "STM32F10x undefined"
 /*#####################################################*/
@@ -49,6 +52,9 @@ extern new_gpio* LED1;
 extern new_dxl_actuator *DXL;
 extern USE_SHT11;
 extern USE_SRF02;
+extern USE_MHC5883;
+extern USE_MS5611;
+extern USE_MPU60x0;
 /*-----------------------------------------------------*/
 //extern new_touchscreen* TouchScreen;
 //extern new_screen* ScreenBuff;
