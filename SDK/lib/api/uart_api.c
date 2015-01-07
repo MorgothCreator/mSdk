@@ -689,7 +689,7 @@ unsigned int UARTwrite(Uart_t* UartSettings,
  *
  * \return None.
  */
-#if 0
+#ifdef _TINY_PRINT_
 Uart_t*  UARTprintf(Uart_t* UartSettings,const char *pcString, ...)
 {
 	if(!UartSettings) return UartSettings;
@@ -981,11 +981,11 @@ bool uart_close(Uart_t *UartSettings)
 
 
 
-
+#ifndef _TINY_PRINT_
 
 
 /*
- * Copyright Patrick Powell 1995
+ * Copyright Patrick Powell 1995 & modified by Iulian Gheorghiu
  * This code is based on code written by Patrick Powell (papowell@astart.com)
  * It may be used for any purpose as long as this notice remains intact
  * on all source code distributions
@@ -1037,54 +1037,6 @@ bool uart_close(Uart_t *UartSettings)
  *
  **************************************************************/
 
-/* Define to empty if the keyword does not work.  */
-#undef const
-
-/* Define if your struct stat has st_blksize.  */
-#undef HAVE_ST_BLKSIZE
-
-/* Define if you have the ANSI C header files.  */
-#undef STDC_HEADERS
-
-/* Define if you have the chflags function.  */
-#undef HAVE_CHFLAGS
-
-/* Define if you have the fdatasync function.  */
-#undef HAVE_FDATASYNC
-
-/* Define if you have the fts_open function.  */
-#undef HAVE_FTS_OPEN
-
-/* Define if you have the nftw function.  */
-#undef HAVE_NFTW
-
-/* Define if you have the snprintf function.  */
-#undef HAVE_SNPRINTF
-
-/* Define if you have the vsnprintf function.  */
-#undef HAVE_VSNPRINTF
-
-/* Define if you have the <linux/ext2_fs.h> header file.  */
-#undef HAVE_LINUX_EXT2_FS_H
-
-/* Define if you have the <stdarg.h> header file.  */
-#undef HAVE_STDARG_H
-
-/* Define if you have the <sys/mount.h> header file.  */
-#undef HAVE_SYS_MOUNT_H
-
-/* Define if you have the <sys/param.h> header file.  */
-#undef HAVE_SYS_PARAM_H
-
-/* Define if you have the <sys/vfs.h> header file.  */
-#undef HAVE_SYS_VFS_H
-
-/* Define if you have the <varargs.h> header file.  */
-#undef HAVE_VARARGS_H
-
-/* Name of package */
-#undef PACKAGE
-
 /* Version number of package */
 #undef VERSION//#include "config.h"
 
@@ -1103,7 +1055,7 @@ bool uart_close(Uart_t *UartSettings)
 #define HAVE_STDARG_H
 
 #if defined(HAVE_STDARG_H)
-# include <stdarg.h>
+# include "stdarg.h"
 # define HAVE_STDARGS    /* let's hope that works everywhere (mj) */
 # define VA_LOCAL_DECL   va_list ap
 # define VA_START(f)     va_start(ap, f)
@@ -1111,7 +1063,7 @@ bool uart_close(Uart_t *UartSettings)
 # define VA_END          va_end(ap)
 #else
 # if defined(HAVE_VARARGS_H)
-#  include <varargs.h>
+#  include "varargs.h"
 #  undef HAVE_STDARGS
 #  define VA_LOCAL_DECL   va_list ap
 #  define VA_START(f)     va_start(ap)      /* f is ignored! */
@@ -1129,7 +1081,7 @@ bool uart_close(Uart_t *UartSettings)
 #endif
 
 //int snprintf (Uart_t* UartSettings, char *str, size_t count, const char *fmt, ...);
-int _vsnprintf_ (Uart_t* UartSettings, char *str, size_t count, const char *fmt, va_list arg);
+int _vsnprintf_ (Uart_t* UartSettings, char *str, size_t count, const char *fmt, va_list arg);// Renamed to avoid conflict with builtin 'vsnprintf' function.
 
 static void dopr (Uart_t* UartSettings, char *buffer, size_t maxlen, const char *format,
                   va_list args);
@@ -1747,6 +1699,30 @@ int _vsnprintf_ (Uart_t* UartSettings, char *str, size_t count, const char *fmt,
 #ifndef HAVE_SNPRINTF
 /* VARARGS3 */
 #ifdef HAVE_STDARGS
+/*
+ * specifier	output
+ *
+ * d or i		Signed decimal integer							392
+ * u			Unsigned decimal integer							7235
+ * o			Unsigned octal										610
+ * x			Unsigned hexadecimal integer						7fa
+ * X			Unsigned hexadecimal integer (uppercase)			7FA
+ * f			Decimal floating point, lowercase					392.65
+ * F			Decimal floating point, uppercase					392.65
+ * e			Scientific notation (mantissa/exponent), lowercase	3.9265e+2
+ * E			Scientific notation (mantissa/exponent), uppercase	3.9265E+2
+ * g			Use the shortest representation: %e or %f			392.65
+ * G			Use the shortest representation: %E or %F			392.65
+ * a			Hexadecimal floating point, lowercase				-0xc.90fep-2
+ * A			Hexadecimal floating point, uppercase				-0XC.90FEP-2
+ * c			Character											a
+ * s			String of characters								sample
+ * p			Pointer address										b8000000
+ * n			Nothing printed.
+ * 					The corresponding argument must be a pointer to a signed int.
+ * 					The number of characters written so far is stored in the pointed location.
+ * %			A % followed by another % character will write a single % to the stream.	%
+ */
 Uart_t*  UARTprintf(Uart_t* UartSettings,const char *pcString, ...)
 //int snprintf (Uart_t* UartSettings, char *str,size_t count,const char *fmt,...)
 #else
@@ -1771,83 +1747,6 @@ int snprintf (va_alist) //va_dcl
 }
 #endif /* !HAVE_SNPRINTF */
 
-#ifdef TEST_SNPRINTF
-#ifndef LONG_STRING
-#define LONG_STRING 1024
-#endif
-int main (void)
-{
-  char buf1[LONG_STRING];
-  char buf2[LONG_STRING];
-  char *fp_fmt[] = {
-    "%-1.5f",
-    "%1.5f",
-    "%123.9f",
-    "%10.5f",
-    "% 10.5f",
-    "%+22.9f",
-    "%+4.9f",
-    "%01.3f",
-    "%4f",
-    "%3.1f",
-    "%3.2f",
-    "%.0f",
-    "%.1f",
-    NULL
-  };
-  double fp_nums[] = { -1.5, 134.21, 91340.2, 341.1234, 0203.9, 0.96, 0.996,
-    0.9996, 1.996, 4.136, 0};
-  char *int_fmt[] = {
-    "%-1.5d",
-    "%1.5d",
-    "%123.9d",
-    "%5.5d",
-    "%10.5d",
-    "% 10.5d",
-    "%+22.33d",
-    "%01.3d",
-    "%4d",
-    NULL
-  };
-  long int_nums[] = { -1, 134, 91340, 341, 0203, 0};
-  int x, y;
-  int fail = 0;
-  int num = 0;
-
-  printf ("Testing snprintf format codes against system sprintf...\n");
-
-  for (x = 0; fp_fmt[x] != NULL ; x++)
-    for (y = 0; fp_nums[y] != 0 ; y++)
-    {
-      snprintf (buf1, sizeof (buf1), fp_fmt[x], fp_nums[y]);
-      sprintf (buf2, fp_fmt[x], fp_nums[y]);
-      if (strcmp (buf1, buf2))
-      {
-	printf("snprintf doesn't match Format: %s\n\tsnprintf = %s\n\tsprintf  = %s\n",
-	    fp_fmt[x], buf1, buf2);
-	fail++;
-      }
-      num++;
-    }
-
-  for (x = 0; int_fmt[x] != NULL ; x++)
-    for (y = 0; int_nums[y] != 0 ; y++)
-    {
-      snprintf (buf1, sizeof (buf1), int_fmt[x], int_nums[y]);
-      sprintf (buf2, int_fmt[x], int_nums[y]);
-      if (strcmp (buf1, buf2))
-      {
-	printf("snprintf doesn't match Format: %s\n\tsnprintf = %s\n\tsprintf  = %s\n",
-	    int_fmt[x], buf1, buf2);
-	fail++;
-      }
-      num++;
-    }
-  printf ("%d tests failed out of %d.\n", fail, num);
-}
-#endif /* SNPRINTF_TEST */
-
 #endif /* !HAVE_SNPRINTF */
-/* Shut up the compaq compiler which hates empty files. This will
-   never be linked anyway. */
-static void do_nothing() { return; }
+
+#endif /* !_TINY_PRINT_ */
