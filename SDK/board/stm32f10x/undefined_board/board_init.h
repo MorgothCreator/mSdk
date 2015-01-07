@@ -50,11 +50,21 @@ extern new_twi* TWI[];
 extern new_adc* ADC[];
 extern new_gpio* LED1;
 extern new_dxl_actuator *DXL;
+#ifdef USE_SHT11
 extern USE_SHT11;
+#endif
+#ifdef USE_SRF02
 extern USE_SRF02;
+#endif
+#ifdef USE_MHC5883
 extern USE_MHC5883;
+#endif
+#ifdef USE_MS5611
 extern USE_MS5611;
+#endif
+#ifdef USE_MPU60x0
 extern USE_MPU60x0;
+#endif
 /*-----------------------------------------------------*/
 //extern new_touchscreen* TouchScreen;
 //extern new_screen* ScreenBuff;

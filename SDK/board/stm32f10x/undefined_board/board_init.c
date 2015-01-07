@@ -48,11 +48,21 @@ new_adc* ADC[2] = {NULL};
 new_gpio* LED1 = NULL;
 new_gpio* ENTX = NULL;
 new_dxl_actuator *DXL;
+#ifdef USE_SHT11
 USE_SHT11;
+#endif
+#ifdef USE_SRF02
 USE_SRF02;
+#endif
+#ifdef USE_MHC5883
 USE_MHC5883;
+#endif
+#ifdef USE_MS5611
 USE_MS5611;
+#endif
+#ifdef USE_MPU60x0
 USE_MPU60x0;
+#endif
 /*-----------------------------------------------------*/
 //new_touchscreen* TouchScreen = NULL;
 //new_screen* ScreenBuff = NULL;
@@ -66,9 +76,13 @@ bool board_init()
 	core_init();
 	timer_init();
 /*-----------------------------------------------------*/
+#ifdef UART_0_INIT
 	UART_0_INIT
+#endif
 /*-----------------------------------------------------*/
+#ifdef DXL_INTERFACE_INIT
 	DXL_INTERFACE_INIT
+#endif
 /*-----------------------------------------------------*/
 /* Display board message*/
 #if defined(BOARD_MESSAGE)
@@ -79,19 +93,33 @@ bool board_init()
 	UARTprintf(DebugCom, "Use %s Board.\n\r", BOARD_MESSAGE);
 #endif
 /*-----------------------------------------------------*/
+#ifdef TWI_1_INIT
 	TWI_1_INIT
+#endif
 /*-----------------------------------------------------*/
+#ifdef ADC_0_INIT
 	ADC_0_INIT
+#endif
 /*-----------------------------------------------------*/
+#ifdef SHT11_INIT
 	SHT11_INIT
+#endif
 /*-----------------------------------------------------*/
+#ifdef SRF02_INIT
 	SRF02_INIT
+#endif
 /*-----------------------------------------------------*/
+#ifdef MHC5883_INIT
 	MHC5883_INIT
+#endif
 /*-----------------------------------------------------*/
+#ifdef MS5611_INIT
 	MS5611_INIT
+#endif
 /*-----------------------------------------------------*/
+#ifdef MPU60x0_INIT
 	MPU60x0_INIT
+#endif
 /*-----------------------------------------------------*/
 	LED1 = gpio_assign(IOC, 13, GPIO_OUT_PUSH_PULL, false);
 	return true;
