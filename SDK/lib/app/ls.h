@@ -24,7 +24,7 @@ typedef struct{
     FRESULT fresult;
     char shr_name[15];
 #if _USE_LFN
-	XCHAR lfn_tmp[258];
+    TCHAR lfn_tmp[258];
 #endif
 }LS_STRUCT;
 //#######################################################

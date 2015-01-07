@@ -665,7 +665,7 @@ void _usb_msc_host_idle(unsigned int instance)
 																			//UARTprintf(DebugCom, "MMCSD0 MediaType:               %d \n\r",Drives_Table[0]->DiskInfo_MediaType);
 																			//UARTprintf(DebugCom, "MMCSD0 AllocTableSize:          %u \n\r",Drives_Table[0]->DiskInfo_AllocTableSize);
 																			UARTprintf(DebugCom, "USB1 DataSectionBegin:        %d \n\r",(int)g_sFatFs2.fatbase);
-																			UARTprintf(DebugCom, "USB1 uSD DiskCapacity:        %uMB\n\r",(unsigned long)((unsigned long long)((unsigned long long)g_sFatFs2.max_clust * (unsigned long long)g_sFatFs2.csize * (unsigned long long)/*g_sFatFs.s_size*/512) / 1000000));
+																			UARTprintf(DebugCom, "USB1 uSD DiskCapacity:        %uMB\n\r",(unsigned long)((unsigned long long)((unsigned long long)g_sFatFs2.fsize * (unsigned long long)/*g_sFatFs.s_size*/512) / 1000000));
 					}
                 } else  if(DebugCom)										UARTPuts(DebugCom,   "USB1 ERROR oppening path\n\r" , -1);
 #endif
@@ -854,7 +854,7 @@ void _usb_msc_host_idle(unsigned int instance)
 																			//UARTprintf(DebugCom, "MMCSD0 MediaType:               %d \n\r",Drives_Table[0]->DiskInfo_MediaType);
 																			//UARTprintf(DebugCom, "MMCSD0 AllocTableSize:          %u \n\r",Drives_Table[0]->DiskInfo_AllocTableSize);
 																			UARTprintf(DebugCom, "USB0 DataSectionBegin:        %d \n\r",(int)g_sFatFs1.fatbase);
-																			UARTprintf(DebugCom, "USB0 uSD DiskCapacity:        %uMB\n\r",(unsigned long)((unsigned long long)((unsigned long long)g_sFatFs1.max_clust * (unsigned long long)g_sFatFs1.csize * (unsigned long long)/*g_sFatFs.s_size*/512) / 1000000));
+																			UARTprintf(DebugCom, "USB0 uSD DiskCapacity:        %uMB\n\r",(unsigned long)((unsigned long long)((unsigned long long)g_sFatFs1.fsize * (unsigned long long)/*g_sFatFs.s_size*/512) / 1000000));
 					}
                 } else  if(DebugCom)										UARTPuts(DebugCom,   "USB0 ERROR oppening path\n\r" , -1);
 #endif
