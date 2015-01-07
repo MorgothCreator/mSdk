@@ -102,9 +102,9 @@ bool mhc5883_display_result(MHC5883_t *structure)
 	signed short Zc = 0;
 	if(!mhc5883_data_get(structure, &Xc, &Yc, &Zc)) return false;
 #ifndef _TINY_PRINT_
-	UARTprintf(DebugCom, "Compass:\n\rXc = %d, Yc = %d, Zc = %d\n\r", Xc, Yc, Zc);
+	UARTprintf(DebugCom, "MHC5883:\n\rCompass:Xc = %d, Yc = %d, Zc = %d\n\r", Xc, Yc, Zc);
 #else
-	UARTprintf(DebugCom, "Compass:\n\rXc = %d, Yc = %d, Zc = %d\n\r", Xc, Yc, Zc);
+	UARTprintf(DebugCom, "MHC5883:\n\rCompass:Xc = %d, Yc = %d, Zc = %d\n\r", Xc, Yc, Zc);
 #endif
 
 	return true;
