@@ -38,6 +38,7 @@ void timer_enable(STimer_t *S_Timer_Struct);
 void timer_disable(STimer_t *S_Timer_Struct);
 bool timer_tick(STimer_t *S_Timer_Struct);
 bool timer_enabled(STimer_t *S_Timer_Struct);
+void sys_delay(unsigned int milliSec);
 /*#####################################################*/
 #define timer(Name)  STimer_t Name
 /*#####################################################*/
