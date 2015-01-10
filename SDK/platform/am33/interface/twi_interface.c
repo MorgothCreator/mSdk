@@ -5,10 +5,12 @@
  *      Author: XxXx
  */
 /*#####################################################*/
-#include <stdbool.h>
-#include <stdlib.h>
+#include "stdbool.h"
+#include "stdlib.h"
+#include "string.h"
 #include "twi_interface.h"
 #include "api/twi_def.h"
+#include "api/timer_api.h"
 #include "aintc/aintc_twi.h"
 #include "sys/twi_definition.h"
 #include "pinmux/pin_mux_twi.h"
@@ -20,13 +22,21 @@
 */
 bool _SetupI2CTransmit(new_twi* TwiStruct, unsigned int TransmitBytes)
 {
-    if(!TwiStruct) return false;
+	if(!TwiStruct) return false;
 	/* Set i2c slave address */
-    I2CMasterSlaveAddrSet(TwiStruct->BaseAddr, TwiStruct->MasterSlaveAddr);
+	timer(TimerBusyTimeout);
+	timer_interval(&TimerBusyTimeout, TwiStruct->BusyTimeOut);
+	timer_enable(&TimerBusyTimeout);
+    while(I2CMasterBusy(TwiStruct->BaseAddr)) {
+    	  if(timer_tick(&TimerBusyTimeout)) {
+    			break;
+    		}
+      }
+	I2CMasterSlaveAddrSet(TwiStruct->BaseAddr, TwiStruct->MasterSlaveAddr);
 
     TwiStruct->tCount = 0;
 
-    if(TwiStruct->WithInterrupt)
+    if(TwiStruct->UseInterrupt)
     {
         /* Data Count specifies the number of bytes to be transmitted */
         I2CSetDataCount(TwiStruct->BaseAddr, TransmitBytes);
@@ -47,16 +57,36 @@ bool _SetupI2CTransmit(new_twi* TwiStruct, unsigned int TransmitBytes)
         /* Generate Start Condition over I2C bus */
         I2CMasterStart(TwiStruct->BaseAddr);
 
-        while(I2CMasterBusBusy(TwiStruct->BaseAddr) == 0);
+	    timer_enable(&TimerBusyTimeout);
+        while(I2CMasterBusBusy(TwiStruct->BaseAddr) == 0) {
+      	  if(timer_tick(&TimerBusyTimeout)) {
+      			return false;
+      		}
+        }
 
-        while(TwiStruct->flag);
+	    timer_enable(&TimerBusyTimeout);
+        while(TwiStruct->flag) {
+        	  if(timer_tick(&TimerBusyTimeout)) {
+        			return false;
+        		}
+        }
 
         if(TwiStruct->error_flag) return false;
 
-        while(I2CMasterBusy(TwiStruct->BaseAddr));
+	    timer_enable(&TimerBusyTimeout);
+        while(I2CMasterBusy(TwiStruct->BaseAddr)) {
+        	  if(timer_tick(&TimerBusyTimeout)) {
+        			return false;
+        		}
+        }
 
         /* Wait untill I2C registers are ready to access */
-        while(0 == (I2CMasterIntRawStatus(TwiStruct->BaseAddr) & I2C_INT_ADRR_READY_ACESS));
+	    timer_enable(&TimerBusyTimeout);
+        while(0 == (I2CMasterIntRawStatus(TwiStruct->BaseAddr) & I2C_INT_ADRR_READY_ACESS)) {
+        	  if(timer_tick(&TimerBusyTimeout)) {
+        			return false;
+        		}
+        }
 
         TwiStruct->flag = 1;
 		return true;
@@ -71,19 +101,34 @@ bool _SetupI2CTransmit(new_twi* TwiStruct, unsigned int TransmitBytes)
 
         I2CMasterStart(TwiStruct->BaseAddr);
 
-		while(I2CMasterBusBusy(TwiStruct->BaseAddr) == 0);
+	    timer_enable(&TimerBusyTimeout);
+		while(I2CMasterBusBusy(TwiStruct->BaseAddr) == 0) {
+	      	  if(timer_tick(&TimerBusyTimeout)) {
+	      			return false;
+	      		}
+		}
 
+	    timer_enable(&TimerBusyTimeout);
 		while((I2C_INT_TRANSMIT_READY == (I2CMasterIntRawStatus(TwiStruct->BaseAddr) & I2C_INT_TRANSMIT_READY))
 			   && TransmitBytes--)
 		{
 	        I2CMasterDataPut(TwiStruct->BaseAddr, TwiStruct->TxBuff[TwiStruct->tCount++]);
 
 			I2CMasterIntClearEx(TwiStruct->BaseAddr, I2C_INT_TRANSMIT_READY);
+	      	  if(timer_tick(&TimerBusyTimeout)) {
+	      			return false;
+	      		}
 		}
 
 		I2CMasterStop(TwiStruct->BaseAddr);
 
-		while(0 == (I2CMasterIntRawStatus(TwiStruct->BaseAddr) & I2C_INT_STOP_CONDITION));
+	    timer_enable(&TimerBusyTimeout);
+		while(0 == (I2CMasterIntRawStatus(TwiStruct->BaseAddr) & I2C_INT_STOP_CONDITION)) {
+	      	  if(timer_tick(&TimerBusyTimeout)) {
+	      			return false;
+	      		}
+
+		}
 
 		I2CMasterIntClearEx(TwiStruct->BaseAddr, I2C_INT_STOP_CONDITION);
 		return true;
@@ -97,11 +142,39 @@ bool _SetupI2CReception(new_twi* TwiStruct, unsigned int TransmitBytes, unsigned
 {
     if(!TwiStruct) return false;
 	/* Set i2c slave address */
+
+    timer(TimerBusyTimeout);
+    timer_interval(&TimerBusyTimeout, TwiStruct->BusyTimeOut);
+    timer_enable(&TimerBusyTimeout);
+    while(I2CMasterBusy(TwiStruct->BaseAddr))
+      {
+    	  if(timer_tick(&TimerBusyTimeout)) {
+    			/*
+    			I2C_TypeDef I2CxBack;
+    			I2CxBack.CR1 = I2Cx->CR1;
+    			I2CxBack.CR2 = I2Cx->CR2;
+    			I2CxBack.OAR1 = I2Cx->OAR1;
+    			I2CxBack.OAR2 = I2Cx->OAR2;
+    			I2CxBack.CCR = I2Cx->CCR;
+    			I2CxBack.TRISE = I2Cx->TRISE;
+    			I2C_SoftwareResetCmd(sEE_I2C[TwiStruct->TwiNr], ENABLE);
+    			I2C_SoftwareResetCmd(sEE_I2C[TwiStruct->TwiNr], DISABLE);
+    			I2Cx->TRISE = I2CxBack.TRISE;
+    			I2Cx->CCR = I2CxBack.CCR;
+    			I2Cx->OAR2 = I2CxBack.OAR2;
+    			I2Cx->OAR1 = I2CxBack.OAR1;
+    			I2Cx->CR2 = I2CxBack.CR2;
+    			I2Cx->CR1 = I2CxBack.CR1;
+    			}
+    			*/
+    			break;
+    		}
+      }
     I2CMasterSlaveAddrSet(TwiStruct->BaseAddr, TwiStruct->MasterSlaveAddr);
     TwiStruct->tCount = 0;
     TwiStruct->rCount = 0;
 
-    if(TwiStruct->WithInterrupt)
+    if(TwiStruct->UseInterrupt)
     {
 		TwiStruct->error_flag = 0;
 		/* Data Count specifies the number of bytes to be transmitted */
@@ -118,6 +191,7 @@ bool _SetupI2CReception(new_twi* TwiStruct, unsigned int TransmitBytes, unsigned
 		/* Transmit interrupt is enabled */
 		I2CMasterIntEnableEx(TwiStruct->BaseAddr, I2C_INT_TRANSMIT_READY | I2C_INT_NO_ACK);
 
+
 		/* Generate Start Condition over I2C bus */
 		I2CMasterStart(TwiStruct->BaseAddr);
 
@@ -125,15 +199,30 @@ bool _SetupI2CReception(new_twi* TwiStruct, unsigned int TransmitBytes, unsigned
 		//{
 		//	if(TwiStruct->error_flag) return false;
 		//}
-		while(I2CMasterBusBusy(TwiStruct->BaseAddr) == 0);
+	    timer_enable(&TimerBusyTimeout);
+		while(I2CMasterBusBusy(TwiStruct->BaseAddr) == 0) {
+	      	  if(timer_tick(&TimerBusyTimeout)) {
+	      			return false;
+	      		}
+		}
 
-		while(TwiStruct->tCount != TwiStruct->numOfBytes);
+	    timer_enable(&TimerBusyTimeout);
+		while(TwiStruct->tCount != TwiStruct->numOfBytes) {
+	      	  if(timer_tick(&TimerBusyTimeout)) {
+	      			return false;
+	      		}
+		}
 
 
 		TwiStruct->flag = 1;
 
 		/* Wait untill I2C registers are ready to access */
-		while(!(I2CMasterIntRawStatus(TwiStruct->BaseAddr) & (I2C_INT_ADRR_READY_ACESS)));
+	    timer_enable(&TimerBusyTimeout);
+		while(!(I2CMasterIntRawStatus(TwiStruct->BaseAddr) & (I2C_INT_ADRR_READY_ACESS))) {
+	      	  if(timer_tick(&TimerBusyTimeout)) {
+	      			return false;
+	      	  }
+		}
 
 		/* Data Count specifies the number of bytes to be received */
 		I2CSetDataCount(TwiStruct->BaseAddr, ReceiveBytes);
@@ -152,14 +241,22 @@ bool _SetupI2CReception(new_twi* TwiStruct, unsigned int TransmitBytes, unsigned
 		/* Generate Start Condition over I2C bus */
 		I2CMasterStart(TwiStruct->BaseAddr);
 
+	    timer_enable(&TimerBusyTimeout);
 		do
 		{
+	      	  if(timer_tick(&TimerBusyTimeout)) {
+	      			return false;
+	      	  }
 			if(TwiStruct->error_flag) return false;
 		}
 		while(I2CMasterBusBusy(TwiStruct->BaseAddr) == 0);
 
+	    timer_enable(&TimerBusyTimeout);
 		do
 		{
+	      	  if(timer_tick(&TimerBusyTimeout)) {
+	      			return false;
+	      	  }
 			if(TwiStruct->error_flag) return false;
 		}
 		while(TwiStruct->flag);
@@ -178,16 +275,30 @@ bool _SetupI2CReception(new_twi* TwiStruct, unsigned int TransmitBytes, unsigned
 
 		I2CMasterStart(TwiStruct->BaseAddr);
 
-        while(I2CMasterBusBusy(TwiStruct->BaseAddr) == 0);
+	    timer_enable(&TimerBusyTimeout);
+        while(I2CMasterBusBusy(TwiStruct->BaseAddr) == 0) {
+	      	  if(timer_tick(&TimerBusyTimeout)) {
+	      			return false;
+	      	  }
+        }
 
+        timer_enable(&TimerBusyTimeout);
         while((I2C_INT_TRANSMIT_READY == (I2CMasterIntRawStatus(TwiStruct->BaseAddr) & I2C_INT_TRANSMIT_READY))
                && TransmitBytes--)
         {
         	I2CMasterDataPut(TwiStruct->BaseAddr, TwiStruct->TxBuff[TwiStruct->tCount++]);
 
             I2CMasterIntClearEx(TwiStruct->BaseAddr, I2C_INT_TRANSMIT_READY);
+	      	  if(timer_tick(&TimerBusyTimeout)) {
+	      			return false;
+	      	  }
         }
-        while(0 == (I2CMasterIntRawStatus(TwiStruct->BaseAddr) & I2C_INT_ADRR_READY_ACESS));
+        timer_enable(&TimerBusyTimeout);
+        while(0 == (I2CMasterIntRawStatus(TwiStruct->BaseAddr) & I2C_INT_ADRR_READY_ACESS)) {
+	      	  if(timer_tick(&TimerBusyTimeout)) {
+	      			return false;
+	      	  }
+        }
 
         I2CSetDataCount(TwiStruct->BaseAddr, ReceiveBytes);
 
@@ -197,11 +308,21 @@ bool _SetupI2CReception(new_twi* TwiStruct, unsigned int TransmitBytes, unsigned
 
 		I2CMasterStart(TwiStruct->BaseAddr);
 
-        while(I2CMasterBusBusy(TwiStruct->BaseAddr) == 0);
+	    timer_enable(&TimerBusyTimeout);
+        while(I2CMasterBusBusy(TwiStruct->BaseAddr) == 0) {
+	      	  if(timer_tick(&TimerBusyTimeout)) {
+	      			return false;
+	      	  }
+        }
 
         while((ReceiveBytes--))
         {
-            while(0 == (I2CMasterIntRawStatus(TwiStruct->BaseAddr) & I2C_INT_RECV_READY));
+            timer_enable(&TimerBusyTimeout);
+            while(0 == (I2CMasterIntRawStatus(TwiStruct->BaseAddr) & I2C_INT_RECV_READY)) {
+  	      	  if(timer_tick(&TimerBusyTimeout)) {
+  	      			return false;
+  	      	  }
+            }
 
             TwiStruct->RxBuff[TwiStruct->rCount++] = I2CMasterDataGet(TwiStruct->BaseAddr);
 
@@ -210,7 +331,12 @@ bool _SetupI2CReception(new_twi* TwiStruct, unsigned int TransmitBytes, unsigned
 
         I2CMasterStop(TwiStruct->BaseAddr);
 
-		while(0 == (I2CMasterIntRawStatus(TwiStruct->BaseAddr) & I2C_INT_STOP_CONDITION));
+        timer_enable(&TimerBusyTimeout);
+		while(0 == (I2CMasterIntRawStatus(TwiStruct->BaseAddr) & I2C_INT_STOP_CONDITION)) {
+	      	  if(timer_tick(&TimerBusyTimeout)) {
+	      			return false;
+	      	  }
+		}
 
         I2CMasterIntClearEx(TwiStruct->BaseAddr, I2C_INT_STOP_CONDITION);
 
@@ -237,7 +363,7 @@ bool _twi_open(new_twi* TwiStruct)
     //new_twi* TwiStruct = new_(new_twi);
 	TWIModuleClkConfig(TwiStruct);
     //if(TwiStruct == NULL) return NULL;
-    if(TwiStruct->WithInterrupt)I2CAINTCConfigure(TwiStruct);
+    if(TwiStruct->UseInterrupt)I2CAINTCConfigure(TwiStruct);
     switch(TwiStruct->TwiNr)
     {
     case 0:
@@ -263,7 +389,7 @@ bool _twi_open(new_twi* TwiStruct)
     /* Put i2c in reset/disabled state */
     I2CMasterDisable(TwiStruct->BaseAddr);
 
-    if(TwiStruct->WithInterrupt) I2CSoftReset(TwiStruct->BaseAddr);
+    if(TwiStruct->UseInterrupt) I2CSoftReset(TwiStruct->BaseAddr);
     /* Disable auto Idle functionality */
     I2CAutoIdleDisable(TwiStruct->BaseAddr);
 
