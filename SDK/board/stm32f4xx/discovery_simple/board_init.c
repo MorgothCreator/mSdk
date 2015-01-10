@@ -8,6 +8,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#include "main.h"
 #include "stm32f4xx_conf.h"
 #include "sys/system_stm32f4xx.h"
 #include "board_init.h"
@@ -27,6 +28,12 @@
 //#include "lib/gfx/controls_definition.h"
 //#include "lib/fs/fat.h"
 //#include "device/mi0283.h"
+#include "device/dxl.h"
+#include "device/sht11.h"
+#include "device/srf02.h"
+#include "device/mhc5883.h"
+#include "device/mpu60x0.h"
+#include "device/ms5611.h"
 /*#####################################################*/
 new_uart* Uart[6] = {NULL,NULL,NULL,NULL,NULL,NULL};
 new_uart* DebugCom = NULL;
@@ -34,6 +41,25 @@ new_twi* TWI[2] = {NULL,NULL};
 new_adc* ADC[2] = {NULL, NULL};
 new_gpio* LED[4] = {NULL,NULL,NULL,NULL};
 new_gpio* HARDBTN1 = NULL;
+#ifdef DXL_INTERFACE_INIT
+new_gpio* ENTX = NULL;
+new_dxl_actuator *DXL;
+#endif
+#ifdef USE_SHT11
+USE_SHT11;
+#endif
+#ifdef USE_SRF02
+USE_SRF02;
+#endif
+#ifdef USE_MHC5883
+USE_MHC5883;
+#endif
+#ifdef USE_MS5611
+USE_MS5611;
+#endif
+#ifdef USE_MPU60x0
+USE_MPU60x0;
+#endif
 //*-----------------------------------------------------*/
 //new_touchscreen* TouchScreen = NULL;
 //new_screen* ScreenBuff = NULL;
@@ -48,19 +74,7 @@ bool board_init()
 	timer_init();
 /*-----------------------------------------------------*/
 /* Set up the Uart 0 like debug interface with RxBuff = 256, TxBuff = 256, 115200b/s*/
-	Uart[5] = new_(new_uart);
-	Uart[5]->BaudRate = 115200;
-	Uart[5]->RxBuffSize = 20;
-	Uart[5]->TxBuffSize = 10;
-	//DebugCom->Mode = UsartCom_Mode_Asynchronus;
-	Uart[5]->Priority = 0;
-	Uart[5]->UartNr = 5;
-	Uart[5]->TxPort = IOC;
-	Uart[5]->RxPort = IOC;
-	Uart[5]->TxPin = 6;
-	Uart[5]->RxPin = 7;
-	uart_open(Uart[5]);
-	DebugCom = Uart[5];
+	UART_0_INIT
 /*-----------------------------------------------------*/
 /* Display board message*/
 #if defined(BOARD_MESSAGE)
@@ -72,46 +86,10 @@ bool board_init()
 #endif
 /*-----------------------------------------------------*/
 /* Set up the Twi 0 to communicate with PMIC and the Onboard serial EEprom memory */
-	UARTPuts(DebugCom, "Setup TWI 0 with RxBuff = 258, TxBuff = 258....." , -1);
-	TWI[0] = new_(new_twi);
-	TWI[0]->BaudRate = 100000;
-	TWI[0]->TwiNr = 0;
-	TWI[0]->Priority = 0;
-		//TWI[0]->WithInterrupt = TRUE;
-	TWI[0]->RxBuffSize = 258;
-	TWI[0]->TxBuffSize = 258;
-	TWI[0]->BusyTimeOut = 10;
-	TWI[0]->SclPort = IOB;
-	TWI[0]->SdaPort = IOB;
-	TWI[0]->SclPin = 6;
-	TWI[0]->SdaPin = 7;
-	twi_open(TWI[0]);
-	UARTPuts(DebugCom, "OK.\n\r" , -1);
+	TWI_1_INIT
 /*-----------------------------------------------------*/
 /* Set up the ADC 0 */
-	UARTPuts(DebugCom, "Setup ADC 0....." , -1);
-	ADC[0] = new_(new_adc);
-	ADC[0]->Align = ADC_ALIGN_RIGHT;
-	ADC[0]->ContinuousMode = ADC_CONTINUOUS_MODE_CONTINUOUS;
-	ADC[0]->ConvMode = ADC_CONV_MODE_MULTICHANNEL;
-	ADC[0]->DmaChannel = 0;
-	ADC[0]->DmaUnitNr = 0;
-	ADC[0]->ExtTrig = ADC_EXT_TRIG_NONE;
-	ADC[0]->ExtTrigEdge = ADC_EXT_TRIG_ADGE_NONE;
-	ADC[0]->IntRefEn = true;
-	ADC[0]->Mode = ADC_MODE_INDEPENDENT;
-	ADC[0]->TempSensorEn = true;
-	ADC[0]->UnitNr = 0;
-	ADC[0]->Prescaller = 2;
-	ADC[0]->ResolutionBits = 12;
-	ADC[0]->EnCh[0] = 1;
-	ADC[0]->EnCh[1] = 2;
-	ADC[0]->EnCh[2] = 17;
-	ADC[0]->SampleTime[0] = ADC_SAMPLE_TIME_5;
-	ADC[0]->SampleTime[1] = ADC_SAMPLE_TIME_5;
-	ADC[0]->SampleTime[2] = ADC_SAMPLE_TIME_6;
-	if(adc_init(ADC[0])) UARTPuts(DebugCom, "OK.\n\r" , -1);
-	else  UARTPuts(DebugCom, "FAILED.\n\r" , -1);
+	ADC_0_INIT
 /*-----------------------------------------------------*/
 	HARDBTN1 = gpio_assign(0, 1, GPIO_DIR_INPUT, false);
 	gpio_up_dn(HARDBTN1, 1);
