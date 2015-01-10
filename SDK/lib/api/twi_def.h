@@ -22,6 +22,7 @@
 #ifndef TWI_DEF_H_
 #define TWI_DEF_H_
 #include "gpio_def.h"
+#include "api/timer_api.h"
 /*#####################################################*/
 #define twi_timeout	500000
 /*#####################################################*/
@@ -32,7 +33,8 @@ typedef struct
 	volatile unsigned char flag;
 	volatile unsigned char error_flag;
 	unsigned char Priority;
-	unsigned char WithInterrupt;
+	bool UseInterrupt;
+	bool UseDma;
 	volatile unsigned char result;
 	volatile unsigned char status;
 	unsigned char SdaPin;
