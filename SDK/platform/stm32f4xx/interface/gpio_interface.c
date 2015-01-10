@@ -111,9 +111,8 @@ void _gpio_init(unsigned int GpioModuleNr)
 	RCC_AHB1PeriphClockCmd(BaseAddr, ENABLE);
 }
 /*#####################################################*/
-new_gpio *_gpio_assign(unsigned int PortNr, unsigned int Pin, unsigned int Direction, bool Multipin)
+new_gpio *_gpio_assign(unsigned int PortNr, unsigned int Pin, gpio_type_enum function, bool Multipin)
 {
-	GPIO_InitTypeDef  GPIO_InitStructure;
 	new_gpio* GpioStruct = new_(new_gpio);
 	if(GpioStruct == NULL) return NULL;
 	unsigned int BaseAddr = 0;
@@ -151,17 +150,10 @@ new_gpio *_gpio_assign(unsigned int PortNr, unsigned int Pin, unsigned int Direc
 	}
 	GpioStruct->BaseAddr = BaseAddr;
 	GpioStruct->Pin = Pin;
-	GpioStruct->Direction = Direction;
+	GpioStruct->Direction = function;
 	GpioStruct->PortNr = PortNr;
 	GpioStruct->Multipin = Multipin;
-	if(Multipin) GPIO_InitStructure.GPIO_Pin = Pin;
-	else GPIO_InitStructure.GPIO_Pin = 1 << Pin;
-	if(Direction == GPIO_DIR_OUTPUT) GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
-	else if(Direction == GPIO_DIR_INPUT) GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
-	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
-	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-	GPIO_Init((GPIO_TypeDef *)BaseAddr, &GPIO_InitStructure);
+	_gpio_function_set(GpioStruct, function);
 	return GpioStruct;
 }
 /*#####################################################*/
@@ -189,30 +181,9 @@ bool _gpio_out(new_gpio *gpio_struct, unsigned int State)
 	return true;
 }
 /*#####################################################*/
-bool _gpio_direction(new_gpio *gpio_struct, unsigned int Direction)
+bool _gpio_direction(new_gpio *gpio_struct, gpio_type_enum function)
 {
-	if(!gpio_struct) return false;
-	GPIO_TypeDef *BaseAddr = (GPIO_TypeDef *)gpio_struct->BaseAddr;
-	unsigned char cnt = 0;
-	unsigned int tmp = gpio_struct->Pin;
-	if(gpio_struct->Multipin)
-	{
-		for(; cnt < 16; cnt++)
-		{
-			if(tmp & 1)
-			{
-				BaseAddr->MODER  &= ~(GPIO_MODER_MODER0 << (cnt * 2));
-				if(gpio_struct->Direction == GPIO_DIR_OUTPUT) BaseAddr->MODER |= (GPIO_Mode_OUT << (cnt * 2));
-			}
-			tmp = tmp >> 1;
-		}
-	}
-	else
-	{
-		BaseAddr->MODER  &= ~(GPIO_MODER_MODER0 << (gpio_struct->Pin * 2));
-		if(gpio_struct->Direction == GPIO_DIR_OUTPUT) BaseAddr->MODER |= (GPIO_Mode_OUT << (gpio_struct->Pin * 2));
-	}
-	return true;
+	return _gpio_function_set(gpio_struct, function);
 }
 /*#####################################################*/
 signed int _gpio_in(new_gpio *gpio_struct)
@@ -257,4 +228,47 @@ bool _gpio_up_dn(new_gpio *gpio_struct, unsigned char value)
 	return true;
 }
 /*#####################################################*/
+bool _gpio_function_set(new_gpio *gpio_struct, gpio_type_enum function)
+{
+	if(!gpio_struct) return false;
+	GPIO_TypeDef *BaseAddr = (GPIO_TypeDef *)gpio_struct->BaseAddr;
+
+	GPIO_InitTypeDef  GPIO_InitStructure;
+	GPIO_InitStructure.GPIO_Pin = 1 << gpio_struct->Pin;
+	switch(function)
+	{
+	case GPIO_AIN:
+		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;
+		GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+		break;
+	case GPIO_IN_FLOATING:
+		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+		GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+		break;
+	case GPIO_IN_PULL_DOWN:
+		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+		GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_DOWN;
+		break;
+	case GPIO_IN_PULL_UP:
+		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+		GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
+		break;
+	case GPIO_OUT_OPEN_DRAIN:
+		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+		GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;
+		break;
+	case GPIO_OUT_PUSH_PULL:
+		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+		break;
+	default:
+		return false;
+
+	}
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+	GPIO_Init((GPIO_TypeDef *)BaseAddr, &GPIO_InitStructure);
+	return true;
+}
+/*#####################################################*/
+
 
