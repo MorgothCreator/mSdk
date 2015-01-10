@@ -85,3 +85,7 @@ bool timer_enabled(STimer_t *S_Timer_Struct)
 	else return true;
 }
 //#####################################################
+void sys_delay(unsigned int milliSec) {
+	Sysdelay(milliSec);
+}
+//#####################################################
