@@ -194,9 +194,9 @@ void I2CAINTCUnConfigure(new_twi* TwiStruct)
 /* Clear status of all interrupts */
 void CleanUpInterrupts(new_twi* TwiStruct)
 {
-    if(TwiStruct->WithInterrupt)I2CMasterIntEnableEx(TwiStruct->BaseAddr, 0x7FF);
+    if(TwiStruct->UseInterrupt)I2CMasterIntEnableEx(TwiStruct->BaseAddr, 0x7FF);
     I2CMasterIntClearEx(TwiStruct->BaseAddr,  0x7FF);
-    if(TwiStruct->WithInterrupt)I2CMasterIntDisableEx(TwiStruct->BaseAddr, 0x7FF);
+    if(TwiStruct->UseInterrupt)I2CMasterIntDisableEx(TwiStruct->BaseAddr, 0x7FF);
 }
 /*#####################################################*/
 
