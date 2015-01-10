@@ -22,15 +22,15 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "ar1020.h"
-#include "sys/sysdelay.h"
-#include "../lib/gfx/controls_definition.h"
-#include "../lib/generic.h"
-#include "../api/touchscreen_def.h"
-#include "../api/gpio_api.h"
-#include "../api/lcd_def.h"
-#include "../api/lcd_api.h"
-#include "../api/twi_def.h"
-#include "../api/twi_api.h"
+#include "lib/gfx/controls_definition.h"
+#include "lib/generic.h"
+#include "api/touchscreen_def.h"
+#include "api/timer_api.h"
+#include "api/gpio_api.h"
+#include "api/lcd_def.h"
+#include "api/lcd_api.h"
+#include "api/twi_def.h"
+#include "api/twi_api.h"
 
 bool ar1020_data_ready(new_touchscreen* structure)
 {
@@ -55,7 +55,7 @@ bool ar1020_init(new_touchscreen* structure, unsigned char Port, unsigned char P
 	if(ar1020_enable_touch(structure)) 
 	{
 		ar1020_disable_touch(structure);
-		Sysdelay(50);
+		sys_delay(50);
 		ar1020_pen_up_delay_set(structure);
 		ar1020_enable_touch(structure);
 		return true;
@@ -78,7 +78,7 @@ bool ar1020_comand_send(new_touchscreen* structure, unsigned char command)
 	bool ResponseOK = false;
 	do
 	{
-		Sysdelay(50);
+		sys_delay(50);
 		if(SetupI2CReception(structure->TwiStruct, 4, 4))
 		{
 			unsigned char Buff0 = twistruct->RxBuff[0];
@@ -128,7 +128,7 @@ bool ar1020_pen_up_delay_set(new_touchscreen* structure)
 //#####################################################
 unsigned char ar1020_touch(new_touchscreen* structure)
 {
-	Sysdelay(50);
+	sys_delay(50);
 	new_twi* twistruct = structure->TwiStruct;
 	if(SetupI2CReception(twistruct, 0, 4) == false) return false;
 	if(twistruct->RxBuff[0] != 0x55 || twistruct->RxBuff[1] != 0x02 || twistruct->RxBuff[2] != AR1020_Response_Success || twistruct->RxBuff[3] != 0x14) return false;
@@ -220,7 +220,7 @@ static bool ar1020_calibrate(new_touchscreen* structure, tDisplay *pDisplay)
 bool ar1020_calibration_start(new_touchscreen* structure, tDisplay *pDisplay)
 {
 	if(!ar1020_disable_touch(structure)) return false;
-	Sysdelay(50);
+	sys_delay(50);
 	if(!ar1020_calibrate(structure, pDisplay)) return false;
 	if(!ar1020_enable_touch(structure)) return false;
 	return true;

@@ -28,7 +28,6 @@
 #include "api/uart_api.h"
 #include "api/uart_def.h"
 #include "api/timer_api.h"
-#include "sys/sysdelay.h"
 
 bool mpu60x0_sample_rate_divider_set(MPU60x0_t *structure, unsigned char IcNr, unsigned char Value)
 {
@@ -332,7 +331,7 @@ bool mpu60x0_gyroscope_test(MPU60x0_t *structure, unsigned char IcNr, double *Xt
 	signed short _Zdata = 0;
 	mpu60x0_gyro_data_get(structure, IcNr, &Xdata, &Ydata, &Zdata);
 	mpu60x0_gyro_self_test_set(structure, IcNr, true, true, true);
-	Sysdelay(100);
+	sys_delay(100);
 	mpu60x0_gyro_data_get(structure, IcNr, &_Xdata, &_Ydata, &_Zdata);
 	TwiStruct->MasterSlaveAddr = MPU60x0_ADDR | (IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_SELF_TEST_X;
@@ -364,7 +363,7 @@ bool mpu60x0_accelerometer_test(MPU60x0_t *structure, unsigned char IcNr, double
 	signed short _Zdata = 0;
 	mpu60x0_accel_data_get(structure, IcNr, &Xdata, &Ydata, &Zdata);
 	mpu60x0_accel_self_test_set(structure, IcNr, true, true, true);
-	Sysdelay(100);
+	sys_delay(100);
 	mpu60x0_accel_data_get(structure, IcNr, &_Xdata, &_Ydata, &_Zdata);
 	TwiStruct->MasterSlaveAddr = MPU60x0_ADDR | (IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_SELF_TEST_X;

@@ -26,7 +26,7 @@
 #include "api/twi_def.h"
 #include "api/uart_api.h"
 #include "api/uart_def.h"
-#include "sys/sysdelay.h"
+#include "api/timer_api.h"
 
 bool mhc5883_sample_nr_set(MHC5883_t *structure, unsigned char Value)
 {
@@ -113,28 +113,28 @@ bool mhc5883_display_result(MHC5883_t *structure)
 bool mhc5883_display_positive_test_result(MHC5883_t *structure)
 {
 	if(!mhc5883_measurament_mode_set(structure, MHC5883_CONFIG_REG_A_MS_POSITIVE_BIAS)) return false;
-	Sysdelay(100);
+	sys_delay(100);
 	signed short Xc = 0;
 	signed short Yc = 0;
 	signed short Zc = 0;
 	mhc5883_data_get(structure, &Xc, &Yc, &Zc);
 	UARTprintf(DebugCom, "Compass positive test:\n\rXc = %d, Yc = %d, Zc = %d\n\r", Xc, Yc, Zc);
 	if(!mhc5883_measurament_mode_set(structure, MHC5883_CONFIG_REG_A_MS_NORMAL)) return false;
-	Sysdelay(100);
+	sys_delay(100);
 	return true;
 }
 
 bool mhc5883_display_negative_test_result(MHC5883_t *structure)
 {
 	if(!mhc5883_measurament_mode_set(structure, MHC5883_CONFIG_REG_A_MS_NEGATIVE_BIAS)) return false;
-	Sysdelay(100);
+	sys_delay(100);
 	signed short Xc = 0;
 	signed short Yc = 0;
 	signed short Zc = 0;
 	mhc5883_data_get(structure, &Xc, &Yc, &Zc);
 	UARTprintf(DebugCom, "Compass negative test:\n\rXc = %d, Yc = %d, Zc = %d\n\r", Xc, Yc, Zc);
 	if(!mhc5883_measurament_mode_set(structure, MHC5883_CONFIG_REG_A_MS_NORMAL)) return false;
-	Sysdelay(100);
+	sys_delay(100);
 	return true;
 }
 
