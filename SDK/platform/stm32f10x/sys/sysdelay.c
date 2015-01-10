@@ -14,6 +14,10 @@
 *******************************************************************************/
 volatile unsigned long long flagIsr = 1;
 volatile unsigned long long STimerCnt;
+
+struct {
+	void *func[8];
+}sys_service;
 //#####################################################
 void SysDelayTimerSetup(void)
 {
@@ -36,6 +40,13 @@ void Sysdelay(unsigned int milliSec)
 void SysTick_Handler(void)
 {
 	STimerCnt++;
+	int service_cnt = 0;
+	void (*appEntry)();
+	while(sys_service.func[service_cnt] && service_cnt < 8) {
+		appEntry = (void (*)(void)) sys_service.func[service_cnt];
+		(*appEntry)();
+		service_cnt++;
+	}
 }
 //ISR(RTC_OVF_vect)
 //{
