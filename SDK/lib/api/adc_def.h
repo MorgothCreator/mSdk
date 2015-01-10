@@ -134,7 +134,7 @@ typedef struct
 #ifndef new_
 #define new_(structure) (structure*)calloc(1,sizeof(structure));
 #endif
-#define free_gpio(address) free(address);
+#define free_adc(address) free(address);
 /*#####################################################*/
 #ifdef HEADER_INCLUDE_C_FILES
 #include "adc_def.c"
