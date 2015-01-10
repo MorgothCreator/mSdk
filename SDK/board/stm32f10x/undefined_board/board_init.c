@@ -46,8 +46,10 @@ new_uart* DebugCom = NULL;
 new_twi* TWI[2] = {NULL,NULL};
 new_adc* ADC[2] = {NULL};
 new_gpio* LED1 = NULL;
+#ifdef DXL_INTERFACE_INIT
 new_gpio* ENTX = NULL;
 new_dxl_actuator *DXL;
+#endif
 #ifdef USE_SHT11
 USE_SHT11;
 #endif

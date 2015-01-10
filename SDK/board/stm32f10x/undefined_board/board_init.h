@@ -48,8 +48,10 @@ extern new_uart* Uart[];
 extern new_uart* DebugCom;
 extern new_twi* TWI[];
 extern new_adc* ADC[];
+#ifdef DXL_INTERFACE_INIT
 extern new_gpio* LED1;
 extern new_dxl_actuator *DXL;
+#endif
 #ifdef USE_SHT11
 extern USE_SHT11;
 #endif
