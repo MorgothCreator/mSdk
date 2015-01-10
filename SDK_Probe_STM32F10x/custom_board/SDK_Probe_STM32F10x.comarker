@@ -1,2 +1,123 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<breakpoints/>
+<breakpoints>
+<breakpoint enabled="true" persistant="true" registered="true">
+<resource path="/SDK_Probe_STM32F10x/stm32f10x/interface/twi_interface.c" type="1"/>
+<marker lineNumber="159" type="org.eclipse.cdt.debug.core.cLineBreakpointMarker">
+<attrib name="enabled" value="true"/>
+<attrib name="org.eclipse.cdt.debug.core.condition" value=""/>
+<attrib name="org.eclipse.debug.core.id" value="org.eclipse.cdt.debug.core"/>
+<attrib name="workingset_name" value=""/>
+<attrib name="org.eclipse.cdt.debug.core.installCount" value="1"/>
+<attrib name="type" value="org.eclipse.cdt.debug.core.cLineBreakpointMarker"/>
+<attrib name="persistant" value="true"/>
+<attrib name="org.eclipse.cdt.debug.core.breakpointType" value="0"/>
+<attrib name="workingset_id" value="org.eclipse.debug.ui.breakpointWorkingSet"/>
+<attrib name="message" value="Line breakpoint: twi_interface.c [line: 159]"/>
+<attrib name="registered" value="true"/>
+<attrib name="path" value="/SDK_Probe_STM32F10x/stm32f10x/interface/twi_interface.c"/>
+<attrib name="org.eclipse.cdt.debug.core.sourceHandle" value="C:\GitHub\mSdk\SDK\platform\stm32f10x\interface\twi_interface.c"/>
+<attrib name="org.eclipse.cdt.debug.core.ignoreCount" value="0"/>
+<attrib name="org.eclipse.debug.core.enabled" value="true"/>
+</marker>
+</breakpoint>
+<breakpoint enabled="true" persistant="true" registered="true">
+<resource path="/SDK_Probe_STM32F10x/stm32f10x/interface/twi_interface.c" type="1"/>
+<marker lineNumber="161" type="org.eclipse.cdt.debug.core.cLineBreakpointMarker">
+<attrib name="enabled" value="true"/>
+<attrib name="org.eclipse.cdt.debug.core.condition" value=""/>
+<attrib name="org.eclipse.debug.core.id" value="org.eclipse.cdt.debug.core"/>
+<attrib name="workingset_name" value=""/>
+<attrib name="org.eclipse.cdt.debug.core.installCount" value="1"/>
+<attrib name="type" value="org.eclipse.cdt.debug.core.cLineBreakpointMarker"/>
+<attrib name="persistant" value="true"/>
+<attrib name="org.eclipse.cdt.debug.core.breakpointType" value="0"/>
+<attrib name="workingset_id" value="org.eclipse.debug.ui.breakpointWorkingSet"/>
+<attrib name="message" value="Line breakpoint: twi_interface.c [line: 161]"/>
+<attrib name="registered" value="true"/>
+<attrib name="path" value="/SDK_Probe_STM32F10x/stm32f10x/interface/twi_interface.c"/>
+<attrib name="org.eclipse.cdt.debug.core.sourceHandle" value="C:\GitHub\mSdk\SDK\platform\stm32f10x\interface\twi_interface.c"/>
+<attrib name="org.eclipse.cdt.debug.core.ignoreCount" value="0"/>
+<attrib name="org.eclipse.debug.core.enabled" value="true"/>
+</marker>
+</breakpoint>
+<breakpoint enabled="true" persistant="true" registered="true">
+<resource path="/SDK_Probe_STM32F10x/stm32f10x/interface/twi_interface.c" type="1"/>
+<marker lineNumber="619" type="org.eclipse.cdt.debug.core.cLineBreakpointMarker">
+<attrib name="enabled" value="true"/>
+<attrib name="org.eclipse.cdt.debug.core.condition" value=""/>
+<attrib name="org.eclipse.debug.core.id" value="org.eclipse.cdt.debug.core"/>
+<attrib name="workingset_name" value=""/>
+<attrib name="org.eclipse.cdt.debug.core.installCount" value="1"/>
+<attrib name="type" value="org.eclipse.cdt.debug.core.cLineBreakpointMarker"/>
+<attrib name="persistant" value="true"/>
+<attrib name="org.eclipse.cdt.debug.core.breakpointType" value="0"/>
+<attrib name="workingset_id" value="org.eclipse.debug.ui.breakpointWorkingSet"/>
+<attrib name="message" value="Line breakpoint: twi_interface.c [line: 618]"/>
+<attrib name="registered" value="true"/>
+<attrib name="path" value="/SDK_Probe_STM32F10x/stm32f10x/interface/twi_interface.c"/>
+<attrib name="org.eclipse.cdt.debug.core.sourceHandle" value="C:\GitHub\mSdk\SDK\platform\stm32f10x\interface\twi_interface.c"/>
+<attrib name="org.eclipse.cdt.debug.core.ignoreCount" value="0"/>
+<attrib name="org.eclipse.debug.core.enabled" value="true"/>
+</marker>
+</breakpoint>
+<breakpoint enabled="true" persistant="true" registered="true">
+<resource path="/SDK_Probe_STM32F10x/stm32f10x/interface/twi_interface.c" type="1"/>
+<marker lineNumber="634" type="org.eclipse.cdt.debug.core.cLineBreakpointMarker">
+<attrib name="enabled" value="true"/>
+<attrib name="org.eclipse.cdt.debug.core.condition" value=""/>
+<attrib name="org.eclipse.debug.core.id" value="org.eclipse.cdt.debug.core"/>
+<attrib name="workingset_name" value=""/>
+<attrib name="org.eclipse.cdt.debug.core.installCount" value="1"/>
+<attrib name="type" value="org.eclipse.cdt.debug.core.cLineBreakpointMarker"/>
+<attrib name="persistant" value="true"/>
+<attrib name="org.eclipse.cdt.debug.core.breakpointType" value="0"/>
+<attrib name="workingset_id" value="org.eclipse.debug.ui.breakpointWorkingSet"/>
+<attrib name="message" value="Line breakpoint: twi_interface.c [line: 633]"/>
+<attrib name="registered" value="true"/>
+<attrib name="path" value="/SDK_Probe_STM32F10x/stm32f10x/interface/twi_interface.c"/>
+<attrib name="org.eclipse.cdt.debug.core.sourceHandle" value="C:\GitHub\mSdk\SDK\platform\stm32f10x\interface\twi_interface.c"/>
+<attrib name="org.eclipse.cdt.debug.core.ignoreCount" value="0"/>
+<attrib name="org.eclipse.debug.core.enabled" value="true"/>
+</marker>
+</breakpoint>
+<breakpoint enabled="true" persistant="true" registered="true">
+<resource path="/SDK_Probe_STM32F10x/stm32f10x/interface/twi_interface.c" type="1"/>
+<marker lineNumber="638" type="org.eclipse.cdt.debug.core.cLineBreakpointMarker">
+<attrib name="enabled" value="true"/>
+<attrib name="org.eclipse.cdt.debug.core.condition" value=""/>
+<attrib name="org.eclipse.debug.core.id" value="org.eclipse.cdt.debug.core"/>
+<attrib name="workingset_name" value=""/>
+<attrib name="org.eclipse.cdt.debug.core.installCount" value="1"/>
+<attrib name="type" value="org.eclipse.cdt.debug.core.cLineBreakpointMarker"/>
+<attrib name="persistant" value="true"/>
+<attrib name="org.eclipse.cdt.debug.core.breakpointType" value="0"/>
+<attrib name="workingset_id" value="org.eclipse.debug.ui.breakpointWorkingSet"/>
+<attrib name="message" value="Line breakpoint: twi_interface.c [line: 637]"/>
+<attrib name="registered" value="true"/>
+<attrib name="path" value="/SDK_Probe_STM32F10x/stm32f10x/interface/twi_interface.c"/>
+<attrib name="org.eclipse.cdt.debug.core.sourceHandle" value="C:\GitHub\mSdk\SDK\platform\stm32f10x\interface\twi_interface.c"/>
+<attrib name="org.eclipse.cdt.debug.core.ignoreCount" value="0"/>
+<attrib name="org.eclipse.debug.core.enabled" value="true"/>
+</marker>
+</breakpoint>
+<breakpoint enabled="true" persistant="true" registered="true">
+<resource path="/SDK_Probe_STM32F10x/stm32f10x/interface/twi_interface.c" type="1"/>
+<marker lineNumber="642" type="org.eclipse.cdt.debug.core.cLineBreakpointMarker">
+<attrib name="enabled" value="true"/>
+<attrib name="org.eclipse.cdt.debug.core.condition" value=""/>
+<attrib name="org.eclipse.debug.core.id" value="org.eclipse.cdt.debug.core"/>
+<attrib name="workingset_name" value=""/>
+<attrib name="org.eclipse.cdt.debug.core.installCount" value="1"/>
+<attrib name="type" value="org.eclipse.cdt.debug.core.cLineBreakpointMarker"/>
+<attrib name="persistant" value="true"/>
+<attrib name="org.eclipse.cdt.debug.core.breakpointType" value="0"/>
+<attrib name="workingset_id" value="org.eclipse.debug.ui.breakpointWorkingSet"/>
+<attrib name="message" value="Line breakpoint: twi_interface.c [line: 641]"/>
+<attrib name="registered" value="true"/>
+<attrib name="path" value="/SDK_Probe_STM32F10x/stm32f10x/interface/twi_interface.c"/>
+<attrib name="org.eclipse.cdt.debug.core.sourceHandle" value="C:\GitHub\mSdk\SDK\platform\stm32f10x\interface\twi_interface.c"/>
+<attrib name="org.eclipse.cdt.debug.core.ignoreCount" value="0"/>
+<attrib name="org.eclipse.debug.core.enabled" value="true"/>
+</marker>
+</breakpoint>
+</breakpoints>

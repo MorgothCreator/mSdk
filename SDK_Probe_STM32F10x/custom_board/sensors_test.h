@@ -69,6 +69,7 @@
 	TWI[0]->BaudRate = 100000;\
 	TWI[0]->TwiNr = 0;\
 	TWI[0]->Priority = 0;\
+	TWI[0]->UseDma = false;\
 	TWI[0]->RxBuffSize = 258;\
 	TWI[0]->TxBuffSize = 258;\
 	TWI[0]->BusyTimeOut = 5;\
@@ -78,6 +79,25 @@
 	TWI[0]->SdaPin = 7;\
 	twi_open(TWI[0]);\
 	UARTPuts(DebugCom, "OK.\n\r" , -1);
+/*#####################################################*/
+#define DXL_INTERFACE_INIT \
+	Uart[1] = new_(new_uart);\
+	Uart[1]->BaudRate = 1000000;\
+	Uart[1]->Priority = 0;\
+	Uart[1]->UartNr = 1;\
+	Uart[1]->TxPort = IOA;\
+	Uart[1]->RxPort = IOA;\
+	Uart[1]->TxPin = 2;\
+	Uart[1]->RxPin = 3;\
+	uart_open(Uart[1]);\
+	\
+	ENTX = gpio_assign(IOA, 4, GPIO_DIR_OUTPUT, false);\
+	gpio_out(ENTX, 0);\
+	\
+	DXL = new_(new_dxl_actuator);\
+	DXL->Uart = Uart[1];\
+	DXL->TxEnGpio = ENTX;\
+	DXL->timeout = 5;
 /*#####################################################*/
 #define ADC_0_INIT \
 	UARTPuts(DebugCom, "Setup ADC 0....." , -1);\
