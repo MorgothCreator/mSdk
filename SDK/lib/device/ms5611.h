@@ -76,7 +76,7 @@ typedef struct MS5611_s{
 }MS5611_t;
 /*#####################################################*/
 bool ms5611_read(MS5611_t *structure, unsigned char osr, signed int *Preasure, signed int *Temperature);
-bool ms5611_display_preasure_result(MS5611_t *structure, unsigned char osr);
+bool ms5611_display_pressure_result(MS5611_t *structure, unsigned char osr);
 /*#####################################################*/
 #define new_ms5611 MS5611_t
 #ifndef new_
