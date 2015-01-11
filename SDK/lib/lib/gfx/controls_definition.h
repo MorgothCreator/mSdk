@@ -56,6 +56,11 @@
 #define ReturnCommand_MaxValue  (unsigned)(0x08)
 #endif
 /*#####################################################*/
+#define BORDER_LINE_ONE_LIGHT		2
+#define BORDER_LINE_TWO_LIGHT		1.5
+#define BORDER_LINE_ONE_DARK		3
+#define BORDER_LINE_TWO_DARK		2
+/*#####################################################*/
 typedef struct{
 	tDisplay *pDisplay;
 	tFont *pFont;

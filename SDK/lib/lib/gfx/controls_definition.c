@@ -33,60 +33,60 @@
 #ifndef USE_16_BIT_COLOR_DEPTH
 controlscolor controls_color =
 {
-	(0x39<<16)|(0x39<<8)|(0x39),
-	(0x00<<16)|(0x00<<8)|(0x00),
-	(0xFF<<16)|(0xFF<<8)|(0xFF),
-	(0x91<<16)|(0x91<<8)|(0x91),
-	(0xFF<<16)|(0xFF<<8)|(0xFF),
-	(0xFF<<16)|(0xFF<<8)|(0xFF),
-	(0x37<<16)|(0x37<<8)|(0x37),
-	(0x55<<16)|(0x55<<8)|(0x55),
-	(0x7F<<16)|(0x7F<<8)|(0x7F),
+	.Control_Color_Enabled_Ink_Pull = (0x39<<16)|(0x39<<8)|(0x39),
+	.Control_Color_Enabled_Ink_Push = (0x00<<16)|(0x00<<8)|(0x00),
+	.Control_Color_Enabled_Buton_Pull = (0xF0<<16)|(0xF0<<8)|(0xF0),
+	.Control_Color_Enabled_Buton_Push = (0xA0<<16)|(0xA0<<8)|(0xA0),
+	.Control_Color_Enabled_Border_Pull = (0x80<<16)|(0x80<<8)|(0x80),
+	.Control_Color_Enabled_Border_Push = (0x80<<16)|(0x80<<8)|(0x80),
+	.Control_Color_Enabled_BackGround = (0x37<<16)|(0x37<<8)|(0x37),
+	.Control_Color_Enabled_WindowBorder = (0x80<<16)|(0x80<<8)|(0x80),
+	.Control_Color_Enabled_WindowHeader = (0x7F<<16)|(0x7F<<8)|(0x7F),
 
-	((0x39<<16)  )|((0x39<<8)  )|((0x39)  ),
+	.Control_Color_Disabled_Ink_Pull = ((0x39<<16)  )|((0x39<<8)  )|((0x39)  ),
 	//((0x39<<16)/2)|((0x39<<8)/2)|((0x39)/2),
-	0x989CB6,//((0x37<<16)  )|((0x37<<8)  )|((0x37)  ),
+	.Control_Color_Disabled_Buton_Pull = 0x989CB6,//((0x37<<16)  )|((0x37<<8)  )|((0x37)  ),
 	//((0x91<<16)/2)|((0x91<<8)/2)|((0x91)/2),
-	0x989CB6,//((0x37<<16)  )|((0x37<<8)  )|((0x37)  ),
+	.Control_Color_Disabled_Border_Pull = 0x808080,//((0x37<<16)  )|((0x37<<8)  )|((0x37)  ),
 	//((0xFF<<16)/2)|((0xFF<<8)/2)|((0xFF)/2),
-	((0x37<<16)  )|((0x37<<8)  )|((0x37)  ),
-	0x989CB6,//((0x37<<16)  )|((0x37<<8)  )|((0x37)  ),
-	0x989CB6,//((0x37<<16)  )|((0x37<<8)  )|((0x37)  ),
-	0x989CB6,
+	.Control_Color_Disabled_BackGround = ((0x37<<16)  )|((0x37<<8)  )|((0x37)  ),
+	.Control_Color_Disabled_WindowBorder = 0x989CB6,//((0x37<<16)  )|((0x37<<8)  )|((0x37)  ),
+	.Control_Color_Disabled_WindowHeader = 0x989CB6,//((0x37<<16)  )|((0x37<<8)  )|((0x37)  ),
+	.Scren = 0x989CB6,
 #ifdef DEFAULT_FONT
-	(tFont*)&DEFAULT_FONT
+	.DefaultFont = (tFont*)&DEFAULT_FONT
 #else
-	(tFont*)NULL
+	.DefaultFont = (tFont*)NULL
 #endif
 };
 #else
 #define COLOR_24_to_16(R, G, B) ((unsigned)(((R)>>3)&0b11111) | (((G)<<3)&0b11111100000) | (((B)<<8)&0b1111100000000000))
 controlscolor controls_color =
 {
-	COLOR_24_to_16(0x39,0x39,0x39),
-	COLOR_24_to_16(0x00,0x00,0x00),
-	COLOR_24_to_16(0xFF,0xFF,0xFF),
-	COLOR_24_to_16(0x91,0x91,0x91),
-	COLOR_24_to_16(0xFF,0xFF,0xFF),
-	COLOR_24_to_16(0xFF,0xFF,0xFF),
-	COLOR_24_to_16(0x37,0x37,0x37),
-	COLOR_24_to_16(0x55,0x55,0x55),
-	COLOR_24_to_16(0x7F,0x7F,0x7F),
+		.Control_Color_Enabled_Ink_Pull = COLOR_24_to_16(0x39,0x39,0x39),
+		.Control_Color_Enabled_Ink_Push = COLOR_24_to_16(0x00,0x00,0x00),
+		.Control_Color_Enabled_Buton_Pull = COLOR_24_to_16(0xFF,0xFF,0xFF),
+		.Control_Color_Enabled_Buton_Push = COLOR_24_to_16(0x91,0x91,0x91),
+		.Control_Color_Enabled_Border_Pull = COLOR_24_to_16(0xFF,0xFF,0xFF),
+		.Control_Color_Enabled_Border_PushCOLOR_24_to_16(0xFF,0xFF,0xFF),
+		.Control_Color_Enabled_BackGround = COLOR_24_to_16(0x37,0x37,0x37),
+		.Control_Color_Enabled_WindowBorder = COLOR_24_to_16(0x55,0x55,0x55),
+		.Control_Color_Enabled_WindowHeader = COLOR_24_to_16(0x7F,0x7F,0x7F),
 
-	COLOR_24_to_16((0x00)/2,(0x00)/2,(0x00)/2),
+		.Control_Color_Disabled_Ink_Pull = COLOR_24_to_16((0x00)/2,(0x00)/2,(0x00)/2),
 	//COLOR_24_to_16((0x39)/2,(0x39)/2,(0x39)/2),
-	COLOR_24_to_16((0xFF)/2,(0xFF)/2,(0xFF)/2),
+		.Control_Color_Disabled_Buton_Pull = COLOR_24_to_16((0xFF)/2,(0xFF)/2,(0xFF)/2),
 	//COLOR_24_to_16((0x91)/2,(0x91)/2,(0x91)/2),
-	COLOR_24_to_16((0xFF)/2,(0xFF)/2,(0xFF)/2),
+		.Control_Color_Disabled_Border_Pull = COLOR_24_to_16((0xFF)/2,(0xFF)/2,(0xFF)/2),
 	//COLOR_24_to_16((0xFF)/2,(0xFF)/2,(0xFF)/2),
-	COLOR_24_to_16((0x37)/2,(0x37)/2,(0x37)/2),
-	COLOR_24_to_16(0x98, 0x9C, 0xB6),
-	COLOR_24_to_16(0x98, 0x9C, 0xB6),
+		.Control_Color_Disabled_BackGround = COLOR_24_to_16((0x37)/2,(0x37)/2,(0x37)/2),
+		.Control_Color_Disabled_WindowBorder = COLOR_24_to_16(0x98, 0x9C, 0xB6),
+		.Control_Color_Disabled_WindowHeader = COLOR_24_to_16(0x98, 0x9C, 0xB6),
 	COLOR_24_to_16(0x98, 0x9C, 0xB6),
 #ifdef USE_FONT_CMSS14B
-	(tFont*)&g_sFontCmss14b
+	.DefaultFont = (tFont*)&g_sFontCmss14b
 #else
-	(tFont*)NULL
+	.DefaultFont = (tFont*)NULL
 #endif
 };
 #endif
