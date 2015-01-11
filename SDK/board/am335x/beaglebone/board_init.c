@@ -99,7 +99,7 @@ bool board_init()
 	TWI[0]->BaudRate = 100000;
 	TWI[0]->TwiNr = 0;
 	TWI[0]->Priority = 0;
-	TWI[0]->WithInterrupt = TRUE;
+	TWI[0]->UseInterrupt = TRUE;
 	TWI[0]->RxBuffSize = 258;
 	TWI[0]->TxBuffSize = 258;
 	twi_open(TWI[0]);
@@ -115,7 +115,7 @@ bool board_init()
 	TWI[1]->BaudRate = 100000;
 	TWI[1]->TwiNr = 1;
 	TWI[1]->Priority = 0;
-	TWI[1]->WithInterrupt = TRUE;
+	TWI[1]->UseInterrupt = TRUE;
 	TWI[1]->RxBuffSize = 258;
 	TWI[1]->TxBuffSize = 258;
 	twi_open(TWI[1]);
@@ -129,7 +129,7 @@ bool board_init()
 	TWI[2]->BaudRate = 100000;
 	TWI[2]->TwiNr = 2;
 	TWI[2]->Priority = 0;
-	TWI[2]->WithInterrupt = TRUE;
+	TWI[2]->UseInterrupt = TRUE;
 	TWI[2]->RxBuffSize = 258;
 	TWI[2]->TxBuffSize = 258;
 	twi_open(TWI[2]);
