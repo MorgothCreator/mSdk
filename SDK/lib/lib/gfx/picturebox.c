@@ -40,9 +40,36 @@ static void paint_picturebox(tPictureBox* settings, tDisplay *pDisplay, signed i
 	pDisplay->sClipRegion.sYMax = y_start + y_len;
 	clip_limit(&pDisplay->sClipRegion, &back_up_clip);
 	color = controls_color.Control_Color_Enabled_Border_Pull;
-	if(!settings->Enabled || !ParentWindow->Internals.OldStateEnabled) color = settings->Color.Disabled.Border;
-	put_rectangle(pDisplay, x_start, y_start, x_len, y_len, false, controlls_change_color(color, -3));
-	put_rectangle(pDisplay, x_start + 1, y_start + 1, x_len - 2, y_len - 2, false, controlls_change_color(color, -2));
+	if((!settings->Enabled || !ParentWindow->Internals.OldStateEnabled) && settings->Internals.Control.Initiated == true) {
+		color = settings->Color.Disabled.Border;
+		put_horizontal_line(pDisplay, x_start, x_len, y_start, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
+		put_horizontal_line(pDisplay, x_start + 1, x_len - 2, y_start + 1, 1, controlls_change_color(color, -BORDER_LINE_TWO_DARK));
+
+		put_horizontal_line(pDisplay, x_start + 1, x_len - 2, y_start + y_len - 2, 1, controlls_change_color(color, -BORDER_LINE_TWO_DARK));
+		put_horizontal_line(pDisplay, x_start, x_len, (y_start + y_len) - 1, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
+
+		put_vertical_line(pDisplay, y_start, y_len, x_start, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
+		put_vertical_line(pDisplay, y_start + 1, y_len - 2, x_start + 1, 1, controlls_change_color(color, -BORDER_LINE_TWO_DARK));
+
+		put_vertical_line(pDisplay, y_start + 1, y_len - 2, x_start + x_len - 2, 1, controlls_change_color(color, -BORDER_LINE_TWO_DARK));
+		put_vertical_line(pDisplay, y_start, y_len, (x_start + x_len) - 1, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
+	} else {
+		put_horizontal_line(pDisplay, x_start, x_len, y_start, 1, controlls_change_color(color, +BORDER_LINE_ONE_LIGHT));
+		put_horizontal_line(pDisplay, x_start + 1, x_len - 2, y_start + 1, 1, controlls_change_color(color, +BORDER_LINE_TWO_LIGHT));
+
+		put_horizontal_line(pDisplay, x_start + 1, x_len - 2, y_start + y_len - 2, 1, controlls_change_color(color, -BORDER_LINE_TWO_DARK));
+		put_horizontal_line(pDisplay, x_start, x_len, (y_start + y_len) - 1, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
+
+		put_vertical_line(pDisplay, y_start, y_len, x_start, 1, controlls_change_color(color, +BORDER_LINE_ONE_LIGHT));
+		put_vertical_line(pDisplay, y_start + 1, y_len - 2, x_start + 1, 1, controlls_change_color(color, +BORDER_LINE_TWO_LIGHT));
+
+		put_vertical_line(pDisplay, y_start + 1, y_len - 2, x_start + x_len - 2, 1, controlls_change_color(color, -BORDER_LINE_TWO_DARK));
+		put_vertical_line(pDisplay, y_start, y_len, (x_start + x_len) - 1, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
+
+	}
+
+	//put_rectangle(pDisplay, x_start, y_start, x_len, y_len, false, controlls_change_color(color, -3));
+	//put_rectangle(pDisplay, x_start + 1, y_start + 1, x_len - 2, y_len - 2, false, controlls_change_color(color, -2));
 	color = settings->BackgroundColor;
 	if(!settings->Enabled || !ParentWindow->Internals.OldStateEnabled) color = settings->Color.Disabled.Buton;
 	//color = controls_color.Control_Color_Enabled_Buton_Pull;

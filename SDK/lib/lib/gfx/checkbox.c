@@ -28,6 +28,7 @@
 #include "graphic_string.h"
 #include "controls_definition.h"
 #include "sys/plat_properties.h"
+#include "gfx_gui_paint.h"
 //#######################################################################################
 static void paint_checkbox(tCheckBox* settings, tDisplay *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len, tControlCommandData* control_comand)
 {
@@ -42,29 +43,14 @@ static void paint_checkbox(tCheckBox* settings, tDisplay *pDisplay, signed int x
 		pDisplay->sClipRegion.sXMax = x_start + y_len;
 		pDisplay->sClipRegion.sYMax = y_start + y_len;
 		clip_limit(&pDisplay->sClipRegion, &back_up_clip);
-		if(cursor == Cursor_Down)
-			color = controls_color.Control_Color_Enabled_Border_Push;
-		else if(cursor == Cursor_Move)
-			color = controls_color.Control_Color_Enabled_Border_Push;
-		else if(cursor == Cursor_Up)
-			color = controls_color.Control_Color_Enabled_Border_Pull;
-		else
-			color = controls_color.Control_Color_Enabled_Border_Pull;
-		if(!settings->Enabled || !ParentWindow->Internals.OldStateEnabled)
-			color = settings->Color.Disabled.Border;
-		put_rectangle(pDisplay, x_start, y_start, y_len, y_len, false, controlls_change_color(color, -3));
-		put_rectangle(pDisplay, x_start + 1, y_start + 1, y_len - 2, y_len - 2, false, controlls_change_color(color, -2));
-		if(cursor == Cursor_Down)
-			color = controls_color.Control_Color_Enabled_Buton_Push;
-		else if(cursor == Cursor_Move)
-			color = controls_color.Control_Color_Enabled_Buton_Push;
-		else if(cursor == Cursor_Up)
-			color = controls_color.Control_Color_Enabled_Buton_Pull;
-		else
-			color = controls_color.Control_Color_Enabled_Buton_Pull;
-		if(!settings->Enabled || !ParentWindow->Internals.OldStateEnabled)
-			color = settings->Color.Disabled.Buton;
-		put_rectangle(pDisplay, x_start + 2, y_start + 2, y_len - 4, y_len - 4, true, color);
+		if((!settings->Enabled || !ParentWindow->Internals.OldStateEnabled) && settings->Internals.Control.Initiated == true)
+			gui_put_item(pDisplay, x_start, y_start, x_len, y_len, settings->Color.Disabled.Border, settings->Color.Disabled.Border, cursor,PAINT_STYLE_ROUNDED_CORNERS , false);
+		else {
+			if(cursor == Cursor_Down || cursor == Cursor_Move)
+				gui_put_item(pDisplay, x_start, y_start, x_len, y_len, controls_color.Control_Color_Enabled_Buton_Push, controls_color.Control_Color_Enabled_Border_Push, cursor,PAINT_STYLE_ROUNDED_CORNERS , true);
+			else
+				gui_put_item(pDisplay, x_start, y_start, x_len, y_len, controls_color.Control_Color_Enabled_Buton_Pull, controls_color.Control_Color_Enabled_Border_Pull, cursor,PAINT_STYLE_ROUNDED_CORNERS , true);
+		}
 		if(settings->Cheched == true)
 			put_rectangle(pDisplay, x_start + 4, y_start + 4, y_len - 8, y_len - 8, true, controlls_change_color(color, -3));
 	}
@@ -75,13 +61,15 @@ static void paint_checkbox(tCheckBox* settings, tDisplay *pDisplay, signed int x
 		pDisplay->sClipRegion.sXMax = x_start + x_len;
 		pDisplay->sClipRegion.sYMax = y_start + y_len;
 		clip_limit(&pDisplay->sClipRegion, &back_up_clip);
-		if(settings->Cheched == true)
-			color = controls_color.Control_Color_Enabled_Buton_Push;
-		else
-			color = controls_color.Control_Color_Enabled_Buton_Pull;
-		put_rectangle(pDisplay, x_start, y_start, x_len, y_len, false, controlls_change_color(color, -3));
-		put_rectangle(pDisplay, x_start + 1, y_start + 1, x_len - 2, y_len - 2, false, controlls_change_color(color, -2));
-		put_rectangle(pDisplay, x_start + 2, y_start + 2, x_len - 4, y_len - 4, true, color);
+		if(settings->Cheched == true) {
+			gui_put_item(pDisplay, x_start, y_start, x_len, y_len, controls_color.Control_Color_Enabled_Buton_Push, controls_color.Control_Color_Enabled_Border_Push, cursor,PAINT_STYLE_ROUNDED_CORNERS , true);
+		}
+		else {
+			gui_put_item(pDisplay, x_start, y_start, x_len, y_len, controls_color.Control_Color_Enabled_Buton_Pull, controls_color.Control_Color_Enabled_Buton_Pull, cursor,PAINT_STYLE_ROUNDED_CORNERS , true);
+		}
+		//put_rectangle(pDisplay, x_start, y_start, x_len, y_len, false, controlls_change_color(color, -3));
+		//put_rectangle(pDisplay, x_start + 1, y_start + 1, x_len - 2, y_len - 2, false, controlls_change_color(color, -2));
+		//put_rectangle(pDisplay, x_start + 2, y_start + 2, x_len - 4, y_len - 4, true, color);
 	}
 	if(settings->Internals.Caption.Text)
 	{

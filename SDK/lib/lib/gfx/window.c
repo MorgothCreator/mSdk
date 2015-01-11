@@ -710,7 +710,13 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 		pDisplay->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
 		clip_limit(&pDisplay->sClipRegion, &back_up_clip);
 		clip_limit(&pDisplay->sClipRegion, &settings->WindowMoveLimits);
-		put_rectangle(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, false, settings->WindowColor.Enabled.WindowBorder);
+		put_horizontal_line(pDisplay, X_StartBox, X_LenBox, Y_StartBox, 1, controlls_change_color(settings->WindowColor.Enabled.WindowBorder, +BORDER_LINE_TWO_DARK));
+		put_horizontal_line(pDisplay, X_StartBox, X_LenBox, (Y_StartBox + Y_LenBox) - 1, 1, controlls_change_color(settings->WindowColor.Enabled.WindowBorder, -BORDER_LINE_TWO_DARK));
+
+		put_vertical_line(pDisplay, Y_StartBox, Y_LenBox, X_StartBox, 1, controlls_change_color(settings->WindowColor.Enabled.WindowBorder, +BORDER_LINE_TWO_DARK));
+		put_vertical_line(pDisplay, Y_StartBox, Y_LenBox, (X_StartBox + X_LenBox) - 1, 1, controlls_change_color(settings->WindowColor.Enabled.WindowBorder, -BORDER_LINE_TWO_DARK));
+
+		//put_rectangle(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, false, settings->WindowColor.Enabled.WindowBorder);
 		put_rectangle(pDisplay, X_StartBox + 1, Y_StartBox + 1, X_LenBox - 2, HeaderSize - 1, true, settings->WindowColor.Enabled.WindowHeader);
 		put_rectangle(pDisplay, X_StartBox + 1, (Y_StartBox + HeaderSize) - 1, X_LenBox - 2, Y_LenBox - HeaderSize - 0, true, controls_color.Scren);
 		box_cache_clean(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox);
@@ -787,9 +793,9 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 			clip_limit(&pDisplay->sClipRegion, &settings->WindowMoveLimits);
 			put_rectangle(pDisplay, _X_StartBox_, _Y_StartBox_, _X_LenBox_ - _X_StartBox_, _Y_LenBox_ - _Y_StartBox_, false, settings->WindowColor.Enabled.WindowBorder);
 			pDisplay->sClipRegion.sXMin = _X_StartBox_ + 1;
-			pDisplay->sClipRegion.sXMax = _X_LenBox_ - 2;
+			pDisplay->sClipRegion.sXMax = _X_LenBox_ - 1;
 			pDisplay->sClipRegion.sYMin = _Y_StartBox_ + 1;
-			pDisplay->sClipRegion.sYMax = _Y_LenBox_ - 2;
+			pDisplay->sClipRegion.sYMax = _Y_LenBox_ - 1;
 			clip_limit(&pDisplay->sClipRegion, &back_up_clip_header);
 			clip_limit(&pDisplay->sClipRegion, &settings->WindowMoveLimits);
 			unsigned int TabGroupCnt = 0;
@@ -887,9 +893,9 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 			clip_limit(&pDisplay->sClipRegion, &settings->WindowMoveLimits);
 			put_rectangle(pDisplay, _X_StartBox_, _Y_StartBox_, _X_LenBox_ - _X_StartBox_, _Y_LenBox_ - _Y_StartBox_, false, settings->WindowColor.Enabled.WindowBorder);
 			pDisplay->sClipRegion.sXMin = _X_StartBox_ + 1;
-			pDisplay->sClipRegion.sXMax = _X_LenBox_ - 2;
+			pDisplay->sClipRegion.sXMax = _X_LenBox_ - 1;
 			pDisplay->sClipRegion.sYMin = _Y_StartBox_ + 1;
-			pDisplay->sClipRegion.sYMax = _Y_LenBox_ - 2;
+			pDisplay->sClipRegion.sYMax = _Y_LenBox_ - 1;
 			clip_limit(&pDisplay->sClipRegion, &back_up_clip_header);
 			clip_limit(&pDisplay->sClipRegion, &settings->WindowMoveLimits);
 			unsigned int TabGroupCnt = 0;
@@ -912,9 +918,9 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 		else
 		{
 			pDisplay->sClipRegion.sXMin = _X_StartBox_ + 1;
-			pDisplay->sClipRegion.sXMax = _X_LenBox_ - 2;
+			pDisplay->sClipRegion.sXMax = _X_LenBox_ - 1;
 			pDisplay->sClipRegion.sYMin = _Y_StartBox_ + 1;
-			pDisplay->sClipRegion.sYMax = _Y_LenBox_ - 2;
+			pDisplay->sClipRegion.sYMax = _Y_LenBox_ - 1;
 			clip_limit(&pDisplay->sClipRegion, &back_up_clip_header);
 			clip_limit(&pDisplay->sClipRegion, &settings->WindowMoveLimits);
 			unsigned int TabGroupCnt = 0;

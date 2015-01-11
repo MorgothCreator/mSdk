@@ -29,10 +29,10 @@
 #include "../generic.h"
 #include "controls_definition.h"
 #include "sys/plat_properties.h"
+#include "gfx_gui_paint.h"
 //#######################################################################################
 static void paint_scrollbar(tScrollBar* settings, tDisplay *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len, tControlCommandData* control_comand)
 {
-	unsigned int color = 0;
 	tWindow *ParentWindow = (tWindow*)settings->Internals.ParentWindow;
 	tRectangle back_up_clip = pDisplay->sClipRegion;
 	pDisplay->sClipRegion.sXMin = x_start;
@@ -42,10 +42,10 @@ static void paint_scrollbar(tScrollBar* settings, tDisplay *pDisplay, signed int
 	clip_limit(&pDisplay->sClipRegion, &back_up_clip);
 	if(settings->Internals.NeedEntireRefresh == true || settings->Internals.NeedEntireRepaint == true || settings->Internals.Control.Initiated == false)
 	{
-		if(settings->Enabled) color = controls_color.Control_Color_Enabled_Border_Push;
-		else color = settings->Color.Disabled.Border;
-		put_rectangle(pDisplay, x_start, y_start, x_len, y_len, false, controlls_change_color(color, -2));
-		put_rectangle(pDisplay, x_start + 1, y_start + 1, x_len - 2, y_len - 2, true, color);
+		if(settings->Enabled)
+			gui_put_item(pDisplay, x_start, y_start, x_len, y_len, settings->Color.Enabled.BackGround, controls_color.Control_Color_Enabled_Border_Push, Cursor_Down,PAINT_STYLE_ROUNDED_CORNERS , true);
+		else
+			gui_put_item(pDisplay, x_start, y_start, x_len, y_len, settings->Color.Disabled.BackGround, settings->Color.Disabled.Border, Cursor_NoAction,PAINT_STYLE_ROUNDED_CORNERS , true);
 		control_comand->WindowRefresh |= true;
 	}
 
@@ -255,8 +255,9 @@ static void paint_scrollbar(tScrollBar* settings, tDisplay *pDisplay, signed int
 		}
 	}
 
-	if(settings->Enabled) ButtonSettings->Color.Scren = settings->Color.Enabled.Buton.Pull;
-	else  ButtonSettings->Color.Scren = settings->Color.Disabled.Buton;
+	//if(settings->Enabled) ButtonSettings->Color.Scren = settings->Color.Enabled.BackGround;
+	//else  ButtonSettings->Color.Scren = settings->Color.Disabled.BackGround;
+	ButtonSettings->Color.Scren = settings->Color.Scren;
 	if(BtnSize > settings->Size.MinBtnSize)
 	{
 		if(settings->Size.X < settings->Size.Y) ButtonSettings->Position.Y = (settings->Value + 2 + (settings->Size.X - 2)) - settings->Minimum;
@@ -377,16 +378,19 @@ void scrollbar(tScrollBar *settings, tControlCommandData* control_comand)
 		ButtonSettings->Internals.NoPaintBackGround = false;
 		ButtonSettings->Internals.ContinuouslyPushTimerDisabled = true;
 		ButtonSettings->Enabled = settings->Enabled;
+		ButtonSettings->Color.Scren = settings->Color.Scren;
 
 		settings->Internals.BtnUpSettings = new_button(settings->Internals.ParentWindow);
 		tButton* BtnUpSettings = settings->Internals.BtnUpSettings;
 		BtnUpSettings->Internals.NoPaintBackGround = true;
 		BtnUpSettings->Enabled = settings->Enabled;
+		BtnUpSettings->Color.Scren = settings->Color.Scren;
 
 		settings->Internals.BtnDnSettings = new_button(settings->Internals.ParentWindow);
 		tButton* BtnDnSettings = settings->Internals.BtnDnSettings;
 		BtnDnSettings->Internals.NoPaintBackGround = true;
 		BtnDnSettings->Enabled = settings->Enabled;
+		BtnDnSettings->Color.Scren = settings->Color.Scren;
 		if(settings->Size.X < settings->Size.Y)
 		{
 			settings->Internals.BtnSettings->Position.X = 2;

@@ -92,7 +92,7 @@ RASTER_TIMINGS lcd_720p_50hz_beaglebone_exp =
 /*pll N*/		22,
 /*pll M2*/		1,
 /*raster clk*/	64500000,
-/*palete len*/	25,
+/*palete len*/	26,
 /*bus size*/	24,
 /*hsw*/			40,
 /*hfp*/			220,

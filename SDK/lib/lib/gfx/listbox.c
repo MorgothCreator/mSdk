@@ -29,6 +29,7 @@
 #include "controls_definition.h"
 #include "sys/plat_properties.h"
 #include "lib/string_lib.h"
+#include "gfx_gui_paint.h"
 //#######################################################################################
 static bool paint_listbox_item(tListBox *_settings, listbox_item* settings, tDisplay *pDisplay, signed int x_start, signed int y_start, tControlCommandData* control_comand, bool Pushed, bool Paint)
 {
@@ -41,22 +42,20 @@ static bool paint_listbox_item(tListBox *_settings, listbox_item* settings, tDis
 	//if(inside_window == true/* && control_comand->Cursor == Cursor_Down*/) settings->CursorDownInsideBox = true;
 	if(Paint)
 	{
-		unsigned int color = 0;
 		tRectangle back_up_clip = pDisplay->sClipRegion;
 		pDisplay->sClipRegion.sXMin = x_start;
 		pDisplay->sClipRegion.sYMin = y_start;
 		pDisplay->sClipRegion.sXMax = x_start + settings->Size.X;
 		pDisplay->sClipRegion.sYMax = y_start + settings->Size.Y;
 		clip_limit(&pDisplay->sClipRegion, &back_up_clip);
-		if(Pushed == true) color = controls_color.Control_Color_Enabled_Border_Push;
-		else color = controls_color.Control_Color_Enabled_Border_Pull;
-		if(!_settings->Enabled || !ParentWindow->Internals.OldStateEnabled) color = settings->Color.Disabled.Border;
-		put_rectangle(pDisplay, x_start, y_start, settings->Size.X, settings->Size.Y, false, controlls_change_color(color, -3));
-		put_rectangle(pDisplay, x_start + 1, y_start + 1, settings->Size.X - 2, settings->Size.Y - 2, false, controlls_change_color(color, -2));
-		if(Pushed == true) color = controls_color.Control_Color_Enabled_Buton_Push;
-		else color = controls_color.Control_Color_Enabled_Buton_Pull;
-		if(!_settings->Enabled || !ParentWindow->Internals.OldStateEnabled) color = settings->Color.Disabled.Buton;
-		put_rectangle(pDisplay, x_start + 2, y_start + 2, settings->Size.X - 4, settings->Size.Y - 4, true, color);
+		if((!_settings->Enabled || !ParentWindow->Internals.OldStateEnabled) && _settings->Internals.Control.Initiated == true)
+			gui_put_item(pDisplay, x_start, y_start, settings->Size.X, settings->Size.Y, settings->Color.Disabled.Buton, settings->Color.Disabled.Border, Cursor_NoAction,PAINT_STYLE_ROUNDED_CORNERS , false);
+		else {
+			if(Pushed == true)
+				gui_put_item(pDisplay, x_start, y_start, settings->Size.X, settings->Size.Y, controls_color.Control_Color_Enabled_Buton_Push, controls_color.Control_Color_Enabled_Border_Push, Cursor_Down,PAINT_STYLE_ROUNDED_CORNERS , true);
+			else
+				gui_put_item(pDisplay, x_start, y_start, settings->Size.X, settings->Size.Y, controls_color.Control_Color_Enabled_Buton_Pull, controls_color.Control_Color_Enabled_Border_Pull, Cursor_Up,PAINT_STYLE_ROUNDED_CORNERS , true);
+		}
 		if(settings->Caption.Text)
 		{
 			pDisplay->sClipRegion.sXMin = x_start + 4;
@@ -181,6 +180,7 @@ void listbox(tListBox *settings, tControlCommandData* control_comand)
 		ScrollBar->Size.Y = settings->Internals.Size.Y - 4;
 		ScrollBar->Maximum = settings->ItemsCount - ((settings->Size.Y - 4) / settings->Size.ItemSizeY);
 		ScrollBar->Internals.NoPaintBackGround = true;
+
 	}
 	/* Verify if position on size has been modified */
 	if(ParentWindow)
@@ -298,9 +298,28 @@ void listbox(tListBox *settings, tControlCommandData* control_comand)
 		pDisplay->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
 		clip_limit(&pDisplay->sClipRegion, &back_up_clip);
 		unsigned int color = controls_color.Control_Color_Enabled_Border_Pull;
-		if(!settings->Enabled || !ParentWindow->Internals.OldStateEnabled) color = settings->Color.Disabled.Border;
-		put_rectangle(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, false, controlls_change_color(color, -3));
-		put_rectangle(pDisplay, X_StartBox + 1, Y_StartBox + 1, X_LenBox - 2, Y_LenBox - 2, true, controlls_change_color(color, -2));
+		if((!settings->Enabled || !ParentWindow->Internals.OldStateEnabled) && settings->Internals.Control.Initiated == true) {
+			color = settings->Color.Disabled.Border;
+			put_horizontal_line(pDisplay, X_StartBox, X_LenBox, Y_StartBox, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
+			put_horizontal_line(pDisplay, X_StartBox, X_LenBox, (Y_StartBox + Y_LenBox) - 1, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
+
+			put_vertical_line(pDisplay, Y_StartBox, Y_LenBox, X_StartBox, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
+			put_vertical_line(pDisplay, Y_StartBox, Y_LenBox, (X_StartBox + X_LenBox) - 1, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
+		} else {
+		//put_rectangle(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, false, controlls_change_color(color, -3));
+		put_horizontal_line(pDisplay, X_StartBox, X_LenBox, Y_StartBox, 1, controlls_change_color(color, +BORDER_LINE_ONE_LIGHT));
+		put_horizontal_line(pDisplay, X_StartBox, X_LenBox, (Y_StartBox + Y_LenBox) - 1, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
+
+		put_vertical_line(pDisplay, Y_StartBox, Y_LenBox, X_StartBox, 1, controlls_change_color(color, +BORDER_LINE_ONE_LIGHT));
+		put_vertical_line(pDisplay, Y_StartBox, Y_LenBox, (X_StartBox + X_LenBox) - 1, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
+		}
+
+
+		if(settings->Enabled)
+			put_rectangle(pDisplay, X_StartBox + 1, Y_StartBox + 1, X_LenBox - 2, Y_LenBox - 2, true, settings->Color.Enabled.BackGround);
+		else
+			put_rectangle(pDisplay, X_StartBox + 1, Y_StartBox + 1, X_LenBox - 2, Y_LenBox - 2, true, settings->Color.Disabled.BackGround);
+
 		box_cache_clean(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox);
 
 
@@ -315,6 +334,12 @@ void listbox(tListBox *settings, tControlCommandData* control_comand)
 			paint_listbox_item(settings, settings->Items[CntDisplayItems], pDisplay, X_StartBox + 2, Y_StartBox + 2 + ((CntDisplayItems - settings->Internals.ItemStartOnBox) * settings->Size.ItemSizeY), control_comand, Pushed, true);
 		}
 		control_comand->Cursor = cursor;
+		if(settings->Enabled)
+			settings->Internals.ScrollBar->Color.Scren = settings->Color.Enabled.BackGround;
+		else
+			settings->Internals.ScrollBar->Color.Scren = settings->Color.Disabled.BackGround;
+		settings->Internals.ScrollBar->Color.Enabled.BackGround = settings->Color.Enabled.BackGround;;
+		settings->Internals.ScrollBar->Color.Disabled.BackGround = settings->Color.Disabled.BackGround;;
 
 		settings->Internals.ScrollBar->Internals.NeedEntireRefresh = true;
 		scrollbar(settings->Internals.ScrollBar, control_comand);

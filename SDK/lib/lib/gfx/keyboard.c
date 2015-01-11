@@ -114,12 +114,12 @@ static void paint_v_keyboard(tVKbd_Qwerty* settings, tDisplay *pDisplay, signed 
 		put_rectangle(pDisplay, x_start + 1, y_start + 1, x_len - 2, y_len - 2, false, controlls_change_color(color, -2));
 		color = controls_color.Control_Color_Enabled_Buton_Pull;
 		put_rectangle(pDisplay, x_start + 2, y_start + 2, x_len - 4, y_len - 4, true, color);
-		signed int key_size_x = ((settings->Size.X-(settings->kbd_border_size << 1))/13) - settings->key_space_size;
+		signed int key_size_x = ((settings->Size.X - 4 - (settings->kbd_border_size << 1))/13) - settings->key_space_size;
 		signed int key_size_y = ((settings->Size.Y - 4 - (settings->kbd_border_size << 1))/3) - settings->key_space_size;
 
 		signed int KeyboardLocationX = ((/*settings->Internals.Position.X + */settings->kbd_border_size) + ((settings->Internals.Size.X>>1) - settings->kbd_border_size)) - (((key_size_x + settings->key_space_size) * 13)>>1);
 		signed int KeyLocationY =      ((/*settings->Internals.Position.Y + */settings->kbd_border_size) + ((settings->Internals.Size.Y>>1) - settings->kbd_border_size)) - (((key_size_y + settings->key_space_size) *  3)>>1);
-		signed int KeyLocationX = KeyboardLocationX;
+		signed int KeyLocationX = KeyboardLocationX + 2;
 
 		signed int CntInitKeys = 0;
 		for(; CntInitKeys < sizeof(settings->Internals.Keys)/sizeof(settings->Internals.Keys[0]); CntInitKeys++)
