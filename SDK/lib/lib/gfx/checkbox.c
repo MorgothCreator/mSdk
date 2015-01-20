@@ -40,7 +40,7 @@ static void paint_checkbox(tCheckBox* settings, tDisplay *pDisplay, signed int x
 	{
 		pDisplay->sClipRegion.sXMin = x_start;
 		pDisplay->sClipRegion.sYMin = y_start;
-		pDisplay->sClipRegion.sXMax = x_start + y_len;
+		pDisplay->sClipRegion.sXMax = x_start + x_len;
 		pDisplay->sClipRegion.sYMax = y_start + y_len;
 		clip_limit(&pDisplay->sClipRegion, &back_up_clip);
 		if((!settings->Enabled || !ParentWindow->Internals.OldStateEnabled) && settings->Internals.Control.Initiated == true)
