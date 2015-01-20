@@ -803,7 +803,7 @@ int mmc_switch(mmcsdCtrlInfo *ctrl, char set, char index, char value)
 
 	if (err == 0)
 	{
-		UARTPuts(DebugCom, "error CMD6 \n", -1);
+		UARTPuts(DebugCom, "error CMD6\n\r", -1);
 		return 0;
 	}
 
@@ -813,21 +813,21 @@ int mmc_switch(mmcsdCtrlInfo *ctrl, char set, char index, char value)
         err = mmc_send_status(ctrl, &status);
         if (err == 0)
         {
-        	UARTPuts(DebugCom, "error status failed\n", -1);
+        	UARTPuts(DebugCom, "error status failed\n\r", -1);
             //return 0;
         }
 
         if(status & (BIT(7)))
         {
         	// switch error
-        	UARTPuts(DebugCom, "switch error\n", -1);
+        	UARTPuts(DebugCom, "switch error\n\r", -1);
         	return 0;
         }
 
         if(status & (BIT(22)))
 	   {
         	// Illegal command
-        	UARTPuts(DebugCom, "Illegal command\n", -1);
+        	UARTPuts(DebugCom, "Illegal command\n\r", -1);
         	return 0;
 	   }
 
@@ -882,7 +882,7 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
 
     if (status == 0)
     {
-    	UARTPuts(DebugCom, "error CMD0 \n", -1);
+    	UARTPuts(DebugCom, "error CMD0 \n\r", -1);
         return 0;
     }
 
@@ -899,7 +899,7 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
 
         if (status == 0)
         {
-        	UARTPuts(DebugCom, "error CMD0 \n", -1);
+        	UARTPuts(DebugCom, "error CMD0 \n\r", -1);
         	return 0;
         }
 
@@ -912,7 +912,7 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
 
         if (status == 0)
         {
-        	UARTPuts(DebugCom, "error CMD8 \n", -1);
+        	UARTPuts(DebugCom, "error CMD8 \n\r", -1);
         	/* If the cmd fails, it can be due to version < 2.0, since
              * we are currently supporting high voltage cards only
              */
@@ -927,7 +927,7 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
 
         if (status == 0)
         {
-        	UARTPuts(DebugCom, "error CMD41 \n", -1);
+        	UARTPuts(DebugCom, "error CMD41 \n\r", -1);
             return 0;
         }
 
@@ -944,7 +944,7 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
         if (retry == 0)
         {
             /* No point in continuing */
-        	UARTPuts(DebugCom, "error CMD41 \n", -1);
+        	UARTPuts(DebugCom, "error CMD41 \n\r", -1);
             return 0;
         }
 
@@ -963,7 +963,7 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
 
         if (status == 0)
         {
-        	UARTPuts(DebugCom, "error CMD2 \n", -1);
+        	UARTPuts(DebugCom, "error CMD2 \n\r", -1);
             return 0;
         }
 
@@ -978,7 +978,7 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
 
         if (status == 0)
         {
-        	UARTPuts(DebugCom, "error CMD3 \n", -1);
+        	UARTPuts(DebugCom, "error CMD3 \n\r", -1);
             return 0;
         }
 
@@ -993,7 +993,7 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
 
         if (status == 0)
         {
-        	UARTPuts(DebugCom, "error CMD9 \n", -1);
+        	UARTPuts(DebugCom, "error CMD9 \n\r", -1);
             return 0;
         }
 
@@ -1023,7 +1023,7 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
 
             if (status == 0)
             {
-            	UARTPuts(DebugCom, "error CMD16 \n", -1);
+            	UARTPuts(DebugCom, "error CMD16 \n\r", -1);
                 return 0;
             }
             else
@@ -1042,7 +1042,7 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
 
         if (status == 0)
         {
-        	UARTPuts(DebugCom, "error CMD7 \n", -1);
+        	UARTPuts(DebugCom, "error CMD7 \n\r", -1);
             return 0;
         }
 
@@ -1057,7 +1057,7 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
         status = MMCSDCmdSend(ctrl,&cmd);
         if (status == 0)
         {
-        	UARTPuts(DebugCom, "error CMD55 \n", -1);
+        	UARTPuts(DebugCom, "error CMD55 \n\r", -1);
             return 0;
         }
 
@@ -1074,7 +1074,7 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
         status = MMCSDCmdSend(ctrl,&cmd);
         if (status == 0)
         {
-        	UARTPuts(DebugCom, "error CMD51 \n", -1);
+        	UARTPuts(DebugCom, "error CMD51 \n\r", -1);
             return 0;
         }
 
@@ -1082,7 +1082,7 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
 
         if (status == 0)
         {
-        	UARTPuts(DebugCom, "error SD xfer setup on CMD51\n", -1);
+        	UARTPuts(DebugCom, "error SD xfer setup on CMD51\n\r", -1);
             return 0;
         }
 
@@ -1111,7 +1111,7 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
 
         if (status == 0)
         {
-			UARTPuts(DebugCom, "error GO_IDLE_STATE \n", -1);
+			UARTPuts(DebugCom, "error GO_IDLE_STATE \n\r", -1);
             return 0;
         }
 
@@ -1124,7 +1124,7 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
                 status = MMCSDCmdSend(ctrl,&cmd);
     			if (status == 0)
     			{
-    				UARTPuts(DebugCom, "error CMD1 \n", -1);
+    				UARTPuts(DebugCom, "error CMD1 \n\r", -1);
     				return 0;
     			}
 
@@ -1133,7 +1133,7 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
         if (retry == 0)
         {
             /* No point in continuing */
-			UARTPuts(DebugCom, "Timeout on CMD1\n", -1);
+			UARTPuts(DebugCom, "Timeout on CMD1\n\r", -1);
             return 0;
         }
 
@@ -1152,7 +1152,7 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
 
         if (status == 0)
         {
-			UARTPuts(DebugCom, "error CMD2 \n", -1);
+			UARTPuts(DebugCom, "error CMD2 \n\r", -1);
             return 0;
         }
 
@@ -1167,7 +1167,7 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
 
         if (status == 0)
         {
-			UARTPuts(DebugCom, "error CMD3 \n", -1);
+			UARTPuts(DebugCom, "error CMD3 \n\r", -1);
             return 0;
         }
 
@@ -1182,7 +1182,7 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
 
         if (status == 0)
         {
-			UARTPuts(DebugCom, "error CMD9 \n", -1);
+			UARTPuts(DebugCom, "error CMD9 \n\r", -1);
             return 0;
         }
 
@@ -1211,7 +1211,7 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
 
         if (status == 0)
         {
-			UARTPuts(DebugCom, "error CMD7 \n", -1);
+			UARTPuts(DebugCom, "error CMD7 \n\r", -1);
             return 0;
         }
 
@@ -1230,7 +1230,7 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
 			status = MMCSDCmdSend(ctrl,&cmd);
 			if (status == 0)
 			{
-				UARTPuts(DebugCom, "error CMD8 \n", -1);
+				UARTPuts(DebugCom, "error CMD8 \n\r", -1);
 				return 0;
 			}
 
@@ -1238,7 +1238,7 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
 
 			if (status == 0)
 			{
-				UARTPuts(DebugCom, "error MMC xferStatusGet \n", -1);
+				UARTPuts(DebugCom, "error MMC xferStatusGet \n\r", -1);
 				return 0;
 			}
             //card->nBlks = SD_CARD0_NUMBLK(card);
@@ -1262,7 +1262,7 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
 			card->busWidth = 8;
 			ctrl->busWidthConfig(ctrl, HS_MMCSD_BUS_WIDTH_8BIT);
 		}
-		else UARTPuts(DebugCom, "error eMMC setup 8bit bus \n", -1);
+		else UARTPuts(DebugCom, "error eMMC setup 8bit bus \n\r", -1);
 
         /* enable High speed */
 		if(mmc_switch(ctrl,MMC_SWITCH_MODE_WRITE_BYTE,EXT_CSD_HS_TIMING,0x1))
@@ -1282,7 +1282,7 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
 			status = MMCSDCmdSend(ctrl,&cmd);
 			if (status == 0)
 			{
-				UARTPuts(DebugCom, "error CMD8 \n", -1);
+				UARTPuts(DebugCom, "error CMD8 \n\r", -1);
 				return 0;
 			}
 
@@ -1291,7 +1291,7 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
 
 			if (status == 0)
 			{
-				UARTPuts(DebugCom, "error xferStatusGet \n", -1);
+				UARTPuts(DebugCom, "error xferStatusGet \n\r", -1);
 				return 0;
 			}
 
@@ -1325,7 +1325,7 @@ unsigned int MMCSDCardInit(mmcsdCtrlInfo *ctrl)
 				return 0;
 			}
 		}
-		else UARTPuts(DebugCom, "error eMMC setup high speed \n", -1);
+		else UARTPuts(DebugCom, "error eMMC setup high speed \n\r", -1);
 
     }
 
