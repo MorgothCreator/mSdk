@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f4xx_cryp_aes.c
   * @author  MCD Application Team
-  * @version V1.1.0
-  * @date    11-January-2013
+  * @version V1.3.0
+  * @date    08-November-2013
   * @brief   This file provides high level functions to encrypt and decrypt an 
   *          input message using AES in ECB/CBC/CTR/GCM/CCM modes.
   *          It uses the stm32f4xx_cryp.c/.h drivers to access the STM32F4xx CRYP
@@ -52,6 +52,7 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
+#include "../stm32f4xx_conf.h"
 #include "stm32f4xx_cryp.h"
 
 /** @addtogroup STM32F4xx_StdPeriph_Driver
@@ -952,7 +953,9 @@ ErrorStatus CRYP_AES_GCM(uint8_t Mode, uint8_t InitVectors[16],
     CRYP_Cmd(ENABLE);
     
     /* Wait for CRYPEN bit to be 0 */
-    while(CRYP_GetCmdStatus() == ENABLE);
+    while(CRYP_GetCmdStatus() == ENABLE)
+    {
+    }
     
     /***************************** header phase *******************************/
     if(HLength != 0)
@@ -973,7 +976,9 @@ ErrorStatus CRYP_AES_GCM(uint8_t Mode, uint8_t InitVectors[16],
       for(loopcounter = 0; (loopcounter < HLength); loopcounter+=16)
       {
         /* Wait until the IFEM flag is reset */
-        while(CRYP_GetFlagStatus(CRYP_FLAG_IFEM) == RESET);
+        while(CRYP_GetFlagStatus(CRYP_FLAG_IFEM) == RESET)
+        {
+        }
         
         /* Write the Input block in the IN FIFO */
         CRYP_DataIn(*(uint32_t*)(headeraddr));
@@ -1019,7 +1024,9 @@ ErrorStatus CRYP_AES_GCM(uint8_t Mode, uint8_t InitVectors[16],
       for(loopcounter = 0; ((loopcounter < ILength) && (status != ERROR)); loopcounter+=16)
       {
         /* Wait until the IFEM flag is reset */
-        while(CRYP_GetFlagStatus(CRYP_FLAG_IFEM) == RESET);
+        while(CRYP_GetFlagStatus(CRYP_FLAG_IFEM) == RESET)
+        {
+        }
         /* Write the Input block in the IN FIFO */
         CRYP_DataIn(*(uint32_t*)(inputaddr));
         inputaddr+=4;
@@ -1045,7 +1052,9 @@ ErrorStatus CRYP_AES_GCM(uint8_t Mode, uint8_t InitVectors[16],
         else
         {
           /* Wait until the OFNE flag is reset */
-          while(CRYP_GetFlagStatus(CRYP_FLAG_OFNE) == RESET);
+          while(CRYP_GetFlagStatus(CRYP_FLAG_OFNE) == RESET)
+          {
+          }
           
           /* Read the Output block from the Output FIFO */
           *(uint32_t*)(outputaddr) = CRYP_DataOut();
@@ -1080,7 +1089,9 @@ ErrorStatus CRYP_AES_GCM(uint8_t Mode, uint8_t InitVectors[16],
     CRYP_DataIn(__REV(inputlength>>32));
     CRYP_DataIn(__REV(inputlength));
     /* Wait until the OFNE flag is reset */
-    while(CRYP_GetFlagStatus(CRYP_FLAG_OFNE) == RESET);
+    while(CRYP_GetFlagStatus(CRYP_FLAG_OFNE) == RESET)
+    {
+    }
     
     tagaddr = (uint32_t)AuthTAG;
     /* Read the Auth TAG in the IN FIFO */
@@ -1322,8 +1333,9 @@ ErrorStatus CRYP_AES_CCM(uint8_t Mode,
     CRYP_Cmd(ENABLE);
     
     /* Wait for CRYPEN bit to be 0 */
-    while(CRYP_GetCmdStatus() == ENABLE);
-    
+    while(CRYP_GetCmdStatus() == ENABLE)
+    {
+    }
     /***************************** header phase *******************************/
     if(headersize != 0)
     {
@@ -1343,7 +1355,9 @@ ErrorStatus CRYP_AES_CCM(uint8_t Mode,
       for(loopcounter = 0; (loopcounter < headersize); loopcounter+=16)
       {
         /* Wait until the IFEM flag is reset */
-        while(CRYP_GetFlagStatus(CRYP_FLAG_IFEM) == RESET);
+        while(CRYP_GetFlagStatus(CRYP_FLAG_IFEM) == RESET)
+        {
+        }
         
         /* Write the Input block in the IN FIFO */
         CRYP_DataIn(*(uint32_t*)(headeraddr));
@@ -1389,7 +1403,10 @@ ErrorStatus CRYP_AES_CCM(uint8_t Mode,
       for(loopcounter = 0; ((loopcounter < ILength) && (status != ERROR)); loopcounter+=16)
       {
         /* Wait until the IFEM flag is reset */
-        while(CRYP_GetFlagStatus(CRYP_FLAG_IFEM) == RESET);
+        while(CRYP_GetFlagStatus(CRYP_FLAG_IFEM) == RESET)
+        {
+        }
+        
         /* Write the Input block in the IN FIFO */
         CRYP_DataIn(*(uint32_t*)(inputaddr));
         inputaddr+=4;
@@ -1415,7 +1432,9 @@ ErrorStatus CRYP_AES_CCM(uint8_t Mode,
         else
         {
           /* Wait until the OFNE flag is reset */
-          while(CRYP_GetFlagStatus(CRYP_FLAG_OFNE) == RESET);
+          while(CRYP_GetFlagStatus(CRYP_FLAG_OFNE) == RESET)
+          {
+          }
           
           /* Read the Output block from the Output FIFO */
           *(uint32_t*)(outputaddr) = CRYP_DataOut();
@@ -1456,7 +1475,9 @@ ErrorStatus CRYP_AES_CCM(uint8_t Mode,
     CRYP_DataIn(*(uint32_t*)(ctraddr) & 0xfeffffff);
     
     /* Wait until the OFNE flag is reset */
-    while(CRYP_GetFlagStatus(CRYP_FLAG_OFNE) == RESET);
+    while(CRYP_GetFlagStatus(CRYP_FLAG_OFNE) == RESET)
+    {
+    }
     
     /* Read the Auth TAG in the IN FIFO */
     temptag[0] = CRYP_DataOut();
@@ -1500,7 +1521,9 @@ ErrorStatus CRYP_AES_CCM(uint8_t Mode,
     CRYP_Cmd(ENABLE);
     
     /* Wait for CRYPEN bit to be 0 */
-    while(CRYP_GetCmdStatus() == ENABLE);
+    while(CRYP_GetCmdStatus() == ENABLE)
+    {
+    }
     
     /***************************** header phase *******************************/
     if(headersize != 0)
@@ -1521,7 +1544,9 @@ ErrorStatus CRYP_AES_CCM(uint8_t Mode,
       for(loopcounter = 0; (loopcounter < headersize); loopcounter+=16)
       {
         /* Wait until the IFEM flag is reset */
-        while(CRYP_GetFlagStatus(CRYP_FLAG_IFEM) == RESET);
+        while(CRYP_GetFlagStatus(CRYP_FLAG_IFEM) == RESET)
+        {
+        }
         
         /* Write the Input block in the IN FIFO */
         CRYP_DataIn(*(uint32_t*)(headeraddr));
@@ -1567,7 +1592,10 @@ ErrorStatus CRYP_AES_CCM(uint8_t Mode,
       for(loopcounter = 0; ((loopcounter < ILength) && (status != ERROR)); loopcounter+=16)
       {
         /* Wait until the IFEM flag is reset */
-        while(CRYP_GetFlagStatus(CRYP_FLAG_IFEM) == RESET);
+        while(CRYP_GetFlagStatus(CRYP_FLAG_IFEM) == RESET)
+        {
+        }
+        
         /* Write the Input block in the IN FIFO */
         CRYP_DataIn(*(uint32_t*)(inputaddr));
         inputaddr+=4;
@@ -1593,7 +1621,9 @@ ErrorStatus CRYP_AES_CCM(uint8_t Mode,
         else
         {
           /* Wait until the OFNE flag is reset */
-          while(CRYP_GetFlagStatus(CRYP_FLAG_OFNE) == RESET);
+          while(CRYP_GetFlagStatus(CRYP_FLAG_OFNE) == RESET)
+          {
+          }
           
           /* Read the Output block from the Output FIFO */
           *(uint32_t*)(outputaddr) = CRYP_DataOut();
@@ -1634,7 +1664,9 @@ ErrorStatus CRYP_AES_CCM(uint8_t Mode,
     CRYP_DataIn(*(uint32_t*)(ctraddr) & 0xfeffffff);
     
     /* Wait until the OFNE flag is reset */
-    while(CRYP_GetFlagStatus(CRYP_FLAG_OFNE) == RESET);
+    while(CRYP_GetFlagStatus(CRYP_FLAG_OFNE) == RESET)
+    {
+    }
     
     /* Read the Authentaication TAG (MAC) in the IN FIFO */
     temptag[0] = CRYP_DataOut();

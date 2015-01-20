@@ -2,9 +2,9 @@
   ******************************************************************************
   * @file    stm32f4xx_crc.h
   * @author  MCD Application Team
-  * @version V1.1.0
-  * @date    11-January-2013
-  * @brief   This file contains all the functions prototypes for the CRC firmware
+  * @version V1.3.0
+  * @date    08-November-2013
+  * @brief   This file contains all the functions prototypes for the CRC firmware 
   *          library.
   ******************************************************************************
   * @attention
@@ -17,8 +17,8 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software
-  * distributed under the License is distributed on an "AS IS" BASIS,
+  * Unless required by applicable law or agreed to in writing, software 
+  * distributed under the License is distributed on an "AS IS" BASIS, 
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
@@ -35,7 +35,7 @@
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "../include/stm32f4xx.h"
+#include "include/stm32f4xx.h"
 
 /** @addtogroup STM32F4xx_StdPeriph_Driver
   * @{
@@ -57,7 +57,7 @@
   */
 
 /* Exported macro ------------------------------------------------------------*/
-/* Exported functions --------------------------------------------------------*/
+/* Exported functions --------------------------------------------------------*/  
 
 void CRC_ResetDR(void);
 uint32_t CRC_CalcCRC(uint32_t Data);

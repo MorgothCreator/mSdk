@@ -26,11 +26,11 @@
   */ 
 
 /* Includes ------------------------------------------------------------------*/
-#include "usbd_core.h"
+#include "../USB_Device/Core/inc/usbd_core.h"
 #include "usbd_desc.h"
-#include "usbd_req.h"
+#include "../USB_Device/Core/inc/usbd_req.h"
 #include "usbd_conf.h"
-#include "usb_regs.h"
+#include "../USB_OTG/inc/usb_regs.h"
 
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
   * @{

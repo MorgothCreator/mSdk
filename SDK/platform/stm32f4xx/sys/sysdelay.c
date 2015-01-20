@@ -8,7 +8,7 @@
 #include "sysdelay.h"
 #include "sys/include/core_cm4.h"
 
-extern unsigned long SystemCoreClock;
+extern unsigned int SystemCoreClock;
 /******************************************************************************
 **                      INTERNAL VARIABLE DEFINITIONS
 *******************************************************************************/
