@@ -10,8 +10,6 @@
 /*#####################################################*/
 #include "sys/mmu.h"
 
-#define board_type_beaglebone
-
 #define DEFAULT_FONT g_sFontCmss14b
 //#define USE_FONT_CMSS14B
 #define USE_ALL_FONTS
