@@ -26,7 +26,7 @@ RASTER_TIMINGS lcd_S035Q01_beaglebone_exp =
 /*vbp*/			11
 };
 
-RASTER_TIMINGS lcd_TFT43AB_OMAP35x_beaglebone_exp =
+RASTER_TIMINGS lcd_TFT43AB_OMAP35x_devkit8600_exp =
 {
 /*X size*/		480,
 /*Y size*/		272,
