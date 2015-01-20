@@ -84,9 +84,11 @@ void gpio_idle(new_gpio *gpio_struct)
 {
 	if(gpio_in(gpio_struct) == 0 && gpio_struct->LastState == true) {
 		gpio_struct->LastState = false;
+		gpio_struct->event.state_dn = true;
 		if(gpio_struct->event.on_state_changed) gpio_struct->event.on_state_changed(gpio_struct->event.on_state_changed_data, false);
-	} else if(gpio_in(gpio_struct) != 0 && gpio_struct->LastState == true) {
+	} else if(gpio_in(gpio_struct) != 0 && gpio_struct->LastState == false) {
 		gpio_struct->LastState = true;
+		gpio_struct->event.state_up = true;
 		if(gpio_struct->event.on_state_changed) gpio_struct->event.on_state_changed(gpio_struct->event.on_state_changed_data, true);
 	}
 }
