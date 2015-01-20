@@ -1496,9 +1496,9 @@ signed int tab_group_new_tab(struct Window_s *settings, char *tab_name)
 		settings->Internals.Header.TabGroupTabsList[settings->Internals.Header.TabGroupTabsListNr] = new_checkbox(settings->Internals.ParentWindow);
 		if(!settings->Internals.Header.TabGroupTabsList[settings->Internals.Header.TabGroupTabsListNr]) return -1;
 		if(!settings->Internals.Header.TabGroupTabsListNr) settings->Internals.Header.TabGroupTabsList[settings->Internals.Header.TabGroupTabsListNr]->Cheched = true;
-		settings->Internals.Header.TabGroupTabsList[settings->Internals.Header.TabGroupTabsListNr]->Caption.Font = (tFont *)&g_sFontCm12b;
+		settings->Internals.Header.TabGroupTabsList[settings->Internals.Header.TabGroupTabsListNr]->Caption.Font = (tFont *)controls_color.DefaultFont;
 		settings->Internals.Header.TabGroupTabsList[settings->Internals.Header.TabGroupTabsListNr]->Caption.Text = malloc(strlen(tab_name) + 1);
-		settings->Internals.Header.TabGroupTabsList[settings->Internals.Header.TabGroupTabsListNr]->Caption.WordWrap = false;
+		settings->Internals.Header.TabGroupTabsList[settings->Internals.Header.TabGroupTabsListNr]->Caption.WordWrap = true;
 		settings->Internals.Header.TabGroupTabsList[settings->Internals.Header.TabGroupTabsListNr]->Caption.TextAlign = Align_Center;
 		settings->Internals.Header.TabGroupTabsList[settings->Internals.Header.TabGroupTabsListNr]->Internals.NoPaintBackGround = true;
 		strcpy(settings->Internals.Header.TabGroupTabsList[settings->Internals.Header.TabGroupTabsListNr]->Caption.Text, tab_name);
