@@ -191,7 +191,7 @@
 #define     PMIC_VOLT_SEL_1260MV      DCDC_VOLT_SEL_1275MV
 #define     PMIC_VOLT_SEL_1325MV      (0x11u)
 
-#elif defined (evmAM335x) || defined (evmskAM335x)
+#elif defined (evmAM335x) || defined (evmskAM335x) || defined (devkit8600)
 
 #define     PMIC_VOLT_SEL_0950MV      (0x1fu)
 #define     PMIC_VOLT_SEL_1100MV      (0x2bu)

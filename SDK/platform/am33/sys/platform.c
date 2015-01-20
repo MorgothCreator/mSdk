@@ -59,16 +59,17 @@
 #include "board/boards.h"
 #include "device.h"
 #include "api/pmic_api.h"
+#include "interface/twi_interface.h"
 //#include "string.h"
-#ifdef evmAM335x
+#if defined (evmAM335x) || defined (devkit8600)
     #include "include/hw/hw_tps65910.h"
-	#include "device/tps65910.h"
+	#include "device/tps65910a.h"
 #elif  (defined beaglebone)
     #include "include/hw/hw_tps65217.h"
 	#include "device/tps65217.h"
 #elif  (defined evmskAM335x)
     #include "include/hw/hw_tps65910.h"
-	#include "device/tps65910.h"
+	#include "device/tps65910a.h"
     #include "include/armv7/am335x/pin_mux.h"
 #endif
 
@@ -831,14 +832,12 @@ void TPS65217VoltageUpdate(new_twi* TwiStruct, unsigned char dc_cntrl_reg, unsig
 void ConfigureVdd2(new_twi* TwiStruct, unsigned int opVolMultiplier, unsigned maxLoadCurrent,
                    unsigned int timeStep, unsigned int supplyState)
 {
-    dataToSlave[0] = VDD2_REG;
-    dataToSlave[1] = ((opVolMultiplier << PMIC_VDD2_REG_VGAIN_SEL_SHIFT) |
+	TwiStruct->TxBuff[0] = VDD2_REG;
+	TwiStruct->TxBuff[1] = ((opVolMultiplier << PMIC_VDD2_REG_VGAIN_SEL_SHIFT) |
 		              (maxLoadCurrent << PMIC_VDD2_REG_ILMAX_SHIFT)      |
 		              (timeStep << PMIC_VDD2_REG_TSTEP_SHIFT)            |
 		              (supplyState << PMIC_VDD2_REG_ST_SHIFT));
-    tCount = 0;
-    rCount = 0;
-    SetupI2CTransmit(2);
+    _SetupI2CTransmit(TwiStruct, 2);
 }
 
 
@@ -852,24 +851,22 @@ void ConfigureVdd2(new_twi* TwiStruct, unsigned int opVolMultiplier, unsigned ma
 void SelectVdd2Source(new_twi* TwiStruct, unsigned int vddSource)
 {
     /*	Read reg value	*/
-    dataToSlave[0] = VDD2_OP_REG;
-    dataFromSlave[0] = 0; // clear receive buffer
-    dataFromSlave[1] = 0;
-    rCount = 0;
-    tCount = 0;
-    SetupReception(1);
+	TwiStruct->TxBuff[0] = VDD2_OP_REG;
+	TwiStruct->RxBuff[0] = 0; // clear receive buffer
+	TwiStruct->RxBuff[1] = 0;
+   _SetupI2CReception(TwiStruct, 1, 1);
 
     /*	Modify reg value	*/
-    vddSource = (dataFromSlave[0] & (~PMIC_VDD2_OP_REG_CMD)) |
+    vddSource = (TwiStruct->RxBuff[0] & (~PMIC_VDD2_OP_REG_CMD)) |
 		 (vddSource << PMIC_VDD2_OP_REG_CMD_SHIFT);
 
 	/*	Write reg value	*/
-    dataToSlave[0] = VDD2_OP_REG;
-    dataToSlave[1] = vddSource;
-    tCount = 0;
-    rCount = 0;
+    TwiStruct->TxBuff[0] = VDD2_OP_REG;
+    TwiStruct->TxBuff[1] = vddSource;
+    //tCount = 0;
+    //rCount = 0;
 
-    SetupI2CTransmit(2);
+    _SetupI2CTransmit(TwiStruct, 2);
 }
 
 /**
@@ -882,34 +879,32 @@ void SelectVdd2Source(new_twi* TwiStruct, unsigned int vddSource)
 void SetVdd2OpVoltage(new_twi* TwiStruct, unsigned int opVolSelector)
 {
     /*	Read reg value	*/
-    dataToSlave[0] = VDD2_OP_REG;
-    dataFromSlave[0] = 0; // clear receive buffer
-    dataFromSlave[1] = 0;
-    rCount = 0;
-    tCount = 0;
-    SetupReception(1);
+	TwiStruct->TxBuff[0] = VDD2_OP_REG;
+	TwiStruct->RxBuff[0] = 0; // clear receive buffer
+	TwiStruct->RxBuff[1] = 0;
+    _SetupI2CReception(TwiStruct, 1, 1);
 
     /*	Modify reg value	*/
-    opVolSelector = (dataFromSlave[0] & (~PMIC_VDD2_OP_REG_SEL)) |
+    opVolSelector = (TwiStruct->RxBuff[0] & (~PMIC_VDD2_OP_REG_SEL)) |
 		            (opVolSelector << PMIC_VDD2_OP_REG_SEL_SHIFT);
 
     /*	Write reg value	*/
-    dataToSlave[0] = VDD2_OP_REG;
-    dataToSlave[1] = opVolSelector;
-    tCount = 0;
-    rCount = 0;
-    SetupI2CTransmit(2);
+    TwiStruct->TxBuff[0] = VDD2_OP_REG;
+    TwiStruct->TxBuff[1] = opVolSelector;
+    //tCount = 0;
+    //rCount = 0;
+    _SetupI2CTransmit(TwiStruct, 2);
 
      /*	Read reg value to verify */
-    dataToSlave[0] = VDD2_OP_REG;
-    dataFromSlave[0] = 0; // clear receive buffer
-    dataFromSlave[1] = 0;
-    rCount = 0;
-    tCount = 0;
+    TwiStruct->TxBuff[0] = VDD2_OP_REG;
+    TwiStruct->RxBuff[0] = 0; // clear receive buffer
+    TwiStruct->RxBuff[1] = 0;
+    //rCount = 0;
+    //tCount = 0;
 
-    SetupReception(1);
+    _SetupI2CReception(TwiStruct, 1, 1);
 
-    while((dataFromSlave[0] & PMIC_VDD2_OP_REG_SEL) != 
+    while((TwiStruct->RxBuff[0] & PMIC_VDD2_OP_REG_SEL) !=
           (opVolSelector << PMIC_VDD2_OP_REG_SEL_SHIFT));
 }
 
@@ -923,10 +918,9 @@ void SetVdd2OpVoltage(new_twi* TwiStruct, unsigned int opVolSelector)
 void SetVdd2SrVoltage(new_twi* TwiStruct, unsigned int opVolSelector)
 {
     /*	Write reg value	*/
-    dataToSlave[0] = VDD2_SR_REG;
-    dataToSlave[1] = opVolSelector;
-    tCount = 0;
-    SetupI2CTransmit(2);	
+	TwiStruct->TxBuff[0] = VDD2_SR_REG;
+	TwiStruct->TxBuff[1] = opVolSelector;
+    _SetupI2CTransmit(TwiStruct, 2);
 }
 
 /**
@@ -939,24 +933,22 @@ void SetVdd2SrVoltage(new_twi* TwiStruct, unsigned int opVolSelector)
 void SelectI2CInstance(new_twi* TwiStruct, unsigned int i2cInstance)
 {
     /*	Read reg value	*/
-    dataToSlave[0] = DEVCTRL_REG;
-    dataFromSlave[0] = 0; // clear receive buffer
-    dataFromSlave[1] = 0;
-    rCount = 0;
-    tCount = 0;
-    SetupReception(1);
+	TwiStruct->TxBuff[0] = DEVCTRL_REG;
+	TwiStruct->RxBuff[0] = 0; // clear receive buffer
+	TwiStruct->RxBuff[1] = 0;
+    _SetupI2CReception(TwiStruct, 1, 1);
 
     /*	Modify reg value */
-    i2cInstance = (dataFromSlave[0] & (~PMIC_DEVCTRL_REG_SR_CTL_I2C_SEL)) |
+    i2cInstance = (TwiStruct->RxBuff[0] & (~PMIC_DEVCTRL_REG_SR_CTL_I2C_SEL)) |
                   (i2cInstance << PMIC_DEVCTRL_REG_SR_CTL_I2C_SEL_SHIFT);
 
     /*	Write reg value	*/
-    dataToSlave[0] = DEVCTRL_REG;
-    dataToSlave[1] = i2cInstance;
-    tCount = 0;
-    rCount = 0;
+    TwiStruct->TxBuff[0] = DEVCTRL_REG;
+    TwiStruct->TxBuff[1] = i2cInstance;
+    //tCount = 0;
+    //rCount = 0;
 
-    SetupI2CTransmit(2);
+    _SetupI2CTransmit(TwiStruct, 2);
 }
 
 /**
@@ -976,14 +968,12 @@ void SelectI2CInstance(new_twi* TwiStruct, unsigned int i2cInstance)
 void ConfigureVdd1(new_twi* TwiStruct, unsigned int opVolMultiplier, unsigned maxLoadCurrent,
                    unsigned int timeStep, unsigned int supplyState)
 {
-    dataToSlave[0] = VDD1_REG;
-    dataToSlave[1] = ((opVolMultiplier << PMIC_VDD1_REG_VGAIN_SEL_SHIFT) |
+	TwiStruct->TxBuff[0] = VDD1_REG;
+	TwiStruct->TxBuff[1] = ((opVolMultiplier << PMIC_VDD1_REG_VGAIN_SEL_SHIFT) |
 		      (maxLoadCurrent << PMIC_VDD1_REG_ILMAX_SHIFT) |
 		      (timeStep << PMIC_VDD1_REG_TSTEP_SHIFT) |
 		      (supplyState << PMIC_VDD1_REG_ST_SHIFT) );
-    tCount = 0;
-    rCount = 0;
-    SetupI2CTransmit(2);
+    _SetupI2CTransmit(TwiStruct, 2);
 }
 
 /**
@@ -996,23 +986,21 @@ void ConfigureVdd1(new_twi* TwiStruct, unsigned int opVolMultiplier, unsigned ma
 void SelectVdd1Source(new_twi* TwiStruct, unsigned int vddSource)
 {
     /*	Read reg value	*/
-    dataToSlave[0] = VDD1_OP_REG;
-    dataFromSlave[0] = 0; // clear receive buffer
-    dataFromSlave[1] = 0;
-    rCount = 0;
-    tCount = 0;
-    SetupReception(1);
+	TwiStruct->TxBuff[0] = VDD1_OP_REG;
+	TwiStruct->RxBuff[0] = 0; // clear receive buffer
+	TwiStruct->RxBuff[1] = 0;
+    _SetupI2CReception(TwiStruct, 1, 1);
 
     /*	Modify reg value */
-    vddSource = (dataFromSlave[0] & (~PMIC_VDD1_OP_REG_CMD)) |
+    vddSource = (TwiStruct->RxBuff[0] & (~PMIC_VDD1_OP_REG_CMD)) |
 		 (vddSource << PMIC_VDD1_OP_REG_CMD_SHIFT);
 
      /*	Write reg value	*/
-    dataToSlave[0] = VDD1_OP_REG;
-    dataToSlave[1] = vddSource;
-    tCount = 0;
-    rCount = 0;
-    SetupI2CTransmit(2);
+    TwiStruct->TxBuff[0] = VDD1_OP_REG;
+    TwiStruct->TxBuff[1] = vddSource;
+    //tCount = 0;
+    //rCount = 0;
+    _SetupI2CTransmit(TwiStruct, 2);
 }
 
 #endif
@@ -1031,36 +1019,34 @@ void SetVdd1OpVoltage(new_twi* TwiStruct, unsigned int opVolSelector)
     /* Set DCDC2 (MPU) voltage */
     TPS65217VoltageUpdate(TwiStruct, DEFDCDC2, opVolSelector);
 
-#elif  defined (evmAM335x) || defined (evmskAM335x)
+#elif  defined (evmAM335x) || defined (evmskAM335x) || defined (devkit8600)
 
     /*	Read reg value	*/
-    dataToSlave[0] = VDD1_OP_REG;
-    dataFromSlave[0] = 0; // clear receive buffer
-    dataFromSlave[1] = 0;
-    rCount = 0;
-    tCount = 0;
-    SetupReception(1);
+    TwiStruct->TxBuff[0] = VDD1_OP_REG;
+    TwiStruct->RxBuff[0] = 0; // clear receive buffer
+    TwiStruct->RxBuff[1] = 0;
+    _SetupI2CReception(TwiStruct, 1, 1);
 
     /*	Modify reg value */
-    opVolSelector = (dataFromSlave[0] & (~PMIC_VDD1_OP_REG_SEL)) |
+    opVolSelector = (TwiStruct->RxBuff[0] & (~PMIC_VDD1_OP_REG_SEL)) |
 		    (opVolSelector << PMIC_VDD1_OP_REG_SEL_SHIFT);
 
     /*	Write reg value	*/
-    dataToSlave[0] = VDD1_OP_REG;
-    dataToSlave[1] = opVolSelector;
-    tCount = 0;
-    rCount = 0;
-    SetupI2CTransmit(2);
+    TwiStruct->TxBuff[0] = VDD1_OP_REG;
+    TwiStruct->TxBuff[1] = opVolSelector;
+    //tCount = 0;
+    //rCount = 0;
+    _SetupI2CTransmit(TwiStruct, 2);
 
     /*	Read reg value to verify */
-    dataToSlave[0] = VDD1_OP_REG;
-    dataFromSlave[0] = 0; // clear receive buffer
-    dataFromSlave[1] = 0;
-    rCount = 0;
-    tCount = 0;
-    SetupReception(1);
+    TwiStruct->TxBuff[0] = VDD1_OP_REG;
+    TwiStruct->RxBuff[0] = 0; // clear receive buffer
+    TwiStruct->RxBuff[1] = 0;
+    //rCount = 0;
+    //tCount = 0;
+    _SetupI2CReception(TwiStruct, 1, 1);
 
-    while((dataFromSlave[0] & PMIC_VDD1_OP_REG_SEL) != 
+    while((TwiStruct->RxBuff[0] & PMIC_VDD1_OP_REG_SEL) !=
           (opVolSelector << PMIC_VDD1_OP_REG_SEL_SHIFT));
 
 #endif
@@ -1100,7 +1086,7 @@ void ConfigVddOpVoltage(new_twi* TwiStruct)
 
     pmic_write(TwiStruct, PROT_LEVEL_2, DEFLS2, LDO_VOLTAGE_OUT_3_3, LDO_MASK);
 
-#elif  defined (evmAM335x) || defined (evmskAM335x)
+#elif  defined (evmAM335x) || defined (evmskAM335x) || defined (devkit8600)
 
     /* Configure PMIC slave address */
     //I2CMasterSlaveAddrSet(SOC_I2C_0_REGS, PMIC_CNTL_I2C_SLAVE_ADDR);
