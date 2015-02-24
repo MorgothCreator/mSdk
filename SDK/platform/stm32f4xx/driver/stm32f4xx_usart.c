@@ -89,6 +89,7 @@
   */ 
 
 /* Includes ------------------------------------------------------------------*/
+#include "stdbool.h"
 #include "../stm32f4xx_conf.h"
 #include "stm32f4xx_usart.h"
 #include "stm32f4xx_rcc.h"
@@ -560,9 +561,29 @@ void USART_SendData(USART_TypeDef* USARTx, uint16_t Data)
   /* Check the parameters */
   assert_param(IS_USART_ALL_PERIPH(USARTx));
   assert_param(IS_USART_DATA(Data)); 
-    
+  while(!(USARTx->SR & USART_FLAG_TC));
   /* Transmit Data */
   USARTx->DR = (Data & (uint16_t)0x01FF);
+}
+
+/**
+  * @brief  Transmits single data through the USARTx peripheral.
+  * @param  USARTx: Select the USART or the UART peripheral.
+  *   This parameter can be one of the following values:
+  *   USART1, USART2, USART3, UART4 or UART5.
+  * @param  Data: the data to transmit.
+  * @retval None
+  */
+bool UARTCharPutNonBlocking(USART_TypeDef* USARTx, uint16_t Data)
+{
+  /* Check the parameters */
+  assert_param(IS_USART_ALL_PERIPH(USARTx));
+  assert_param(IS_USART_DATA(Data));
+
+  if(!(USARTx->SR & USART_FLAG_TC)) return false;
+  /* Transmit Data */
+  USARTx->DR = (Data & (uint16_t)0x01FF);
+  return true;
 }
 
 /**
@@ -575,11 +596,28 @@ uint16_t USART_ReceiveData(USART_TypeDef* USARTx)
 {
   /* Check the parameters */
   assert_param(IS_USART_ALL_PERIPH(USARTx));
-  
+  while(!(USARTx->SR & USART_FLAG_RXNE));
   /* Receive Data */
   return (uint16_t)(USARTx->DR & (uint16_t)0x01FF);
 }
 
+/**
+  * @brief  Returns the most recent received data by the USARTx peripheral.
+  * @param  USARTx: Select the USART or the UART peripheral.
+  *   This parameter can be one of the following values:
+  *   USART1, USART2, USART3, UART4 or UART5.
+  * @retval The received data.
+  */
+uint16_t UARTCharGetNonBlocking(USART_TypeDef* USARTx)
+{
+  /* Check the parameters */
+  assert_param(IS_USART_ALL_PERIPH(USARTx));
+
+  if(!(USARTx->SR & USART_FLAG_RXNE)) return -1;
+  else
+  /* Receive Data */
+  return (uint16_t)(USARTx->DR & (uint16_t)0x01FF);
+}
 /**
   * @}
   */
