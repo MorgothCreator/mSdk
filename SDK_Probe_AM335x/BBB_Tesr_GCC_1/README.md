@@ -45,7 +45,7 @@ On this example can be tested some interfaces like:
 			2) 1080 24hz.
 			3) 720*480 60hz ( some monitors will cut the edges at this resolution ).
 	
-7) Test some GUY libraryes integrated in a sizeable window like:
+7) Test some GUI libraryes integrated in a sizeable window like:
 
 	Button.
 	
