@@ -117,14 +117,6 @@ int main(void)
 			srf02_display_data(SRF02);
 #endif
 
-#if _USE_MPU60x0_9150 == 1
-			mpu60x0_9150_temperature_display_result(MPU60x0_9150, 0);
-			mpu60x0_9150_giroscope_display_result(MPU60x0_9150, 0);
-			mpu60x0_9150_accelerometer_display_result(MPU60x0_9150, 0);
-#endif
-#if _USE_AK8975 == 1
-			ak8975_display_result(AK8975);
-#endif
 #if _USE_BMP180 == 1
 			//bmp180_display_result(BMP180, BMP180_CTRL_MEAS_OSS_1);
 			float temperature = 0.0;
@@ -135,7 +127,14 @@ int main(void)
 			bmp180_get_altitude(BMP180, &altitude, BMP180_CTRL_MEAS_OSS_8);
 			UARTprintf(DebugCom, "BMP180: T = %2.1f, P = %4.2f, Alt = %4.2f\n\r", temperature, pressure, altitude);
 #endif
-
+#if _USE_MPU60x0_9150 == 1
+			mpu60x0_9150_temperature_display_result(MPU60x0_9150, 0);
+			mpu60x0_9150_giroscope_display_result(MPU60x0_9150, 0);
+			mpu60x0_9150_accelerometer_display_result(MPU60x0_9150, 0);
+#endif
+#if _USE_AK8975 == 1
+			ak8975_display_result(AK8975);
+#endif
 #if _USE_INT_ADC == 1
 			UARTprintf(DebugCom, "ADC1: CH0 = %d, CH1 = %d, TempSensor = %2.2f\n\r\n\r", ADC[0]->ConvResult[0], ADC[0]->ConvResult[1], (float)(((float)1775 - (float)ADC[0]->ConvResult[2]) / 5.337) + (float)25);
 #endif
