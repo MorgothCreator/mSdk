@@ -1811,7 +1811,7 @@ int snprintf (va_alist) //va_dcl
   VA_SHIFT (count, size_t );
   VA_SHIFT (fmt, char *);
   char buff[1];
-  (void) _vsnprintf_(UartSettings, buff, 1, pcString, ap);
+  (void) _vsnprintf_(UartSettings, buff, 65535, pcString, ap);
   VA_END;
   return UartSettings;//(strlen(str));
 }
