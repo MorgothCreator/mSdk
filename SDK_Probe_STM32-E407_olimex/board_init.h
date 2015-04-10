@@ -29,9 +29,14 @@
 //#include "driver/dma.h"
 //#include "lib/fs/fat.h"
 //#include "device/mi0283.h"
-#include "device/mpu60x0.h"
+#include "device/mpu60x0_9150.h"
 #include "device/ak8975.h"
 #include "device/bmp180.h"
+#include "device/sht11.h"
+#include "device/srf02.h"
+#include "device/mhc5883.h"
+#include "device/ms5611.h"
+#include "device/adxl345.h"
 /*#####################################################*/
 #define BOARD_MESSAGE "Olimex STM32-E407"
 /*#####################################################*/
@@ -42,14 +47,26 @@ extern new_adc* ADC[];
 extern new_gpio* LED1;
 extern new_gpio* HARDBTN1;
 extern new_gpio* LED;
-#ifdef USE_MPU60x0
-extern USE_MPU60x0;
+#ifdef USE_MPU60x0_9150
+extern USE_MPU60x0_9150;
 #endif
 #ifdef USE_AK8975
 extern USE_AK8975;
 #endif
 #ifdef USE_BMP180
 extern USE_BMP180;
+#endif
+#ifdef USE_SHT11
+extern USE_SHT11;
+#endif
+#ifdef USE_SRF02
+extern USE_SRF02;
+#endif
+#ifdef USE_MHC5883
+extern USE_MHC5883;
+#endif
+#ifdef USE_MS5611
+extern USE_MS5611;
 #endif
 /*-----------------------------------------------------*/
 //extern new_touchscreen* TouchScreen;

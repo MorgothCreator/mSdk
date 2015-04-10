@@ -28,9 +28,14 @@
 //#include "lib/gfx/controls_definition.h"
 //#include "lib/fs/fat.h"
 //#include "device/mi0283.h"
-#include "device/mpu60x0.h"
+#include "device/mpu60x0_9150.h"
 #include "device/ak8975.h"
 #include "device/bmp180.h"
+#include "device/sht11.h"
+#include "device/srf02.h"
+#include "device/mhc5883.h"
+#include "device/ms5611.h"
+#include "device/adxl345.h"
 /*#####################################################*/
 new_uart* Uart[6] = {NULL,NULL,NULL,NULL,NULL,NULL};
 new_uart* DebugCom = NULL;
@@ -38,14 +43,26 @@ new_twi* TWI[2] = {NULL,NULL};
 new_adc* ADC[2] = {NULL, NULL};
 new_gpio* LED = NULL;
 new_gpio* HARDBTN1 = NULL;
-#ifdef USE_MPU60x0
-USE_MPU60x0;
+#ifdef USE_MPU60x0_9150
+USE_MPU60x0_9150;
 #endif
 #ifdef USE_AK8975
 USE_AK8975;
 #endif
 #ifdef USE_BMP180
 USE_BMP180;
+#endif
+#ifdef USE_SHT11
+USE_SHT11;
+#endif
+#ifdef USE_SRF02
+USE_SRF02;
+#endif
+#ifdef USE_MHC5883
+USE_MHC5883;
+#endif
+#ifdef USE_MS5611
+USE_MS5611;
 #endif
 //*-----------------------------------------------------*/
 //new_touchscreen* TouchScreen = NULL;
@@ -76,13 +93,21 @@ bool board_init()
 	TWI_1_INIT
 /*-----------------------------------------------------*/
 /* Set up the ADC 0 */
+#if _USE_INT_ADC == 1
 	ADC_0_INIT
+#endif
 /*-----------------------------------------------------*/
-	MPU60x0_INIT
+#if _USE_MPU60x0_9150 == 1
+	MPU60x0_9150_INIT
+#endif
 /*-----------------------------------------------------*/
+#if _USE_AK8975 == 1
 	AK8975_INIT
+#endif
 /*-----------------------------------------------------*/
+#if _USE_BMP180 == 1
 	BMP180_INIT
+#endif
 /*-----------------------------------------------------*/
 	HARDBTN1 = gpio_assign(0, 0, GPIO_DIR_INPUT, false);
 	gpio_up_dn(HARDBTN1, 1);

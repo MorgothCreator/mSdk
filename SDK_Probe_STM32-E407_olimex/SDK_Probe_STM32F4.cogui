@@ -10,23 +10,18 @@
 <info part="DefaultEditorWorkbook">
 <folder appearance="1" expanded="2">
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
+<part id="7"/>
 <part id="0"/>
 <part id="1"/>
 <part id="2"/>
-<part id="3"/>
-<part id="5"/>
 <part id="4"/>
-<part id="7"/>
+<part id="3"/>
 <part id="6"/>
-<part id="8"/>
+<part id="5"/>
 </presentation>
 </folder>
 </info>
 </editorArea>
-<editor id="org.eclipse.cdt.ui.editor.CEditor" name="main.c" partName="main.c" path="C:/GitHub/mSdk/SDK_Probe_STM32-E407_olimex/main.c" title="main.c" tooltip="C:/GitHub/mSdk/SDK_Probe_STM32-E407_olimex/main.c" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/main.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="1140" selectionTopPixel="103"/>
-</editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="main.h" partName="main.h" path="C:/GitHub/mSdk/SDK_Probe_STM32-E407_olimex/main.h" title="main.h" tooltip="C:/GitHub/mSdk/SDK_Probe_STM32-E407_olimex/main.h" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/main.h"/>
 <editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="909" selectionTopPixel="0"/>
@@ -41,28 +36,28 @@
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="ak8975.c" partName="ak8975.c" path="C:/GitHub/mSdk/SDK/lib/device/ak8975.c" title="ak8975.c" tooltip="C:/GitHub/mSdk/SDK/lib/device/ak8975.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/lib/device/ak8975.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="427" selectionOffset="2307" selectionTopPixel="553"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="2555" selectionTopPixel="553"/>
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="ak8975.h" partName="ak8975.h" path="C:/GitHub/mSdk/SDK/lib/device/ak8975.h" title="ak8975.h" tooltip="C:/GitHub/mSdk/SDK/lib/device/ak8975.h" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/lib/device/ak8975.h"/>
 <editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="2564" selectionTopPixel="988"/>
 </editor>
-<editor activePart="true" focus="true" id="org.eclipse.cdt.ui.editor.CEditor" name="bmp180.c" partName="bmp180.c" path="C:/GitHub/mSdk/SDK/lib/device/bmp180.c" title="bmp180.c" tooltip="C:/GitHub/mSdk/SDK/lib/device/bmp180.c" workbook="DefaultEditorWorkbook">
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="bmp180.c" partName="bmp180.c" path="C:/GitHub/mSdk/SDK/lib/device/bmp180.c" title="bmp180.c" tooltip="C:/GitHub/mSdk/SDK/lib/device/bmp180.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/lib/device/bmp180.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="14" selectionOffset="3678" selectionTopPixel="1078"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="3397" selectionTopPixel="688"/>
 </editor>
-<editor id="org.eclipse.cdt.ui.editor.CEditor" name="bmp180.h" partName="bmp180.h" path="C:/GitHub/mSdk/SDK/lib/device/bmp180.h" title="bmp180.h" tooltip="C:/GitHub/mSdk/SDK/lib/device/bmp180.h" workbook="DefaultEditorWorkbook">
+<editor activePart="true" focus="true" id="org.eclipse.cdt.ui.editor.CEditor" name="bmp180.h" partName="bmp180.h" path="C:/GitHub/mSdk/SDK/lib/device/bmp180.h" title="bmp180.h" tooltip="C:/GitHub/mSdk/SDK/lib/device/bmp180.h" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/lib/device/bmp180.h"/>
-<editorState selectionHorizontalPixel="0" selectionLength="11" selectionOffset="1102" selectionTopPixel="343"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="2390" selectionTopPixel="1003"/>
 </editor>
-<editor id="org.eclipse.cdt.ui.editor.CEditor" name="ms5611.c" partName="ms5611.c" path="C:/GitHub/mSdk/SDK/lib/device/ms5611.c" title="ms5611.c" tooltip="C:/GitHub/mSdk/SDK/lib/device/ms5611.c" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/lib/device/ms5611.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="0" selectionTopPixel="1963"/>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="main.c" partName="main.c" path="C:/GitHub/mSdk/SDK_Probe_STM32-E407_olimex/main.c" title="main.c" tooltip="C:/GitHub/mSdk/SDK_Probe_STM32-E407_olimex/main.c" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/main.c"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="1400" selectionTopPixel="208"/>
 </editor>
 </editors>
 <views>
 <view id="org.coocox.builder.ui.views.ProjectView" partName="Project">
-<viewState CommonNavigator.LINKING_ENABLED="0" horizontalPosition="0" org.eclipse.ui.navigator.resources.workingSets.showTopLevelWorkingSets="0" verticalPosition="0">
+<viewState CommonNavigator.LINKING_ENABLED="0" horizontalPosition="0" org.eclipse.ui.navigator.resources.workingSets.showTopLevelWorkingSets="0" verticalPosition="43">
 <expanded>
 <element path="/SDK_Probe_STM32F4"/>
 <element path="/SDK_Probe_STM32F4/lib"/>
@@ -71,7 +66,7 @@
 <element path="/SDK_Probe_STM32F4/stm32f4xx/interface"/>
 </expanded>
 <selection>
-<element path="/SDK_Probe_STM32F4/lib/device/ms5611.c"/>
+<element path="/SDK_Probe_STM32F4/main.c"/>
 </selection>
 </viewState>
 </view>
@@ -88,9 +83,7 @@
 <viewState/>
 </view>
 <view id="org.coocox.coassistant.view.CoAssistantView_debug" partName="Peripherals">
-<viewState horizontalPosition="0" verticalPosition="5">
-<registerValues baseAddress="Base Address: 0x40005400" description="Description:  I2C1 event interrupt"/>
-</viewState>
+<viewState horizontalPosition="0" verticalPosition="0"/>
 </view>
 <view id="org.eclipse.cdt.dsf.debug.ui.disassembly.view" partName="Disassembly">
 <viewState disassembly.syncActiveContext="true" disassembly.trackExpression="false"/>
@@ -121,8 +114,8 @@
 <hide_menu_item_id id="org.coocox.codebugger.configuration.showMemoryBrowserAction"/>
 <hide_menu_item_id id="org.coocox.codebugger.configuration.showVariablesAction"/>
 <hide_menu_item_id id="org.coocox.builder.ui.openProjectExplorerAction"/>
-<hide_menu_item_id id="org.coocox.codebugger.trace.actions.ShowTraceControlAction"/>
 <hide_menu_item_id id="org.eclipse.debug.ui.commands.TerminateAndRelaunch"/>
+<hide_menu_item_id id="org.coocox.codebugger.trace.actions.ShowTraceControlAction"/>
 <hide_menu_item_id id="org.coocox.codebugger.configuration.showRegistersAction"/>
 <hide_toolbar_item_id id="org.eclipse.cdt.debug.internal.ui.actions.ToggleInstructionStepModeAction"/>
 <hide_toolbar_item_id id="org.eclipse.ui.edit.text.toggleShowSelectedElementOnly"/>
@@ -181,44 +174,44 @@
 <alwaysOnActionSet id="org.eclipse.ui.actionSet.openFiles"/>
 <alwaysOnActionSet id="org.eclipse.debug.ui.breakpointActionSet"/>
 <alwaysOnActionSet id="org.eclipse.debug.ui.debugActionSet"/>
-<hide_menu_item_id id="org.coocox.builder.ui.newFile"/>
 <hide_menu_item_id id="org.coocox.builder.ui.newFolder"/>
-<hide_menu_item_id id="org.coocox.builder.ui.openFile"/>
+<hide_menu_item_id id="org.coocox.welcome.ui.action.repository"/>
 <hide_menu_item_id id="org.eclipse.ui.file.save"/>
-<hide_menu_item_id id="org.eclipse.ui.file.saveAs"/>
+<hide_menu_item_id id="org.eclipse.jdt.ui.refactoring.menu"/>
+<hide_menu_item_id id="org.coocox.builder.ui.rebuild"/>
 <hide_menu_item_id id="org.eclipse.ui.file.saveAll"/>
+<hide_menu_item_id id="org.coocox.builder.ui.openFile"/>
+<hide_menu_item_id id="org.eclipse.ui.file.saveAs"/>
 <hide_menu_item_id id="org.coocox.builder.rcp.projectMenu"/>
 <hide_menu_item_id id="org.coocox.builder.rcp.flashMenu"/>
-<hide_menu_item_id id="org.coocox.builder.ui.showHelpViewAction"/>
-<hide_menu_item_id id="org.coocox.component.ui.ShowRepositoryAction"/>
 <hide_menu_item_id id="org.coocox.builder.ui.debug"/>
-<hide_menu_item_id id="org.coocox.builder.ui.build"/>
-<hide_menu_item_id id="org.coocox.builder.ui.rebuild"/>
-<hide_menu_item_id id="org.eclipse.jdt.ui.refactoring.menu"/>
-<hide_menu_item_id id="org.eclipse.jdt.ui.source.menu"/>
+<hide_menu_item_id id="org.coocox.builder.ui.showHelpViewAction"/>
+<hide_menu_item_id id="org.coocox.builder.ui.newFile"/>
 <hide_menu_item_id id="org.coocox.builder.ui.actions.ConfigurationAction"/>
+<hide_menu_item_id id="org.eclipse.jdt.ui.source.menu"/>
+<hide_menu_item_id id="org.coocox.builder.ui.build"/>
 <hide_menu_item_id id="org.coocox.welcome.ui.action.welcome"/>
-<hide_menu_item_id id="org.coocox.welcome.ui.action.repository"/>
-<hide_toolbar_item_id id="org.coocox.builder.ui.newProject"/>
-<hide_toolbar_item_id id="org.coocox.builder.ui.newFile"/>
-<hide_toolbar_item_id id="org.eclipse.ui.file.save"/>
-<hide_toolbar_item_id id="org.coocox.component.ui.ShowRepositoryAction"/>
-<hide_toolbar_item_id id="org.coocox.builder.ui.build"/>
-<hide_toolbar_item_id id="org.coocox.builder.ui.rebuild"/>
-<hide_toolbar_item_id id="org.coocox.builder.ui.debug"/>
-<hide_toolbar_item_id id="org.coocox.codebugger.configuration.coideProgramDownloadAction"/>
-<hide_toolbar_item_id id="org.coocox.codebugger.configuration.coideFlashEraseAction"/>
+<hide_menu_item_id id="org.coocox.component.ui.ShowRepositoryAction"/>
 <hide_toolbar_item_id id="org.coocox.builder.ui.actions.TargetManageAction"/>
-<hide_toolbar_item_id id="org.coocox.builder.ui.actions.ConfigurationAction"/>
-<hide_toolbar_item_id id="org.coocox.welcome.ui.action.welcome"/>
+<hide_toolbar_item_id id="org.coocox.builder.ui.newProject"/>
 <hide_toolbar_item_id id="org.coocox.welcome.ui.action.repository"/>
+<hide_toolbar_item_id id="org.eclipse.ui.file.save"/>
+<hide_toolbar_item_id id="org.coocox.builder.ui.rebuild"/>
+<hide_toolbar_item_id id="org.coocox.codebugger.configuration.coideFlashEraseAction"/>
+<hide_toolbar_item_id id="org.coocox.builder.ui.debug"/>
+<hide_toolbar_item_id id="org.coocox.builder.ui.newFile"/>
+<hide_toolbar_item_id id="org.coocox.builder.ui.actions.ConfigurationAction"/>
 <hide_toolbar_item_id id="org.eclipse.ui.edit.text.toggleShowSelectedElementOnly"/>
+<hide_toolbar_item_id id="org.coocox.builder.ui.build"/>
+<hide_toolbar_item_id id="org.coocox.welcome.ui.action.welcome"/>
+<hide_toolbar_item_id id="org.coocox.component.ui.ShowRepositoryAction"/>
+<hide_toolbar_item_id id="org.coocox.codebugger.configuration.coideProgramDownloadAction"/>
 <view id="org.eclipse.ui.console.ConsoleView"/>
 <view id="org.eclipse.debug.ui.DebugView"/>
 <view id="org.coocox.codebugger.trace.ui.traceview"/>
 <view id="org.eclipse.debug.ui.VariableView"/>
-<view id="org.eclipse.cdt.dsf.debug.ui.disassembly.view"/>
 <view id="org.coocox.coassistant.view.CoAssistantView_debug"/>
+<view id="org.eclipse.cdt.dsf.debug.ui.disassembly.view"/>
 <view id="org.coocox.builder.ui.views.ProjectView"/>
 <fastViewBars/>
 <viewLayoutRec closeable="false" id="org.eclipse.debug.ui.DebugView"/>
@@ -282,165 +275,167 @@
 <workingSets/>
 <navigationHistory>
 <editors>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/lib/device/ak8975.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/lib/device/bmp180.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/lib/device/bmp180.h"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/main.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/main.h"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/board_init.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/board_init.h"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/lib/device/mhc5883.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/lib/device/ms5611.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/lib/device/ms5611.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.asm.AsmEditor" path="/SDK_Probe_STM32F4/stm32f4xx/sys/startup_stm32f40xx.S"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/main.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/stm32f4xx/interface/adc_interface.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/lib/device/bmp180.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/lib/device/ak8975.c"/>
 </editors>
-<item historyLabel="bmp180.c" index="1">
-<position info="not_deleted" x="3622" y="0"/>
-</item>
-<item historyLabel="ak8975.c" index="0">
-<position info="not_deleted" x="2307" y="427"/>
-</item>
-<item historyLabel="bmp180.c" index="1">
-<position info="not_deleted" x="3622" y="0"/>
-</item>
-<item historyLabel="bmp180.c" index="1">
-<position info="not_deleted" x="4106" y="0"/>
-</item>
-<item historyLabel="bmp180.h" index="2">
-<position info="not_deleted" x="1491" y="22"/>
-</item>
-<item historyLabel="bmp180.c" index="1">
-<position info="not_deleted" x="4106" y="0"/>
-</item>
-<item historyLabel="bmp180.c" index="1">
-<position/>
-</item>
-<item historyLabel="bmp180.c" index="1">
-<position info="not_deleted" x="4610" y="0"/>
-</item>
-<item historyLabel="bmp180.c" index="1">
-<position info="not_deleted" x="4908" y="0"/>
-</item>
-<item historyLabel="bmp180.c" index="1">
-<position info="not_deleted" x="4469" y="0"/>
-</item>
-<item historyLabel="bmp180.c" index="1">
-<position info="not_deleted" x="4908" y="0"/>
-</item>
-<item historyLabel="bmp180.c" index="1">
-<position info="not_deleted" x="4604" y="0"/>
-</item>
-<item historyLabel="bmp180.c" index="1">
-<position info="not_deleted" x="4908" y="0"/>
-</item>
-<item historyLabel="bmp180.c" index="1">
-<position info="not_deleted" x="4688" y="0"/>
-</item>
-<item historyLabel="bmp180.c" index="1">
-<position info="not_deleted" x="4721" y="0"/>
-</item>
-<item historyLabel="bmp180.c" index="1">
-<position info="not_deleted" x="955" y="52"/>
-</item>
-<item historyLabel="bmp180.h" index="2">
-<position info="not_deleted" x="2694" y="0"/>
-</item>
-<item historyLabel="bmp180.c" index="1">
-<position info="not_deleted" x="2360" y="65"/>
-</item>
-<item historyLabel="bmp180.h" index="2">
-<position info="not_deleted" x="2694" y="0"/>
-</item>
-<item historyLabel="bmp180.c" index="1">
-<position info="not_deleted" x="2976" y="92"/>
-</item>
-<item historyLabel="bmp180.h" index="2">
-<position info="not_deleted" x="2694" y="0"/>
-</item>
-<item historyLabel="bmp180.c" index="1">
-<position info="not_deleted" x="3626" y="70"/>
-</item>
-<item historyLabel="bmp180.h" index="2">
-<position info="not_deleted" x="2692" y="0"/>
-</item>
-<item historyLabel="main.c" index="3">
-<position info="not_deleted" x="236" y="28"/>
-</item>
-<item historyLabel="main.h" index="4">
-<position info="not_deleted" x="1065" y="0"/>
-</item>
-<item historyLabel="board_init.c" index="5">
-<position info="not_deleted" x="832" y="0"/>
-</item>
-<item historyLabel="board_init.h" index="6">
-<position info="not_deleted" x="1367" y="47"/>
-</item>
-<item historyLabel="board_init.c" index="5">
-<position info="not_deleted" x="1190" y="0"/>
-</item>
-<item historyLabel="main.c" index="3">
-<position info="not_deleted" x="236" y="28"/>
-</item>
-<item historyLabel="main.h" index="4">
-<position info="not_deleted" x="909" y="0"/>
-</item>
-<item historyLabel="board_init.c" index="5">
-<position info="not_deleted" x="2562" y="0"/>
-</item>
-<item historyLabel="bmp180.h" index="2">
-<position info="not_deleted" x="2692" y="0"/>
-</item>
-<item historyLabel="bmp180.c" index="1">
-<position info="not_deleted" x="3631" y="21"/>
-</item>
-<item historyLabel="main.c" index="3">
+<item historyLabel="main.c" index="2">
 <position info="not_deleted" x="1138" y="0"/>
 </item>
-<item historyLabel="bmp180.h" index="2">
-<position info="not_deleted" x="1491" y="22"/>
-</item>
-<item historyLabel="main.c" index="3">
-<position info="not_deleted" x="1138" y="0"/>
-</item>
-<item historyLabel="bmp180.h" index="2">
-<position info="not_deleted" x="1491" y="22"/>
-</item>
-<item historyLabel="bmp180.c" index="1">
-<position info="not_deleted" x="3631" y="21"/>
-</item>
-<item historyLabel="main.c" index="3">
-<position info="not_deleted" x="1138" y="0"/>
-</item>
-<item historyLabel="main.c" index="3">
+<item historyLabel="main.c" index="2">
 <position info="not_deleted" x="1140" y="0"/>
 </item>
-<item historyLabel="bmp180.c" index="1">
+<item historyLabel="bmp180.c" index="0">
 <position info="not_deleted" x="2782" y="0"/>
 </item>
-<item historyLabel="bmp180.c" index="1">
+<item historyLabel="bmp180.c" index="0">
 <position info="not_deleted" x="3388" y="41"/>
 </item>
-<item historyLabel="bmp180.c" index="1">
+<item historyLabel="bmp180.c" index="0">
 <position info="not_deleted" x="3290" y="0"/>
 </item>
-<item historyLabel="bmp180.c" index="1">
+<item historyLabel="bmp180.c" index="0">
 <position/>
 </item>
-<item historyLabel="bmp180.h" index="2">
+<item historyLabel="bmp180.h" index="1">
 <position info="not_deleted" x="1102" y="11"/>
 </item>
-<item historyLabel="bmp180.c" index="1">
+<item historyLabel="bmp180.c" index="0">
 <position info="not_deleted" x="4908" y="0"/>
 </item>
-<item historyLabel="mhc5883.c" index="7">
+<item historyLabel="mhc5883.c" index="3">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="bmp180.c" index="1">
+<item historyLabel="bmp180.c" index="0">
 <position info="not_deleted" x="4908" y="0"/>
 </item>
-<item historyLabel="ms5611.c" index="8">
+<item historyLabel="ms5611.c" index="4">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item active="true" historyLabel="bmp180.c" index="1">
+<item historyLabel="bmp180.c" index="0">
 <position info="not_deleted" x="4908" y="0"/>
+</item>
+<item historyLabel="ms5611.c" index="5">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="bmp180.c" index="0">
+<position info="not_deleted" x="4941" y="0"/>
+</item>
+<item historyLabel="startup_stm32f40xx.S" index="6">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="main.c" index="7">
+<position info="not_deleted" x="1140" y="0"/>
+</item>
+<item historyLabel="main.c" index="7">
+<position info="not_deleted" x="282" y="0"/>
+</item>
+<item historyLabel="adc_interface.c" index="8">
+<position info="not_deleted" x="1530" y="0"/>
+</item>
+<item historyLabel="bmp180.c" index="0">
+<position info="not_deleted" x="4129" y="0"/>
+</item>
+<item historyLabel="bmp180.c" index="0">
+<position info="not_deleted" x="3684" y="0"/>
+</item>
+<item historyLabel="bmp180.c" index="0">
+<position info="not_deleted" x="4867" y="0"/>
+</item>
+<item historyLabel="bmp180.h" index="9">
+<position info="not_deleted" x="1102" y="11"/>
+</item>
+<item historyLabel="bmp180.c" index="0">
+<position info="not_deleted" x="3621" y="0"/>
+</item>
+<item historyLabel="ak8975.c" index="10">
+<position info="not_deleted" x="2555" y="0"/>
+</item>
+<item historyLabel="bmp180.c" index="0">
+<position info="not_deleted" x="4860" y="0"/>
+</item>
+<item historyLabel="bmp180.c" index="0">
+<position info="not_deleted" x="6980" y="0"/>
+</item>
+<item historyLabel="bmp180.c" index="0">
+<position info="not_deleted" x="5097" y="58"/>
+</item>
+<item historyLabel="bmp180.h" index="9">
+<position info="not_deleted" x="2919" y="0"/>
+</item>
+<item historyLabel="bmp180.c" index="0">
+<position info="not_deleted" x="5563" y="85"/>
+</item>
+<item historyLabel="bmp180.h" index="9">
+<position info="not_deleted" x="2919" y="0"/>
+</item>
+<item historyLabel="bmp180.c" index="0">
+<position info="not_deleted" x="6870" y="85"/>
+</item>
+<item historyLabel="bmp180.h" index="9">
+<position info="not_deleted" x="2852" y="0"/>
+</item>
+<item historyLabel="adc_interface.c" index="8">
+<position info="not_deleted" x="1530" y="0"/>
+</item>
+<item historyLabel="bmp180.h" index="9">
+<position info="not_deleted" x="2852" y="0"/>
+</item>
+<item historyLabel="main.c" index="7">
+<position info="not_deleted" x="1515" y="0"/>
+</item>
+<item historyLabel="bmp180.c" index="0">
+<position info="not_deleted" x="5568" y="19"/>
+</item>
+<item historyLabel="main.c" index="7">
+<position info="not_deleted" x="1515" y="0"/>
+</item>
+<item historyLabel="bmp180.c" index="0">
+<position info="not_deleted" x="4954" y="123"/>
+</item>
+<item historyLabel="main.c" index="7">
+<position info="not_deleted" x="1511" y="0"/>
+</item>
+<item historyLabel="bmp180.c" index="0">
+<position info="not_deleted" x="5228" y="22"/>
+</item>
+<item historyLabel="bmp180.c" index="0">
+<position info="not_deleted" x="5982" y="35"/>
+</item>
+<item historyLabel="bmp180.c" index="0">
+<position info="not_deleted" x="4143" y="0"/>
+</item>
+<item historyLabel="bmp180.c" index="0">
+<position info="not_deleted" x="7134" y="3"/>
+</item>
+<item historyLabel="bmp180.c" index="0">
+<position info="not_deleted" x="7132" y="0"/>
+</item>
+<item historyLabel="bmp180.c" index="0">
+<position info="not_deleted" x="3397" y="0"/>
+</item>
+<item historyLabel="main.c" index="7">
+<position info="not_deleted" x="1334" y="0"/>
+</item>
+<item historyLabel="bmp180.h" index="9">
+<position info="not_deleted" x="2852" y="0"/>
+</item>
+<item historyLabel="main.c" index="7">
+<position info="not_deleted" x="1400" y="0"/>
+</item>
+<item historyLabel="ak8975.c" index="10">
+<position info="not_deleted" x="2555" y="0"/>
+</item>
+<item active="true" historyLabel="bmp180.h" index="9">
+<position info="not_deleted" x="2852" y="0"/>
 </item>
 </navigationHistory>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
@@ -449,6 +444,17 @@
 <actionBarAdvisor/>
 </window>
 <mruList>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="main.c" tooltip="SDK_Probe_STM32F4/main.c">
+<persistable path="/SDK_Probe_STM32F4/main.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.asm.AsmEditor" name="startup_stm32f40xx.S" tooltip="SDK_Probe_STM32F4/stm32f4xx/sys/startup_stm32f40xx.S">
+<persistable path="/SDK_Probe_STM32F4/stm32f4xx/sys/startup_stm32f40xx.S"/>
+</file>
+<file factoryID="org.coocox.builder.ui.persistent.PersistentElementFactory" id="org.coocox.welcome.ui.WelcomePage" name="" tooltip="">
+<persistable>
+<org.coocox.welcome.ui.WelcomePage/>
+</persistable>
+</file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="ms5611.c" tooltip="SDK_Probe_STM32F4/lib/device/ms5611.c">
 <persistable path="/SDK_Probe_STM32F4/lib/device/ms5611.c"/>
 </file>
@@ -463,9 +469,6 @@
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="stm32f4xx_rcc.c" tooltip="SDK_Probe_STM32F4/stm32f4xx/driver/stm32f4xx_rcc.c">
 <persistable path="/SDK_Probe_STM32F4/stm32f4xx/driver/stm32f4xx_rcc.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.asm.AsmEditor" name="startup_stm32f40xx.S" tooltip="SDK_Probe_STM32F4/stm32f4xx/sys/startup_stm32f40xx.S">
-<persistable path="/SDK_Probe_STM32F4/stm32f4xx/sys/startup_stm32f40xx.S"/>
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="adc_interface_def.h" tooltip="SDK_Probe_STM32F4/stm32f4xx/interface/adc_interface_def.h">
 <persistable path="/SDK_Probe_STM32F4/stm32f4xx/interface/adc_interface_def.h"/>

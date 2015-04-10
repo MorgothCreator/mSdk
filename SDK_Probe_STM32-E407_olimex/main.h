@@ -8,26 +8,82 @@
 #ifndef MAIN_H_
 #define MAIN_H_
 /*#####################################################*/
-#define USE_MPU60x0 \
-	new_mpu60x0 *MPU60x0
+#define _USE_MPU60x0_9150	1
+#define _USE_AK8975			1
+#define _USE_BMP180			1
+#define _USE_MS5611			1
+#define _USE_MHC5883		1
+#define _USE_SRF02			1
+#define _USE_SHT11 			0
+#define _USE_INT_ADC		0
 /*#####################################################*/
-#define MPU60x0_INIT \
-	MPU60x0 = new_(new_mpu60x0);\
-	MPU60x0->TWI = TWI[0];
+#if _USE_MPU60x0_9150 == 1
+#define USE_MPU60x0_9150 \
+	new_mpu60x0_9150 *MPU60x0_9150
+/*-----------------------------------------------------*/
+#define MPU60x0_9150_INIT \
+	MPU60x0_9150 = new_(new_mpu60x0_9150);\
+	MPU60x0_9150->TWI = TWI[0];
+#endif
 /*#####################################################*/
+#if _USE_AK8975 == 1
 #define USE_AK8975 \
 	new_ak8975 *AK8975
-/*#####################################################*/
+/*-----------------------------------------------------*/
 #define AK8975_INIT \
 	AK8975 = new_(new_ak8975);\
 	AK8975->TWI = TWI[0];
+#endif
 /*#####################################################*/
+#if _USE_BMP180 == 1
 #define USE_BMP180 \
 	new_bmp180 *BMP180
-/*#####################################################*/
+/*-----------------------------------------------------*/
 #define BMP180_INIT \
 	BMP180 = new_(new_bmp180);\
 	BMP180->TWI = TWI[0];
+#endif
+/*#####################################################*/
+#if _USE_MS5611 == 1
+#define USE_MS5611 \
+	new_ms5611 *MS5611
+/*-----------------------------------------------------*/
+#define MS5611_INIT \
+	MS5611 = new_(new_ms5611);\
+	MS5611->TWI = TWI[0];
+#endif
+/*#####################################################*/
+#if _USE_MHC5883 == 1
+#define USE_MHC5883 \
+	new_mhc5883 *MHC5883
+/*-----------------------------------------------------*/
+#define MHC5883_INIT \
+	MHC5883 = new_(new_mhc5883);\
+	MHC5883->TWI = TWI[0];
+#endif
+/*#####################################################*/
+#if _USE_SRF02 == 1
+#define USE_SRF02 \
+	new_srf02 *SRF02
+/*-----------------------------------------------------*/
+#define SRF02_INIT \
+	SRF02 = new_(new_srf02);\
+	SRF02->measure_unit = SRF02_CENTIMETER;\
+	SRF02->addr = (0xE0 >> 1);/*the real address is 0x70*/\
+	SRF02->TWI = TWI[0];
+#endif
+/*#####################################################*/
+#if _USE_SHT11 == 1
+#define USE_SHT11 \
+	new_sht11 *SHT11
+/*-----------------------------------------------------*/
+#define SHT11_INIT \
+	SHT11 = new_(new_sht11);\
+	SHT11->Scl = gpio_assign(IOB, 12, GPIO_OUT_OPEN_DRAIN, false); \
+	SHT11->Sda = gpio_assign(IOB, 13, GPIO_OUT_OPEN_DRAIN, false); \
+	SHT11->state_delay = 200;\
+	SHT11->vdd_comp = SH11_VDD_3_5V;
+#endif
 /*#####################################################*/
 #define UART_0_INIT \
 	Uart[5] = new_(new_uart);\
@@ -59,6 +115,7 @@
 	twi_open(TWI[0]);\
 	UARTPuts(DebugCom, "OK.\n\r" , -1);
 /*#####################################################*/
+#if _USE_INT_ADC == 1
 #define ADC_0_INIT \
 	UARTPuts(DebugCom, "Setup ADC 0....." , -1);\
 	ADC[0] = new_(new_adc);\
@@ -83,6 +140,7 @@
 	ADC[0]->ResolutionBits = 12;\
 	if(adc_init(ADC[0])) UARTPuts(DebugCom, "OK.\n\r" , -1);\
 	else  UARTPuts(DebugCom, "FAILED.\n\r" , -1);
+#endif
 /*#####################################################*/
 #endif /* MAIN_H_ */
 /*#####################################################*/
