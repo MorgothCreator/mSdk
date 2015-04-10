@@ -30,18 +30,18 @@ bool DS1307_Setup(new_twi* TwiStruct)
 {
 	TwiStruct->MasterSlaveAddr = DS1307_Rtc_DeviceAddr;
 	TwiStruct->TxBuff[0] = DS1307_RTC_SecReg;
-	if(!SetupI2CReception(TwiStruct, DS1307_Address_Length, 1)) return false;
-	else
-	{
-		if((TwiStruct->RxBuff[0] & DS1307_Ch_bm) != 0)
-		{
+	if(!SetupI2CReception(TwiStruct, DS1307_Address_Length, 1))
+		return false;
+	else {
+		if((TwiStruct->RxBuff[0] & DS1307_Ch_bm) != 0) {
 			unsigned char *RxBuff = TwiStruct->RxBuff;
 			unsigned char *TxBuff = TwiStruct->TxBuff;
 			*TxBuff++ = DS1307_RTC_SecReg;
 			*TxBuff++ = *RxBuff++ & !DS1307_Ch_bm;
 			*TxBuff++ = *RxBuff++;
 			*TxBuff++ = *RxBuff | DS1307_12_24_bm;
-			SetupI2CTransmit(TwiStruct, DS1307_Address_Length + 4);
+			if(!SetupI2CTransmit(TwiStruct, DS1307_Address_Length + 4))
+				return false;
 		}
 	}
 	return true;
@@ -130,9 +130,9 @@ bool DS1307_ReadTime_Str(new_twi* TwiStruct, char* Buff)
 {
 	TwiStruct->MasterSlaveAddr = DS1307_Rtc_DeviceAddr;
 	*TwiStruct->TxBuff = DS1307_RTC_SecReg;
-	if(!SetupI2CReception(TwiStruct, DS1307_Address_Length, 7)) return false;
-	else
-	{
+	if(!SetupI2CReception(TwiStruct, DS1307_Address_Length, 7))
+		return false;
+	else {
 #if defined(_AVR_IOXXX_H_)
 		unsigned char *ReadBuffer = TwiStruct->RxBuff;
 		utoa((unsigned short)((ReadBuffer[6] & DS1307_10Year_gm) >> DS1307_10Year_gp), (char *)Buff, 10);
@@ -197,23 +197,23 @@ void DS1307_Write_RTC(new_twi* TwiStruct, unsigned char Reg, unsigned char Data)
 	switch (Reg)
 	{
 		case DS1307_RTC_SecReg:
-		TmpReg = (TmpReg & ~(DS1307_Seconds_gm | DS1307_10Seconds_gm)) | (DS1307_Byte_To_Bcd(Data) & (DS1307_Seconds_gm | DS1307_10Seconds_gm));
-		break;
+			TmpReg = (TmpReg & ~(DS1307_Seconds_gm | DS1307_10Seconds_gm)) | (DS1307_Byte_To_Bcd(Data) & (DS1307_Seconds_gm | DS1307_10Seconds_gm));
+			break;
 		case DS1307_RTC_MinReg:
-		TmpReg = (TmpReg & ~(DS1307_Minutes_gm | DS1307_10Minutes_gm)) | (DS1307_Byte_To_Bcd(Data) & (DS1307_Minutes_gm | DS1307_10Minutes_gm));
-		break;
+			TmpReg = (TmpReg & ~(DS1307_Minutes_gm | DS1307_10Minutes_gm)) | (DS1307_Byte_To_Bcd(Data) & (DS1307_Minutes_gm | DS1307_10Minutes_gm));
+			break;
 		case DS1307_RTC_HourReg:
-		TmpReg = (TmpReg & ~(DS1307_Hours_gm | DS1307_10Hours_gm)) | (DS1307_Byte_To_Bcd(Data) & (DS1307_Hours_gm | DS1307_10Hours_gm));
-		break;
+			TmpReg = (TmpReg & ~(DS1307_Hours_gm | DS1307_10Hours_gm)) | (DS1307_Byte_To_Bcd(Data) & (DS1307_Hours_gm | DS1307_10Hours_gm));
+			break;
 		case DS1307_RTC_DateReg:
-		TmpReg = (TmpReg & ~(DS1307_Date_gm | DS1307_10Date_gm)) | (DS1307_Byte_To_Bcd(Data) & (DS1307_Date_gm | DS1307_10Date_gm));
-		break;
+			TmpReg = (TmpReg & ~(DS1307_Date_gm | DS1307_10Date_gm)) | (DS1307_Byte_To_Bcd(Data) & (DS1307_Date_gm | DS1307_10Date_gm));
+			break;
 		case DS1307_RTC_MonthReg:
-		TmpReg = (TmpReg & ~(DS1307_Month_gm | DS1307_10Month_bm)) | (DS1307_Byte_To_Bcd(Data) & (DS1307_Month_gm | DS1307_10Month_bm));
-		break;
+			TmpReg = (TmpReg & ~(DS1307_Month_gm | DS1307_10Month_bm)) | (DS1307_Byte_To_Bcd(Data) & (DS1307_Month_gm | DS1307_10Month_bm));
+			break;
 		case DS1307_RTC_YearReg:
-		TmpReg = (TmpReg & ~(DS1307_Year_gm | DS1307_10Year_gm)) | (DS1307_Byte_To_Bcd(Data) & (DS1307_Year_gm | DS1307_10Year_gm));
-		break;
+			TmpReg = (TmpReg & ~(DS1307_Year_gm | DS1307_10Year_gm)) | (DS1307_Byte_To_Bcd(Data) & (DS1307_Year_gm | DS1307_10Year_gm));
+			break;
 	}
 	DS1307_Write_Reg(TwiStruct, Reg, TmpReg);
 }

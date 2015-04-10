@@ -33,9 +33,11 @@ bool mhc5883_sample_nr_set(MHC5883_t *structure, unsigned char Value)
 	Twi_t *TwiStruct = structure->TWI;
 	TwiStruct->MasterSlaveAddr = MHC5883_ADDR;
 	TwiStruct->TxBuff[0] = MHC5883_CONFIG_REG_A;
-	if(!SetupI2CReception(TwiStruct, 1, 1)) return false;
+	if(!SetupI2CReception(TwiStruct, 1, 1))
+		return false;
 	TwiStruct->TxBuff[1] = (TwiStruct->RxBuff[0] & ~MHC5883_CONFIG_REG_A_MA_gm) | ((Value << MHC5883_CONFIG_REG_A_MA_gp) & MHC5883_CONFIG_REG_A_MA_gm);
-	if(!SetupI2CTransmit(TwiStruct, 2)) return false;
+	if(!SetupI2CTransmit(TwiStruct, 2))
+		return false;
 	return true;
 }
 
@@ -44,9 +46,11 @@ bool mhc5883_data_output_rate_set(MHC5883_t *structure, unsigned char Value)
 	Twi_t *TwiStruct = structure->TWI;
 	TwiStruct->MasterSlaveAddr = MHC5883_ADDR;
 	TwiStruct->TxBuff[0] = MHC5883_CONFIG_REG_A;
-	if(!SetupI2CReception(TwiStruct, 1, 1)) return false;
+	if(!SetupI2CReception(TwiStruct, 1, 1))
+		return false;
 	TwiStruct->TxBuff[1] = (TwiStruct->RxBuff[0] & ~MHC5883_CONFIG_REG_A_DO_gm) | ((Value << MHC5883_CONFIG_REG_A_DO_gp) & MHC5883_CONFIG_REG_A_DO_gm);
-	if(!SetupI2CTransmit(TwiStruct, 2)) return false;
+	if(!SetupI2CTransmit(TwiStruct, 2))
+		return false;
 	return true;
 }
 
@@ -55,9 +59,11 @@ bool mhc5883_measurament_mode_set(MHC5883_t *structure, unsigned char Value)
 	Twi_t *TwiStruct = structure->TWI;
 	TwiStruct->MasterSlaveAddr = MHC5883_ADDR;
 	TwiStruct->TxBuff[0] = MHC5883_CONFIG_REG_A;
-	if(!SetupI2CReception(TwiStruct, 1, 1)) return false;
+	if(!SetupI2CReception(TwiStruct, 1, 1))
+		return false;
 	TwiStruct->TxBuff[1] = (TwiStruct->RxBuff[0] & ~MHC5883_CONFIG_REG_A_MS_gm) | ((Value << MHC5883_CONFIG_REG_A_MS_gp) & MHC5883_CONFIG_REG_A_MS_gm);
-	if(!SetupI2CTransmit(TwiStruct, 2)) return false;
+	if(!SetupI2CTransmit(TwiStruct, 2))
+		return false;
 	return true;
 }
 
@@ -66,9 +72,11 @@ bool mhc5883_gain_set(MHC5883_t *structure, unsigned char Value)
 	Twi_t *TwiStruct = structure->TWI;
 	TwiStruct->MasterSlaveAddr = MHC5883_ADDR;
 	TwiStruct->TxBuff[0] = MHC5883_CONFIG_REG_B;
-	if(!SetupI2CReception(TwiStruct, 1, 1)) return false;
+	if(!SetupI2CReception(TwiStruct, 1, 1))
+		return false;
 	TwiStruct->TxBuff[1] = (TwiStruct->RxBuff[0] & ~MHC5883_CONFIG_REG_B_GN_gm) | ((Value << MHC5883_CONFIG_REG_B_GN_gp) & MHC5883_CONFIG_REG_B_GN_gm);
-	if(!SetupI2CTransmit(TwiStruct, 2)) return false;
+	if(!SetupI2CTransmit(TwiStruct, 2))
+		return false;
 	return true;
 }
 
@@ -77,9 +85,11 @@ bool mhc5883_mode_set(MHC5883_t *structure, unsigned char Value)
 	Twi_t *TwiStruct = structure->TWI;
 	TwiStruct->MasterSlaveAddr = MHC5883_ADDR;
 	TwiStruct->TxBuff[0] = MHC5883_MODE_REG;
-	if(!SetupI2CReception(TwiStruct, 1, 1)) return false;
+	if(!SetupI2CReception(TwiStruct, 1, 1))
+		return false;
 	TwiStruct->TxBuff[1] = (TwiStruct->RxBuff[0] & ~MHC5883_MODE_REG_MD_gm) | ((Value << MHC5883_MODE_REG_MD_gp) & MHC5883_MODE_REG_MD_gm);
-	if(!SetupI2CTransmit(TwiStruct, 2)) return false;
+	if(!SetupI2CTransmit(TwiStruct, 2))
+		return false;
 	return true;
 }
 
@@ -88,7 +98,8 @@ bool mhc5883_data_get(MHC5883_t *structure, signed short *X_Axis, signed short *
 	Twi_t *TwiStruct = structure->TWI;
 	TwiStruct->MasterSlaveAddr = MHC5883_ADDR;
 	TwiStruct->TxBuff[0] = MHC5883_DATA_OUT_X_H;
-	if(!SetupI2CReception(TwiStruct, 1, 6)) return false;
+	if(!SetupI2CReception(TwiStruct, 1, 6))
+		return false;
 	*X_Axis = (TwiStruct->RxBuff[0] << 8) + TwiStruct->RxBuff[1];
 	*Z_Axis = (TwiStruct->RxBuff[2] << 8) + TwiStruct->RxBuff[3];
 	*Y_Axis = (TwiStruct->RxBuff[4] << 8) + TwiStruct->RxBuff[5];
@@ -100,11 +111,12 @@ bool mhc5883_display_result(MHC5883_t *structure)
 	signed short Xc = 0;
 	signed short Yc = 0;
 	signed short Zc = 0;
-	if(!mhc5883_data_get(structure, &Xc, &Yc, &Zc)) return false;
+	if(!mhc5883_data_get(structure, &Xc, &Yc, &Zc))
+		return false;
 #ifndef _TINY_PRINT_
-	UARTprintf(DebugCom, "MHC5883:\n\rCompass:Xc = %d, Yc = %d, Zc = %d\n\r", Xc, Yc, Zc);
+	UARTprintf(DebugCom, "MHC5883: Compass: Xc = %d, Yc = %d, Zc = %d\n\r", Xc, Yc, Zc);
 #else
-	UARTprintf(DebugCom, "MHC5883:\n\rCompass:Xc = %d, Yc = %d, Zc = %d\n\r", Xc, Yc, Zc);
+	UARTprintf(DebugCom, "MHC5883: Compass: Xc = %d, Yc = %d, Zc = %d\n\r", Xc, Yc, Zc);
 #endif
 
 	return true;
@@ -112,14 +124,17 @@ bool mhc5883_display_result(MHC5883_t *structure)
 
 bool mhc5883_display_positive_test_result(MHC5883_t *structure)
 {
-	if(!mhc5883_measurament_mode_set(structure, MHC5883_CONFIG_REG_A_MS_POSITIVE_BIAS)) return false;
+	if(!mhc5883_measurament_mode_set(structure, MHC5883_CONFIG_REG_A_MS_POSITIVE_BIAS))
+		return false;
 	sys_delay(100);
 	signed short Xc = 0;
 	signed short Yc = 0;
 	signed short Zc = 0;
-	mhc5883_data_get(structure, &Xc, &Yc, &Zc);
-	UARTprintf(DebugCom, "Compass positive test:\n\rXc = %d, Yc = %d, Zc = %d\n\r", Xc, Yc, Zc);
-	if(!mhc5883_measurament_mode_set(structure, MHC5883_CONFIG_REG_A_MS_NORMAL)) return false;
+	if(!mhc5883_data_get(structure, &Xc, &Yc, &Zc))
+		return false;
+	UARTprintf(DebugCom, "Compass positive test: Xc = %d, Yc = %d, Zc = %d\n\r", Xc, Yc, Zc);
+	if(!mhc5883_measurament_mode_set(structure, MHC5883_CONFIG_REG_A_MS_NORMAL))
+		return false;
 	sys_delay(100);
 	return true;
 }
@@ -131,8 +146,9 @@ bool mhc5883_display_negative_test_result(MHC5883_t *structure)
 	signed short Xc = 0;
 	signed short Yc = 0;
 	signed short Zc = 0;
-	mhc5883_data_get(structure, &Xc, &Yc, &Zc);
-	UARTprintf(DebugCom, "Compass negative test:\n\rXc = %d, Yc = %d, Zc = %d\n\r", Xc, Yc, Zc);
+	if(!mhc5883_data_get(structure, &Xc, &Yc, &Zc))
+		return false;
+	UARTprintf(DebugCom, "Compass negative test: Xc = %d, Yc = %d, Zc = %d\n\r", Xc, Yc, Zc);
 	if(!mhc5883_measurament_mode_set(structure, MHC5883_CONFIG_REG_A_MS_NORMAL)) return false;
 	sys_delay(100);
 	return true;
@@ -140,6 +156,7 @@ bool mhc5883_display_negative_test_result(MHC5883_t *structure)
 
 bool mhc5883_init(MHC5883_t *structure)
 {
-	if(!mhc5883_mode_set(structure, MHC5883_MODE_REG_MD_CONTINUOUS)) return false;
+	if(!mhc5883_mode_set(structure, MHC5883_MODE_REG_MD_CONTINUOUS))
+		return false;
 	return true;
 }

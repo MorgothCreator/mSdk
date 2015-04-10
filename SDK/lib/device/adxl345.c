@@ -31,13 +31,14 @@ bool adxl345_bit_set(new_adxl345* adxl345_struct, unsigned char regOffset, unsig
 	TwiStruct->tCount = 0;
 	TwiStruct->rCount = 0;
 	TxBuff[0] = regOffset;
-    if(SetupI2CReception(TwiStruct, 1, 1) == false) return false;
-
+    if(!SetupI2CReception(TwiStruct, 1, 1))
+    	return false;
 	TwiStruct->tCount = 0;
 	TwiStruct->rCount = 0;
 	TxBuff[0] = regOffset;
 	TxBuff[1] = RxBuff[0] | mask;
-	if(SetupI2CTransmit(TwiStruct, 2) == false) return false;
+	if(!SetupI2CTransmit(TwiStruct, 2))
+		return false;
     return true;
 }
 /*#####################################################*/
@@ -50,13 +51,14 @@ bool adxl345_bit_clr(new_adxl345* adxl345_struct, unsigned char regOffset, unsig
 	TwiStruct->tCount = 0;
 	TwiStruct->rCount = 0;
 	TxBuff[0] = regOffset;
-	if(SetupI2CReception(TwiStruct, 1, 1) == false) return false;
-
+	if(!SetupI2CReception(TwiStruct, 1, 1))
+		return false;
 	TwiStruct->tCount = 0;
 	TwiStruct->rCount = 0;
 	TxBuff[0] = regOffset;
 	TxBuff[1] = RxBuff[0] & ~mask;
-	if(SetupI2CTransmit(TwiStruct, 2) == false) return false;
+	if(!SetupI2CTransmit(TwiStruct, 2))
+		return false;
     return true;
 }
 /*#####################################################*/
@@ -67,9 +69,9 @@ bool adxl345_write(new_adxl345* adxl345_struct, unsigned char regOffset, unsigne
 	TwiStruct->MasterSlaveAddr = adxl345_struct->MasterSlaveAddr;
 	TxBuff[0] = regOffset;
 	TxBuff[1] = data;
-
 	TwiStruct->tCount = 0;
-	if(SetupI2CTransmit(TwiStruct, 2) == false) return false;
+	if(!SetupI2CTransmit(TwiStruct, 2))
+		return false;
     return true;
 }
 /*#####################################################*/
@@ -81,11 +83,11 @@ bool adxl345_write_multiple(new_adxl345* adxl345_struct, unsigned int regOffset,
 	TwiStruct->MasterSlaveAddr = adxl345_struct->MasterSlaveAddr;
 	TxBuff[0] = regOffset;
 	TwiStruct->tCount = 0;
-    for (i = 0; i < DataLen; i++ )
-    {
+    for (i = 0; i < DataLen; i++ ) {
     	TxBuff[i + 1] = Buff[i];
     }
-    if(SetupI2CTransmit(TwiStruct, DataLen + 1) == false) return false;
+    if(!SetupI2CTransmit(TwiStruct, DataLen + 1))
+    	return false;
     return true;
 }
 /*#####################################################*/
@@ -97,11 +99,9 @@ bool adxl345_read(new_adxl345* adxl345_struct, unsigned char regOffset, unsigned
 	TwiStruct->MasterSlaveAddr = adxl345_struct->MasterSlaveAddr;
 	TwiStruct->tCount = 0;
 	TwiStruct->rCount = 0;
-
 	TxBuff[0] = regOffset;
-
-	if(SetupI2CReception(TwiStruct, 1, 1) == false) return false;
-
+	if(!SetupI2CReception(TwiStruct, 1, 1))
+		return false;
     *data = RxBuff[0];
     return true;
 }
@@ -115,13 +115,10 @@ bool adxl345_read_multiple(new_adxl345* adxl345_struct, unsigned int regOffset, 
 	TwiStruct->MasterSlaveAddr = adxl345_struct->MasterSlaveAddr;
 	TwiStruct->tCount = 0;
 	TwiStruct->rCount = 0;
-
 	TxBuff[0] = regOffset;
-
-	if(SetupI2CReception(TwiStruct, 1, DataLen) == false) return false;
-
-    for (i = 0; i < DataLen; i++ )
-    {
+	if(!SetupI2CReception(TwiStruct, 1, DataLen))
+		return false;
+    for (i = 0; i < DataLen; i++ ) {
     	Buff[i] = RxBuff[i];
     }
     return true;
@@ -130,9 +127,12 @@ bool adxl345_read_multiple(new_adxl345* adxl345_struct, unsigned int regOffset, 
 bool adxl345_device_id_corect(new_adxl345* adxl345_struct)
 {
 	unsigned char data = 0;
-	adxl345_read(adxl345_struct, 0, &data);
-	if(data == 0xE5) return true;
-	else return false;
+	if(!adxl345_read(adxl345_struct, 0, &data))
+		return false;
+	if(data == 0xE5)
+		return true;
+	else
+		return false;
 }
 /*#####################################################*/
 /* ADXL345_REG_ACT_TAP_STATUS */
@@ -147,14 +147,14 @@ unsigned char adxl345_tap_status_read(new_adxl345* adxl345_struct)
 bool adxl345_x_read(new_adxl345* adxl345_struct, signed int *Data)
 {
 	unsigned short Status;
-	if(adxl345_read_multiple(adxl345_struct, ADXL345_REG_OUT_X_L_DATA, (unsigned char*)&Status, 0x2) == false) return false;
+	if(!adxl345_read_multiple(adxl345_struct, ADXL345_REG_OUT_X_L_DATA, (unsigned char*)&Status, 0x2))
+		return false;
 	signed int XAxe = Status;
 	if(XAxe & 0x8000) XAxe+= 0xFFFF0000;
 	unsigned int CntMed = 0;
 	adxl345_struct->OutputFilter.Buff_X[adxl345_struct->OutputFilter.Buff_X_Count] = XAxe;
 	XAxe = 0;
-	for(; CntMed < adxl345_struct->FilterBuffSize; CntMed++)
-	{
+	for(; CntMed < adxl345_struct->FilterBuffSize; CntMed++) {
 		XAxe += adxl345_struct->OutputFilter.Buff_X[CntMed];
 	}
 	XAxe /= (signed int)adxl345_struct->FilterBuffSize;
@@ -167,14 +167,14 @@ bool adxl345_x_read(new_adxl345* adxl345_struct, signed int *Data)
 bool adxl345_y_read(new_adxl345* adxl345_struct, signed int *Data)
 {
 	unsigned short Status;
-	if(adxl345_read_multiple(adxl345_struct, ADXL345_REG_OUT_Y_L_DATA, (unsigned char*)&Status, 0x2) == false) return false;
+	if(!adxl345_read_multiple(adxl345_struct, ADXL345_REG_OUT_Y_L_DATA, (unsigned char*)&Status, 0x2))
+		return false;
 	signed int YAxe = Status;
 	if(YAxe & 0x8000) YAxe+= 0xFFFF0000;
 	unsigned int CntMed = 0;
 	adxl345_struct->OutputFilter.Buff_Y[adxl345_struct->OutputFilter.Buff_Y_Count] = YAxe;
 	YAxe = 0;
-	for(; CntMed < adxl345_struct->FilterBuffSize; CntMed++)
-	{
+	for(; CntMed < adxl345_struct->FilterBuffSize; CntMed++) {
 		YAxe += adxl345_struct->OutputFilter.Buff_Y[CntMed];
 	}
 	YAxe /= (signed int)adxl345_struct->FilterBuffSize;
@@ -187,14 +187,14 @@ bool adxl345_y_read(new_adxl345* adxl345_struct, signed int *Data)
 bool adxl345_z_read(new_adxl345* adxl345_struct, signed int *Data)
 {
 	unsigned short Status;
-	if(adxl345_read_multiple(adxl345_struct, ADXL345_REG_OUT_Z_L_DATA, (unsigned char*)&Status, 0x2) == false) return false;
+	if(!adxl345_read_multiple(adxl345_struct, ADXL345_REG_OUT_Z_L_DATA, (unsigned char*)&Status, 0x2))
+		return false;
 	signed int ZAxe = Status;
 	if(ZAxe & 0x8000) ZAxe+= 0xFFFF0000;
 	unsigned int CntMed = 0;
 	adxl345_struct->OutputFilter.Buff_Z[adxl345_struct->OutputFilter.Buff_Z_Count] = ZAxe;
 	ZAxe = 0;
-	for(; CntMed < adxl345_struct->FilterBuffSize; CntMed++)
-	{
+	for(; CntMed < adxl345_struct->FilterBuffSize; CntMed++) {
 		ZAxe += adxl345_struct->OutputFilter.Buff_Z[CntMed];
 	}
 	ZAxe /= (signed int)adxl345_struct->FilterBuffSize;
@@ -204,103 +204,139 @@ bool adxl345_z_read(new_adxl345* adxl345_struct, signed int *Data)
 }
 /*#####################################################*/
 /* ADXL345_REG_OFSX */
-void adxl345_x_offset_set(new_adxl345* adxl345_struct, signed char Offset)
+bool adxl345_x_offset_set(new_adxl345* adxl345_struct, signed char Offset)
 {
-	adxl345_write(adxl345_struct, ADXL345_REG_OFSX, Offset / 3);
+	if(!adxl345_write(adxl345_struct, ADXL345_REG_OFSX, Offset / 3))
+		return false;
+	return true;
 }
 /*#####################################################*/
 /* ADXL345_REG_OFSY */
-void adxl345_y_offset_set(new_adxl345* adxl345_struct, signed char Offset)
+bool adxl345_y_offset_set(new_adxl345* adxl345_struct, signed char Offset)
 {
-	adxl345_write(adxl345_struct, ADXL345_REG_OFSY, Offset / 3);
+	if(!adxl345_write(adxl345_struct, ADXL345_REG_OFSY, Offset / 3))
+		return false;
+	return true;
 }
 /*#####################################################*/
 /* ADXL345_REG_OFSZ */
-void adxl345_z_offset_set(new_adxl345* adxl345_struct, signed char Offset)
+bool adxl345_z_offset_set(new_adxl345* adxl345_struct, signed char Offset)
 {
-	adxl345_write(adxl345_struct, ADXL345_REG_OFSZ, Offset / 3);
+	if(!adxl345_write(adxl345_struct, ADXL345_REG_OFSZ, Offset / 3))
+		return false;
+	return true;
 }
 /*#####################################################*/
 /* ADXL345_REG_POWER_CTL */
-void adxl345_power_ctl_set_wekup(new_adxl345* adxl345_struct, unsigned char Wekup)
+bool adxl345_power_ctl_set_wekup(new_adxl345* adxl345_struct, unsigned char Wekup)
 {
-	adxl345_bit_set(adxl345_struct, ADXL345_REG_POWER_CTL, Wekup);
-	adxl345_bit_clr(adxl345_struct, ADXL345_REG_POWER_CTL, ~Wekup);
+	if(!adxl345_bit_set(adxl345_struct, ADXL345_REG_POWER_CTL, Wekup))
+		return false;
+	if(!adxl345_bit_clr(adxl345_struct, ADXL345_REG_POWER_CTL, ~Wekup))
+		return false;
+	return true;
 }
 /*#####################################################*/
-void adxl345_power_ctl_set_link(new_adxl345* adxl345_struct)
+bool adxl345_power_ctl_set_link(new_adxl345* adxl345_struct)
 {
-	adxl345_bit_set(adxl345_struct, ADXL345_REG_POWER_CTL, ADXL345_POWER_CTL_AUTO_SLEEP);
+	if(!adxl345_bit_set(adxl345_struct, ADXL345_REG_POWER_CTL, ADXL345_POWER_CTL_AUTO_SLEEP))
+		return false;
+	return true;
 }
 /*#####################################################*/
-void adxl345_power_ctl_clear_link(new_adxl345* adxl345_struct)
+bool adxl345_power_ctl_clear_link(new_adxl345* adxl345_struct)
 {
-	adxl345_bit_clr(adxl345_struct, ADXL345_REG_POWER_CTL, ADXL345_POWER_CTL_AUTO_SLEEP);
+	if(!adxl345_bit_clr(adxl345_struct, ADXL345_REG_POWER_CTL, ADXL345_POWER_CTL_AUTO_SLEEP))
+		return false;
+	return true;
 }
 /*#####################################################*/
-void adxl345_power_ctl_set_autosleep(new_adxl345* adxl345_struct)
+bool adxl345_power_ctl_set_autosleep(new_adxl345* adxl345_struct)
 {
-	adxl345_bit_set(adxl345_struct, ADXL345_REG_POWER_CTL, ADXL345_POWER_CTL_AUTO_SLEEP);
+	if(!adxl345_bit_set(adxl345_struct, ADXL345_REG_POWER_CTL, ADXL345_POWER_CTL_AUTO_SLEEP))
+		return false;
+	return true;
 }
 /*#####################################################*/
-void adxl345_power_ctl_clear_autosleep(new_adxl345* adxl345_struct)
+bool adxl345_power_ctl_clear_autosleep(new_adxl345* adxl345_struct)
 {
-	adxl345_bit_clr(adxl345_struct, ADXL345_REG_POWER_CTL, ADXL345_POWER_CTL_AUTO_SLEEP);
+	if(!adxl345_bit_clr(adxl345_struct, ADXL345_REG_POWER_CTL, ADXL345_POWER_CTL_AUTO_SLEEP))
+		return false;
+	return true;
 }
 /*#####################################################*/
-void adxl345_power_ctl_set_sleep(new_adxl345* adxl345_struct)
+bool adxl345_power_ctl_set_sleep(new_adxl345* adxl345_struct)
 {
-	adxl345_bit_set(adxl345_struct, ADXL345_REG_POWER_CTL, ADXL345_POWER_CTL_Sleep);
+	if(!adxl345_bit_set(adxl345_struct, ADXL345_REG_POWER_CTL, ADXL345_POWER_CTL_Sleep))
+		return false;
+	return true;
 }
 /*#####################################################*/
-void adxl345_power_ctl_clear_sleep(new_adxl345* adxl345_struct)
+bool adxl345_power_ctl_clear_sleep(new_adxl345* adxl345_struct)
 {
-	adxl345_bit_clr(adxl345_struct, ADXL345_REG_POWER_CTL, ADXL345_POWER_CTL_Sleep);
+	if(!adxl345_bit_clr(adxl345_struct, ADXL345_REG_POWER_CTL, ADXL345_POWER_CTL_Sleep))
+		return false;
+	return true;
 }
 /*#####################################################*/
 /* ADXL345_REG_DATA_FORMAT */
-void adxl345_data_format_set_full_resolution(new_adxl345* adxl345_struct)
+bool adxl345_data_format_set_full_resolution(new_adxl345* adxl345_struct)
 {
-	adxl345_bit_set(adxl345_struct, ADXL345_REG_DATA_FORMAT, ADXL345_DATA_FORMAT_FULL_RES);
+	if(!adxl345_bit_set(adxl345_struct, ADXL345_REG_DATA_FORMAT, ADXL345_DATA_FORMAT_FULL_RES))
+		return false;
+	return true;
 }
 /*#####################################################*/
-void adxl345_data_format_set_normal_resolution(new_adxl345* adxl345_struct)
+bool adxl345_data_format_set_normal_resolution(new_adxl345* adxl345_struct)
 {
-	adxl345_bit_clr(adxl345_struct, ADXL345_REG_DATA_FORMAT, ADXL345_DATA_FORMAT_FULL_RES);
+	if(!adxl345_bit_clr(adxl345_struct, ADXL345_REG_DATA_FORMAT, ADXL345_DATA_FORMAT_FULL_RES))
+		return false;
+	return true;
 }
 /*#####################################################*/
-void adxl345_data_format_set(new_adxl345* adxl345_struct, unsigned int DataFormat)
+bool adxl345_data_format_set(new_adxl345* adxl345_struct, unsigned int DataFormat)
 {
-	adxl345_bit_set(adxl345_struct, ADXL345_REG_DATA_FORMAT, DataFormat);
-	adxl345_bit_clr(adxl345_struct, ADXL345_REG_DATA_FORMAT, ~DataFormat);
+	if(!adxl345_bit_set(adxl345_struct, ADXL345_REG_DATA_FORMAT, DataFormat))
+		return false;
+	if(!adxl345_bit_clr(adxl345_struct, ADXL345_REG_DATA_FORMAT, ~DataFormat))
+		return false;
+	return true;
 }
 /*#####################################################*/
-void adxl345_bw_rate_output_rate_set(new_adxl345* adxl345_struct, unsigned char Rate)
+bool adxl345_bw_rate_output_rate_set(new_adxl345* adxl345_struct, unsigned char Rate)
 {
-	adxl345_bit_set(adxl345_struct, ADXL345_REG_BW_RATE, Rate);
-	adxl345_bit_clr(adxl345_struct, ADXL345_REG_BW_RATE, ~Rate);
+	if(!adxl345_bit_set(adxl345_struct, ADXL345_REG_BW_RATE, Rate))
+		return false;
+	if(!adxl345_bit_clr(adxl345_struct, ADXL345_REG_BW_RATE, ~Rate))
+		return false;
+	return true;
 }
 /*#####################################################*/
 /* ADXL345 init */
 bool adxl345_init(new_adxl345* adxl345_struct)
 {
-	if(!adxl345_struct) return false;
-	if(adxl345_device_id_corect(adxl345_struct))
-	{
+	if(!adxl345_struct)
+		return false;
+	if(adxl345_device_id_corect(adxl345_struct)) {
 		adxl345_struct->OutputFilter.Buff_X = calloc(1, adxl345_struct->FilterBuffSize * sizeof(adxl345_struct->OutputFilter.Buff_X[0]));
 		adxl345_struct->OutputFilter.Buff_Y = calloc(1, adxl345_struct->FilterBuffSize * sizeof(adxl345_struct->OutputFilter.Buff_Y[0]));
 		adxl345_struct->OutputFilter.Buff_Z = calloc(1, adxl345_struct->FilterBuffSize * sizeof(adxl345_struct->OutputFilter.Buff_Z[0]));
-		adxl345_bit_set(adxl345_struct, ADXL345_REG_POWER_CTL, ADXL345_POWER_CTL_Measure);
-		adxl345_data_format_set(adxl345_struct, ADXL345_DATA_FORMAT_Range_16g);
-		adxl345_bw_rate_output_rate_set(adxl345_struct, ADXL345_BW_RATE_Rate_25Hz);
-		adxl345_data_format_set_full_resolution(adxl345_struct);
-		adxl345_x_offset_set(adxl345_struct, adxl345_struct->Calibration_X);
-		adxl345_y_offset_set(adxl345_struct, adxl345_struct->Calibration_Y);
-		adxl345_z_offset_set(adxl345_struct, adxl345_struct->Calibration_Z);
+		if(!adxl345_bit_set(adxl345_struct, ADXL345_REG_POWER_CTL, ADXL345_POWER_CTL_Measure))
+			return false;
+		if(!adxl345_data_format_set(adxl345_struct, ADXL345_DATA_FORMAT_Range_16g))
+			return false;
+		if(!adxl345_bw_rate_output_rate_set(adxl345_struct, ADXL345_BW_RATE_Rate_25Hz))
+			return false;
+		if(!adxl345_data_format_set_full_resolution(adxl345_struct))
+			return false;
+		if(!adxl345_x_offset_set(adxl345_struct, adxl345_struct->Calibration_X))
+			return false;
+		if(!adxl345_y_offset_set(adxl345_struct, adxl345_struct->Calibration_Y))
+			return false;
+		if(!adxl345_z_offset_set(adxl345_struct, adxl345_struct->Calibration_Z))
+			return false;
 		return true;
-	}
-	else
-	{
+	} else {
 		//if(adxl345_struct) free(adxl345_struct);
 		return false;
 	}

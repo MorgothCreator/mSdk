@@ -29,9 +29,12 @@
 
 bool ft5x06_data_ready(new_touchscreen* structure)
 {
-	if(!structure) return false;
-	if(!gpio_in(structure->IrqStruct)) return false;
-	else return true;
+	if(!structure)
+		return false;
+	if(!gpio_in(structure->IrqStruct))
+		return false;
+	else
+		return true;
 }
 
 void ft5x06_free(new_touchscreen* structure)
@@ -43,7 +46,8 @@ void ft5x06_free(new_touchscreen* structure)
 
 bool ft5x06_init(new_touchscreen* structure, unsigned char Port, unsigned char Pin)
 {
-	if(!structure) return false;
+	if(!structure)
+		return false;
 	structure->TouchScreen_Type = TouchScreen_Type_FT5x06;
 	structure->touch_max_x = 1024;
 	structure->touch_max_y = 600;
@@ -56,7 +60,8 @@ bool ft5x06_init(new_touchscreen* structure, unsigned char Port, unsigned char P
 		twistruct->rCount = 0;
 		twistruct->tCount = 0;
 		twistruct->TxBuff[0] = 0xF9;
-		if(SetupI2CReception(twistruct, 1, 38)) return true;
+		if(SetupI2CReception(twistruct, 1, 38))
+			return true;
     }
     //ft5x06_free(structure);
     return false;
@@ -66,14 +71,17 @@ bool ft5x06_init(new_touchscreen* structure, unsigned char Port, unsigned char P
 
 bool ft5x06_TouchIdle(new_touchscreen* structure)
 {
-	if(!structure) return false;
-	if(!gpio_in(structure->IrqStruct)) return false;
+	if(!structure)
+		return false;
+	if(!gpio_in(structure->IrqStruct))
+		return false;
 	new_twi* twistruct = structure->TwiStruct;
 	twistruct->MasterSlaveAddr = 0x38;
 	twistruct->rCount = 0;
 	twistruct->tCount = 0;
 	twistruct->TxBuff[0] = 0xF9;
-	SetupI2CReception(twistruct, 1, 38);
+	if(!SetupI2CReception(twistruct, 1, 38))
+		return false;
 	volatile unsigned char* Response = twistruct->RxBuff;
 	//if(Response[0] != 0xAA || Response[1] != 0xAA) return 0;
 	//TouchScreen_Data_t* structure->TouchResponse = &structure->TouchResponse;

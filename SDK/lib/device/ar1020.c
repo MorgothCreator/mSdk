@@ -34,9 +34,12 @@
 
 bool ar1020_data_ready(new_touchscreen* structure)
 {
-	if(!structure) return false;
-	if(!gpio_in(structure->IrqStruct)) return false;
-	else return true;
+	if(!structure)
+		return false;
+	if(!gpio_in(structure->IrqStruct))
+		return false;
+	else
+		return true;
 }
 
 void ar1020_free(new_touchscreen* structure)
@@ -48,10 +51,12 @@ void ar1020_free(new_touchscreen* structure)
 
 bool ar1020_init(new_touchscreen* structure, unsigned char Port, unsigned char Pin)
 {
-	if(!structure) return false;
+	if(!structure)
+		return false;
 	structure->TouchScreen_Type = TouchScreen_Type_AR1020;
 	structure->IrqStruct = gpio_assign(Port, Pin, GPIO_IN_FLOATING, false);
-	if(!structure->IrqStruct) return false;
+	if(!structure->IrqStruct)
+		return false;
 	if(ar1020_enable_touch(structure)) 
 	{
 		ar1020_disable_touch(structure);
@@ -196,7 +201,8 @@ static bool ar1020_calibrate(new_touchscreen* structure, tDisplay *pDisplay)
 	twistruct->TxBuff[3] = 0x14;
 	twistruct->TxBuff[4] = 0x04;
 	twistruct->MasterSlaveAddr = AR1020_TWI_DeviceAddr;
-	if(!SetupI2CReception(twistruct, 5, 4)) return false;
+	if(!SetupI2CReception(twistruct, 5, 4))
+		return false;
 	if(twistruct->TxBuff[0] != 0x55 && twistruct->TxBuff[0] != 0x02 && twistruct->TxBuff[0] != AR1020_Response_Success && twistruct->TxBuff[0] != 0x14) return false;
 	
 	TouchPaintPoint(pDisplay, (((double)pDisplay->raster_timings->X * (double)12.5) / (double)100), (((double)pDisplay->raster_timings->Y * (double)12.5) / (double)100), 0x0000);
@@ -219,10 +225,13 @@ static bool ar1020_calibrate(new_touchscreen* structure, tDisplay *pDisplay)
 //#####################################################
 bool ar1020_calibration_start(new_touchscreen* structure, tDisplay *pDisplay)
 {
-	if(!ar1020_disable_touch(structure)) return false;
+	if(!ar1020_disable_touch(structure))
+		return false;
 	sys_delay(50);
-	if(!ar1020_calibrate(structure, pDisplay)) return false;
-	if(!ar1020_enable_touch(structure)) return false;
+	if(!ar1020_calibrate(structure, pDisplay))
+		return false;
+	if(!ar1020_enable_touch(structure))
+		return false;
 	return true;
 }
 

@@ -12,7 +12,8 @@
 #include "api/timer_api.h"
 
 bool srf02_start(SRF02_t *structure, SRF02_COMMANDS command) {
-	if(structure->busy) return true;
+	if(structure->busy)
+		return true;
 	timer_interval(&structure->Timeout_Timer, 80);
 	structure->busy = true;
 	Twi_t* TwiStruct = structure->TWI;
@@ -41,7 +42,8 @@ bool srf02_read(SRF02_t *structure) {
 		structure->busy = false;
 		return false;
 	}
-	if(!structure->busy) return false;
+	if(!structure->busy)
+		return false;
 
 	Twi_t* TwiStruct = structure->TWI;
 	if(structure->addr)
@@ -71,13 +73,13 @@ void srf02_display_data(SRF02_t *structure) {
 	switch(structure->measure_unit)
 	{
 	case SRF02_INCH:
-		UARTprintf(DebugCom, "SRF02:\n\rRange = %u inch\n\r", (unsigned long)structure->range_value);
+		UARTprintf(DebugCom, "SRF02: Range = %u inch\n\r", (unsigned long)structure->range_value);
 		break;
 	case SRF02_CENTIMETER:
-		UARTprintf(DebugCom, "SRF02:\n\rRange = %u centimeters\n\r", (unsigned long)structure->range_value);
+		UARTprintf(DebugCom, "SRF02: Range = %u centimeters\n\r", (unsigned long)structure->range_value);
 		break;
 	case SRF02_MICROSECONDS:
-		UARTprintf(DebugCom, "SRF02:\n\rRange = %u microseconds\n\r", (unsigned long)structure->range_value);
+		UARTprintf(DebugCom, "SRF02: Range = %u microseconds\n\r", (unsigned long)structure->range_value);
 		break;
 	}
 }
