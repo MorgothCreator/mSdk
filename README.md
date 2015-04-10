@@ -49,6 +49,8 @@ At this moment is supported the next platforms:
   
   <a href="http://www.mikroe.com/mikromedia/stm32-m4/">Mikromedia board.</a>
   
+  <a href="https://www.olimex.com/Products/ARM/ST/STM32-H407/open-source-hardware">STM32-E407.</a>
+  
 I added the settings for all example projects to help beginners to understand how it works, is necessary to clone mSdk into "C:\GitHub\" directory.
 
 <a href="http://forum.devboardshop.com/">Detalied description link.</a>
