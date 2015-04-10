@@ -78,7 +78,7 @@ bool ak8975_display_result(AK8975_t *structure) {
 	}
 	if(!ak8975_read_data(structure, &Xg, &Yg, &Zg))
 		return false;
-	UARTprintf(DebugCom, "AK8975 Magnetometer: Xg = %d, Yg = %d, Zg = %d\n\r", Xg, Yg, Zg);
+	UARTprintf(DebugCom, "AK8975: Magnetometer: Xg = %d, Yg = %d, Zg = %d\n\r", Xg, Yg, Zg);
 	return true;
 }
 

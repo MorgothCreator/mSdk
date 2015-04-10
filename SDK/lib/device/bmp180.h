@@ -83,7 +83,7 @@ typedef struct BMP180_s{
 	}cal_data;
 }BMP180_t;
 
-bool bmp180_read_alibration(BMP180_t *structure);
+bool bmp180_read_calibration(BMP180_t *structure);
 bool bmp180_read_temp(BMP180_t *structure, signed long *temp);
 bool bmp180_read_pressure(BMP180_t *structure, signed long *pressure, unsigned char oss);
 bool bmp180_display_result(BMP180_t *structure, unsigned char oss);

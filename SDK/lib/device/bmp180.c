@@ -25,7 +25,7 @@
 #include "api/timer_api.h"
 
 
-bool bmp180_read_alibration(BMP180_t *structure) {
+bool bmp180_read_calibration(BMP180_t *structure) {
 	if(!structure->TWI)
 		return false;
 	Twi_t *TwiStruct = structure->TWI;
@@ -86,7 +86,7 @@ bool bmp180_read_pressure(BMP180_t *structure, signed long *pressure, unsigned c
 bool bmp180_display_result(BMP180_t *structure, unsigned char oss) {
 	if(!structure->TWI)
 		return false;
-	if(!bmp180_read_alibration(structure))
+	if(!bmp180_read_calibration(structure))
 		return false;
 	signed long UT = 0, UP = 0;
 	if(!bmp180_read_temp(structure, &UT))
@@ -127,7 +127,7 @@ bool bmp180_display_result(BMP180_t *structure, unsigned char oss) {
 bool bmp180_get_temp(BMP180_t *structure, float *temp) {
 	if(!structure->TWI)
 		return false;
-	if(!bmp180_read_alibration(structure))
+	if(!bmp180_read_calibration(structure))
 		return false;
 	signed long UT = 0;
 	if(!bmp180_read_temp(structure, &UT))
@@ -141,7 +141,7 @@ bool bmp180_get_temp(BMP180_t *structure, float *temp) {
 }
 
 bool bmp180_get_pressure(BMP180_t *structure, float *pressure, unsigned char oss) {
-	if(!bmp180_read_alibration(structure))
+	if(!bmp180_read_calibration(structure))
 		return false;
 	signed long UT = 0, UP = 0;
 	if(!bmp180_read_temp(structure, &UT))
