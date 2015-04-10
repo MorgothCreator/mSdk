@@ -1,5 +1,5 @@
 /*
- *  lib/device/mhc5883.c
+ *  lib/device/mpu60x0.c
  *
  *  Copyright (C) 2013  Iulian Gheorghiu <morgoth.creator@gmail.com>
  *

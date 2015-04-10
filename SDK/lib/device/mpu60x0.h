@@ -1,5 +1,5 @@
 /*
- *  lib/device/ms5611.h
+ *  lib/device/mpu60x0.h
  *
  *  Copyright (C) 2013  Iulian Gheorghiu <morgoth.creator@gmail.com>
  *
