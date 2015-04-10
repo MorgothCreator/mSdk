@@ -246,9 +246,9 @@
     <File name="lib/lib/buffers/ring_buff.h" path="../../SDK/lib/lib/buffers/ring_buff.h" type="1"/>
     <File name="stm32f4xx/interface/USB_Device/Class/msc/inc" path="" type="2"/>
     <File name="stm32f4xx/interface/USB_OTG/inc/usb_hcd.h" path="../../SDK/platform/stm32f4xx/interface/USB_OTG/inc/usb_hcd.h" type="1"/>
-    <File name="stm32f4xx/interface/USB_HOST/Core/src/usbh_hcs.c" path="../../SDK/platform/stm32f4xx/interface/USB_HOST/Core/src/usbh_hcs.c" type="1"/>
     <File name="stm32f4xx/driver/stm32f4xx_sdio.h" path="../../SDK/platform/stm32f4xx/driver/stm32f4xx_sdio.h" type="1"/>
     <File name="lib/lib/gfx/jpg/IJG/jfdctfst.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jfdctfst.c" type="1"/>
+    <File name="stm32f4xx/interface/USB_HOST/Core/src/usbh_hcs.c" path="../../SDK/platform/stm32f4xx/interface/USB_HOST/Core/src/usbh_hcs.c" type="1"/>
     <File name="stm32f4xx/interface/USB_HOST/Core/inc/usbh_core.h" path="../../SDK/platform/stm32f4xx/interface/USB_HOST/Core/inc/usbh_core.h" type="1"/>
     <File name="stm32f4xx/interface/USB_Device/Class/msc" path="" type="2"/>
     <File name="lib/lib/gfx/jpg/IJG/transupp.h" path="../../SDK/lib/lib/gfx/jpg/IJG/transupp.h" type="1"/>
@@ -416,14 +416,14 @@
     <File name="lib/lib/gfx/jpg/jpeg_decoder.h" path="../../SDK/lib/lib/gfx/jpg/jpeg_decoder.h" type="1"/>
     <File name="lib/lib/gfx/scrollbar.h" path="../../SDK/lib/lib/gfx/scrollbar.h" type="1"/>
     <File name="lib/api/lcd_api.h" path="../../SDK/lib/api/lcd_api.h" type="1"/>
-    <File name="stm32f4xx/interface/USB_HOST/Class/MSC/src/usbh_msc_scsi.c" path="../../SDK/platform/stm32f4xx/interface/USB_HOST/Class/MSC/src/usbh_msc_scsi.c" type="1"/>
     <File name="stm32f4xx/driver/stm32f4xx_tim.h" path="../../SDK/platform/stm32f4xx/driver/stm32f4xx_tim.h" type="1"/>
     <File name="lib/lib/gfx/jpg/IJG/jpegint.h" path="../../SDK/lib/lib/gfx/jpg/IJG/jpegint.h" type="1"/>
+    <File name="stm32f4xx/interface/USB_HOST/Class/MSC/src/usbh_msc_scsi.c" path="../../SDK/platform/stm32f4xx/interface/USB_HOST/Class/MSC/src/usbh_msc_scsi.c" type="1"/>
     <File name="lib/lib/gfx/resource" path="" type="2"/>
     <File name="lib/lib/gfx/jpg/IJG/jdsample.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jdsample.c" type="1"/>
-    <File name="stm32f4xx/sys/include/core_cm3.h" path="../../SDK/platform/stm32f4xx/sys/Include/core_cm3.h" type="1"/>
     <File name="lib/api/uart_api.h" path="../../SDK/lib/api/uart_api.h" type="1"/>
     <File name="stm32f4xx/driver/stm32f4xx_pwr.c" path="../../SDK/platform/stm32f4xx/driver/stm32f4xx_pwr.c" type="1"/>
+    <File name="stm32f4xx/sys/include/core_cm3.h" path="../../SDK/platform/stm32f4xx/sys/Include/core_cm3.h" type="1"/>
     <File name="lib/lib/gfx/bmp/bmp.h" path="../../SDK/lib/lib/gfx/bmp/bmp.h" type="1"/>
     <File name="lib/lib/gfx/3d.c" path="../../SDK/lib/lib/gfx/3d.c" type="1"/>
     <File name="stm32f4xx/interface/USB_HOST/Class/MSC" path="" type="2"/>
@@ -513,9 +513,9 @@
     <File name="lib/lib/gfx/checkbox.c" path="../../SDK/lib/lib/gfx/checkbox.c" type="1"/>
     <File name="lib/lib/fat_fs/inc/diskio.h" path="../../SDK/lib/lib/fat_fs/inc/diskio.h" type="1"/>
     <File name="lib/lib/gfx/jpg/IJG/jdphuff.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jdphuff.c" type="1"/>
-    <File name="lib/lib/gfx/files/stl.h" path="../../SDK/lib/lib/gfx/files/stl.h" type="1"/>
     <File name="lib/lib/gfx/jpg/IJG/jdapistd.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jdapistd.c" type="1"/>
     <File name="lib/lib/gfx/gfx_gui_paint.h" path="../../SDK/lib/lib/gfx/gfx_gui_paint.h" type="1"/>
+    <File name="lib/lib/gfx/files/stl.h" path="../../SDK/lib/lib/gfx/files/stl.h" type="1"/>
     <File name="stm32f4xx/driver/stm32f4xx_tim.c" path="../../SDK/platform/stm32f4xx/driver/stm32f4xx_tim.c" type="1"/>
     <File name="stm32f4xx/driver/stm32f4xx_cryp_tdes.c" path="../../SDK/platform/stm32f4xx/driver/stm32f4xx_cryp_tdes.c" type="1"/>
     <File name="lib/lib/gfx/jpg/IJG/jdmainct.c" path="../../SDK/lib/lib/gfx/jpg/IJG/jdmainct.c" type="1"/>
