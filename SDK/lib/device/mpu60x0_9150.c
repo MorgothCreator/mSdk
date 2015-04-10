@@ -91,23 +91,24 @@ bool mpu60x0_9150_gyro_full_scale_set(MPU60x0_9150_t *structure, unsigned char I
 	unsigned char tmp = 0;
 	switch(scale)
 	{
-	case 250:
+	case MPU60X0_9150_GYRO_CONFIG_FS_SEL_250:
 		tmp = MPU60X0_9150_GYRO_CONFIG_FS_SEL_250 << MPU60X0_9150_GYRO_CONFIG_FS_SEL_gp;
 		break;
-	case 500:
+	case MPU60X0_9150_GYRO_CONFIG_FS_SEL_500:
 		tmp = MPU60X0_9150_GYRO_CONFIG_FS_SEL_500 << MPU60X0_9150_GYRO_CONFIG_FS_SEL_gp;
 		break;
-	case 1000:
+	case MPU60X0_9150_GYRO_CONFIG_FS_SEL_1000:
 		tmp = MPU60X0_9150_GYRO_CONFIG_FS_SEL_1000 << MPU60X0_9150_GYRO_CONFIG_FS_SEL_gp;
 		break;
-	case 2000:
+	case MPU60X0_9150_GYRO_CONFIG_FS_SEL_2000:
 		tmp = MPU60X0_9150_GYRO_CONFIG_FS_SEL_2000 << MPU60X0_9150_GYRO_CONFIG_FS_SEL_gp;
 		break;
 	default:
 		return false;
 	}
 	TwiStruct->TxBuff[1] = (TwiStruct->RxBuff[0] & ~MPU60X0_9150_GYRO_CONFIG_FS_SEL_gm) | tmp;
-	if(!SetupI2CTransmit(TwiStruct, 2)) return false;
+	if(!SetupI2CTransmit(TwiStruct, 2))
+		return false;
 	return true;
 }
 
@@ -449,7 +450,7 @@ bool mpu60x0_9150_gyroscope_test_display_result(MPU60x0_9150_t *structure, unsig
 	double YtestResultDec = modf(((double)YtestResult), &YtestResultInt);
 	double ZtestResultInt = 0;
 	double ZtestResultDec = modf(((double)ZtestResult), &ZtestResultInt);
-	UARTprintf(DebugCom, "MPU60x0 Giroscope calibration value: Xg = %d.%u, Yg = %d.%u, Zg = %d.%u\n\r", (signed int)XtestResultInt, (unsigned int)(XtestResultDec * 10000), (signed int)YtestResultInt, (unsigned int)(YtestResultDec * 10000), (signed int)YtestResultInt, (unsigned int)(ZtestResultDec * 10000));
+	UARTprintf(DebugCom, "MPU60x0: Giroscope calibration value: Xg = %d.%u, Yg = %d.%u, Zg = %d.%u\n\r", (signed int)XtestResultInt, (unsigned int)(XtestResultDec * 10000), (signed int)YtestResultInt, (unsigned int)(YtestResultDec * 10000), (signed int)YtestResultInt, (unsigned int)(ZtestResultDec * 10000));
 	return true;
 }
 
@@ -466,7 +467,7 @@ bool mpu60x0_9150_accelerometer_test_display_result(MPU60x0_9150_t *structure, u
 	double YtestResultDec = modf(((double)YtestResult), &YtestResultInt);
 	double ZtestResultInt = 0;
 	double ZtestResultDec = modf(((double)ZtestResult), &ZtestResultInt);
-	UARTprintf(DebugCom, "MPU60x0 Accelerometer calibration value: Xa = %d.%u, Ya = %d.%u, Za = %d.%u\n\r", (signed int)XtestResultInt, (unsigned int)(XtestResultDec * 10000), (signed int)YtestResultInt, (unsigned int)(YtestResultDec * 10000), (signed int)ZtestResultInt, (unsigned int)(ZtestResultDec * 10000));
+	UARTprintf(DebugCom, "MPU60x0: Accelerometer calibration value: Xa = %d.%u, Ya = %d.%u, Za = %d.%u\n\r", (signed int)XtestResultInt, (unsigned int)(XtestResultDec * 10000), (signed int)YtestResultInt, (unsigned int)(YtestResultDec * 10000), (signed int)ZtestResultInt, (unsigned int)(ZtestResultDec * 10000));
 	return true;
 }
 
@@ -476,11 +477,11 @@ bool mpu60x0_9150_temperature_display_result(MPU60x0_9150_t *structure, unsigned
 	if(!mpu60x0_9150_temp_data_get(structure, IcNr , &Temperature))
 		return false;
 #ifndef _TINY_PRINT_
-	UARTprintf(DebugCom, "MPU60x0 Temperature: %2.2f Gr Celsius\n\r", Temperature);
+	UARTprintf(DebugCom, "MPU60x0: Temperature: %2.2f Gr Celsius\n\r", Temperature);
 #else
 	float GrCelsius = 0;
 	float GrCelsiusMod = modff(Temperature, &GrCelsius);
-	UARTprintf(DebugCom, "MPU60x0 Temperature: %d.%u Gr Celsius\n\r", (unsigned int)GrCelsius, (unsigned int)(GrCelsiusMod*1000));
+	UARTprintf(DebugCom, "MPU60x0: Temperature: %d.%u Gr Celsius\n\r", (unsigned int)GrCelsius, (unsigned int)(GrCelsiusMod*1000));
 #endif
 	return true;
 }
@@ -492,7 +493,7 @@ bool mpu60x0_9150_giroscope_display_result(MPU60x0_9150_t *structure, unsigned c
 	signed short Zg = 0;
 	if(!mpu60x0_9150_gyro_data_get(structure, IcNr, &Xg, &Yg, &Zg))
 		return false;
-	UARTprintf(DebugCom, "MPU60x0 Giroscope: Xg = %d, Yg = %d, Zg = %d\n\r", Xg, Yg, Zg);
+	UARTprintf(DebugCom, "MPU60x0: Giroscope: Xg = %d, Yg = %d, Zg = %d\n\r", Xg, Yg, Zg);
 	return true;
 }
 
@@ -503,7 +504,7 @@ bool mpu60x0_9150_accelerometer_display_result(MPU60x0_9150_t *structure, unsign
 	signed short Za = 0;
 	if(!mpu60x0_9150_accel_data_get(structure, IcNr, &Xa, &Ya, &Za))
 		return false;
-	UARTprintf(DebugCom, "MPU60x0 Accelerometer: Xa = %d, Ya = %d, Za = %d\n\r", Xa, Ya, Za);
+	UARTprintf(DebugCom, "MPU60x0: Accelerometer: Xa = %d, Ya = %d, Za = %d\n\r", Xa, Ya, Za);
 	return true;
 }
 
