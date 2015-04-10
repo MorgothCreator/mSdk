@@ -37,6 +37,7 @@ bool ak8975_start_measure(AK8975_t *structure) {
 }
 
 bool ak8975_ready(AK8975_t *structure) {
+	if(!structure->TWI) return false;
 	Twi_t *TwiStruct = structure->TWI;
 	TwiStruct->MasterSlaveAddr = AK8975_ADDR | (structure->IcNr & 0x03);
 	TwiStruct->TxBuff[0] = AK8975_ST1_REG;
@@ -48,6 +49,7 @@ bool ak8975_ready(AK8975_t *structure) {
 }
 
 bool ak8975_read_data(AK8975_t *structure, signed short *X_Axis, signed short *Y_Axis, signed short *Z_Axis) {
+	if(!structure->TWI) return false;
 	Twi_t *TwiStruct = structure->TWI;
 	TwiStruct->MasterSlaveAddr = AK8975_ADDR | (structure->IcNr & 0x03);
 	TwiStruct->TxBuff[0] = AK8975_HXL_REG;
@@ -59,6 +61,7 @@ bool ak8975_read_data(AK8975_t *structure, signed short *X_Axis, signed short *Y
 }
 
 bool ak8975_display_result(AK8975_t *structure) {
+	if(!structure->TWI) return false;
 	signed short Xg = 0;
 	signed short Yg = 0;
 	signed short Zg = 0;
