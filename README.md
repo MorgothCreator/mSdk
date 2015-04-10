@@ -118,7 +118,7 @@ Supported devices (this drivers works on all platforms that has API's for used c
 	DS1307 I2C RTC device.
 	FT5x06 I2C capacitive touchscreen device.
 	MHC5883 I2C compass device.
-	MPU60x0 I2C accelerometer & giroscope device.
+	MPU60x0 I2C accelerometer, giroscope and temperature sensor device.
 	MS5611 I2C pressure & temperature sensor device.
 	SHT11 custom software interface humidity and temperature device.
 	SRF02 I2C ultrasonic range finder device.
@@ -126,3 +126,7 @@ Supported devices (this drivers works on all platforms that has API's for used c
 	TPS65217 I2C PMIC device.
 	TPS65910 I2C PMIC device.
 	DXL actuators from Dynamixel.
+	BMP180 I2C barometer and temperature sensor device.
+	MPU9150 I2C accelerometer, giroscope, compass(AK8975) and temperature sensor device.
+	AK8975 I2C compass sensor device.
+	HIH6130-HIH6131 I2C hidrometer and temperature sensor device(only STM32F4 controllers for now).
