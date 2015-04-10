@@ -68,6 +68,9 @@ extern USE_MHC5883;
 #ifdef USE_MS5611
 extern USE_MS5611;
 #endif
+#ifdef USE_ADXL345
+extern USE_ADXL345;
+#endif
 /*-----------------------------------------------------*/
 //extern new_touchscreen* TouchScreen;
 //extern new_screen* ScreenBuff;

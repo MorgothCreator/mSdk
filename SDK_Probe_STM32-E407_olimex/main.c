@@ -116,16 +116,22 @@ int main(void)
 #if _USE_SRF02 == 1
 			srf02_display_data(SRF02);
 #endif
-
+#if _USE_ADXL345 == 1
+			signed int Xaccel = 0, Yaccel = 0, Zaccel = 0;
+			if(adxl345_x_read(ADXL345, &Xaccel) &&
+					adxl345_y_read(ADXL345, &Yaccel) &&
+						adxl345_z_read(ADXL345, &Zaccel))
+				UARTprintf(DebugCom, "ADXL345: X = %d, Y = %d, Z = %d\n\r", Xaccel, Yaccel, Zaccel);
+#endif
 #if _USE_BMP180 == 1
 			//bmp180_display_result(BMP180, BMP180_CTRL_MEAS_OSS_1);
 			float temperature = 0.0;
 			float pressure = 0.0;
 			float altitude = 0.0;
-			bmp180_get_temp(BMP180, &temperature);
-			bmp180_get_pressure(BMP180, &pressure, BMP180_CTRL_MEAS_OSS_8);
-			bmp180_get_altitude(BMP180, &altitude, BMP180_CTRL_MEAS_OSS_8);
-			UARTprintf(DebugCom, "BMP180: T = %2.1f, P = %4.2f, Alt = %4.2f\n\r", temperature, pressure, altitude);
+			if(bmp180_get_temp(BMP180, &temperature) &&
+					bmp180_get_pressure(BMP180, &pressure, BMP180_CTRL_MEAS_OSS_8) &&
+						bmp180_get_altitude(BMP180, &altitude, BMP180_CTRL_MEAS_OSS_8))
+				UARTprintf(DebugCom, "BMP180: T = %2.1f, P = %4.2f, Alt = %4.2f\n\r", temperature, pressure, altitude);
 #endif
 #if _USE_MPU60x0_9150 == 1
 			mpu60x0_9150_temperature_display_result(MPU60x0_9150, 0);

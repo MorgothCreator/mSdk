@@ -64,6 +64,9 @@ USE_MHC5883;
 #ifdef USE_MS5611
 USE_MS5611;
 #endif
+#ifdef USE_ADXL345
+USE_ADXL345;
+#endif
 //*-----------------------------------------------------*/
 //new_touchscreen* TouchScreen = NULL;
 //new_screen* ScreenBuff = NULL;
@@ -109,10 +112,14 @@ bool board_init()
 	BMP180_INIT
 #endif
 /*-----------------------------------------------------*/
-	HARDBTN1 = gpio_assign(0, 0, GPIO_DIR_INPUT, false);
+#if _USE_ADXL345 == 1
+	ADXL345_INIT
+#endif
+/*-----------------------------------------------------*/
+	HARDBTN1 = gpio_assign(IOA, 0, GPIO_DIR_INPUT, false);
 	gpio_up_dn(HARDBTN1, 1);
 /*-----------------------------------------------------*/
-	LED = gpio_assign(2, 13, GPIO_DIR_OUTPUT, false);
+	LED = gpio_assign(IOC, 13, GPIO_DIR_OUTPUT, false);
 //*-----------------------------------------------------*/
 	return true;
 }

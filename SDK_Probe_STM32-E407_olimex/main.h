@@ -14,6 +14,7 @@
 #define _USE_MS5611			1
 #define _USE_MHC5883		1
 #define _USE_SRF02			1
+#define _USE_ADXL345		1
 #define _USE_SHT11 			0
 #define _USE_INT_ADC		0
 /*#####################################################*/
@@ -83,6 +84,22 @@
 	SHT11->Sda = gpio_assign(IOB, 13, GPIO_OUT_OPEN_DRAIN, false); \
 	SHT11->state_delay = 200;\
 	SHT11->vdd_comp = SH11_VDD_3_5V;
+#endif
+/*#####################################################*/
+/*#####################################################*/
+#if _USE_ADXL345 == 1
+#define USE_ADXL345 \
+	new_adxl345 *ADXL345
+/*-----------------------------------------------------*/
+#define ADXL345_INIT \
+	ADXL345 = new_(new_adxl345);\
+	ADXL345->MasterSlaveAddr = 0x53;\
+	ADXL345->TwiStruct = TWI[0];\
+	ADXL345->Calibration_X = 0;\
+	ADXL345->Calibration_Y = 0;\
+	ADXL345->Calibration_Z = 0;\
+	ADXL345->FilterBuffSize = 4;\
+	adxl345_init(ADXL345);
 #endif
 /*#####################################################*/
 #define UART_0_INIT \
