@@ -37,6 +37,7 @@
 #include "device/mhc5883.h"
 #include "device/ms5611.h"
 #include "device/adxl345.h"
+#include "device/hih6130.h"
 /*#####################################################*/
 #define BOARD_MESSAGE "Olimex STM32-E407"
 /*#####################################################*/
@@ -70,6 +71,9 @@ extern USE_MS5611;
 #endif
 #ifdef USE_ADXL345
 extern USE_ADXL345;
+#endif
+#ifdef USE_HIH613x
+extern USE_HIH613x;
 #endif
 /*-----------------------------------------------------*/
 //extern new_touchscreen* TouchScreen;

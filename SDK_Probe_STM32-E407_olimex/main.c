@@ -15,6 +15,7 @@
 #include "device/mhc5883.h"
 #include "device/ms5611.h"
 #include "device/adxl345.h"
+#include "device/hih6130.h"
 
 int main(void)
 {
@@ -140,6 +141,30 @@ int main(void)
 #endif
 #if _USE_AK8975 == 1
 			ak8975_display_result(AK8975);
+#endif
+#if _USE_HIH613x == 1
+			unsigned char status = 0;
+			unsigned short hum = 0, temp = 0;
+			float RH, T_C;
+			if(hih613x_get_hum_temp(HIH613x, &status, &hum, &temp)) {
+				switch(status)
+				{
+				case 0:
+					RH = (float)hum * 6.10e-3;
+					T_C = (float)temp * 1.007e-2 - 40.0;
+					UARTprintf(DebugCom, "HIH613x: H = %2.1f, T = %2.2f\n\r", RH, T_C);
+					break;
+				case 1:
+					UARTprintf(DebugCom, "Stale Data\n\r");
+					break;
+				case 2:
+					UARTprintf(DebugCom, "In command mode\n\r");
+					break;
+				default:
+					UARTprintf(DebugCom, "Diagnostic\n\r");
+					break;
+				}
+			}
 #endif
 #if _USE_INT_ADC == 1
 			UARTprintf(DebugCom, "ADC1: CH0 = %d, CH1 = %d, TempSensor = %2.2f\n\r\n\r", ADC[0]->ConvResult[0], ADC[0]->ConvResult[1], (float)(((float)1775 - (float)ADC[0]->ConvResult[2]) / 5.337) + (float)25);

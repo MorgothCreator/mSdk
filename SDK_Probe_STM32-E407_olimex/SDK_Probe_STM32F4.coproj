@@ -111,12 +111,14 @@
     <File name="stm32f4xx/interface/htimer_interface.h" path="../SDK/platform/stm32f4xx/interface/htimer_interface.h" type="1"/>
     <File name="lib/lib/gfx/jpg/IJG/jdpostct.c" path="../SDK/lib/lib/gfx/jpg/IJG/jdpostct.c" type="1"/>
     <File name="lib/api/lcd_def.h" path="../SDK/lib/api/lcd_def.h" type="1"/>
+    <File name="lib/device/hih6130.c" path="../SDK/lib/device/hih6130.c" type="1"/>
     <File name="lib/lib/gfx/jpg/IJG/jccoefct.c" path="../SDK/lib/lib/gfx/jpg/IJG/jccoefct.c" type="1"/>
     <File name="lib/lib/gfx/jpg/IJG/jcprepct.c" path="../SDK/lib/lib/gfx/jpg/IJG/jcprepct.c" type="1"/>
     <File name="lib/lib/gfx/jpg" path="" type="2"/>
     <File name="stm32f4xx/interface/USB_OTG/src/usb_otg.c" path="../SDK/platform/stm32f4xx/interface/USB_OTG/src/usb_otg.c" type="1"/>
     <File name="lib/lib/gfx/jpg/IJG/jerror.c" path="../SDK/lib/lib/gfx/jpg/IJG/jerror.c" type="1"/>
     <File name="stm32f4xx/driver/stm32f4xx_rcc.c" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_rcc.c" type="1"/>
+    <File name="lib/device/hih6130.h" path="../SDK/lib/device/hih6130.h" type="1"/>
     <File name="stm32f4xx/interface/gpio_interface.h" path="../SDK/platform/stm32f4xx/interface/gpio_interface.h" type="1"/>
     <File name="lib/device/ft5x06.h" path="../SDK/lib/device/ft5x06.h" type="1"/>
     <File name="stm32f4xx/interface/USB_OTG/inc/usb_dcd_int.h" path="../SDK/platform/stm32f4xx/interface/USB_OTG/inc/usb_dcd_int.h" type="1"/>
@@ -264,8 +266,8 @@
     <File name="lib/lib/gfx/jpg/jdatasrc.c" path="../SDK/lib/lib/gfx/jpg/jdatasrc.c" type="1"/>
     <File name="stm32f4xx/driver/stm32f4xx_rng.c" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_rng.c" type="1"/>
     <File name="stm32f4xx/interface/USB_HOST/Class/MSC/inc" path="" type="2"/>
-    <File name="lib/lib/gfx/gfx_util.h" path="../SDK/lib/lib/gfx/gfx_util.h" type="1"/>
     <File name="lib/device/bmp180.h" path="../SDK/lib/device/bmp180.h" type="1"/>
+    <File name="lib/lib/gfx/gfx_util.h" path="../SDK/lib/lib/gfx/gfx_util.h" type="1"/>
     <File name="stm32f4xx/interface/lcd_interface.c" path="../SDK/platform/stm32f4xx/interface/lcd_interface.c" type="1"/>
     <File name="lib/lib/gfx/mpeg4/avconfig.h" path="../SDK/lib/lib/gfx/mpeg4/avconfig.h" type="1"/>
     <File name="stm32f4xx/driver/stm32f4xx_sdio.c" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_sdio.c" type="1"/>

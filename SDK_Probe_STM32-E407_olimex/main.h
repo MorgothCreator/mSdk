@@ -15,6 +15,7 @@
 #define _USE_MHC5883		1
 #define _USE_SRF02			1
 #define _USE_ADXL345		1
+#define _USE_HIH613x		1
 #define _USE_SHT11 			0
 #define _USE_INT_ADC		0
 /*#####################################################*/
@@ -86,6 +87,14 @@
 	SHT11->vdd_comp = SH11_VDD_3_5V;
 #endif
 /*#####################################################*/
+#if _USE_HIH613x == 1
+#define USE_HIH613x \
+	new_hih613x *HIH613x
+/*-----------------------------------------------------*/
+#define HIH613x_INIT \
+	HIH613x = new_(new_hih613x);\
+	HIH613x->TWI = TWI[0];
+#endif
 /*#####################################################*/
 #if _USE_ADXL345 == 1
 #define USE_ADXL345 \

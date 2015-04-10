@@ -36,6 +36,7 @@
 #include "device/mhc5883.h"
 #include "device/ms5611.h"
 #include "device/adxl345.h"
+#include "device/hih6130.h"
 /*#####################################################*/
 new_uart* Uart[6] = {NULL,NULL,NULL,NULL,NULL,NULL};
 new_uart* DebugCom = NULL;
@@ -66,6 +67,9 @@ USE_MS5611;
 #endif
 #ifdef USE_ADXL345
 USE_ADXL345;
+#endif
+#ifdef USE_HIH613x
+USE_HIH613x;
 #endif
 //*-----------------------------------------------------*/
 //new_touchscreen* TouchScreen = NULL;
@@ -114,6 +118,10 @@ bool board_init()
 /*-----------------------------------------------------*/
 #if _USE_ADXL345 == 1
 	ADXL345_INIT
+#endif
+/*-----------------------------------------------------*/
+#if _USE_HIH613x == 1
+	HIH613x_INIT
 #endif
 /*-----------------------------------------------------*/
 	HARDBTN1 = gpio_assign(IOA, 0, GPIO_DIR_INPUT, false);
