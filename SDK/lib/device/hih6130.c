@@ -1,0 +1,46 @@
+/*
+ *  lib/device/hih613x.c
+ *
+ *  Copyright (C) 2015  Iulian Gheorghiu <morgoth.creator@gmail.com>
+ *
+ *  This file is part of Multiplatform SDK.
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+#include <stdbool.h>
+#include "board_init.h"
+#include "hih6130.h"
+#include "api/twi_def.h"
+#include "api/timer_api.h"
+
+bool hih613x_get_hum_temp(HIH613x_t *structure, unsigned char *status, unsigned short *hum, unsigned short *temp) {
+	if(!structure->TWI)
+		return false;
+	Twi_t *TwiStruct = structure->TWI;
+	TwiStruct->MasterSlaveAddr = HIH613x_ADDR;
+	if(!SetupI2CTransmit(TwiStruct, 0))
+		return false;
+	Sysdelay(100);
+	structure->TWI->NoSendWriteOnRead = true;
+	if(!SetupI2CReception(TwiStruct, 0, 4)) {
+		structure->TWI->NoSendWriteOnRead = false;
+		return false;
+	}
+	structure->TWI->NoSendWriteOnRead = false;
+	*status = (TwiStruct->RxBuff[0] >> 6) & 0x03;
+	TwiStruct->RxBuff[0] = TwiStruct->RxBuff[0] & 0x3F;
+	*hum = (((unsigned short)TwiStruct->RxBuff[0]) << 8) | TwiStruct->RxBuff[1];
+	*temp = ((((unsigned short)TwiStruct->RxBuff[2]) << 8) | TwiStruct->RxBuff[3]) >> 2;
+	return true;
+}
