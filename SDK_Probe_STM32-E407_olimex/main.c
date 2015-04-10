@@ -45,8 +45,8 @@ int main(void)
 			float pressure = 0.0;
 			float altitude = 0.0;
 			bmp180_get_temp(BMP180, &temperature);
-			bmp180_get_pressure(BMP180, &pressure, BMP180_CTRL_MEAS_OSS_1);
-			bmp180_get_altitude(BMP180, &altitude, BMP180_CTRL_MEAS_OSS_1);
+			bmp180_get_pressure(BMP180, &pressure, BMP180_CTRL_MEAS_OSS_8);
+			bmp180_get_altitude(BMP180, &altitude, BMP180_CTRL_MEAS_OSS_8);
 			UARTprintf(DebugCom, "BMP180:\n\rT = %2.1f, P = %4.2f, Alt = %4.2f\n\r", temperature, pressure, altitude);
 
 			//UARTprintf(DebugCom, "ADC1:\n\rCH0 = %d, CH1 = %d, TempSensor = %2.2f\n\r\n\r", ADC[0]->ConvResult[0], ADC[0]->ConvResult[1], (float)(((float)1775 - (float)ADC[0]->ConvResult[2]) / 5.337) + (float)25);

@@ -68,7 +68,7 @@ bool bmp180_read_pressure(BMP180_t *structure, signed long *pressure, unsigned c
 	TwiStruct->TxBuff[0] = BMP180_CTRL_MEAS;
 	TwiStruct->TxBuff[1] = 0x34 + (oss << BMP180_CTRL_MEAS_OSS_gp);
 	if(!SetupI2CTransmit(TwiStruct, 2)) return false;
-	Sysdelay(6);
+	Sysdelay(6 * (1 << oss));
 	TwiStruct->TxBuff[0] = BMP180_OUT_MSB;
 	if(!SetupI2CReception(TwiStruct, 1, 3)) return false;
 	*pressure = (signed long)(((TwiStruct->RxBuff[0] << 16) + (TwiStruct->RxBuff[1] << 8) + TwiStruct->RxBuff[2]) >> (8 - oss));
