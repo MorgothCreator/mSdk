@@ -193,46 +193,49 @@ uint32_t TWI_MasterWriteRead(new_twi* TwiStruct, unsigned int TransmitBytes, uns
 				break;
 			}
 	  }
-  /*!< Send START condition */
-  I2C_GenerateSTART(sEE_I2C[TwiStruct->TwiNr], ENABLE);
-
-  /*!< Test on EV5 and clear it (cleared by reading SR1 then writing to DR) */
-  sEETimeout = sEE_FLAG_TIMEOUT;
-  while(!I2C_CheckEvent(sEE_I2C[TwiStruct->TwiNr], I2C_EVENT_MASTER_MODE_SELECT))
-  {
-		if((sEETimeout--) == 0) {
-			return false;
-		}
-  }
-
-  /*!< Send EEPROM address for write */
-  I2C_Send7bitAddress(sEE_I2C[TwiStruct->TwiNr], TwiStruct->MasterSlaveAddr << 1, I2C_Direction_Transmitter);
-
-  /*!< Test on EV6 and clear it */
-  sEETimeout = sEE_FLAG_TIMEOUT;
-  while(!I2C_CheckEvent(sEE_I2C[TwiStruct->TwiNr], I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED))
-  {
-		if((sEETimeout--) == 0) {
-			return false;
-		}
-  }
-
-
-  unsigned int cnt = 0;
-  for(; cnt < TransmitBytes; cnt++)
-  {
-	  /*!< Send the EEPROM's internal address to read from: MSB of the address first */
-	  I2C_SendData(sEE_I2C[TwiStruct->TwiNr], TwiStruct->TxBuff[cnt]);
-
-	  /*!< Test on EV8 and clear it */
-	  sEETimeout = sEE_FLAG_TIMEOUT;
-	  while(!I2C_CheckEvent(sEE_I2C[TwiStruct->TwiNr], I2C_EVENT_MASTER_BYTE_TRANSMITTED))
+	  unsigned int cnt = 0;
+	  if(!TwiStruct->NoSendWriteOnRead)
 	  {
-			if((sEETimeout--) == 0) {
-				return false;
-			}
+			  /*!< Send START condition */
+		  I2C_GenerateSTART(sEE_I2C[TwiStruct->TwiNr], ENABLE);
+
+		  /*!< Test on EV5 and clear it (cleared by reading SR1 then writing to DR) */
+		  sEETimeout = sEE_FLAG_TIMEOUT;
+		  while(!I2C_CheckEvent(sEE_I2C[TwiStruct->TwiNr], I2C_EVENT_MASTER_MODE_SELECT))
+		  {
+				if((sEETimeout--) == 0) {
+					return false;
+				}
+		  }
+
+		  /*!< Send EEPROM address for write */
+		  I2C_Send7bitAddress(sEE_I2C[TwiStruct->TwiNr], TwiStruct->MasterSlaveAddr << 1, I2C_Direction_Transmitter);
+
+		  /*!< Test on EV6 and clear it */
+		  sEETimeout = sEE_FLAG_TIMEOUT;
+		  while(!I2C_CheckEvent(sEE_I2C[TwiStruct->TwiNr], I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED))
+		  {
+				if((sEETimeout--) == 0) {
+					return false;
+				}
+		  }
+
+
+		  for(; cnt < TransmitBytes; cnt++)
+		  {
+			  /*!< Send the EEPROM's internal address to read from: MSB of the address first */
+			  I2C_SendData(sEE_I2C[TwiStruct->TwiNr], TwiStruct->TxBuff[cnt]);
+
+			  /*!< Test on EV8 and clear it */
+			  sEETimeout = sEE_FLAG_TIMEOUT;
+			  while(!I2C_CheckEvent(sEE_I2C[TwiStruct->TwiNr], I2C_EVENT_MASTER_BYTE_TRANSMITTED))
+			  {
+					if((sEETimeout--) == 0) {
+						return false;
+					}
+			  }
+		  }
 	  }
-  }
 
   if(ReceiveBytes) {
 	  /* If number of data to be read is 1, then DMA couldn't be used */
