@@ -30,6 +30,7 @@
 //#include "device/mi0283.h"
 #include "device/mpu60x0.h"
 #include "device/ak8975.h"
+#include "device/bmp180.h"
 /*#####################################################*/
 new_uart* Uart[6] = {NULL,NULL,NULL,NULL,NULL,NULL};
 new_uart* DebugCom = NULL;
@@ -42,6 +43,9 @@ USE_MPU60x0;
 #endif
 #ifdef USE_AK8975
 USE_AK8975;
+#endif
+#ifdef USE_BMP180
+USE_BMP180;
 #endif
 //*-----------------------------------------------------*/
 //new_touchscreen* TouchScreen = NULL;
@@ -77,6 +81,8 @@ bool board_init()
 	MPU60x0_INIT
 /*-----------------------------------------------------*/
 	AK8975_INIT
+/*-----------------------------------------------------*/
+	BMP180_INIT
 /*-----------------------------------------------------*/
 	HARDBTN1 = gpio_assign(0, 0, GPIO_DIR_INPUT, false);
 	gpio_up_dn(HARDBTN1, 1);

@@ -31,6 +31,7 @@
 //#include "device/mi0283.h"
 #include "device/mpu60x0.h"
 #include "device/ak8975.h"
+#include "device/bmp180.h"
 /*#####################################################*/
 #define BOARD_MESSAGE "Olimex STM32-E407"
 /*#####################################################*/
@@ -46,6 +47,9 @@ extern USE_MPU60x0;
 #endif
 #ifdef USE_AK8975
 extern USE_AK8975;
+#endif
+#ifdef USE_BMP180
+extern USE_BMP180;
 #endif
 /*-----------------------------------------------------*/
 //extern new_touchscreen* TouchScreen;

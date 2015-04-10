@@ -22,6 +22,13 @@
 	AK8975 = new_(new_ak8975);\
 	AK8975->TWI = TWI[0];
 /*#####################################################*/
+#define USE_BMP180 \
+	new_bmp180 *BMP180
+/*#####################################################*/
+#define BMP180_INIT \
+	BMP180 = new_(new_bmp180);\
+	BMP180->TWI = TWI[0];
+/*#####################################################*/
 #define UART_0_INIT \
 	Uart[5] = new_(new_uart);\
 	Uart[5]->BaudRate = 115200;\
@@ -38,7 +45,7 @@
 #define TWI_1_INIT \
 	UARTPuts(DebugCom, "Setup TWI1 with RxBuff = 258, TxBuff = 258....." , -1);\
 	TWI[0] = new_(new_twi);\
-	TWI[0]->BaudRate = 100000;\
+	TWI[0]->BaudRate = 400000;\
 	TWI[0]->TwiNr = 0;\
 	TWI[0]->Priority = 0;\
 	TWI[0]->UseDma = false;\
