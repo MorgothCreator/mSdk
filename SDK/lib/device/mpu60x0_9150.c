@@ -29,10 +29,10 @@
 #include "api/uart_def.h"
 #include "api/timer_api.h"
 
-bool mpu60x0_9150_sample_rate_divider_set(MPU60x0_9150_t *structure, unsigned char IcNr, unsigned char Value)
+bool mpu60x0_9150_sample_rate_divider_set(MPU60x0_9150_t *structure, unsigned char Value)
 {
 	Twi_t *TwiStruct = structure->TWI;
-	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (IcNr & 0x01);
+	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (structure->IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_9150_SMPLRT_DIV;
 	TwiStruct->TxBuff[1] = Value;
 	if(!SetupI2CTransmit(TwiStruct, 2))
@@ -40,14 +40,14 @@ bool mpu60x0_9150_sample_rate_divider_set(MPU60x0_9150_t *structure, unsigned ch
 	return true;
 }
 
-bool mpu60x0_9150_who_am_i_get(MPU60x0_9150_t *structure, unsigned char IcNr)
+bool mpu60x0_9150_who_am_i_get(MPU60x0_9150_t *structure)
 {
 	Twi_t *TwiStruct = structure->TWI;
-	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (IcNr & 0x01);
+	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (structure->IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_9150_WHO_AM_I;
 	if(!SetupI2CReception(TwiStruct, 1, 1))
 		return false;
-	if((TwiStruct->RxBuff[0] & 0x02 >> 1) == (IcNr & 0x01))
+	if((TwiStruct->RxBuff[0] & 0x02 >> 1) == (structure->IcNr & 0x01))
 	{
 		if((TwiStruct->RxBuff[0] >> 2) == (MPU60x0_9150_ADDR >> 2))
 			return true;
@@ -55,10 +55,10 @@ bool mpu60x0_9150_who_am_i_get(MPU60x0_9150_t *structure, unsigned char IcNr)
 	return false;
 }
 
-bool mpu60x0_9150_dlpf_cfg_set(MPU60x0_9150_t *structure, unsigned char IcNr, unsigned char value)
+bool mpu60x0_9150_dlpf_cfg_set(MPU60x0_9150_t *structure, unsigned char value)
 {
 	Twi_t *TwiStruct = structure->TWI;
-	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (IcNr & 0x01);
+	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (structure->IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_9150_CONFIG;
 	if(!SetupI2CReception(TwiStruct, 1, 1))
 		return false;
@@ -68,10 +68,10 @@ bool mpu60x0_9150_dlpf_cfg_set(MPU60x0_9150_t *structure, unsigned char IcNr, un
 	return true;
 }
 
-bool mpu60x0_9150_gyro_self_test_set(MPU60x0_9150_t *structure, unsigned char IcNr, bool X_test, bool Y_test, bool Z_test)
+bool mpu60x0_9150_gyro_self_test_set(MPU60x0_9150_t *structure, bool X_test, bool Y_test, bool Z_test)
 {
 	Twi_t *TwiStruct = structure->TWI;
-	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (IcNr & 0x01);
+	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (structure->IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_9150_GYRO_CONFIG;
 	if(!SetupI2CReception(TwiStruct, 1, 1))
 		return false;
@@ -81,10 +81,10 @@ bool mpu60x0_9150_gyro_self_test_set(MPU60x0_9150_t *structure, unsigned char Ic
 	return true;
 }
 
-bool mpu60x0_9150_gyro_full_scale_set(MPU60x0_9150_t *structure, unsigned char IcNr, unsigned int scale)
+bool mpu60x0_9150_gyro_full_scale_set(MPU60x0_9150_t *structure, unsigned int scale)
 {
 	Twi_t *TwiStruct = structure->TWI;
-	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (IcNr & 0x01);
+	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (structure->IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_9150_GYRO_CONFIG;
 	if(!SetupI2CReception(TwiStruct, 1, 1))
 		return false;
@@ -112,10 +112,10 @@ bool mpu60x0_9150_gyro_full_scale_set(MPU60x0_9150_t *structure, unsigned char I
 	return true;
 }
 
-bool mpu60x0_9150_accel_self_test_set(MPU60x0_9150_t *structure, unsigned char IcNr, bool X_test, bool Y_test, bool Z_test)
+bool mpu60x0_9150_accel_self_test_set(MPU60x0_9150_t *structure, bool X_test, bool Y_test, bool Z_test)
 {
 	Twi_t *TwiStruct = structure->TWI;
-	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (IcNr & 0x01);
+	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (structure->IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_9150_ACCEL_CONFIG;
 	if(!SetupI2CReception(TwiStruct, 1, 1))
 		return false;
@@ -125,10 +125,10 @@ bool mpu60x0_9150_accel_self_test_set(MPU60x0_9150_t *structure, unsigned char I
 	return true;
 }
 
-bool mpu60x0_9150_accel_full_scale_set(MPU60x0_9150_t *structure, unsigned char IcNr, unsigned int scale)
+bool mpu60x0_9150_accel_full_scale_set(MPU60x0_9150_t *structure, unsigned int scale)
 {
 	Twi_t *TwiStruct = structure->TWI;
-	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (IcNr & 0x01);
+	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (structure->IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_9150_ACCEL_CONFIG;
 	if(!SetupI2CReception(TwiStruct, 1, 1))
 		return false;
@@ -156,10 +156,10 @@ bool mpu60x0_9150_accel_full_scale_set(MPU60x0_9150_t *structure, unsigned char 
 	return true;
 }
 
-bool mpu60x0_9150_accel_data_get(MPU60x0_9150_t *structure, unsigned char IcNr, signed short *X_Axis, signed short *Y_Axis, signed short *Z_Axis)
+bool mpu60x0_9150_accel_data_get(MPU60x0_9150_t *structure, signed short *X_Axis, signed short *Y_Axis, signed short *Z_Axis)
 {
 	Twi_t *TwiStruct = structure->TWI;
-	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (IcNr & 0x01);
+	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (structure->IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_9150_ACCEL_XOUT_H;
 	if(!SetupI2CReception(TwiStruct, 1, 6))
 		return false;
@@ -169,10 +169,10 @@ bool mpu60x0_9150_accel_data_get(MPU60x0_9150_t *structure, unsigned char IcNr, 
 	return true;
 }
 
-bool mpu60x0_9150_gyro_data_get(MPU60x0_9150_t *structure, unsigned char IcNr, signed short *X_Axis, signed short *Y_Axis, signed short *Z_Axis)
+bool mpu60x0_9150_gyro_data_get(MPU60x0_9150_t *structure, signed short *X_Axis, signed short *Y_Axis, signed short *Z_Axis)
 {
 	Twi_t *TwiStruct = structure->TWI;
-	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (IcNr & 0x01);
+	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (structure->IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_9150_GYRO_XOUT_H;
 	if(!SetupI2CReception(TwiStruct, 1, 6))
 		return false;
@@ -182,10 +182,10 @@ bool mpu60x0_9150_gyro_data_get(MPU60x0_9150_t *structure, unsigned char IcNr, s
 	return true;
 }
 
-bool mpu60x0_9150_temp_data_get(MPU60x0_9150_t *structure, unsigned char IcNr, float *Temperature)
+bool mpu60x0_9150_temp_data_get(MPU60x0_9150_t *structure, float *Temperature)
 {
 	Twi_t *TwiStruct = structure->TWI;
-	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (IcNr & 0x01);
+	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (structure->IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_9150_TEMP_OUT_H;
 	if(!SetupI2CReception(TwiStruct, 1, 2))
 		return false;
@@ -193,10 +193,10 @@ bool mpu60x0_9150_temp_data_get(MPU60x0_9150_t *structure, unsigned char IcNr, f
 	return true;
 }
 
-bool mpu60x0_9150_clock_sel_set(MPU60x0_9150_t *structure, unsigned char IcNr, unsigned char Value)
+bool mpu60x0_9150_clock_sel_set(MPU60x0_9150_t *structure, unsigned char Value)
 {
 	Twi_t *TwiStruct = structure->TWI;
-	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (IcNr & 0x01);
+	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (structure->IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_9150_PWR_MGMT_1;
 	if(!SetupI2CReception(TwiStruct, 1, 1))
 		return false;
@@ -206,10 +206,10 @@ bool mpu60x0_9150_clock_sel_set(MPU60x0_9150_t *structure, unsigned char IcNr, u
 	return true;
 }
 
-bool mpu60x0_9150_temp_dis_set(MPU60x0_9150_t *structure, unsigned char IcNr, bool Value)
+bool mpu60x0_9150_temp_dis_set(MPU60x0_9150_t *structure, bool Value)
 {
 	Twi_t *TwiStruct = structure->TWI;
-	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (IcNr & 0x01);
+	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (structure->IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_9150_PWR_MGMT_1;
 	if(!SetupI2CReception(TwiStruct, 1, 1))
 		return false;
@@ -219,10 +219,10 @@ bool mpu60x0_9150_temp_dis_set(MPU60x0_9150_t *structure, unsigned char IcNr, bo
 	return true;
 }
 
-bool mpu60x0_9150_cycle_set(MPU60x0_9150_t *structure, unsigned char IcNr, bool Value)
+bool mpu60x0_9150_cycle_set(MPU60x0_9150_t *structure, bool Value)
 {
 	Twi_t *TwiStruct = structure->TWI;
-	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (IcNr & 0x01);
+	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (structure->IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_9150_PWR_MGMT_1;
 	if(!SetupI2CReception(TwiStruct, 1, 1))
 		return false;
@@ -232,10 +232,10 @@ bool mpu60x0_9150_cycle_set(MPU60x0_9150_t *structure, unsigned char IcNr, bool 
 	return true;
 }
 
-bool mpu60x0_9150_sleep_set(MPU60x0_9150_t *structure, unsigned char IcNr, bool Value)
+bool mpu60x0_9150_sleep_set(MPU60x0_9150_t *structure, bool Value)
 {
 	Twi_t *TwiStruct = structure->TWI;
-	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (IcNr & 0x01);
+	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (structure->IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_9150_PWR_MGMT_1;
 	if(!SetupI2CReception(TwiStruct, 1, 1))
 		return false;
@@ -245,10 +245,10 @@ bool mpu60x0_9150_sleep_set(MPU60x0_9150_t *structure, unsigned char IcNr, bool 
 	return true;
 }
 
-bool mpu60x0_9150_device_reset_set(MPU60x0_9150_t *structure, unsigned char IcNr, bool Value)
+bool mpu60x0_9150_device_reset_set(MPU60x0_9150_t *structure, bool Value)
 {
 	Twi_t *TwiStruct = structure->TWI;
-	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (IcNr & 0x01);
+	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (structure->IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_9150_PWR_MGMT_1;
 	if(!SetupI2CReception(TwiStruct, 1, 1))
 		return false;
@@ -258,10 +258,10 @@ bool mpu60x0_9150_device_reset_set(MPU60x0_9150_t *structure, unsigned char IcNr
 	return true;
 }
 
-bool mpu60x0_9150_stby_zg_set(MPU60x0_9150_t *structure, unsigned char IcNr, bool Value)
+bool mpu60x0_9150_stby_zg_set(MPU60x0_9150_t *structure, bool Value)
 {
 	Twi_t *TwiStruct = structure->TWI;
-	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (IcNr & 0x01);
+	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (structure->IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_9150_PWR_MGMT_2;
 	if(!SetupI2CReception(TwiStruct, 1, 1))
 		return false;
@@ -271,10 +271,10 @@ bool mpu60x0_9150_stby_zg_set(MPU60x0_9150_t *structure, unsigned char IcNr, boo
 	return true;
 }
 
-bool mpu60x0_9150_stby_yg_set(MPU60x0_9150_t *structure, unsigned char IcNr, bool Value)
+bool mpu60x0_9150_stby_yg_set(MPU60x0_9150_t *structure, bool Value)
 {
 	Twi_t *TwiStruct = structure->TWI;
-	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (IcNr & 0x01);
+	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (structure->IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_9150_PWR_MGMT_2;
 	if(!SetupI2CReception(TwiStruct, 1, 1))
 		return false;
@@ -284,10 +284,10 @@ bool mpu60x0_9150_stby_yg_set(MPU60x0_9150_t *structure, unsigned char IcNr, boo
 	return true;
 }
 
-bool mpu60x0_9150_stby_xg_set(MPU60x0_9150_t *structure, unsigned char IcNr, bool Value)
+bool mpu60x0_9150_stby_xg_set(MPU60x0_9150_t *structure, bool Value)
 {
 	Twi_t *TwiStruct = structure->TWI;
-	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (IcNr & 0x01);
+	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (structure->IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_9150_PWR_MGMT_2;
 	if(!SetupI2CReception(TwiStruct, 1, 1))
 		return false;
@@ -297,10 +297,10 @@ bool mpu60x0_9150_stby_xg_set(MPU60x0_9150_t *structure, unsigned char IcNr, boo
 	return true;
 }
 
-bool mpu60x0_9150_stby_za_set(MPU60x0_9150_t *structure, unsigned char IcNr, bool Value)
+bool mpu60x0_9150_stby_za_set(MPU60x0_9150_t *structure, bool Value)
 {
 	Twi_t *TwiStruct = structure->TWI;
-	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (IcNr & 0x01);
+	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (structure->IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_9150_PWR_MGMT_2;
 	if(!SetupI2CReception(TwiStruct, 1, 1))
 		return false;
@@ -310,10 +310,10 @@ bool mpu60x0_9150_stby_za_set(MPU60x0_9150_t *structure, unsigned char IcNr, boo
 	return true;
 }
 
-bool mpu60x0_9150_stby_ya_set(MPU60x0_9150_t *structure, unsigned char IcNr, bool Value)
+bool mpu60x0_9150_stby_ya_set(MPU60x0_9150_t *structure, bool Value)
 {
 	Twi_t *TwiStruct = structure->TWI;
-	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (IcNr & 0x01);
+	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (structure->IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_9150_PWR_MGMT_2;
 	if(!SetupI2CReception(TwiStruct, 1, 1))
 		return false;
@@ -323,10 +323,10 @@ bool mpu60x0_9150_stby_ya_set(MPU60x0_9150_t *structure, unsigned char IcNr, boo
 	return true;
 }
 
-bool mpu60x0_9150_stby_xa_set(MPU60x0_9150_t *structure, unsigned char IcNr, bool Value)
+bool mpu60x0_9150_stby_xa_set(MPU60x0_9150_t *structure, bool Value)
 {
 	Twi_t *TwiStruct = structure->TWI;
-	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (IcNr & 0x01);
+	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (structure->IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_9150_PWR_MGMT_2;
 	if(!SetupI2CReception(TwiStruct, 1, 1))
 		return false;
@@ -336,10 +336,10 @@ bool mpu60x0_9150_stby_xa_set(MPU60x0_9150_t *structure, unsigned char IcNr, boo
 	return true;
 }
 
-bool mpu60x0_9150_lp_wake_ctrl_set(MPU60x0_9150_t *structure, unsigned char IcNr, unsigned char Value)
+bool mpu60x0_9150_lp_wake_ctrl_set(MPU60x0_9150_t *structure, unsigned char Value)
 {
 	Twi_t *TwiStruct = structure->TWI;
-	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (IcNr & 0x01);
+	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (structure->IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_9150_PWR_MGMT_2;
 	if(!SetupI2CReception(TwiStruct, 1, 1))
 		return false;
@@ -349,10 +349,10 @@ bool mpu60x0_9150_lp_wake_ctrl_set(MPU60x0_9150_t *structure, unsigned char IcNr
 	return true;
 }
 
-bool mpu60x0_9150_i2c_bypass_enable_set(MPU60x0_9150_t *structure, unsigned char IcNr, bool Value)
+bool mpu60x0_9150_i2c_bypass_enable_set(MPU60x0_9150_t *structure, bool Value)
 {
 	Twi_t *TwiStruct = structure->TWI;
-	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (IcNr & 0x01);
+	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (structure->IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_9150_INT_PIN_CFG;
 	if(!SetupI2CReception(TwiStruct, 1, 1))
 		return false;
@@ -362,7 +362,7 @@ bool mpu60x0_9150_i2c_bypass_enable_set(MPU60x0_9150_t *structure, unsigned char
 	return true;
 }
 
-bool mpu60x0_9150_gyroscope_test(MPU60x0_9150_t *structure, unsigned char IcNr, double *XtestResult, double *YtestResult, double *ZtestResult)
+bool mpu60x0_9150_gyroscope_test(MPU60x0_9150_t *structure, double *XtestResult, double *YtestResult, double *ZtestResult)
 {
 	Twi_t *TwiStruct = structure->TWI;
 	signed short Xdata = 0;
@@ -371,21 +371,21 @@ bool mpu60x0_9150_gyroscope_test(MPU60x0_9150_t *structure, unsigned char IcNr, 
 	signed short _Xdata = 0;
 	signed short _Ydata = 0;
 	signed short _Zdata = 0;
-	if(!mpu60x0_9150_gyro_data_get(structure, IcNr, &Xdata, &Ydata, &Zdata))
+	if(!mpu60x0_9150_gyro_data_get(structure, &Xdata, &Ydata, &Zdata))
 		return false;
-	if(!mpu60x0_9150_gyro_self_test_set(structure, IcNr, true, true, true))
+	if(!mpu60x0_9150_gyro_self_test_set(structure, true, true, true))
 		return false;
 	sys_delay(100);
-	if(!mpu60x0_9150_gyro_data_get(structure, IcNr, &_Xdata, &_Ydata, &_Zdata))
+	if(!mpu60x0_9150_gyro_data_get(structure, &_Xdata, &_Ydata, &_Zdata))
 		return false;
-	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (IcNr & 0x01);
+	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (structure->IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_9150_SELF_TEST_X;
 	if(!SetupI2CReception(TwiStruct, 1, 3))
 		return false;
 	double XG_TEST = (double)(TwiStruct->RxBuff[0] & 0x1F);
 	double YG_TEST = (double)(TwiStruct->RxBuff[1] & 0x1F);
 	double ZG_TEST = (double)(TwiStruct->RxBuff[2] & 0x1F);
-	if(!mpu60x0_9150_gyro_self_test_set(structure, IcNr, false, false, false))
+	if(!mpu60x0_9150_gyro_self_test_set(structure, false, false, false))
 		return false;
 	*XtestResult = 0;
 	*YtestResult = 0;
@@ -399,7 +399,7 @@ bool mpu60x0_9150_gyroscope_test(MPU60x0_9150_t *structure, unsigned char IcNr, 
 	return true;
 }
 
-bool mpu60x0_9150_accelerometer_test(MPU60x0_9150_t *structure, unsigned char IcNr, double *XtestResult, double *YtestResult, double *ZtestResult)
+bool mpu60x0_9150_accelerometer_test(MPU60x0_9150_t *structure, double *XtestResult, double *YtestResult, double *ZtestResult)
 {
 	Twi_t *TwiStruct = structure->TWI;
 	signed short Xdata = 0;
@@ -408,14 +408,14 @@ bool mpu60x0_9150_accelerometer_test(MPU60x0_9150_t *structure, unsigned char Ic
 	signed short _Xdata = 0;
 	signed short _Ydata = 0;
 	signed short _Zdata = 0;
-	if(!mpu60x0_9150_accel_data_get(structure, IcNr, &Xdata, &Ydata, &Zdata))
+	if(!mpu60x0_9150_accel_data_get(structure, &Xdata, &Ydata, &Zdata))
 		return false;
-	if(!mpu60x0_9150_accel_self_test_set(structure, IcNr, true, true, true))
+	if(!mpu60x0_9150_accel_self_test_set(structure, true, true, true))
 		return false;
 	sys_delay(100);
-	if(!mpu60x0_9150_accel_data_get(structure, IcNr, &_Xdata, &_Ydata, &_Zdata))
+	if(!mpu60x0_9150_accel_data_get(structure, &_Xdata, &_Ydata, &_Zdata))
 		return false;
-	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (IcNr & 0x01);
+	TwiStruct->MasterSlaveAddr = MPU60x0_9150_ADDR | (structure->IcNr & 0x01);
 	TwiStruct->TxBuff[0] = MPU60X0_9150_SELF_TEST_X;
 	if(!SetupI2CReception(TwiStruct, 1, 4))
 		return false;
@@ -423,7 +423,7 @@ bool mpu60x0_9150_accelerometer_test(MPU60x0_9150_t *structure, unsigned char Ic
 	double YA_TEST = (double)(((TwiStruct->RxBuff[1] >> 4) & 0x0C) | ((TwiStruct->RxBuff[3] >> 2) & 0x03));
 	double ZA_TEST = (double)(((TwiStruct->RxBuff[2] >> 4) & 0x0C) | ((TwiStruct->RxBuff[3] >> 0) & 0x03));
 
-	if(!mpu60x0_9150_accel_self_test_set(structure, IcNr, false, false, false))
+	if(!mpu60x0_9150_accel_self_test_set(structure, false, false, false))
 		return false;
 	*XtestResult = 0;
 	*YtestResult = 0;
@@ -437,12 +437,12 @@ bool mpu60x0_9150_accelerometer_test(MPU60x0_9150_t *structure, unsigned char Ic
 	return true;
 }
 
-bool mpu60x0_9150_gyroscope_test_display_result(MPU60x0_9150_t *structure, unsigned char IcNr)
+bool mpu60x0_9150_gyroscope_test_display_result(MPU60x0_9150_t *structure)
 {
 	double XtestResult = 0;
 	double YtestResult = 0;
 	double ZtestResult = 0;
-	if(!mpu60x0_9150_gyroscope_test(structure, IcNr , &XtestResult, &YtestResult, &ZtestResult))
+	if(!mpu60x0_9150_gyroscope_test(structure , &XtestResult, &YtestResult, &ZtestResult))
 		return false;
 	double XtestResultInt = 0;
 	double XtestResultDec = modf(((double)XtestResult), &XtestResultInt);
@@ -454,12 +454,12 @@ bool mpu60x0_9150_gyroscope_test_display_result(MPU60x0_9150_t *structure, unsig
 	return true;
 }
 
-bool mpu60x0_9150_accelerometer_test_display_result(MPU60x0_9150_t *structure, unsigned char IcNr)
+bool mpu60x0_9150_accelerometer_test_display_result(MPU60x0_9150_t *structure)
 {
 	double XtestResult = 0;
 	double YtestResult = 0;
 	double ZtestResult = 0;
-	if(!mpu60x0_9150_accelerometer_test(structure, IcNr , &XtestResult, &YtestResult, &ZtestResult))
+	if(!mpu60x0_9150_accelerometer_test(structure , &XtestResult, &YtestResult, &ZtestResult))
 		return false;
 	double XtestResultInt = 0;
 	double XtestResultDec = modf(((double)XtestResult), &XtestResultInt);
@@ -471,10 +471,10 @@ bool mpu60x0_9150_accelerometer_test_display_result(MPU60x0_9150_t *structure, u
 	return true;
 }
 
-bool mpu60x0_9150_temperature_display_result(MPU60x0_9150_t *structure, unsigned char IcNr)
+bool mpu60x0_9150_temperature_display_result(MPU60x0_9150_t *structure)
 {
 	float Temperature = 0;
-	if(!mpu60x0_9150_temp_data_get(structure, IcNr , &Temperature))
+	if(!mpu60x0_9150_temp_data_get(structure , &Temperature))
 		return false;
 #ifndef _TINY_PRINT_
 	UARTprintf(DebugCom, "MPU60x0: Temperature: %2.2f Gr Celsius\n\r", Temperature);
@@ -486,39 +486,39 @@ bool mpu60x0_9150_temperature_display_result(MPU60x0_9150_t *structure, unsigned
 	return true;
 }
 
-bool mpu60x0_9150_giroscope_display_result(MPU60x0_9150_t *structure, unsigned char IcNr)
+bool mpu60x0_9150_giroscope_display_result(MPU60x0_9150_t *structure)
 {
 	signed short Xg = 0;
 	signed short Yg = 0;
 	signed short Zg = 0;
-	if(!mpu60x0_9150_gyro_data_get(structure, IcNr, &Xg, &Yg, &Zg))
+	if(!mpu60x0_9150_gyro_data_get(structure, &Xg, &Yg, &Zg))
 		return false;
 	UARTprintf(DebugCom, "MPU60x0: Giroscope: Xg = %d, Yg = %d, Zg = %d\n\r", Xg, Yg, Zg);
 	return true;
 }
 
-bool mpu60x0_9150_accelerometer_display_result(MPU60x0_9150_t *structure, unsigned char IcNr)
+bool mpu60x0_9150_accelerometer_display_result(MPU60x0_9150_t *structure)
 {
 	signed short Xa = 0;
 	signed short Ya = 0;
 	signed short Za = 0;
-	if(!mpu60x0_9150_accel_data_get(structure, IcNr, &Xa, &Ya, &Za))
+	if(!mpu60x0_9150_accel_data_get(structure, &Xa, &Ya, &Za))
 		return false;
 	UARTprintf(DebugCom, "MPU60x0: Accelerometer: Xa = %d, Ya = %d, Za = %d\n\r", Xa, Ya, Za);
 	return true;
 }
 
-bool mpu60x0_9150_init(MPU60x0_9150_t *structure, unsigned char IcNr)
+bool mpu60x0_9150_init(MPU60x0_9150_t *structure)
 {
-	if(!mpu60x0_9150_who_am_i_get(structure, IcNr))
+	if(!mpu60x0_9150_who_am_i_get(structure))
 		return false;
-	if(!mpu60x0_9150_sleep_set(structure, IcNr, false))
+	if(!mpu60x0_9150_sleep_set(structure, false))
 		return false;
-	if(!mpu60x0_9150_clock_sel_set(structure, IcNr, MPU60X0_9150_PWR_MGMT_1_CLKSEL_PLL_X_AX))
+	if(!mpu60x0_9150_clock_sel_set(structure, MPU60X0_9150_PWR_MGMT_1_CLKSEL_PLL_X_AX))
 		return false;
-	if(!mpu60x0_9150_gyro_full_scale_set(structure, IcNr, MPU60X0_9150_GYRO_CONFIG_FS_SEL_2000))
+	if(!mpu60x0_9150_gyro_full_scale_set(structure, MPU60X0_9150_GYRO_CONFIG_FS_SEL_2000))
 		return false;
-	if(!mpu60x0_9150_i2c_bypass_enable_set(structure, IcNr, true))
+	if(!mpu60x0_9150_i2c_bypass_enable_set(structure, true))
 		return false;
 	return true;
 }
