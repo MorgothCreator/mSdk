@@ -1,7 +1,7 @@
 /*
  * main.c
  *
- *  Created on: Mar 6, 2013
+ *  Created on: Mar 6, 2015
  *      Iulian Gheorghiu <morgoth.creator@gmail.com>
  */
 #include "main.h"
@@ -25,7 +25,7 @@ int main(void)
 	timer(TimerBlinkLed);
     timer_interval(&TimerBlinkLed, 1000);
 #if _USE_MPU60x0_9150 == 1
-	mpu60x0_9150_init(MPU60x0_9150, 0);
+	mpu60x0_9150_init(MPU60x0_9150);
 #endif
 #if _USE_MHC5883 == 1
 	mhc5883_init(MHC5883);
@@ -126,48 +126,91 @@ int main(void)
 #endif
 #if _USE_BMP180 == 1
 			//bmp180_display_result(BMP180, BMP180_CTRL_MEAS_OSS_1);
-			float temperature = 0.0;
-			float pressure = 0.0;
-			float altitude = 0.0;
-			if(bmp180_get_temp(BMP180, &temperature) &&
-					bmp180_get_pressure(BMP180, &pressure, BMP180_CTRL_MEAS_OSS_8) &&
-						bmp180_get_altitude(BMP180, &altitude, BMP180_CTRL_MEAS_OSS_8))
-				UARTprintf(DebugCom, "BMP180: T = %2.1f, P = %4.2f, Alt = %4.2f\n\r", temperature, pressure, altitude);
-#endif
-#if _USE_MPU60x0_9150 == 1
-			mpu60x0_9150_temperature_display_result(MPU60x0_9150, 0);
-			mpu60x0_9150_giroscope_display_result(MPU60x0_9150, 0);
-			mpu60x0_9150_accelerometer_display_result(MPU60x0_9150, 0);
-#endif
-#if _USE_AK8975 == 1
-			ak8975_display_result(AK8975);
-#endif
-#if _USE_HIH613x == 1
-			unsigned char status = 0;
-			unsigned short hum = 0, temp = 0;
-			float RH, T_C;
-			if(hih613x_get_hum_temp(HIH613x, &status, &hum, &temp)) {
-				switch(status)
-				{
-				case 0:
-					RH = (float)hum * 6.10e-3;
-					T_C = (float)temp * 1.007e-2 - 40.0;
-					UARTprintf(DebugCom, "HIH613x: H = %2.1f, T = %2.2f\n\r", RH, T_C);
-					break;
-				case 1:
-					UARTprintf(DebugCom, "Stale Data\n\r");
-					break;
-				case 2:
-					UARTprintf(DebugCom, "In command mode\n\r");
-					break;
-				default:
-					UARTprintf(DebugCom, "Diagnostic\n\r");
-					break;
-				}
+			float bmp180_temperature = 0.0;
+			float bmp180_pressure = 0.0;
+			float bmp180_altitude = 0.0;
+			bool bmp180_stat = false;
+			if(bmp180_get_temp(BMP180, &bmp180_temperature) &&
+					bmp180_get_pressure(BMP180, &bmp180_pressure, BMP180_CTRL_MEAS_OSS_8) &&
+						bmp180_get_altitude(BMP180, &bmp180_altitude, BMP180_CTRL_MEAS_OSS_8)) {
+				bmp180_stat = true;
 			}
 #endif
+#if _USE_MPU60x0_9150 == 1
+			float mpu60x0_9150_temp = 0.0;
+			bool mpu60x0_9150_temp_stat = mpu60x0_9150_temp_data_get(MPU60x0_9150, &mpu60x0_9150_temp);
+			//mpu60x0_9150_temperature_display_result(MPU60x0_9150);
+			signed short mpu60x0_9150_gyro_Xg = 0;
+			signed short mpu60x0_9150_gyro_Yg = 0;
+			signed short mpu60x0_9150_gyro_Zg = 0;
+			bool mpu60x0_9150_gyro_stat = mpu60x0_9150_gyro_data_get(MPU60x0_9150, &mpu60x0_9150_gyro_Xg, &mpu60x0_9150_gyro_Yg, &mpu60x0_9150_gyro_Zg);
+			//mpu60x0_9150_giroscope_display_result(MPU60x0_9150);
+			signed short mpu60x0_9150_accel_Xa = 0;
+			signed short mpu60x0_9150_accel_Ya = 0;
+			signed short mpu60x0_9150_accel_Za = 0;
+			bool mpu60x0_9150_accel_stat = mpu60x0_9150_accel_data_get(MPU60x0_9150, &mpu60x0_9150_accel_Xa, &mpu60x0_9150_accel_Ya, &mpu60x0_9150_accel_Za);
+			//mpu60x0_9150_accelerometer_display_result(MPU60x0_9150);
+#endif
+#if _USE_AK8975 == 1
+			//ak8975_display_result(AK8975);
+			signed short AK8975_X_Axis = 0, AK8975_Y_Axis = 0, AK8975_Z_Axis = 0;
+			ak8975_get_mag(AK8975, &AK8975_X_Axis, &AK8975_Y_Axis, &AK8975_Z_Axis);
+#endif
+#if _USE_HIH613x == 1
+			unsigned char hih613x_status = 0;
+			unsigned short hih613x_hum = 0, hih613x_temp = 0;
+			float hih613x_RH, hih613x_T_C;
+			if(!hih613x_get_hum_temp(HIH613x, &hih613x_status, &hih613x_hum, &hih613x_temp)) {
+				hih613x_status = (unsigned char)-1;
+			}
+#endif
+/*
+ * Display results.
+ */
 #if _USE_INT_ADC == 1
 			UARTprintf(DebugCom, "ADC1: CH0 = %d, CH1 = %d, TempSensor = %2.2f\n\r\n\r", ADC[0]->ConvResult[0], ADC[0]->ConvResult[1], (float)(((float)1775 - (float)ADC[0]->ConvResult[2]) / 5.337) + (float)25);
+#endif
+#if _USE_BMP180 == 1
+			UARTprintf(DebugCom, "BMP180: T = %2.1f, P = %4.2f, Alt = %4.2f\n\r", bmp180_temperature, bmp180_pressure, bmp180_altitude);
+#endif
+#if _USE_MPU60x0_9150 == 1
+			if(mpu60x0_9150_temp_stat) {
+#ifndef _TINY_PRINT_
+				UARTprintf(DebugCom, "MPU60x0: Temperature: %2.2f Gr Celsius\n\r", mpu60x0_9150_temp);
+#else
+				float GrCelsius = 0;
+				float GrCelsiusMod = modff(mpu60x0_9150_temp, &GrCelsius);
+				UARTprintf(DebugCom, "MPU60x0: Temperature: %d.%u Gr Celsius\n\r", (unsigned int)GrCelsius, (unsigned int)(GrCelsiusMod*1000));
+#endif
+			}
+			if(mpu60x0_9150_gyro_stat) {
+				UARTprintf(DebugCom, "MPU60x0: Giroscope: Xg = %d, Yg = %d, Zg = %d\n\r", mpu60x0_9150_gyro_Xg, mpu60x0_9150_gyro_Yg, mpu60x0_9150_gyro_Zg);
+			}
+			if(mpu60x0_9150_accel_stat) {
+				UARTprintf(DebugCom, "MPU60x0: Accelerometer: Xa = %d, Ya = %d, Za = %d\n\r", mpu60x0_9150_accel_Xa, mpu60x0_9150_accel_Ya, mpu60x0_9150_accel_Za);
+			}
+#endif
+#if _USE_AK8975 == 1
+			UARTprintf(DebugCom, "AK8975: Magnetometer: Xg = %d, Yg = %d, Zg = %d\n\r", AK8975_X_Axis, AK8975_Y_Axis, AK8975_Z_Axis);
+#endif
+#if _USE_HIH613x == 1
+			switch(hih613x_status)
+			{
+			case 0:
+				hih613x_RH = (float)hih613x_hum * 6.10e-3;
+				hih613x_T_C = (float)hih613x_temp * 1.007e-2 - 40.0;
+				UARTprintf(DebugCom, "HIH613x: H = %2.1f, T = %2.2f\n\r", hih613x_RH, hih613x_T_C);
+				break;
+			case 1:
+				UARTprintf(DebugCom, "Stale Data\n\r");
+				break;
+			case 2:
+				UARTprintf(DebugCom, "In command mode\n\r");
+				break;
+			case 3:
+				UARTprintf(DebugCom, "Diagnostic\n\r");
+				break;
+			}
 #endif
 		}
 	}
