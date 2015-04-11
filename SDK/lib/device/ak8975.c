@@ -1,7 +1,7 @@
 /*
  *  lib/device/ak8975.c
  *
- *  Copyright (C) 2013  Iulian Gheorghiu <morgoth.creator@gmail.com>
+ *  Copyright (C) 2015  Iulian Gheorghiu <morgoth.creator@gmail.com>
  *
  *  This file is part of Multiplatform SDK.
  *
@@ -60,6 +60,21 @@ bool ak8975_read_data(AK8975_t *structure, signed short *X_Axis, signed short *Y
 	*X_Axis = (signed short)((TwiStruct->RxBuff[1] << 8) + TwiStruct->RxBuff[0]);
 	*Y_Axis = (signed short)((TwiStruct->RxBuff[3] << 8) + TwiStruct->RxBuff[2]);
 	*Z_Axis = (signed short)((TwiStruct->RxBuff[5] << 8) + TwiStruct->RxBuff[4]);
+	return true;
+}
+
+bool ak8975_get_mag(AK8975_t *structure, signed short *X_Axis, signed short *Y_Axis, signed short *Z_Axis) {
+	if(!ak8975_start_measure(structure))
+		return false;
+	timer(Timeout);
+    timer_interval(&Timeout, 11);
+    timer_enable(&Timeout);
+	while(!ak8975_ready(structure)) {
+		if(timer_tick(&Timeout))
+			return false;
+	}
+	if(!ak8975_read_data(structure, X_Axis, Y_Axis, Z_Axis))
+		return false;
 	return true;
 }
 

@@ -1,7 +1,7 @@
 /*
  *  lib/device/ak8975.h
  *
- *  Copyright (C) 2013  Iulian Gheorghiu <morgoth.creator@gmail.com>
+ *  Copyright (C) 2015  Iulian Gheorghiu <morgoth.creator@gmail.com>
  *
  *  This file is part of Multiplatform SDK.
  *
@@ -106,6 +106,7 @@ typedef struct AK8975_s{
 bool ak8975_start_measure(AK8975_t *structure);
 bool ak8975_ready(AK8975_t *structure);
 bool ak8975_read_data(AK8975_t *structure, signed short *X_Axis, signed short *Y_Axis, signed short *Z_Axis);
+bool ak8975_get_mag(AK8975_t *structure, signed short *X_Axis, signed short *Y_Axis, signed short *Z_Axis);
 bool ak8975_display_result(AK8975_t *structure);
 
 /*#####################################################*/
