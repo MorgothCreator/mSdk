@@ -23,16 +23,24 @@
 #define MCSPI_DEF_H_
 /*#####################################################*/
 #include <stdbool.h>
+#include "gpio_def.h"
 /*#####################################################*/
 typedef struct
 {
-	unsigned int D0Pin;
-	unsigned int D1Pin;
-	unsigned int ClkPin;
-	unsigned int Cs0Pin;
-	unsigned int Cs1Pin;
-	unsigned int Cs2Pin;
-	unsigned int Cs3Pin;
+	unsigned char MosiPin;
+	unsigned char MisoPin;
+	unsigned char SckPin;
+	unsigned char Cs0Pin;
+	unsigned char Cs1Pin;
+	unsigned char Cs2Pin;
+	unsigned char Cs3Pin;
+	gpio_port_enum MosiPort;
+	gpio_port_enum MisoPort;
+	gpio_port_enum SckPort;
+	gpio_port_enum Cs0Port;
+	gpio_port_enum Cs1Port;
+	gpio_port_enum Cs2Port;
+	gpio_port_enum Cs3Port;
 	volatile bool interrupted;
 	volatile unsigned char Channel;
 	volatile unsigned int BaseAddr;
@@ -47,6 +55,7 @@ typedef struct
 	void *UserData;
 	volatile unsigned char* Buff;
 	volatile unsigned char* BuffTmp;
+	bool DisableCsHandle;
 }Mcspi_t;
 /*#####################################################*/
 #define new_mcspi Mcspi_t
