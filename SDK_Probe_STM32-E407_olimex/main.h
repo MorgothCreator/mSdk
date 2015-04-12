@@ -8,14 +8,15 @@
 #ifndef MAIN_H_
 #define MAIN_H_
 /*#####################################################*/
-#define _USE_MPU60x0_9150	1
-#define _USE_AK8975			1
-#define _USE_BMP180			1
-#define _USE_MS5611			1
-#define _USE_MHC5883		1
-#define _USE_SRF02			1
-#define _USE_ADXL345		1
-#define _USE_HIH613x		1
+#define _USE_MPU60x0_9150	0
+#define _USE_AK8975			0
+#define _USE_BMP180			0
+#define _USE_MS5611			0
+#define _USE_MHC5883		0
+#define _USE_SRF02			0
+#define _USE_ADXL345		0
+#define _USE_HIH613x		0
+#define _USE_LEPTON_FLIR	1
 #define _USE_SHT11 			0
 #define _USE_INT_ADC		0
 /*#####################################################*/
@@ -96,6 +97,15 @@
 	HIH613x->TWI = TWI[0];
 #endif
 /*#####################################################*/
+#if _USE_LEPTON_FLIR == 1
+#define USE_LEPTON_FLIR \
+	new_lepton_flir *LEPTON_FLIR
+/*-----------------------------------------------------*/
+#define LEPTON_FLIR_INIT \
+	LEPTON_FLIR = new_(new_lepton_flir);\
+	LEPTON_FLIR->SPI = SPI[1];
+#endif
+/*#####################################################*/
 #if _USE_ADXL345 == 1
 #define USE_ADXL345 \
 	new_adxl345 *ADXL345
@@ -113,13 +123,13 @@
 /*#####################################################*/
 #define UART_0_INIT \
 	Uart[5] = new_(new_uart);\
-	Uart[5]->BaudRate = 115200;\
+	Uart[5]->BaudRate = 921600;\
 	Uart[5]->Priority = 0;\
-	Uart[5]->UartNr = 2;\
-	Uart[5]->TxPort = IOB;\
-	Uart[5]->RxPort = IOB;\
-	Uart[5]->TxPin = 10;\
-	Uart[5]->RxPin = 11;\
+	Uart[5]->UartNr = 5;\
+	Uart[5]->TxPort = IOC;\
+	Uart[5]->RxPort = IOC;\
+	Uart[5]->TxPin = 6;\
+	Uart[5]->RxPin = 7;\
 	uart_open(Uart[5]);\
 	DebugCom = Uart[5];
 
@@ -139,6 +149,21 @@
 	TWI[0]->SclPin = 8;\
 	TWI[0]->SdaPin = 9;\
 	twi_open(TWI[0]);\
+	UARTPuts(DebugCom, "OK.\n\r" , -1);
+/*#####################################################*/
+#define SPI_1_INIT \
+	UARTPuts(DebugCom, "Setup SPI1 ....." , -1); \
+	SPI[1] = new_(new_mcspi); \
+	SPI[1]->Cs0Port = IOG; \
+	SPI[1]->Cs0Pin = 10; \
+	SPI[1]->MisoPort = IOC; \
+	SPI[1]->MisoPin = 2; \
+	SPI[1]->MosiPort = IOC; \
+	SPI[1]->MosiPin = 3; \
+	SPI[1]->SckPort = IOB; \
+	SPI[1]->SckPin = 10; \
+	SPI[1]->McspiNr = 1; \
+	mcspi_open(SPI[1]); \
 	UARTPuts(DebugCom, "OK.\n\r" , -1);
 /*#####################################################*/
 #if _USE_INT_ADC == 1

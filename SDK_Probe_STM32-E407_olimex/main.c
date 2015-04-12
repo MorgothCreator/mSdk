@@ -4,6 +4,7 @@
  *  Created on: Mar 6, 2015
  *      Iulian Gheorghiu <morgoth.creator@gmail.com>
  */
+#include <stdlib.h>
 #include "main.h"
 #include "board_init.h"
 #include "api/timer_api.h"
@@ -16,12 +17,13 @@
 #include "device/ms5611.h"
 #include "device/adxl345.h"
 #include "device/hih6130.h"
+#include "device/lepton_flir.h"
 
 int main(void)
 {
 	board_init();
 	timer(TimerReadSensors);
-    timer_interval(&TimerReadSensors, 500);
+    timer_interval(&TimerReadSensors, 250);
 	timer(TimerBlinkLed);
     timer_interval(&TimerBlinkLed, 1000);
 #if _USE_MPU60x0_9150 == 1
@@ -35,6 +37,10 @@ int main(void)
 	unsigned char sht11_status_reg = 0;
 	bool sht11_read_mode = false;
 #endif
+#if _USE_LEPTON_FLIR == 1
+	unsigned short flir_buff[((LEPTON_FLIR_LINE_SIZE / 2) - 2) * LEPTON_FLIR_LINES_NR];
+#endif
+
 	while(1)
 	{
 		if(timer_tick(&TimerBlinkLed)) {
@@ -154,7 +160,7 @@ int main(void)
 #if _USE_AK8975 == 1
 			//ak8975_display_result(AK8975);
 			signed short AK8975_X_Axis = 0, AK8975_Y_Axis = 0, AK8975_Z_Axis = 0;
-			ak8975_get_mag(AK8975, &AK8975_X_Axis, &AK8975_Y_Axis, &AK8975_Z_Axis);
+			bool ak8975_stat = ak8975_get_mag(AK8975, &AK8975_X_Axis, &AK8975_Y_Axis, &AK8975_Z_Axis);
 #endif
 #if _USE_HIH613x == 1
 			unsigned char hih613x_status = 0;
@@ -164,6 +170,10 @@ int main(void)
 				hih613x_status = (unsigned char)-1;
 			}
 #endif
+#if _USE_LEPTON_FLIR == 1
+			memset(flir_buff, 0, ((LEPTON_FLIR_LINE_SIZE - 4) * LEPTON_FLIR_LINES_NR));
+			lepton_flir_get_image(LEPTON_FLIR, flir_buff);
+#endif
 /*
  * Display results.
  */
@@ -171,7 +181,9 @@ int main(void)
 			UARTprintf(DebugCom, "ADC1: CH0 = %d, CH1 = %d, TempSensor = %2.2f\n\r\n\r", ADC[0]->ConvResult[0], ADC[0]->ConvResult[1], (float)(((float)1775 - (float)ADC[0]->ConvResult[2]) / 5.337) + (float)25);
 #endif
 #if _USE_BMP180 == 1
-			UARTprintf(DebugCom, "BMP180: T = %2.1f, P = %4.2f, Alt = %4.2f\n\r", bmp180_temperature, bmp180_pressure, bmp180_altitude);
+			if(bmp180_stat) {
+				UARTprintf(DebugCom, "BMP180: T = %2.1f, P = %4.2f, Alt = %4.2f\n\r", bmp180_temperature, bmp180_pressure, bmp180_altitude);
+			}
 #endif
 #if _USE_MPU60x0_9150 == 1
 			if(mpu60x0_9150_temp_stat) {
@@ -191,7 +203,9 @@ int main(void)
 			}
 #endif
 #if _USE_AK8975 == 1
-			UARTprintf(DebugCom, "AK8975: Magnetometer: Xg = %d, Yg = %d, Zg = %d\n\r", AK8975_X_Axis, AK8975_Y_Axis, AK8975_Z_Axis);
+			if(ak8975_stat) {
+				UARTprintf(DebugCom, "AK8975: Magnetometer: Xg = %d, Yg = %d, Zg = %d\n\r", AK8975_X_Axis, AK8975_Y_Axis, AK8975_Z_Axis);
+			}
 #endif
 #if _USE_HIH613x == 1
 			switch(hih613x_status)
@@ -211,6 +225,19 @@ int main(void)
 				UARTprintf(DebugCom, "Diagnostic\n\r");
 				break;
 			}
+#endif
+#if _USE_LEPTON_FLIR == 1
+			unsigned char flir_x_cnt = 0, flir_y_cnt = 0;
+			for(flir_y_cnt = 0; flir_y_cnt < LEPTON_FLIR_LINES_NR; flir_y_cnt++) {
+				for(flir_x_cnt = 0; flir_x_cnt < (LEPTON_FLIR_LINE_SIZE / 2) - 2; flir_x_cnt++) {
+					unsigned long flir_var = flir_buff[(flir_y_cnt * ((LEPTON_FLIR_LINE_SIZE / 2) - 2)) + flir_x_cnt];
+					//UARTprintf(DebugCom, "%4X, ", flir_var);
+					UARTPutc(DebugCom, flir_var >> 8);
+					UARTPutc(DebugCom, flir_var);
+				}
+				//UARTprintf(DebugCom, "\r");
+			}
+			//lepton_flir_get_image(LEPTON_FLIR, flir_buff);
 #endif
 		}
 	}

@@ -20,6 +20,8 @@
 #include "api/uart_api.h"
 #include "api/twi_def.h"
 #include "api/twi_api.h"
+#include "api/mcspi_def.h"
+#include "api/mcspi_api.h"
 #include "api/adc_def.h"
 #include "api/adc_api.h"
 //#include "api/lcd_def.h"
@@ -37,10 +39,12 @@
 #include "device/ms5611.h"
 #include "device/adxl345.h"
 #include "device/hih6130.h"
+#include "device/lepton_flir.h"
 /*#####################################################*/
-new_uart* Uart[6] = {NULL,NULL,NULL,NULL,NULL,NULL};
+new_uart* Uart[6] = {NULL, NULL, NULL, NULL, NULL, NULL};
 new_uart* DebugCom = NULL;
-new_twi* TWI[2] = {NULL,NULL};
+new_twi* TWI[3] = {NULL, NULL, NULL};
+new_mcspi* SPI[3] = {NULL, NULL, NULL};
 new_adc* ADC[2] = {NULL, NULL};
 new_gpio* LED = NULL;
 new_gpio* HARDBTN1 = NULL;
@@ -71,6 +75,9 @@ USE_ADXL345;
 #ifdef USE_HIH613x
 USE_HIH613x;
 #endif
+#ifdef USE_LEPTON_FLIR
+USE_LEPTON_FLIR;
+#endif
 //*-----------------------------------------------------*/
 //new_touchscreen* TouchScreen = NULL;
 //new_screen* ScreenBuff = NULL;
@@ -99,6 +106,8 @@ bool board_init()
 /* Set up the Twi 0 to communicate with PMIC and the Onboard serial EEprom memory */
 	TWI_1_INIT
 /*-----------------------------------------------------*/
+	SPI_1_INIT
+/*-----------------------------------------------------*/
 /* Set up the ADC 0 */
 #if _USE_INT_ADC == 1
 	ADC_0_INIT
@@ -122,6 +131,10 @@ bool board_init()
 /*-----------------------------------------------------*/
 #if _USE_HIH613x == 1
 	HIH613x_INIT
+#endif
+/*-----------------------------------------------------*/
+#if _USE_LEPTON_FLIR == 1
+	LEPTON_FLIR_INIT
 #endif
 /*-----------------------------------------------------*/
 	HARDBTN1 = gpio_assign(IOA, 0, GPIO_DIR_INPUT, false);

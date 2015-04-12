@@ -20,6 +20,8 @@
 #include "api/uart_api.h"
 #include "api/twi_def.h"
 #include "api/twi_api.h"
+#include "api/mcspi_def.h"
+#include "api/mcspi_api.h"
 #include "api/adc_def.h"
 #include "api/adc_api.h"
 //#include "api/lcd_def.h"
@@ -38,6 +40,7 @@
 #include "device/ms5611.h"
 #include "device/adxl345.h"
 #include "device/hih6130.h"
+#include "device/lepton_flir.h"
 /*#####################################################*/
 #define BOARD_MESSAGE "Olimex STM32-E407"
 /*#####################################################*/
@@ -74,6 +77,9 @@ extern USE_ADXL345;
 #endif
 #ifdef USE_HIH613x
 extern USE_HIH613x;
+#endif
+#ifdef USE_LEPTON_FLIR
+extern USE_LEPTON_FLIR;
 #endif
 /*-----------------------------------------------------*/
 //extern new_touchscreen* TouchScreen;
