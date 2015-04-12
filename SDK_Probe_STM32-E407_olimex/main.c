@@ -227,17 +227,7 @@ int main(void)
 			}
 #endif
 #if _USE_LEPTON_FLIR == 1
-			unsigned char flir_x_cnt = 0, flir_y_cnt = 0;
-			for(flir_y_cnt = 0; flir_y_cnt < LEPTON_FLIR_LINES_NR; flir_y_cnt++) {
-				for(flir_x_cnt = 0; flir_x_cnt < (LEPTON_FLIR_LINE_SIZE / 2) - 2; flir_x_cnt++) {
-					unsigned long flir_var = flir_buff[(flir_y_cnt * ((LEPTON_FLIR_LINE_SIZE / 2) - 2)) + flir_x_cnt];
-					//UARTprintf(DebugCom, "%4X, ", flir_var);
-					UARTPutc(DebugCom, flir_var >> 8);
-					UARTPutc(DebugCom, flir_var);
-				}
-				//UARTprintf(DebugCom, "\r");
-			}
-			//lepton_flir_get_image(LEPTON_FLIR, flir_buff);
+			UARTPuts(DebugCom, flir_buff, ((LEPTON_FLIR_LINE_SIZE - 4) * LEPTON_FLIR_LINES_NR));
 #endif
 		}
 	}
