@@ -56,6 +56,11 @@ typedef struct
 	volatile unsigned char* Buff;
 	volatile unsigned char* BuffTmp;
 	bool DisableCsHandle;
+	bool Cpol;
+	bool Cpha;
+	bool LsbFirst;
+	unsigned char WordSize;
+	bool Slave;
 }Mcspi_t;
 /*#####################################################*/
 #define new_mcspi Mcspi_t
