@@ -29,8 +29,9 @@
 #include "interface/mcspi_interface.h"
 /*#####################################################*/
 bool mcspi_transfer(Mcspi_t *McspiStruct, unsigned int NumOfBytesSend, unsigned int NumOfBytesReceive);
-bool mcspi_open(new_mcspi *McspiStruct);
-void mcspi_close(new_mcspi *McspiStruct);
+bool mcspi_open(Mcspi_t *McspiStruct);
+void mcspi_close(Mcspi_t *McspiStruct);
+unsigned char mcspi_send_byte(Mcspi_t *McspiStruct, unsigned char byte);
 /*#####################################################*/
 #ifdef HEADER_INCLUDE_C_FILES
 #include "mcspi_api.c"

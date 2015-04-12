@@ -24,22 +24,25 @@
 //#include "aintc/aintc_mcspi.h"
 //#include "clk/clk_mcspi.h"
 #include "interface/mcspi_interface.h"
-/*#####################################################*/
-bool mcspi_open(new_mcspi *McspiStruct)
+
+bool mcspi_open(Mcspi_t *McspiStruct)
 {
 	return _mcspi_open(McspiStruct);
 }
-/*#####################################################*/
-void mcspi_close(new_mcspi *McspiStruct)
+
+void mcspi_close(Mcspi_t *McspiStruct)
 {
 	_mcspi_close(McspiStruct);
 }
-/*#####################################################*/
+
 bool mcspi_transfer(Mcspi_t *McspiStruct, unsigned int NumOfBytesSend, unsigned int NumOfBytesReceive)
 {
 	McspiStruct->numOfBytes = NumOfBytesSend + NumOfBytesReceive;
 	_mcspi_transfer(McspiStruct);
 	return true;
 }
-/*#####################################################*/
+
+unsigned char mcspi_send_byte(Mcspi_t *McspiStruct, unsigned char byte) {
+	return _mcspi_SendByte(McspiStruct, byte);
+}
 
