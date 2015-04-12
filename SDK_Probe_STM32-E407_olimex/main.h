@@ -163,6 +163,11 @@
 	SPI[1]->SckPort = IOB; \
 	SPI[1]->SckPin = 10; \
 	SPI[1]->McspiNr = 1; \
+	SPI[1]->Cpol = true; \
+	SPI[1]->Cpha = true; \
+	SPI[1]->LsbFirst = false; \
+	SPI[1]->WordSize = 8; \
+	SPI[1]->Slave = false; \
 	mcspi_open(SPI[1]); \
 	UARTPuts(DebugCom, "OK.\n\r" , -1);
 /*#####################################################*/
