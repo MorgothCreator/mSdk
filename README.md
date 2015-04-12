@@ -132,3 +132,4 @@ Supported devices (this drivers works on all platforms that has API's for used c
 	MPU9150 I2C accelerometer, giroscope, compass(AK8975) and temperature sensor device.
 	AK8975 I2C compass sensor device.
 	HIH6130-HIH6131 I2C hidrometer and temperature sensor device(only STM32F4 controllers for now).
+	Lepton FLIR termal image sensor SPI device.
