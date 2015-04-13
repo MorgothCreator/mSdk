@@ -227,7 +227,7 @@ int main(void)
 			}
 #endif
 #if _USE_LEPTON_FLIR == 1
-			UARTPuts(DebugCom, flir_buff, ((LEPTON_FLIR_LINE_SIZE - 4) * LEPTON_FLIR_LINES_NR));
+			UARTPuts(DebugCom, (char)flir_buff, ((LEPTON_FLIR_LINE_SIZE - 4) * LEPTON_FLIR_LINES_NR));
 #endif
 		}
 	}
