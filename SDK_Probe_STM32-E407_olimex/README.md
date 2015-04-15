@@ -25,4 +25,4 @@ Modify definition on main.h
 | #define _USE_INT_ADC		  0
 
 
-Change 0 or 1 to enable or disable sensor reading.
+Change 1 or 0 to enable or disable sensor reading.
