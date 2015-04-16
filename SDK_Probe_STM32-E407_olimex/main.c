@@ -23,7 +23,7 @@ int main(void)
 {
 	board_init();
 	timer(TimerReadSensors);
-    timer_interval(&TimerReadSensors, 250);
+    timer_interval(&TimerReadSensors, 300);
 	timer(TimerBlinkLed);
     timer_interval(&TimerBlinkLed, 1000);
 #if _USE_MPU60x0_9150 == 1
@@ -227,7 +227,7 @@ int main(void)
 			}
 #endif
 #if _USE_LEPTON_FLIR == 1
-			UARTPuts(DebugCom, (char)flir_buff, ((LEPTON_FLIR_LINE_SIZE - 4) * LEPTON_FLIR_LINES_NR));
+			UARTPuts(DebugCom, (char *)flir_buff, ((LEPTON_FLIR_LINE_SIZE - 4) * LEPTON_FLIR_LINES_NR));
 #endif
 		}
 	}

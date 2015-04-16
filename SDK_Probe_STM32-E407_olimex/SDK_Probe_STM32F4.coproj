@@ -79,8 +79,8 @@
     <File name="lib/lib/gfx/jpg/IJG/jfdctflt.c" path="../SDK/lib/lib/gfx/jpg/IJG/jfdctflt.c" type="1"/>
     <File name="lib/lib/fat_fs/src/option/syncobj.c" path="../SDK/lib/lib/fat_fs/src/option/syncobj.c" type="1"/>
     <File name="stm32f4xx/driver/stm32f4xx_dma2d.h" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_dma2d.h" type="1"/>
-    <File name="lib/api/lcd_def.c" path="../SDK/lib/api/lcd_def.c" type="1"/>
     <File name="lib/lib/gfx/textbox.c" path="../SDK/lib/lib/gfx/textbox.c" type="1"/>
+    <File name="lib/api/lcd_def.c" path="../SDK/lib/api/lcd_def.c" type="1"/>
     <File name="stm32f4xx/sys/stm32f4xx_flash_extsram.ld" path="../SDK/platform/stm32f4xx/sys/stm32f4xx_flash_extsram.ld" type="1"/>
     <File name="lib/lib/fs/fat.c" path="../SDK/lib/lib/fs/fat.c" type="1"/>
     <File name="stm32f4xx/driver/stm32f4xx_hash.h" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_hash.h" type="1"/>
@@ -119,25 +119,25 @@
     <File name="lib/api/htimer_api.h" path="../SDK/lib/api/htimer_api.h" type="1"/>
     <File name="lib/protocols" path="" type="2"/>
     <File name="lib/app/app_util" path="" type="2"/>
-    <File name="stm32f4xx/driver/stm32f4xx_cryp.c" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_cryp.c" type="1"/>
     <File name="lib/lib/gfx/jpg/IJG/jdinput.c" path="../SDK/lib/lib/gfx/jpg/IJG/jdinput.c" type="1"/>
+    <File name="stm32f4xx/driver/stm32f4xx_cryp.c" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_cryp.c" type="1"/>
     <File name="lib/api/timer_api.c" path="../SDK/lib/api/timer_api.c" type="1"/>
     <File name="stm32f4xx/driver/stm32f4xx_fmc.c" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_fmc.c" type="1"/>
     <File name="stm32f4xx/sys/Include/core_cm0.h" path="../SDK/platform/stm32f4xx/sys/Include/core_cm0.h" type="1"/>
     <File name="lib/device/ds1307.h" path="../SDK/lib/device/ds1307.h" type="1"/>
     <File name="lib/lib/gfx/jpg/IJG/jdcoefct.c" path="../SDK/lib/lib/gfx/jpg/IJG/jdcoefct.c" type="1"/>
-    <File name="lib/lib/gfx/jpg/IJG/jdmerge.c" path="../SDK/lib/lib/gfx/jpg/IJG/jdmerge.c" type="1"/>
     <File name="lib/lib/string_lib.c" path="../SDK/lib/lib/string_lib.c" type="1"/>
-    <File name="stm32f4xx/interface/htimer_interface.h" path="../SDK/platform/stm32f4xx/interface/htimer_interface.h" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jdmerge.c" path="../SDK/lib/lib/gfx/jpg/IJG/jdmerge.c" type="1"/>
     <File name="lib/lib/gfx/jpg/IJG/jcparam.c" path="../SDK/lib/lib/gfx/jpg/IJG/jcparam.c" type="1"/>
-    <File name="lib/app/app_result.h" path="../SDK/lib/app/app_result.h" type="1"/>
+    <File name="stm32f4xx/interface/htimer_interface.h" path="../SDK/platform/stm32f4xx/interface/htimer_interface.h" type="1"/>
     <File name="lib/device/sht11.h" path="../SDK/lib/device/sht11.h" type="1"/>
+    <File name="lib/app/app_result.h" path="../SDK/lib/app/app_result.h" type="1"/>
     <File name="lib/lib/gfx/jpg/IJG/jdpostct.c" path="../SDK/lib/lib/gfx/jpg/IJG/jdpostct.c" type="1"/>
     <File name="lib/lib/generic.c" path="../SDK/lib/lib/generic.c" type="1"/>
     <File name="lib/lib/gfx/files" path="" type="2"/>
     <File name="lib/api/lcd_def.h" path="../SDK/lib/api/lcd_def.h" type="1"/>
-    <File name="lib/device/hih6130.c" path="../SDK/lib/device/hih6130.c" type="1"/>
     <File name="lib/api/mcspi_def.h" path="../SDK/lib/api/mcspi_def.h" type="1"/>
+    <File name="lib/device/hih6130.c" path="../SDK/lib/device/hih6130.c" type="1"/>
     <File name="lib/lib/gfx/resource/fonts.h" path="../SDK/lib/lib/gfx/resource/fonts.h" type="1"/>
     <File name="lib/api/timer_api.h" path="../SDK/lib/api/timer_api.h" type="1"/>
     <File name="lib/lib/gfx/jpg/IJG/jconfig.h" path="../SDK/lib/lib/gfx/jpg/IJG/jconfig.h" type="1"/>
@@ -158,17 +158,17 @@
     <File name="lib/device/ft5x06.h" path="../SDK/lib/device/ft5x06.h" type="1"/>
     <File name="stm32f4xx/driver/misc.c" path="../SDK/platform/stm32f4xx/driver/misc.c" type="1"/>
     <File name="stm32f4xx/driver/stm32f4xx_cryp_aes.c" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_cryp_aes.c" type="1"/>
-    <File name="stm32f4xx/driver/stm32f4xx_can.c" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_can.c" type="1"/>
     <File name="lib/device/sht11.c" path="../SDK/lib/device/sht11.c" type="1"/>
+    <File name="stm32f4xx/driver/stm32f4xx_can.c" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_can.c" type="1"/>
     <File name="lib/lib/string_lib.h" path="../SDK/lib/lib/string_lib.h" type="1"/>
     <File name="stm32f4xx/driver/stm32f4xx_fsmc.h" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_fsmc.h" type="1"/>
-    <File name="stm32f4xx/interface/adc_interface.h" path="../SDK/platform/stm32f4xx/interface/adc_interface.h" type="1"/>
     <File name="stm32f4xx/driver/stm32f4xx_dac.c" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_dac.c" type="1"/>
+    <File name="stm32f4xx/interface/adc_interface.h" path="../SDK/platform/stm32f4xx/interface/adc_interface.h" type="1"/>
     <File name="lib/app/cd.c" path="../SDK/lib/app/cd.c" type="1"/>
     <File name="stm32f4xx/driver/stm32f4xx_ltdc.c" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_ltdc.c" type="1"/>
-    <File name="lib/device/mhc5883.h" path="../SDK/lib/device/mhc5883.h" type="1"/>
-    <File name="lib/lib/fs" path="" type="2"/>
     <File name="lib/lib/gfx/jpg/IJG/jcinit.c" path="../SDK/lib/lib/gfx/jpg/IJG/jcinit.c" type="1"/>
+    <File name="lib/lib/fs" path="" type="2"/>
+    <File name="lib/device/mhc5883.h" path="../SDK/lib/device/mhc5883.h" type="1"/>
     <File name="stm32f4xx/driver/stm32f4xx_i2c.h" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_i2c.h" type="1"/>
     <File name="stm32f4xx/sys/sysdelay.c" path="../SDK/platform/stm32f4xx/sys/sysdelay.c" type="1"/>
     <File name="stm32f4xx/sys/system_stm32f4xx.c" path="../SDK/platform/stm32f4xx/sys/system_stm32f4xx.c" type="1"/>
@@ -183,8 +183,8 @@
     <File name="lib/device/ak8975.h" path="../SDK/lib/device/ak8975.h" type="1"/>
     <File name="lib/api/twi_api.c" path="../SDK/lib/api/twi_api.c" type="1"/>
     <File name="lib/lib/gfx/jpg/IJG/jfdctint.c" path="../SDK/lib/lib/gfx/jpg/IJG/jfdctint.c" type="1"/>
-    <File name="stm32f4xx/interface/adc_interface.c" path="../SDK/platform/stm32f4xx/interface/adc_interface.c" type="1"/>
     <File name="lib/lib/gfx/scrollbar.c" path="../SDK/lib/lib/gfx/scrollbar.c" type="1"/>
+    <File name="stm32f4xx/interface/adc_interface.c" path="../SDK/platform/stm32f4xx/interface/adc_interface.c" type="1"/>
     <File name="lib/lib/fat_fs/inc/integer.h" path="../SDK/lib/lib/fat_fs/inc/integer.h" type="1"/>
     <File name="stm32f4xx/driver/stm32f4xx_ltdc.h" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_ltdc.h" type="1"/>
     <File name="stm32f4xx/sys/Include/arm_common_tables.h" path="../SDK/platform/stm32f4xx/sys/Include/arm_common_tables.h" type="1"/>
@@ -226,23 +226,23 @@
     <File name="stm32f4xx/stm32f4xx_conf.h" path="../SDK/platform/stm32f4xx/stm32f4xx_conf.h" type="1"/>
     <File name="stm32f4xx/driver/stm32f4xx_rcc.h" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_rcc.h" type="1"/>
     <File name="stm32f4xx/driver/stm32f4xx_usart.h" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_usart.h" type="1"/>
-    <File name="lib/device/ms5611.c" path="../SDK/lib/device/ms5611.c" type="1"/>
     <File name="lib/device/24c.h" path="../SDK/lib/device/24c.h" type="1"/>
-    <File name="stm32f4xx/driver/stm32f4xx_spi.h" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_spi.h" type="1"/>
+    <File name="lib/device/ms5611.c" path="../SDK/lib/device/ms5611.c" type="1"/>
     <File name="lib/lib/fat_fs/src/diskio.c" path="../SDK/lib/lib/fat_fs/src/diskio.c" type="1"/>
+    <File name="stm32f4xx/driver/stm32f4xx_spi.h" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_spi.h" type="1"/>
     <File name="stm32f4xx/sys/Include/core_cm4_simd.h" path="../SDK/platform/stm32f4xx/sys/Include/core_cm4_simd.h" type="1"/>
     <File name="stm32f4xx/driver/stm32f4xx_fsmc.c" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_fsmc.c" type="1"/>
     <File name="lib/app" path="" type="2"/>
     <File name="lib/lib/gfx/jpg/IJG/jcsample.c" path="../SDK/lib/lib/gfx/jpg/IJG/jcsample.c" type="1"/>
     <File name="lib/app/ls.c" path="../SDK/lib/app/ls.c" type="1"/>
-    <File name="stm32f4xx/driver/stm32f4xx_dcmi.h" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_dcmi.h" type="1"/>
     <File name="stm32f4xx/driver/stm32f4xx_adc.c" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_adc.c" type="1"/>
+    <File name="stm32f4xx/driver/stm32f4xx_dcmi.h" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_dcmi.h" type="1"/>
     <File name="lib/lib/fat_fs/inc/fattime.h" path="../SDK/lib/lib/fat_fs/inc/fattime.h" type="1"/>
     <File name="lib/lib/gfx/jpg/IJG/jdmaster.c" path="../SDK/lib/lib/gfx/jpg/IJG/jdmaster.c" type="1"/>
     <File name="stm32f4xx/driver/stm32f4xx_cryp_des.c" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_cryp_des.c" type="1"/>
     <File name="lib/device/ft5x06.c" path="../SDK/lib/device/ft5x06.c" type="1"/>
-    <File name="lib/lib/gfx/jpg/IJG/jquant2.c" path="../SDK/lib/lib/gfx/jpg/IJG/jquant2.c" type="1"/>
     <File name="lib/api/edma_api.c" path="../SDK/lib/api/edma_api.c" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jquant2.c" path="../SDK/lib/lib/gfx/jpg/IJG/jquant2.c" type="1"/>
     <File name="lib/device/ak8975.c" path="../SDK/lib/device/ak8975.c" type="1"/>
     <File name="lib/app/cd.h" path="../SDK/lib/app/cd.h" type="1"/>
     <File name="stm32f4xx/driver/stm32f4xx_syscfg.c" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_syscfg.c" type="1"/>
@@ -258,11 +258,11 @@
     <File name="lib/lib/gfx/jpg/jpeg_decoder.h" path="../SDK/lib/lib/gfx/jpg/jpeg_decoder.h" type="1"/>
     <File name="lib/lib/gfx/scrollbar.h" path="../SDK/lib/lib/gfx/scrollbar.h" type="1"/>
     <File name="lib/api/lcd_api.h" path="../SDK/lib/api/lcd_api.h" type="1"/>
-    <File name="stm32f4xx/driver/stm32f4xx_tim.h" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_tim.h" type="1"/>
     <File name="lib/lib/gfx/jpg/IJG/jpegint.h" path="../SDK/lib/lib/gfx/jpg/IJG/jpegint.h" type="1"/>
+    <File name="stm32f4xx/driver/stm32f4xx_tim.h" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_tim.h" type="1"/>
     <File name="lib/lib/gfx/resource" path="" type="2"/>
-    <File name="lib/lib/gfx/jpg/IJG/jdsample.c" path="../SDK/lib/lib/gfx/jpg/IJG/jdsample.c" type="1"/>
     <File name="lib/lib/gfx/jpg/IJG/jdtrans.c" path="../SDK/lib/lib/gfx/jpg/IJG/jdtrans.c" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jdsample.c" path="../SDK/lib/lib/gfx/jpg/IJG/jdsample.c" type="1"/>
     <File name="lib/lib/gfx/window.c" path="../SDK/lib/lib/gfx/window.c" type="1"/>
     <File name="lib/api/uart_api.h" path="../SDK/lib/api/uart_api.h" type="1"/>
     <File name="stm32f4xx/driver/stm32f4xx_pwr.c" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_pwr.c" type="1"/>
@@ -275,16 +275,16 @@
     <File name="lib/lib/gfx/3d.c" path="../SDK/lib/lib/gfx/3d.c" type="1"/>
     <File name="stm32f4xx/driver/stm32f4xx_sai.c" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_sai.c" type="1"/>
     <File name="lib/protocols/nmea.h" path="../SDK/lib/protocols/nmea.h" type="1"/>
-    <File name="stm32f4xx/sys/Include/arm_math.h" path="../SDK/platform/stm32f4xx/sys/Include/arm_math.h" type="1"/>
     <File name="lib/app/console.h" path="../SDK/lib/app/console.h" type="1"/>
+    <File name="stm32f4xx/sys/Include/arm_math.h" path="../SDK/platform/stm32f4xx/sys/Include/arm_math.h" type="1"/>
     <File name="lib/lib/gfx/jpg/IJG/jdapimin.c" path="../SDK/lib/lib/gfx/jpg/IJG/jdapimin.c" type="1"/>
     <File name="lib/lib/gfx/button.h" path="../SDK/lib/lib/gfx/button.h" type="1"/>
     <File name="lib/lib/fat_fs" path="" type="2"/>
     <File name="lib/api/cache_api.c" path="../SDK/lib/api/cache_api.c" type="1"/>
-    <File name="lib/device/ar1020.h" path="../SDK/lib/device/ar1020.h" type="1"/>
     <File name="stm32f4xx/include/stm32f4xx.h" path="../SDK/platform/stm32f4xx/include/stm32f4xx.h" type="1"/>
-    <File name="stm32f4xx/driver/stm32f4xx_dcmi.c" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_dcmi.c" type="1"/>
+    <File name="lib/device/ar1020.h" path="../SDK/lib/device/ar1020.h" type="1"/>
     <File name="lib/device/sst25vf.h" path="../SDK/lib/device/sst25vf.h" type="1"/>
+    <File name="stm32f4xx/driver/stm32f4xx_dcmi.c" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_dcmi.c" type="1"/>
     <File name="lib/lib/gfx/files/stl.c" path="../SDK/lib/lib/gfx/files/stl.c" type="1"/>
     <File name="stm32f4xx/interface/hs_mmcsd_interface.h" path="../SDK/platform/stm32f4xx/interface/hs_mmcsd_interface.h" type="1"/>
     <File name="stm32f4xx/driver/stm32f4xx_dac.h" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_dac.h" type="1"/>
@@ -308,62 +308,62 @@
     <File name="lib" path="" type="2"/>
     <File name="board_init.h" path="board_init.h" type="1"/>
     <File name="lib/lib/gfx/window.h" path="../SDK/lib/lib/gfx/window.h" type="1"/>
-    <File name="stm32f4xx/driver/stm32f4xx_sai.h" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_sai.h" type="1"/>
-    <File name="lib/device" path="" type="2"/>
     <File name="lib/lib/gfx/3d.h" path="../SDK/lib/lib/gfx/3d.h" type="1"/>
+    <File name="lib/device" path="" type="2"/>
+    <File name="stm32f4xx/driver/stm32f4xx_sai.h" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_sai.h" type="1"/>
     <File name="lib/lib/fat_fs/src/ff.c" path="../SDK/lib/lib/fat_fs/src/ff.c" type="1"/>
     <File name="stm32f4xx/sys/Include/core_cm3.h" path="../SDK/platform/stm32f4xx/sys/Include/core_cm3.h" type="1"/>
     <File name="lib/lib/gfx/png" path="" type="2"/>
     <File name="stm32f4xx/driver/stm32f4xx_rng.h" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_rng.h" type="1"/>
     <File name="lib/lib/gfx/bmp" path="" type="2"/>
     <File name="lib/api/adc_api.h" path="../SDK/lib/api/adc_api.h" type="1"/>
-    <File name="lib/app/cat.h" path="../SDK/lib/app/cat.h" type="1"/>
     <File name="lib/lib/gfx/jpg/IJG/jdhuff.c" path="../SDK/lib/lib/gfx/jpg/IJG/jdhuff.c" type="1"/>
+    <File name="lib/app/cat.h" path="../SDK/lib/app/cat.h" type="1"/>
     <File name="lib/device/srf02.c" path="../SDK/lib/device/srf02.c" type="1"/>
     <File name="lib/lib/gfx/button.c" path="../SDK/lib/lib/gfx/button.c" type="1"/>
-    <File name="lib/lib/gfx/jpg/IJG/jdmarker.c" path="../SDK/lib/lib/gfx/jpg/IJG/jdmarker.c" type="1"/>
     <File name="lib/lib/fat_fs/src/option/ccsbcs.c" path="../SDK/lib/lib/fat_fs/src/option/ccsbcs.c" type="1"/>
-    <File name="lib/device/bmp180.c" path="../SDK/lib/device/bmp180.c" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jdmarker.c" path="../SDK/lib/lib/gfx/jpg/IJG/jdmarker.c" type="1"/>
     <File name="lib/lib/gfx/gfx_util.c" path="../SDK/lib/lib/gfx/gfx_util.c" type="1"/>
+    <File name="lib/device/bmp180.c" path="../SDK/lib/device/bmp180.c" type="1"/>
     <File name="lib/api/core_init_api.c" path="../SDK/lib/api/core_init_api.c" type="1"/>
     <File name="lib/lib/gfx/keyboard.c" path="../SDK/lib/lib/gfx/keyboard.c" type="1"/>
     <File name="lib/api/pmic_api.c" path="../SDK/lib/api/pmic_api.c" type="1"/>
     <File name="lib/lib/buffers/ring_buff.h" path="../SDK/lib/lib/buffers/ring_buff.h" type="1"/>
-    <File name="stm32f4xx/driver/stm32f4xx_dma.h" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_dma.h" type="1"/>
     <File name="stm32f4xx/sys/system_stm32f4xx.h" path="../SDK/platform/stm32f4xx/sys/system_stm32f4xx.h" type="1"/>
+    <File name="stm32f4xx/driver/stm32f4xx_dma.h" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_dma.h" type="1"/>
     <File name="lib/lib/gfx/jpg/IJG/jversion.h" path="../SDK/lib/lib/gfx/jpg/IJG/jversion.h" type="1"/>
     <File name="lib/device/tps65217.c" path="../SDK/lib/device/tps65217.c" type="1"/>
-    <File name="stm32f4xx/interface/twi_interface.c" path="../SDK/platform/stm32f4xx/interface/twi_interface.c" type="1"/>
     <File name="lib/lib/gfx/jpg/IJG/jfdctfst.c" path="../SDK/lib/lib/gfx/jpg/IJG/jfdctfst.c" type="1"/>
+    <File name="stm32f4xx/interface/twi_interface.c" path="../SDK/platform/stm32f4xx/interface/twi_interface.c" type="1"/>
     <File name="stm32f4xx/driver/stm32f4xx_sdio.h" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_sdio.h" type="1"/>
     <File name="lib/lib/gfx/jpg/IJG/jdhuff.h" path="../SDK/lib/lib/gfx/jpg/IJG/jdhuff.h" type="1"/>
     <File name="lib/lib/gfx/jpg/IJG/transupp.h" path="../SDK/lib/lib/gfx/jpg/IJG/transupp.h" type="1"/>
     <File name="lib/lib/gfx/jpg/conf_jpeg_decoder.h" path="../SDK/lib/lib/gfx/jpg/conf_jpeg_decoder.h" type="1"/>
     <File name="stm32f4xx/driver" path="" type="2"/>
-    <File name="board_init.c" path="board_init.c" type="1"/>
     <File name="stm32f4xx/sys/startup_stm32f40xx.S" path="../SDK/platform/stm32f4xx/sys/startup_stm32f40xx.S" type="1"/>
+    <File name="board_init.c" path="board_init.c" type="1"/>
     <File name="lib/lib/gfx/keyboard.h" path="../SDK/lib/lib/gfx/keyboard.h" type="1"/>
     <File name="lib/device/tps65910a.c" path="../SDK/lib/device/tps65910a.c" type="1"/>
     <File name="lib/lib/gfx/jpg/jdatasrc.c" path="../SDK/lib/lib/gfx/jpg/jdatasrc.c" type="1"/>
     <File name="lib/app/cat.c" path="../SDK/lib/app/cat.c" type="1"/>
     <File name="stm32f4xx/driver/stm32f4xx_rng.c" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_rng.c" type="1"/>
-    <File name="stm32f4xx/include" path="" type="2"/>
     <File name="lib/lib/fat_fs/inc" path="" type="2"/>
+    <File name="stm32f4xx/include" path="" type="2"/>
     <File name="lib/lib/gfx/jpg/IJG/jdct.h" path="../SDK/lib/lib/gfx/jpg/IJG/jdct.h" type="1"/>
-    <File name="lib/device/sst25vf.c" path="../SDK/lib/device/sst25vf.c" type="1"/>
     <File name="lib/lib/gfx/gfx_util.h" path="../SDK/lib/lib/gfx/gfx_util.h" type="1"/>
+    <File name="lib/device/sst25vf.c" path="../SDK/lib/device/sst25vf.c" type="1"/>
     <File name="lib/device/bmp180.h" path="../SDK/lib/device/bmp180.h" type="1"/>
     <File name="stm32f4xx/interface/lcd_interface.c" path="../SDK/platform/stm32f4xx/interface/lcd_interface.c" type="1"/>
     <File name="lib/lib/gfx/mpeg4/avconfig.h" path="../SDK/lib/lib/gfx/mpeg4/avconfig.h" type="1"/>
     <File name="lib/lib/gfx/jpg/IJG/jcmarker.c" path="../SDK/lib/lib/gfx/jpg/IJG/jcmarker.c" type="1"/>
-    <File name="stm32f4xx/driver/stm32f4xx_sdio.c" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_sdio.c" type="1"/>
     <File name="stm32f4xx/interface/twi_interface.h" path="../SDK/platform/stm32f4xx/interface/twi_interface.h" type="1"/>
+    <File name="stm32f4xx/driver/stm32f4xx_sdio.c" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_sdio.c" type="1"/>
     <File name="lib/lib/gfx/png/png.c" path="../SDK/lib/lib/gfx/png/png.c" type="1"/>
     <File name="lib/api/mcspi_api.c" path="../SDK/lib/api/mcspi_api.c" type="1"/>
     <File name="stm32f4xx/driver/stm32f4xx_hash_md5.c" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_hash_md5.c" type="1"/>
     <File name="stm32f4xx/driver/stm32f4xx_wwdg.h" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_wwdg.h" type="1"/>
-    <File name="lib/lib/gfx/checkbox.h" path="../SDK/lib/lib/gfx/checkbox.h" type="1"/>
     <File name="lib/device/tps65217.h" path="../SDK/lib/device/tps65217.h" type="1"/>
+    <File name="lib/lib/gfx/checkbox.h" path="../SDK/lib/lib/gfx/checkbox.h" type="1"/>
     <File name="stm32f4xx/interface/uart_interface.h" path="../SDK/platform/stm32f4xx/interface/uart_interface.h" type="1"/>
     <File name="lib/lib/gfx/resource/fonts.c" path="../SDK/lib/lib/gfx/resource/fonts.c" type="1"/>
     <File name="lib/lib/gfx/gfx_gui_paint.c" path="../SDK/lib/lib/gfx/gfx_gui_paint.c" type="1"/>
@@ -386,8 +386,8 @@
     <File name="lib/lib/gfx/progressbar.h" path="../SDK/lib/lib/gfx/progressbar.h" type="1"/>
     <File name="lib/api/core_init_api.h" path="../SDK/lib/api/core_init_api.h" type="1"/>
     <File name="lib/lib/buffers" path="" type="2"/>
-    <File name="lib/lib/gfx/bmp/test_bmp.h" path="../SDK/lib/lib/gfx/bmp/test_bmp.h" type="1"/>
     <File name="lib/device/adxl345.h" path="../SDK/lib/device/adxl345.h" type="1"/>
+    <File name="lib/lib/gfx/bmp/test_bmp.h" path="../SDK/lib/lib/gfx/bmp/test_bmp.h" type="1"/>
     <File name="stm32f4xx/interface/mcspi_interface.h" path="../SDK/platform/stm32f4xx/interface/mcspi_interface.h" type="1"/>
     <File name="ffconf.h" path="ffconf.h" type="1"/>
     <File name="lib/lib/gfx/graphic_string.c" path="../SDK/lib/lib/gfx/graphic_string.c" type="1"/>
@@ -406,14 +406,14 @@
     <File name="lib/lib/gfx/controls_definition.c" path="../SDK/lib/lib/gfx/controls_definition.c" type="1"/>
     <File name="lib/lib/gfx/picturebox.c" path="../SDK/lib/lib/gfx/picturebox.c" type="1"/>
     <File name="lib/lib/gfx/mpeg4/config.h" path="../SDK/lib/lib/gfx/mpeg4/config.h" type="1"/>
-    <File name="lib/lib/gfx/listbox.c" path="../SDK/lib/lib/gfx/listbox.c" type="1"/>
     <File name="lib/device/lepton_flir.c" path="../SDK/lib/device/lepton_flir.c" type="1"/>
+    <File name="lib/lib/gfx/listbox.c" path="../SDK/lib/lib/gfx/listbox.c" type="1"/>
     <File name="lib/lib/gfx/bmp/bmp.c" path="../SDK/lib/lib/gfx/bmp/bmp.c" type="1"/>
     <File name="lib/device/mpu60x0_9150.c" path="../SDK/lib/device/mpu60x0_9150.c" type="1"/>
     <File name="lib/api/adc_def.h" path="../SDK/lib/api/adc_def.h" type="1"/>
     <File name="stm32f4xx/sys/Include/core_cm4.h" path="../SDK/platform/stm32f4xx/sys/Include/core_cm4.h" type="1"/>
-    <File name="lib/lib/gfx/jpg/IJG/cderror.h" path="../SDK/lib/lib/gfx/jpg/IJG/cderror.h" type="1"/>
     <File name="lib/api/uart_def.h" path="../SDK/lib/api/uart_def.h" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/cderror.h" path="../SDK/lib/lib/gfx/jpg/IJG/cderror.h" type="1"/>
     <File name="lib/lib/gfx/resource/grlib.h" path="../SDK/lib/lib/gfx/resource/grlib.h" type="1"/>
     <File name="stm32f4xx/driver/stm32f4xx_wwdg.c" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_wwdg.c" type="1"/>
     <File name="lib/lib/gfx/checkbox.c" path="../SDK/lib/lib/gfx/checkbox.c" type="1"/>
@@ -428,8 +428,8 @@
     <File name="stm32f4xx/driver/stm32f4xx_rtc.c" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_rtc.c" type="1"/>
     <File name="lib/lib/gfx/jpg/IJG/jcmainct.c" path="../SDK/lib/lib/gfx/jpg/IJG/jcmainct.c" type="1"/>
     <File name="stm32f4xx/driver/stm32f4xx_cryp_tdes.c" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_cryp_tdes.c" type="1"/>
-    <File name="lib/lib/gfx/jpg/IJG/jdmainct.c" path="../SDK/lib/lib/gfx/jpg/IJG/jdmainct.c" type="1"/>
     <File name="stm32f4xx/sys/cache.c" path="../SDK/platform/stm32f4xx/sys/cache.c" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jdmainct.c" path="../SDK/lib/lib/gfx/jpg/IJG/jdmainct.c" type="1"/>
     <File name="lib/lib/gfx/jpg/IJG/jidctred.c" path="../SDK/lib/lib/gfx/jpg/IJG/jidctred.c" type="1"/>
   </Files>
   <Bookmarks/>

@@ -103,7 +103,8 @@
 /*-----------------------------------------------------*/
 #define LEPTON_FLIR_INIT \
 	LEPTON_FLIR = new_(new_lepton_flir);\
-	LEPTON_FLIR->SPI = SPI[1];
+	LEPTON_FLIR->SPI = SPI[1]; \
+	LEPTON_FLIR->TWI = TWI[0];
 #endif
 /*#####################################################*/
 #if _USE_ADXL345 == 1

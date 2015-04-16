@@ -97,12 +97,14 @@
 #define LEP_CID_VID_FREEZE_ENABLE           (LEP_VID_MODULE_BASE + 0x0024 )
 
 
-   /* VID Module Attribute Limits
-   */
+/*
+ * VID Module Attribute Limits
+ */
 
 
-   /* VID Module Object Sizes
-   */
+/*
+ * VID Module Object Sizes
+ */
    #define LEPTON_COLOR_LUT_SIZE               256     /* 8-bit LUT as 256 x 8-bits */
 
 
@@ -166,6 +168,35 @@ typedef enum Result
 
 } LEP_RESULT;
 /*#####################################################*/
+/* SYS Module Command IDs
+*/
+   #define LEP_SYS_MODULE_BASE                     0x0200
+
+   #define LEP_CID_SYS_PING                        (LEP_SYS_MODULE_BASE + 0x0000 )
+   #define LEP_CID_SYS_CAM_STATUS                  (LEP_SYS_MODULE_BASE + 0x0004 )
+   #define LEP_CID_SYS_FLIR_SERIAL_NUMBER          (LEP_SYS_MODULE_BASE + 0x0008 )
+   #define LEP_CID_SYS_CAM_UPTIME                  (LEP_SYS_MODULE_BASE + 0x000C )
+   #define LEP_CID_SYS_AUX_TEMPERATURE_KELVIN      (LEP_SYS_MODULE_BASE + 0x0010 )
+   #define LEP_CID_SYS_FPA_TEMPERATURE_KELVIN      (LEP_SYS_MODULE_BASE + 0x0014 )
+   #define LEP_CID_SYS_TELEMETRY_ENABLE_STATE      (LEP_SYS_MODULE_BASE + 0x0018 )
+   #define LEP_CID_SYS_TELEMETRY_LOCATION          (LEP_SYS_MODULE_BASE + 0x001C )
+   #define LEP_CID_SYS_EXECTUE_FRAME_AVERAGE       (LEP_SYS_MODULE_BASE + 0x0020 )
+   #define LEP_CID_SYS_NUM_FRAMES_TO_AVERAGE       (LEP_SYS_MODULE_BASE + 0x0024 )
+   #define LEP_CID_SYS_CUST_SERIAL_NUMBER          (LEP_SYS_MODULE_BASE + 0x0028 )
+   #define LEP_CID_SYS_SCENE_STATISTICS            (LEP_SYS_MODULE_BASE + 0x002C )
+   #define LEP_CID_SYS_SCENE_ROI                   (LEP_SYS_MODULE_BASE + 0x0030 )
+   #define LEP_CID_SYS_THERMAL_SHUTDOWN_COUNT      (LEP_SYS_MODULE_BASE + 0x0034 )
+   #define LEP_CID_SYS_SHUTTER_POSITION            (LEP_SYS_MODULE_BASE + 0x0038 )
+   #define LEP_CID_SYS_FFC_SHUTTER_MODE_OBJ        (LEP_SYS_MODULE_BASE + 0x003C )
+   #define FLR_CID_SYS_RUN_FFC                     (LEP_SYS_MODULE_BASE + 0x0042 )
+   #define LEP_CID_SYS_FFC_STATUS                  (LEP_SYS_MODULE_BASE + 0x0044 )
+
+/* SYS Module Attribute Limits
+*/
+
+   #define LEP_SYS_MAX_FRAMES_TO_AVERAGE               128          /* Scale is 1x    */
+   #define LEP_SYS_MAX_SERIAL_NUMBER_CHAR_SIZE         32
+
 typedef struct LEPTON_FLIR_s{
 	//STimer_t Timeout_Timer;
 	bool busy;
@@ -175,8 +206,13 @@ typedef struct LEPTON_FLIR_s{
 	//unsigned char Stage;
 }LEPTON_FLIR_t;
 /*#####################################################*/
-bool lepton_flir_init(LEPTON_FLIR_t *structure);
+bool lepton_run_command(LEPTON_FLIR_t *structure, unsigned short commandID);
+bool lepton_reg_write(LEPTON_FLIR_t *structure, unsigned short commandID, unsigned short *attributePtr, unsigned short attributeWordLength);
+bool lepton_reg_read(LEPTON_FLIR_t *structure, unsigned short commandID, unsigned short *attributePtr, unsigned short attributeWordLength);
 bool lepton_flir_get_image(LEPTON_FLIR_t *structure, unsigned short *image);
+bool lepton_direct_write_buff(LEPTON_FLIR_t *structure, unsigned short *attributePtr, unsigned short attributeWordLength);
+bool lepton_direct_write_reg(LEPTON_FLIR_t *structure, unsigned short regAddress, unsigned short regValue);
+bool lepton_flir_init(LEPTON_FLIR_t *structure);
 /*#####################################################*/
 #define new_lepton_flir LEPTON_FLIR_t
 #ifndef new_
