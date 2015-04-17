@@ -65,7 +65,7 @@ typedef struct HIH613x_s{
 	unsigned char Stage;
 }HIH613x_t;
 /*#####################################################*/
-bool hih613x_get_hum_temp(HIH613x_t *structure, unsigned char *status, unsigned short *hum, unsigned short *temp);
+bool hih613x_get_hum_temp(HIH613x_t *structure, unsigned char *status, float *hum, float *temp);
 /*#####################################################*/
 #define new_hih613x HIH613x_t
 #ifndef new_
