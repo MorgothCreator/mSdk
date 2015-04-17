@@ -8,15 +8,16 @@
 #ifndef MAIN_H_
 #define MAIN_H_
 /*#####################################################*/
-#define _USE_MPU60x0_9150	0
-#define _USE_AK8975			0
-#define _USE_BMP180			0
+#define _USE_MPU60x0_9150	1
+#define _USE_AK8975			1
+#define _USE_BMP180			1
+#define _USE_MPL3115A2		1
 #define _USE_MS5611			0
 #define _USE_MHC5883		0
 #define _USE_SRF02			0
 #define _USE_ADXL345		0
-#define _USE_HIH613x		0
-#define _USE_LEPTON_FLIR	1
+#define _USE_HIH613x		1
+#define _USE_LEPTON_FLIR	0
 #define _USE_SHT11 			0
 #define _USE_INT_ADC		0
 /*#####################################################*/
@@ -63,6 +64,15 @@
 #define MHC5883_INIT \
 	MHC5883 = new_(new_mhc5883);\
 	MHC5883->TWI = TWI[0];
+#endif
+/*#####################################################*/
+#if _USE_MPL3115A2 == 1
+#define USE_MPL3115A2 \
+	new_mpl3115a2 *MPL3115A2
+/*-----------------------------------------------------*/
+#define MPL3115A2_INIT \
+	MPL3115A2 = new_(new_mpl3115a2);\
+	MPL3115A2->TWI = TWI[0];
 #endif
 /*#####################################################*/
 #if _USE_SRF02 == 1

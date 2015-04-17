@@ -40,6 +40,7 @@
 #include "device/ms5611.h"
 #include "device/adxl345.h"
 #include "device/hih6130.h"
+#include "device/mpl3115a2.h"
 #include "device/lepton_flir.h"
 /*#####################################################*/
 #define BOARD_MESSAGE "Olimex STM32-E407"
@@ -68,6 +69,9 @@ extern USE_SRF02;
 #endif
 #ifdef USE_MHC5883
 extern USE_MHC5883;
+#endif
+#ifdef USE_MPL3115A2
+extern USE_MPL3115A2;
 #endif
 #ifdef USE_MS5611
 extern USE_MS5611;

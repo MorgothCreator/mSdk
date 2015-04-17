@@ -16,57 +16,71 @@
 <part id="3"/>
 <part id="5"/>
 <part id="4"/>
-<part id="6"/>
 <part id="7"/>
+<part id="6"/>
+<part id="8"/>
+<part id="9"/>
+<part id="10"/>
 </presentation>
 </folder>
 </info>
 </editorArea>
-<editor id="org.eclipse.cdt.ui.editor.CEditor" name="main.h" partName="main.h" path="C:/GitHub/mSdk/SDK_Probe_STM32-E407_olimex/main.h" title="main.h" tooltip="C:/GitHub/mSdk/SDK_Probe_STM32-E407_olimex/main.h" workbook="DefaultEditorWorkbook">
+<editor activePart="true" focus="true" id="org.eclipse.cdt.ui.editor.CEditor" name="main.h" partName="main.h" path="C:/GitHub/mSdk/SDK_Probe_STM32-E407_olimex/main.h" title="main.h" tooltip="C:/GitHub/mSdk/SDK_Probe_STM32-E407_olimex/main.h" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/main.h"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="505" selectionTopPixel="0"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="380" selectionTopPixel="0"/>
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="main.c" partName="main.c" path="C:/GitHub/mSdk/SDK_Probe_STM32-E407_olimex/main.c" title="main.c" tooltip="C:/GitHub/mSdk/SDK_Probe_STM32-E407_olimex/main.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/main.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="1043" selectionTopPixel="240"/>
+<editorState selectionHorizontalPixel="0" selectionLength="1" selectionOffset="6400" selectionTopPixel="3032"/>
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="board_init.h" partName="board_init.h" path="C:/GitHub/mSdk/SDK_Probe_STM32-E407_olimex/board_init.h" title="board_init.h" tooltip="C:/GitHub/mSdk/SDK_Probe_STM32-E407_olimex/board_init.h" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/board_init.h"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="0" selectionTopPixel="0"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="1194" selectionTopPixel="480"/>
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="board_init.c" partName="board_init.c" path="C:/GitHub/mSdk/SDK_Probe_STM32-E407_olimex/board_init.c" title="board_init.c" tooltip="C:/GitHub/mSdk/SDK_Probe_STM32-E407_olimex/board_init.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/board_init.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="400" selectionTopPixel="0"/>
-</editor>
-<editor activePart="true" focus="true" id="org.eclipse.cdt.ui.editor.CEditor" name="lepton_flir.c" partName="lepton_flir.c" path="C:/GitHub/mSdk/SDK/lib/device/lepton_flir.c" title="lepton_flir.c" tooltip="C:/GitHub/mSdk/SDK/lib/device/lepton_flir.c" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/lib/device/lepton_flir.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="4020" selectionTopPixel="1195"/>
-</editor>
-<editor id="org.eclipse.cdt.ui.editor.CEditor" name="lepton_flir.h" partName="lepton_flir.h" path="C:/GitHub/mSdk/SDK/lib/device/lepton_flir.h" title="lepton_flir.h" tooltip="C:/GitHub/mSdk/SDK/lib/device/lepton_flir.h" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/lib/device/lepton_flir.h"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="9542" selectionTopPixel="2884"/>
+<editorState selectionHorizontalPixel="0" selectionLength="27" selectionOffset="4011" selectionTopPixel="2040"/>
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="mhc5883.c" partName="mhc5883.c" path="C:/GitHub/mSdk/SDK/lib/device/mhc5883.c" title="mhc5883.c" tooltip="C:/GitHub/mSdk/SDK/lib/device/mhc5883.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/lib/device/mhc5883.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="55" selectionOffset="1449" selectionTopPixel="135"/>
+<editorState selectionHorizontalPixel="0" selectionLength="55" selectionOffset="1449" selectionTopPixel="1826"/>
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="mhc5883.h" partName="mhc5883.h" path="C:/GitHub/mSdk/SDK/lib/device/mhc5883.h" title="mhc5883.h" tooltip="C:/GitHub/mSdk/SDK/lib/device/mhc5883.h" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/lib/device/mhc5883.h"/>
-<editorState selectionHorizontalPixel="0" selectionLength="14" selectionOffset="3907" selectionTopPixel="1258"/>
+<editorState selectionHorizontalPixel="0" selectionLength="1431" selectionOffset="3751" selectionTopPixel="1519"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="mpl3115a2.c" partName="mpl3115a2.c" path="C:/GitHub/mSdk/SDK/lib/device/mpl3115a2.c" title="mpl3115a2.c" tooltip="C:/GitHub/mSdk/SDK/lib/device/mpl3115a2.c" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/lib/device/mpl3115a2.c"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="2338" selectionTopPixel="941"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="mpl3115a2.h" partName="mpl3115a2.h" path="C:/GitHub/mSdk/SDK/lib/device/mpl3115a2.h" title="mpl3115a2.h" tooltip="C:/GitHub/mSdk/SDK/lib/device/mpl3115a2.h" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/lib/device/mpl3115a2.h"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="3245" selectionTopPixel="1090"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="hih6130.c" partName="hih6130.c" path="C:/GitHub/mSdk/SDK/lib/device/hih6130.c" title="hih6130.c" tooltip="C:/GitHub/mSdk/SDK/lib/device/hih6130.c" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/lib/device/hih6130.c"/>
+<editorState selectionHorizontalPixel="0" selectionLength="36" selectionOffset="1462" selectionTopPixel="244"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="hih6130.h" partName="hih6130.h" path="C:/GitHub/mSdk/SDK/lib/device/hih6130.h" title="hih6130.h" tooltip="C:/GitHub/mSdk/SDK/lib/device/hih6130.h" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/lib/device/hih6130.h"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="2645" selectionTopPixel="805"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="bmp180.c" partName="bmp180.c" path="C:/GitHub/mSdk/SDK/lib/device/bmp180.c" title="bmp180.c" tooltip="C:/GitHub/mSdk/SDK/lib/device/bmp180.c" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/lib/device/bmp180.c"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="5329" selectionTopPixel="1958"/>
 </editor>
 </editors>
 <views>
 <view id="org.coocox.builder.ui.views.ProjectView" partName="Project">
-<viewState CommonNavigator.LINKING_ENABLED="0" horizontalPosition="0" org.eclipse.ui.navigator.resources.workingSets.showTopLevelWorkingSets="0" verticalPosition="11">
+<viewState CommonNavigator.LINKING_ENABLED="0" horizontalPosition="0" org.eclipse.ui.navigator.resources.workingSets.showTopLevelWorkingSets="0" verticalPosition="0">
 <expanded>
 <element path="/SDK_Probe_STM32F4"/>
 <element path="/SDK_Probe_STM32F4/lib"/>
-<element path="/SDK_Probe_STM32F4/lib/api"/>
 <element path="/SDK_Probe_STM32F4/lib/device"/>
 <element path="/SDK_Probe_STM32F4/stm32f4xx"/>
 </expanded>
 <selection>
-<element path="/SDK_Probe_STM32F4/lib/api/timer_api.c"/>
+<element path="/SDK_Probe_STM32F4/lib/device/bmp180.c"/>
 </selection>
 </viewState>
 </view>
@@ -83,7 +97,7 @@
 <viewState/>
 </view>
 <view id="org.coocox.coassistant.view.CoAssistantView_debug" partName="Peripherals">
-<viewState horizontalPosition="0" verticalPosition="0">
+<viewState horizontalPosition="0" verticalPosition="13">
 <selection>&#x0A;<element name="GPIOC"/>
 </selection>
 <registerValues baseAddress="Base Address: 0x40020800" description="Description:  "/>
@@ -118,8 +132,8 @@
 <hide_menu_item_id id="org.coocox.codebugger.configuration.showMemoryBrowserAction"/>
 <hide_menu_item_id id="org.coocox.codebugger.configuration.showVariablesAction"/>
 <hide_menu_item_id id="org.coocox.builder.ui.openProjectExplorerAction"/>
-<hide_menu_item_id id="org.eclipse.debug.ui.commands.TerminateAndRelaunch"/>
 <hide_menu_item_id id="org.coocox.codebugger.trace.actions.ShowTraceControlAction"/>
+<hide_menu_item_id id="org.eclipse.debug.ui.commands.TerminateAndRelaunch"/>
 <hide_menu_item_id id="org.coocox.codebugger.configuration.showRegistersAction"/>
 <hide_toolbar_item_id id="org.eclipse.cdt.debug.internal.ui.actions.ToggleInstructionStepModeAction"/>
 <hide_toolbar_item_id id="org.eclipse.ui.edit.text.toggleShowSelectedElementOnly"/>
@@ -228,7 +242,7 @@
 <page content="org.eclipse.ui.internal.introview" label="LabelNotFound"/>
 </folder>
 </info>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@9e13e3" ratio="0.69957983" ratioLeft="666" ratioRight="286" relationship="4" relative="org.eclipse.ui.internal.ViewStack@9d9ec4">&#x0A;<folder activePageID="org.eclipse.ui.console.ConsoleView" appearance="2" expanded="2">&#x0A;<page content="org.eclipse.ui.console.ConsoleView" label="Console"/>
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@9e13e3" ratio="0.69957983" ratioLeft="666" ratioRight="286" relationship="4" relative="org.eclipse.ui.internal.ViewStack@9d9ec4">&#x0A;<folder activePageID="org.eclipse.debug.ui.DebugView" appearance="2" expanded="2">&#x0A;<page content="org.eclipse.ui.console.ConsoleView" label="Console"/>
 <page content="org.eclipse.debug.ui.DebugView" label="Debug"/>
 <page content="org.eclipse.debug.ui.BreakpointView" label="LabelNotFound"/>
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">&#x0A;<part id="0"/>
@@ -263,168 +277,168 @@
 <workingSets/>
 <navigationHistory>
 <editors>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/lib/device/lepton_flir.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/lib/device/mpl3115a2.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/main.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/lib/device/lepton_flir.h"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/main.h"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/lib/api/timer_api.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.asm.AsmEditor" path="/SDK_Probe_STM32F4/stm32f4xx/sys/startup_stm32f40xx.S"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/lib/device/mpl3115a2.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/lib/device/hih6130.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/lib/device/mpl3115a2.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/main.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/lib/api/uart_api.h"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/lib/device/lepton_flir.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/lib/device/lepton_flir.h"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/lib/device/mhc5883.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/lib/api/timer_api.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/lib/api/uart_api.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/lib/device/hih6130.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/lib/device/mpl3115a2.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/lib/device/bmp180.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/main.h"/>
 </editors>
+<item historyLabel="startup_stm32f40xx.S" index="3">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="mpl3115a2.c" index="0">
+<position info="not_deleted" x="1875" y="8"/>
+</item>
+<item historyLabel="mpl3115a2.h" index="4">
+<position info="not_deleted" x="3285" y="0"/>
+</item>
+<item historyLabel="mpl3115a2.c" index="0">
+<position info="not_deleted" x="2754" y="0"/>
+</item>
 <item historyLabel="main.c" index="1">
-<position info="not_deleted" x="7869" y="0"/>
+<position info="not_deleted" x="6695" y="0"/>
 </item>
-<item historyLabel="lepton_flir.c" index="0">
-<position info="not_deleted" x="8457" y="69"/>
+<item historyLabel="mpl3115a2.c" index="0">
+<position info="not_deleted" x="1821" y="22"/>
 </item>
-<item historyLabel="lepton_flir.c" index="0">
-<position info="not_deleted" x="8823" y="0"/>
+<item historyLabel="mpl3115a2.h" index="4">
+<position info="not_deleted" x="3245" y="0"/>
 </item>
-<item historyLabel="lepton_flir.c" index="0">
-<position info="not_deleted" x="8526" y="90"/>
+<item historyLabel="main.c" index="1">
+<position info="not_deleted" x="5869" y="0"/>
 </item>
-<item historyLabel="lepton_flir.c" index="0">
-<position info="not_deleted" x="7992" y="57"/>
+<item historyLabel="main.h" index="2">
+<position info="not_deleted" x="379" y="1"/>
 </item>
-<item historyLabel="lepton_flir.h" index="2">
-<position info="not_deleted" x="1024" y="52"/>
+<item historyLabel="hih6130.c" index="5">
+<position info="not_deleted" x="1470" y="0"/>
 </item>
-<item historyLabel="main.h" index="3">
-<position info="not_deleted" x="3344" y="0"/>
+<item historyLabel="main.c" index="1">
+<position info="not_deleted" x="541" y="0"/>
 </item>
-<item historyLabel="lepton_flir.c" index="0">
-<position info="not_deleted" x="7379" y="0"/>
+<item historyLabel="hih6130.c" index="5">
+<position info="not_deleted" x="1465" y="0"/>
 </item>
-<item historyLabel="timer_api.c" index="4">
+<item historyLabel="hih6130.c" index="5">
+<position info="not_deleted" x="1420" y="0"/>
+</item>
+<item historyLabel="hih6130.c" index="5">
+<position info="not_deleted" x="1465" y="0"/>
+</item>
+<item historyLabel="hih6130.c" index="5">
+<position info="not_deleted" x="1513" y="0"/>
+</item>
+<item historyLabel="hih6130.c" index="5">
+<position info="not_deleted" x="1465" y="0"/>
+</item>
+<item historyLabel="hih6130.c" index="5">
+<position info="not_deleted" x="1513" y="0"/>
+</item>
+<item historyLabel="mpl3115a2.c" index="6">
+<position info="not_deleted" x="1821" y="22"/>
+</item>
+<item historyLabel="hih6130.c" index="5">
+<position info="not_deleted" x="1555" y="0"/>
+</item>
+<item historyLabel="main.c" index="7">
+<position/>
+</item>
+<item historyLabel="hih6130.c" index="5">
+<position info="not_deleted" x="1803" y="0"/>
+</item>
+<item historyLabel="hih6130.h" index="8">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="lepton_flir.c" index="0">
-<position info="not_deleted" x="5919" y="0"/>
+<item historyLabel="hih6130.c" index="5">
+<position info="not_deleted" x="1910" y="0"/>
 </item>
-<item historyLabel="main.h" index="3">
-<position info="not_deleted" x="505" y="0"/>
+<item historyLabel="main.c" index="7">
+<position/>
 </item>
-<item historyLabel="lepton_flir.c" index="0">
-<position info="not_deleted" x="9106" y="0"/>
+<item historyLabel="hih6130.c" index="5">
+<position info="not_deleted" x="1796" y="0"/>
 </item>
-<item historyLabel="main.h" index="3">
-<position info="not_deleted" x="505" y="0"/>
+<item historyLabel="main.c" index="7">
+<position/>
 </item>
-<item historyLabel="main.c" index="5">
-<position info="not_deleted" x="914" y="0"/>
+<item historyLabel="hih6130.c" index="5">
+<position info="not_deleted" x="1716" y="0"/>
 </item>
-<item historyLabel="main.h" index="3">
-<position info="not_deleted" x="505" y="0"/>
+<item historyLabel="main.c" index="7">
+<position/>
 </item>
-<item historyLabel="main.c" index="5">
-<position info="not_deleted" x="597" y="0"/>
+<item historyLabel="hih6130.c" index="5">
+<position info="not_deleted" x="1910" y="0"/>
 </item>
-<item historyLabel="uart_api.h" index="6">
-<position info="not_deleted" x="1448" y="84"/>
+<item historyLabel="main.c" index="7">
+<position/>
 </item>
-<item historyLabel="main.c" index="5">
-<position info="not_deleted" x="7718" y="0"/>
+<item historyLabel="hih6130.c" index="5">
+<position info="not_deleted" x="1026" y="5"/>
 </item>
-<item historyLabel="main.h" index="3">
-<position info="not_deleted" x="505" y="0"/>
+<item historyLabel="hih6130.h" index="8">
+<position info="not_deleted" x="2645" y="0"/>
 </item>
-<item historyLabel="main.c" index="5">
-<position info="not_deleted" x="597" y="0"/>
+<item historyLabel="main.c" index="7">
+<position info="not_deleted" x="7747" y="0"/>
 </item>
-<item historyLabel="lepton_flir.c" index="0">
-<position info="not_deleted" x="9115" y="2"/>
+<item historyLabel="hih6130.c" index="5">
+<position info="not_deleted" x="1026" y="5"/>
 </item>
-<item historyLabel="main.h" index="3">
-<position info="not_deleted" x="505" y="0"/>
+<item historyLabel="hih6130.c" index="5">
+<position info="not_deleted" x="1550" y="0"/>
 </item>
-<item historyLabel="main.c" index="5">
-<position info="not_deleted" x="597" y="0"/>
+<item historyLabel="hih6130.c" index="5">
+<position info="not_deleted" x="1345" y="0"/>
 </item>
-<item historyLabel="lepton_flir.c" index="7">
-<position info="not_deleted" x="15286" y="2"/>
+<item historyLabel="mpl3115a2.c" index="6">
+<position info="not_deleted" x="1821" y="22"/>
 </item>
-<item historyLabel="lepton_flir.c" index="7">
-<position info="not_deleted" x="7641" y="0"/>
+<item historyLabel="hih6130.c" index="5">
+<position info="not_deleted" x="1345" y="0"/>
 </item>
-<item historyLabel="lepton_flir.c" index="7">
-<position info="not_deleted" x="7484" y="0"/>
+<item historyLabel="hih6130.c" index="5">
+<position info="not_deleted" x="1249" y="30"/>
 </item>
-<item historyLabel="lepton_flir.h" index="8">
-<position info="not_deleted" x="10178" y="0"/>
+<item historyLabel="mpl3115a2.c" index="6">
+<position info="not_deleted" x="2343" y="0"/>
 </item>
-<item historyLabel="lepton_flir.c" index="7">
-<position info="not_deleted" x="7225" y="143"/>
+<item historyLabel="hih6130.c" index="5">
+<position info="not_deleted" x="1462" y="36"/>
 </item>
-<item historyLabel="lepton_flir.h" index="8">
-<position info="not_deleted" x="10176" y="0"/>
+<item historyLabel="mpl3115a2.c" index="6">
+<position info="not_deleted" x="2338" y="0"/>
 </item>
-<item historyLabel="lepton_flir.c" index="7">
-<position info="not_deleted" x="17247" y="0"/>
+<item historyLabel="main.c" index="7">
+<position/>
 </item>
-<item historyLabel="lepton_flir.h" index="8">
-<position info="not_deleted" x="10036" y="0"/>
+<item historyLabel="mpl3115a2.h" index="9">
+<position info="not_deleted" x="3245" y="0"/>
 </item>
-<item historyLabel="lepton_flir.c" index="7">
-<position info="not_deleted" x="16045" y="125"/>
+<item historyLabel="mpl3115a2.c" index="6">
+<position info="not_deleted" x="2338" y="0"/>
 </item>
-<item historyLabel="lepton_flir.h" index="8">
-<position info="not_deleted" x="10036" y="0"/>
+<item historyLabel="main.c" index="7">
+<position info="not_deleted" x="6844" y="0"/>
 </item>
-<item historyLabel="lepton_flir.c" index="7">
-<position info="not_deleted" x="16045" y="125"/>
+<item historyLabel="bmp180.c" index="10">
+<position info="not_deleted" x="5052" y="0"/>
 </item>
-<item historyLabel="lepton_flir.h" index="8">
-<position info="not_deleted" x="10630" y="0"/>
+<item historyLabel="main.c" index="7">
+<position info="not_deleted" x="6400" y="1"/>
 </item>
-<item historyLabel="lepton_flir.c" index="7">
-<position info="not_deleted" x="16634" y="110"/>
+<item historyLabel="bmp180.c" index="10">
+<position info="not_deleted" x="5052" y="0"/>
 </item>
-<item historyLabel="lepton_flir.h" index="8">
-<position info="not_deleted" x="10628" y="0"/>
-</item>
-<item historyLabel="lepton_flir.c" index="7">
-<position info="not_deleted" x="16634" y="110"/>
-</item>
-<item historyLabel="lepton_flir.c" index="7">
-<position info="not_deleted" x="16909" y="0"/>
-</item>
-<item historyLabel="lepton_flir.c" index="7">
-<position info="not_deleted" x="16343" y="53"/>
-</item>
-<item historyLabel="lepton_flir.c" index="7">
-<position info="not_deleted" x="16209" y="0"/>
-</item>
-<item historyLabel="lepton_flir.c" index="7">
-<position info="not_deleted" x="16627" y="0"/>
-</item>
-<item historyLabel="lepton_flir.h" index="8">
-<position info="not_deleted" x="9542" y="0"/>
-</item>
-<item historyLabel="lepton_flir.c" index="7">
-<position info="not_deleted" x="16627" y="0"/>
-</item>
-<item historyLabel="mhc5883.c" index="9">
-<position info="not_deleted" x="1449" y="55"/>
-</item>
-<item historyLabel="timer_api.c" index="10">
-<position info="not_deleted" x="0" y="0"/>
-</item>
-<item historyLabel="mhc5883.c" index="9">
-<position info="not_deleted" x="1449" y="55"/>
-</item>
-<item historyLabel="uart_api.h" index="11">
-<position info="not_deleted" x="1448" y="84"/>
-</item>
-<item historyLabel="mhc5883.c" index="9">
-<position info="not_deleted" x="1449" y="55"/>
-</item>
-<item active="true" historyLabel="lepton_flir.c" index="7">
-<position info="not_deleted" x="952" y="0"/>
+<item active="true" historyLabel="main.h" index="11">
+<position info="not_deleted" x="379" y="1"/>
 </item>
 </navigationHistory>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
@@ -433,6 +447,27 @@
 <actionBarAdvisor/>
 </window>
 <mruList>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="bmp180.c" tooltip="SDK_Probe_STM32F4/lib/device/bmp180.c">
+<persistable path="/SDK_Probe_STM32F4/lib/device/bmp180.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="hih6130.h" tooltip="SDK_Probe_STM32F4/lib/device/hih6130.h">
+<persistable path="/SDK_Probe_STM32F4/lib/device/hih6130.h"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="hih6130.c" tooltip="SDK_Probe_STM32F4/lib/device/hih6130.c">
+<persistable path="/SDK_Probe_STM32F4/lib/device/hih6130.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.asm.AsmEditor" name="startup_stm32f40xx.S" tooltip="SDK_Probe_STM32F4/stm32f4xx/sys/startup_stm32f40xx.S">
+<persistable path="/SDK_Probe_STM32F4/stm32f4xx/sys/startup_stm32f40xx.S"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="twi_api.c" tooltip="SDK_Probe_STM32F4/lib/api/twi_api.c">
+<persistable path="/SDK_Probe_STM32F4/lib/api/twi_api.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="mpl3115a2.h" tooltip="SDK_Probe_STM32F4/lib/device/mpl3115a2.h">
+<persistable path="/SDK_Probe_STM32F4/lib/device/mpl3115a2.h"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="mpl3115a2.c" tooltip="SDK_Probe_STM32F4/lib/device/mpl3115a2.c">
+<persistable path="/SDK_Probe_STM32F4/lib/device/mpl3115a2.c"/>
+</file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="uart_api.h" tooltip="SDK_Probe_STM32F4/lib/api/uart_api.h">
 <persistable path="/SDK_Probe_STM32F4/lib/api/uart_api.h"/>
 </file>
@@ -445,14 +480,8 @@
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="mhc5883.c" tooltip="SDK_Probe_STM32F4/lib/device/mhc5883.c">
 <persistable path="/SDK_Probe_STM32F4/lib/device/mhc5883.c"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="hih6130.c" tooltip="SDK_Probe_STM32F4/lib/device/hih6130.c">
-<persistable path="/SDK_Probe_STM32F4/lib/device/hih6130.c"/>
-</file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="ds1307.c" tooltip="SDK_Probe_STM32F4/lib/device/ds1307.c">
 <persistable path="/SDK_Probe_STM32F4/lib/device/ds1307.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="bmp180.c" tooltip="SDK_Probe_STM32F4/lib/device/bmp180.c">
-<persistable path="/SDK_Probe_STM32F4/lib/device/bmp180.c"/>
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="lepton_flir.h" tooltip="SDK_Probe_STM32F4/lib/device/lepton_flir.h">
 <persistable path="/SDK_Probe_STM32F4/lib/device/lepton_flir.h"/>
@@ -460,23 +489,8 @@
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="ff.c" tooltip="SDK_Probe_STM32F4/lib/lib/fat_fs/src/ff.c">
 <persistable path="/SDK_Probe_STM32F4/lib/lib/fat_fs/src/ff.c"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="controls_definition.c" tooltip="SDK_Probe_STM32F4/lib/lib/gfx/controls_definition.c">
-<persistable path="/SDK_Probe_STM32F4/lib/lib/gfx/controls_definition.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="uart_api.c" tooltip="SDK_Probe_STM32F4/lib/api/uart_api.c">
-<persistable path="/SDK_Probe_STM32F4/lib/api/uart_api.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="stm32f4xx_spi.h" tooltip="SDK_Probe_STM32F4/stm32f4xx/driver/stm32f4xx_spi.h">
-<persistable path="/SDK_Probe_STM32F4/stm32f4xx/driver/stm32f4xx_spi.h"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="mcspi_interface.c" tooltip="SDK_Probe_STM32F4/stm32f4xx/interface/mcspi_interface.c">
-<persistable path="/SDK_Probe_STM32F4/stm32f4xx/interface/mcspi_interface.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="mcspi_def.h" tooltip="SDK_Probe_STM32F4/lib/api/mcspi_def.h">
-<persistable path="/SDK_Probe_STM32F4/lib/api/mcspi_def.h"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="lepton_flir.c" tooltip="SDK_Probe_STM32F4/lib/device/lepton_flir.c">
-<persistable path="/SDK_Probe_STM32F4/lib/device/lepton_flir.c"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="hih6130.c" tooltip="SDK_Probe_STM32F4/lib/device/hih6130.c">
+<persistable path="/SDK_Probe_STM32F4/lib/device/hih6130.c"/>
 </file>
 </mruList>
 </workbench>

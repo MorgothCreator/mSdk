@@ -8,6 +8,8 @@ Modify definition on main.h
 
 | #define _USE_BMP180			  1
 
+| #define _USE_MPL3115A2		1
+
 | #define _USE_MS5611			  1
 
 | #define _USE_MHC5883		  1

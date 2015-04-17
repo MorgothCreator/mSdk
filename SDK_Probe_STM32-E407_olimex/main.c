@@ -17,6 +17,7 @@
 #include "device/ms5611.h"
 #include "device/adxl345.h"
 #include "device/hih6130.h"
+#include "device/mpl3115a2.h"
 #include "device/lepton_flir.h"
 
 int main(void)
@@ -164,11 +165,14 @@ int main(void)
 #endif
 #if _USE_HIH613x == 1
 			unsigned char hih613x_status = 0;
-			unsigned short hih613x_hum = 0, hih613x_temp = 0;
-			float hih613x_RH, hih613x_T_C;
+			float hih613x_hum = 0, hih613x_temp = 0;
 			if(!hih613x_get_hum_temp(HIH613x, &hih613x_status, &hih613x_hum, &hih613x_temp)) {
 				hih613x_status = (unsigned char)-1;
 			}
+#endif
+#if _USE_MPL3115A2 == 1
+			float mpl3115a2_altitude = 0.0, mpl3115a2_temp = 0.0;
+			bool mpl3115a2_status = mpl3115a2_get_alt_temp(MPL3115A2, &mpl3115a2_altitude, &mpl3115a2_temp);
 #endif
 #if _USE_LEPTON_FLIR == 1
 			memset(flir_buff, 0, ((LEPTON_FLIR_LINE_SIZE - 4) * LEPTON_FLIR_LINES_NR));
@@ -183,6 +187,28 @@ int main(void)
 #if _USE_BMP180 == 1
 			if(bmp180_stat) {
 				UARTprintf(DebugCom, "BMP180: T = %2.1f, P = %4.2f, Alt = %4.2f\n\r", bmp180_temperature, bmp180_pressure, bmp180_altitude);
+			}
+#endif
+#if _USE_MPL3115A2 == 1
+			if(mpl3115a2_status) {
+				UARTprintf(DebugCom, "MPL3115A1: T = %3.2f, P = %3.2f, Alt = %4.2f\n\r", mpl3115a2_temp, 0.0, mpl3115a2_altitude);
+			}
+#endif
+#if _USE_HIH613x == 1
+			switch(hih613x_status)
+			{
+			case 0:
+				UARTprintf(DebugCom, "HIH613x: T = %2.2f, H = %2.1f\n\r", hih613x_temp, hih613x_hum);
+				break;
+			case 1:
+				UARTprintf(DebugCom, "Stale Data\n\r");
+				break;
+			case 2:
+				UARTprintf(DebugCom, "In command mode\n\r");
+				break;
+			case 3:
+				UARTprintf(DebugCom, "Diagnostic\n\r");
+				break;
 			}
 #endif
 #if _USE_MPU60x0_9150 == 1
@@ -205,25 +231,6 @@ int main(void)
 #if _USE_AK8975 == 1
 			if(ak8975_stat) {
 				UARTprintf(DebugCom, "AK8975: Magnetometer: Xg = %d, Yg = %d, Zg = %d\n\r", AK8975_X_Axis, AK8975_Y_Axis, AK8975_Z_Axis);
-			}
-#endif
-#if _USE_HIH613x == 1
-			switch(hih613x_status)
-			{
-			case 0:
-				hih613x_RH = (float)hih613x_hum * 6.10e-3;
-				hih613x_T_C = (float)hih613x_temp * 1.007e-2 - 40.0;
-				UARTprintf(DebugCom, "HIH613x: H = %2.1f, T = %2.2f\n\r", hih613x_RH, hih613x_T_C);
-				break;
-			case 1:
-				UARTprintf(DebugCom, "Stale Data\n\r");
-				break;
-			case 2:
-				UARTprintf(DebugCom, "In command mode\n\r");
-				break;
-			case 3:
-				UARTprintf(DebugCom, "Diagnostic\n\r");
-				break;
 			}
 #endif
 #if _USE_LEPTON_FLIR == 1

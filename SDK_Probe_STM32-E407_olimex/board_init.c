@@ -39,6 +39,7 @@
 #include "device/ms5611.h"
 #include "device/adxl345.h"
 #include "device/hih6130.h"
+#include "device/mpl3115a2.h"
 #include "device/lepton_flir.h"
 /*#####################################################*/
 new_uart* Uart[6] = {NULL, NULL, NULL, NULL, NULL, NULL};
@@ -65,6 +66,9 @@ USE_SRF02;
 #endif
 #ifdef USE_MHC5883
 USE_MHC5883;
+#endif
+#ifdef USE_MPL3115A2
+USE_MPL3115A2;
 #endif
 #ifdef USE_MS5611
 USE_MS5611;
@@ -131,6 +135,10 @@ bool board_init()
 /*-----------------------------------------------------*/
 #if _USE_HIH613x == 1
 	HIH613x_INIT
+#endif
+/*-----------------------------------------------------*/
+#if _USE_MPL3115A2 == 1
+	MPL3115A2_INIT
 #endif
 /*-----------------------------------------------------*/
 #if _USE_LEPTON_FLIR == 1
