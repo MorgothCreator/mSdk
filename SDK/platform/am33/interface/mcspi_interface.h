@@ -12,6 +12,7 @@
 #include "api/mcspi_def.h"
 /*#####################################################*/
 void _mcspi_transfer(Mcspi_t *McspiStruct);
+unsigned char _mcspi_SendByte(Mcspi_t *McspiStruct, unsigned char byte);
 bool _mcspi_open(Mcspi_t *McspiStruct);
 void _mcspi_close(Mcspi_t *McspiStruct);
 /*#####################################################*/

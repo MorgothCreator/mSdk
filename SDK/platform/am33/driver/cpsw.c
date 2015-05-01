@@ -130,6 +130,7 @@ void CPSWSlGigModeForceDisable(unsigned int baseAddr)
  *         CPSW_SLIVER_NON_GIG_HALF_DUPLEX - 10/100 Mbps mode, half duplex. \n
  *         CPSW_SLIVER_NON_GIG_FULL_DUPLEX - 10/100 Mbps mode, full duplex. \n
  *         CPSW_SLIVER_GIG_FULL_DUPLEX - 1000 Mbps mode, full duplex. \n
+ *         Note: for 10Mbps mode, CPSW_SLIVER_INBAND has to be configured. \n
  *
  * \return  None
  *
@@ -389,6 +390,72 @@ void CPSWALEInit(unsigned int baseAddr)
 }
 
 /**
+ * \brief   Age Out Address Table. The Untouched ageable ALE table
+ *          entries are cleared.
+ *
+ * \param   baseAddr    Base address of the ALE module
+ *
+ * \return  None
+ **/
+void CPSWALEAgeOut(unsigned int baseAddr)
+{
+    HWREG(baseAddr + CPSW_ALE_CONTROL) |= CPSW_ALE_CONTROL_AGE_OUT_NOW;
+
+    while(CPSW_ALE_CONTROL_AGE_OUT_NOW & (HWREG(baseAddr + CPSW_ALE_CONTROL)));
+
+}
+
+/**
+ * \brief   Sets the Broadcast Packet Rate Limit
+ *
+ * \param   baseAddr      Base Address of the ALE module
+ * \param   bplVal        The Broadcast Packet Rate Limit Value
+ *
+ * \return  None
+ *
+ **/
+void CPSWALEBroadcastRateLimitSet(unsigned int baseAddr, unsigned int portNum,
+                                  unsigned int bplVal)
+{
+    HWREG(baseAddr + CPSW_ALE_PORTCTL(portNum)) &=
+                                         ~CPSW_ALE_PORTCTL0_BCAST_LIMIT;
+    HWREG(baseAddr + CPSW_ALE_PORTCTL(portNum)) |=
+                            (bplVal << CPSW_ALE_PORTCTL0_BCAST_LIMIT_SHIFT);
+}
+
+/**
+ * \brief   Sets the Multicast Packet Rate Limit
+ *
+ * \param   baseAddr      Base Address of the ALE module
+ * \param   mplVal        The Multicast Packet Rate Limit Value
+ *
+ * \return  None
+ *
+ **/
+void CPSWALEMulticastRateLimitSet(unsigned int baseAddr, unsigned int portNum,
+                                  unsigned int mplVal)
+{
+    HWREG(baseAddr + CPSW_ALE_PORTCTL(portNum)) &=
+                                         ~CPSW_ALE_PORTCTL0_MCAST_LIMIT;
+    HWREG(baseAddr + CPSW_ALE_PORTCTL(portNum)) |=
+                            (mplVal << CPSW_ALE_PORTCTL0_MCAST_LIMIT_SHIFT);
+}
+
+/**
+ * \brief   VLAN ID Ingress Check
+ *
+ * \param   baseAddr      Base Address of the ALE module
+ *
+ * \return  None
+ *
+ **/
+void CPSWALEVIDIngressCheckSet(unsigned int baseAddr, unsigned int portNum)
+{
+    HWREG(baseAddr + CPSW_ALE_PORTCTL(portNum)) |=
+                                         CPSW_ALE_PORTCTL0_MCAST_LIMIT;
+}
+
+/**
  * \brief   Sets the port state in the ALE for a given port
  *
  * \param   baseAddr    Base address of the ALE module
@@ -412,7 +479,7 @@ void CPSWALEPortStateSet(unsigned int baseAddr, unsigned int portNum,
 }
 
 /**
- * \brief   Sets VLAN Aware mode for ALE
+ * \brief   Sets VLAN Aware mode for ALE to Flood if VLAN not found
  *
  * \param   baseAddr    Base address of the ALE Module
  *
@@ -421,6 +488,90 @@ void CPSWALEPortStateSet(unsigned int baseAddr, unsigned int portNum,
 void CPSWALEVLANAwareSet(unsigned int baseAddr)
 {
     HWREG(baseAddr + CPSW_ALE_CONTROL) |= CPSW_ALE_CONTROL_ALE_VLAN_AWARE;
+}
+
+/**
+ * \brief   Clears VLAN Aware mode for ALE to drop packets
+ *
+ * \param   baseAddr    Base address of the ALE Module
+ *
+ * \return  None
+ **/
+void CPSWALEVLANAwareClear(unsigned int baseAddr)
+{
+    HWREG(baseAddr + CPSW_ALE_CONTROL) &= ~CPSW_ALE_CONTROL_ALE_VLAN_AWARE;
+}
+
+/**
+ * \brief   Configure Rate Limit to TX Mode
+ *
+ * \param   baseAddr    Base address of the ALE Module
+ *
+ * \return  None
+ **/
+void CPSWALERateLimitTXMode(unsigned int baseAddr)
+{
+    HWREG(baseAddr + CPSW_ALE_CONTROL) |= CPSW_ALE_CONTROL_RATE_LIMIT_TX;
+}
+
+/**
+ * \brief   Configure Rate Limit to RX Mode
+ *
+ * \param   baseAddr    Base address of the ALE Module
+ *
+ * \return  None
+ **/
+void CPSWALERateLimitRXMode(unsigned int baseAddr)
+{
+    HWREG(baseAddr + CPSW_ALE_CONTROL) &= ~CPSW_ALE_CONTROL_RATE_LIMIT_TX;
+}
+
+/**
+ * \brief   Enable Rate Limit for ALE
+ *
+ * \param   baseAddr    Base address of the ALE Module
+ *
+ * \return  None
+ **/
+void CPSWALERateLimitEnable(unsigned int baseAddr)
+{
+    HWREG(baseAddr + CPSW_ALE_CONTROL) |= CPSW_ALE_CONTROL_ENABLE_RATE_LIMIT;
+}
+
+/**
+ * \brief   Disable Rate Limit for ALE
+ *
+ * \param   baseAddr    Base address of the ALE Module
+ *
+ * \return  None
+ **/
+void CPSWALERateLimitDisable(unsigned int baseAddr)
+{
+    HWREG(baseAddr + CPSW_ALE_CONTROL) &= ~CPSW_ALE_CONTROL_ENABLE_RATE_LIMIT;
+}
+
+/**
+ * \brief   Enable MAC Authorization Mode for ALE
+ *
+ * \param   baseAddr    Base address of the ALE Module
+ *
+ * \return  None
+ **/
+void CPSWALEAUTHModeSet(unsigned int baseAddr)
+{
+    HWREG(baseAddr + CPSW_ALE_CONTROL) |= CPSW_ALE_CONTROL_ENABLE_AUTH_MODE;
+}
+
+/**
+ * \brief   Disable MAC Authorization Mode for ALE
+ *
+ * \param   baseAddr    Base address of the ALE Module
+ *
+ * \return  None
+ **/
+void CPSWALEAUTHModeClear(unsigned int baseAddr)
+{
+    HWREG(baseAddr + CPSW_ALE_CONTROL) &= ~CPSW_ALE_CONTROL_ENABLE_AUTH_MODE;
 }
 
 /**
@@ -497,6 +648,74 @@ void CPSWALEPrescaleSet(unsigned int baseAddr, unsigned int psVal)
 {
     HWREG(baseAddr + CPSW_ALE_PRESCALE) |= psVal 
                                    & CPSW_ALE_PRESCALE_ALE_PRESCALE ;
+}
+
+/**
+ * \brief   Sets the Unknown VLAN Force Untagged Egress
+ *
+ * \param   baseAddr      Base Address of the ALE module
+ * \param   ueVal         The Unknown VLAN Fornce Untagged Egress value
+ *
+ * \return  None
+ *
+ **/
+void CPSWALEUnknownUntaggedEgressSet(unsigned int baseAddr, unsigned int ueVal)
+{
+    HWREG(baseAddr + CPSW_ALE_UNKNOWN_VLAN) &=
+                      ~CPSW_ALE_UNKNOWN_VLAN_UNKNOWN_FORCE_UNTA;
+    HWREG(baseAddr + CPSW_ALE_UNKNOWN_VLAN) |=
+                      (ueVal << CPSW_ALE_UNKNOWN_VLAN_UNKNOWN_FORCE_UNTA_SHIFT);
+}
+
+/**
+ * \brief   Sets the Unknown VLAN Registered Multicast Flood Mask
+ *
+ * \param   baseAddr      Base Address of the ALE module
+ * \param   rfmVal        Unknown VLAN Registered Multicast Flood Mask Value
+ *
+ * \return  None
+ *
+ **/
+void CPSWALEUnknownRegFloodMaskSet(unsigned int baseAddr, unsigned int rfmVal)
+{
+    HWREG(baseAddr + CPSW_ALE_UNKNOWN_VLAN) &=
+                      ~CPSW_ALE_UNKNOWN_VLAN_UNKNOWN_MCAST_FLO;
+    HWREG(baseAddr + CPSW_ALE_UNKNOWN_VLAN) |=
+                      (rfmVal << CPSW_ALE_UNKNOWN_VLAN_UNKNOWN_MCAST_FLO_SHIFT);
+}
+
+/**
+ * \brief   Sets the Unknown VLAN UnRegistered Multicast Flood Mask
+ *
+ * \param   baseAddr      Base Address of the ALE module
+ * \param   ufmVal        Unknown VLAN UnRegistered Multicast Flood Mask Value
+ *
+ * \return  None
+ *
+ **/
+void CPSWALEUnknownUnRegFloodMaskSet(unsigned int baseAddr, unsigned int ufmVal)
+{
+    HWREG(baseAddr + CPSW_ALE_UNKNOWN_VLAN) &=
+                      ~CPSW_ALE_UNKNOWN_VLAN_UNKNOWN_REG_MCAST;
+    HWREG(baseAddr + CPSW_ALE_UNKNOWN_VLAN) |=
+                      (ufmVal << CPSW_ALE_UNKNOWN_VLAN_UNKNOWN_REG_MCAST_SHIFT);
+}
+
+/**
+ * \brief   Sets the Unknown VLAN Member List
+ *
+ * \param   baseAddr      Base Address of the ALE module
+ * \param   mlVal        Unknown VLAN UnRegistered Multicast Flood Mask Value
+ *
+ * \return  None
+ *
+ **/
+void CPSWALEUnknownMemberListSet(unsigned int baseAddr, unsigned int mlVal)
+{
+    HWREG(baseAddr + CPSW_ALE_UNKNOWN_VLAN) &=
+                        ~CPSW_ALE_UNKNOWN_VLAN_UNKNOWN_VLAN_MEM;
+    HWREG(baseAddr + CPSW_ALE_UNKNOWN_VLAN) |=
+                        (mlVal << CPSW_ALE_UNKNOWN_VLAN_UNKNOWN_VLAN_MEM_SHIFT);
 }
 
 /**
@@ -595,6 +814,19 @@ void CPSWStatisticsEnable(unsigned int baseAddr)
     HWREG(baseAddr + CPSW_SS_STAT_PORT_EN) = CPSW_SS_STAT_PORT_EN_P0_STAT_EN
                                              | CPSW_SS_STAT_PORT_EN_P1_STAT_EN
                                              | CPSW_SS_STAT_PORT_EN_P2_STAT_EN;
+}
+
+/**
+ * \brief   Enables the VLAN aware mode for CPSW
+ *
+ * \param   baseAddr      Base Address of the CPSW subsystem
+ *
+ * \return  None
+ *
+ **/
+void CPSWVLANAwareEnable(unsigned int baseAddr)
+{
+    HWREG(baseAddr + CPSW_SS_CONTROL) |= CPSW_SS_CONTROL_VLAN_AWARE;
 }
 
 /**

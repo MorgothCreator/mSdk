@@ -102,11 +102,13 @@ extern "C" {
 #define PHY_LINK_PARTNER_1000BT_HD        (0x0400u)
 
 /* Speed settings for BCR register */
-#define PHY_SPEED_MASK                    (0xDFFBu)
+#define PHY_SPEED_MASK                    (0xDFBF)
 #define PHY_SPEED_10MBPS                  (0x0000u)
 #define PHY_SPEED_100MBPS                 (0x2000u)
-#define PHY_SPEED_1000MBPS                (0x0004u)
+#define PHY_SPEED_1000MBPS                (0x0040)
 
+/* Duplex settings for BCR register */
+#define PHY_FULL_DUPLEX                   (0x0100)
 
 /**************************************************************************
                         API function Prototypes
@@ -117,6 +119,11 @@ extern unsigned int PhyLoopBackEnable(unsigned int mdioBaseAddr,
                                       unsigned int phyAddr);
 extern unsigned int PhyLoopBackDisable(unsigned int mdioBaseAddr,
                                        unsigned int phyAddr);
+extern unsigned int PhyReset(unsigned int mdioBaseAddr, unsigned int phyAddr);
+extern unsigned int PhyConfigure(unsigned int mdioBaseAddr,
+                                 unsigned int phyAddr,
+                                 unsigned short speed,
+                                 unsigned short duplexMode);
 extern unsigned int PhyAutoNegotiate(unsigned int mdioBaseAddr, 
                                      unsigned int phyAddr,
                                      unsigned short *advPtr,

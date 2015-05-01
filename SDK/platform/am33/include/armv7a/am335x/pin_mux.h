@@ -41,7 +41,7 @@
 #ifndef _PIN_MUX_H_
 #define _PIN_MUX_H_
 
-#include "hw_control_AM335x.h"
+#include "include/hw/hw_control_AM335x.h"
 
 #ifdef __cplusplus
 extern "C" {

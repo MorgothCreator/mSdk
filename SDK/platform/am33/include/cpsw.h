@@ -61,6 +61,7 @@ extern "C" {
 #define CPSW_SLIVER_NON_GIG_FULL_DUPLEX        CPSW_SL_MACCONTROL_FULLDUPLEX
 #define CPSW_SLIVER_NON_GIG_HALF_DUPLEX        (0x00u)
 #define CPSW_SLIVER_GIG_FULL_DUPLEX            CPSW_SL_MACCONTROL_GIG
+#define CPSW_SLIVER_INBAND                     CPSW_SL_MACCONTROL_EXT_EN
 
 /*
 ** Macros which can be used as 'statFlag' to the API CPSWSlMACStatusGet
@@ -268,91 +269,110 @@ typedef struct cpswContext {
 /*
 ** Prototypes for the APIs
 */
-void CPSWSSReset(unsigned int baseAddr);
-void CPSWSlControlExtEnable(unsigned int baseAddr);
-void CPSWSlGigModeForceEnable(unsigned int baseAddr);
-void CPSWSlGigModeForceDisable(unsigned int baseAddr);
-void CPSWSlTransferModeSet(unsigned int baseAddr, unsigned int mode);
-unsigned int CPSWSlMACStatusGet(unsigned int baseAddr, unsigned int statFlag);
-void CPSWSlReset(unsigned int baseAddr);
-void CPSWSlRxMaxLenSet(unsigned int baseAddr, unsigned int rxMaxLen);
-void CPSWSlGMIIEnable(unsigned int baseAddr);
-void CPSWSlRGMIIEnable(unsigned int baseAddr);
-void CPSWWrReset(unsigned int baseAddr);
-void CPSWWrControlRegReset(unsigned int baseAddr);
-void CPSWWrCoreIntEnable(unsigned int baseAddr, unsigned int core,
+extern void CPSWSSReset(unsigned int baseAddr);
+extern void CPSWSlControlExtEnable(unsigned int baseAddr);
+extern void CPSWSlGigModeForceEnable(unsigned int baseAddr);
+extern void CPSWSlGigModeForceDisable(unsigned int baseAddr);
+extern void CPSWSlTransferModeSet(unsigned int baseAddr, unsigned int mode);
+extern unsigned int CPSWSlMACStatusGet(unsigned int baseAddr, unsigned int statFlag);
+extern void CPSWSlReset(unsigned int baseAddr);
+extern void CPSWSlRxMaxLenSet(unsigned int baseAddr, unsigned int rxMaxLen);
+extern void CPSWSlGMIIEnable(unsigned int baseAddr);
+extern void CPSWSlRGMIIEnable(unsigned int baseAddr);
+extern void CPSWWrReset(unsigned int baseAddr);
+extern void CPSWWrControlRegReset(unsigned int baseAddr);
+extern void CPSWWrCoreIntEnable(unsigned int baseAddr, unsigned int core,
                          unsigned int channel, unsigned int intFlag);
-void CPSWWrCoreIntDisable(unsigned int baseAddr, unsigned int core,
+extern void CPSWWrCoreIntDisable(unsigned int baseAddr, unsigned int core,
                           unsigned int channel, unsigned int intFlag);
-unsigned int CPSWWrCoreIntStatusGet(unsigned int baseAddr, unsigned int core,
+extern unsigned int CPSWWrCoreIntStatusGet(unsigned int baseAddr, unsigned int core,
                                     unsigned int channel, unsigned int intFlag);
-unsigned int CPSWWrRGMIIStatusGet(unsigned int baseAddr, unsigned int statFlag);
-void CPSWALEInit(unsigned int baseAddr);
-void CPSWALEPortStateSet(unsigned int baseAddr, unsigned int portNum,
+extern unsigned int CPSWWrRGMIIStatusGet(unsigned int baseAddr, unsigned int statFlag);
+extern void CPSWALEInit(unsigned int baseAddr);
+extern void CPSWALEPortStateSet(unsigned int baseAddr, unsigned int portNum,
                          unsigned int portState);
-void CPSWALETableEntrySet(unsigned int baseAddr, unsigned int aleTblIdx,
+extern void CPSWALETableEntrySet(unsigned int baseAddr, unsigned int aleTblIdx,
                           unsigned int *aleEntryPtr);
-void CPSWALETableEntryGet(unsigned int baseAddr, unsigned int aleTblIdx,
+extern void CPSWALETableEntryGet(unsigned int baseAddr, unsigned int aleTblIdx,
                           unsigned int *aleEntryPtr);
-unsigned int CPSWALEPrescaleGet(unsigned int baseAddr);
-void CPSWALEPrescaleSet(unsigned int baseAddr, unsigned int psVal);
-void CPSWALEBypassEnable(unsigned int baseAddr);
-void CPSWALEBypassDisable(unsigned int baseAddr);
-void CPSWRxFlowControlEnable(unsigned int baseAddr, unsigned int portNum);
-void CPSWRxFlowControlDisable(unsigned int baseAddr, unsigned int portNum);
-void CPSWSoftwareIdleEnable(unsigned int baseAddr);
-void CPSWSoftwareIdleDisable(unsigned int baseAddr, unsigned int portNum);
-void CPSWStatisticsEnable(unsigned int baseAddr);
-void CPSWVLANAwareDisable(unsigned int baseAddr);
-void CPSWPortSrcAddrSet(unsigned int baseAddr, unsigned char *ethAddr);
-unsigned int CPSWStatisticsGet(unsigned int baseAddr, unsigned int statReg);
-void CPSWCPDMAReset(unsigned int baseAddr);
-void CPSWCPDMACmdIdleEnable(unsigned int baseAddr);
-void CPSWCPDMACmdIdleDisable(unsigned int baseAddr);
-void CPSWCPDMATxIntEnable(unsigned int baseAddr, unsigned int channel);
-void CPSWCPDMARxIntEnable(unsigned int baseAddr, unsigned int channel);
-void CPSWCPDMATxIntDisable(unsigned int baseAddr, unsigned int channel);
-void CPSWCPDMARxIntDisable(unsigned int baseAddr, unsigned int channel);
-void CPSWCPDMATxEnable(unsigned int baseAddr);
-void CPSWCPDMARxEnable(unsigned int baseAddr);
-void CPSWCPDMATxHdrDescPtrWrite(unsigned int baseAddr, unsigned int descHdr,
+extern unsigned int CPSWALEPrescaleGet(unsigned int baseAddr);
+extern void CPSWALEPrescaleSet(unsigned int baseAddr, unsigned int psVal);
+extern void CPSWALEBypassEnable(unsigned int baseAddr);
+extern void CPSWALEBypassDisable(unsigned int baseAddr);
+extern void CPSWRxFlowControlEnable(unsigned int baseAddr, unsigned int portNum);
+extern void CPSWRxFlowControlDisable(unsigned int baseAddr, unsigned int portNum);
+extern void CPSWSoftwareIdleEnable(unsigned int baseAddr);
+extern void CPSWSoftwareIdleDisable(unsigned int baseAddr, unsigned int portNum);
+extern void CPSWStatisticsEnable(unsigned int baseAddr);
+extern void CPSWVLANAwareEnable(unsigned int baseAddr);
+extern void CPSWVLANAwareDisable(unsigned int baseAddr);
+extern void CPSWPortSrcAddrSet(unsigned int baseAddr, unsigned char *ethAddr);
+extern unsigned int CPSWStatisticsGet(unsigned int baseAddr, unsigned int statReg);
+extern void CPSWCPDMAReset(unsigned int baseAddr);
+extern void CPSWCPDMACmdIdleEnable(unsigned int baseAddr);
+extern void CPSWCPDMACmdIdleDisable(unsigned int baseAddr);
+extern void CPSWCPDMATxIntEnable(unsigned int baseAddr, unsigned int channel);
+extern void CPSWCPDMARxIntEnable(unsigned int baseAddr, unsigned int channel);
+extern void CPSWCPDMATxIntDisable(unsigned int baseAddr, unsigned int channel);
+extern void CPSWCPDMARxIntDisable(unsigned int baseAddr, unsigned int channel);
+extern void CPSWCPDMATxEnable(unsigned int baseAddr);
+extern void CPSWCPDMARxEnable(unsigned int baseAddr);
+extern void CPSWCPDMATxHdrDescPtrWrite(unsigned int baseAddr, unsigned int descHdr,
                                 unsigned int channel);
-void CPSWCPDMARxHdrDescPtrWrite(unsigned int baseAddr, unsigned int descHdr,
+extern void CPSWCPDMARxHdrDescPtrWrite(unsigned int baseAddr, unsigned int descHdr,
                                 unsigned int channel);
-void CPSWCPDMAEndOfIntVectorWrite(unsigned int baseAddr, unsigned int eoiFlag);
-void CPSWCPDMATxCPWrite(unsigned int baseAddr, unsigned int channel,
+extern void CPSWCPDMAEndOfIntVectorWrite(unsigned int baseAddr, unsigned int eoiFlag);
+extern void CPSWCPDMATxCPWrite(unsigned int baseAddr, unsigned int channel,
                         unsigned int comPtr);
-void CPSWCPDMARxCPWrite(unsigned int baseAddr, unsigned int channel,
+extern void CPSWCPDMARxCPWrite(unsigned int baseAddr, unsigned int channel,
                         unsigned int comPtr);
-void CPSWCPDMANumFreeBufSet(unsigned int baseAddr, unsigned int channel,
+extern void CPSWCPDMANumFreeBufSet(unsigned int baseAddr, unsigned int channel,
                             unsigned int nBuf);
-unsigned int CPSWCPDMAStatusGet(unsigned int baseAddr, unsigned int statFlag);
-void CPSWCPDMAConfig(unsigned int baseAddr, unsigned int cfg);
-void CPSWCPDMARxBufOffsetSet(unsigned int baseAddr, unsigned int bufOff);
-unsigned int CPSWCPDMATxIntStatRawGet(unsigned int baseAddr,
+extern unsigned int CPSWCPDMAStatusGet(unsigned int baseAddr, unsigned int statFlag);
+extern void CPSWCPDMAConfig(unsigned int baseAddr, unsigned int cfg);
+extern void CPSWCPDMARxBufOffsetSet(unsigned int baseAddr, unsigned int bufOff);
+extern unsigned int CPSWCPDMATxIntStatRawGet(unsigned int baseAddr,
                                       unsigned int chanMask);
-unsigned int CPSWCPDMATxIntStatMaskedGet(unsigned int baseAddr,
+extern unsigned int CPSWCPDMATxIntStatMaskedGet(unsigned int baseAddr,
                                          unsigned int chanMask);
-unsigned int CPSWCPDMARxIntStatRawGet(unsigned int baseAddr,
+extern unsigned int CPSWCPDMARxIntStatRawGet(unsigned int baseAddr,
                                       unsigned int chanMask,
                                       unsigned int intType);
-unsigned int CPSWCPDMARxIntStatMaskedGet(unsigned int baseAddr,
+extern unsigned int CPSWCPDMARxIntStatMaskedGet(unsigned int baseAddr,
                                          unsigned int channel,
                                          unsigned int intFlag);
-void CPSWContextSave(CPSWCONTEXT *contextPtr);
-void CPSWContextRestore(CPSWCONTEXT *contextPtr);
-void CPSWHostPortDualMacModeSet(unsigned int baseAddr);
-void CPSWALEVLANAwareSet(unsigned int baseAddr);
-void CPSWPortVLANConfig(unsigned int baseAddr, unsigned int vlanId,
+extern void CPSWContextSave(CPSWCONTEXT *contextPtr);
+extern void CPSWContextRestore(CPSWCONTEXT *contextPtr);
+extern void CPSWHostPortDualMacModeSet(unsigned int baseAddr);
+extern void CPSWALEVLANAwareSet(unsigned int baseAddr);
+extern void CPSWALEVLANAwareClear(unsigned int baseAddr);
+extern void CPSWPortVLANConfig(unsigned int baseAddr, unsigned int vlanId,
                                unsigned int cfiBit, unsigned int vlanPri);
-
-#ifdef HEADER_INCLUDE_C_FILES
-#include "driver/cpsw.c"
-#endif
-
+extern void CPSWALERateLimitTXMode(unsigned int baseAddr);
+extern void CPSWALERateLimitRXMode(unsigned int baseAddr);
+extern void CPSWALERateLimitEnable(unsigned int baseAddr);
+extern void CPSWALERateLimitDisable(unsigned int baseAddr);
+extern void CPSWALEAUTHModeSet(unsigned int baseAddr);
+extern void CPSWALEAUTHModeClear(unsigned int baseAddr);
+extern void CPSWALEUnknownUntaggedEgressSet(unsigned int baseAddr,
+                                            unsigned int ueVal);
+extern void CPSWALEUnknownRegFloodMaskSet(unsigned int baseAddr,
+                                          unsigned int rfmVal);
+extern void CPSWALEUnknownUnRegFloodMaskSet(unsigned int baseAddr,
+                                            unsigned int ufmVal);
+extern void CPSWALEUnknownMemberListSet(unsigned int baseAddr,
+                                        unsigned int mlVal);
+extern void CPSWALEBroadcastRateLimitSet(unsigned int baseAddr,
+                                         unsigned int portNum,
+                                         unsigned int bplVal);
+extern void CPSWALEMulticastRateLimitSet(unsigned int baseAddr,
+                                         unsigned int portNum,
+                                         unsigned int mplVal);
+extern void CPSWALEVIDIngressCheckSet(unsigned int baseAddr,
+                                      unsigned int portNum);
+extern void CPSWALEAgeOut(unsigned int baseAddr);
 #ifdef __cplusplus
 }
 #endif
-
 
 #endif /* __CPSW_H__ */

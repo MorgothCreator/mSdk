@@ -533,7 +533,7 @@ UpdateKeyboardState(tUSBHKeyboard *pUSBHKeyboard)
         //
         // If there is no old key pressed in this entry go to the next one.
         //
-        if(pUSBHKeyboard->pucKeyState[lOldKey] == 0)
+        if(pUSBHKeyboard->pucKeyState[lOldKey - 2] == 0)
         {
             continue;
         }

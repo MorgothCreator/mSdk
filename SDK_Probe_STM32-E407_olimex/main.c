@@ -20,6 +20,8 @@
 #include "device/mpl3115a2.h"
 #include "device/lepton_flir.h"
 
+#include "interface/lwip/httpd.h"
+
 int main(void)
 {
 	board_init();
@@ -41,7 +43,7 @@ int main(void)
 #if _USE_LEPTON_FLIR == 1
 	unsigned short flir_buff[((LEPTON_FLIR_LINE_SIZE / 2) - 2) * LEPTON_FLIR_LINES_NR];
 #endif
-
+	httpd_init();
 	while(1)
 	{
 		if(timer_tick(&TimerBlinkLed)) {

@@ -47,21 +47,25 @@ void _mcspi_transfer(Mcspi_t *McspiStruct)
     McSPIChannelDisable(McspiStruct->BaseAddr, McspiStruct->Channel);
 }
 /*#####################################################*/
+unsigned char _mcspi_SendByte(Mcspi_t *McspiStruct, unsigned char byte) {
+	return 0;
+}
+/*#####################################################*/
 static void McSPIPinMux(Mcspi_t *McspiStruct)
 {
 	switch(McspiStruct->McspiNr)
 	{
 		case 0:
-			pin_mux_spi0_sclk(McspiStruct->ClkPin);
-			pin_mux_spi0_d0(McspiStruct->D0Pin);
-			pin_mux_spi0_d1(McspiStruct->D1Pin);
+			pin_mux_spi0_sclk(McspiStruct->SckPin);
+			pin_mux_spi0_d0(McspiStruct->MosiPin);
+			pin_mux_spi0_d1(McspiStruct->MisoPin);
 			if(McspiStruct->Cs0Pin) pin_mux_spi0_cs0(McspiStruct->Cs0Pin);
 			if(McspiStruct->Cs1Pin) pin_mux_spi0_cs1(McspiStruct->Cs1Pin);
 			break;
 		case 1:
-			pin_mux_spi1_sclk(McspiStruct->ClkPin);
-			pin_mux_spi1_d0(McspiStruct->D0Pin);
-			pin_mux_spi1_d1(McspiStruct->D1Pin);
+			pin_mux_spi1_sclk(McspiStruct->SckPin);
+			pin_mux_spi1_d0(McspiStruct->MosiPin);
+			pin_mux_spi1_d1(McspiStruct->MisoPin);
 			if(McspiStruct->Cs0Pin) pin_mux_spi1_cs0(McspiStruct->Cs0Pin);
 			if(McspiStruct->Cs1Pin) pin_mux_spi1_cs1(McspiStruct->Cs1Pin);
 			break;

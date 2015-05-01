@@ -44,7 +44,8 @@
 #include "../include/mdio.h"
 #include "../include/phy.h"
 
-#define PHY_ADV_VAL_MASK                 (0xff10)
+#define PHY_ADV_VAL_MASK                 (0x01e0)
+#define PHY_GIG_ADV_VAL_MASK             (0x0300)
 
 /*******************************************************************************
 *                        API FUNCTION DEFINITIONS
@@ -170,6 +171,63 @@ unsigned int PhyLoopBackDisable(unsigned int mdioBaseAddr, unsigned int phyAddr)
 }
 
 /**
+ * \brief   Resets the PHY
+ *
+ * \param   mdioBaseAddr  Base Address of the MDIO Module Registers.
+ * \param   phyAddr       PHY Adress.
+ * \param   speed         Speed to be enabled
+ * \param   duplexMode    Duplex Mode
+ *
+ * \return  status after configuring \n
+ *          TRUE if configuration successful
+ *          FALSE if configuration failed
+ *
+ **/
+unsigned int PhyReset(unsigned int mdioBaseAddr, unsigned int phyAddr)
+{
+    unsigned short data;
+
+    data = PHY_SOFTRESET;
+
+    /* Reset the phy */
+    MDIOPhyRegWrite(mdioBaseAddr, phyAddr, PHY_BCR, data);
+
+    /* wait till the reset bit is auto cleared */
+    while(data & PHY_SOFTRESET)
+    {
+        /* Read the reset */
+        if(MDIOPhyRegRead(mdioBaseAddr, phyAddr, PHY_BCR, &data) != TRUE)
+        {
+            return FALSE;
+        }
+    }
+
+    return TRUE;
+}
+
+/**
+ * \brief   Configures the PHY for a given speed and duplex mode.
+ *
+ * \param   mdioBaseAddr  Base Address of the MDIO Module Registers.
+ * \param   phyAddr       PHY Adress.
+ * \param   speed         Speed to be enabled
+ * \param   duplexMode    Duplex Mode
+ *
+ * \return  status after configuring \n
+ *          TRUE if configuration successful
+ *          FALSE if configuration failed
+ *
+ **/
+unsigned int PhyConfigure(unsigned int mdioBaseAddr, unsigned int phyAddr,
+                          unsigned short speed, unsigned short duplexMode)
+{
+    /* Set the configurations */
+    MDIOPhyRegWrite(mdioBaseAddr, phyAddr, PHY_BCR, (speed | duplexMode));
+
+    return TRUE;
+}
+
+/**
  * \brief   This function ask the phy device to start auto negotiation.
  *          
  *
@@ -227,11 +285,12 @@ unsigned int PhyAutoNegotiate(unsigned int mdioBaseAddr, unsigned int phyAddr,
     anar &= ~PHY_ADV_VAL_MASK;
     MDIOPhyRegWrite(mdioBaseAddr, phyAddr, PHY_AUTONEG_ADV, (anar |(*advPtr)));
 
-    if(*gigAdvPtr != 0)
-    {
-        /* Write the gigabit capabilities */
-        MDIOPhyRegWrite(mdioBaseAddr, phyAddr, PHY_1000BT_CONTROL, (*gigAdvPtr));
-    }
+    /* Write Auto Negotiation Gigabyte capabilities */
+    anar = 0;
+    MDIOPhyRegRead(mdioBaseAddr, phyAddr, PHY_1000BT_CONTROL, &anar);
+    anar &= ~PHY_GIG_ADV_VAL_MASK;
+    MDIOPhyRegWrite(mdioBaseAddr, phyAddr, PHY_1000BT_CONTROL,
+                    (anar |(*gigAdvPtr)));
 
     data |= PHY_AUTONEG_RESTART;
 
@@ -339,5 +398,4 @@ unsigned int PhyLinkStatusGet(unsigned int mdioBaseAddr,
 
     return FALSE;
 }
-
 /**************************** End Of File ***********************************/

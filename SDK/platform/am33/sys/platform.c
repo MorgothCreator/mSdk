@@ -48,6 +48,7 @@
 #include "include/hw/hw_cm_wkup.h"
 #include "include/hw/hw_control_AM335x.h"
 #include "include/hw/hw_emif4d.h"
+#include "include/armv7a/am335x/pin_mux.h"
 //#include "bl.h"
 #include "include/gpmc.h"
 //#include "bl_copy.h"
@@ -56,10 +57,12 @@
 #include "include/watchdog.h"
 #include "include/hsi2c.h"
 #include "include/gpio_v2.h"
+#include "include/gpio.h"
 #include "board/boards.h"
 #include "device.h"
 #include "api/pmic_api.h"
 #include "interface/twi_interface.h"
+#include "api/gpio_api.h"
 //#include "string.h"
 #if defined (evmAM335x) || defined (devkit8600)
     #include "include/hw/hw_tps65910.h"
@@ -70,7 +73,7 @@
 #elif  (defined evmskAM335x)
     #include "include/hw/hw_tps65910.h"
 	#include "device/tps65910a.h"
-    #include "include/armv7/am335x/pin_mux.h"
+    #include "include/armv7a/am335x/pin_mux.h"
 #endif
 
 #if defined(SPI)
@@ -1578,9 +1581,9 @@ void BlPlatformSPISetup(void)
 **
 */
 #ifdef evmskAM335x
-static void DDRVTTEnable(void)
+void DDRVTTEnable(void)
 {
-    GPIO0ModuleClkConfig();
+	gpio_init(0);//GPIO0ModuleClkConfig();
 
     GPIO_PMUX_OFFADDR_VALUE(0, 7, PAD_FS_RXE_PD_PUPDE(7));
 

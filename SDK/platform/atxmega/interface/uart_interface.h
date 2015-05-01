@@ -16,8 +16,8 @@ bool _uart_close(Uart_t *UartSettings);
 void _UARTBaudSetRate(unsigned int BaseAddr, unsigned long BaudRate);
 void _UARTCharPut(unsigned int BaseAddr, unsigned char byteTx);
 unsigned char _UARTCharGet(unsigned int BaseAddr);
-void _UARTCharPutNonBlocking(unsigned int BaseAddr, unsigned char byteTx);
-signed char _UARTCharGetNonBlocking(unsigned int BaseAddr);
+bool _UARTCharPutNonBlocking(unsigned int BaseAddr, unsigned char byteTx);
+signed short _UARTCharGetNonBlocking(unsigned int BaseAddr);
 unsigned int _UARTRxErrorGet(unsigned int BaseAddr);
 /*#####################################################*/
 #ifdef HEADER_INCLUDE_C_FILES

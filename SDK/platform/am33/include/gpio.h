@@ -42,17 +42,10 @@
 #ifndef      __GPIO_H__
 #define      __GPIO_H__
 
-#include "hw_gpio.h"
+//#include "include/hw/hw_gpio.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-/************* GPIO pin directions.************************************/
-
-/* This is used to configure a GPIO pin as an input pin. */
-#define GPIO_DIR_INPUT                1
-/* This is used to configure a GPIO pin as an output pin.*/
-#define GPIO_DIR_OUTPUT               0
 
 /******************Interrupt Trigger Level Types.**********************/
 
@@ -75,15 +68,6 @@ extern "C" {
 
 /* This signifies interrupt status as pending.*/
 #define GPIO_INT_PEND                 1
-
-/*****************Write values to a pin.********************************/
-
-/* This is used to write a logic 0 to a pin.*/
-#define GPIO_PIN_LOW                  0
-
-/* This is used to write a logic 1 to a pin.*/
-#define GPIO_PIN_HIGH                 1
-
 
 /*****************Bit Mask values for banks.***************************/
 /* 
@@ -116,22 +100,7 @@ extern "C" {
 *****************************************************************************/
 
 
-void GPIODirModeSet(unsigned int baseAdd, unsigned int pinNumber,
-                    unsigned int pinDir);
-unsigned int GPIODirModeGet(unsigned int baseAdd, unsigned int pinNumber);
-void GPIOPinWrite(unsigned int baseAdd, unsigned int pinNumber,
-                  unsigned int bitValue);
-int GPIOPinRead(unsigned int baseAdd, unsigned int pinNumber);
-void GPIOIntTypeSet(unsigned int baseAdd, unsigned int pinNumber,
-                    unsigned int intType);
-unsigned int GPIOIntTypeGet(unsigned int baseAdd, unsigned int pinNumber);
-unsigned int GPIOPinIntStatus(unsigned int baseAdd, unsigned int pinNumber);
-void GPIOPinIntClear(unsigned int baseAdd, unsigned int pinNumber);
-void GPIOBankIntEnable(unsigned int baseAdd, unsigned int bankNumber);
-void GPIOBankIntDisable(unsigned int baseAdd, unsigned int bankNumber);
-void GPIOBankPinsWrite(unsigned int baseAdd, unsigned int bankNumber,
-                       unsigned int setPins, unsigned int clrPins);
-
+void GpioPinMuxSetup(unsigned int offsetAddr, unsigned int padConfValue);
 
 #ifdef __cplusplus
 }

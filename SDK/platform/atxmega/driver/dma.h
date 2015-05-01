@@ -240,31 +240,6 @@ void dma_transfer_request(Dma_t *DmaStruct);
 void dma_complete_int(Dma_t *DmaStruct);
 //#######################################################
 extern DmaServiceAddresses Dma_ServiceAddresses;
-
-ISR(DMA_CH0_vect)
-{
-	//dma_complete_int(Dma_ServiceAddresses.DmaCh0RamServiceAddr);
-	Dma_t *DmaChStruct = Dma_ServiceAddresses.DmaCh0RamServiceAddr;
-	if(DmaChStruct->CallBackTransferEnd) DmaChStruct->CallBackTransferEnd(DmaChStruct->CallBackTransferEndData);
-}
-ISR(DMA_CH1_vect)
-{
-	//dma_complete_int(Dma_ServiceAddresses.DmaCh1RamServiceAddr);
-	Dma_t *DmaChStruct = Dma_ServiceAddresses.DmaCh1RamServiceAddr;
-	if(DmaChStruct->CallBackTransferEnd) DmaChStruct->CallBackTransferEnd(DmaChStruct->CallBackTransferEndData);
-}
-ISR(DMA_CH2_vect)
-{
-	//dma_complete_int(Dma_ServiceAddresses.DmaCh2RamServiceAddr);
-	Dma_t *DmaChStruct = Dma_ServiceAddresses.DmaCh2RamServiceAddr;
-	if(DmaChStruct->CallBackTransferEnd) DmaChStruct->CallBackTransferEnd(DmaChStruct->CallBackTransferEndData);
-}
-ISR(DMA_CH3_vect)
-{
-	//dma_complete_int(Dma_ServiceAddresses.DmaCh3RamServiceAddr);
-	Dma_t *DmaChStruct = Dma_ServiceAddresses.DmaCh3RamServiceAddr;
-	if(DmaChStruct->CallBackTransferEnd) DmaChStruct->CallBackTransferEnd(DmaChStruct->CallBackTransferEndData);
-}
 //#######################################################
 #ifdef HEADER_INCLUDE_C_FILES
 #include "dma.c"

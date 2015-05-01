@@ -99,13 +99,13 @@ bool board_init()
 	ScreenBuff->BackLightPin = MI0283QT2_Light_Pin;
 	ScreenBuff->Orientation = 90;
 	screen_init(ScreenBuff);
-	UARTprintf(DebugCom, "LCD display initialize successful for %ux%u resolution, 16 Bit/pixel.\n\r" , (unsigned long)ScreenBuff->Width, (unsigned long)ScreenBuff->Height);
+	//UARTprintf(DebugCom, "LCD display initialize successful for %ux%u resolution, 16 Bit/pixel.\n\r" , (unsigned long)LcdStruct->raster_timings->X, (unsigned long)LcdStruct->raster_timings->Y);
 	screen_clear(ScreenBuff, 0);
 	screen_clear(ScreenBuff, controls_color.Scren);
 	//screen_fill_area(ScreenBuff, 2, 2, ScreenBuff->Width, ScreenBuff->Height, controls_color.Scren);
 	screen_backlight_on(ScreenBuff);
-	TouchScreen->screen_max_x = (double)ScreenBuff->Width;
-	TouchScreen->screen_max_y = (double)ScreenBuff->Height;
+	//TouchScreen->screen_max_x = (double)LcdStruct->raster_timings->X;
+	//TouchScreen->screen_max_y = (double)LcdStruct->raster_timings->Y;
 	TouchScreen->TwiStruct = TWI3;
 	TouchScreen->pDisplay = ScreenBuff;
 	ar1020_init(TouchScreen, 3, 1);
