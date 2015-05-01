@@ -68,7 +68,7 @@ controlscolor controls_color =
 		.Control_Color_Enabled_Buton_Pull = COLOR_24_to_16(0xFF,0xFF,0xFF),
 		.Control_Color_Enabled_Buton_Push = COLOR_24_to_16(0x91,0x91,0x91),
 		.Control_Color_Enabled_Border_Pull = COLOR_24_to_16(0xFF,0xFF,0xFF),
-		.Control_Color_Enabled_Border_PushCOLOR_24_to_16(0xFF,0xFF,0xFF),
+		.Control_Color_Enabled_Border_Push = COLOR_24_to_16(0xFF,0xFF,0xFF),
 		.Control_Color_Enabled_BackGround = COLOR_24_to_16(0x37,0x37,0x37),
 		.Control_Color_Enabled_WindowBorder = COLOR_24_to_16(0x55,0x55,0x55),
 		.Control_Color_Enabled_WindowHeader = COLOR_24_to_16(0x7F,0x7F,0x7F),

@@ -24,7 +24,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <malloc.h>
+//#include <malloc.h>
 #include "fat.h"
 #include "board_init.h"
 #include "sys/plat_properties.h"
