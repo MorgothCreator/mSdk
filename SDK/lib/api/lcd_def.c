@@ -45,6 +45,25 @@ RASTER_TIMINGS lcd_TFT43AB_OMAP35x_devkit8600_exp =
 /*vbp*/			15
 };
 
+RASTER_TIMINGS lcd_TFT43_TMDSSK3358 =
+{
+/*X size*/		480,
+/*Y size*/		272,
+/*ref clk*/		24000000,
+/*pll M*/		64,
+/*pll N*/		23,
+/*pll M2*/		1,
+/*raster clk*/	14901480,
+/*palete len*/	8,
+/*bus size*/	24,
+/*hsw*/			40,
+/*hfp*/			255,
+/*hbp*/			6,
+/*vsw*/			9,
+/*vfp*/			22,
+/*vbp*/			15
+};
+
 RASTER_TIMINGS lcd_AT070TN92_beaglebone_exp =
 {
 /*X size*/		800,

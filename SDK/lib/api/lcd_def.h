@@ -68,6 +68,7 @@ typedef struct
 //*****************************************************************************
 RASTER_TIMINGS lcd_S035Q01_beaglebone_exp;
 RASTER_TIMINGS lcd_TFT43AB_OMAP35x_devkit8600_exp;
+RASTER_TIMINGS lcd_TFT43_TMDSSK3358;
 RASTER_TIMINGS lcd_AT070TN92_beaglebone_exp;
 RASTER_TIMINGS lcd_720p_480_60hz_beaglebone_exp;
 RASTER_TIMINGS lcd_720p_50hz_beaglebone_exp;
