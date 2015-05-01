@@ -25,6 +25,40 @@
 #include <stdbool.h>
 #include "uart_def.h"
 /*#####################################################*/
+#define MAX_SCANF_STRING_WIDTH		128
+#define BASE_10             (10u)
+#define BASE_16             (16u)
+#define INVALID_INPUT       (0xFFu)
+#define MAX_STRING_WIDTH    (80u)
+
+
+/*
+** Loop continuously until user enters any character other
+** than space, carriage return, tab space and backspace
+*/
+#define IS_WHITESPACE(UartSettings, rxByte)    rxByte = UARTGetc(UartSettings); \
+                                 while(('\r' == rxByte) || (' ' == rxByte) || \
+                                       ('\t' == rxByte) || ('\b' == rxByte)) \
+                                 { \
+                                      UARTPutc(UartSettings, rxByte);   \
+                                      rxByte = UARTGetc(UartSettings);\
+                                 }
+
+/*
+** Echoes back the delimiting character entered by the user
+** after the actual input value has been read from the user.
+*/
+#define UART_SCANF_ECHO_INPUT(UartSettings, rxByte)                                     \
+                                 if(('\n' == rxByte) || ('\r' == rxByte)) \
+                                 {                                        \
+                                     UARTPutc(UartSettings, '\r');                      \
+                                     UARTPutc(UartSettings, '\n');                      \
+                                 }                                        \
+                                 else                                     \
+                                 {                                        \
+                                     UARTPutc(UartSettings, rxByte);                    \
+                                 }
+
 /*#####################################################*/
 void UARTPutc(Uart_t* UartSettings, unsigned char byteTx);
 unsigned char UARTGetc(Uart_t* UartSettings);
@@ -39,6 +73,7 @@ void UARTPutHexNum(Uart_t* UartSettings, unsigned long hexValue);
 long UARTGetNum(Uart_t* UartSettings);
 unsigned long UARTGetHexNum(Uart_t* UartSettings);
 unsigned int UARTwrite(Uart_t* UartSettings, const char *pcBuf, unsigned int len);
+int UARTscanf(Uart_t* UartSettings, const char *format, ...);
 Uart_t* UARTprintf(Uart_t* UartSettings,const char *pcString, ...);
 bool uart_open(Uart_t *UartSettings);
 bool uart_close(Uart_t *UartSettings);

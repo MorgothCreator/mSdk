@@ -26,6 +26,7 @@
 #include "uart_def.h"
 #include "sys/plat_properties.h"
 #include "interface/uart_interface.h"
+#include "lib/util/ascii.h"
 /*#####################################################*/
 /* A mapping from an integer between 0 and 15 to its ASCII character
  * equivalent. */
@@ -599,6 +600,397 @@ unsigned long UARTGetHexNum(Uart_t* UartSettings)
 }
 
 /**
+ * \brief   This function reads the input value from UART continuously
+ *          and stores into a buffer until the entered character is a space or
+ *          carriage return.
+ *
+ * \param   rxBuff       pointer to the buffer where input
+ *                       values shall be stored
+ *          rxByte       character variable holding the last
+ *                       character entered by user
+ *
+ * \return  None.
+ *
+ */
+static inline void UARTStdioRead(Uart_t* UartSettings, unsigned char *rxBuff, unsigned char rxByte)
+{
+    unsigned int inputCount = 0u;
+
+    /*
+    ** Check whether the byte entered is not either the carriage
+    ** return or space, if yes then break from the loop.
+    */
+    while((rxByte != '\r') && (rxByte != ' '))
+    {
+        UARTPutc(UartSettings, rxByte);
+
+        /* Account for the backspace to allow user to edit the input */
+        if(('\b' == rxByte) && (inputCount > 0))
+        {
+            rxBuff--;
+            inputCount--;
+        }
+        else
+        {
+            *rxBuff++ = rxByte;
+            inputCount++;
+        }
+        rxByte = UARTGetc(UartSettings);
+    }
+    /* Add the delimiting character at the end of the buffer */
+    *rxBuff = rxByte;
+}
+
+/**
+ * A simple UART based scanf function supporting \%c, \%d, \%s, \%u, \%x,
+ * \%X, and \%p.
+ *
+ * \param format is the format string.
+ * \param vaArg is the value identifying a variable arguments list
+ *        initialized with va_start.
+ *
+ * This function is very similar to the C library vscanf() function.
+ * All of its input will be read from the UART console. The input characters
+ * are stored into the locations pointed by the pointer arguments.
+ * The destination address pointed to by the pointers is not validated.
+ * Only the following formatting characters are supported:
+ *
+ * - %c to read a character
+ * - %d to read a integer value
+ * - %s to read a string
+ * - %u to read an unsigned decimal value
+ * - %x or %X to read a hexadecimal value
+ * - %p to read a pointer as a hexadecimal value
+ *
+ * Note: The width option in the format specifier is not supported. So this
+ *       function will take input as much as supported by the data type. The
+ *       size specification in the format specifier will be treated as invalid
+ *       specifier.
+ *
+ *  \return The number of valid input values successfully read
+ *          from the UART console.
+ *          Returns a Negative value on error.
+ *
+ */
+int UARTScanf_low(Uart_t* UartSettings, const char *format, va_list vaArg)
+{
+    unsigned char rxByte, rxBuffer[MAX_SCANF_STRING_WIDTH];
+    unsigned int width = MAX_SCANF_STRING_WIDTH, byteCount = 0u;
+    int sign = 1, inputMatch = 0;
+    int *value;
+    unsigned int *num;
+    char *dst;
+
+    /* Loop while there are more characters in the string. */
+    while(*format != '\0')
+    {
+        /* Find the first % character */
+        if((*format++ == '%') && (inputMatch >= 0))
+        {
+            switch(*format++)
+            {
+                /* Handle the %c command. */
+                case 'c':
+                    /* Get the address of variable from varargs */
+                    dst = va_arg(vaArg, char *);
+
+                    rxByte = UARTGetc(UartSettings);
+                    UARTPutc(UartSettings, rxByte);
+                    *dst = rxByte;
+                    /*
+                    ** Increment the count for input values successfully
+                    ** read and matched.
+                    */
+                    inputMatch++;
+
+                    /*
+                    ** Wait until the byte entered is new line or carriage
+                    ** return or space
+                    */
+                    while((rxByte != '\n') && (rxByte != '\r') && (rxByte != ' '))
+                    {
+                       rxByte = UARTGetc(UartSettings);
+                    }
+                    UART_SCANF_ECHO_INPUT(UartSettings, rxByte);
+                 break;
+
+                /* Handle the %d command. */
+                case 'd':
+                    /* Get the address of variable from argument */
+                    value = va_arg(vaArg, int *);
+                    *value = 0;
+
+                    /*
+                    ** Increment the count for input values successfully
+                    ** read and matched.
+                    */
+                    inputMatch++;
+
+                    /*
+                    ** Continuously loop until user enters a non
+                    ** white-space character
+                    */
+                    IS_WHITESPACE(UartSettings, rxByte);
+
+                    /*
+                    ** Continuously read input values from UART console
+                    ** and update the buffer until user enters a delimiting
+                    ** character.
+                    */
+                    UARTStdioRead(UartSettings, rxBuffer, rxByte);
+
+                    rxByte = rxBuffer[byteCount];
+
+                    /* Account for negative numbers. */
+                    if('-' == rxByte)
+                    {
+                        sign = -1;
+                        byteCount++;
+                        rxByte = rxBuffer[byteCount];
+                    }
+                    /*
+                    ** Check whether the byte entered is not either the carriage
+                    ** return or space or new line, if yes then break from the
+                    ** loop.
+                    */
+                    while((rxByte != '\n') && (rxByte != '\r') && (rxByte != ' '))
+                    {
+                        /* Convert the ASCII value to decimal number */
+                        rxByte = ASCIIToDigit(rxByte, BASE_10);
+                        /*
+                        ** Check for invalid input characters if true then
+                        ** then break from the loop.
+                        */
+                        if(INVALID_INPUT == rxByte)
+                        {
+                            inputMatch = -1;
+                            break;
+                        }
+                        else
+                        {
+                            *value = ((*value) * BASE_10) + rxByte;
+                        }
+                        byteCount++;
+                        rxByte = rxBuffer[byteCount];
+                    }
+
+                    /* Add the sign value to the number */
+                    *value = *(value) * sign;
+                    byteCount = 0u;
+                    UART_SCANF_ECHO_INPUT(UartSettings, rxByte);
+                break;
+
+                /* Handle the %x,%X and %p command. */
+                case 'x':
+                case 'X':
+                case 'p':
+                    /* Get the address of variable from argument */
+                    num = va_arg(vaArg, unsigned int*);
+                    *num = 0u;
+
+                    /*
+                    ** Increment the count for input values successfully
+                    ** read and matched.
+                    */
+                    inputMatch++;
+
+                    /* Continuously loop until user enters a non
+                    ** white-space character.
+                    */
+                    IS_WHITESPACE(UartSettings, rxByte);
+
+                    /*
+                    ** Continuously read input values from UART console
+                    ** and update the buffer until user enters a delimiting
+                    ** character.
+                    */
+                    UARTStdioRead(UartSettings, rxBuffer, rxByte);
+
+                    rxByte = rxBuffer[byteCount];
+                    /*
+                    ** Check whether the byte entered is not either the carriage
+                    ** return or space or new line, if yes then break from the
+                    ** loop.
+                    */
+                    while((rxByte != '\n') && (rxByte != '\r') && (rxByte != ' '))
+                    {
+                        /*
+                        ** Ignore the first 2 characters from the
+                        ** received input if they are 0x or 0X.
+                        */
+                        if((byteCount < 2) && (('0' == rxByte) ||
+                            ('x' == rxByte) || ('X' == rxByte)))
+                        {
+                            byteCount++;
+                            rxByte = rxBuffer[byteCount];
+                            continue;
+                        }
+                        /* Convert the ASCII value to hexadecimal number */
+                        rxByte = ASCIIToDigit(rxByte, BASE_16);
+
+                        /* Check for invalid hexadecimal characters */
+                        if(INVALID_INPUT == rxByte)
+                        {
+                            inputMatch = -1;
+                            break;
+                        }
+                        else
+                        {
+                            *num = ((*num) * BASE_16) + rxByte;
+                        }
+                        byteCount++;
+                        rxByte = rxBuffer[byteCount];
+                    }
+                    byteCount = 0u;
+                    UART_SCANF_ECHO_INPUT(UartSettings, rxByte);
+                break;
+
+                /* Handle the %s command. */
+                case 's':
+                    /* Get the address of variable from the argument*/
+                    dst = va_arg(vaArg, char*);
+
+                    /*
+                    ** Increment the count for input values successfully
+                    ** read and matched.
+                    */
+                    inputMatch++;
+
+                    /*
+                    ** Continuously loop till user enters a non
+                    ** white-space character
+                    */
+                    IS_WHITESPACE(UartSettings, rxByte);
+
+                     /* Read the characters one at a time from UART console */
+                    while((rxByte != '\n') && (rxByte != '\r') && (rxByte != ' ') && (width--))
+                    {
+                        UARTPutc(UartSettings, rxByte);
+
+                        /*Account for backspace and decrement the pointer */
+                        if('\b' == rxByte)
+                        {
+                            dst--;
+                            width++;
+                        }
+                        else
+                        {
+                            *dst++ = (char) rxByte;
+                        }
+                        rxByte = UARTGetc(UartSettings);
+                    }
+                    *dst = '\0';
+                    UART_SCANF_ECHO_INPUT(UartSettings, rxByte);
+                break;
+
+                /* Handles %u command */
+                case 'u':
+                    /* Get the address of variable from varargs */
+                    num = va_arg(vaArg, unsigned int*);
+                    *num = 0u;
+                    inputMatch++;
+                    /*
+                    ** Continuously loop until user enters a non
+                    ** white-space character
+                    */
+                    IS_WHITESPACE(UartSettings, rxByte);
+
+                    /*
+                    ** Continuously read input values from UART console
+                    ** and update the buffer until user enters a delimiting
+                    ** character.
+                    */
+                    UARTStdioRead(UartSettings, rxBuffer, rxByte);
+
+                    rxByte = rxBuffer[byteCount];
+                    while((rxByte != '\n') && (rxByte != '\r') && (rxByte != ' '))
+                    {
+                        /* Convert the ASCII value to decimal number */
+                        rxByte = ASCIIToDigit(rxByte, BASE_10);
+
+                        /*
+                        ** Check for invalid input characters if true then
+                        ** then break from the loop.
+                        */
+                        if(INVALID_INPUT == rxByte)
+                        {
+                            inputMatch = -1;
+                            break;
+                        }
+                        else
+                        {
+                            *num = ((*num) * BASE_10) + rxByte;
+                        }
+                        byteCount++;
+                        rxByte = rxBuffer[byteCount];
+                    }
+                    byteCount = 0u;
+                    UART_SCANF_ECHO_INPUT(UartSettings, rxByte);
+                break;
+
+                default:
+                    UARTPuts(UartSettings, "Format specifier is not supported\r\n", -1);
+                    inputMatch = -1;
+                break;
+            }
+        }
+    }
+    /* Check for invalid format specifiers */
+    if(0 == inputMatch)
+    {
+        UARTPuts(UartSettings, "Invalid format specifiers\r\n", -1);
+        inputMatch = -1;
+    }
+
+    return inputMatch;
+}
+/**
+ * \brief   This function is a wrapper for scanf utility which reads
+ *          the input according to the format specifier from the
+ *          configured console type.
+ *
+ * \param   format is the format specifiers.
+ * \param   ... are the pointer arguments, which point to the locations
+ *          where the input values are to be stored.
+ *
+ * \return  None.
+ *
+ */
+int UARTscanf(Uart_t* UartSettings, const char *format, ...)
+{
+    va_list arg;
+    int inputStatus = -1;
+
+    /* Start the variable argument processing. */
+    va_start(arg, format);
+
+//    if(CONSOLE_DEBUGGER == ConsoleType)
+//    {
+        /*
+        **  Adding a compile time check to reduce the binary size
+        **  if semihosting is not needed.
+        */
+        #if defined(SEMIHOSTING)
+        inputStatus = vscanf(format, arg);
+        /*
+        ** The input stream stdout is flushed to avoid reading unwanted
+        ** characters from the CCS console
+        */
+        fflush(stdin);
+//        #else
+//        UARTPuts("Error! SemiHosting Support is not enabled\r\n", -1);
+        #endif
+//    }
+//    else
+//    {
+        inputStatus = UARTScanf_low(UartSettings, format, arg);
+//    }
+    /* End the variable argument processing. */
+    va_end(arg);
+    return (inputStatus);
+}
+
+/**
  * Writes a string of characters to the UART output.
  *
  * \param pcBuf points to a buffer containing the string to transmit.
@@ -1044,7 +1436,10 @@ bool uart_close(Uart_t *UartSettings)
 
 #include <string.h>
 #include <ctype.h>
+#ifndef USE_AVR_STUDIO
 #include <sys/types.h>
+#endif
+
 
 /* Define this as a fall through, HAVE_STDARG_H is probably already set */
 
