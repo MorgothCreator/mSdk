@@ -23,6 +23,7 @@
 #include "board_init.h"
 #include "ak8975.h"
 #include "api/twi_def.h"
+#include "api/twi_api.h"
 #include "api/timer_api.h"
 
 

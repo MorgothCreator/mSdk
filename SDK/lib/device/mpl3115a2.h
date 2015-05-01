@@ -92,7 +92,7 @@ bool mpl3115a2_init(MPL3115A2_t *structure);
 #define free_mpl3115a2(address) free(address);
 /*#####################################################*/
 #ifdef HEADER_INCLUDE_C_FILES
-#include "mhc5883.c"
+#include "mpl3115a2.c"
 #endif
 /*#####################################################*/
 #endif /* MPL3115A2_H_ */
