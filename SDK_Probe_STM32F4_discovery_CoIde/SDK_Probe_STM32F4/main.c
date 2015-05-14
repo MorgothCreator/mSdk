@@ -7,23 +7,28 @@
 #include "board_init.h"
 #include "api/timer_api.h"
 #include "device/ms5611.h"
-#include "device/mpu60x0.h"
+#include "device/mpu60x0_9150.h"
 #include "device/mhc5883.h"
 
 int main(void)
 {
 	board_init();
+/*******************************************************/
+	//lan_interface_init();
+	//httpd_init();
+
 	timer(TimerReadSensors);
     timer_interval(&TimerReadSensors, 1000);
 	timer(TimerBlinkLed);
     timer_interval(&TimerBlinkLed, 1000);
-	mpu60x0_init(MPU60x0, 0);
-	mhc5883_init(MHC5883);
+    //mpu60x0_9150_init(MPU60x0);
+	//mhc5883_init(MHC5883);
     bool Led1Status = false;
 	unsigned char sht11_status_reg = 0;
 	bool sht11_read_mode = false;
 	while(1)
 	{
+		//lwip_idle();
 		if(sht11_read_mode) {
 			/*
 			 * Send start temperature measure
@@ -93,11 +98,12 @@ int main(void)
 				Led1Status = true;
 			}
 		}
-		if(timer_tick(&TimerReadSensors)) {
+		if(0/*timer_tick(&TimerReadSensors)*/) {
+			Time_Update();
 			ms5611_display_pressure_result(MS5611, MS5611_CONVERT_OSR_1024);
-			mpu60x0_temperature_display_result(MPU60x0, 0);
-			mpu60x0_giroscope_display_result(MPU60x0, 0);
-			mpu60x0_accelerometer_display_result(MPU60x0, 0);
+			mpu60x0_9150_temperature_display_result(MPU60x0);
+			mpu60x0_9150_giroscope_display_result(MPU60x0);
+			mpu60x0_9150_accelerometer_display_result(MPU60x0);
 			mhc5883_display_result(MHC5883);
 			sht11_display_data(SHT11);
 			srf02_display_data(SRF02);

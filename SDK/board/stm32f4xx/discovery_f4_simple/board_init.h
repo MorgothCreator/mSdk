@@ -33,7 +33,7 @@
 #include "device/sht11.h"
 #include "device/srf02.h"
 #include "device/mhc5883.h"
-#include "device/mpu60x0.h"
+#include "device/mpu60x0_9150.h"
 #include "device/ms5611.h"
 /*#####################################################*/
 #define BOARD_MESSAGE "STM32F407VGT6 Discovery"

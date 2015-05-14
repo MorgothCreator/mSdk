@@ -20,7 +20,8 @@
 #include "device/mpl3115a2.h"
 #include "device/lepton_flir.h"
 
-#include "interface/lwip/httpd.h"
+#include "interface/lwip/lwip_hardware_init.h"
+#include "lib/lwip/simple_fs_httpd.h"
 
 int main(void)
 {
@@ -43,9 +44,11 @@ int main(void)
 #if _USE_LEPTON_FLIR == 1
 	unsigned short flir_buff[((LEPTON_FLIR_LINE_SIZE / 2) - 2) * LEPTON_FLIR_LINES_NR];
 #endif
+    lan_interface_init();
 	httpd_init();
 	while(1)
 	{
+		lwip_idle();
 		if(timer_tick(&TimerBlinkLed)) {
 			if(Led1Status) {
 				gpio_out(LED, 1);
@@ -113,7 +116,7 @@ int main(void)
 			srf02_read(SRF02);
 #endif
 		if(timer_tick(&TimerReadSensors)) {
-
+			Time_Update();
 #if _USE_MS5611 == 1
 			ms5611_display_pressure_result(MS5611, MS5611_CONVERT_OSR_1024);
 #endif
