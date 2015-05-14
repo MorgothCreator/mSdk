@@ -4,15 +4,15 @@
  *  Created on: Nov 7, 2012
  *      Author: XxXx
  */
-#include "lwip_api.h"
+#include "lwip_hardware_init.h"
 
 #include "clk/clk_cpsw.h"
 #include "pin_mux_cpsw.h"
 #include "aintc/aintc_cpsw.h"
 #include "driver/cpu.h"
-#include "ports/cpsw/include/lwiplib.h"
+#include "ports/include/lwiplib.h"
 #include "lib/util//ascii.h"
-#include "httpd.h"
+#include "lib/lwip/simple_fs_httpd.h"
 
 #ifdef UseLwip
 extern new_uart* DebugCom;

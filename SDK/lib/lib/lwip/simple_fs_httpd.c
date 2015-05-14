@@ -33,10 +33,10 @@
 
 #include "lib/lwip/include/lwip/debug.h"
 #include "lib/lwip/include/lwip/stats.h"
-#include "httpd.h"
+#include "simple_fs_httpd.h"
 #include "lib/lwip/include/lwip/tcp.h"
-#include "lwip_api.h"
-#include "driver/cpu.h"
+//#include "lwip_api.h"
+//#include "driver/cpu.h"
 //#include "fs.h"
 //#include "fs.c"
 //#include "lib/fs/fat.h"

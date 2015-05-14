@@ -32,7 +32,6 @@
 /* Includes ------------------------------------------------------------------*/
 /* Uncomment the line below to enable peripheral header file inclusion */
 #include "driver/stm32f4x7_eth.h"
-#include "driver/stm32f4x7_eth_conf_template.h"
 #include "driver/stm32f4xx_adc.h"
 #include "driver/stm32f4xx_can.h"
 #include "driver/stm32f4xx_crc.h"

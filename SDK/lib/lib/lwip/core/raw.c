@@ -48,7 +48,7 @@
 #include "../include/lwip/netif.h"
 #include "../include/lwip/raw.h"
 #include "../include/lwip/stats.h"
-#include "interface/lwip/ports/cpsw/include/arch/perf.h"
+#include "interface/lwip/ports/include/arch/perf.h"
 
 #include <string.h>
 

@@ -12,9 +12,9 @@
 #ifdef UseLwip
 #include "api/uart_api.h"
 #include "include/cpsw.h"
-#include "ports/cpsw/include/locator.h"
+#include "ports/include/locator.h"
 //#include "httpd.h"
-#include "ports/cpsw/include/lwiplib.h"
+#include "ports/include/lwiplib.h"
 #include "lwipopts.h"
 
 //#include "ports/cpsw/lwiplib.c"

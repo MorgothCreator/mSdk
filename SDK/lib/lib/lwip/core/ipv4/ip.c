@@ -54,7 +54,7 @@
 #include "../../include/lwip/dhcp.h"
 #include "../../include/ipv4/lwip/autoip.h"
 #include "../../include/lwip/stats.h"
-#include "interface/lwip/ports/cpsw/include/arch/perf.h"
+#include "interface/lwip/ports/include/arch/perf.h"
 
 #include <string.h>
 

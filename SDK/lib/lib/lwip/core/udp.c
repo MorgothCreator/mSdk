@@ -59,7 +59,7 @@
 #include "../include/ipv4/lwip/icmp.h"
 #include "../include/lwip/stats.h"
 #include "../include/lwip/snmp.h"
-#include "interface/lwip/ports/cpsw/include/arch/perf.h"
+#include "interface/lwip/ports/include/arch/perf.h"
 #include "../include/lwip/dhcp.h"
 
 #include <string.h>
