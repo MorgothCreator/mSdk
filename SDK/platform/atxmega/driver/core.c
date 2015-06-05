@@ -13,7 +13,7 @@
 #define OSC_RC32MCREF_bm OSC_RC32MCREF_gm
 #endif
 //###########################################################################
-unsigned long core_clk_set(unsigned long CoreFrequency, unsigned char ClkSource, unsigned short Prescaller, bool ExternalOsc)
+unsigned long core_clk_set(unsigned long CoreFrequency, unsigned char ClkSource, unsigned short Prescaller, char ExternalOsc)
 {
 	#ifdef CPU_RAMPX
 	CPU_RAMPX = 0;
@@ -27,11 +27,30 @@ unsigned long core_clk_set(unsigned long CoreFrequency, unsigned char ClkSource,
 	volatile unsigned char Tmp = 0;
 	//	unsigned char Tmp2 = 0;
 	//OSC_XOSCCTRL = OSC_XOSCSEL1_bm;// | OSC_X32KLPM_bm;
-	if(ExternalOsc == true)
+	/*if(ExternalOsc == true)
 	{
 		OSC_CTRL= OSC_XOSCEN_bm | OSC_XOSCSEL1_bm;
 		while(~OSC_STATUS & OSC_XOSCRDY_bm);
+	}*/
+	switch(ExternalOsc)
+	{
+		case CoreClk_ExtOscType_ExtClk:
+			//OSC_CTRL= OSC_XOSCEN_bm | OSC_XOSCSEL1_bm;
+			break
+		case CoreClk_ExtOscType_32KHz:
+			OSC_CTRL= OSC_XOSCEN_bm | OSC_XOSCSEL_32KHz_gc;
+			break
+		case CoreClk_ExtOscType_XTAL_256CLK:
+			OSC_CTRL= OSC_XOSCEN_bm | OSC_XOSCSEL_XTAL_256CLK_gc;
+			break
+		case CoreClk_ExtOscType_XTAL_1KCLK:
+			OSC_CTRL= OSC_XOSCEN_bm | OSC_XOSCSEL_XTAL_1KCLK_gc;
+			break
+		case CoreClk_ExtOscType_XTAL_16KCLK:
+			OSC_CTRL= OSC_XOSCEN_bm | OSC_XOSCSEL_XTAL_16KCLK_gc;
+			break
 	}
+	while(~OSC_STATUS & OSC_XOSCRDY_bm);
 	//Setup DFLL
 	//OSC_CTRL = OSC_XOSCEN_bm;
 	//Set osc

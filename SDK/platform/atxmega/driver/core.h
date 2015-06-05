@@ -8,10 +8,20 @@
 #ifndef CORE_H_
 #define CORE_H_
 /*#####################################################*/
+#include <avr/io.h>
 #include <stdbool.h>
 /*#####################################################*/
 //-Wl,--defsym=__heap_start=0x803000,--defsym=__heap_end=0x80ffff
 /*#####################################################*/
+typedef enum
+{
+	CoreClk_ExtOscType_ExtClk = 0,
+	CoreClk_ExtOscType_32KHz,
+	CoreClk_ExtOscType_XTAL_256CLK,
+	CoreClk_ExtOscType_XTAL_1KCLK,
+	CoreClk_ExtOscType_16KCLK,
+}CoreClk_ExtOscType;
+
 typedef enum
 {
 	CoreClk_Source_RC2M = 0,
