@@ -180,9 +180,9 @@ typedef struct region {
 /*
 ** API prototypes for configuring ARMv7a MMU.
 */
-void MMUInit(unsigned int *masterPt);
-void MMUMemRegionMap(REGION *region);
-void MMUEnable(unsigned int *masterPt);
+inline void MMUInit(unsigned int *masterPt);
+inline void MMUMemRegionMap(REGION *region);
+inline void MMUEnable(unsigned int *masterPt);
 
 #ifdef __cplusplus
 }

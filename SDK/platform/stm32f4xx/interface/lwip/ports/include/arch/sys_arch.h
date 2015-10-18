@@ -49,7 +49,7 @@ typedef xTaskHandle sys_thread_t;
 typedef struct _sys_arch_state_t
 {
 	// Task creation data.
-	char cTaskName[configMAX_TASK_NAME_LEN];
+	char cTaskName[MAX_TASK_NAME_LEN];
 	unsigned short nStackDepth;
 	unsigned short nTaskCount;
 } sys_arch_state_t;

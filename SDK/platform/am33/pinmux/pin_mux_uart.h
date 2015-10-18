@@ -9,6 +9,7 @@
 #include "../include/hw/soc_AM335x.h"
 #include "../include/hw/hw_control_AM335x.h"
 #include "../include/hw/hw_types.h"
+#include "api/gpio_def.h"
 /**********************************************/
 #ifndef PIN_MUX_UART_H_
 #define PIN_MUX_UART_H_
@@ -82,7 +83,10 @@ unsigned int pin_mux_uart5_tx(unsigned int PinNr);
 bool pin_mux_uart_rx(unsigned int UartNr);
 bool pin_mux_uart_tx(unsigned int UartNr);
 bool UARTPinMuxSetup(unsigned int instanceNum);
-/**********************************************/
+/*#####################################################*/
+void pin_mux_uart_transmit(gpio_port_enum port, unsigned char pin);
+void pin_mux_uart_receive(gpio_port_enum port, unsigned char pin);
+/*#####################################################*/
 #ifdef HEADER_INCLUDE_C_FILES
 #include "pin_mux_uart.c"
 #endif

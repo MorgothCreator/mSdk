@@ -14,8 +14,6 @@ MEMORY
   RAM1 (xrw) 	: ORIGIN = 0x10000000, LENGTH = 0x00010000 /*64K*/
 }
  
-/* higher address of the user mode stack (end of 128K RAM on AHB bus)*/
-_estack = 0x20020000;
 
 
 /* define stack size and heap size here */
@@ -26,6 +24,8 @@ heap_size = 10;
 _stack_end = ORIGIN(RAM)+LENGTH(RAM);
 _stack_begin = _stack_end - stack_size;
  
+ /* higher address of the user mode stack (end of 128K RAM on AHB bus)*/
+_estack = _stack_end;
  
 /* Define output sections */
 SECTIONS

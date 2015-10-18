@@ -187,35 +187,37 @@ bool _uart_open(Uart_t* UartSettings)
 	{
 	case 0:
 		Uart_Int_Service.Uart0 = UartSettings;
-		pin_mux_uart0_rx(UartSettings->RxPin);
-		pin_mux_uart0_tx(UartSettings->TxPin);
+		//pin_mux_uart0_rx(UartSettings->RxPin);
+		//pin_mux_uart0_tx(UartSettings->TxPin);
 		break;
 	case 1:
 		Uart_Int_Service.Uart1 = UartSettings;
-		pin_mux_uart1_rx(UartSettings->RxPin);
-		pin_mux_uart1_tx(UartSettings->TxPin);
+		//pin_mux_uart1_rx(UartSettings->RxPin);
+		//pin_mux_uart1_tx(UartSettings->TxPin);
 		break;
 	case 2:
 		Uart_Int_Service.Uart2 = UartSettings;
-		pin_mux_uart2_rx(UartSettings->RxPin);
-		pin_mux_uart2_tx(UartSettings->TxPin);
+		//pin_mux_uart2_rx(UartSettings->RxPin);
+		//pin_mux_uart2_tx(UartSettings->TxPin);
 		break;
 	case 3:
 		Uart_Int_Service.Uart3 = UartSettings;
-		pin_mux_uart3_rx(UartSettings->RxPin);
-		pin_mux_uart3_tx(UartSettings->TxPin);
+		//pin_mux_uart3_rx(UartSettings->RxPin);
+		//pin_mux_uart3_tx(UartSettings->TxPin);
 		break;
 	case 4:
 		Uart_Int_Service.Uart4 = UartSettings;
-		pin_mux_uart4_rx(UartSettings->RxPin);
-		pin_mux_uart4_tx(UartSettings->TxPin);
+		//pin_mux_uart4_rx(UartSettings->RxPin);
+		//pin_mux_uart4_tx(UartSettings->TxPin);
 		break;
 	case 5:
 		Uart_Int_Service.Uart5 = UartSettings;
-		pin_mux_uart5_rx(UartSettings->RxPin);
-		pin_mux_uart5_tx(UartSettings->TxPin);
+		//pin_mux_uart5_rx(UartSettings->RxPin);
+		//pin_mux_uart5_tx(UartSettings->TxPin);
 		break;
 	}
+	pin_mux_uart_transmit(UartSettings->TxPort, UartSettings->TxPin);
+	pin_mux_uart_receive(UartSettings->RxPort, UartSettings->RxPin);
 	//UARTPinMuxSetup(UartSettings->UartNr);
     /* Performing a module reset. */
     UARTModuleReset(UartSettings->BaseAddr);

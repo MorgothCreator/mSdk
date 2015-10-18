@@ -30,7 +30,7 @@
 #include "api/lcd_def.h"
 #include "api/lcd_api.h"
 #include "api/pmic_api.h"
-#include "api/usb_msc_host_api.h"
+#include "api/usb_api.h"
 #include "api/touchscreen_def.h"
 #include "api/mmcsd_api.h"
 #include "device/24c.h"

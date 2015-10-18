@@ -338,7 +338,7 @@
 *******************************************************************************/
 
 #ifdef evmskAM335x
-static void DDRVTTEnable(void);
+void DDRVTTEnable(void);
 #endif
 extern void SPIConfigure(void);
 extern void I2C1ModuleClkConfig(void);

@@ -11,6 +11,7 @@
 #include "../include/hw/soc_AM335x.h"
 #include "../include/hw/hw_control_AM335x.h"
 #include "../include/hw/hw_types.h"
+#include "api/gpio_def.h"
 /**********************************************/
 #define Spi0_Sclk_PinMux_A17	1
 
@@ -62,6 +63,12 @@ unsigned int pin_mux_spi1_d0(unsigned int PinNr);
 unsigned int pin_mux_spi1_d1(unsigned int PinNr);
 unsigned int pin_mux_spi1_cs0(unsigned int PinNr);
 unsigned int pin_mux_spi1_cs1(unsigned int PinNr);
+/**********************************************/
+void pin_mux_spi_mosi(gpio_port_enum port, unsigned char pin);
+void pin_mux_spi_miso(gpio_port_enum port, unsigned char pin);
+void pin_mux_spi_sck(gpio_port_enum port, unsigned char pin);
+void pin_mux_spi_cs0(gpio_port_enum port, unsigned char pin);
+void pin_mux_spi_cs1(gpio_port_enum port, unsigned char pin);
 /**********************************************/
 #ifdef HEADER_INCLUDE_C_FILES
 #include "pin_mux_spi.c"

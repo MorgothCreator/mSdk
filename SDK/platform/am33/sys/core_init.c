@@ -17,6 +17,7 @@
 #include "include/hw/hw_cm_wkup.h"
 #include "include/hw/soc_AM335x.h"
 #include "include/hw/hw_control_AM335x.h"
+#include "driver/cpu.h"
 //#include "startup.c"
 
 
@@ -33,9 +34,10 @@ inline void VfpEnable(void)
 
 
 
-void _core_init(void)
+inline void _core_init(void)
 {
 	//VfpEnable();
+	//CPUSwitchToUserMode();
 	MMUConfigAndEnable();
 	CacheEnable(CACHE_ICACHE);
 	CacheEnable(CACHE_ALL);

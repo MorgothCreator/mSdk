@@ -187,6 +187,7 @@ FIQHandler:
 @ if nothing is done in the abort mode, the execution enters infinite loop.
 @
 AbortHandler:
+UndefInstHandler:
 @
 @ Disable all the interrupts
 @
@@ -199,27 +200,7 @@ AbortHandler:
 @ Go to infinite loop if returned from C handler
 @
 loop0:
-        @B       loop0
-        STMFD    r13!, {r0-r1, r14}       @ Save context in SVC stack
-        LDMFD    r13!, {r0-r1, pc}^       @ Restore registers from IRQ stack
-
-UndefInstHandler:
-@
-@ Disable all the interrupts
-@
-    @    MRS     r0, cpsr                  @ Read from CPSR
-    @    ORR     r0, r0, #0xC0             @ Clear the IRQ and FIQ bits
-    @    MSR     cpsr, r0                  @ Write to CPSR
-    @    ADD     r14, pc, #0               @ Store the return address
-    @    LDR     pc, =CPUAbortHandler      @ Go to C handler
-@
-@ Go to infinite loop if returned from C handler
-@
-loop1:
-        @B       loop1
-        STMFD    r13!, {r0-r1, r14}       @ Save context in SVC stack
-        LDMFD    r13!, {r0-r1, pc}^       @ Restore registers from IRQ stack
-
+        B       loop0
 
 @*****************************************************************************
 @

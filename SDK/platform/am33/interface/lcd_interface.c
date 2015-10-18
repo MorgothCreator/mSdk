@@ -192,7 +192,7 @@ bool SetUpLCD(tDisplay* LcdStruct)
     /* Enable raster */
     RasterEnable(SOC_LCDC_0_REGS);
     unsigned int retVal = 0u;
-#if 1
+#if 0
 	/* Request DMA Channel and TCC for MMCSD Transmit*/
     retVal = EDMA3RequestChannel(EDMA_INST_BASE, EDMA3_CHANNEL_TYPE_DMA,
 			LCD_DMA_TRANSFER_CHANNEL, LCD_DMA_TRANSFER_CHANNEL,
@@ -253,7 +253,7 @@ bool _screen_copy(tDisplay *pDisplayTo, tDisplay *pDisplayFrom, bool put_cursor,
 	volatile unsigned int* ScreenBuff = pDisplayTo->DisplayData + pDisplayTo->raster_timings->palete_len;
 	volatile unsigned int* _ScreenBuff = pDisplayFrom->DisplayData + pDisplayTo->raster_timings->palete_len;
 
-#if 0
+#if 1
 	for(; LineCnt < pDisplayTo->raster_timings->Y; LineCnt ++)
 	{
 		memcpy((void *)(ScreenBuff + (pDisplayFrom->raster_timings->X * LineCnt)), (void *)(_ScreenBuff + (pDisplayFrom->raster_timings->X * LineCnt)), (sizeof(ScreenBuff[0]) * pDisplayTo->raster_timings->X));

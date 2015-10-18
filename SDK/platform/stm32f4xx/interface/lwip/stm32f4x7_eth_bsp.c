@@ -26,13 +26,13 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
-#include "lib/lwip/include/lwip/opt.h"
+#include "src/include/lwip/opt.h"
 #include "stm32f4x7_eth.h"
 #include "stm32f4x7_eth_bsp.h"
 #include "main.h"
-#include "lib/lwip/include/lwip/netif.h"
+#include "src/include/lwip/netif.h"
 #include "netconf.h"
-#include "lib/lwip/include/lwip/dhcp.h"
+#include "src/include/lwip/dhcp.h"
 #include "driver/misc.h"
 #include "driver/stm32f4xx_rcc.h"
 #include "driver/stm32f4xx_gpio.h"

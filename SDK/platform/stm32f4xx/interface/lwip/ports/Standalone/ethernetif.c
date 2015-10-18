@@ -37,9 +37,9 @@
  *
  */
 
-#include "lib/lwip/include/lwip/opt.h"
-#include "lib/lwip/include/lwip/mem.h"
-#include "lib/lwip/include/netif/etharp.h"
+#include "src/include/lwip/opt.h"
+#include "src/include/lwip/mem.h"
+#include "src/include/netif/etharp.h"
 #include "ethernetif.h"
 #include "driver/stm32f4x7_eth.h"
 #include "main.h"

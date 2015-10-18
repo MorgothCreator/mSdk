@@ -22,6 +22,7 @@
 #include "board_init.h"
 #include "hih6130.h"
 #include "api/twi_def.h"
+#include "api/twi_api.h"
 #include "api/timer_api.h"
 
 bool hih613x_get_hum_temp(HIH613x_t *structure, unsigned char *status, float *hum, float *temp) {

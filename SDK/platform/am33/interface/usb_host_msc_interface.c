@@ -62,8 +62,8 @@ void USBHCDEvents(void *pvData);
 //
 //*****************************************************************************
 #define PATH_BUF_SIZE   4
-static char g_cCwdBuf1[PATH_BUF_SIZE] = "3:/";
-static char g_cCwdBuf2[PATH_BUF_SIZE] = "4:/";
+char g_cCwdBuf1[PATH_BUF_SIZE] = "3:/";
+char g_cCwdBuf2[PATH_BUF_SIZE] = "4:/";
 
 FATFS g_sFatFs1;
 FATFS g_sFatFs2;

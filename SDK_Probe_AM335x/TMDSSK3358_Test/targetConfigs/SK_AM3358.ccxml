@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<configurations XML_version="1.2" id="configurations_0">
+    <configuration XML_version="1.2" id="configuration_0">
+        <instance XML_version="1.2" desc="Texas Instruments XDS100v2 USB Debug Probe" href="connections/TIXDS100v2_Connection.xml" id="Texas Instruments XDS100v2 USB Debug Probe" xml="TIXDS100v2_Connection.xml" xmlpath="connections"/>
+        <connection XML_version="1.2" id="Texas Instruments XDS100v2 USB Debug Probe">
+            <instance XML_version="1.2" href="drivers/tixds100v2icepick_d.xml" id="drivers" xml="tixds100v2icepick_d.xml" xmlpath="drivers"/>
+            <instance XML_version="1.2" href="drivers/tixds100v2cs_dap.xml" id="drivers" xml="tixds100v2cs_dap.xml" xmlpath="drivers"/>
+            <instance XML_version="1.2" href="drivers/tixds100v2cortexM.xml" id="drivers" xml="tixds100v2cortexM.xml" xmlpath="drivers"/>
+            <instance XML_version="1.2" href="drivers/tixds100v2cs_child.xml" id="drivers" xml="tixds100v2cs_child.xml" xmlpath="drivers"/>
+            <instance XML_version="1.2" href="drivers/tixds100v2cortexA.xml" id="drivers" xml="tixds100v2cortexA.xml" xmlpath="drivers"/>
+            <instance XML_version="1.2" href="drivers/tixds100v2csstm.xml" id="drivers" xml="tixds100v2csstm.xml" xmlpath="drivers"/>
+            <instance XML_version="1.2" href="drivers/tixds100v2etbcs.xml" id="drivers" xml="tixds100v2etbcs.xml" xmlpath="drivers"/>
+            <instance XML_version="1.2" href="drivers/tixds100v2pru.xml" id="drivers" xml="tixds100v2pru.xml" xmlpath="drivers"/>
+            <property Type="choicelist" Value="0" id="dataFileRequired"/>
+            <property Type="choicelist" Value="0" id="The JTAG TCLK Frequency (MHz)">
+                <choice Name="Fixed with user specified faster value" value="SPECIFIC">
+                    <property Type="stringfield" Value="100.0KHz" id="-- Enter a value from 1.0MHz to 30.0MHz"/>
+                </choice>
+            </property>
+            <platform XML_version="1.2" id="platform_0">
+                <instance XML_version="1.2" desc="SK_AM3358" href="boards/sk_am3358.xml" id="SK_AM3358" xml="sk_am3358.xml" xmlpath="boards"/>
+            <board XML_version="1.2" description="AM3358 StarterKit Board" id="SK_AM3358">
+                    <device HW_revision="1" XML_version="1.2" description="AM33x - Cortex A8 Embedded Processor" id="AM3358_0" partnum="AM3358" simulation="no">
+                        <router HW_revision="1.0" XML_version="1.2" description="ICEPick_D Router" id="IcePick_D_0" isa="ICEPICK_D">
+                            <subpath id="subpath_12">
+                                <router HW_revision="1.0" XML_version="1.2" description="CS_DAP Router" id="CS_DAP_0" isa="CS_DAP">
+                                    <subpath id="ModenaSS">
+                                        <cpu HW_revision="1.0" XML_version="1.2" desc="CortxA8" description="Cortex_A8 CPU" deviceSim="false" id="CortexA8" isa="Cortex_A8">
+                                            <property Type="filepathfield" Value="..\..\emulation\boards\sk_am3358\gel\AM3358_StarterKit.gel" id="GEL File"/>
+                                        <property Type="choicelist" Value="0" id="bypass"/>
+                                        </cpu>
+                                    </subpath>
+                                </router>
+                            </subpath>
+                        </router>
+                    </device>
+                </board>
+            </platform>
+        </connection>
+    </configuration>
+</configurations>

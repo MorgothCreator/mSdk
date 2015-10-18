@@ -53,7 +53,7 @@ unsigned char _mcspi_SendByte(Mcspi_t *McspiStruct, unsigned char byte) {
 /*#####################################################*/
 static void McSPIPinMux(Mcspi_t *McspiStruct)
 {
-	switch(McspiStruct->McspiNr)
+	/*switch(McspiStruct->McspiNr)
 	{
 		case 0:
 			pin_mux_spi0_sclk(McspiStruct->SckPin);
@@ -69,7 +69,12 @@ static void McSPIPinMux(Mcspi_t *McspiStruct)
 			if(McspiStruct->Cs0Pin) pin_mux_spi1_cs0(McspiStruct->Cs0Pin);
 			if(McspiStruct->Cs1Pin) pin_mux_spi1_cs1(McspiStruct->Cs1Pin);
 			break;
-	}
+	}*/
+	pin_mux_spi_mosi(McspiStruct->MosiPort, McspiStruct->MosiPin);
+	pin_mux_spi_miso(McspiStruct->MisoPort, McspiStruct->MisoPin);
+	pin_mux_spi_sck(McspiStruct->SckPort, McspiStruct->SckPin);
+	pin_mux_spi_cs0(McspiStruct->Cs0Port, McspiStruct->Cs0Pin);
+	pin_mux_spi_cs1(McspiStruct->Cs1Port, McspiStruct->Cs1Pin);
 }
 /*#####################################################*/
 /*

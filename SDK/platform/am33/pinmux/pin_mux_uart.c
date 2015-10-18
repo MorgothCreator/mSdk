@@ -6,7 +6,9 @@
  */
 /*#####################################################*/
 #include <stdbool.h>
+#include "api/gpio_def.h"
 #include "pin_mux_uart.h"
+#include "pin_mux_gpio.h"
 #include "include/hw/soc_AM335x.h"
 #include "include/hw/hw_control_AM335x.h"
 #include "include/hw/hw_types.h"
@@ -443,6 +445,54 @@ bool UARTPinMuxSetup(unsigned int instanceNum)
 {
 	if(pin_mux_uart_rx(instanceNum) & pin_mux_uart_tx(instanceNum)) return true;
 	else return false;
+}
+/*#####################################################*/
+void pin_mux_uart_transmit(gpio_port_enum port, unsigned char pin)
+{
+	unsigned char mode = 0;
+	if(port == IOA)
+	{
+		switch(pin)
+		case 15:
+			break;
+	}
+	else if(port == IOB)
+	{
+
+	}
+	else if(port == IOC)
+	{
+
+	}
+	else if(port == IOD)
+	{
+
+	}
+	gpio_mux_setup(port, pin, mode, 1, 1, 1, 1);
+}
+/*#####################################################*/
+void pin_mux_uart_receive(gpio_port_enum port, unsigned char pin)
+{
+	unsigned char mode = 0;
+	if(port == IOA)
+	{
+		switch(pin)
+		case 14:
+			break;
+	}
+	else if(port == IOB)
+	{
+
+	}
+	else if(port == IOC)
+	{
+
+	}
+	else if(port == IOD)
+	{
+
+	}
+	gpio_mux_setup(port, pin, mode, 1, 1, 1, 1);
 }
 /*#####################################################*/
 

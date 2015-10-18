@@ -62,21 +62,21 @@ extern "C" {
 /*
 ** API prototypes
 */
-void CacheEnable(unsigned int enFlag);
-void CacheDisable(unsigned int disFlag);
-void CacheInstInvalidateAll(void);
-void CacheInstInvalidateBuff(unsigned int startAddr,
+inline void CacheEnable(unsigned int enFlag);
+inline void CacheDisable(unsigned int disFlag);
+inline void CacheInstInvalidateAll(void);
+inline void CacheInstInvalidateBuff(unsigned int startAddr,
                                     unsigned int numBytes);
-void CacheDataCleanInvalidateAll(void);
-void CacheDataCleanAll(void);
-void CacheDataInvalidateAll(void);
-void CacheDataCleanBuff(unsigned int startAddr,
+inline void CacheDataCleanInvalidateAll(void);
+inline void CacheDataCleanAll(void);
+inline void CacheDataInvalidateAll(void);
+inline void CacheDataCleanBuff(unsigned int startAddr,
                                unsigned int numBytes);
 
-void CacheDataInvalidateBuff(unsigned int startAddr,
+inline void CacheDataInvalidateBuff(unsigned int startAddr,
                                     unsigned int numBytes);
 
-void CacheDataCleanInvalidateBuff(unsigned int startAddr,
+inline void CacheDataCleanInvalidateBuff(unsigned int startAddr,
                                          unsigned int numBytes);
 
 #ifdef HEADER_INCLUDE_C_FILES

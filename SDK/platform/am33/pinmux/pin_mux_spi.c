@@ -6,6 +6,8 @@
  */
 /*#####################################################*/
 #include "pin_mux_spi.h"
+#include "api/gpio_def.h"
+#include "pin_mux_gpio.h"
 /*#####################################################*/
 unsigned int pin_mux_spi_sclk_beaglebone(unsigned int SpiNr)
 {
@@ -350,6 +352,126 @@ unsigned int pin_mux_spi1_cs1(unsigned int PinNr)
 }
 
 /**********************************************/
+void pin_mux_spi_mosi(gpio_port_enum port, unsigned char pin)
+{
+	unsigned char mode = 0;
+	if(port == IOA)
+	{
+		switch(pin)
+		case 3:
+			break;
+	}
+	else if(port == IOB)
+	{
+
+	}
+	else if(port == IOC)
+	{
+
+	}
+	else if(port == IOD)
+	{
+
+	}
+	gpio_mux_setup(port, pin, mode, 1, 1, 1, 1);
+}
+/*#####################################################*/
+void pin_mux_spi_miso(gpio_port_enum port, unsigned char pin)
+{
+	unsigned char mode = 0;
+	if(port == IOA)
+	{
+		switch(pin)
+		case 4:
+			break;
+	}
+	else if(port == IOB)
+	{
+
+	}
+	else if(port == IOC)
+	{
+
+	}
+	else if(port == IOD)
+	{
+
+	}
+	gpio_mux_setup(port, pin, mode, 1, 1, 1, 1);
+}
+/*#####################################################*/
+void pin_mux_spi_sck(gpio_port_enum port, unsigned char pin)
+{
+	unsigned char mode = 0;
+	if(port == IOA)
+	{
+		switch(pin)
+		case 2:
+			break;
+	}
+	else if(port == IOB)
+	{
+
+	}
+	else if(port == IOC)
+	{
+
+	}
+	else if(port == IOD)
+	{
+
+	}
+	gpio_mux_setup(port, pin, mode, 1, 1, 1, 1);
+}
+/*#####################################################*/
+void pin_mux_spi_cs0(gpio_port_enum port, unsigned char pin)
+{
+	unsigned char mode = 0;
+	if(port == IOA)
+	{
+		switch(pin)
+		case 5:
+			break;
+	}
+	else if(port == IOB)
+	{
+
+	}
+	else if(port == IOC)
+	{
+
+	}
+	else if(port == IOD)
+	{
+
+	}
+	gpio_mux_setup(port, pin, mode, 1, 1, 1, 1);
+}
+/*#####################################################*/
+void pin_mux_spi_cs1(gpio_port_enum port, unsigned char pin)
+{
+	unsigned char mode = 0;
+	if(port == IOA)
+	{
+		switch(pin)
+		case 6:
+			break;
+	}
+	else if(port == IOB)
+	{
+
+	}
+	else if(port == IOC)
+	{
+
+	}
+	else if(port == IOD)
+	{
+
+	}
+	gpio_mux_setup(port, pin, mode, 1, 1, 1, 1);
+}
+/*#####################################################*/
 
 
 
