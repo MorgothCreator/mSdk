@@ -40,6 +40,7 @@
 #include "device/adxl345.h"
 #include "device/hih6130.h"
 #include "device/mpl3115a2.h"
+#include "device/mpr121.h"
 #include "device/lepton_flir.h"
 /*#####################################################*/
 new_uart* Uart[6] = {NULL, NULL, NULL, NULL, NULL, NULL};
@@ -78,6 +79,9 @@ USE_ADXL345;
 #endif
 #ifdef USE_HIH613x
 USE_HIH613x;
+#endif
+#ifdef USE_MPR121
+USE_MPR121;
 #endif
 #ifdef USE_LEPTON_FLIR
 USE_LEPTON_FLIR;
@@ -139,6 +143,10 @@ bool board_init()
 /*-----------------------------------------------------*/
 #if _USE_MPL3115A2 == 1
 	MPL3115A2_INIT
+#endif
+/*-----------------------------------------------------*/
+#if _USE_MPR121 == 1
+	MPR121_INIT
 #endif
 /*-----------------------------------------------------*/
 #if _USE_LEPTON_FLIR == 1

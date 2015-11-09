@@ -41,6 +41,7 @@
 #include "device/adxl345.h"
 #include "device/hih6130.h"
 #include "device/mpl3115a2.h"
+#include "device/mpr121.h"
 #include "device/lepton_flir.h"
 /*#####################################################*/
 #define BOARD_MESSAGE "Olimex STM32-E407"
@@ -81,6 +82,9 @@ extern USE_ADXL345;
 #endif
 #ifdef USE_HIH613x
 extern USE_HIH613x;
+#endif
+#ifdef USE_MPR121
+extern USE_MPR121;
 #endif
 #ifdef USE_LEPTON_FLIR
 extern USE_LEPTON_FLIR;
