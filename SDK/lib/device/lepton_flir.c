@@ -492,7 +492,7 @@ bool lepton_flir_get_image(LEPTON_FLIR_t *structure, unsigned short *image) {
 	Sysdelay(200);
 	unsigned char line_buff[LEPTON_FLIR_LINE_SIZE];
 	unsigned char checkByte = 0x0F;
-	unsigned int packet_nr;
+	unsigned int packet_nr = 0;
 	structure->SPI->Buff = line_buff;
 	// loop while discard packets
 	while((checkByte & 0x0F) == 0x0f) {

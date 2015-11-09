@@ -1647,9 +1647,9 @@ static void dopr (Uart_t* UartSettings, char *buffer, size_t maxlen, const char 
       case 'd':
       case 'i':
 	if (cflags == DP_C_SHORT)
-	  value = va_arg (args, short int);
+	  value = va_arg (args, short);
 	else if (cflags == DP_C_LONG)
-	  value = va_arg (args, long int);
+	  value = va_arg (args, long);
 	else
 	  value = va_arg (args, int);
 	fmtint (UartSettings, buffer, &currlen, maxlen, value, 10, min, max, flags);
@@ -1657,9 +1657,9 @@ static void dopr (Uart_t* UartSettings, char *buffer, size_t maxlen, const char 
       case 'o':
 	flags |= DP_F_UNSIGNED;
 	if (cflags == DP_C_SHORT)
-	  value = va_arg (args, unsigned short int);
+	  value = va_arg (args, unsigned short);
 	else if (cflags == DP_C_LONG)
-	  value = va_arg (args, unsigned long int);
+	  value = va_arg (args, unsigned long);
 	else
 	  value = va_arg (args, unsigned int);
 	fmtint (UartSettings, buffer, &currlen, maxlen, value, 8, min, max, flags);
@@ -1667,9 +1667,9 @@ static void dopr (Uart_t* UartSettings, char *buffer, size_t maxlen, const char 
       case 'u':
 	flags |= DP_F_UNSIGNED;
 	if (cflags == DP_C_SHORT)
-	  value = va_arg (args, unsigned short int);
+	  value = va_arg (args, unsigned short);
 	else if (cflags == DP_C_LONG)
-	  value = va_arg (args, unsigned long int);
+	  value = va_arg (args, unsigned long);
 	else
 	  value = va_arg (args, unsigned int);
 	fmtint (UartSettings, buffer, &currlen, maxlen, value, 10, min, max, flags);
@@ -1679,9 +1679,9 @@ static void dopr (Uart_t* UartSettings, char *buffer, size_t maxlen, const char 
       case 'x':
 	flags |= DP_F_UNSIGNED;
 	if (cflags == DP_C_SHORT)
-	  value = va_arg (args, unsigned short int);
+	  value = va_arg (args, unsigned short);
 	else if (cflags == DP_C_LONG)
-	  value = va_arg (args, unsigned long int);
+	  value = va_arg (args, unsigned long);
 	else
 	  value = va_arg (args, unsigned int);
 	fmtint (UartSettings, buffer, &currlen, maxlen, value, 16, min, max, flags);
@@ -1727,13 +1727,13 @@ static void dopr (Uart_t* UartSettings, char *buffer, size_t maxlen, const char 
 	if (cflags == DP_C_SHORT)
 	{
 	  short int *num;
-	  num = va_arg (args, short int *);
+	  num = va_arg (args, short *);
 	  *num = currlen;
         }
 	else if (cflags == DP_C_LONG)
 	{
 	  long int *num;
-	  num = va_arg (args, long int *);
+	  num = va_arg (args, long *);
 	  *num = currlen;
         }
 	else
