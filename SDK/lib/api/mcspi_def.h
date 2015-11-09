@@ -27,20 +27,15 @@
 /*#####################################################*/
 typedef struct
 {
+	unsigned char CsSelect;
 	unsigned char MosiPin;
 	unsigned char MisoPin;
 	unsigned char SckPin;
-	unsigned char Cs0Pin;
-	unsigned char Cs1Pin;
-	unsigned char Cs2Pin;
-	unsigned char Cs3Pin;
+	unsigned char CsPin[4];
 	gpio_port_enum MosiPort;
 	gpio_port_enum MisoPort;
 	gpio_port_enum SckPort;
-	gpio_port_enum Cs0Port;
-	gpio_port_enum Cs1Port;
-	gpio_port_enum Cs2Port;
-	gpio_port_enum Cs3Port;
+	gpio_port_enum CsPort[4];
 	volatile bool interrupted;
 	volatile unsigned char Channel;
 	volatile unsigned int BaseAddr;

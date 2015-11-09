@@ -39,7 +39,15 @@ SPI_TypeDef* _SPI_[] = { SPI1, SPI2, SPI3};
 
 bool _mcspi_open(new_mcspi *McspiStruct)
 {
-	RCC_APB2PeriphClockCmd(GET_PORT_CLK_ADDR[McspiStruct->MosiPort] | GET_PORT_CLK_ADDR[McspiStruct->MisoPort] | GET_PORT_CLK_ADDR[McspiStruct->SckPort] | GET_PORT_CLK_ADDR[McspiStruct->Cs0Port], ENABLE);
+	RCC_APB2PeriphClockCmd(GET_PORT_CLK_ADDR[McspiStruct->MosiPort] | GET_PORT_CLK_ADDR[McspiStruct->MisoPort] | GET_PORT_CLK_ADDR[McspiStruct->SckPort], ENABLE);
+	if(McspiStruct->CsPort[0])
+		RCC_APB2PeriphClockCmd(GET_PORT_CLK_ADDR[McspiStruct->CsPort[0]], ENABLE);
+	if(McspiStruct->CsPort[1])
+		RCC_APB2PeriphClockCmd(GET_PORT_CLK_ADDR[McspiStruct->CsPort[1]], ENABLE);
+	if(McspiStruct->CsPort[2])
+		RCC_APB2PeriphClockCmd(GET_PORT_CLK_ADDR[McspiStruct->CsPort[2]], ENABLE);
+	if(McspiStruct->CsPort[3])
+		RCC_APB2PeriphClockCmd(GET_PORT_CLK_ADDR[McspiStruct->CsPort[3]], ENABLE);
 	switch(McspiStruct->McspiNr) {
 	case 0:
 		RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1, ENABLE);
@@ -73,12 +81,30 @@ bool _mcspi_open(new_mcspi *McspiStruct)
 	GPIO_InitStructure.GPIO_Pin = 1 << McspiStruct->SckPin;
 	GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->SckPort], &GPIO_InitStructure);
 
-	GPIO_InitStructure.GPIO_Pin = 1 << McspiStruct->Cs0Pin;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
 	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-	GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->Cs0Port], &GPIO_InitStructure);
+	if(McspiStruct->CsPort[0])
+	{
+		GPIO_InitStructure.GPIO_Pin = 1 << McspiStruct->CsPin[0];
+		GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[0]], &GPIO_InitStructure);
+	}
+	if(McspiStruct->CsPort[1])
+	{
+		GPIO_InitStructure.GPIO_Pin = 1 << McspiStruct->CsPin[1];
+		GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[1]], &GPIO_InitStructure);
+	}
+	if(McspiStruct->CsPort[2])
+	{
+		GPIO_InitStructure.GPIO_Pin = 1 << McspiStruct->CsPin[2];
+		GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[2]], &GPIO_InitStructure);
+	}
+	if(McspiStruct->CsPort[3])
+	{
+		GPIO_InitStructure.GPIO_Pin = 1 << McspiStruct->CsPin[3];
+		GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[3]], &GPIO_InitStructure);
+	}
 
 
 	SPI_InitTypeDef  SPI_InitStructure;
@@ -98,12 +124,12 @@ bool _mcspi_open(new_mcspi *McspiStruct)
 		SPI_InitStructure.SPI_DataSize = SPI_DataSize_8b;
 		break;
 	}
-	SPI_InitStructure.SPI_CPOL = McspiStruct->Cpol << 1;//SPI_CPOL_High;
-	SPI_InitStructure.SPI_CPHA = McspiStruct->Cpha << 0;//SPI_CPHA_2Edge;
+	SPI_InitStructure.SPI_CPOL = (McspiStruct->Cpol & 0x01) << 1;//SPI_CPOL_High;
+	SPI_InitStructure.SPI_CPHA = (McspiStruct->Cpha & 0x01) << 0;//SPI_CPHA_2Edge;
 	SPI_InitStructure.SPI_NSS = SPI_NSS_Soft;
 	SPI_InitStructure.SPI_BaudRatePrescaler = (McspiStruct->BaudRate << 3) & SPI_BaudRatePrescaler_256;//SPI_BaudRatePrescaler_8;
 
-	SPI_InitStructure.SPI_FirstBit = McspiStruct->LsbFirst << 7;//SPI_FirstBit_MSB;
+	SPI_InitStructure.SPI_FirstBit = (McspiStruct->LsbFirst & 0x01) << 7;//SPI_FirstBit_MSB;
 	SPI_InitStructure.SPI_CRCPolynomial = 7;
 	SPI_Init(_SPI_[McspiStruct->McspiNr], &SPI_InitStructure);
 
@@ -137,23 +163,41 @@ void _mcspi_close(new_mcspi *McspiStruct)
 			break;
 		default:
 			return;
-		}
+	}
 
-	  /*!< Configure all pins used by the _SPI_ as input floating *******************/
-	  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
-	  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+	/*!< Configure all pins used by the _SPI_ as input floating *******************/
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
 
-	  GPIO_InitStructure.GPIO_Pin = 1 << McspiStruct->SckPin;
-	  GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->SckPort], &GPIO_InitStructure);
+	GPIO_InitStructure.GPIO_Pin = 1 << McspiStruct->SckPin;
+	GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->SckPort], &GPIO_InitStructure);
 
-	  GPIO_InitStructure.GPIO_Pin = 1 << McspiStruct->MisoPin;
-	  GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->MisoPort], &GPIO_InitStructure);
+	GPIO_InitStructure.GPIO_Pin = 1 << McspiStruct->MisoPin;
+	GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->MisoPort], &GPIO_InitStructure);
 
-	  GPIO_InitStructure.GPIO_Pin = 1 << McspiStruct->MosiPin;
-	  GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->MosiPort], &GPIO_InitStructure);
+	GPIO_InitStructure.GPIO_Pin = 1 << McspiStruct->MosiPin;
+	GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->MosiPort], &GPIO_InitStructure);
 
-	  GPIO_InitStructure.GPIO_Pin = 1 << McspiStruct->Cs0Pin;
-	  GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->Cs0Port], &GPIO_InitStructure);
+	if(McspiStruct->CsPort[0])
+	{
+		  GPIO_InitStructure.GPIO_Pin = 1 << McspiStruct->CsPin[0];
+		  GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[0]], &GPIO_InitStructure);
+	}
+	if(McspiStruct->CsPort[1])
+	{
+		  GPIO_InitStructure.GPIO_Pin = 1 << McspiStruct->CsPin[1];
+		  GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[1]], &GPIO_InitStructure);
+	}
+	if(McspiStruct->CsPort[2])
+	{
+		  GPIO_InitStructure.GPIO_Pin = 1 << McspiStruct->CsPin[2];
+		  GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[2]], &GPIO_InitStructure);
+	}
+	if(McspiStruct->CsPort[3])
+	{
+		  GPIO_InitStructure.GPIO_Pin = 1 << McspiStruct->CsPin[3];
+		  GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[3]], &GPIO_InitStructure);
+	}
 }
 /*#####################################################*/
 unsigned char _mcspi_SendByte(Mcspi_t *McspiStruct, unsigned char byte)
@@ -178,7 +222,7 @@ bool _mcspi_transfer(Mcspi_t *McspiStruct)
 	//memcpy(McspiStruct->Buff, McspiStruct->Buff + NumOfBytesSend, NumOfBytesReceive);
 	if(response) return false;*/
 	if(!McspiStruct->DisableCsHandle)
-		GPIO_ResetBits(GET_GPIO_PORT_ADDR[McspiStruct->Cs0Port], 1 << McspiStruct->Cs0Pin);
+		GPIO_ResetBits(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[McspiStruct->CsSelect]], 1 << McspiStruct->CsPin[McspiStruct->CsSelect]);
 
 	unsigned int transfer_cnt = 0;
 	for(; transfer_cnt < McspiStruct->numOfBytes; transfer_cnt++) {
@@ -186,7 +230,7 @@ bool _mcspi_transfer(Mcspi_t *McspiStruct)
 	}
 
 	if(!McspiStruct->DisableCsHandle)
-		GPIO_SetBits(GET_GPIO_PORT_ADDR[McspiStruct->Cs0Port], 1 << McspiStruct->Cs0Pin);
+		GPIO_SetBits(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[McspiStruct->CsSelect]], 1 << McspiStruct->CsPin[McspiStruct->CsSelect]);
 	return true;
 }
 /*#####################################################*/
