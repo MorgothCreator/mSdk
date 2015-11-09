@@ -18,25 +18,53 @@
 #include "device/adxl345.h"
 #include "device/hih6130.h"
 #include "device/mpl3115a2.h"
+#include "device/mpr121.h"
 #include "device/lepton_flir.h"
 
-#include "interface/lwip/lwip_hardware_init.h"
-#include "lib/lwip/simple_fs_httpd.h"
+//#include "interface/lwip/lwip_hardware_init.h"
+//#include "lib/lwip/simple_fs_httpd.h"
+
+timer(timer_led);
+char led_state = 0;
+
+void heart_beat_service(void) {
+	if(timer_tick(&timer_led)) {
+		switch(led_state) {
+			case 0:
+				led_state = 1;
+				gpio_out(LED, 1);
+				timer_interval(&timer_led, 10);
+				break;
+			case 1:
+				led_state = 2;
+				gpio_out(LED, 0);
+				timer_interval(&timer_led, 200);
+				break;
+			case 2:
+				led_state = 3;
+				gpio_out(LED, 1);
+				timer_interval(&timer_led, 10);
+				break;
+			case 3:
+				led_state = 0;
+				gpio_out(LED, 0);
+				timer_interval(&timer_led, 780);
+				break;
+		}
+	}
+}
 
 int main(void)
 {
 	board_init();
 	timer(TimerReadSensors);
     timer_interval(&TimerReadSensors, 300);
-	timer(TimerBlinkLed);
-    timer_interval(&TimerBlinkLed, 1000);
 #if _USE_MPU60x0_9150 == 1
 	mpu60x0_9150_init(MPU60x0_9150);
 #endif
 #if _USE_MHC5883 == 1
 	mhc5883_init(MHC5883);
 #endif
-    bool Led1Status = false;
 #if _USE_SHT11 == 1
 	unsigned char sht11_status_reg = 0;
 	bool sht11_read_mode = false;
@@ -44,24 +72,14 @@ int main(void)
 #if _USE_LEPTON_FLIR == 1
 	unsigned short flir_buff[((LEPTON_FLIR_LINE_SIZE / 2) - 2) * LEPTON_FLIR_LINES_NR];
 #endif
-    lan_interface_init();
-	httpd_init();
+    //lan_interface_init();
+	//httpd_init();
+	double unu = 1.0;
 	while(1)
 	{
-		lwip_idle();
-		if(timer_tick(&TimerBlinkLed)) {
-			if(Led1Status) {
-				gpio_out(LED, 1);
-				timer_interval(&TimerBlinkLed, 100);
-				timer_enable(&TimerBlinkLed);
-				Led1Status = false;
-			} else {
-				gpio_out(LED, 0);
-				timer_interval(&TimerBlinkLed, 900);
-				timer_enable(&TimerBlinkLed);
-				Led1Status = true;
-			}
-		}
+		unu += 0.1;
+		//lwip_idle();
+		heart_beat_service();
 #if _USE_SHT11 == 1
 		if(sht11_read_mode) {
 			/*
@@ -116,7 +134,7 @@ int main(void)
 			srf02_read(SRF02);
 #endif
 		if(timer_tick(&TimerReadSensors)) {
-			Time_Update();
+			//Time_Update();
 #if _USE_MS5611 == 1
 			ms5611_display_pressure_result(MS5611, MS5611_CONVERT_OSR_1024);
 #endif
@@ -236,6 +254,16 @@ int main(void)
 #if _USE_AK8975 == 1
 			if(ak8975_stat) {
 				UARTprintf(DebugCom, "AK8975: Magnetometer: Xg = %d, Yg = %d, Zg = %d\n\r", AK8975_X_Axis, AK8975_Y_Axis, AK8975_Z_Axis);
+			}
+#endif
+#if _USE_MPR121 == 1
+			mpr121_ret_t mpr121_return;
+			if(mpr121_idle(MPR121, &mpr121_return))
+			{
+				if(mpr121_return.pushed)
+					UARTprintf(DebugCom, "MPR121: Pushed   > K0=%c, K1=%c, K2=%c, K3=%c, K4=%c, K5=%c, K6=%c, K7=%c, K8=%c, K9=%c, K10=%c, K11=%c\n\r",     (unsigned char)mpr121_return.pushed & 0x01,   (unsigned char)(mpr121_return.pushed >> 1) & 0x01,   (unsigned char)(mpr121_return.pushed >> 2) & 0x01,   (unsigned char)(mpr121_return.pushed >> 3) & 0x01,   (unsigned char)(mpr121_return.pushed >> 4) & 0x01,   (unsigned char)(mpr121_return.pushed >> 5) & 0x01,   (unsigned char)(mpr121_return.pushed >> 6) & 0x01,   (unsigned char)(mpr121_return.pushed >> 7) & 0x01,   (unsigned char)(mpr121_return.pushed >> 8) & 0x01,   (unsigned char)(mpr121_return.pushed >> 9) & 0x01,   (unsigned char)(mpr121_return.pushed >> 10) & 0x01,   (unsigned char)(mpr121_return.pushed >> 11) & 0x01);
+				if(mpr121_return.released)
+					UARTprintf(DebugCom, "MPR121: Released > K0=%c, K1=%c, K2=%c, K3=%c, K4=%c, K5=%c, K6=%c, K7=%c, K8=%c, K9=%c, K10=%c, K11=%c\n\r\n\r", (unsigned char)mpr121_return.released & 0x01, (unsigned char)(mpr121_return.released >> 1) & 0x01, (unsigned char)(mpr121_return.released >> 2) & 0x01, (unsigned char)(mpr121_return.released >> 3) & 0x01, (unsigned char)(mpr121_return.released >> 4) & 0x01, (unsigned char)(mpr121_return.released >> 5) & 0x01, (unsigned char)(mpr121_return.released >> 6) & 0x01, (unsigned char)(mpr121_return.released >> 7) & 0x01, (unsigned char)(mpr121_return.released >> 8) & 0x01, (unsigned char)(mpr121_return.released >> 9) & 0x01, (unsigned char)(mpr121_return.released >> 10) & 0x01, (unsigned char)(mpr121_return.released >> 11) & 0x01);
 			}
 #endif
 #if _USE_LEPTON_FLIR == 1

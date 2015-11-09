@@ -9,6 +9,7 @@
 //#include <avr/interrupt.h>
 //#include <avr/pgmspace.h>
 #include <stdbool.h>
+#include <string.h>
 #include "config.h"
 #include "mpr121.h"
 #include "api/twi_api.h"
@@ -108,7 +109,7 @@ static const mpr121_setup mpr121_set[] = {
 	
 	};
 
-void mpr121_idle(mpr121_t *structure, mpr121_ret_t *return_keys)
+bool mpr121_idle(mpr121_t *structure, mpr121_ret_t *return_keys)
 {
 	if(!structure->TWI)
 		return false;

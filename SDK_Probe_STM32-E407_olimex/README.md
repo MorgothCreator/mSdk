@@ -22,7 +22,9 @@ Modify definition on main.h
 
 | #define _USE_LEPTON_FLIR	1
 
-| #define _USE_SHT11 			  0
+| #define _USE_SHT11 			  1
+
+| #define _USE_MPR121			1
 
 | #define _USE_INT_ADC		  0
 

@@ -133,6 +133,7 @@ typedef struct
 bool mpr121_read_short(mpr121_t *structure, unsigned char reg, unsigned short *return_data);
 bool mpr121_read(mpr121_t *structure, unsigned char reg, unsigned char *return_data);
 bool mpr121_write(mpr121_t *structure, unsigned char reg, unsigned char data);
+bool mpr121_idle(mpr121_t *structure, mpr121_ret_t *return_keys);
 bool mpr121_init(mpr121_t *structure);
 /*#####################################################*/
 #define new_mpr121 mpr121_t
