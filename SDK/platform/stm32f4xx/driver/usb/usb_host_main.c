@@ -209,16 +209,16 @@ void USBH_USR_DeviceSpeedDetected(uint8_t DeviceSpeed)
 */
 void USBH_USR_Device_DescAvailable(void *DeviceDesc)
 {
-  uint8_t temp[50];
+  char temp[50];
   USBH_DevDesc_TypeDef *hs;
   hs = DeviceDesc;
 
 
-  sprintf((char *)temp , "VID : %04Xh\n\r" , (uint32_t)(*hs).idVendor);
+  sprintf(temp , "VID : %04Xh\n\r" , (unsigned int)(*hs).idVendor);
   printf(temp);
 
 
-  sprintf((char *)temp , "PID : %04Xh\n\r" , (uint32_t)(*hs).idProduct);
+  sprintf(temp , "PID : %04Xh\n\r" , (unsigned int)(*hs).idProduct);
   printf(temp);
 }
 
@@ -294,7 +294,7 @@ void USBH_USR_Product_String(void *ProductString)
 */
 void USBH_USR_SerialNum_String(void *SerialNumString)
 {
-  uint8_t temp[100];
+  char temp[100];
   sprintf((char *)temp, "Serial Number : %s\n\r", (char *)SerialNumString);
   printf(temp);
 }
@@ -540,8 +540,8 @@ int USBH_USR_MSC_Application(void)
       return(-1);
     }
     printf("> File System initialized.\n");
-    printf("> Disk capacity : %d Bytes\n", USBH_MSC_Param.MSCapacity * \
-      USBH_MSC_Param.MSPageLength);
+    printf("> Disk capacity : %u Bytes\n", (unsigned int)USBH_MSC_Param.MSCapacity * \
+    		(unsigned int)USBH_MSC_Param.MSPageLength);
 
     if(USBH_MSC_Param.MSWriteProtect == DISK_WRITE_PROTECTED) {
     	printf(MSG_WR_PROTECT);
@@ -568,11 +568,11 @@ int USBH_USR_MSC_Application(void)
     USB_OTG_BSP_mDelay(100);
 
     /*Key B3 in polling*/
-    //while((HCD_IsDeviceConnected(&USB_OTG_Core)))/* && \
-      (STM_EVAL_PBGetState (BUTTON_USER) == RESET))
+    //while((HCD_IsDeviceConnected(&USB_OTG_Core))) && \
+    //  (STM_EVAL_PBGetState (BUTTON_USER) == RESET))
     //{
     //  Toggle_Leds();
-    //}*/
+    //}
     /* Writes a text file, STM32.TXT in the disk*/
     printf("> Writing File to disk flash ...\n");
     if (USBH_MSC_Param.MSWriteProtect == DISK_WRITE_PROTECTED) {

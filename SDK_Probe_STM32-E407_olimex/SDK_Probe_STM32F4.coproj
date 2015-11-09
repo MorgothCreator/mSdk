@@ -7,11 +7,11 @@
         <Option name="OptimizationLevel" value="1"/>
         <Option name="UseFPU" value="0"/>
         <Option name="UserEditCompiler" value="-mfpu=neon;-save-temps;-U__SOFTFP__;"/>
-        <Option name="FPU" value="0"/>
+        <Option name="FPU" value="2"/>
         <Option name="DEBUG" value="2"/>
         <Option name="WARNING" value="1"/>
         <Option name="CPPADVANCES" value="0,0,0,0,0,0"/>
-        <Option name="CompileBeforeDebug" value="1"/>
+        <Option name="CompileBeforeDebug" value="0"/>
         <Includepaths/>
         <DefinedSymbols>
           <Define name="STM32F4XX"/>
@@ -21,6 +21,7 @@
           <Define name="USB_OTG_HS_CORE"/>
           <Define name="USE_EMBEDDED_PHY"/>
           <Define name="USE_USB_OTG_FS"/>
+          <Define name="__FPU_USED"/>
         </DefinedSymbols>
       </Compile>
       <Link useDefault="0">

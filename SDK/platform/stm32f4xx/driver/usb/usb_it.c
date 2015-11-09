@@ -1,4 +1,6 @@
 #include "usbh_core.h"
+#include "usb_bsp.h"
+#include "usb_hcd_int.h"
 
 extern USB_OTG_CORE_HANDLE          USB_OTG_Core;
 extern USBH_HOST                    USB_Host;

@@ -141,7 +141,7 @@ static void BSP_SetTime(uint8_t Unit);
 static void BSP_Delay(uint32_t nTime,uint8_t Unit);
 static void USB_OTG_BSP_TimeInit ( void );
 #endif
-static void _uDelay (uint32_t usec);
+void _uDelay (uint32_t usec);
 /**
   * @}
   */ 
@@ -480,7 +480,7 @@ void USB_OTG_BSP_uDelay (const uint32_t usec)
   * @param  usec : Value of delay required in micro sec
   * @retval None
   */
-static void _uDelay (uint32_t usec)
+void _uDelay (uint32_t usec)
 {
   __IO uint32_t count = 0;
   const uint32_t utime = (120 * usec / 7);
