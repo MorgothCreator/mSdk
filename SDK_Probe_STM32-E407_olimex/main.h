@@ -19,6 +19,7 @@
 #define _USE_HIH613x		0
 #define _USE_LEPTON_FLIR	0
 #define _USE_SHT11 			0
+#define _USE_MPR121			1
 #define _USE_INT_ADC		0
 /*#####################################################*/
 #if _USE_MPU60x0_9150 == 1
@@ -73,6 +74,15 @@
 #define MPL3115A2_INIT \
 	MPL3115A2 = new_(new_mpl3115a2);\
 	MPL3115A2->TWI = TWI[0];
+#endif
+/*#####################################################*/
+#if _USE_MPR121 == 1
+#define USE_MPR121 \
+	new_mpr121 *MPR121
+/*-----------------------------------------------------*/
+#define MPR121_INIT \
+	MPR121 = new_(new_mpr121);\
+	MPR121->TWI = TWI[0];
 #endif
 /*#####################################################*/
 #if _USE_SRF02 == 1
@@ -165,8 +175,8 @@
 #define SPI_1_INIT \
 	UARTPuts(DebugCom, "Setup SPI1 ....." , -1); \
 	SPI[1] = new_(new_mcspi); \
-	SPI[1]->Cs0Port = IOG; \
-	SPI[1]->Cs0Pin = 10; \
+	SPI[1]->CsPort[0] = IOG; \
+	SPI[1]->CsPin[0] = 10; \
 	SPI[1]->MisoPort = IOC; \
 	SPI[1]->MisoPin = 2; \
 	SPI[1]->MosiPort = IOC; \
