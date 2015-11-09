@@ -586,7 +586,7 @@ __attribute__( ( always_inline ) ) __STATIC_INLINE void __set_FAULTMASK(uint32_t
  */
 __attribute__( ( always_inline ) ) __STATIC_INLINE uint32_t __get_FPSCR(void)
 {
-#if (__FPU_PRESENT == 1) && (__FPU_USED == 1)
+#if (__FPU_PRESENT == 1) && defined(__FPU_USED)
   uint32_t result;
 
   /* Empty asm statement works as a scheduling barrier */
@@ -608,7 +608,7 @@ __attribute__( ( always_inline ) ) __STATIC_INLINE uint32_t __get_FPSCR(void)
  */
 __attribute__( ( always_inline ) ) __STATIC_INLINE void __set_FPSCR(uint32_t fpscr)
 {
-#if (__FPU_PRESENT == 1) && (__FPU_USED == 1)
+#if (__FPU_PRESENT == 1) && defined(__FPU_USED)
   /* Empty asm statement works as a scheduling barrier */
   __ASM volatile ("");
   __ASM volatile ("VMSR fpscr, %0" : : "r" (fpscr) : "vfpcc");
