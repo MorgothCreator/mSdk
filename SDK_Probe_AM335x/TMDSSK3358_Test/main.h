@@ -7,6 +7,7 @@
 /*#####################################################*/
 #ifndef MAIN_H_
 #define MAIN_H_
+#include "device/ADXL345.h"
 #include "device/mpu60x0_9150.h"
 #include "device/ak8975.h"
 #include "device/bmp180.h"

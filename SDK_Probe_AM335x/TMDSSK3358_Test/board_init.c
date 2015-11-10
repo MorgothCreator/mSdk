@@ -23,7 +23,6 @@
 #include "lib/gfx/controls_definition.h"
 #include "lib/fs/fat.h"
 
-#include "device/ADXL345.h"
 
 #include "pinmux/pin_mux_uart.h"
 #include "pinmux/pin_mux_spi.h"
@@ -37,6 +36,7 @@
 #include "interface/mmcsdlib/mmcsd_proto.h"
 
 
+#include "device/ADXL345.h"
 #include "device/mpu60x0_9150.h"
 #include "device/ak8975.h"
 #include "device/bmp180.h"
@@ -146,7 +146,48 @@ inline bool board_init()
 /*-----------------------------------------------------*/
 	TWI_INIT(0);
 /*-----------------------------------------------------*/
-	SPI_INIT(0);
+SPI_INIT(0);
+/*-----------------------------------------------------*/
+/* Set up the ADC 0 */
+#if _USE_INT_ADC == 1
+	ADC_0_INIT
+#endif
+/*-----------------------------------------------------*/
+#if _USE_MPU60x0_9150 == 1
+	MPU60x0_9150_INIT(0);
+#endif
+/*-----------------------------------------------------*/
+#if _USE_AK8975 == 1
+	AK8975_INIT(0);
+#endif
+/*-----------------------------------------------------*/
+#if _USE_BMP180 == 1
+	BMP180_INIT(0);
+#endif
+/*-----------------------------------------------------*/
+#if _USE_SHT11 == 1
+	SHT11_INIT();
+#endif
+/*-----------------------------------------------------*/
+#if _USE_ADXL345 == 1
+	ADXL345_INIT(0);
+#endif
+/*-----------------------------------------------------*/
+#if _USE_HIH613x == 1
+	HIH613x_INIT(0);
+#endif
+/*-----------------------------------------------------*/
+#if _USE_MPL3115A2 == 1
+	MPL3115A2_INIT(0);
+#endif
+/*-----------------------------------------------------*/
+#if _USE_MPR121 == 1
+	MPR121_INIT(0);
+#endif
+/*-----------------------------------------------------*/
+#if _USE_LEPTON_FLIR == 1
+	LEPTON_FLIR_INIT(1, 0);
+#endif
 /*-----------------------------------------------------*/
 	MmcSd_Present = gpio_assign(0, 6, GPIO_DIR_OUTPUT, false);
 	UARTPuts(DebugCom, "Init MMCSD0 .......", -1);

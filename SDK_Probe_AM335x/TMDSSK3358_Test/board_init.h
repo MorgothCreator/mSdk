@@ -23,7 +23,6 @@
 #include "lib/gfx/controls_definition.h"
 #include "lib/fs/fat.h"
 
-#include "device/ADXL345.h"
 
 #include "pinmux/pin_mux_uart.h"
 #include "pinmux/pin_mux_spi.h"
@@ -36,6 +35,7 @@
 
 #include "interface/mmcsdlib/mmcsd_proto.h"
 
+#include "device/ADXL345.h"
 #include "device/mpu60x0_9150.h"
 #include "device/ak8975.h"
 #include "device/bmp180.h"
