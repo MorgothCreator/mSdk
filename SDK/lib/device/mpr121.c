@@ -10,10 +10,11 @@
 //#include <avr/pgmspace.h>
 #include <stdbool.h>
 #include <string.h>
-#include "config.h"
 #include "mpr121.h"
 #include "api/twi_api.h"
 #include "api/twi_def.h"
+#include "api/gpio_api.h"
+#include "api/gpio_def.h"
 
 
 bool mpr121_read_short(mpr121_t *structure, unsigned char reg, unsigned short *return_data)

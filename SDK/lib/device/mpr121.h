@@ -11,7 +11,7 @@
 
 #include "api/twi_api.h"
 #include "api/twi_def.h"
-#include "api/gpio_api.h"
+#include "api/gpio_def.h"
 
 #define MPR121_ADDR	0x5A
 // Match key inputs with electrode numbers
