@@ -24,7 +24,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_it.h"
 #include "sys/sysdelay.h"
-#include "interface/mmcsd_interface.h"
+#include "interface/hs_mmcsd_interface.h"
 
 /** @addtogroup STM32F4_Discovery_Peripheral_Examples
   * @{
