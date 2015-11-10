@@ -73,8 +73,8 @@ static void McSPIPinMux(Mcspi_t *McspiStruct)
 	pin_mux_spi_mosi(McspiStruct->MosiPort, McspiStruct->MosiPin);
 	pin_mux_spi_miso(McspiStruct->MisoPort, McspiStruct->MisoPin);
 	pin_mux_spi_sck(McspiStruct->SckPort, McspiStruct->SckPin);
-	pin_mux_spi_cs0(McspiStruct->Cs0Port, McspiStruct->Cs0Pin);
-	pin_mux_spi_cs1(McspiStruct->Cs1Port, McspiStruct->Cs1Pin);
+	pin_mux_spi_cs0(McspiStruct->CsPort[0], McspiStruct->CsPin[0]);
+	pin_mux_spi_cs1(McspiStruct->CsPort[1], McspiStruct->CsPin[1]);
 }
 /*#####################################################*/
 /*

@@ -447,7 +447,7 @@ void HSMMCSD2Isr(void)
 /*
 ** Initialize the MMCSD controller structure for use
 */
-static void HSMMCSDControllerSetup(mmcsdCtrlInfo* SdCtrlStruct, signed int CardDetectPortNr, signed int CardDetectPinNr)
+static void HSMMCSDControllerSetup(mmcsdCtrlInfo* SdCtrlStruct, new_gpio* Cs)
 {
 	ctrlInfo[SdCtrlStruct->SdNr] = SdCtrlStruct;
 	switch(SdCtrlStruct->SdNr)
@@ -485,18 +485,7 @@ static void HSMMCSDControllerSetup(mmcsdCtrlInfo* SdCtrlStruct, signed int CardD
     //sdCard.ctrl = &ctrlInfo;
 	SdCtrlStruct->card->ctrl = (mmcsdCtrlInfo*)(void*)&ctrlInfo;
 
-	if(CardDetectPortNr == -1 || CardDetectPinNr == -1)
-	{
-		SdCtrlStruct->cdPinNum = -1;
-		//CardDetectPinMmcSd[0] = new_(new_gpio);
-		CardDetectPinMmcSd[SdCtrlStruct->SdNr] = (new_gpio *)-1;
-	}
-	else
-	{
-		SdCtrlStruct->cdPinNum = (CardDetectPortNr<<5) + CardDetectPinNr;
-		//CardDetectPinMmcSd[0] = new_(new_gpio);
-		CardDetectPinMmcSd[SdCtrlStruct->SdNr] = gpio_assign(CardDetectPortNr, CardDetectPinNr, GPIO_IN_PULL_UP, false);
-	}
+	CardDetectPinMmcSd[SdCtrlStruct->SdNr] = Cs;
 
     callbackOccured[SdCtrlStruct->SdNr] = 0;
     xferCompFlag[SdCtrlStruct->SdNr] = 0;
@@ -536,7 +525,7 @@ void _mmcsd_ioctl(void *SdCtrlStruct, unsigned int  command,  unsigned int *buff
     }
 }
 
-void _mmcsd_init(void *SdCtrlStruct, signed int CardDetectPortNr, signed int CardDetectPinNr, new_gpio* StatusLed)
+void _mmcsd_init(void *SdCtrlStruct, new_gpio* Cs, new_gpio* StatusLed)
 {
 
 	LedStatusMmcSd[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr] = StatusLed;
@@ -551,7 +540,7 @@ void _mmcsd_init(void *SdCtrlStruct, signed int CardDetectPortNr, signed int Car
     HSMMCSDModuleClkConfig(((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr);
 
     /* Basic controller initializations */
-    HSMMCSDControllerSetup((mmcsdCtrlInfo*)SdCtrlStruct, CardDetectPortNr, CardDetectPinNr);
+    HSMMCSDControllerSetup((mmcsdCtrlInfo*)SdCtrlStruct, Cs);
 
     /* Initialize the MMCSD controller */
     MMCSDCtrlInit((mmcsdCtrlInfo*)SdCtrlStruct);

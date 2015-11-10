@@ -23,9 +23,9 @@
 #include "interface/hs_mmcsd_interface.h"
 #include "api/gpio_def.h"
 /*#####################################################*/
-void mmcsd_init(void *SdStruct, signed int CardDetectPortNr, signed int CardDetectPinNr, new_gpio* StatusLed)
+void mmcsd_init(void *SdStruct, new_gpio* Cs, new_gpio* StatusLed)
 {
-	_mmcsd_init(SdStruct, CardDetectPortNr, CardDetectPinNr, StatusLed);
+	_mmcsd_init(SdStruct, Cs, StatusLed);
 }
 /*#####################################################*/
 void mmcsd_idle(void *SdStruct)
