@@ -183,54 +183,56 @@
 	adxl345_init(ADXL345);
 #endif
 /*#####################################################*/
-#define UART_0_INIT(UART_INTERFACE) \
+#define UART_0_INIT(UART_INTERFACE, Baud, _TxPort, _TxPin, _RxPort, _RxPin) \
 	Uart[UART_INTERFACE] = new_(new_uart);\
-	Uart[UART_INTERFACE]->BaudRate = 115200;\
+	Uart[UART_INTERFACE]->BaudRate = Baud;\
 	Uart[UART_INTERFACE]->Priority = 0;\
 	Uart[UART_INTERFACE]->UartNr = UART_INTERFACE;\
-	Uart[UART_INTERFACE]->TxPort = IOE;\
-	Uart[UART_INTERFACE]->RxPort = IOE;\
-	Uart[UART_INTERFACE]->TxPin = 16;\
-	Uart[UART_INTERFACE]->RxPin = 15;\
+	Uart[UART_INTERFACE]->TxPort = _TxPort;\
+	Uart[UART_INTERFACE]->RxPort = _RxPort;\
+	Uart[UART_INTERFACE]->TxPin = _TxPin;\
+	Uart[UART_INTERFACE]->RxPin = _RxPin;\
 	Uart[UART_INTERFACE]->rxFifoTrigLevel = 1;\
 	Uart[UART_INTERFACE]->txFifoTrigLevel = 1;\
 	uart_open(Uart[UART_INTERFACE]);\
 	DebugCom = Uart[UART_INTERFACE];
 
 /*#####################################################*/
-#define TWI_INIT(TWI_INTERFACE) \
+#define TWI_INIT(TWI_INTERFACE, Baud, _SclPort, _SclPin, _SdaPort, _SdaPin) \
 	UARTprintf(DebugCom, "Setup TWI1 with RxBuff = 258, TxBuff = 258....." , TWI_INTERFACE);\
 	TWI[TWI_INTERFACE] = new_(new_twi);\
-	TWI[TWI_INTERFACE]->BaudRate = 400000;\
+	TWI[TWI_INTERFACE]->BaudRate = Baud;\
 	TWI[TWI_INTERFACE]->TwiNr = 0;\
 	TWI[TWI_INTERFACE]->Priority = 0;\
 	TWI[TWI_INTERFACE]->UseDma = false;\
 	TWI[TWI_INTERFACE]->RxBuffSize = 258;\
 	TWI[TWI_INTERFACE]->TxBuffSize = 258;\
 	TWI[TWI_INTERFACE]->BusyTimeOut = 5;\
-	TWI[TWI_INTERFACE]->SclPort = IOC;\
-	TWI[TWI_INTERFACE]->SdaPort = IOC;\
-	TWI[TWI_INTERFACE]->SclPin = 17;\
-	TWI[TWI_INTERFACE]->SdaPin = 16;\
+	TWI[TWI_INTERFACE]->SclPort = _SclPort;\
+	TWI[TWI_INTERFACE]->SdaPort = _SdaPort;\
+	TWI[TWI_INTERFACE]->SclPin = _SclPin;\
+	TWI[TWI_INTERFACE]->SdaPin = _SdaPin;\
 	twi_open(TWI[TWI_INTERFACE]);\
 	UARTPuts(DebugCom, "OK.\n\r" , -1);
+
 /*#####################################################*/
-#define SPI_INIT(SPI_INTERFACE) \
+#define SPI_INIT(SPI_INTERFACE, _SckPort, _SckPin, _MosiPort, _MosiPin, _MisoPort, _MisoPin, _CsPort, _CsPin) \
 	UARTprintf(DebugCom, "Setup SPI1 ....." , SPI_INTERFACE); \
-	SPI[SPI_INTERFACE] = new_(new_mcspi);\
-	SPI[SPI_INTERFACE]->BaudRate = 24000000;\
-	SPI[SPI_INTERFACE]->BuffSize = 260;\
-	SPI[SPI_INTERFACE]->Channel = 0;\
-	SPI[SPI_INTERFACE]->McspiNr = 0;\
-	SPI[SPI_INTERFACE]->Priority = 0;\
-	SPI[SPI_INTERFACE]->MosiPort = IOB;\
-	SPI[SPI_INTERFACE]->MisoPort = IOB;\
-	SPI[SPI_INTERFACE]->SckPort = IOA;\
-	SPI[SPI_INTERFACE]->CsPort[0] = IOA;\
-	SPI[SPI_INTERFACE]->MosiPin = 17;\
-	SPI[SPI_INTERFACE]->MisoPin = 16;\
-	SPI[SPI_INTERFACE]->SckPin = 17;\
-	SPI[SPI_INTERFACE]->CsPin[0] = 16;\
+	SPI[SPI_INTERFACE] = new_(new_mcspi); \
+	SPI[SPI_INTERFACE]->CsPort[0] = _CsPort; \
+	SPI[SPI_INTERFACE]->CsPin[0] = _CsPin; \
+	SPI[SPI_INTERFACE]->MisoPort = _MisoPort; \
+	SPI[SPI_INTERFACE]->MisoPin = _MisoPin; \
+	SPI[SPI_INTERFACE]->MosiPort = _MosiPort; \
+	SPI[SPI_INTERFACE]->MosiPin = _MosiPin; \
+	SPI[SPI_INTERFACE]->SckPort = _SckPort; \
+	SPI[SPI_INTERFACE]->SckPin = _SckPin; \
+	SPI[SPI_INTERFACE]->McspiNr = SPI_INTERFACE; \
+	SPI[SPI_INTERFACE]->Cpol = true; \
+	SPI[SPI_INTERFACE]->Cpha = true; \
+	SPI[SPI_INTERFACE]->LsbFirst = false; \
+	SPI[SPI_INTERFACE]->WordSize = 8; \
+	SPI[SPI_INTERFACE]->Slave = false; \
 	mcspi_open(SPI[SPI_INTERFACE]); \
 	UARTPuts(DebugCom, "OK.\n\r" , -1);
 /*#####################################################*/

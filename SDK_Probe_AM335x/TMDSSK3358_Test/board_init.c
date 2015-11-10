@@ -107,7 +107,7 @@ inline bool board_init()
 	timer_init();
 	RtcInit();
 /*-----------------------------------------------------*/
-	UART_0_INIT(0);
+	UART_0_INIT(0, 115200, IOE, 16, IOE, 15);
 /*-----------------------------------------------------*/
 	/* Display board message*/
 #if defined(BOARD_MESSAGE)
@@ -144,9 +144,9 @@ inline bool board_init()
 	LED[3] = gpio_assign(LED4_PORT, LED4_PIN, GPIO_DIR_OUTPUT, false);
 #endif
 /*-----------------------------------------------------*/
-	TWI_INIT(0);
+	TWI_INIT(0, 400000, IOC, 17, IOC, 16);
 /*-----------------------------------------------------*/
-SPI_INIT(0);
+	SPI_INIT(1, IOA, 17, IOB, 17, IOB, 16, IOA, 16);
 /*-----------------------------------------------------*/
 /* Set up the ADC 0 */
 #if _USE_INT_ADC == 1

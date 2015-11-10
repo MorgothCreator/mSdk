@@ -102,7 +102,7 @@ bool board_init()
 	timer_init();
 /*-----------------------------------------------------*/
 /* Set up the Uart 0 like debug interface with RxBuff = 256, TxBuff = 256, 115200b/s*/
-	UART_INIT(5);
+	UART_INIT(5, 921600, IOC, 6, IOC, 7);
 /*-----------------------------------------------------*/
 /* Display board message*/
 #if defined(BOARD_MESSAGE)
@@ -114,9 +114,9 @@ bool board_init()
 #endif
 /*-----------------------------------------------------*/
 /* Set up the Twi 0 to communicate with PMIC and the Onboard serial EEprom memory */
-	TWI_INIT(0);
+	TWI_INIT(0, 400000, IOB, 8, IOB, 9);
 /*-----------------------------------------------------*/
-	SPI_INIT(1);
+	SPI_INIT(1, IOB, 10, IOC, 3, IOC, 2, IOG, 10);
 /*-----------------------------------------------------*/
 /* Set up the ADC 0 */
 #if _USE_INT_ADC == 1
