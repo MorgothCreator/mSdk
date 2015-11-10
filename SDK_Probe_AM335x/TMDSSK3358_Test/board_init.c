@@ -36,9 +36,24 @@
 
 #include "interface/mmcsdlib/mmcsd_proto.h"
 
+
+#include "device/mpu60x0_9150.h"
+#include "device/ak8975.h"
+#include "device/bmp180.h"
+#include "device/sht11.h"
+#include "device/srf02.h"
+#include "device/mhc5883.h"
+#include "device/ms5611.h"
+#include "device/adxl345.h"
+#include "device/hih6130.h"
+#include "device/mpl3115a2.h"
+#include "device/mpr121.h"
+#include "device/lepton_flir.h"
+
+new_uart* Uart[6] = {NULL};
 new_uart* DebugCom = NULL;
-new_twi* TWI0 = NULL;
-new_mcspi* MCSPI0 = NULL;
+new_twi* TWI[3] = {NULL};
+new_mcspi* SPI[2] = {NULL};
 new_touchscreen* TouchScreen = NULL;
 new_screen* ScreenBuff = NULL;
 new_gpio* LED[LEDS_NR] = {NULL};
@@ -49,25 +64,50 @@ new_gpio* MmcSd_Present = NULL;
 new_gpio* eMMC_Res = NULL;
 mmcsdCtrlInfo sdCtrl[2];
 
+#ifdef USE_MPU60x0_9150
+USE_MPU60x0_9150;
+#endif
+#ifdef USE_AK8975
+USE_AK8975;
+#endif
+#ifdef USE_BMP180
+USE_BMP180;
+#endif
+#ifdef USE_SHT11
+USE_SHT11;
+#endif
+#ifdef USE_SRF02
+USE_SRF02;
+#endif
+#ifdef USE_MHC5883
+USE_MHC5883;
+#endif
+#ifdef USE_MPL3115A2
+USE_MPL3115A2;
+#endif
+#ifdef USE_MS5611
+USE_MS5611;
+#endif
+#ifdef USE_ADXL345
+USE_ADXL345;
+#endif
+#ifdef USE_HIH613x
+USE_HIH613x;
+#endif
+#ifdef USE_MPR121
+USE_MPR121;
+#endif
+#ifdef USE_LEPTON_FLIR
+USE_LEPTON_FLIR;
+#endif
+
 inline bool board_init()
 {
 	core_init();
 	timer_init();
 	RtcInit();
 /*-----------------------------------------------------*/
-/* Set up the Uart 0 like debug interface with RxBuff = 256, TxBuff = 256, 115200b/s*/
-	DebugCom = new_(new_uart);
-	DebugCom->TxPort = IOE;
-	DebugCom->RxPort = IOE;
-	DebugCom->TxPin = 16;
-	DebugCom->RxPin = 15;
-	DebugCom->BaudRate = 115200;
-	//DebugCom->RxBuffSize = 256;
-	//DebugCom->TxBuffSize = 256;
-	DebugCom->rxFifoTrigLevel = 1;
-	DebugCom->txFifoTrigLevel = 1;
-	DebugCom->UartNr = 0;
-	uart_open(DebugCom);
+	UART_0_INIT(0);
 /*-----------------------------------------------------*/
 	/* Display board message*/
 #if defined(BOARD_MESSAGE)
@@ -104,39 +144,9 @@ inline bool board_init()
 	LED[3] = gpio_assign(LED4_PORT, LED4_PIN, GPIO_DIR_OUTPUT, false);
 #endif
 /*-----------------------------------------------------*/
-/* Set up the Twi 0 to communicate with PMIC and the Onboard serial EEprom memory */
-	UARTPuts(DebugCom, "Setup TWI 0 with RxBuff = 258, TxBuff = 258 at 100000b/s....." , -1);
-	TWI0 = new_(new_twi);
-	TWI0->SdaPort = IOC;
-	TWI0->SclPort = IOC;
-	TWI0->SdaPin = 17;
-	TWI0->SclPin = 16;
-	TWI0->BaudRate = 100000;
-	TWI0->TwiNr = 0;
-	TWI0->Priority = 0;
-	TWI0->UseInterrupt = true;
-	TWI0->RxBuffSize = 258;
-	TWI0->TxBuffSize = 258;
-	twi_open(TWI0);
-	UARTPuts(DebugCom, "OK.\n\r" , -1);
+	TWI_INIT(0);
 /*-----------------------------------------------------*/
-	UARTPuts(DebugCom, "Setup McSpi0 only CS0 with Buff = 260 at 24Mb/s on J8 connector....." , -1);
-	MCSPI0 = new_(new_mcspi);
-	MCSPI0->BaudRate = 24000000;
-	MCSPI0->BuffSize = 260;
-	MCSPI0->Channel = 0;
-	MCSPI0->McspiNr = 0;
-	MCSPI0->Priority = 0;
-	MCSPI0->MosiPort = IOB;
-	MCSPI0->MisoPort = IOB;
-	MCSPI0->SckPort = IOA;
-	MCSPI0->CsPort[0] = IOA;
-	MCSPI0->MosiPin = 17;
-	MCSPI0->MisoPin = 16;
-	MCSPI0->SckPin = 17;
-	MCSPI0->CsPin[0] = 16;
-	mcspi_open(MCSPI0);
-	UARTPuts(DebugCom, "OK.\n\r" , -1);
+	SPI_INIT(0);
 /*-----------------------------------------------------*/
 	MmcSd_Present = gpio_assign(0, 6, GPIO_DIR_OUTPUT, false);
 	UARTPuts(DebugCom, "Init MMCSD0 .......", -1);
@@ -158,7 +168,7 @@ inline bool board_init()
 	ScreenBuff = new_(new_screen);
 	ScreenBuff->raster_timings = &lcd_TFT43_TMDSSK3358;
 	ScreenBuff->BackLightLevel = 60;
-	ScreenBuff->PmicTwiModuleStruct = TWI0;
+	ScreenBuff->PmicTwiModuleStruct = TWI[0];
 	screen_init(ScreenBuff);
 	UARTprintf(DebugCom, "LCD display initialize successful for %dx%d resolution, %d Bit bus.\n\r" , ScreenBuff->raster_timings->X, ScreenBuff->raster_timings->Y, ScreenBuff->raster_timings->bus_size);
 
