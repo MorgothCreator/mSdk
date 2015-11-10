@@ -50,9 +50,8 @@ extern new_uart* Uart[];
 extern new_uart* DebugCom;
 extern new_twi* TWI[];
 extern new_adc* ADC[];
-extern new_gpio* LED1;
 extern new_gpio* HARDBTN1;
-extern new_gpio* LED;
+extern new_gpio* LED[];
 #ifdef USE_MPU60x0_9150
 extern USE_MPU60x0_9150;
 #endif

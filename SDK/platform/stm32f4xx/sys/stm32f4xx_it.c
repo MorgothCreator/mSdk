@@ -24,6 +24,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_it.h"
 #include "sys/sysdelay.h"
+#include "interface/mmcsd_interface.h"
 
 /** @addtogroup STM32F4_Discovery_Peripheral_Examples
   * @{
@@ -141,6 +142,32 @@ void SysTick_Handler(void)
 {
 	TimerCnt_Isr_Increment();
 }
+/******************************************************************************/
+/*                 STM32F4xx Peripherals Interrupt Handlers                   */
+/******************************************************************************/
+/**
+  * @brief  This function handles SDIO global interrupt request.
+  * @param  None
+  * @retval None
+  */
+void SDIO_IRQHandler(void)
+{
+  /* Process All SDIO Interrupt Sources */
+  SD_ProcessIRQSrc();
+}
+
+/**
+  * @brief  This function handles DMA2 Stream3 or DMA2 Stream6 global interrupts
+  *         requests.
+  * @param  None
+  * @retval None
+  */
+void SD_SDIO_DMA_IRQHANDLER(void)
+{
+  /* Process DMA2 Stream3 or DMA2 Stream6 Interrupt Sources */
+  SD_ProcessDMAIRQ();
+}
+
 
 /******************************************************************************/
 /*                 STM32F4xx Peripherals Interrupt Handlers                   */

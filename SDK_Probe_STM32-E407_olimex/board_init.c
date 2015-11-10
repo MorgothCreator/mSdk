@@ -8,6 +8,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 #include "main.h"
 #include "stm32f4xx_conf.h"
 #include "sys/system_stm32f4xx.h"
@@ -26,7 +27,8 @@
 #include "api/adc_api.h"
 //#include "api/lcd_def.h"
 //#include "api/lcd_api.h"
-//#include "api/mmcsd_api.h"
+#include "api/mmcsd_api.h"
+#include "interface/hs_mmcsd_interface.h"
 //#include "lib/gfx/controls_definition.h"
 //#include "lib/fs/fat.h"
 //#include "device/mi0283.h"
@@ -48,8 +50,8 @@ new_uart* DebugCom = NULL;
 new_twi* TWI[3] = {NULL, NULL, NULL};
 new_mcspi* SPI[3] = {NULL, NULL, NULL};
 new_adc* ADC[2] = {NULL, NULL};
-new_gpio* LED = NULL;
-new_gpio* HARDBTN1 = NULL;
+new_gpio* LED[LEDS_NR] = {NULL};
+new_gpio* HARDBTN[HARDBTNS_NR] = {NULL};
 #ifdef USE_MPU60x0_9150
 USE_MPU60x0_9150;
 #endif
@@ -122,41 +124,73 @@ bool board_init()
 #endif
 /*-----------------------------------------------------*/
 #if _USE_MPU60x0_9150 == 1
-	MPU60x0_9150_INIT
+	MPU60x0_9150_INIT(0);
 #endif
 /*-----------------------------------------------------*/
 #if _USE_AK8975 == 1
-	AK8975_INIT
+	AK8975_INIT(0);
 #endif
 /*-----------------------------------------------------*/
 #if _USE_BMP180 == 1
-	BMP180_INIT
+	BMP180_INIT(0);
+#endif
+/*-----------------------------------------------------*/
+#if _USE_SHT11 == 1
+	SHT11_INIT();
 #endif
 /*-----------------------------------------------------*/
 #if _USE_ADXL345 == 1
-	ADXL345_INIT
+	ADXL345_INIT(0);
 #endif
 /*-----------------------------------------------------*/
 #if _USE_HIH613x == 1
-	HIH613x_INIT
+	HIH613x_INIT(0);
 #endif
 /*-----------------------------------------------------*/
 #if _USE_MPL3115A2 == 1
-	MPL3115A2_INIT
+	MPL3115A2_INIT(0);
 #endif
 /*-----------------------------------------------------*/
 #if _USE_MPR121 == 1
-	MPR121_INIT
+	MPR121_INIT(0);
 #endif
 /*-----------------------------------------------------*/
 #if _USE_LEPTON_FLIR == 1
-	LEPTON_FLIR_INIT
+	LEPTON_FLIR_INIT(1, 0);
 #endif
 /*-----------------------------------------------------*/
-	HARDBTN1 = gpio_assign(IOA, 0, GPIO_DIR_INPUT, false);
-	gpio_up_dn(HARDBTN1, 1);
+#if defined(HARDBTN1_PORT) && defined(HARDBTN1_PIN)
+	HARDBTN[0] = gpio_assign(HARDBTN1_PORT, HARDBTN1_PIN, GPIO_DIR_INPUT, false);
+	gpio_up_dn(HARDBTN[0], 1);
+#endif
+#if defined(HARDBTN2_PORT) && defined(HARDBTN2_PIN)
+	HARDBTN[1] = gpio_assign(HARDBTN2_PORT, HARDBTN2_PIN, GPIO_DIR_INPUT, false);
+	gpio_up_dn(HARDBTN[1], 1);
+#endif
+#if defined(HARDBTN3_PORT) && defined(HARDBTN3_PIN)
+	HARDBTN[2] = gpio_assign(HARDBTN3_PORT, HARDBTN3_PIN, GPIO_DIR_INPUT, false);
+	gpio_up_dn(HARDBTN[2], 1);
+#endif
+#if defined(HARDBTN4_PORT) && defined(HARDBTN4_PIN)
+	HARDBTN[3] = gpio_assign(HARDBTN4_PORT, HARDBTN4_PIN, GPIO_DIR_INPUT, false);
+	gpio_up_dn(HARDBTN[3], 1);
+#endif
 /*-----------------------------------------------------*/
-	LED = gpio_assign(IOC, 13, GPIO_DIR_OUTPUT, false);
-//*-----------------------------------------------------*/
+#if defined(LED1_PORT) && defined(LED1_PIN)
+	LED[0] = gpio_assign(LED1_PORT, LED1_PIN, GPIO_DIR_OUTPUT, false);
+#endif
+#if defined(LED2_PORT) && defined(LED2_PIN)
+	LED[1] = gpio_assign(LED2_PORT, LED2_PIN, GPIO_DIR_OUTPUT, false);
+#endif
+#if defined(LED3_PORT) && defined(LED3_PIN)
+	LED[2] = gpio_assign(LED3_PORT, LED3_PIN, GPIO_DIR_OUTPUT, false);
+#endif
+#if defined(LED4_PORT) && defined(LED4_PIN)
+	LED[3] = gpio_assign(LED4_PORT, LED4_PIN, GPIO_DIR_OUTPUT, false);
+#endif
+/*-----------------------------------------------------*/
+	mmcsd_init((void *)&SDCardInfo, (Gpio_t *)NULL, LED[0]);
+	mmcsd_idle((void *)&SDCardInfo);
+/*-----------------------------------------------------*/
 	return true;
 }
