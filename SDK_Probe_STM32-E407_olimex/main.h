@@ -153,80 +153,81 @@
 	adxl345_init(ADXL345);
 #endif
 /*#####################################################*/
-#define UART_0_INIT \
-	Uart[5] = new_(new_uart);\
-	Uart[5]->BaudRate = 921600;\
-	Uart[5]->Priority = 0;\
-	Uart[5]->UartNr = 5;\
-	Uart[5]->TxPort = IOC;\
-	Uart[5]->RxPort = IOC;\
-	Uart[5]->TxPin = 6;\
-	Uart[5]->RxPin = 7;\
-	uart_open(Uart[5]);\
-	DebugCom = Uart[5];
+#define UART_0_INIT(UART_INTERFACE) \
+	Uart[UART_INTERFACE] = new_(new_uart);\
+	Uart[UART_INTERFACE]->BaudRate = 921600;\
+	Uart[UART_INTERFACE]->Priority = 0;\
+	Uart[UART_INTERFACE]->UartNr = UART_INTERFACE;\
+	Uart[UART_INTERFACE]->TxPort = IOC;\
+	Uart[UART_INTERFACE]->RxPort = IOC;\
+	Uart[UART_INTERFACE]->TxPin = 6;\
+	Uart[UART_INTERFACE]->RxPin = 7;\
+	uart_open(Uart[UART_INTERFACE]);\
+	DebugCom = Uart[UART_INTERFACE];
 
 /*#####################################################*/
-#define TWI_1_INIT \
-	UARTPuts(DebugCom, "Setup TWI1 with RxBuff = 258, TxBuff = 258....." , -1);\
-	TWI[0] = new_(new_twi);\
-	TWI[0]->BaudRate = 400000;\
-	TWI[0]->TwiNr = 0;\
-	TWI[0]->Priority = 0;\
-	TWI[0]->UseDma = false;\
-	TWI[0]->RxBuffSize = 258;\
-	TWI[0]->TxBuffSize = 258;\
-	TWI[0]->BusyTimeOut = 5;\
-	TWI[0]->SclPort = IOB;\
-	TWI[0]->SdaPort = IOB;\
-	TWI[0]->SclPin = 8;\
-	TWI[0]->SdaPin = 9;\
-	twi_open(TWI[0]);\
+#define TWI_INIT(TWI_INTERFACE) \
+	UARTprintf(DebugCom, "Setup TWI1 with RxBuff = 258, TxBuff = 258....." , TWI_INTERFACE);\
+	TWI[TWI_INTERFACE] = new_(new_twi);\
+	TWI[TWI_INTERFACE]->BaudRate = 400000;\
+	TWI[TWI_INTERFACE]->TwiNr = 0;\
+	TWI[TWI_INTERFACE]->Priority = 0;\
+	TWI[TWI_INTERFACE]->UseDma = false;\
+	TWI[TWI_INTERFACE]->RxBuffSize = 258;\
+	TWI[TWI_INTERFACE]->TxBuffSize = 258;\
+	TWI[TWI_INTERFACE]->BusyTimeOut = 5;\
+	TWI[TWI_INTERFACE]->SclPort = IOB;\
+	TWI[TWI_INTERFACE]->SdaPort = IOB;\
+	TWI[TWI_INTERFACE]->SclPin = 8;\
+	TWI[TWI_INTERFACE]->SdaPin = 9;\
+	twi_open(TWI[TWI_INTERFACE]);\
 	UARTPuts(DebugCom, "OK.\n\r" , -1);
 /*#####################################################*/
-#define SPI_1_INIT \
-	UARTPuts(DebugCom, "Setup SPI1 ....." , -1); \
-	SPI[1] = new_(new_mcspi); \
-	SPI[1]->CsPort[0] = IOG; \
-	SPI[1]->CsPin[0] = 10; \
-	SPI[1]->MisoPort = IOC; \
-	SPI[1]->MisoPin = 2; \
-	SPI[1]->MosiPort = IOC; \
-	SPI[1]->MosiPin = 3; \
-	SPI[1]->SckPort = IOB; \
-	SPI[1]->SckPin = 10; \
-	SPI[1]->McspiNr = 1; \
-	SPI[1]->Cpol = true; \
-	SPI[1]->Cpha = true; \
-	SPI[1]->LsbFirst = false; \
-	SPI[1]->WordSize = 8; \
-	SPI[1]->Slave = false; \
-	mcspi_open(SPI[1]); \
+#define SPI_INIT(SPI_INTERFACE) \
+	UARTprintf(DebugCom, "Setup SPI1 ....." , SPI_INTERFACE); \
+	SPI[SPI_INTERFACE] = new_(new_mcspi); \
+	SPI[SPI_INTERFACE]->CsPort[0] = IOG; \
+	SPI[SPI_INTERFACE]->CsPin[0] = 10; \
+	SPI[SPI_INTERFACE]->MisoPort = IOC; \
+	SPI[SPI_INTERFACE]->MisoPin = 2; \
+	SPI[SPI_INTERFACE]->MosiPort = IOC; \
+	SPI[SPI_INTERFACE]->MosiPin = 3; \
+	SPI[SPI_INTERFACE]->SckPort = IOB; \
+	SPI[SPI_INTERFACE]->SckPin = 10; \
+	SPI[SPI_INTERFACE]->McspiNr = 1; \
+	SPI[SPI_INTERFACE]->Cpol = true; \
+	SPI[SPI_INTERFACE]->Cpha = true; \
+	SPI[SPI_INTERFACE]->LsbFirst = false; \
+	SPI[SPI_INTERFACE]->WordSize = 8; \
+	SPI[SPI_INTERFACE]->Slave = false; \
+	mcspi_open(SPI[SPI_INTERFACE]); \
 	UARTPuts(DebugCom, "OK.\n\r" , -1);
 /*#####################################################*/
 #if _USE_INT_ADC == 1
-#define ADC_0_INIT \
-	UARTPuts(DebugCom, "Setup ADC 0....." , -1);\
-	ADC[0] = new_(new_adc);\
-	ADC[0]->Align = ADC_ALIGN_RIGHT;\
-	ADC[0]->ContinuousMode = ADC_CONTINUOUS_MODE_CONTINUOUS;\
-	ADC[0]->ConvMode = ADC_CONV_MODE_MULTICHANNEL;\
-	ADC[0]->DmaChannel = 0;\
-	ADC[0]->DmaUnitNr = 0;\
-	ADC[0]->EnCh[0] = 1;\
-	ADC[0]->EnCh[1] = 2;\
-	ADC[0]->EnCh[2] = 17;\
-	ADC[0]->ExtTrig = ADC_EXT_TRIG_NONE;\
-	ADC[0]->ExtTrigEdge = ADC_EXT_TRIG_ADGE_NONE;\
-	ADC[0]->IntRefEn = true;\
-	ADC[0]->Mode = ADC_MODE_INDEPENDENT;\
-	ADC[0]->SampleTime[0] = ADC_SAMPLE_TIME_5;\
-	ADC[0]->SampleTime[1] = ADC_SAMPLE_TIME_5;\
-	ADC[0]->SampleTime[2] = ADC_SAMPLE_TIME_6;\
-	ADC[0]->TempSensorEn = true;\
-	ADC[0]->UnitNr = 0;\
-	ADC[0]->Prescaller = 2;\
-	ADC[0]->ResolutionBits = 12;\
-	if(adc_init(ADC[0])) UARTPuts(DebugCom, "OK.\n\r" , -1);\
+#define ADC_0_INIT(ADC_INTERFACE) \
+	UARTprintf(DebugCom, "Setup ADC %d....." , ADC_INTERFACE);\
+	ADC[ADC_INTERFACE] = new_(new_adc);\
+	ADC[ADC_INTERFACE]->Align = ADC_ALIGN_RIGHT;\
+	ADC[ADC_INTERFACE]->ContinuousMode = ADC_CONTINUOUS_MODE_CONTINUOUS;\
+	ADC[ADC_INTERFACE]->ConvMode = ADC_CONV_MODE_MULTICHANNEL;\
+	ADC[ADC_INTERFACE]->DmaChannel = 0;\
+	ADC[ADC_INTERFACE]->DmaUnitNr = 0;\
+	ADC[ADC_INTERFACE]->EnCh[0] = 1;\
+	ADC[ADC_INTERFACE]->EnCh[1] = 2;\
+	ADC[ADC_INTERFACE]->EnCh[2] = 17;\
+	ADC[ADC_INTERFACE]->ExtTrig = ADC_EXT_TRIG_NONE;\
+	ADC[ADC_INTERFACE]->ExtTrigEdge = ADC_EXT_TRIG_ADGE_NONE;\
+	ADC[ADC_INTERFACE]->IntRefEn = true;\
+	ADC[ADC_INTERFACE]->Mode = ADC_MODE_INDEPENDENT;\
+	ADC[ADC_INTERFACE]->SampleTime[0] = ADC_SAMPLE_TIME_5;\
+	ADC[ADC_INTERFACE]->SampleTime[1] = ADC_SAMPLE_TIME_5;\
+	ADC[ADC_INTERFACE]->SampleTime[2] = ADC_SAMPLE_TIME_6;\
+	ADC[ADC_INTERFACE]->TempSensorEn = true;\
+	ADC[ADC_INTERFACE]->UnitNr = 0;\
+	ADC[ADC_INTERFACE]->Prescaller = 2;\
+	ADC[ADC_INTERFACE]->ResolutionBits = 12;\
+	if(adc_init(ADC[ADC_INTERFACE]))
+		UARTPuts(DebugCom, "OK.\n\r" , -1);\
 	else  UARTPuts(DebugCom, "FAILED.\n\r" , -1);
 #endif
 /*#####################################################*/
