@@ -21,86 +21,97 @@
 #define _USE_SHT11 			0
 #define _USE_MPR121			1
 #define _USE_INT_ADC		0
+
+
+#define LED1_PORT		IOC
+#define LED1_PIN		13
+
+#define LEDS_NR			1
+
+#define HARDBTN1_PORT	IOA
+#define HARDBTN1_PIN	0
+
+#define HARDBTNS_NR		1
 /*#####################################################*/
 #if _USE_MPU60x0_9150 == 1
 #define USE_MPU60x0_9150 \
 	new_mpu60x0_9150 *MPU60x0_9150
 /*-----------------------------------------------------*/
-#define MPU60x0_9150_INIT \
+#define MPU60x0_9150_INIT(TWI_INTERFACE) \
 	MPU60x0_9150 = new_(new_mpu60x0_9150);\
-	MPU60x0_9150->TWI = TWI[0];
+	MPU60x0_9150->TWI = TWI[TWI_INTERFACE];
 #endif
 /*#####################################################*/
 #if _USE_AK8975 == 1
 #define USE_AK8975 \
 	new_ak8975 *AK8975
 /*-----------------------------------------------------*/
-#define AK8975_INIT \
+#define AK8975_INIT(TWI_INTERFACE) \
 	AK8975 = new_(new_ak8975);\
-	AK8975->TWI = TWI[0];
+	AK8975->TWI = TWI[TWI_INTERFACE];
 #endif
 /*#####################################################*/
 #if _USE_BMP180 == 1
 #define USE_BMP180 \
 	new_bmp180 *BMP180
 /*-----------------------------------------------------*/
-#define BMP180_INIT \
+#define BMP180_INIT(TWI_INTERFACE) \
 	BMP180 = new_(new_bmp180);\
-	BMP180->TWI = TWI[0];
+	BMP180->TWI = TWI[TWI_INTERFACE];
 #endif
 /*#####################################################*/
 #if _USE_MS5611 == 1
 #define USE_MS5611 \
 	new_ms5611 *MS5611
 /*-----------------------------------------------------*/
-#define MS5611_INIT \
+#define MS5611_INIT(TWI_INTERFACE) \
 	MS5611 = new_(new_ms5611);\
-	MS5611->TWI = TWI[0];
+	MS5611->TWI = TWI[TWI_INTERFACE];
 #endif
 /*#####################################################*/
 #if _USE_MHC5883 == 1
 #define USE_MHC5883 \
 	new_mhc5883 *MHC5883
 /*-----------------------------------------------------*/
-#define MHC5883_INIT \
+#define MHC5883_INIT(TWI_INTERFACE) \
 	MHC5883 = new_(new_mhc5883);\
-	MHC5883->TWI = TWI[0];
+	MHC5883->TWI = TWI[TWI_INTERFACE];
 #endif
 /*#####################################################*/
 #if _USE_MPL3115A2 == 1
 #define USE_MPL3115A2 \
 	new_mpl3115a2 *MPL3115A2
 /*-----------------------------------------------------*/
-#define MPL3115A2_INIT \
+#define MPL3115A2_INIT(TWI_INTERFACE) \
 	MPL3115A2 = new_(new_mpl3115a2);\
-	MPL3115A2->TWI = TWI[0];
+	MPL3115A2->TWI = TWI[TWI_INTERFACE];
 #endif
 /*#####################################################*/
 #if _USE_MPR121 == 1
 #define USE_MPR121 \
 	new_mpr121 *MPR121
 /*-----------------------------------------------------*/
-#define MPR121_INIT \
+#define MPR121_INIT(TWI_INTERFACE) \
 	MPR121 = new_(new_mpr121);\
-	MPR121->TWI = TWI[0];
+	MPR121->TWI = TWI[TWI_INTERFACE];
 #endif
 /*#####################################################*/
 #if _USE_SRF02 == 1
 #define USE_SRF02 \
 	new_srf02 *SRF02
 /*-----------------------------------------------------*/
-#define SRF02_INIT \
+#define SRF02_INIT(TWI_INTERFACE) \
 	SRF02 = new_(new_srf02);\
 	SRF02->measure_unit = SRF02_CENTIMETER;\
 	SRF02->addr = (0xE0 >> 1);/*the real address is 0x70*/\
-	SRF02->TWI = TWI[0];
+	SRF02->TWI = TWI[TWI_INTERFACE];
 #endif
 /*#####################################################*/
 #if _USE_SHT11 == 1
 #define USE_SHT11 \
 	new_sht11 *SHT11
 /*-----------------------------------------------------*/
-#define SHT11_INIT \
+#define SHT11_INIT() \
 	SHT11 = new_(new_sht11);\
 	SHT11->Scl = gpio_assign(IOB, 12, GPIO_OUT_OPEN_DRAIN, false); \
 	SHT11->Sda = gpio_assign(IOB, 13, GPIO_OUT_OPEN_DRAIN, false); \
@@ -112,29 +123,29 @@
 #define USE_HIH613x \
 	new_hih613x *HIH613x
 /*-----------------------------------------------------*/
-#define HIH613x_INIT \
+#define HIH613x_INIT(TWI_INTERFACE) \
 	HIH613x = new_(new_hih613x);\
-	HIH613x->TWI = TWI[0];
+	HIH613x->TWI = TWI[TWI_INTERFACE];
 #endif
 /*#####################################################*/
 #if _USE_LEPTON_FLIR == 1
 #define USE_LEPTON_FLIR \
 	new_lepton_flir *LEPTON_FLIR
 /*-----------------------------------------------------*/
-#define LEPTON_FLIR_INIT \
+#define LEPTON_FLIR_INIT(SPI_INTERFACE, TWI_INTERFACE) \
 	LEPTON_FLIR = new_(new_lepton_flir);\
-	LEPTON_FLIR->SPI = SPI[1]; \
-	LEPTON_FLIR->TWI = TWI[0];
+	LEPTON_FLIR->SPI = SPI[SPI_INTERFACE]; \
+	LEPTON_FLIR->TWI = TWI[TWI_INTERFACE];
 #endif
 /*#####################################################*/
 #if _USE_ADXL345 == 1
 #define USE_ADXL345 \
 	new_adxl345 *ADXL345
 /*-----------------------------------------------------*/
-#define ADXL345_INIT \
+#define ADXL345_INIT(TWI_INTERFACE) \
 	ADXL345 = new_(new_adxl345);\
 	ADXL345->MasterSlaveAddr = 0x53;\
-	ADXL345->TwiStruct = TWI[0];\
+	ADXL345->TwiStruct = TWI[TWI_INTERFACE];\
 	ADXL345->Calibration_X = 0;\
 	ADXL345->Calibration_Y = 0;\
 	ADXL345->Calibration_Z = 0;\
