@@ -153,7 +153,7 @@
 	adxl345_init(ADXL345);
 #endif
 /*#####################################################*/
-#define UART_0_INIT(UART_INTERFACE, Baud, _TxPort, _TxPin, _RxPort, _RxPin) \
+#define UART_INIT(UART_INTERFACE, Baud, _TxPort, _TxPin, _RxPort, _RxPin) \
 	Uart[UART_INTERFACE] = new_(new_uart);\
 	Uart[UART_INTERFACE]->BaudRate = Baud;\
 	Uart[UART_INTERFACE]->Priority = 0;\

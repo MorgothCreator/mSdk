@@ -107,7 +107,7 @@ inline bool board_init()
 	timer_init();
 	RtcInit();
 /*-----------------------------------------------------*/
-	UART_0_INIT(0, 115200, IOE, 16, IOE, 15);
+	UART_INIT(0, 115200, IOE, 16, IOE, 15);
 /*-----------------------------------------------------*/
 	/* Display board message*/
 #if defined(BOARD_MESSAGE)
