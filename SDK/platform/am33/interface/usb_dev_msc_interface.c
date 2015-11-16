@@ -51,7 +51,7 @@
 #include "api/uart_def.h"
 #include "usb_dev_msc/usb_msc_structs.h"
 
-USBD_DRV_RW_FUNC drv_rw_func;
+USBD_DRV_RW_FUNC drv_rw_func[2];
 unsigned char *dataBuffer;
 
 //*****************************************************************************
@@ -313,17 +313,20 @@ void _usb_msc_dev_media_change_state(unsigned int instance, bool media_is_presen
 	//USBDMSCMediaChange((tUSBDMSCDevice *)&g_sMSCDevice, eMediaStatus);
 }
 
-void _usb_msc_dev_init(unsigned int instance)
+void _usb_msc_dev_init(unsigned int instance, void *slave_controls)
 {
-    //
+    memcpy(&drv_rw_func[instance], slave_controls, sizeof(USBD_DRV_RW_FUNC));
+	//
     //USB module clock enable
     //
-    USB0ModuleClkConfig();
-
+    if(instance == 0)
+    {
+    	USB0ModuleClkConfig();
     //
     //USB Interrupt enable
     //
-    _USBInterruptEnable_();
+    	_USBInterruptEnable_();
+    }
 
     //
     // Initialize the idle timeout and reset all flags.
@@ -336,15 +339,15 @@ void _usb_msc_dev_init(unsigned int instance)
     //
     g_eMSCState = MSC_DEV_IDLE;
 
-    USBDMSCInit(0, (tUSBDMSCDevice *)&g_sMSCDevice);
+    USBDMSCInit(instance, (tUSBDMSCDevice *)&g_sMSCDevice);
 
 #ifdef DMA_MODE
-    Cppi41DmaInit(USB_INSTANCE, epInfo, NUMBER_OF_ENDPOINTS);
+    Cppi41DmaInit(instance, epInfo, NUMBER_OF_ENDPOINTS);
 
     for(;g_bufferIndex < NUM_OF_RX_BDs; g_bufferIndex++)
     {
         dataBuffer = (unsigned char *)cppiDmaAllocBuffer();
-        doDmaRxTransfer(USB_INSTANCE, USB_MSC_BUFER_SIZE, dataBuffer,
+        doDmaRxTransfer(instance, USB_MSC_BUFER_SIZE, dataBuffer,
                             g_sMSCDevice.psPrivateData->ucOUTEndpoint);
     }
 #endif

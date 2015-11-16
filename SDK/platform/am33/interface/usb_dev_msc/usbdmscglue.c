@@ -57,7 +57,7 @@ struct
 }
 g_sDriveInformation;
 
-extern USBD_DRV_RW_FUNC drv_rw_func;
+extern USBD_DRV_RW_FUNC drv_rw_func[];
 //*****************************************************************************
 //
 // This function opens the drive number and prepares it for use by the Mass
@@ -146,7 +146,8 @@ unsigned int USBDMSCStorageRead(void * pvDrive,
     //disk_read(ulSector, pucData, ulNumBlocks);
 	unsigned int status = CPUIntStatus();
 	CPUirqe();
-    drv_rw_func.drv_r_func(drv_rw_func.DriveStruct, pucData, ulSector, ulNumBlocks);
+	if(drv_rw_func[0].drv_r_func)
+		drv_rw_func[0].drv_r_func(drv_rw_func[0].DriveStruct, pucData, ulSector, ulNumBlocks);
 	if(status & 0x80) CPUirqd();
 
     return(ulNumBlocks * 512);
@@ -180,7 +181,8 @@ unsigned int USBDMSCStorageWrite(void * pvDrive,
     //disk_write(ulSector, pucData, ulNumBlocks);
 	unsigned int status = CPUIntStatus();
 	CPUirqe();
-	if(drv_rw_func.drv_w_func) drv_rw_func.drv_w_func(drv_rw_func.DriveStruct, pucData, ulSector, ulNumBlocks);
+	if(drv_rw_func[0].drv_w_func)
+		drv_rw_func[0].drv_w_func(drv_rw_func[0].DriveStruct, pucData, ulSector, ulNumBlocks);
 	if(status & 0x80) CPUirqd();
 
     return(ulNumBlocks * 512);
@@ -208,7 +210,8 @@ USBDMSCStorageNumBlocks(void * pvDrive)
     // Read the number of sectors.
     //
     //disk_ioctl(0, GET_SECTOR_COUNT, &ulSectorCount);
-    if(drv_rw_func.drv_ioctl_func) drv_rw_func.drv_ioctl_func(drv_rw_func.DriveStruct, GET_SECTOR_COUNT, &ulSectorCount);
+    if(drv_rw_func[0].drv_ioctl_func)
+    	drv_rw_func[0].drv_ioctl_func(drv_rw_func[0].DriveStruct, GET_SECTOR_COUNT, &ulSectorCount);
     return(ulSectorCount);
 }
 

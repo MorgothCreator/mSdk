@@ -62,9 +62,9 @@ void usb_mouse_host_idle(unsigned int instance, tControlCommandData *control_com
 	_usb_mouse_host_idle(instance, control_comand);
 }
 /*-----------------------------------------------------------*/
-void usb_msc_dev_init(unsigned int instance)
+void usb_msc_dev_init(unsigned int instance, void *slave_controls)
 {
-	_usb_msc_dev_init(instance);
+	_usb_msc_dev_init(instance, slave_controls);
 }
 
 void usb_msc_dev_media_change_state(unsigned int instance, bool media_is_present)

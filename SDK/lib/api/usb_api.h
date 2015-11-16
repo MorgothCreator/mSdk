@@ -26,7 +26,7 @@
 #include "interface/usb_dev_msc_interface.h"
 #include "lib/gfx/controls_definition.h"
 
-extern USBD_DRV_RW_FUNC drv_rw_func;
+extern USBD_DRV_RW_FUNC drv_rw_func[];
 
 /*-----------------------------------------------------------*/
 void usb_msc_host_init(unsigned int instance, new_gpio* StatusLed);
@@ -38,7 +38,7 @@ void usb_msc_host_ioctl(void *_ctrl, unsigned int  command,  unsigned int *buffe
 void usb_mouse_host_init(unsigned int instance);
 void usb_mouse_host_idle(unsigned int instance, tControlCommandData *control_comand);
 /*-----------------------------------------------------------*/
-void usb_msc_dev_init(unsigned int instance);
+void usb_msc_dev_init(unsigned int instance, void *slave_controls);
 void usb_msc_dev_media_change_state(unsigned int instance, bool media_is_present);
 /*-----------------------------------------------------------*/
 void usb_com_dev_init(unsigned int instance);
