@@ -11,6 +11,9 @@
 #include <stdbool.h>
 #include <string.h>
 #include "main.h"
+
+
+#include "api/init_api_def.h"
 #include "api/core_init_api.h"
 #include "api/uart_api.h"
 #include "api/twi_api.h"
@@ -64,42 +67,18 @@ extern new_gpio* MmcSd_Present;
 extern new_gpio* eMMC_Res;
 extern mmcsdCtrlInfo sdCtrl[];
 
-#ifdef USE_MPU60x0_9150
-extern USE_MPU60x0_9150;
-#endif
-#ifdef USE_AK8975
-extern USE_AK8975;
-#endif
-#ifdef USE_BMP180
-extern USE_BMP180;
-#endif
-#ifdef USE_SHT11
-extern USE_SHT11;
-#endif
-#ifdef USE_SRF02
-extern USE_SRF02;
-#endif
-#ifdef USE_MHC5883
-extern USE_MHC5883;
-#endif
-#ifdef USE_MPL3115A2
-extern USE_MPL3115A2;
-#endif
-#ifdef USE_MS5611
-extern USE_MS5611;
-#endif
-#ifdef USE_ADXL345
-extern USE_ADXL345;
-#endif
-#ifdef USE_HIH613x
-extern USE_HIH613x;
-#endif
-#ifdef USE_MPR121
-extern USE_MPR121;
-#endif
-#ifdef USE_LEPTON_FLIR
-extern USE_LEPTON_FLIR;
-#endif
+extern NEW_MPU60x0_9150(MPU60x0_9150);
+extern NEW_AK8975(AK8975);
+extern NEW_BMP180(BMP180);
+extern NEW_SHT11(SHT11);
+extern NEW_SRF02(SRF02);
+extern NEW_MHC5883(MHC5883);
+extern NEW_MPL3115A2(MPL3115A2);
+extern NEW_MS5611(MS5611);
+extern NEW_ADXL345(ADXL345);
+extern NEW_HIH613x(HIH613x);
+extern NEW_MPR121(MPR121);
+extern NEW_LEPTON_FLIR(LEPTON_FLIR);
 
 
 inline bool board_init();

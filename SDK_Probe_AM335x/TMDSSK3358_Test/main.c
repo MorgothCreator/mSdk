@@ -57,12 +57,6 @@ int main(void)
 	board_init();
 	timer(TimerReadSensors);
     timer_interval(&TimerReadSensors, 300);
-#if _USE_MPU60x0_9150 == 1
-	mpu60x0_9150_init(MPU60x0_9150);
-#endif
-#if _USE_MHC5883 == 1
-	mhc5883_init(MHC5883);
-#endif
 #if _USE_SHT11 == 1
 	unsigned char sht11_status_reg = 0;
 	bool sht11_read_mode = false;

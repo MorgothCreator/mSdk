@@ -11,6 +11,7 @@
 #include "board_init.h"
 #include "main.h"
 
+#include "api/init_api_def.h"
 #include "api/core_init_api.h"
 #include "api/uart_api.h"
 #include "api/twi_api.h"
@@ -64,42 +65,18 @@ new_gpio* MmcSd_Present = NULL;
 new_gpio* eMMC_Res = NULL;
 mmcsdCtrlInfo sdCtrl[2];
 
-#ifdef USE_MPU60x0_9150
-USE_MPU60x0_9150;
-#endif
-#ifdef USE_AK8975
-USE_AK8975;
-#endif
-#ifdef USE_BMP180
-USE_BMP180;
-#endif
-#ifdef USE_SHT11
-USE_SHT11;
-#endif
-#ifdef USE_SRF02
-USE_SRF02;
-#endif
-#ifdef USE_MHC5883
-USE_MHC5883;
-#endif
-#ifdef USE_MPL3115A2
-USE_MPL3115A2;
-#endif
-#ifdef USE_MS5611
-USE_MS5611;
-#endif
-#ifdef USE_ADXL345
-USE_ADXL345;
-#endif
-#ifdef USE_HIH613x
-USE_HIH613x;
-#endif
-#ifdef USE_MPR121
-USE_MPR121;
-#endif
-#ifdef USE_LEPTON_FLIR
-USE_LEPTON_FLIR;
-#endif
+NEW_MPU60x0_9150(MPU60x0_9150);
+NEW_AK8975(AK8975);
+NEW_BMP180(BMP180);
+NEW_SHT11(SHT11);
+NEW_SRF02(SRF02);
+NEW_MHC5883(MHC5883);
+NEW_MPL3115A2(MPL3115A2);
+NEW_MS5611(MS5611);
+NEW_ADXL345(ADXL345);
+NEW_HIH613x(HIH613x);
+NEW_MPR121(MPR121);
+NEW_LEPTON_FLIR(LEPTON_FLIR);
 
 inline bool board_init()
 {
@@ -107,7 +84,8 @@ inline bool board_init()
 	timer_init();
 	RtcInit();
 /*-----------------------------------------------------*/
-	UART_INIT(0, 115200, IOE, 16, IOE, 15);
+	INIT_UART(0, 115200, IOE, 16, IOE, 15);
+	DebugCom = Uart[0];
 /*-----------------------------------------------------*/
 	/* Display board message*/
 #if defined(BOARD_MESSAGE)
@@ -144,67 +122,36 @@ inline bool board_init()
 	LED[3] = gpio_assign(LED4_PORT, LED4_PIN, GPIO_DIR_OUTPUT, false);
 #endif
 /*-----------------------------------------------------*/
-	TWI_INIT(0, 400000, IOC, 17, IOC, 16);
+	INIT_TWI(0, 400000, IOC, 17, IOC, 16, 256, 256);
 /*-----------------------------------------------------*/
-	SPI_INIT(1, IOA, 17, IOB, 17, IOB, 16, IOA, 16);
+	INIT_SPI(1, 25000000, 8, IOA, 17, IOB, 17, IOB, 16, IOA, 16);
 /*-----------------------------------------------------*/
 /* Set up the ADC 0 */
-#if _USE_INT_ADC == 1
-	ADC_0_INIT
-#endif
+	//INIT_ADC(0);
 /*-----------------------------------------------------*/
-#if _USE_MPU60x0_9150 == 1
-	MPU60x0_9150_INIT(0);
-#endif
+	INIT_MPU60x0_9150(MPU60x0_9150, 0);
 /*-----------------------------------------------------*/
-#if _USE_AK8975 == 1
-	AK8975_INIT(0);
-#endif
+	INIT_AK8975(AK8975, 0);
 /*-----------------------------------------------------*/
-#if _USE_BMP180 == 1
-	BMP180_INIT(0);
-#endif
+	INIT_BMP180(BMP180, 0);
 /*-----------------------------------------------------*/
-#if _USE_SHT11 == 1
-	SHT11_INIT();
-#endif
+	INIT_SHT11(SHT11, IOB, 12, IOB, 13);
 /*-----------------------------------------------------*/
-#if _USE_ADXL345 == 1
-	ADXL345_INIT(0);
-#endif
+	INIT_ADXL345(ADXL345, 0);
 /*-----------------------------------------------------*/
-#if _USE_HIH613x == 1
-	HIH613x_INIT(0);
-#endif
+	INIT_HIH613x(HIH613x, 0);
 /*-----------------------------------------------------*/
-#if _USE_MPL3115A2 == 1
-	MPL3115A2_INIT(0);
-#endif
+	INIT_MPL3115A2(MPL3115A2, 0);
 /*-----------------------------------------------------*/
-#if _USE_MPR121 == 1
-	MPR121_INIT(0);
-#endif
+	INIT_MPR121(MPR121, 0);
 /*-----------------------------------------------------*/
-#if _USE_LEPTON_FLIR == 1
-	LEPTON_FLIR_INIT(1, 0);
-#endif
+	INIT_LEPTON_FLIR(LEPTON_FLIR, 1, 0);
 /*-----------------------------------------------------*/
-	MmcSd_Present = gpio_assign(0, 6, GPIO_DIR_OUTPUT, false);
-	UARTPuts(DebugCom, "Init MMCSD0 .......", -1);
-	sdCtrl[0].SdNr = 0;
-	mmcsd_init(&sdCtrl[0], MmcSd_Present, LED[0]);
-	UARTPuts(DebugCom, "OK.\n\r", -1);
-	mmcsd_idle(&sdCtrl[0]);
+	MmcSd_Present = gpio_assign(0, 6, GPIO_OUT_PUSH_PULL, false);
+	INIT_MMCSD(0, MmcSd_Present, LED[0]);
 /*-----------------------------------------------------*/
-	eMMC_Res = gpio_assign(1, 20, GPIO_DIR_OUTPUT, false);
-	gpio_out(eMMC_Res, 0);
-	Sysdelay(10);
-	gpio_out(eMMC_Res, 1);
-	UARTPuts(DebugCom, "Init eMMC on MMCSD1 interface.......", -1);
-	sdCtrl[1].SdNr = 1;
-	mmcsd_init(&sdCtrl[1], (Gpio_t*)NULL, LED[0]);
-	UARTPuts(DebugCom, "OK.\n\r", -1);
-	mmcsd_idle(&sdCtrl[1]);
+	eMMC_Res = gpio_assign(1, 20, GPIO_OUT_PUSH_PULL, false);
+	INIT_EMMC(1, eMMC_Res, LED[0]);
 /*-----------------------------------------------------*/
 	ScreenBuff = new_(new_screen);
 	ScreenBuff->raster_timings = &lcd_TFT43_TMDSSK3358;
