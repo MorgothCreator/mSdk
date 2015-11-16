@@ -22,7 +22,9 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include "scrollbar.h"
+#include "scrollbar_def.h"
 #include "button.h"
+#include "button_def.h"
 #include "window_def.h"
 #include "api/lcd_def.h"
 #include "api/lcd_api.h"

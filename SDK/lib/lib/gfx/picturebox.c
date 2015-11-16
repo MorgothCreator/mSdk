@@ -20,6 +20,7 @@
  */
 #include <stdbool.h>
 #include "picturebox.h"
+#include "picturebox_def.h"
 #include "window_def.h"
 #include "api/lcd_def.h"
 #include "api/lcd_api.h"

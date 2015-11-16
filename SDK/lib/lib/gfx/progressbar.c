@@ -22,6 +22,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include "progressbar.h"
+#include "progressbar_def.h"
 #include "window_def.h"
 #include "controls_definition.h"
 #include "api/lcd_def.h"

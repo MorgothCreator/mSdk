@@ -22,11 +22,13 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include "textbox.h"
+#include "textbox_def.h"
 #include "window_def.h"
 #include "controls_definition.h"
 #include "api/lcd_def.h"
 #include "api/lcd_api.h"
 #include "scrollbar.h"
+#include "scrollbar_def.h"
 #include "graphic_string.h"
 #include "lib/string_lib.h"
 #include "sys/plat_properties.h"

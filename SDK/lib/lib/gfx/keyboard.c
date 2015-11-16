@@ -23,6 +23,7 @@
 #include <stdlib.h>
 #include "button.h"
 #include "keyboard.h"
+#include "keyboard_def.h"
 #include "window_def.h"
 #include "api/lcd_def.h"
 #include "api/lcd_api.h"

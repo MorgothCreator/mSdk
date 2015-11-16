@@ -22,6 +22,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include "checkbox.h"
+#include "checkbox_def.h"
 #include "window_def.h"
 #include "api/lcd_def.h"
 #include "api/lcd_api.h"

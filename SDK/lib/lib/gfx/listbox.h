@@ -23,130 +23,11 @@
 #define LISTBOX_H_
 //#######################################################################################
 #include <stdbool.h>
+#include "listbox_def.h"
 #include "scrollbar.h"
+#include "scrollbar_def.h"
 #include "controls_definition.h"
 //#include "window_def.h"
-//#######################################################################################
-typedef struct
-{
-	struct
-	{
-		signed int X;
-		signed int Y;
-	}Size;
-	struct
-	{
-		Align TextAlign;
-		char *Text;
-		bool WordWrap;
-		tFont* Font;
-	}Caption;
-	controls_color_struct_t Color;
-	bool CursorDownInsideBox;
-}listbox_item;
-//#######################################################################################
-typedef struct
-{
-	struct
-	{
-		signed int X;
-		signed int Y;
-	}Position;
-	struct
-	{
-		signed int X;
-		signed int Y;
-		signed int ItemSizeY;
-		signed int ScrollSize;
-	}Size;
-	controls_caption_t Caption;
-	controls_color_struct_t Color;
-	struct
-	{
-		struct
-		{
-			void* CallbackData;
-			void* CallbackReturnData;
-			void*(*CallBack)(void*);
-		}OnMove;
-		struct
-		{
-			void* CallbackData;
-			void* CallbackReturnData;
-			void*(*CallBack)(void*);
-		}OnUp;
-		struct
-		{
-			void* CallbackData;
-			void* CallbackReturnData;
-			void*(*CallBack)(void*);
-		}OnDown;
-		bool CursorUp;
-		bool CursorDown;
-		bool CursorMove;
-	}Events;
-	struct
-	{
-		struct
-		{
-			bool Initiated;
-		}Control;
-		struct
-		{
-			signed int X;
-			signed int Y;
-		}Position;
-		struct
-		{
-			signed int X;
-			signed int Y;
-		}PositionOffset;
-		struct
-		{
-			signed int X;
-			signed int Y;
-			signed int ItemSizeY;
-			signed int ScrollSize;
-		}Size;
-		controls_caption_t Caption;
-		bool OldStateVisible;
-		bool OldStateEnabled;
-		bool NeedEntireRefresh;
-		bool NeedEntireRepaint;
-		bool CursorDownInsideBox;
-		bool IsChildren;
-		bool NoPaintBackGround;
-		unsigned int ItemStartOnBox;
-		unsigned int OldItemStartOnBox;
-		CursorState OldStateCursor;
-		tDisplay *pDisplay;
-		tScrollBar* ScrollBar;
-		void *ParentWindow;
-		bool ParentWindowStateEnabled;
-	}Internals;
-	bool Visible;
-	bool Enabled;
-	bool AlwaisShowScrollbar;
-	CursorState StateChangedOn;
-	tControlCommandData*(*Idle)(void*, tControlCommandData*);
-#ifdef USE_FULL_GRAPHICS
-	struct
-	{
-
-	}Text;
-	struct
-	{
-		void* (*insert)(void* /*_settings*/, char* /*text*/, unsigned int /*location*/);
-		void* (*add)(void* /*_settings*/, char* /*text*/);
-		bool (*remove)(void* /*_settings*/, unsigned int /*location*/);
-		bool (*remove_all)(void* /*_settings*/);
-	}Item;
-#endif
-	bool (*free)(void */*settings*/);
-	unsigned int ItemsCount;
-	unsigned int SelectedItem;
-	listbox_item **Items;
-}tListBox;
 //#######################################################################################
 void listbox(tListBox *settings, tControlCommandData* control_comand);
 tListBox *new_listbox(void *ParentWindow);
@@ -155,9 +36,6 @@ void* listbox_item_insert(void* _settings, char* text, unsigned int location);
 void* listbox_item_add(void* _settings, char* text);
 bool listbox_item_remove(void* _settings, unsigned int location);
 bool listbox_item_remove_all(void* _settings);
-//#######################################################################################
-#define _new_listbox(name) tListBox *name = NULL
-//#define free_listbox(address) free(address);
 //#######################################################################################
 #ifdef HEADER_INCLUDE_C_FILES
 #include "listbox.c"
