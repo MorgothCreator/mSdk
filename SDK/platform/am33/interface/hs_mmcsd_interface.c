@@ -138,7 +138,7 @@ char *g_cCwdBuf[2] = {g_cCwdBuf0, g_cCwdBuf1};
 //mmcsdCardInfo sdCard;
 
 /* SD Controller info structure */
-mmcsdCtrlInfo *ctrlInfo[3];
+mmcsdCtrlInfo ctrlInfo[3];
 
 /* EDMA callback function array */
 extern void (*cb_Fxn[EDMA3_NUM_TCC]) (unsigned int tcc, unsigned int status);
@@ -431,15 +431,15 @@ void HSMMCSDIsrGen(mmcsdCtrlInfo* SdCtrlStruct)
 
 void HSMMCSD0Isr(void)
 {
-	HSMMCSDIsrGen(ctrlInfo[0]);
+	HSMMCSDIsrGen(&ctrlInfo[0]);
 }
 void HSMMCSD1Isr(void)
 {
-	HSMMCSDIsrGen(ctrlInfo[1]);
+	HSMMCSDIsrGen(&ctrlInfo[1]);
 }
 void HSMMCSD2Isr(void)
 {
-	HSMMCSDIsrGen(ctrlInfo[2]);
+	HSMMCSDIsrGen(&ctrlInfo[2]);
 }
 
 
@@ -449,7 +449,7 @@ void HSMMCSD2Isr(void)
 */
 static void HSMMCSDControllerSetup(mmcsdCtrlInfo* SdCtrlStruct, new_gpio* Cs)
 {
-	ctrlInfo[SdCtrlStruct->SdNr] = SdCtrlStruct;
+	//ctrlInfo[SdCtrlStruct->SdNr] = SdCtrlStruct;
 	switch(SdCtrlStruct->SdNr)
 	{
 	case (0):
@@ -483,7 +483,7 @@ static void HSMMCSDControllerSetup(mmcsdCtrlInfo* SdCtrlStruct, new_gpio* Cs)
 	SdCtrlStruct->ipClk = HSMMCSD_IN_FREQ;
 	SdCtrlStruct->opClk = 400000;
     //sdCard.ctrl = &ctrlInfo;
-	SdCtrlStruct->card->ctrl = (mmcsdCtrlInfo*)(void*)&ctrlInfo;
+	SdCtrlStruct->card->ctrl = (mmcsdCtrlInfo*)(void*)&ctrlInfo[SdCtrlStruct->SdNr];
 
 	CardDetectPinMmcSd[SdCtrlStruct->SdNr] = Cs;
 
@@ -496,9 +496,9 @@ static void HSMMCSDControllerSetup(mmcsdCtrlInfo* SdCtrlStruct, new_gpio* Cs)
 
 extern MMC_extCsd extCsd;
 
-void _mmcsd_ioctl(void *SdCtrlStruct, unsigned int  command,  unsigned int *buffer)
+void _mmcsd_ioctl(unsigned int unit_nr, unsigned int  command,  unsigned int *buffer)
 {
-	mmcsdCtrlInfo* _SdCtrlStruct = (mmcsdCtrlInfo*)SdCtrlStruct;
+	mmcsdCtrlInfo* _SdCtrlStruct = &ctrlInfo[unit_nr];
     switch(command)
     {
 
@@ -525,39 +525,39 @@ void _mmcsd_ioctl(void *SdCtrlStruct, unsigned int  command,  unsigned int *buff
     }
 }
 
-void _mmcsd_init(void *SdCtrlStruct, new_gpio* Cs, new_gpio* StatusLed)
+void _mmcsd_init(unsigned int unit_nr, new_gpio* Cs, new_gpio* StatusLed)
 {
-
-	LedStatusMmcSd[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr] = StatusLed;
+	ctrlInfo[unit_nr].SdNr = unit_nr;
+	LedStatusMmcSd[unit_nr] = StatusLed;
 	/* Configure EDMA to service the HSMMCSD events. */
-    HSMMCSDEdmaInit(((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr);
+    HSMMCSDEdmaInit(unit_nr);
 
     /* Perform pin-mux for HSMMCSD pins. */
     //HSMMCSDPinMuxSetup();
-    pin_mux_mmcsd_beaglebone(((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr);
+    pin_mux_mmcsd_beaglebone(unit_nr);
 
     /* Enable module clock for HSMMCSD. */
-    HSMMCSDModuleClkConfig(((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr);
+    HSMMCSDModuleClkConfig(unit_nr);
 
     /* Basic controller initializations */
-    HSMMCSDControllerSetup((mmcsdCtrlInfo*)SdCtrlStruct, Cs);
+    HSMMCSDControllerSetup(&ctrlInfo[unit_nr], Cs);
 
     /* Initialize the MMCSD controller */
-    MMCSDCtrlInit((mmcsdCtrlInfo*)SdCtrlStruct);
+    MMCSDCtrlInit(&ctrlInfo[unit_nr]);
 
-    MMCSDIntEnable((mmcsdCtrlInfo*)SdCtrlStruct);
+    MMCSDIntEnable(&ctrlInfo[unit_nr]);
 }
 
-void _mmcsd_idle(void *SdCtrlStruct)
+void _mmcsd_idle(unsigned int unit_nr)
 {
-    if(!gpio_in(CardDetectPinMmcSd[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr])/*(HSMMCSDCardPresent(&ctrlInfo)) == 1*/ || (int)(CardDetectPinMmcSd[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr]) == -1)
+    if(!gpio_in(CardDetectPinMmcSd[unit_nr])/*(HSMMCSDCardPresent(&ctrlInfo)) == 1*/ || (int)(CardDetectPinMmcSd[unit_nr]) == -1)
     {
-        if(initFlg[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr])
+        if(initFlg[unit_nr])
         {
-            initFlg[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr] = 0;
-        	if(MMCSDCardInit((mmcsdCtrlInfo*)SdCtrlStruct))
+            initFlg[unit_nr] = 0;
+        	if(MMCSDCardInit(&ctrlInfo[unit_nr]))
         	{
-        		((mmcsdCtrlInfo*)SdCtrlStruct)->connected = true;
+        		ctrlInfo[unit_nr].connected = true;
 #ifndef thirdpartyfatfs
                 Drives_Table[0] = new_(new_fat_disk);
                 Drives_Table[0]->DiskInfo_SdDriverStructAddr = &ctrlInfo;
@@ -588,10 +588,10 @@ void _mmcsd_idle(void *SdCtrlStruct)
                 }
                 else if(DebugCom)											UARTPuts(DebugCom,   "MMCSD0 Fat not detected\n\r" , -1);
 #else
-                g_s_mmcFatFs[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr].drv_rw_func.DriveStruct = SdCtrlStruct;
-                g_s_mmcFatFs[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr].drv_rw_func.drv_r_func = MMCSDReadCmdSend;
-                g_s_mmcFatFs[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr].drv_rw_func.drv_w_func = MMCSDWriteCmdSend;
-                if(!f_mount(((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr, &g_s_mmcFatFs[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr]))
+                g_s_mmcFatFs[unit_nr].drv_rw_func.DriveStruct = &ctrlInfo[unit_nr];
+                g_s_mmcFatFs[unit_nr].drv_rw_func.drv_r_func = MMCSDReadCmdSend;
+                g_s_mmcFatFs[unit_nr].drv_rw_func.drv_w_func = MMCSDWriteCmdSend;
+                if(!f_mount(unit_nr, &g_s_mmcFatFs[unit_nr]))
                 {
 #ifdef mmcsd_debug
                     if(f_opendir(&g_sDirObject, g_cCwdBuf[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr]) == FR_OK)
@@ -620,17 +620,17 @@ void _mmcsd_idle(void *SdCtrlStruct)
 #endif
                 }
 #endif
-                else if(DebugCom)												UARTprintf(DebugCom,   "MMCSD%d ERROR mounting disk\n\r" , ((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr);
+                else if(DebugCom)												UARTprintf(DebugCom,   "MMCSD%d ERROR mounting disk\n\r" , unit_nr);
         	}
         }
     }
     else
     {
         Sysdelay(1);
-        if(initFlg[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr] != 1)
+        if(initFlg[unit_nr] != 1)
         {
-        	((mmcsdCtrlInfo*)SdCtrlStruct)->connected = false;
-        	initFlg[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr] = 1;
+        	ctrlInfo[unit_nr].connected = false;
+        	initFlg[unit_nr] = 1;
 #ifdef mmcsd_debug
 #ifndef thirdpartyfatfs
         	if(_FatData_CloseSesion(FILE1) == 1 && DebugCom != NULL)						UARTPuts(DebugCom, "MMCSD0 Session closed\n\r" , -1);
@@ -642,14 +642,14 @@ void _mmcsd_idle(void *SdCtrlStruct)
 #endif
 #endif
         	/* Reinitialize all the state variables */
-            callbackOccured[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr] = 0;
-            xferCompFlag[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr] = 0;
-            dataTimeout[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr] = 0;
-            cmdCompFlag[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr] = 0;
-            cmdTimeout[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr] = 0;
+            callbackOccured[unit_nr] = 0;
+            xferCompFlag[unit_nr] = 0;
+            dataTimeout[unit_nr] = 0;
+            cmdCompFlag[unit_nr] = 0;
+            cmdTimeout[unit_nr] = 0;
             /* Initialize the MMCSD controller */
-            MMCSDCtrlInit((mmcsdCtrlInfo*)SdCtrlStruct);
-            MMCSDIntEnable((mmcsdCtrlInfo*)SdCtrlStruct);
+            MMCSDCtrlInit(&ctrlInfo[unit_nr]);
+            MMCSDIntEnable(&ctrlInfo[unit_nr]);
         }
     }
 }

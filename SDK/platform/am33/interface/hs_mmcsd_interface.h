@@ -15,9 +15,9 @@
 /*#####################################################*/
 //extern mmcsdCtrlInfo  ctrlInfo;
 /*#####################################################*/
-void _mmcsd_init(void *SdCtrlStruct, new_gpio* Cs, new_gpio* StatusLed);
-void _mmcsd_idle(void *SdCtrlStruct);
-void _mmcsd_ioctl(void *SdCtrlStruct, unsigned int  command,  unsigned int *buffer);
+void _mmcsd_init(unsigned int unit_nr, new_gpio* Cs, new_gpio* StatusLed);
+void _mmcsd_idle(unsigned int unit_nr);
+void _mmcsd_ioctl(unsigned int unit_nr, unsigned int  command,  unsigned int *buffer);
 /*#####################################################*/
 #ifdef HEADER_INCLUDE_C_FILES
 #include "hs_mmcsd_interface.c"

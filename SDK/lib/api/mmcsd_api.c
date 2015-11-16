@@ -23,19 +23,19 @@
 #include "interface/hs_mmcsd_interface.h"
 #include "api/gpio_def.h"
 /*#####################################################*/
-void mmcsd_init(void *SdStruct, new_gpio* Cs, new_gpio* StatusLed)
+void mmcsd_init(unsigned int unit_nr, new_gpio* Cs, new_gpio* StatusLed)
 {
-	_mmcsd_init(SdStruct, Cs, StatusLed);
+	_mmcsd_init(unit_nr, Cs, StatusLed);
 }
 /*#####################################################*/
-void mmcsd_idle(void *SdStruct)
+void mmcsd_idle(unsigned int unit_nr)
 {
-	_mmcsd_idle(SdStruct);
+	_mmcsd_idle(unit_nr);
 }
 /*#####################################################*/
-void mmcsd_ioctl(void *_ctrl, unsigned int  command,  unsigned int *buffer)
+void mmcsd_ioctl(unsigned int unit_nr, unsigned int  command,  unsigned int *buffer)
 {
-	_mmcsd_ioctl(_ctrl, command,  buffer);
+	_mmcsd_ioctl(unit_nr, command,  buffer);
 }
 /*#####################################################*/
 unsigned int mmcsd_write(void *_ctrl, void *ptr, unsigned long block, unsigned int nblks)

@@ -24,9 +24,9 @@
 /*#####################################################*/
 #include "gpio_def.h"
 /*#####################################################*/
-void mmcsd_init(void *SdStruct, new_gpio* Cs, new_gpio* StatusLed);
-void mmcsd_idle(void *SdStruct);
-void mmcsd_ioctl(void *_ctrl, unsigned int  command,  unsigned int *buffer);
+void mmcsd_init(unsigned int unit_nr, new_gpio* Cs, new_gpio* StatusLed);
+void mmcsd_idle(unsigned int unit_nr);
+void mmcsd_ioctl(unsigned int unit_nr, unsigned int  command,  unsigned int *buffer);
 unsigned int mmcsd_write(void *_ctrl, void *ptr, unsigned long block, unsigned int nblks);
 unsigned int mmcsd_read(void *_ctrl, void *ptr, unsigned long block, unsigned int nblks);
 /*#####################################################*/
