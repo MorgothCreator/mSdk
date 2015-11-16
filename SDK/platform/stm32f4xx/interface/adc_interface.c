@@ -23,13 +23,14 @@
 #include "stdio.h"
 #include "api/adc_def.h"
 #include "adc_interface.h"
-#include "driver/stm32f4xx_adc.h"
-#include "driver/stm32f4xx_dma.h"
-#include "driver/stm32f4xx_rcc.h"
-#include "driver/stm32f4xx_gpio.h"
+#include "driver/stm32f4xx_hal_adc.h"
+#include "driver/stm32f4xx_hal_dma.h"
+#include "driver/stm32f4xx_hal_rcc.h"
+#include "driver/stm32f4xx_hal_gpio.h"
 /*#####################################################*/
 bool _adc_init(Adc_t *Adc_s)
 {
+#if 0
 	bool return_status = true;
 //#if defined (STM32F10X_LD_VL) || defined (STM32F10X_MD_VL) || defined (STM32F10X_HD_VL)
 	/* ADCCLK = PCLK2/2 */
@@ -433,7 +434,7 @@ bool _adc_init(Adc_t *Adc_s)
 
 	/* Start ADC Software Conversion */
 	ADC_SoftwareStartConv((ADC_TypeDef *)Adc_s->BaseAddr);
-
-	return true;
+#endif
+	return false;
 }
 /*#####################################################*/

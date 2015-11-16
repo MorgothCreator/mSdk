@@ -32,7 +32,7 @@
 /* Includes ------------------------------------------------------------------*/
 /* Uncomment the line below to enable peripheral header file inclusion */
 //#include "driver/stm32f4x7_eth.h"
-#include "driver/stm32f4xx_adc.h"
+/*#include "driver/stm32f4xx_adc.h"
 #include "driver/stm32f4xx_can.h"
 #include "driver/stm32f4xx_crc.h"
 #include "driver/stm32f4xx_cryp.h"
@@ -57,7 +57,7 @@
 #include "driver/stm32f4xx_tim.h"
 #include "driver/stm32f4xx_usart.h"
 #include "driver/stm32f4xx_wwdg.h"
-#include "driver/misc.h" /* High level functions for NVIC and SysTick (add-on to CMSIS functions) */
+#include "driver/misc.h" *//* High level functions for NVIC and SysTick (add-on to CMSIS functions) */
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/

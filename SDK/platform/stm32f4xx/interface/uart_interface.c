@@ -5,45 +5,17 @@
  *  Author: XxXx
  */
 /*#####################################################*/
+#include <stdlib.h>
 #include "stm32f4xx_conf.h"
 #include "uart_interface.h"
-#include "driver/stm32f4xx_usart.h"
+#include "include/stm32f4xx.h"
+#include "driver/stm32f4xx_hal_conf.h"
+#include "driver/stm32f4xx_hal_uart.h"
+#include "driver/stm32f4xx_hal_rcc.h"
+#include "driver/misc.h"
 #include "gpio_interface.h"
 //#include "driver/uart.h"
 //#include "int/int_uart.h"
-/**
-  * @brief  Configures the nested vectored interrupt controller.
-  * @param  None
-  * @retval None
-  */
-void UART_nvic_config(Uart_t* UartSettings)
-{
-  NVIC_InitTypeDef NVIC_InitStructure;
-
-  switch(UartSettings->UartNr)
-  {
-	  case 0:
-		  NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQn;
-		  break;
-  	  case 1:
-  		  NVIC_InitStructure.NVIC_IRQChannel = USART2_IRQn;
-  		  break;
-  	  case 2:
-  		  NVIC_InitStructure.NVIC_IRQChannel = USART3_IRQn;
-  		  break;
-  	  case 3:
-  		  NVIC_InitStructure.NVIC_IRQChannel = UART4_IRQn;
-  		  break;
-  	  case 4:
-  		  NVIC_InitStructure.NVIC_IRQChannel = UART5_IRQn;
-  		  break;
-  }
-  /* Enable the USARTx Interrupt */
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = UartSettings->Priority;
-  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
-  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-  NVIC_Init(&NVIC_InitStructure);
-}
 /**
   * @brief  Configures COM port.
   * @param  COM: Specifies the COM port to be configured.
@@ -55,16 +27,42 @@ void UART_nvic_config(Uart_t* UartSettings)
   * @retval None
   */
 
-#define COMn                             6
+#define COMn                             8
 
-USART_TypeDef* COM_USART[COMn] = { USART1, USART2, USART3, UART4, UART5, USART6};
+USART_TypeDef* COM_USART[COMn] = {
+#ifdef USART1
+		USART1,
+#endif
+#ifdef USART2
+		USART2,
+#endif
+#ifdef USART3
+		USART3,
+#endif
+#ifdef UART4
+		UART4,
+#endif
+#ifdef UART5
+		UART5,
+#endif
+#ifdef USART6
+		USART6,
+#endif
+#ifdef UART7
+		UART7,
+#endif
+#ifdef UART8
+		UART8
+#endif
+};
 
-const uint32_t COM_USART_CLK[COMn] = {RCC_APB2Periph_USART1, RCC_APB1Periph_USART2, RCC_APB1Periph_USART3, RCC_APB1Periph_UART4, RCC_APB1Periph_UART5, RCC_APB2Periph_USART6};
+//const uint32_t COM_USART_CLK[COMn] = {RCC_APB2Periph_USART1, RCC_APB1Periph_USART2, RCC_APB1Periph_USART3, RCC_APB1Periph_UART4, RCC_APB1Periph_UART5, RCC_APB2Periph_USART6};
 
-const uint16_t COM_TX_AF[COMn] = {GPIO_AF_USART1, GPIO_AF_USART2, GPIO_AF_USART3, GPIO_AF_UART4, GPIO_AF_UART5, GPIO_AF_USART6};
+//const uint16_t COM_TX_AF[COMn] = {GPIO_AF_USART1, GPIO_AF_USART2, GPIO_AF_USART3, GPIO_AF_UART4, GPIO_AF_UART5, GPIO_AF_USART6};
 
-const uint16_t COM_RX_AF[COMn] = {GPIO_AF_USART1, GPIO_AF_USART2, GPIO_AF_USART3, GPIO_AF_UART4, GPIO_AF_UART5, GPIO_AF_USART6};
+//const uint16_t COM_RX_AF[COMn] = {GPIO_AF_USART1, GPIO_AF_USART2, GPIO_AF_USART3, GPIO_AF_UART4, GPIO_AF_UART5, GPIO_AF_USART6};
 
+#if 0
 void STM_EVAL_COMInit(Uart_t* UartSettings, unsigned char COM, USART_InitTypeDef* USART_InitStruct)
 {
   GPIO_InitTypeDef GPIO_InitStructure;
@@ -106,21 +104,120 @@ void STM_EVAL_COMInit(Uart_t* UartSettings, unsigned char COM, USART_InitTypeDef
   /* Enable USART */
   USART_Cmd(COM_USART[COM], ENABLE);
 }
+#endif
 /*#####################################################*/
 bool _uart_open(Uart_t* UartSettings)
 {
+
+
+
+	  GPIO_InitTypeDef  GPIO_InitStruct;
+
+	  /*##-1- Enable peripherals and GPIO Clocks #################################*/
+	  /* Enable GPIO TX/RX clock */
+	  _gpio_init(UartSettings->TxPort);
+	  _gpio_init(UartSettings->RxPort);
+
+	  //USARTx_TX_GPIO_CLK_ENABLE();
+	  //USARTx_RX_GPIO_CLK_ENABLE();
+	  /* Enable USART1 clock */
+	  switch(UartSettings->UartNr)
+	  {
+#ifdef __HAL_RCC_USART1_CLK_ENABLE
+	  case 0:
+		  __HAL_RCC_USART1_CLK_ENABLE();
+		  break;
+#endif
+#ifdef __HAL_RCC_USART2_CLK_ENABLE
+	  case 1:
+		  __HAL_RCC_USART2_CLK_ENABLE();
+		  break;
+#endif
+#ifdef __HAL_RCC_USART3_CLK_ENABLE
+	  case 2:
+		  __HAL_RCC_USART3_CLK_ENABLE();
+		  break;
+#endif
+#ifdef __HAL_RCC_UART4_CLK_ENABLE
+	  case 3:
+		  __HAL_RCC_UART4_CLK_ENABLE();
+		  break;
+#endif
+#ifdef __HAL_RCC_UART5_CLK_ENABLE
+	  case 4:
+		  __HAL_RCC_UART5_CLK_ENABLE();
+		  break;
+#endif
+#ifdef __HAL_RCC_USART6_CLK_ENABLE
+	  case 5:
+		  __HAL_RCC_USART6_CLK_ENABLE();
+		  break;
+#endif
+#ifdef __HAL_RCC_UART7_CLK_ENABLE
+	  case 6:
+		  __HAL_RCC_UART7_CLK_ENABLE();
+		  break;
+#endif
+#ifdef __HAL_RCC_UART8_CLK_ENABLE
+	  case 7:
+		  __HAL_RCC_UART8_CLK_ENABLE();
+		  break;
+#endif
+	  }
+	  //USARTx_CLK_ENABLE();
+
+	  /*##-2- Configure peripheral GPIO ##########################################*/
+	  /* UART TX GPIO pin configuration  */
+	  GPIO_InitStruct.Pin       = 1 << UartSettings->TxPin;
+	  GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
+	  GPIO_InitStruct.Pull      = GPIO_NOPULL;
+	  GPIO_InitStruct.Speed     = GPIO_SPEED_FAST;
+	  switch(UartSettings->UartNr)
+	  {
+	  case 0:
+	  case 1:
+	  case 2:
+		  GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
+		  break;
+	  case 3:
+	  case 4:
+	  case 5:
+	  case 6:
+	  case 7:
+		  GPIO_InitStruct.Alternate = GPIO_AF8_UART4;
+		  break;
+	  default:
+		  return false;
+	  }
+	  //GPIO_InitStruct.Alternate = USARTx_TX_AF;
+
+	  HAL_GPIO_Init(GET_GPIO_PORT_ADDR[UartSettings->TxPort], &GPIO_InitStruct);
+
+	  /* UART RX GPIO pin configuration  */
+	  GPIO_InitStruct.Pin = 1 << UartSettings->RxPin;
+	  //GPIO_InitStruct.Alternate = USARTx_RX_AF;
+
+	  HAL_GPIO_Init(GET_GPIO_PORT_ADDR[UartSettings->RxPort], &GPIO_InitStruct);
+
+	  UartSettings->udata = calloc(1, sizeof(UART_HandleTypeDef));
+	  if(!UartSettings->udata)
+		  return false;
+	  UART_HandleTypeDef *UartHandle = (UART_HandleTypeDef *)UartSettings->udata;
 	//USART_DeInit(COM_USART[UartSettings->UartNr]);
 	//UART_nvic_config(UartSettings);
-	UartSettings->BaseAddr = (unsigned int)COM_USART[UartSettings->UartNr];
-	USART_InitTypeDef USART_InitStructure;
-	USART_InitStructure.USART_BaudRate = UartSettings->BaudRate;
-	USART_InitStructure.USART_WordLength = USART_WordLength_8b;
-	USART_InitStructure.USART_StopBits = USART_StopBits_1;
-	USART_InitStructure.USART_Parity = USART_Parity_No;
-	USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
-	USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
+	UartSettings->BaseAddr = (unsigned int)UartSettings;
+	UartHandle->Instance = COM_USART[UartSettings->UartNr];
+	UartHandle->Init.BaudRate = UartSettings->BaudRate;
+	UartHandle->Init.WordLength = UART_WORDLENGTH_8B;
+	UartHandle->Init.StopBits = UART_STOPBITS_1;
+	UartHandle->Init.Parity = UART_PARITY_NONE;
+	UartHandle->Init.HwFlowCtl = UART_HWCONTROL_NONE;
+	UartHandle->Init.Mode = UART_MODE_TX_RX;
+	UartHandle->Init.OverSampling = UART_OVERSAMPLING_16;
+
+	HAL_UART_Init(UartHandle);
 	//UART_nvic_config(UartSettings);
-	STM_EVAL_COMInit(UartSettings, UartSettings->UartNr, &USART_InitStructure);
+	//STM_EVAL_COMInit(UartSettings, UartSettings->UartNr, &USART_InitStructure);
 	  //while(1);
 	//USART_TypeDef* base_addr = (USART_TypeDef*)UartSettings->BaseAddr;
 	//base_addr->CR1 |= USART_Mode_Rx | USART_Mode_Tx;
@@ -129,7 +226,9 @@ bool _uart_open(Uart_t* UartSettings)
 /*#####################################################*/
 bool _uart_close(Uart_t *UartSettings)
 {
-	USART_DeInit((USART_TypeDef*)UartSettings->BaseAddr);
+	HAL_UART_DeInit((UART_HandleTypeDef*)UartSettings->udata);
+	if(UartSettings->udata)
+		free(UartSettings->udata);
 	return true;
 }
 /*#####################################################*/
@@ -140,22 +239,38 @@ void _UARTBaudSetRate(unsigned int BaseAddr, unsigned long BaudRate)
 /*#####################################################*/
 void _UARTCharPut(unsigned int BaseAddr, unsigned char byteTx)
 {
-	  USART_SendData((USART_TypeDef*)BaseAddr, byteTx);
+	  //USART_SendData((USART_TypeDef*)BaseAddr, byteTx);
+	Uart_t* UartSettings = (Uart_t *)BaseAddr;
+	  HAL_UART_Transmit(UartSettings->udata, &byteTx, 1, 10);
 }
 /*#####################################################*/
 unsigned char _UARTCharGet(unsigned int BaseAddr)
 {
-	return (signed char)USART_ReceiveData((USART_TypeDef*)BaseAddr);//UARTCharGet(BaseAddr);
+	unsigned char data = 0;
+	Uart_t* UartSettings = (Uart_t *)BaseAddr;
+	HAL_UART_Receive(UartSettings->udata, &data, 1, 10);
+	return data;//(signed char)USART_ReceiveData((USART_TypeDef*)BaseAddr);//UARTCharGet(BaseAddr);
 }
 /*#####################################################*/
 bool _UARTCharPutNonBlocking(unsigned int BaseAddr, unsigned char byteTx)
 {
-	return UARTCharPutNonBlocking((USART_TypeDef*)BaseAddr, byteTx);
+	Uart_t* UartSettings = (Uart_t *)BaseAddr;
+	HAL_StatusTypeDef status = HAL_UART_Transmit(UartSettings->udata, &byteTx, 1, 2);
+	if(status == HAL_TIMEOUT || status == HAL_BUSY || status == HAL_ERROR)
+		return false;//UARTCharPutNonBlocking((USART_TypeDef*)BaseAddr, byteTx);
+	return true;
 }
 /*#####################################################*/
 signed short _UARTCharGetNonBlocking(unsigned int BaseAddr)
 {
-	return UARTCharGetNonBlocking((USART_TypeDef*)BaseAddr);
+	signed short data = 0;
+	Uart_t* UartSettings = (Uart_t *)BaseAddr;
+	HAL_StatusTypeDef status = HAL_UART_Receive((UART_HandleTypeDef *)UartSettings->udata, (unsigned char *)&data, 1, 2);
+	if(status == HAL_TIMEOUT || status == HAL_BUSY || status == HAL_ERROR)
+		return -1;//UARTCharPutNonBlocking((USART_TypeDef*)BaseAddr, byteTx);
+	return data;
+
+	//return UARTCharGetNonBlocking((USART_TypeDef*)BaseAddr);
 }
 /*#####################################################*/
 unsigned int _UARTRxErrorGet(unsigned int BaseAddr)

@@ -213,7 +213,7 @@
   */
 #include "board_properties.h"
 #include "include/stm32f4xx.h"
-
+#include "driver/stm32f4xx_hal_conf.h"
 /**
   * @}
   */
@@ -255,19 +255,19 @@
 /* USB OTG FS, SDIO and RNG Clock =  PLL_VCO / PLLQ */
 #define PLL_Q      7
 
-#if defined (STM32F40_41xxx)
+#if defined (STM32F410Tx) || defined (STM32F410Cx) || defined (STM32F410Rx)  || defined (STM32F411xE)  || defined (STM32F405xx)  || defined (STM32F415xx)  || defined (STM32F407xx)  || defined (STM32F417xx)
 #define PLL_N      (CoreFreq_Mhz * 2)//336
 /* SYSCLK = PLL_VCO / PLL_P */
 #define PLL_P      2
 #endif /* STM32F40_41xxx */
 
-#if defined (STM32F427_437xx) || defined (STM32F429_439xx)
+#if defined (STM32F427xx) || defined (STM32F437xx) || defined (STM32F429xx) || defined (STM32F439xx)
 #define PLL_N      (CoreFreq_Mhz * 2)//360
 /* SYSCLK = PLL_VCO / PLL_P */
 #define PLL_P      2
 #endif /* STM32F427_437x || STM32F429_439xx */
 
-#if defined (STM32F401xx)
+#if defined (STM32F401xC) || defined (STM32F401xE)
 #define PLL_N      (CoreFreq_Mhz * 2)//336
 /* SYSCLK = PLL_VCO / PLL_P */
 #define PLL_P      4
@@ -291,16 +291,16 @@
   * @{
   */
 
-#if defined (STM32F40_41xxx)
-  unsigned int SystemCoreClock = 168000000;
+#if defined (STM32F410Tx) || defined (STM32F410Cx) || defined (STM32F410Rx)  || defined (STM32F411xE)  || defined (STM32F405xx)  || defined (STM32F415xx)  || defined (STM32F407xx)  || defined (STM32F417xx)
+  unsigned long SystemCoreClock = 168000000;
 #endif /* STM32F40_41xxx */
 
-#if defined (STM32F427_437xx) || defined (STM32F429_439xx)
-  unsigned int SystemCoreClock = 180000000;
+#if defined (STM32F427xx) || defined (STM32F437xx) || defined (STM32F429xx) || defined (STM32F439xx)
+  unsigned long SystemCoreClock = 180000000;
 #endif /* STM32F427_437x || STM32F429_439xx */
 
-#if defined (STM32F401xx)
-  unsigned int SystemCoreClock = 84000000;
+#if defined (STM32F401xC) || defined (STM32F401xE)
+  unsigned long SystemCoreClock = 84000000;
 #endif /* STM32F401xx */
 
   __I uint8_t AHBPrescTable[16] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 6, 7, 8, 9};
@@ -505,7 +505,7 @@ static void SetSysClock(void)
     /* HCLK = SYSCLK / 1*/
     RCC->CFGR |= RCC_CFGR_HPRE_DIV1;
 
-#if defined (STM32F40_41xxx) || defined (STM32F427_437xx) || defined (STM32F429_439xx)      
+#if defined (STM32F410Tx) || defined (STM32F410Cx) || defined (STM32F410Rx)  || defined (STM32F411xE)  || defined (STM32F405xx)  || defined (STM32F415xx)  || defined (STM32F407xx)  || defined (STM32F417xx) || defined (STM32F427xx) || defined (STM32F437xx) || defined (STM32F429xx) || defined (STM32F439xx)
     /* PCLK2 = HCLK / 2*/
     RCC->CFGR |= RCC_CFGR_PPRE2_DIV2;
     
@@ -513,7 +513,7 @@ static void SetSysClock(void)
     RCC->CFGR |= RCC_CFGR_PPRE1_DIV4;
 #endif /* STM32F40_41xxx || STM32F427_437x || STM32F429_439xx */
 
-#if defined (STM32F401xx)
+#if defined (STM32F401xC) || defined (STM32F401xE)
     /* PCLK2 = HCLK / 2*/
     RCC->CFGR |= RCC_CFGR_PPRE2_DIV1;
     
@@ -533,7 +533,7 @@ static void SetSysClock(void)
     {
     }
    
-#if defined (STM32F427_437xx) || defined (STM32F429_439xx)
+#if defined (STM32F427xx) || defined (STM32F437xx) || defined (STM32F429xx) || defined (STM32F439xx)
     /* Enable the Over-drive to extend the clock frequency to 180 Mhz */
     PWR->CR |= PWR_CR_ODEN;
     while((PWR->CSR & PWR_CSR_ODRDY) == 0)
@@ -547,12 +547,12 @@ static void SetSysClock(void)
     FLASH->ACR = FLASH_ACR_PRFTEN | FLASH_ACR_ICEN |FLASH_ACR_DCEN |FLASH_ACR_LATENCY_5WS;
 #endif /* STM32F427_437x || STM32F429_439xx  */
 
-#if defined (STM32F40_41xxx)     
+#if defined (STM32F410Tx) || defined (STM32F410Cx) || defined (STM32F410Rx)  || defined (STM32F411xE)  || defined (STM32F405xx)  || defined (STM32F415xx)  || defined (STM32F407xx)  || defined (STM32F417xx)
     /* Configure Flash prefetch, Instruction cache, Data cache and wait state */
-    FLASH->ACR = FLASH_ACR_PRFTEN | FLASH_ACR_ICEN |FLASH_ACR_DCEN |FLASH_ACR_LATENCY_5WS;
+    FLASH->ACR = /*FLASH_ACR_PRFTEN | FLASH_ACR_ICEN |*/FLASH_ACR_DCEN |FLASH_ACR_LATENCY_5WS;
 #endif /* STM32F40_41xxx  */
 
-#if defined (STM32F401xx)
+#if defined (STM32F401xC) || defined (STM32F401xE)
     /* Configure Flash prefetch, Instruction cache, Data cache and wait state */
     FLASH->ACR = FLASH_ACR_PRFTEN | FLASH_ACR_ICEN |FLASH_ACR_DCEN |FLASH_ACR_LATENCY_2WS;
 #endif /* STM32F401xx */
@@ -665,14 +665,14 @@ void SystemInit_ExtMemCtl(void)
   /* Enable the FMC/FSMC interface clock */
   RCC->AHB3ENR         |= 0x00000001;
   
-#if defined (STM32F427_437xx) || defined (STM32F429_439xx)
+#if defined (STM32F427xx) || defined (STM32F437xx) || defined (STM32F429xx) || defined (STM32F439xx)
   /* Configure and enable Bank1_SRAM2 */
   FMC_Bank1->BTCR[2]  = 0x00001011;
   FMC_Bank1->BTCR[3]  = 0x00000201;
   FMC_Bank1E->BWTR[2] = 0x0fffffff;
 #endif /* STM32F427_437xx || STM32F429_439xx */ 
 
-#if defined (STM32F40_41xxx)
+#if defined (STM32F410Tx) || defined (STM32F410Cx) || defined (STM32F410Rx)  || defined (STM32F411xE)  || defined (STM32F405xx)  || defined (STM32F415xx)  || defined (STM32F407xx)  || defined (STM32F417xx)
   /* Configure and enable Bank1_SRAM2 */
   FSMC_Bank1->BTCR[2]  = 0x00001011;
   FSMC_Bank1->BTCR[3]  = 0x00000201;

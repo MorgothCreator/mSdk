@@ -10,7 +10,7 @@
 #include "board_properties.h"
 #include "api/gpio_api.h"
 #include "sys/system_stm32f4xx.h"
-#include "driver/stm32f4xx_rcc.h"
+#include "driver/stm32f4xx_hal_rcc.h"
 //#include "driver/core.h"
 
 unsigned long CoreFreq = 0;

@@ -15,6 +15,7 @@
 #include "board_properties.h"
 #include "board_init.h"
 #include "sys/core_init.h"
+#include "api/lcd_def.h"
 /*#include "lib/gfx/buton.h"
 #include "lib/gfx/checkbox.h"
 #include "lib/gfx/progressbar.h"
@@ -22,6 +23,7 @@
 #include "lib/gfx/textbox.h"
 #include "lib/gfx/listbox.h"*/
 #include "lib/gfx/window.h"
+#include "lib/gfx/window_def.h"
 //#include "device/24c.h"
 #include "device/ar1020.h"
 //#include "device/ph7_62_matrix_led.h"
@@ -44,6 +46,7 @@ tWindow *MainWindow = NULL;
 /*-----------------------------------------------------*/
 FileInfo_t *BrowserDisk1 = NULL;
 /*-----------------------------------------------------*/
+extern new_screen* ScreenBuff;
 //new_screen* ph_7_62_ScreenBuff = NULL;
 //unsigned long FFT_Cnt = 0;
 /*#####################################################*/
@@ -58,8 +61,8 @@ int main(void)
 	//if (E2promRead(TWI3, 0x50, 0, TmpBuff, 10)) UARTPuts(DebugCom, "24C eeprom device detected\n\r" , -1);
 	//else UARTPuts(DebugCom, "24C eeprom device not detected\n\r" , -1);
 #ifdef IngludeGraphics
-    MainWindow = new_window(ScreenBuff);
-    window_new_buton(MainWindow, Btn1);
+    MainWindow = new_window(NULL, ScreenBuff);
+    window_new_button(MainWindow, Btn1);
     window_new_checkbox(MainWindow, CB1);
     window_new_listbox(MainWindow, ListBox1);
     window_new_progressbar(MainWindow, PBar1);
@@ -113,7 +116,8 @@ int main(void)
 				if(timer_tick(&TimerInitTouchCalibration))
 				{
 					UARTPuts(DebugCom, "Init calibration of LCD resistive touch screen....." , -1);
-					put_rectangle(ScreenBuff, 0, 0, ScreenBuff->Width, ScreenBuff->Height, true, controls_color.Scren);
+					screen_clear(ScreenBuff, controls_color.Scren);
+					//put_rectangle(ScreenBuff, 0, 0, ScreenBuff->raster_timings.X, ScreenBuff->raster_timings.Y, true, controls_color.Scren);
 					ar1020_calibration_start(TouchScreen, ScreenBuff);
 					UARTPuts(DebugCom, "OK.\n\r" , -1);
 					control_comand.Comand = Control_Entire_Repaint;

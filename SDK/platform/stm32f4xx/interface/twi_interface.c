@@ -9,19 +9,39 @@
 #include "stm32f4xx_conf.h"
 #include "include/stm32f4xx.h"
 #include "twi_interface.h"
-#include "driver/stm32f4xx_i2c.h"
+#include "include/stm32f4xx.h"
+#include "driver/stm32f4xx_hal_i2c.h"
+#include "driver/stm32f4xx_hal_rcc.h"
 #include "api/timer_api.h"
 #include "api/twi_def.h"
 #include "gpio_interface.h"
 
 #define USE_I2C_TX_DMA
 //#####################################################
-I2C_TypeDef *sEE_I2C[3] = {I2C1, I2C2, I2C3};
+I2C_TypeDef *sEE_I2C[3] = {
+#ifdef I2C1
+		I2C1,
+#endif
+#ifdef I2C2
+		I2C2,
+#endif
+#ifdef I2C3
+		I2C3,
+#endif
+#ifdef I2C4
+		I2C4,
+#endif
+#ifdef I2C5
+		I2C5,
+#endif
+#ifdef I2C6
+		I2C6
+#endif
+};
 #define I2Cn                             3
 
-I2C_TypeDef* I2C[I2Cn] = { I2C1, I2C2, I2C3};
 
-const uint32_t I2C_CLK[I2Cn] = {RCC_APB1Periph_I2C1, RCC_APB1Periph_I2C2, RCC_APB1Periph_I2C3};
+//const unsigned long I2C_CLK[I2Cn] = {RCC_APB1Periph_I2C1, RCC_APB1Periph_I2C2, RCC_APB1Periph_I2C3};
 
 
 /**
@@ -63,23 +83,58 @@ void sEE_LowLevel_DeInit(new_twi* TwiStruct)
   GPIO_InitTypeDef  GPIO_InitStructure;
 
   /* sEE_I2C Peripheral Disable */
-  I2C_Cmd(sEE_I2C[TwiStruct->TwiNr], DISABLE);
+  //I2C_Cmd(sEE_I2C[TwiStruct->TwiNr], DISABLE);
 
   /* sEE_I2C DeInit */
-  I2C_DeInit(sEE_I2C[TwiStruct->TwiNr]);
+  //I2C_DeInit(sEE_I2C[TwiStruct->TwiNr]);
 
   /*!< sEE_I2C Periph clock disable */
-  RCC_APB1PeriphClockCmd(I2C_CLK[TwiStruct->TwiNr], DISABLE);
-
+  //RCC_APB1PeriphClockCmd(I2C_CLK[TwiStruct->TwiNr], DISABLE);
+  switch(TwiStruct->TwiNr)
+  {
+#ifdef __HAL_RCC_I2C1_CLK_DISABLE
+  case 0:
+	  __HAL_RCC_I2C1_CLK_DISABLE();
+	  break;
+#endif
+#ifdef __HAL_RCC_I2C2_CLK_DISABLE
+  case 1:
+	  __HAL_RCC_I2C2_CLK_DISABLE();
+	  break;
+#endif
+#ifdef __HAL_RCC_I2C3_CLK_DISABLE
+  case 2:
+	  __HAL_RCC_I2C3_CLK_DISABLE();
+	  break;
+#endif
+#ifdef __HAL_RCC_I2C4_CLK_DISABLE
+  case 3:
+	  __HAL_RCC_I2C4_CLK_DISABLE();
+	  break;
+#endif
+#ifdef __HAL_RCC_I2C5_CLK_DISABLE
+  case 4:
+	  __HAL_RCC_I2C5_CLK_DISABLE();
+	  break;
+#endif
+#ifdef __HAL_RCC_I2C6_CLK_DISABLE
+  case 5:
+	  __HAL_RCC_I2C6_CLK_DISABLE();
+	  break;
+#endif
+  }
   /*!< GPIO configuration */
   /*!< Configure sEE_I2C pins: SCL */
-  GPIO_InitStructure.GPIO_Pin = 1 << TwiStruct->SclPin;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
-  GPIO_Init(GET_GPIO_PORT_ADDR[TwiStruct->SclPort], &GPIO_InitStructure);
+  GPIO_InitStructure.Pin = 1 << TwiStruct->SclPin;
+  GPIO_InitStructure.Alternate = GPIO_AF4_I2C1;
+  GPIO_InitStructure.Mode = GPIO_MODE_AF_OD;
+  GPIO_InitStructure.Pull = GPIO_PULLUP;
+  GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
+  HAL_GPIO_Init(GET_GPIO_PORT_ADDR[TwiStruct->SclPort], &GPIO_InitStructure);
 
   /*!< Configure sEE_I2C pins: SDA */
-  GPIO_InitStructure.GPIO_Pin = 1 << TwiStruct->SdaPin;
-  GPIO_Init(GET_GPIO_PORT_ADDR[TwiStruct->SdaPort], &GPIO_InitStructure);
+  GPIO_InitStructure.Pin = 1 << TwiStruct->SdaPin;
+  HAL_GPIO_Init(GET_GPIO_PORT_ADDR[TwiStruct->SdaPort], &GPIO_InitStructure);
 
 }
 //#####################################################
@@ -93,28 +148,92 @@ void sEE_LowLevel_Init(new_twi* TwiStruct)
   GPIO_InitTypeDef  GPIO_InitStructure;
 
   /*!< sEE_I2C_SCL_GPIO_CLK and sEE_I2C_SDA_GPIO_CLK Periph clock enable */
-  RCC_APB2PeriphClockCmd(GET_PORT_CLK_ADDR[TwiStruct->SclPort] | GET_PORT_CLK_ADDR[TwiStruct->SdaPort], ENABLE);
+  //RCC_APB2PeriphClockCmd(GET_PORT_CLK_ADDR[TwiStruct->SclPort] | GET_PORT_CLK_ADDR[TwiStruct->SdaPort], ENABLE);
+  _gpio_init(TwiStruct->SclPort);
+  _gpio_init(TwiStruct->SdaPort);
 
   /*!< sEE_I2C Periph clock enable */
-  RCC_APB1PeriphClockCmd(I2C_CLK[TwiStruct->TwiNr], ENABLE);
-
+  //RCC_APB1PeriphClockCmd(I2C_CLK[TwiStruct->TwiNr], ENABLE);
+  switch(TwiStruct->TwiNr)
+  {
+#ifdef __HAL_RCC_I2C1_CLK_ENABLE
+  case 0:
+	  __HAL_RCC_I2C1_CLK_ENABLE();
+	  break;
+#endif
+#ifdef __HAL_RCC_I2C2_CLK_ENABLE
+  case 1:
+	  __HAL_RCC_I2C2_CLK_ENABLE();
+	  break;
+#endif
+#ifdef __HAL_RCC_I2C3_CLK_ENABLE
+  case 2:
+	  __HAL_RCC_I2C3_CLK_ENABLE();
+	  break;
+#endif
+#ifdef __HAL_RCC_I2C4_CLK_ENABLE
+  case 3:
+	  __HAL_RCC_I2C4_CLK_ENABLE();
+	  break;
+#endif
+#ifdef __HAL_RCC_I2C5_CLK_ENABLE
+  case 4:
+	  __HAL_RCC_I2C5_CLK_ENABLE();
+	  break;
+#endif
+#ifdef __HAL_RCC_I2C6_CLK_ENABLE
+  case 5:
+	  __HAL_RCC_I2C6_CLK_ENABLE();
+	  break;
+#endif
+  }
   /*!< GPIO configuration */
   /*!< Configure sEE_I2C pins: SCL */
-  GPIO_InitStructure.GPIO_Pin = 1 << TwiStruct->SclPin;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
-  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+  GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_MEDIUM;
+  GPIO_InitStructure.Alternate = GPIO_AF4_I2C1;
+  GPIO_InitStructure.Mode = GPIO_MODE_AF_OD;
+  GPIO_InitStructure.Pull  = GPIO_PULLUP;
 
-  GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
-  GPIO_Init(GET_GPIO_PORT_ADDR[TwiStruct->SclPort], &GPIO_InitStructure);
+  GPIO_InitStructure.Pin = 1 << TwiStruct->SclPin;
+  HAL_GPIO_Init(GET_GPIO_PORT_ADDR[TwiStruct->SclPort], &GPIO_InitStructure);
 
   /*!< Configure sEE_I2C pins: SDA */
-  GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;
-  GPIO_InitStructure.GPIO_Pin = 1 << TwiStruct->SdaPin;
-  GPIO_Init(GET_GPIO_PORT_ADDR[TwiStruct->SdaPort], &GPIO_InitStructure);
+  //GPIO_InitStructure.Mode = GPIO_OType_OD;
+  GPIO_InitStructure.Pin = 1 << TwiStruct->SdaPin;
+  HAL_GPIO_Init(GET_GPIO_PORT_ADDR[TwiStruct->SdaPort], &GPIO_InitStructure);
 
-  GPIO_PinAFConfig(GET_GPIO_PORT_ADDR[TwiStruct->SclPort], TwiStruct->SclPin, GPIO_AF_I2C1);
-  GPIO_PinAFConfig(GET_GPIO_PORT_ADDR[TwiStruct->SdaPort], TwiStruct->SdaPin, GPIO_AF_I2C1);
+  //GPIO_PinAFConfig(GET_GPIO_PORT_ADDR[TwiStruct->SclPort], TwiStruct->SclPin, GPIO_AF_I2C1);
+  //GPIO_PinAFConfig(GET_GPIO_PORT_ADDR[TwiStruct->SdaPort], TwiStruct->SdaPin, GPIO_AF_I2C1);
+
+}
+/**
+  * @brief  Enables or disables the specified I2C software reset.
+  * @note   When software reset is enabled, the I2C IOs are released (this can
+  *         be useful to recover from bus errors).
+  * @param  I2Cx: where x can be 1, 2 or 3 to select the I2C peripheral.
+  * @param  NewState: new state of the I2C software reset.
+  *          This parameter can be: ENABLE or DISABLE.
+  * @retval None
+  */
+void I2C_SoftwareResetCmd(I2C_TypeDef* I2Cx, FunctionalState NewState)
+{
+  /* Check the parameters */
+  assert_param(IS_I2C_ALL_PERIPH(I2Cx));
+  assert_param(IS_FUNCTIONAL_STATE(NewState));
+  if (NewState != DISABLE)
+  {
+    /* Peripheral under reset */
+    I2Cx->CR1 |= I2C_CR1_SWRST;
+  }
+  else
+  {
+    /* Peripheral not under reset */
+    I2Cx->CR1 &= (uint16_t)~((uint16_t)I2C_CR1_SWRST);
+  }
+}
+
+void TWI_SendStop(I2C_HandleTypeDef *hi2c)
+{
 
 }
 //#####################################################
@@ -140,17 +259,17 @@ void sEE_LowLevel_Init(new_twi* TwiStruct)
   * @retval sEE_OK (0) if operation is correctly performed, else return value
   *         different from sEE_OK (0) or the timeout user callback.
   */
-uint32_t TWI_MasterWriteRead(new_twi* TwiStruct, unsigned int TransmitBytes, unsigned int ReceiveBytes)
+unsigned long TWI_MasterWriteRead(new_twi* TwiStruct, unsigned int TransmitBytes, unsigned int Size)
 {
-	uint32_t sEETimeout;
+	//unsigned long sEETimeout;
 	/* Set the pointer to the Number of data to be read. This pointer will be used
       by the DMA Transfer Completer interrupt Handler in order to reset the
       variable to 0. User should check on this variable in order to know if the
       DMA transfer has been complete or not. */
-	uint16_t NumByteToRead = ReceiveBytes;
 	I2C_TypeDef *I2Cx = sEE_I2C[TwiStruct->TwiNr];
+	I2C_HandleTypeDef *hi2c = ((I2C_HandleTypeDef *)TwiStruct->udata);
 	/* If bus is freeze we will reset the unit and restore the settings. */
-	if(I2C_GetFlagStatus(sEE_I2C[TwiStruct->TwiNr], I2C_FLAG_AF | I2C_FLAG_ARLO) || (I2Cx->CR1 & (1 << 8))) {
+	if(__HAL_I2C_GET_FLAG(hi2c, I2C_FLAG_AF | I2C_FLAG_ARLO) || (I2Cx->CR1 & (1 << 8))) {
 		  /* sEE_I2C Peripheral Enable */
 		I2C_TypeDef I2CxBack;
 		I2CxBack.CR1 = I2Cx->CR1;
@@ -172,7 +291,7 @@ uint32_t TWI_MasterWriteRead(new_twi* TwiStruct, unsigned int TransmitBytes, uns
 	timer(TimerBusyTimeout);
 	  timer_interval(&TimerBusyTimeout, TwiStruct->BusyTimeOut);
 	  timer_enable(&TimerBusyTimeout);
-	  while(I2C_GetFlagStatus(sEE_I2C[TwiStruct->TwiNr], I2C_FLAG_BUSY))
+	  while(__HAL_I2C_GET_FLAG(hi2c, I2C_FLAG_BUSY))
 	  {
 		  if(timer_tick(&TimerBusyTimeout)) {
 				I2C_TypeDef I2CxBack;
@@ -193,223 +312,244 @@ uint32_t TWI_MasterWriteRead(new_twi* TwiStruct, unsigned int TransmitBytes, uns
 				break;
 			}
 	  }
+
 	  unsigned int cnt = 0;
-	  if(!TwiStruct->NoSendWriteOnRead)
+	  unsigned long Timeout = 10;
+	    /* Disable Pos */
+	    hi2c->Instance->CR1 &= ~I2C_CR1_POS;
+
+	    hi2c->State = HAL_I2C_STATE_MEM_BUSY_RX;
+	    hi2c->ErrorCode = HAL_I2C_ERROR_NONE;
+
+	    if(!TwiStruct->NoSendWriteOnRead)
 	  {
-			  /*!< Send START condition */
-		  I2C_GenerateSTART(sEE_I2C[TwiStruct->TwiNr], ENABLE);
 
-		  /*!< Test on EV5 and clear it (cleared by reading SR1 then writing to DR) */
-		  sEETimeout = sEE_FLAG_TIMEOUT;
-		  while(!I2C_CheckEvent(sEE_I2C[TwiStruct->TwiNr], I2C_EVENT_MASTER_MODE_SELECT))
+
+		  /* Enable Acknowledge */
+		  hi2c->Instance->CR1 |= I2C_CR1_ACK;
+
+		  /* Generate Start */
+		  hi2c->Instance->CR1 |= I2C_CR1_START;
+
+		  /* Wait until SB flag is set */
+		  if(I2C_WaitOnFlagUntilTimeout(hi2c, I2C_FLAG_SB, RESET, Timeout) != HAL_OK)
 		  {
-				if((sEETimeout--) == 0) {
-					return false;
-				}
+        	  __HAL_UNLOCK(hi2c);
+		    return false;
 		  }
 
-		  /*!< Send EEPROM address for write */
-		  I2C_Send7bitAddress(sEE_I2C[TwiStruct->TwiNr], TwiStruct->MasterSlaveAddr << 1, I2C_Direction_Transmitter);
+		  /* Send slave address */
+		  hi2c->Instance->DR = I2C_7BIT_ADD_WRITE(TwiStruct->MasterSlaveAddr << 1);
 
-		  /*!< Test on EV6 and clear it */
-		  sEETimeout = sEE_FLAG_TIMEOUT;
-		  while(!I2C_CheckEvent(sEE_I2C[TwiStruct->TwiNr], I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED))
+		  /* Wait until ADDR flag is set */
+		  if(I2C_WaitOnMasterAddressFlagUntilTimeout(hi2c, I2C_FLAG_ADDR, Timeout) != HAL_OK)
 		  {
-				if((sEETimeout--) == 0) {
-					return false;
-				}
+		    if(hi2c->ErrorCode == HAL_I2C_ERROR_AF)
+		    {
+	        	  __HAL_UNLOCK(hi2c);
+		      return false;
+		    }
+		    else
+		    {
+	        	  __HAL_UNLOCK(hi2c);
+		      return false;
+		    }
 		  }
+
+		  /* Clear ADDR flag */
+		  __HAL_I2C_CLEAR_ADDRFLAG(hi2c);
+
+		  /* Wait until TXE flag is set */
+		  if(I2C_WaitOnFlagUntilTimeout(hi2c, I2C_FLAG_TXE, RESET, Timeout) != HAL_OK)
+		  {
+        	  __HAL_UNLOCK(hi2c);
+		    return false;
+		  }
+
 
 
 		  for(; cnt < TransmitBytes; cnt++)
 		  {
-			  /*!< Send the EEPROM's internal address to read from: MSB of the address first */
-			  I2C_SendData(sEE_I2C[TwiStruct->TwiNr], TwiStruct->TxBuff[cnt]);
 
-			  /*!< Test on EV8 and clear it */
-			  sEETimeout = sEE_FLAG_TIMEOUT;
-			  while(!I2C_CheckEvent(sEE_I2C[TwiStruct->TwiNr], I2C_EVENT_MASTER_BYTE_TRANSMITTED))
-			  {
-					if((sEETimeout--) == 0) {
-						return false;
-					}
-			  }
-		  }
-	  }
+			/* Send MSB of Memory Address */
+			hi2c->Instance->DR = TwiStruct->TxBuff[cnt];
 
-  if(ReceiveBytes) {
-	  /* If number of data to be read is 1, then DMA couldn't be used */
-	  /* One Byte Master Reception procedure (POLLING) ---------------------------*/
-	  if (NumByteToRead < 2)
-	  {
-		  /*!< Send STRAT condition a second time */
-		  I2C_GenerateSTART(sEE_I2C[TwiStruct->TwiNr], ENABLE);
-
-		  /*!< Test on EV5 and clear it (cleared by reading SR1 then writing to DR) */
-		  sEETimeout = sEE_FLAG_TIMEOUT;
-		  while(!I2C_CheckEvent(sEE_I2C[TwiStruct->TwiNr], I2C_EVENT_MASTER_MODE_SELECT))
-		  {
-				if((sEETimeout--) == 0) {
-					return false;
-				}
-		  }
-
-		  /*!< Send EEPROM address for read */
-		  I2C_Send7bitAddress(sEE_I2C[TwiStruct->TwiNr], TwiStruct->MasterSlaveAddr << 1, I2C_Direction_Receiver);
-
-		/* Wait on ADDR flag to be set (ADDR is still not cleared at this level */
-		sEETimeout = sEE_FLAG_TIMEOUT;
-		while(I2C_GetFlagStatus(sEE_I2C[TwiStruct->TwiNr], I2C_FLAG_ADDR) == RESET)
-		{
-			if((sEETimeout--) == 0) {
-				return false;
-			}
-		}
-
-		/*!< Disable Acknowledgement */
-		I2C_AcknowledgeConfig(sEE_I2C[TwiStruct->TwiNr], DISABLE);
-
-		/* Call User callback for critical section start (should typically disable interrupts) */
-		sEE_EnterCriticalSection_UserCallback();
-
-		/* Clear ADDR register by reading SR1 then SR2 register (SR1 has already been read) */
-		(void)sEE_I2C[TwiStruct->TwiNr]->SR2;
-
-		/*!< Send STOP Condition */
-		I2C_GenerateSTOP(sEE_I2C[TwiStruct->TwiNr], ENABLE);
-
-		/* Call User callback for critical section end (should typically re-enable interrupts) */
-		sEE_ExitCriticalSection_UserCallback();
-
-		/* Wait for the byte to be received */
-		sEETimeout = sEE_FLAG_TIMEOUT;
-		while(I2C_GetFlagStatus(sEE_I2C[TwiStruct->TwiNr], I2C_FLAG_RXNE) == RESET)
-		{
-			if((sEETimeout--) == 0) {
-				return false;
-			}
-		}
-
-		/*!< Read the byte received from the EEPROM */
-		*TwiStruct->RxBuff = I2C_ReceiveData(sEE_I2C[TwiStruct->TwiNr]);
-
-		/*!< Decrement the read bytes counter */
-		NumByteToRead--;
-
-		/* Wait to make sure that STOP control bit has been cleared */
-		sEETimeout = sEE_FLAG_TIMEOUT;
-		while(sEE_I2C[TwiStruct->TwiNr]->CR1 & I2C_CR1_STOP)
-		{
-			if((sEETimeout--) == 0) {
-				return false;
-			}
-		}
-
-		/*!< Re-Enable Acknowledgement to be ready for another reception */
-		I2C_AcknowledgeConfig(sEE_I2C[TwiStruct->TwiNr], ENABLE);
-	  }
-	  else/* More than one Byte Master Reception procedure (DMA) -----------------*/
-	  {
-		  /*!< Send STRAT condition a second time */
-		  I2C_GenerateSTART(sEE_I2C[TwiStruct->TwiNr], ENABLE);
-
-		  /*!< Test on EV5 and clear it (cleared by reading SR1 then writing to DR) */
-		  sEETimeout = sEE_FLAG_TIMEOUT;
-		  while(!I2C_CheckEvent(sEE_I2C[TwiStruct->TwiNr], I2C_EVENT_MASTER_MODE_SELECT))
-		  {
-				if((sEETimeout--) == 0) {
-					return false;
-				}
-		  }
-
-		  /*!< Send EEPROM address for read */
-		  I2C_Send7bitAddress(sEE_I2C[TwiStruct->TwiNr], TwiStruct->MasterSlaveAddr << 1, I2C_Direction_Receiver);
-
-		  /* If number of data to be read is 1, then DMA couldn't be used */
-		  /* One Byte Master Reception procedure (POLLING) ---------------------------*/
-		  //if (NumByteToRead < 2)
-		  //{
-			/* Wait on ADDR flag to be set (ADDR is still not cleared at this level */
-			sEETimeout = sEE_FLAG_TIMEOUT;
-			while(I2C_GetFlagStatus(sEE_I2C[TwiStruct->TwiNr], I2C_FLAG_ADDR) == RESET)
+			/* Wait until TXE flag is set */
+			if(I2C_WaitOnFlagUntilTimeout(hi2c, I2C_FLAG_TXE, RESET, Timeout) != HAL_OK)
 			{
-				if((sEETimeout--) == 0) {
-					return false;
-				}
+	        	  __HAL_UNLOCK(hi2c);
+			return false;
 			}
-			(void)sEE_I2C[TwiStruct->TwiNr]->SR2;
-
-			  cnt = 0;
-			  for(; cnt < ReceiveBytes; cnt++)
-			  {
-				if(cnt == ReceiveBytes - 1)
-				{
-					/*!< Disable Acknowledgement */
-					I2C_AcknowledgeConfig(sEE_I2C[TwiStruct->TwiNr], DISABLE);
-
-					/* Call User callback for critical section start (should typically disable interrupts) */
-					sEE_EnterCriticalSection_UserCallback();
-
-					/* Clear ADDR register by reading SR1 then SR2 register (SR1 has already been read) */
-					(void)sEE_I2C[TwiStruct->TwiNr]->SR2;
-
-					/*!< Send STOP Condition */
-					I2C_GenerateSTOP(sEE_I2C[TwiStruct->TwiNr], ENABLE);
-
-					/* Call User callback for critical section end (should typically re-enable interrupts) */
-					sEE_ExitCriticalSection_UserCallback();
-				}
-
-				/* Wait for the byte to be received */
-				sEETimeout = sEE_FLAG_TIMEOUT;
-				while(I2C_GetFlagStatus(sEE_I2C[TwiStruct->TwiNr], I2C_FLAG_RXNE) == RESET)
-				{
-					if((sEETimeout--) == 0) {
-						return false;
-					}
-				}
-
-				/*!< Read the byte received from the EEPROM */
-				TwiStruct->RxBuff[cnt] = I2C_ReceiveData(sEE_I2C[TwiStruct->TwiNr]);
-			  }
-
-			/* Wait to make sure that STOP control bit has been cleared */
-			sEETimeout = sEE_FLAG_TIMEOUT;
-			while(sEE_I2C[TwiStruct->TwiNr]->CR1 & I2C_CR1_STOP)
-			{
-				if((sEETimeout--) == 0) {
-					return false;
-				}
-			}
-
-			/*!< Re-Enable Acknowledgement to be ready for another reception */
-			I2C_AcknowledgeConfig(sEE_I2C[TwiStruct->TwiNr], ENABLE);
+		  }
 	  }
-  }
-  else {
-		/* Call User callback for critical section start (should typically disable interrupts) */
-		sEE_EnterCriticalSection_UserCallback();
 
-		/* Clear ADDR register by reading SR1 then SR2 register (SR1 has already been read) */
-		(void)sEE_I2C[TwiStruct->TwiNr]->SR2;
+  if(!Size)
+  {
+	  /* Generate Stop */
+	  hi2c->Instance->CR1 |= I2C_CR1_STOP;
 
-		/*!< Send STOP Condition */
-		I2C_GenerateSTOP(sEE_I2C[TwiStruct->TwiNr], ENABLE);
+	  hi2c->State = HAL_I2C_STATE_READY;
 
-		/* Call User callback for critical section end (should typically re-enable interrupts) */
-		sEE_ExitCriticalSection_UserCallback();
+	  /* Process Unlocked */
+	  __HAL_UNLOCK(hi2c);
 
-		/* Wait for the byte to be received */
-		sEETimeout = sEE_FLAG_TIMEOUT;
-		while(I2C_GetFlagStatus(sEE_I2C[TwiStruct->TwiNr], I2C_FLAG_RXNE) == RESET)
-		{
-			if((sEETimeout--) == 0) {
-				return true;
-			}
-		}
+  }else
+  {
 
-  }
-  /* If all operations OK, return sEE_OK (0) */
+	  /* Generate Restart */
+	  hi2c->Instance->CR1 |= I2C_CR1_START;
+
+	  /* Wait until SB flag is set */
+	  if(I2C_WaitOnFlagUntilTimeout(hi2c, I2C_FLAG_SB, RESET, Timeout) != HAL_OK)
+	  {
+    	  __HAL_UNLOCK(hi2c);
+	    return false;
+	  }
+
+	  /* Send slave address */
+	  hi2c->Instance->DR = I2C_7BIT_ADD_READ(TwiStruct->MasterSlaveAddr << 1);
+
+	  /* Wait until ADDR flag is set */
+	  if(I2C_WaitOnMasterAddressFlagUntilTimeout(hi2c, I2C_FLAG_ADDR, Timeout) != HAL_OK)
+	  {
+    	  __HAL_UNLOCK(hi2c);
+		  return false;
+	  }
+	  unsigned long data_cnt = 0;
+
+	  if(Size == 1)
+	      {
+	        /* Disable Acknowledge */
+	        hi2c->Instance->CR1 &= ~I2C_CR1_ACK;
+
+	        /* Clear ADDR flag */
+	        __HAL_I2C_CLEAR_ADDRFLAG(hi2c);
+
+	        /* Generate Stop */
+	        hi2c->Instance->CR1 |= I2C_CR1_STOP;
+	      }
+	      else if(Size == 2)
+	      {
+	        /* Disable Acknowledge */
+	        hi2c->Instance->CR1 &= ~I2C_CR1_ACK;
+
+	        /* Enable Pos */
+	        hi2c->Instance->CR1 |= I2C_CR1_POS;
+
+	        /* Clear ADDR flag */
+	        __HAL_I2C_CLEAR_ADDRFLAG(hi2c);
+	      }
+	      else
+	      {
+	        /* Enable Acknowledge */
+	        hi2c->Instance->CR1 |= I2C_CR1_ACK;
+
+	        /* Clear ADDR flag */
+	        __HAL_I2C_CLEAR_ADDRFLAG(hi2c);
+	      }
+
+	      while(Size > 0)
+	      {
+	        if(Size <= 3)
+	        {
+	          /* One byte */
+	          if(Size == 1)
+	          {
+	            /* Wait until RXNE flag is set */
+	            if(I2C_WaitOnFlagUntilTimeout(hi2c, I2C_FLAG_RXNE, RESET, Timeout) != HAL_OK)
+	            {
+		        	  __HAL_UNLOCK(hi2c);
+	              return false;
+	            }
+
+	            /* Read data from DR */
+	            TwiStruct->RxBuff[data_cnt++] = hi2c->Instance->DR;
+	            Size--;
+	          }
+	          /* Two bytes */
+	          else if(Size == 2)
+	          {
+	            /* Wait until BTF flag is set */
+	            if(I2C_WaitOnFlagUntilTimeout(hi2c, I2C_FLAG_BTF, RESET, Timeout) != HAL_OK)
+	            {
+		        	  __HAL_UNLOCK(hi2c);
+	              return false;
+	            }
+
+	            /* Generate Stop */
+	            hi2c->Instance->CR1 |= I2C_CR1_STOP;
+
+	            /* Read data from DR */
+	            TwiStruct->RxBuff[data_cnt++] = hi2c->Instance->DR;
+	            Size--;
+
+	            /* Read data from DR */
+	            TwiStruct->RxBuff[data_cnt++] = hi2c->Instance->DR;
+	            Size--;
+	          }
+	          /* 3 Last bytes */
+	          else
+	          {
+	            /* Wait until BTF flag is set */
+	            if(I2C_WaitOnFlagUntilTimeout(hi2c, I2C_FLAG_BTF, RESET, Timeout) != HAL_OK)
+	            {
+		        	  __HAL_UNLOCK(hi2c);
+	              return false;
+	            }
+
+	            /* Disable Acknowledge */
+	            hi2c->Instance->CR1 &= ~I2C_CR1_ACK;
+
+	            /* Read data from DR */
+	            TwiStruct->RxBuff[data_cnt++] = hi2c->Instance->DR;
+	            Size--;
+
+	            /* Wait until BTF flag is set */
+	            if(I2C_WaitOnFlagUntilTimeout(hi2c, I2C_FLAG_BTF, RESET, Timeout) != HAL_OK)
+	            {
+		        	  __HAL_UNLOCK(hi2c);
+	              return false;
+	            }
+
+	            /* Generate Stop */
+	            hi2c->Instance->CR1 |= I2C_CR1_STOP;
+
+	            /* Read data from DR */
+	            TwiStruct->RxBuff[data_cnt++] = hi2c->Instance->DR;
+	            Size--;
+
+	            /* Read data from DR */
+	            TwiStruct->RxBuff[data_cnt++] = hi2c->Instance->DR;
+	            Size--;
+	          }
+	        }
+	        else
+	        {
+	          /* Wait until RXNE flag is set */
+	          if(I2C_WaitOnFlagUntilTimeout(hi2c, I2C_FLAG_RXNE, RESET, Timeout) != HAL_OK)
+	          {
+	        	  __HAL_UNLOCK(hi2c);
+	            return false;
+	          }
+
+	          /* Read data from DR */
+	          TwiStruct->RxBuff[data_cnt++] = hi2c->Instance->DR;
+	          Size--;
+
+	          if(__HAL_I2C_GET_FLAG(hi2c, I2C_FLAG_BTF) == SET)
+	          {
+	            /* Read data from DR */
+	        	  TwiStruct->RxBuff[data_cnt++] = hi2c->Instance->DR;
+	            Size--;
+	          }
+	        }
+	      }
+	    }
+  /* Process Unlocked */
+  hi2c->State = HAL_I2C_STATE_READY;
+
+  /* Process Unlocked */
+ __HAL_UNLOCK(hi2c);
   return true;
 }
 //#####################################################
@@ -420,23 +560,30 @@ uint32_t TWI_MasterWriteRead(new_twi* TwiStruct, unsigned int TransmitBytes, uns
   */
 bool TWI_open(new_twi* TwiStruct)
 {
-  I2C_InitTypeDef  I2C_InitStructure;
-
+	  I2C_HandleTypeDef *I2cHandle = calloc(1, sizeof(I2C_HandleTypeDef));
+	  if(!I2cHandle)
+		  return false;
+	   //I2C_InitTypeDef  I2C_InitStructure;
+	  TwiStruct->udata = (void *)I2cHandle;
   sEE_LowLevel_Init(TwiStruct);
+ /*##-1- Configure the I2C peripheral #######################################*/
+  I2cHandle->Instance             = sEE_I2C[TwiStruct->TwiNr];
 
-  /*!< I2C configuration */
-  /* sEE_I2C configuration */
-  I2C_InitStructure.I2C_Mode = I2C_Mode_I2C;
-  I2C_InitStructure.I2C_DutyCycle = I2C_DutyCycle_2;
-  I2C_InitStructure.I2C_OwnAddress1 = TwiStruct->MasterSlaveAddr;
-  I2C_InitStructure.I2C_Ack = I2C_Ack_Enable;
-  I2C_InitStructure.I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit;
-  I2C_InitStructure.I2C_ClockSpeed = TwiStruct->BaudRate;
+  I2cHandle->Init.AddressingMode  = I2C_ADDRESSINGMODE_7BIT;
+  I2cHandle->Init.ClockSpeed      = TwiStruct->BaudRate;
+  I2cHandle->Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  I2cHandle->Init.DutyCycle       = I2C_DUTYCYCLE_2;
+  I2cHandle->Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  I2cHandle->Init.NoStretchMode   = I2C_NOSTRETCH_DISABLE;
+  I2cHandle->Init.OwnAddress1     = TwiStruct->MasterSlaveAddr;
+  //I2cHandle.Init.OwnAddress2     = 0xFE;
 
-  /* sEE_I2C Peripheral Enable */
-  I2C_Cmd(sEE_I2C[TwiStruct->TwiNr], ENABLE);
-  /* Apply sEE_I2C configuration after enabling it */
-  I2C_Init(sEE_I2C[TwiStruct->TwiNr], &I2C_InitStructure);
+  if(HAL_I2C_Init(I2cHandle) != HAL_OK)
+  {
+    /* Initialization Error */
+    return false;
+  }
+
   return true;
 }
 /*#####################################################*/
@@ -472,6 +619,7 @@ bool _twi_open(new_twi* TwiStruct)
 void _twi_close(new_twi* TwiStruct)
 {
 	sEE_LowLevel_DeInit(TwiStruct);
+	if(TwiStruct->udata) free(TwiStruct->udata);
 	if(TwiStruct->RxBuff) free(TwiStruct->RxBuff);
 	if(TwiStruct->TxBuff) free(TwiStruct->TxBuff);
 }

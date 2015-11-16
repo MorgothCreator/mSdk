@@ -13,7 +13,7 @@
 #define CoreFreq_Mhz		168
 //#define USE_SELECTED_FONTS
 //#define INT_SIZE_IS_2_BYTES
-//#define USE_16_BIT_COLOR_DEPTH
+#define USE_16_BIT_COLOR_DEPTH
 //#define USE_AVR_STUDIO
 #define NO_ENUM_ON_SWITCH
 //#define USE_RTC_100_MS

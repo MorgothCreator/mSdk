@@ -56,7 +56,7 @@
   * @{
   */
 
-extern unsigned int SystemCoreClock;          /*!< System Clock Frequency (Core Clock) */
+extern unsigned long SystemCoreClock;          /*!< System Clock Frequency (Core Clock) */
 
 
 /**

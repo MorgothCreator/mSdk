@@ -25,7 +25,8 @@
 #include "stm32f4xx_it.h"
 #include "sys/sysdelay.h"
 #include "interface/hs_mmcsd_interface.h"
-
+#include "stm32f4xx_hal_dma.h"
+#include "driver/stm32f4xx_hal.h"
 /** @addtogroup STM32F4_Discovery_Peripheral_Examples
   * @{
   */
@@ -141,33 +142,45 @@ void PendSV_Handler(void)
 void SysTick_Handler(void)
 {
 	TimerCnt_Isr_Increment();
+	HAL_IncTick();
+
 }
 /******************************************************************************/
 /*                 STM32F4xx Peripherals Interrupt Handlers                   */
+/*  Add here the Interrupt Handler for the used peripheral(s) (PPP), for the  */
+/*  available peripheral interrupt handler's name please refer to the startup */
+/*  file (startup_stm32f4xx.s).                                               */
 /******************************************************************************/
+
 /**
-  * @brief  This function handles SDIO global interrupt request.
+  * @brief  This function handles DMA2 Stream 3 interrupt request.
+  * @param  None
+  * @retval None
+  */
+void DMA2_Stream3_IRQHandler(void)
+{
+  BSP_SD_DMA_Rx_IRQHandler();
+}
+
+/**
+  * @brief  This function handles DMA2 Stream 6 interrupt request.
+  * @param  None
+  * @retval None
+  */
+void DMA2_Stream6_IRQHandler(void)
+{
+  BSP_SD_DMA_Tx_IRQHandler();
+}
+
+/**
+  * @brief  This function handles SDIO interrupt request.
   * @param  None
   * @retval None
   */
 void SDIO_IRQHandler(void)
 {
-  /* Process All SDIO Interrupt Sources */
-  SD_ProcessIRQSrc();
+  BSP_SD_IRQHandler();
 }
-
-/**
-  * @brief  This function handles DMA2 Stream3 or DMA2 Stream6 global interrupts
-  *         requests.
-  * @param  None
-  * @retval None
-  */
-void SD_SDIO_DMA_IRQHANDLER(void)
-{
-  /* Process DMA2 Stream3 or DMA2 Stream6 Interrupt Sources */
-  SD_ProcessDMAIRQ();
-}
-
 
 /******************************************************************************/
 /*                 STM32F4xx Peripherals Interrupt Handlers                   */

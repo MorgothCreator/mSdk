@@ -25,8 +25,8 @@
 #include "api/mcspi_api.h"
 #include "api/adc_def.h"
 #include "api/adc_api.h"
-//#include "api/lcd_def.h"
-//#include "api/lcd_api.h"
+#include "api/lcd_def.h"
+#include "api/lcd_api.h"
 #include "api/mmcsd_api.h"
 #include "interface/hs_mmcsd_interface.h"
 //#include "lib/gfx/controls_definition.h"
@@ -49,9 +49,13 @@ new_uart* Uart[6] = {NULL, NULL, NULL, NULL, NULL, NULL};
 new_uart* DebugCom = NULL;
 new_twi* TWI[3] = {NULL, NULL, NULL};
 new_mcspi* SPI[3] = {NULL, NULL, NULL};
-new_adc* ADC[2] = {NULL, NULL};
+new_adc* _ADC[2] = {NULL, NULL};
 new_gpio* LED[LEDS_NR] = {NULL};
 new_gpio* HARDBTN[HARDBTNS_NR] = {NULL};
+new_gpio* LCD_BACKLIGHT;
+new_screen* ScreenBuff = NULL;
+
+
 #ifdef USE_MPU60x0_9150
 USE_MPU60x0_9150;
 #endif
@@ -94,6 +98,7 @@ USE_LEPTON_FLIR;
 /*-----------------------------------------------------*/
 //SD_Struct_t SD_StructDisk1;
 //SD_Struct_t SD_StructDisk2;
+extern HAL_SD_CardInfoTypedef SDCardInfo;
 /*#####################################################*/
 bool board_init()
 {
@@ -114,9 +119,16 @@ bool board_init()
 #endif
 /*-----------------------------------------------------*/
 /* Set up the Twi 0 to communicate with PMIC and the Onboard serial EEprom memory */
-	TWI_INIT(0, 400000, IOB, 8, IOB, 9);
+	TWI_INIT(0, 1000000, IOB, 8, IOB, 9);
 /*-----------------------------------------------------*/
-	SPI_INIT(1, IOB, 10, IOC, 3, IOC, 2, IOG, 10);
+	//SPI_INIT(1, IOB, 10, IOC, 3, IOC, 2, IOG, 10);
+/*-----------------------------------------------------*/
+	LCD_BACKLIGHT = gpio_assign(IOD, 13, GPIO_DIR_OUTPUT, false);
+	ScreenBuff = new_(new_screen);
+	ScreenBuff->raster_timings = &lcd_S035Q01_beaglebone_exp;
+	ScreenBuff->BackLight = LCD_BACKLIGHT;
+	screen_init(ScreenBuff);
+	UARTprintf(DebugCom, "LCD display initialize successful for %dx%d resolution, %d Bit bus.\n\r" , ScreenBuff->raster_timings->X, ScreenBuff->raster_timings->Y, ScreenBuff->raster_timings->bus_size);
 /*-----------------------------------------------------*/
 /* Set up the ADC 0 */
 #if _USE_INT_ADC == 1
@@ -189,8 +201,8 @@ bool board_init()
 	LED[3] = gpio_assign(LED4_PORT, LED4_PIN, GPIO_DIR_OUTPUT, false);
 #endif
 /*-----------------------------------------------------*/
-	mmcsd_init((void *)&SDCardInfo, (Gpio_t *)NULL, LED[0]);
-	mmcsd_idle((void *)&SDCardInfo);
+	mmcsd_init(NULL, NULL, LED[0]);
+	mmcsd_idle(NULL);
 /*-----------------------------------------------------*/
 	return true;
 }

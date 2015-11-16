@@ -5,17 +5,23 @@
  *  Author: XxXx
  */
 
+#include <stdlib.h>
+#include "stm32f4xx_conf.h"
+#include "include/stm32f4xx.h"
 #include "mcspi_interface.h"
 #include "api/mcspi_def.h"
-#include "driver/stm32f4xx_rcc.h"
-#include "driver/stm32f4xx_spi.h"
+#include "driver/stm32f4xx_hal_conf.h"
+#include "driver/stm32f4xx_hal_rcc_ex.h"
+#include "driver/stm32f4xx_hal_rcc.h"
+#include "driver/stm32f4xx_hal_spi.h"
+#include "driver/stm32f4xx_hal_gpio.h"
 #include "gpio_interface.h"
 //#include "driver/spi.h"
 
 extern unsigned long CoreFreq;
-#define SPIn                             3
+#define SPIn                             6
 
-const uint32_t SPI_CLK[] = {
+/*const uint32_t SPI_CLK[] = {
 		RCC_APB2Periph_SPI1
 #ifdef RCC_APB1Periph_SPI2
 		, RCC_APB1Periph_SPI2
@@ -32,188 +38,253 @@ const uint32_t SPI_CLK[] = {
 #ifdef RCC_APB1Periph_SPI6
 		, RCC_APB1Periph_SPI6
 #endif
+};*/
+
+SPI_TypeDef* _SPI_[] = {
+#ifdef SPI1
+		SPI1,
+#endif
+#ifdef SPI2
+		SPI2,
+#endif
+#ifdef SPI3
+		SPI3,
+#endif
+#ifdef SPI4
+		SPI4,
+#endif
+#ifdef SPI5
+		SPI5,
+#endif
+#ifdef SPI6
+		SPI6
+#endif
 };
 
-SPI_TypeDef* _SPI_[] = { SPI1, SPI2, SPI3};
 
 
+
+
+/**
+  * @brief SPI MSP Initialization
+  *        This function configures the hardware resources used in this example:
+  *           - Peripheral's clock enable
+  *           - Peripheral's GPIO Configuration
+  *           - DMA configuration for transmission request by peripheral
+  *           - NVIC configuration for DMA interrupt request enable
+  * @param hspi: SPI handle pointer
+  * @retval None
+  */
 bool _mcspi_open(new_mcspi *McspiStruct)
 {
-	RCC_APB2PeriphClockCmd(GET_PORT_CLK_ADDR[McspiStruct->MosiPort] | GET_PORT_CLK_ADDR[McspiStruct->MisoPort] | GET_PORT_CLK_ADDR[McspiStruct->SckPort], ENABLE);
+	if(!McspiStruct)
+			return false;
+	McspiStruct->UserData = calloc(1, sizeof(SPI_HandleTypeDef));
+	if(!McspiStruct->UserData)
+			return false;
+	SPI_HandleTypeDef *SpiHandle = (SPI_HandleTypeDef *)McspiStruct->UserData;
+	//SPI_HandleTypeDef *hspi = McspiStruct.
+
+  /*##-1- Enable peripherals and GPIO Clocks #################################*/
+  /* Enable GPIO TX/RX clock */
+  _gpio_init(McspiStruct->SckPort);
+  _gpio_init(McspiStruct->MisoPort);
+  _gpio_init(McspiStruct->MosiPort);
+  //SPIx_SCK_GPIO_CLK_ENABLE();
+  //SPIx_MISO_GPIO_CLK_ENABLE();
+  //SPIx_MOSI_GPIO_CLK_ENABLE();
+  /* Enable SPI3 clock */
+  switch(McspiStruct->McspiNr)
+  {
+  case 0:
+	  __HAL_RCC_SPI1_CLK_ENABLE();
+	  break;
+  case 1:
+	  __HAL_RCC_SPI2_CLK_ENABLE();
+	  break;
+  case 2:
+	  __HAL_RCC_SPI3_CLK_ENABLE();
+	  break;
+#if defined(STM32F427xx) || defined(STM32F429xx) || defined(STM32F437xx) || defined(STM32F439xx)
+  case 3:
+	  __HAL_RCC_SPI4_CLK_ENABLE();
+	  break;
+#endif
+#ifdef __HAL_RCC_SPI5_CLK_ENABLE
+  case 4:
+	  __HAL_RCC_SPI5_CLK_ENABLE();
+	  break;
+#endif
+#ifdef __HAL_RCC_SPI6_CLK_ENABLE
+  case 5:
+	  __HAL_RCC_SPI6_CLK_ENABLE();
+	  break;
+#endif
+#ifdef __HAL_RCC_SPI7_CLK_ENABLE
+  case 6:
+	  __HAL_RCC_SPI7_CLK_ENABLE();
+	  break;
+#endif
+#ifdef __HAL_RCC_SPI8_CLK_ENABLE
+  case 7:
+	  __HAL_RCC_SPI8_CLK_ENABLE();
+	  break;
+#endif
+  default:
+
+	  return false;
+  }
+
+  /*##-2- Configure peripheral GPIO ##########################################*/
+  /* SPI SCK GPIO pin configuration  */
+  GPIO_InitTypeDef GPIO_InitStruct;
+  GPIO_InitStruct.Pin       = 1 << McspiStruct->SckPin;
+  GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
+  GPIO_InitStruct.Pull      = GPIO_PULLUP;
+  GPIO_InitStruct.Speed     = GPIO_SPEED_FAST;
+  GPIO_InitStruct.Alternate = GPIO_AF5_SPI1;
+
+  HAL_GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->SckPort], &GPIO_InitStruct);
+
+  /* SPI MISO GPIO pin configuration  */
+  GPIO_InitStruct.Pin = 1 << McspiStruct->MisoPin;
+  GPIO_InitStruct.Alternate = GPIO_AF5_SPI1;
+
+  HAL_GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->MisoPort], &GPIO_InitStruct);
+
+  /* SPI MOSI GPIO pin configuration  */
+  GPIO_InitStruct.Pin = 1 << McspiStruct->MosiPin;
+  GPIO_InitStruct.Alternate = GPIO_AF5_SPI1;
+
+  HAL_GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->MisoPort], &GPIO_InitStruct);
+
+
+	//GPIO_InitStructure.Alternate = GPIO_Mode_OUT;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
 	if(McspiStruct->CsPort[0])
-		RCC_APB2PeriphClockCmd(GET_PORT_CLK_ADDR[McspiStruct->CsPort[0]], ENABLE);
-	if(McspiStruct->CsPort[1])
-		RCC_APB2PeriphClockCmd(GET_PORT_CLK_ADDR[McspiStruct->CsPort[1]], ENABLE);
-	if(McspiStruct->CsPort[2])
-		RCC_APB2PeriphClockCmd(GET_PORT_CLK_ADDR[McspiStruct->CsPort[2]], ENABLE);
-	if(McspiStruct->CsPort[3])
-		RCC_APB2PeriphClockCmd(GET_PORT_CLK_ADDR[McspiStruct->CsPort[3]], ENABLE);
-	switch(McspiStruct->McspiNr) {
-	case 0:
-		RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1, ENABLE);
-		break;
-	case 1:
-	case 2:
-	case 3:
-	case 4:
-	case 5:
-		RCC_APB1PeriphClockCmd(SPI_CLK[McspiStruct->McspiNr], ENABLE);
-		break;
-	default:
-		return false;
-	}
-
-	GPIO_InitTypeDef  GPIO_InitStructure;
-
-	GPIO_PinAFConfig(GET_GPIO_PORT_ADDR[McspiStruct->MosiPort], McspiStruct->MosiPin, GPIO_AF_SPI1);
-	GPIO_PinAFConfig(GET_GPIO_PORT_ADDR[McspiStruct->MisoPort], McspiStruct->MisoPin, GPIO_AF_SPI1);
-	GPIO_PinAFConfig(GET_GPIO_PORT_ADDR[McspiStruct->SckPort], McspiStruct->SckPin, GPIO_AF_SPI1);
-
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
-	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-	GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
-
-	GPIO_InitStructure.GPIO_Pin = 1 << McspiStruct->MosiPin;
-	GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->MosiPort], &GPIO_InitStructure);
-	GPIO_InitStructure.GPIO_Pin = 1 << McspiStruct->MisoPin;
-	GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->MisoPort], &GPIO_InitStructure);
-	GPIO_InitStructure.GPIO_Pin = 1 << McspiStruct->SckPin;
-	GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->SckPort], &GPIO_InitStructure);
-
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
-	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
-	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-	if(McspiStruct->CsPort[0])
 	{
-		GPIO_InitStructure.GPIO_Pin = 1 << McspiStruct->CsPin[0];
-		GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[0]], &GPIO_InitStructure);
+		  _gpio_init(McspiStruct->CsPort[0]);
+		GPIO_InitStruct.Pin = 1 << McspiStruct->CsPin[0];
+		HAL_GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[0]], &GPIO_InitStruct);
 	}
 	if(McspiStruct->CsPort[1])
 	{
-		GPIO_InitStructure.GPIO_Pin = 1 << McspiStruct->CsPin[1];
-		GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[1]], &GPIO_InitStructure);
+		  _gpio_init(McspiStruct->CsPort[1]);
+		GPIO_InitStruct.Pin = 1 << McspiStruct->CsPin[1];
+		HAL_GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[1]], &GPIO_InitStruct);
 	}
 	if(McspiStruct->CsPort[2])
 	{
-		GPIO_InitStructure.GPIO_Pin = 1 << McspiStruct->CsPin[2];
-		GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[2]], &GPIO_InitStructure);
+		  _gpio_init(McspiStruct->CsPort[2]);
+		GPIO_InitStruct.Pin = 1 << McspiStruct->CsPin[2];
+		HAL_GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[2]], &GPIO_InitStruct);
 	}
 	if(McspiStruct->CsPort[3])
 	{
-		GPIO_InitStructure.GPIO_Pin = 1 << McspiStruct->CsPin[3];
-		GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[3]], &GPIO_InitStructure);
+		  _gpio_init(McspiStruct->CsPort[3]);
+		GPIO_InitStruct.Pin = 1 << McspiStruct->CsPin[3];
+		HAL_GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[3]], &GPIO_InitStruct);
 	}
-
-
-	SPI_InitTypeDef  SPI_InitStructure;
-
-	/*!< _SPI_ configuration */
-	SPI_InitStructure.SPI_Direction = SPI_Direction_2Lines_FullDuplex;
-	if(McspiStruct->Slave) {
-		SPI_InitStructure.SPI_Mode = SPI_Mode_Slave;
-	} else {
-		SPI_InitStructure.SPI_Mode = SPI_Mode_Master;
-	}
-	switch(McspiStruct->WordSize) {
-	case 16:
-		SPI_InitStructure.SPI_DataSize = SPI_DataSize_16b;
-		break;
-	default:
-		SPI_InitStructure.SPI_DataSize = SPI_DataSize_8b;
-		break;
-	}
-	SPI_InitStructure.SPI_CPOL = (McspiStruct->Cpol & 0x01) << 1;//SPI_CPOL_High;
-	SPI_InitStructure.SPI_CPHA = (McspiStruct->Cpha & 0x01) << 0;//SPI_CPHA_2Edge;
-	SPI_InitStructure.SPI_NSS = SPI_NSS_Soft;
-	SPI_InitStructure.SPI_BaudRatePrescaler = (McspiStruct->BaudRate << 3) & SPI_BaudRatePrescaler_256;//SPI_BaudRatePrescaler_8;
-
-	SPI_InitStructure.SPI_FirstBit = (McspiStruct->LsbFirst & 0x01) << 7;//SPI_FirstBit_MSB;
-	SPI_InitStructure.SPI_CRCPolynomial = 7;
-	SPI_Init(_SPI_[McspiStruct->McspiNr], &SPI_InitStructure);
-
-	/*!< Enable the sFLASH_SPI  */
-	SPI_Cmd(_SPI_[McspiStruct->McspiNr], ENABLE);
-	return true;//spi_enable(McspiStruct);
+	  SpiHandle->Instance               = _SPI_[McspiStruct->McspiNr];
+	  SpiHandle->Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16;
+	  SpiHandle->Init.Direction         = SPI_DIRECTION_2LINES;
+	  SpiHandle->Init.CLKPhase          = SPI_PHASE_1EDGE;
+	  SpiHandle->Init.CLKPolarity       = SPI_POLARITY_HIGH;
+	  SpiHandle->Init.CRCCalculation    = SPI_CRCCALCULATION_DISABLE;
+	  SpiHandle->Init.CRCPolynomial     = 7;
+	  SpiHandle->Init.DataSize          = SPI_DATASIZE_8BIT;
+	  SpiHandle->Init.FirstBit          = SPI_FIRSTBIT_MSB;
+	  SpiHandle->Init.NSS               = SPI_NSS_SOFT;
+	  SpiHandle->Init.TIMode            = SPI_TIMODE_DISABLE;
+	  SpiHandle->Init.Mode 				= SPI_MODE_MASTER;
+	  if(HAL_SPI_Init(SpiHandle) != HAL_OK)
+	  	  return false;
+	  return true;
 }
-/*#####################################################*/
+
+/**
+  * @brief SPI MSP De-Initialization
+  *        This function frees the hardware resources used in this example:
+  *          - Disable the Peripheral's clock
+  *          - Revert GPIO, DMA and NVIC configuration to their default state
+  * @param hspi: SPI handle pointer
+  * @retval None
+  */
 void _mcspi_close(new_mcspi *McspiStruct)
 {
-	//spi_disable(McspiStruct);
-	  GPIO_InitTypeDef GPIO_InitStructure;
-
-	  /*!< Disable the sFLASH_SPI  ************************************************/
-	  SPI_Cmd(_SPI_[McspiStruct->McspiNr], DISABLE);
-
-	  /*!< DeInitializes the sFLASH_SPI *******************************************/
-	  SPI_I2S_DeInit(_SPI_[McspiStruct->McspiNr]);
-
-	  /*!< sFLASH_SPI Periph clock disable ****************************************/
-		switch(McspiStruct->McspiNr) {
-		case 0:
-			RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1, DISABLE);
-			break;
-		case 1:
-		case 2:
-		case 3:
-		case 4:
-		case 5:
-			RCC_APB1PeriphClockCmd(SPI_CLK[McspiStruct->McspiNr], DISABLE);
-			break;
-		default:
+	if(!McspiStruct)
 			return;
-	}
+	SPI_HandleTypeDef *SpiHandle = (SPI_HandleTypeDef *)McspiStruct->UserData;
 
-	/*!< Configure all pins used by the _SPI_ as input floating *******************/
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
-	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
 
-	GPIO_InitStructure.GPIO_Pin = 1 << McspiStruct->SckPin;
-	GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->SckPort], &GPIO_InitStructure);
+  /*##-1- Reset peripherals ##################################################*/
+  //SPIx_FORCE_RESET();
+  //SPIx_RELEASE_RESET();
+  switch(McspiStruct->McspiNr)
+  {
+  case 0:
+	  __HAL_RCC_SPI1_FORCE_RESET();
+	  __HAL_RCC_SPI1_RELEASE_RESET();
+	  break;
+  case 1:
+	  __HAL_RCC_SPI2_FORCE_RESET();
+	  __HAL_RCC_SPI2_RELEASE_RESET();
+	  break;
+  case 2:
+	  __HAL_RCC_SPI3_FORCE_RESET();
+	  __HAL_RCC_SPI3_RELEASE_RESET();
+	  break;
+#if defined(STM32F427xx) || defined(STM32F429xx) || defined(STM32F437xx) || defined(STM32F439xx)
+  case 3:
+	  __HAL_RCC_SPI4_FORCE_RESET();
+	  __HAL_RCC_SPI4_RELEASE_RESET();
+	  break;
+#endif
+#ifdef __HAL_RCC_SPI5_FORCE_RESET
+  case 4:
+	  __HAL_RCC_SPI5_FORCE_RESET();
+	  __HAL_RCC_SPI5_RELEASE_RESET();
+	  break;
+#endif
+#ifdef __HAL_RCC_SPI6_FORCE_RESET
+  case 5:
+	  __HAL_RCC_SPI6_FORCE_RESET();
+	  __HAL_RCC_SPI6_RELEASE_RESET();
+	  break;
+#endif
+  }
 
-	GPIO_InitStructure.GPIO_Pin = 1 << McspiStruct->MisoPin;
-	GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->MisoPort], &GPIO_InitStructure);
+  /*##-2- Disable peripherals and GPIO Clocks ################################*/
+  /* Configure SPI SCK as alternate function  */
+  HAL_GPIO_DeInit(GET_GPIO_PORT_ADDR[McspiStruct->SckPort], 1 << McspiStruct->SckPin);
+  /* Configure SPI MISO as alternate function  */
+  HAL_GPIO_DeInit(GET_GPIO_PORT_ADDR[McspiStruct->MisoPort], 1 << McspiStruct->MisoPin);
+  /* Configure SPI MOSI as alternate function  */
+  HAL_GPIO_DeInit(GET_GPIO_PORT_ADDR[McspiStruct->MosiPort], 1 << McspiStruct->MosiPin);
 
-	GPIO_InitStructure.GPIO_Pin = 1 << McspiStruct->MosiPin;
-	GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->MosiPort], &GPIO_InitStructure);
-
-	if(McspiStruct->CsPort[0])
-	{
-		  GPIO_InitStructure.GPIO_Pin = 1 << McspiStruct->CsPin[0];
-		  GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[0]], &GPIO_InitStructure);
-	}
-	if(McspiStruct->CsPort[1])
-	{
-		  GPIO_InitStructure.GPIO_Pin = 1 << McspiStruct->CsPin[1];
-		  GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[1]], &GPIO_InitStructure);
-	}
-	if(McspiStruct->CsPort[2])
-	{
-		  GPIO_InitStructure.GPIO_Pin = 1 << McspiStruct->CsPin[2];
-		  GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[2]], &GPIO_InitStructure);
-	}
-	if(McspiStruct->CsPort[3])
-	{
-		  GPIO_InitStructure.GPIO_Pin = 1 << McspiStruct->CsPin[3];
-		  GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[3]], &GPIO_InitStructure);
-	}
+  if(McspiStruct->CsPort[0])
+  	{
+  		HAL_GPIO_DeInit(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[0]], 1 << McspiStruct->CsPin[0]);
+  	}
+  	if(McspiStruct->CsPort[1])
+  	{
+  		HAL_GPIO_DeInit(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[1]], 1 << McspiStruct->CsPin[1]);
+  	}
+  	if(McspiStruct->CsPort[2])
+  	{
+  		HAL_GPIO_DeInit(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[2]], 1 << McspiStruct->CsPin[2]);
+  	}
+  	if(McspiStruct->CsPort[3])
+  	{
+  		HAL_GPIO_DeInit(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[3]], 1 << McspiStruct->CsPin[3]);
+  	}
+  	HAL_SPI_DeInit(SpiHandle);
 }
-/*#####################################################*/
-unsigned char _mcspi_SendByte(Mcspi_t *McspiStruct, unsigned char byte)
-{
-  /*!< Loop while DR register in not empty */
-  while (SPI_I2S_GetFlagStatus(_SPI_[McspiStruct->McspiNr], SPI_I2S_FLAG_TXE) == RESET);
 
-  /*!< Send byte through the SPI1 peripheral */
-  SPI_I2S_SendData(_SPI_[McspiStruct->McspiNr], byte);
 
-  /*!< Wait to receive a byte */
-  while (SPI_I2S_GetFlagStatus(_SPI_[McspiStruct->McspiNr], SPI_I2S_FLAG_RXNE) == RESET);
 
-  /*!< Return the byte read from the _SPI_ bus */
-  return SPI_I2S_ReceiveData(_SPI_[McspiStruct->McspiNr]);
-}
 /*#####################################################*/
 bool _mcspi_transfer(Mcspi_t *McspiStruct)
 {
@@ -222,15 +293,17 @@ bool _mcspi_transfer(Mcspi_t *McspiStruct)
 	//memcpy(McspiStruct->Buff, McspiStruct->Buff + NumOfBytesSend, NumOfBytesReceive);
 	if(response) return false;*/
 	if(!McspiStruct->DisableCsHandle)
-		GPIO_ResetBits(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[McspiStruct->CsSelect]], 1 << McspiStruct->CsPin[McspiStruct->CsSelect]);
+		HAL_GPIO_WritePin(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[McspiStruct->CsSelect]], 1 << McspiStruct->CsPin[McspiStruct->CsSelect], GPIO_PIN_RESET);
 
-	unsigned int transfer_cnt = 0;
-	for(; transfer_cnt < McspiStruct->numOfBytes; transfer_cnt++) {
-		McspiStruct->Buff[transfer_cnt] = _mcspi_SendByte(McspiStruct, McspiStruct->Buff[transfer_cnt]);
-	}
+	//unsigned int transfer_cnt = 0;
+	//for(; transfer_cnt < McspiStruct->numOfBytes; transfer_cnt++) {
+	//	McspiStruct->Buff[transfer_cnt] = _mcspi_SendByte(McspiStruct, McspiStruct->Buff[transfer_cnt]);
+	//}
+	SPI_HandleTypeDef *hspi = (SPI_HandleTypeDef *)McspiStruct->UserData;
+	HAL_SPI_TransmitReceive(hspi, McspiStruct->Buff, McspiStruct->Buff, McspiStruct->numOfBytes, 10);
 
 	if(!McspiStruct->DisableCsHandle)
-		GPIO_SetBits(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[McspiStruct->CsSelect]], 1 << McspiStruct->CsPin[McspiStruct->CsSelect]);
+		HAL_GPIO_WritePin(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[McspiStruct->CsSelect]], 1 << McspiStruct->CsPin[McspiStruct->CsSelect], GPIO_PIN_SET);
 	return true;
 }
 /*#####################################################*/

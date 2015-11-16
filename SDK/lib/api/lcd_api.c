@@ -89,3 +89,8 @@ void put_vertical_line(tDisplay *pDisplay, signed int Y1, signed int Y2, signed 
 	_screen_put_vertical_line(pDisplay, Y1, Y2, X, width, color);
 }
 
+void screen_clear(tDisplay *pDisplay, unsigned int color)
+{
+	_screen_clear(pDisplay, color);
+}
+

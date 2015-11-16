@@ -32,22 +32,22 @@ void heart_beat_service(void) {
 		switch(led_state) {
 			case 0:
 				led_state = 1;
-				gpio_out(LED[0], 1);
+				gpio_out(LED[0], 0);
 				timer_interval(&timer_led, 10);
 				break;
 			case 1:
 				led_state = 2;
-				gpio_out(LED[0], 0);
+				gpio_out(LED[0], 1);
 				timer_interval(&timer_led, 200);
 				break;
 			case 2:
 				led_state = 3;
-				gpio_out(LED[0], 1);
+				gpio_out(LED[0], 0);
 				timer_interval(&timer_led, 10);
 				break;
 			case 3:
 				led_state = 0;
-				gpio_out(LED[0], 0);
+				gpio_out(LED[0], 1);
 				timer_interval(&timer_led, 780);
 				break;
 		}
@@ -253,7 +253,7 @@ int main(void)
 #endif
 #if _USE_AK8975 == 1
 			if(ak8975_stat) {
-				UARTprintf(DebugCom, "AK8975: Magnetometer: Xg = %d, Yg = %d, Zg = %d\n\r", AK8975_X_Axis, AK8975_Y_Axis, AK8975_Z_Axis);
+				UARTprintf(DebugCom, "AK8975: Magnetometer: Xm = %d, Ym = %d, Zm = %d\n\r", AK8975_X_Axis, AK8975_Y_Axis, AK8975_Z_Axis);
 			}
 #endif
 #if _USE_MPR121 == 1
