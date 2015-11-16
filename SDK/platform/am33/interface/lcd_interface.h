@@ -39,6 +39,7 @@ void _put_rectangle(tDisplay *pDisplay, signed int x_start, signed int y_start, 
 void _put_pixel(tDisplay *pDisplay, signed int X, signed int Y, unsigned int color);
 void _screen_put_horizontal_line(tDisplay *pDisplay, signed int X1, signed int X2, signed int Y, unsigned char width, unsigned int color);
 void _screen_put_vertical_line(tDisplay *pDisplay, signed int Y1, signed int Y2, signed int X, unsigned char width, unsigned int color);
+void _screen_clear(tDisplay *pDisplay, unsigned int color);
 /**********************************************/
 #ifdef HEADER_INCLUDE_C_FILES
 #include "lcd_interface.c"

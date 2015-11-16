@@ -12,11 +12,6 @@
 
 /*-----------------------------------------------------------------------*/
 /* Correspondence between physical drive number and physical drive.      */
-
-#define MMC		0
-#define ATA		1
-#define USB		2
-
 //extern mmcsdCtrlInfo  ctrlInfo;
 extern FATFS *FatFs[];
 /*-----------------------------------------------------------------------*/

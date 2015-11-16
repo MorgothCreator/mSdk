@@ -45,11 +45,10 @@ bool screen_set_orientation(tDisplay* LcdStruct);
 void screen_put_pixel16(tDisplay* LcdStruct, signed int X_Coordonate, signed int Y_Coordonate, uint16_t Color16);
 uint16_t screen_get_pixel16(tDisplay* LcdStruct, signed int X_Coordonate, signed int Y_Coordonate, uint16_t Color16);
 void screen_put_pixel24(tDisplay* LcdStruct, signed int X_Coordonate, signed int Y_Coordonate, unsigned char Red, unsigned char Green, unsigned char Blue);
-void screen_clear(tDisplay* LcdStruct, unsigned int color);
 //void screen_fill_area(tDisplay* LcdStruct, signed int x1, signed int y1, signed int x2, signed int y2, unsigned int color);
 void screen_draw_rectangle(tDisplay* LcdStruct, signed int x1, signed int y1, signed int x2, signed int y2, bool fill, unsigned int color);
-void _screen_put_horizontal_line_(tDisplay *LcdStruct, signed int X1, signed int X2, signed int Y, unsigned char width, unsigned int color);
-void _screen_put_vertical_line_(tDisplay *LcdStruct, signed int Y1, signed int Y2, signed int X, unsigned char width, unsigned int color);
+void screen_put_horizontal_line_(tDisplay *LcdStruct, signed int X1, signed int X2, signed int Y, unsigned char width, unsigned int color);
+void screen_put_vertical_line_(tDisplay *LcdStruct, signed int Y1, signed int Y2, signed int X, unsigned char width, unsigned int color);
 /*#####################################################*/
 #ifdef HEADER_INCLUDE_C_FILES
 #include "mi0283.c"

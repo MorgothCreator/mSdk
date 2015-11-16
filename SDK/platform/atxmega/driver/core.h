@@ -45,7 +45,7 @@ typedef enum
 	CoreClk_Prescaller_512,
 }CoreClk_Prescaller;
 /*#####################################################*/
-unsigned long core_clk_set(unsigned long CoreFrequency, unsigned char ClkSource, unsigned short Prescaller, bool ExternalOsc);
+unsigned long core_clk_set(unsigned long CoreFrequency, unsigned char ClkSource, unsigned short Prescaller, char ExternalOsc);
 void int_lvl_enable(bool LowLevel_En, bool MedLevel_En, bool HighLevel_En);
 void int_lvl_disable(bool LowLevel_En, bool MedLevel_En, bool HighLevel_En);
 unsigned char Bit_Reverse( unsigned char x );

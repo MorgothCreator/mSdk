@@ -589,7 +589,8 @@ void _screen_put_rgb_array_32(void *_pDisplay, unsigned char *rgb_buffer, unsign
 //#######################################################################################
 void _screen_put_horizontal_line(tDisplay *pDisplay, signed int X1, signed int X2, signed int Y, unsigned char width, unsigned int color)
 {
-
+	if(width == 1 && (Y < pDisplay->sClipRegion.sYMin || Y >= pDisplay->sClipRegion.sYMax))
+		return;
 	register int X1_Tmp = X1, X2_Tmp = X1 + X2;
 	if(X1_Tmp <= (int)pDisplay->sClipRegion.sXMin) X1_Tmp = (int)pDisplay->sClipRegion.sXMin;
 	if(X1_Tmp >= (int)pDisplay->sClipRegion.sXMax) X1_Tmp = (int)pDisplay->sClipRegion.sXMax;
@@ -613,7 +614,8 @@ void _screen_put_horizontal_line(tDisplay *pDisplay, signed int X1, signed int X
 //#######################################################################################
 void _screen_put_vertical_line(tDisplay *pDisplay, signed int Y1, signed int Y2, signed int X, unsigned char width, unsigned int color)
 {
-
+	if(width == 1 && (X < pDisplay->sClipRegion.sXMin || X >= pDisplay->sClipRegion.sXMax))
+		return;
 	register int Y1_Tmp = Y1, Y2_Tmp = Y1 + Y2;
 	if(X <= (int)pDisplay->sClipRegion.sXMin) X = (int)pDisplay->sClipRegion.sXMin;
 	if(X >= (int)pDisplay->sClipRegion.sXMax) X = (int)pDisplay->sClipRegion.sXMax;
@@ -635,3 +637,8 @@ void _screen_put_vertical_line(tDisplay *pDisplay, signed int Y1, signed int Y2,
 	}
 }
 //#######################################################################################
+void _screen_clear(tDisplay *pDisplay, unsigned int color)
+{
+	_put_rectangle(pDisplay, 0, 0, pDisplay->raster_timings->X, pDisplay->raster_timings->Y, true, color);
+	_box_cache_clean(pDisplay, 0, 0, pDisplay->raster_timings->X, pDisplay->raster_timings->Y);
+}

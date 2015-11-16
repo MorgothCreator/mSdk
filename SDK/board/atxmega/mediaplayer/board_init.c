@@ -103,7 +103,7 @@ bool board_init()
 	screen_clear(ScreenBuff, 0);
 	screen_clear(ScreenBuff, controls_color.Scren);
 	//screen_fill_area(ScreenBuff, 2, 2, ScreenBuff->Width, ScreenBuff->Height, controls_color.Scren);
-	screen_backlight_on(ScreenBuff);
+	backlight_on(ScreenBuff);
 	//TouchScreen->screen_max_x = (double)LcdStruct->raster_timings->X;
 	//TouchScreen->screen_max_y = (double)LcdStruct->raster_timings->Y;
 	TouchScreen->TwiStruct = TWI3;
@@ -118,26 +118,30 @@ bool board_init()
 	SD_StructDisk1.CS_Port = &uSD_CS1_Port;
 	SD_StructDisk1.CS_PinMask = uSD_CS1_Pin_pm;
 	SD_StructDisk1.DriveNr = 0;
-	if(_mmcsd_init(&SD_StructDisk1, 0, 0, NULL)) 
+	mmcsd_init(&SD_StructDisk1, NULL, NULL);
+	mmcsd_idle(&SD_StructDisk1);
+	/*if(mmcsd_idle(&SD_StructDisk1)) 
 	{
 		if(SD_StructDisk1.SD_Hc == IsSd) UARTPuts(DebugCom, "uSD disk 1 is SD type.\n\r" , -1);
 		else if(SD_StructDisk1.SD_Hc == IsSdhc)UARTPuts(DebugCom, "uSD disk 1 is SDHC type.\n\r" , -1);
 		mmcsd_idle(&SD_StructDisk1);
 		UARTPuts(DebugCom, "\n\r" , -1);
 	}		
-	else  UARTPuts(DebugCom, "uSD disk 1 not detected.\n\r" , -1);
+	else  UARTPuts(DebugCom, "uSD disk 1 not detected.\n\r" , -1);*/
 /*-----------------------------------------------------*/
 	SD_StructDisk2.CS_Port = &uSD_CS2_Port;
 	SD_StructDisk2.CS_PinMask = uSD_CS2_Pin_pm;
 	SD_StructDisk2.DriveNr = 4;
-	if(_mmcsd_init(&SD_StructDisk2, 0, 0, NULL)) 
+	mmcsd_init(&SD_StructDisk2, NULL, NULL);
+	mmcsd_idle(&SD_StructDisk1);
+	/*if(mmcsd_idle(&SD_StructDisk2))
 	{
 		if(SD_StructDisk2.SD_Hc == IsSd) UARTPuts(DebugCom, "uSD disk 2 is SD type.\n\r" , -1);
 		else if(SD_StructDisk2.SD_Hc == IsSdhc)UARTPuts(DebugCom, "uSD disk 2 is SDHC type.\n\r" , -1);
 		mmcsd_idle(&SD_StructDisk2);
 		UARTPuts(DebugCom, "\n\r" , -1);
 	}		
-	else  UARTPuts(DebugCom, "uSD disk 2 not detected.\n\r" , -1);
+	else  UARTPuts(DebugCom, "uSD disk 2 not detected.\n\r" , -1);*/
 /*-----------------------------------------------------*/
 
 	return true;

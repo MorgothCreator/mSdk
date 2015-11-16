@@ -108,7 +108,7 @@ typedef struct SD_Struct
 extern SD_Struct_t SD_StructDisk1;
 extern SD_Struct_t SD_StructDisk2;
 /*#####################################################*/
-bool _mmcsd_init(void *SdStruct, signed int CardDetectPortNr, signed int CardDetectPinNr, new_gpio* StatusLed);
+void _mmcsd_init(void *SdStruct, new_gpio* Cs, new_gpio* StatusLed);
 void _mmcsd_idle(void *SdStruct);
 /*#####################################################*/
 #ifdef HEADER_INCLUDE_C_FILES

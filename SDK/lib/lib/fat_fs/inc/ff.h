@@ -338,5 +338,10 @@ int ff_del_syncobj (_SYNC_t sobj);				/* Delete a sync object */
 #ifdef __cplusplus
 }
 #endif
+#ifdef HEADER_INCLUDE_C_FILES
+#include "../src/ff.c"
+#include "../src/option/ccsbcs.c"
+#include "../src/option/syncobj.c"
+#endif
 
 #endif /* _FATFS */

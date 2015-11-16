@@ -16,6 +16,7 @@ void _lcd_enable();
 void _lcd_disable();
 void _screen_backlight_on(tDisplay *pDisplay);
 void _screen_backlight_off(tDisplay *pDisplay);
+bool _screen_copy(tDisplay *pDisplayTo, tDisplay *pDisplayFrom, bool put_cursor, signed int X, signed int Y, unsigned int color);
 void _box_cache_clean(tDisplay *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len);
 void _put_rectangle(tDisplay *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len, bool fill, unsigned int color);
 void _put_pixel(tDisplay *pDisplay, signed int X, signed int Y, unsigned int color);

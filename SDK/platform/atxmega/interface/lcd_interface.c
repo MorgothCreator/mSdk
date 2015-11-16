@@ -6,6 +6,7 @@
  */ 
 
 #include <stdbool.h>
+#include "main.h"
 #include "board_properties.h"
 #include "lcd_interface.h"
 #include "sys/cache.h"
@@ -75,6 +76,28 @@ void _screen_backlight_off(tDisplay *pDisplay)
 void _box_cache_clean(tDisplay *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len)
 {
 	
+}
+//#######################################################################################
+bool _screen_copy(tDisplay *pDisplayTo, tDisplay *pDisplayFrom, bool put_cursor, signed int X, signed int Y, unsigned int color)
+{
+	if(pDisplayTo->raster_timings->X != pDisplayFrom->raster_timings->X || pDisplayTo->raster_timings->Y != pDisplayFrom->raster_timings->Y)
+	return false;
+	CacheDataCleanBuff((unsigned int)pDisplayFrom->DisplayData, (pDisplayFrom->raster_timings->X * pDisplayFrom->raster_timings->Y * sizeof(pDisplayFrom->DisplayData[0])) + (pDisplayFrom->raster_timings->palete_len * sizeof(pDisplayFrom->DisplayData[0])));
+	signed int LineCnt = 0;
+	volatile unsigned int* ScreenBuff = pDisplayTo->DisplayData + pDisplayTo->raster_timings->palete_len;
+	volatile unsigned int* _ScreenBuff = pDisplayFrom->DisplayData + pDisplayTo->raster_timings->palete_len;
+
+	for(; LineCnt < pDisplayTo->raster_timings->Y; LineCnt ++)
+	{
+		memcpy((void *)(ScreenBuff + (pDisplayFrom->raster_timings->X * LineCnt)), (void *)(_ScreenBuff + (pDisplayFrom->raster_timings->X * LineCnt)), (sizeof(ScreenBuff[0]) * pDisplayTo->raster_timings->X));
+		if(put_cursor == true && LineCnt >= Y && LineCnt <= Y + 2)
+		{
+			unsigned int cnt_x = X;
+			for(;cnt_x < X + 2; cnt_x++)
+			_put_pixel(pDisplayTo, cnt_x, LineCnt, color);
+		}
+	}
+	return true;
 }
 //#######################################################################################
 void _put_rectangle(tDisplay *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len, bool fill, unsigned int color)
@@ -170,3 +193,7 @@ void _screen_put_rgb_array_32(void *_pDisplay, unsigned char *rgb_buffer, unsign
 	}*/
 }
 //#######################################################################################
+void _screen_clear(tDisplay *pDisplay, unsigned int color)
+{
+	_put_rectangle(pDisplay, 0, 0, pDisplay->raster_timings->X, pDisplay->raster_timings->Y, true, color);
+}

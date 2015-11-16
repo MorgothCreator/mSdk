@@ -42,7 +42,7 @@ extern unsigned long CoreFreq;
 /*#####################################################*/
 #define board_xmega_mediaplayer
 /*#####################################################*/
-#ifndef EBI_CS_ASPACE_1MB_gc
+#ifdef EBI_CS_ASIZE_1MB_gc
 #define EBI_CS_ASPACE_1MB_gc		EBI_CS_ASIZE_1MB_gc
 #endif
 

@@ -36,19 +36,19 @@ unsigned long core_clk_set(unsigned long CoreFrequency, unsigned char ClkSource,
 	{
 		case CoreClk_ExtOscType_ExtClk:
 			//OSC_CTRL= OSC_XOSCEN_bm | OSC_XOSCSEL1_bm;
-			break
+			break;
 		case CoreClk_ExtOscType_32KHz:
 			OSC_CTRL= OSC_XOSCEN_bm | OSC_XOSCSEL_32KHz_gc;
-			break
+			break;
 		case CoreClk_ExtOscType_XTAL_256CLK:
 			OSC_CTRL= OSC_XOSCEN_bm | OSC_XOSCSEL_XTAL_256CLK_gc;
-			break
+			break;
 		case CoreClk_ExtOscType_XTAL_1KCLK:
 			OSC_CTRL= OSC_XOSCEN_bm | OSC_XOSCSEL_XTAL_1KCLK_gc;
-			break
-		case CoreClk_ExtOscType_XTAL_16KCLK:
+			break;
+		case CoreClk_ExtOscType_16KCLK:
 			OSC_CTRL= OSC_XOSCEN_bm | OSC_XOSCSEL_XTAL_16KCLK_gc;
-			break
+			break;
 	}
 	while(~OSC_STATUS & OSC_XOSCRDY_bm);
 	//Setup DFLL

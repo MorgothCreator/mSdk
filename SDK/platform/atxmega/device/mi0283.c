@@ -262,11 +262,6 @@ void screen_put_pixel24(tDisplay* LcdStruct, signed int X_Coordonate, signed int
 	}	
 }
 //#######################################################################################
-void screen_clear(tDisplay* LcdStruct, unsigned int color)
-{
-	screen_draw_rectangle(LcdStruct, 0, 0, LcdStruct->raster_timings->X, LcdStruct->raster_timings->Y, true, color);
-}
-//#######################################################################################
 void screen_draw_rectangle(tDisplay* LcdStruct, signed int x1, signed int y1, signed int x2, signed int y2, bool fill, unsigned int color)
 {
 	int16_t _x1 = x1, _x2 = (x1 + x2)-1, _y1 = y1, _y2 = (y1 + y2)-1;
@@ -365,7 +360,7 @@ void screen_draw_rectangle(tDisplay* LcdStruct, signed int x1, signed int y1, si
 	}
 }
 //#######################################################################################
-void _screen_put_horizontal_line_(tDisplay *LcdStruct, signed int X1, signed int X2, signed int Y, unsigned char width, unsigned int color)
+void screen_put_horizontal_line(tDisplay *LcdStruct, signed int X1, signed int X2, signed int Y, unsigned char width, unsigned int color)
 {
 	if(Y < LcdStruct->sClipRegion.sYMin) return;
 	if(Y >= LcdStruct->sClipRegion.sYMax) return;
@@ -395,7 +390,7 @@ void _screen_put_horizontal_line_(tDisplay *LcdStruct, signed int X1, signed int
 	}	
 }
 //#######################################################################################
-void _screen_put_vertical_line_(tDisplay *LcdStruct, signed int Y1, signed int Y2, signed int X, unsigned char width, unsigned int color)
+void screen_put_vertical_line(tDisplay *LcdStruct, signed int Y1, signed int Y2, signed int X, unsigned char width, unsigned int color)
 {
 	if(X < LcdStruct->sClipRegion.sXMin) return;
 	if(X >= LcdStruct->sClipRegion.sXMax) return;

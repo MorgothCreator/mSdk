@@ -48,6 +48,11 @@ DRESULT disk_ioctl (BYTE, BYTE, void*);
 #define STA_PROTECT		0x04	/* Write protected */
 
 
+#define MMC		0
+#define ATA		1
+#define USB		2
+
+
 /* Command code for disk_ioctrl() */
 
 /* Generic command */
@@ -70,4 +75,8 @@ DRESULT disk_ioctl (BYTE, BYTE, void*);
 #define ATA_GET_SN			22
 
 #define _DISKIO
+//#######################################################################################
+#ifdef HEADER_INCLUDE_C_FILES
+#include "../src/diskio.c"
+#endif
 #endif

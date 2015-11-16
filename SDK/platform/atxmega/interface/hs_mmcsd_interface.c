@@ -478,12 +478,12 @@ unsigned int sd_write_page(void *_SD_Struct, void* _Buffer, unsigned long _block
 	return true;
 }
 //#######################################################################################
-bool _mmcsd_init(void *SdStruct, signed int CardDetectPortNr, signed int CardDetectPinNr, new_gpio* StatusLed)
+void _mmcsd_init(void *SdStruct, new_gpio* Cs, new_gpio* StatusLed)
 {
 	SD_Struct_t *SD_StructDisk = (SD_Struct_t *)SdStruct;
 
 	sd_init(SD_StructDisk);
-	if(SD_StructDisk->SD_Init_OK) return true;
+	//if(SD_StructDisk->SD_Init_OK) return true;
 
 	/*MMCSD = new_(new_uart);
 	if(!MMCSD) return false;

@@ -54,6 +54,7 @@ typedef struct
 	unsigned char* TxBuff;
 	unsigned long BusyTimeOut;
 	bool NoSendWriteOnRead;
+	void *udata;
 }Twi_t;
 /*#####################################################*/
 #define new_twi Twi_t
