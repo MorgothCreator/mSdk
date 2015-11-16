@@ -23,14 +23,15 @@
 #define _USE_INT_ADC		0
 
 
-#define LED1_PORT		IOC
-#define LED1_PIN		13
+#define LED1_PORT			IOC
+#define LED1_PIN			13
 
-#define LEDS_NR			1
+#define LEDS_NR				1
 
-#define HARDBTN1_PORT	IOA
-#define HARDBTN1_PIN	0
+#define HARDBTN1_PORT		IOA
+#define HARDBTN1_PIN		0
 
-#define HARDBTNS_NR		1
+#define HARDBTNS_NR			1
+/*#####################################################*/
 #endif /* MAIN_H_ */
 /*#####################################################*/

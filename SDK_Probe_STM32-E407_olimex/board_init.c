@@ -13,6 +13,8 @@
 #include "stm32f4xx_conf.h"
 #include "sys/system_stm32f4xx.h"
 #include "board_init.h"
+
+#include "api/init_api_def.h"
 #include "api/core_init_api.h"
 #include "api/timer_api.h"
 #include "api/gpio_def.h"
@@ -56,42 +58,19 @@ new_gpio* LCD_BACKLIGHT;
 new_screen* ScreenBuff = NULL;
 
 
-#ifdef USE_MPU60x0_9150
-USE_MPU60x0_9150;
-#endif
-#ifdef USE_AK8975
-USE_AK8975;
-#endif
-#ifdef USE_BMP180
-USE_BMP180;
-#endif
-#ifdef USE_SHT11
-USE_SHT11;
-#endif
-#ifdef USE_SRF02
-USE_SRF02;
-#endif
-#ifdef USE_MHC5883
-USE_MHC5883;
-#endif
-#ifdef USE_MPL3115A2
-USE_MPL3115A2;
-#endif
-#ifdef USE_MS5611
-USE_MS5611;
-#endif
-#ifdef USE_ADXL345
-USE_ADXL345;
-#endif
-#ifdef USE_HIH613x
-USE_HIH613x;
-#endif
-#ifdef USE_MPR121
-USE_MPR121;
-#endif
-#ifdef USE_LEPTON_FLIR
-USE_LEPTON_FLIR;
-#endif
+NEW_MPU60x0_9150(MPU60x0_9150);
+NEW_AK8975(AK8975);
+NEW_BMP180(BMP180);
+NEW_SHT11(SHT11);
+NEW_SRF02(SRF02);
+NEW_MHC5883(MHC5883);
+NEW_MPL3115A2(MPL3115A2);
+NEW_MS5611(MS5611);
+NEW_ADXL345(ADXL345);
+NEW_HIH613x(HIH613x);
+NEW_MPR121(MPR121);
+NEW_LEPTON_FLIR(LEPTON_FLIR);
+
 //*-----------------------------------------------------*/
 //new_touchscreen* TouchScreen = NULL;
 //new_screen* ScreenBuff = NULL;
@@ -107,7 +86,9 @@ bool board_init()
 	timer_init();
 /*-----------------------------------------------------*/
 /* Set up the Uart 0 like debug interface with RxBuff = 256, TxBuff = 256, 115200b/s*/
-	UART_INIT(5, 921600, IOC, 6, IOC, 7);
+	INIT_UART(5, 921600, IOC, 6, IOC, 7);
+	DebugCom = Uart[5];
+
 /*-----------------------------------------------------*/
 /* Display board message*/
 #if defined(BOARD_MESSAGE)
@@ -119,9 +100,9 @@ bool board_init()
 #endif
 /*-----------------------------------------------------*/
 /* Set up the Twi 0 to communicate with PMIC and the Onboard serial EEprom memory */
-	TWI_INIT(0, 1000000, IOB, 8, IOB, 9);
+	INIT_TWI(0, 1000000, IOB, 8, IOB, 9, 256, 256);
 /*-----------------------------------------------------*/
-	//SPI_INIT(1, IOB, 10, IOC, 3, IOC, 2, IOG, 10);
+	//INIT_SPI(1, 25000000, 8, IOB, 10, IOC, 3, IOC, 2, IOG, 10);
 /*-----------------------------------------------------*/
 	LCD_BACKLIGHT = gpio_assign(IOD, 13, GPIO_DIR_OUTPUT, false);
 	ScreenBuff = new_(new_screen);
@@ -130,46 +111,23 @@ bool board_init()
 	screen_init(ScreenBuff);
 	UARTprintf(DebugCom, "LCD display initialize successful for %dx%d resolution, %d Bit bus.\n\r" , ScreenBuff->raster_timings->X, ScreenBuff->raster_timings->Y, ScreenBuff->raster_timings->bus_size);
 /*-----------------------------------------------------*/
-/* Set up the ADC 0 */
-#if _USE_INT_ADC == 1
-	ADC_0_INIT
-#endif
+	INIT_MPU60x0_9150(MPU60x0_9150, 0);
 /*-----------------------------------------------------*/
-#if _USE_MPU60x0_9150 == 1
-	MPU60x0_9150_INIT(0);
-#endif
+	INIT_AK8975(AK8975, 0);
 /*-----------------------------------------------------*/
-#if _USE_AK8975 == 1
-	AK8975_INIT(0);
-#endif
+	INIT_BMP180(BMP180, 0);
 /*-----------------------------------------------------*/
-#if _USE_BMP180 == 1
-	BMP180_INIT(0);
-#endif
+	//INIT_SHT11(SHT11, IOB, 12, IOB, 13);
 /*-----------------------------------------------------*/
-#if _USE_SHT11 == 1
-	SHT11_INIT();
-#endif
+	//INIT_ADXL345(ADXL345, 0);
 /*-----------------------------------------------------*/
-#if _USE_ADXL345 == 1
-	ADXL345_INIT(0);
-#endif
+	INIT_HIH613x(HIH613x, 0);
 /*-----------------------------------------------------*/
-#if _USE_HIH613x == 1
-	HIH613x_INIT(0);
-#endif
+	INIT_MPL3115A2(MPL3115A2, 0);
 /*-----------------------------------------------------*/
-#if _USE_MPL3115A2 == 1
-	MPL3115A2_INIT(0);
-#endif
+	//INIT_MPR121(MPR121, 0);
 /*-----------------------------------------------------*/
-#if _USE_MPR121 == 1
-	MPR121_INIT(0);
-#endif
-/*-----------------------------------------------------*/
-#if _USE_LEPTON_FLIR == 1
-	LEPTON_FLIR_INIT(1, 0);
-#endif
+	//INIT_LEPTON_FLIR(LEPTON_FLIR, 1, 0);
 /*-----------------------------------------------------*/
 #if defined(HARDBTN1_PORT) && defined(HARDBTN1_PIN)
 	HARDBTN[0] = gpio_assign(HARDBTN1_PORT, HARDBTN1_PIN, GPIO_DIR_INPUT, false);
@@ -201,8 +159,7 @@ bool board_init()
 	LED[3] = gpio_assign(LED4_PORT, LED4_PIN, GPIO_DIR_OUTPUT, false);
 #endif
 /*-----------------------------------------------------*/
-	mmcsd_init(NULL, NULL, LED[0]);
-	mmcsd_idle(NULL);
+	INIT_MMCSD(0, NULL, LED[0]);
 /*-----------------------------------------------------*/
 	return true;
 }

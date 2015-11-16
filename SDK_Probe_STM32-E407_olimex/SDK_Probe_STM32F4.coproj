@@ -269,10 +269,11 @@
     <File name="lib/lib/gfx/jpg/IJG/transupp.h" path="../SDK/lib/lib/gfx/jpg/IJG/transupp.h" type="1"/>
     <File name="stm32f4xx/driver" path="" type="2"/>
     <File name="stm32f4xx/driver/stm32f4xx_hal_dma_ex.c" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_hal_dma_ex.c" type="1"/>
+    <File name="lib/api/init_api.c" path="../SDK/lib/api/init_api.c" type="1"/>
     <File name="board_init.c" path="board_init.c" type="1"/>
     <File name="stm32f4xx/driver/stm32f4xx_hal_i2c_ex.c" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_hal_i2c_ex.c" type="1"/>
-    <File name="lib/device/tps65910a.c" path="../SDK/lib/device/tps65910a.c" type="1"/>
     <File name="lib/lib/gfx/jpg/jdatasrc.c" path="../SDK/lib/lib/gfx/jpg/jdatasrc.c" type="1"/>
+    <File name="lib/device/tps65910a.c" path="../SDK/lib/device/tps65910a.c" type="1"/>
     <File name="lib/device/bmp180.h" path="../SDK/lib/device/bmp180.h" type="1"/>
     <File name="lib/lib/gfx/gfx_util.h" path="../SDK/lib/lib/gfx/gfx_util.h" type="1"/>
     <File name="stm32f4xx/driver/stm32f4xx_hal_ltdc.c" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_hal_ltdc.c" type="1"/>
@@ -307,6 +308,7 @@
     <File name="stm32f4xx/include/stm32f469xx.h" path="../SDK/platform/stm32f4xx/include/stm32f469xx.h" type="1"/>
     <File name="ffconf.h" path="ffconf.h" type="1"/>
     <File name="lib/lib/gfx/graphic_string.c" path="../SDK/lib/lib/gfx/graphic_string.c" type="1"/>
+    <File name="lib/api/init_api.h" path="../SDK/lib/api/init_api.h" type="1"/>
     <File name="lib/lib/fat_fs/src/option" path="" type="2"/>
     <File name="stm32f4xx/driver/stm32f4xx_hal_adc_ex.h" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_hal_adc_ex.h" type="1"/>
     <File name="lib/lib/gfx/jpg/IJG/jidctflt.c" path="../SDK/lib/lib/gfx/jpg/IJG/jidctflt.c" type="1"/>
@@ -322,6 +324,7 @@
     <File name="stm32f4xx/driver/stm32f4xx_hal_dma2d.c" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_hal_dma2d.c" type="1"/>
     <File name="stm32f4xx/driver/stm32f4xx_hal_flash.h" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_hal_flash.h" type="1"/>
     <File name="stm32f4xx/driver/stm32f4xx_hal_flash_ramfunc.h" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_hal_flash_ramfunc.h" type="1"/>
+    <File name="stm32f4xx/interface/hs_mmcsd_interface_def.h" path="../SDK/platform/stm32f4xx/interface/hs_mmcsd_interface_def.h" type="1"/>
     <File name="stm32f4xx/driver/stm32f4xx_hal_cec.c" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_hal_cec.c" type="1"/>
     <File name="stm32f4xx/sys/Include/core_cm4.h" path="../SDK/platform/stm32f4xx/sys/Include/core_cm4.h" type="1"/>
     <File name="stm32f4xx/driver/stm32f4xx_hal_flash.c" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_hal_flash.c" type="1"/>
@@ -449,6 +452,7 @@
     <File name="lib/lib/gfx/jpg/IJG/jdsample.c" path="../SDK/lib/lib/gfx/jpg/IJG/jdsample.c" type="1"/>
     <File name="lib/lib/util/ascii.h" path="../SDK/lib/lib/util/ascii.h" type="1"/>
     <File name="lib/api/uart_api.h" path="../SDK/lib/api/uart_api.h" type="1"/>
+    <File name="lib/api/init_api_def.h" path="../SDK/lib/api/init_api_def.h" type="1"/>
     <File name="lib/lib/gfx/bmp/bmp.h" path="../SDK/lib/lib/gfx/bmp/bmp.h" type="1"/>
     <File name="stm32f4xx/sys/Include/core_cmFunc.h" path="../SDK/platform/stm32f4xx/sys/Include/core_cmFunc.h" type="1"/>
     <File name="lib/lib/gfx/3d.c" path="../SDK/lib/lib/gfx/3d.c" type="1"/>
@@ -461,9 +465,9 @@
     <File name="lib/lib/gfx/files/stl.c" path="../SDK/lib/lib/gfx/files/stl.c" type="1"/>
     <File name="lib/api/uart_api.c" path="../SDK/lib/api/uart_api.c" type="1"/>
     <File name="lib/api" path="" type="2"/>
-    <File name="stm32f4xx/include/stm32f429xx.h" path="../SDK/platform/stm32f4xx/include/stm32f429xx.h" type="1"/>
-    <File name="lib/lib/gfx/jpg/IJG/jchuff.h" path="../SDK/lib/lib/gfx/jpg/IJG/jchuff.h" type="1"/>
     <File name="stm32f4xx/include/stm32f417xx.h" path="../SDK/platform/stm32f4xx/include/stm32f417xx.h" type="1"/>
+    <File name="lib/lib/gfx/jpg/IJG/jchuff.h" path="../SDK/lib/lib/gfx/jpg/IJG/jchuff.h" type="1"/>
+    <File name="stm32f4xx/include/stm32f429xx.h" path="../SDK/platform/stm32f4xx/include/stm32f429xx.h" type="1"/>
     <File name="lib/device/srf02.h" path="../SDK/lib/device/srf02.h" type="1"/>
     <File name="stm32f4xx/driver/stm32f4xx_hal_cryp_ex.c" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_hal_cryp_ex.c" type="1"/>
     <File name="lib/api/lcd_api.c" path="../SDK/lib/api/lcd_api.c" type="1"/>
