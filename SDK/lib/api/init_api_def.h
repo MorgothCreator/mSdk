@@ -31,6 +31,9 @@
 #include "device/mpl3115a2.h"
 #include "device/mpr121.h"
 #include "device/lepton_flir.h"
+
+
+#include "interface/hs_mmcsd_interface_def.h"
 /*#####################################################*/
 /*#####################################################*/
 /*#####################################################*/
@@ -92,17 +95,18 @@
 		mcspi_open(SPI[SPI_INTERFACE])
 /*#####################################################*/
 #define INIT_MMCSD(UNIT_NR, GpioMmcSdDetect, GpioLed) \
-		sdCtrl[UNIT_NR].SdNr = UNIT_NR; \
-		mmcsd_init(&sdCtrl[UNIT_NR], GpioMmcSdDetect, GpioLed); \
-		mmcsd_idle(&sdCtrl[UNIT_NR])
+		mmcsd_init(UNIT_NR, GpioMmcSdDetect, GpioLed); \
+		mmcsd_idle(UNIT_NR)
 /*-----------------------------------------------------*/
 #define INIT_EMMC(UNIT_NR, GpioReset, GpioLed) \
 		gpio_out(GpioReset, 0); \
 		Sysdelay(1); \
 		gpio_out(GpioReset, 1); \
-		sdCtrl[UNIT_NR].SdNr = UNIT_NR; \
-		mmcsd_init(&sdCtrl[UNIT_NR], (Gpio_t*)NULL, LED[0]); \
-		mmcsd_idle(&sdCtrl[UNIT_NR])
+		mmcsd_init(UNIT_NR, (Gpio_t*)NULL, LED[0]); \
+		mmcsd_idle(UNIT_NR)
+/*#####################################################*/
+#define INIT_USB_DEV_MSC_BRIDGE(USB_DEVICE_NR, SLAVE_DEV_CONTROLS_PTR) \
+	usb_msc_dev_init(USB_DEVICE_NR, SLAVE_DEV_CONTROLS_PTR)
 /*#####################################################*/
 /*#####################################################*/
 /*#####################################################*/

@@ -38,7 +38,7 @@
 	</linkedResources>
 	<variableList>
 		<variable>
-			<name>LIBRAY</name>
+			<name>LIBRARY</name>
 			<value>file:/C:/GitHub/mSdk/SDK/lib</value>
 		</variable>
 		<variable>
