@@ -799,9 +799,9 @@ void BSP_SD_GetCardInfo(HAL_SD_CardInfoTypedef *CardInfo)
 }
 
 
-void _mmcsd_ioctl(void *SdCtrlStruct, unsigned int  command,  unsigned int *buffer)
+void _mmcsd_ioctl(unsigned int unit_nr, unsigned int  command,  unsigned int *buffer)
 {
-	HAL_SD_CardInfoTypedef* _SdCtrlStruct = (HAL_SD_CardInfoTypedef*)SdCtrlStruct;
+	HAL_SD_CardInfoTypedef* _SdCtrlStruct = &uSdCardInfo;
     switch(command)
     {
 
@@ -872,7 +872,7 @@ unsigned int MMCSDWriteCmdSend(void *SdStruct, void *ptr, unsigned long block, u
 
 
 
-void _mmcsd_idle(void *SdStruct)
+void _mmcsd_idle(unsigned int unit_nr)
 {
 	if(card_detect != NULL)
 		gpio_idle(card_detect);
@@ -931,7 +931,7 @@ void _mmcsd_idle(void *SdStruct)
 /* Inidialize a Drive                                                    */
 /*-----------------------------------------------------------------------*/
 
-void _mmcsd_init(void *SdStruct, new_gpio* CardDetect, new_gpio* StatusLed)
+void _mmcsd_init(unsigned int unit_nr, new_gpio* CardDetect, new_gpio* StatusLed)
 {
 	status_led = StatusLed;
 	card_detect = CardDetect;

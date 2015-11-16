@@ -155,39 +155,12 @@ void    BSP_SD_Detect_MspInit(SD_HandleTypeDef *hsd, void *Params);
 void    BSP_SD_MspDeInit(SD_HandleTypeDef *hsd, void *Params);
 
 
-#if 0
-void SD_DeInit(void);
-HAL_SD_ErrorTypedef SD_Init(void);
-SDTransferState SD_GetStatus(void);
-SDCardState SD_GetState(void);
-unsigned char SD_Detect(void);
-HAL_SD_ErrorTypedef SD_PowerON(void);
-HAL_SD_ErrorTypedef SD_PowerOFF(void);
-HAL_SD_ErrorTypedef SD_InitializeCards(void);
-HAL_SD_ErrorTypedef SD_GetCardInfo(HAL_SD_CardInfoTypedef *cardinfo);
-HAL_SD_ErrorTypedef SD_GetCardStatus(SD_CardStatus *cardstatus);
-HAL_SD_ErrorTypedef SD_EnableWideBusOperation(unsigned long WideMode);
-HAL_SD_ErrorTypedef SD_SelectDeselect(unsigned long addr);
-HAL_SD_ErrorTypedef SD_ReadBlock(unsigned char *readbuff, unsigned long ReadAddr, unsigned short BlockSize);
-HAL_SD_ErrorTypedef SD_ReadMultiBlocks(unsigned char *readbuff, unsigned long ReadAddr, unsigned short BlockSize, unsigned long NumberOfBlocks);
-HAL_SD_ErrorTypedef SD_WriteBlock(unsigned char *writebuff, unsigned long WriteAddr, unsigned short BlockSize);
-HAL_SD_ErrorTypedef SD_WriteMultiBlocks(unsigned char *writebuff, unsigned long WriteAddr, unsigned short BlockSize, unsigned long NumberOfBlocks);
-SDTransferState SD_GetTransferState(void);
-HAL_SD_ErrorTypedef SD_StopTransfer(void);
-HAL_SD_ErrorTypedef SD_Erase(unsigned long startaddr, unsigned long endaddr);
-HAL_SD_ErrorTypedef SD_SendStatus(unsigned long *pcardstatus);
-HAL_SD_ErrorTypedef SD_SendSDStatus(unsigned long *psdstatus);
-HAL_SD_ErrorTypedef SD_ProcessIRQSrc(void);
-void SD_ProcessDMAIRQ(void);
-HAL_SD_ErrorTypedef SD_WaitReadOperation(void);
-HAL_SD_ErrorTypedef SD_WaitWriteOperation(void);
-#endif
 unsigned int MMCSDReadCmdSend(void *SdStruct, void *ptr, unsigned long block, unsigned int nblks);
 unsigned int MMCSDWriteCmdSend(void *SdStruct, void *ptr, unsigned long block, unsigned int nblks);
 
-void _mmcsd_ioctl(void *SdCtrlStruct, unsigned int  command,  unsigned int *buffer);
-void _mmcsd_idle(void *SdStruct);
-void _mmcsd_init(void *SdStruct, new_gpio* CardDetect, new_gpio* StatusLed);
+void _mmcsd_ioctl(unsigned int unit_nr, unsigned int  command,  unsigned int *buffer);
+void _mmcsd_idle(unsigned int unit_nr);
+void _mmcsd_init(unsigned int unit_nr, new_gpio* CardDetect, new_gpio* StatusLed);
 #ifdef __cplusplus
 }
 #endif
