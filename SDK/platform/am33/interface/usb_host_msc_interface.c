@@ -4,6 +4,7 @@
  *  Created on: Dec 25, 2012
  *      Author: XxXx
  */
+#include "main.h"
 #include "usb_host_msc_interface.h"
 
 #include "include/cppi41dma.h"
@@ -609,42 +610,12 @@ void _usb_msc_host_idle(unsigned int instance)
     	    }
 
             //deviceRetryOnTimeOut1 = USBMSC_DRIVE_RETRY;
-#ifndef thirdpartyfatfs
-    		Drives_Table[8] = new_(new_fat_disk);
-    		Drives_Table[8]->DiskInfo_SdDriverStructAddr = (void*)g_ulMSCInstance0Usb1;
-    		//Drives_Table[4]->drive_init = MMCSD_CardInit;
-    		Drives_Table[8]->drive_read_page = USBMSCReadBlock;
-    		Drives_Table[8]->drive_write_page = USBMSCWriteBlock;
-    		if(_Fat_Mount(8))
-    		{
-																	UARTPuts(DebugCom,   "USB1 drive 8 mounted\n\r" , -1);
-																	UARTPuts(DebugCom,   "USB1 Fat fs detected\n\r" , -1);
-    			if(Drives_Table[8]->DiskInfo_FatType == NoFs ){ 	UARTprintf(DebugCom, "USB1 Fs type:                 None\n\r");}
-    			if(Drives_Table[8]->DiskInfo_FatType == Fat12){ 	UARTprintf(DebugCom, "USB1 Fs type:                 Fat12\n\r");}
-    			if(Drives_Table[8]->DiskInfo_FatType == Fat16){ 	UARTprintf(DebugCom, "USB1 Fs type:                 Fat16\n\r");}
-    			if(Drives_Table[8]->DiskInfo_FatType == Fat32){ 	UARTprintf(DebugCom, "USB1 Fs type:                 Fat32\n\r");}
-    																UARTprintf(DebugCom, "USB1 BootSectorAddress:       %u \n\r",Drives_Table[8]->DiskInfo_BootSectorAddress);
-    																UARTprintf(DebugCom, "USB1 BytesPerSector:          %d \n\r",Drives_Table[8]->DiskInfo_BytesPerSector);
-    																UARTprintf(DebugCom, "USB1 SectorsPerCluster:       %d \n\r",Drives_Table[8]->DiskInfo_SectorsPerCluster);
-    																UARTprintf(DebugCom, "USB1 AllocTable1Begin:        %u \n\r",Drives_Table[8]->DiskInfo_AllocTable1Begin);
-    																UARTprintf(DebugCom, "USB1 NumberOfFats:            %d \n\r",Drives_Table[8]->DiskInfo_NumberOfFats);
-    																UARTprintf(DebugCom, "USB1 MediaType:               %d \n\r",Drives_Table[8]->DiskInfo_MediaType);
-    																UARTprintf(DebugCom, "USB1 AllocTableSize:          %u \n\r",Drives_Table[8]->DiskInfo_AllocTableSize);
-    																UARTprintf(DebugCom, "USB1 DataSectionBegin:        %d \n\r",Drives_Table[8]->DiskInfo_DataSectionBegin);
-    			if(Drives_Table[8]->DiskInfo_FatType == Fat32)		UARTprintf(DebugCom, "USB1 DiskCapacity:            %uMB\n\r",(unsigned long long)((unsigned long long)Drives_Table[8]->DiskInfo_AllocTableSize * 128 * (unsigned long long)Drives_Table[8]->DiskInfo_SectorsPerCluster * (unsigned long long)Drives_Table[8]->DiskInfo_BytesPerSector) / 1000000);
-    			else if(Drives_Table[8]->DiskInfo_FatType == Fat16)	UARTprintf(DebugCom, "USB1 DiskCapacity:            %uMB\n\r",(unsigned long long)((unsigned long long)Drives_Table[8]->DiskInfo_AllocTableSize * 256 * (unsigned long long)Drives_Table[8]->DiskInfo_SectorsPerCluster * (unsigned long long)Drives_Table[8]->DiskInfo_BytesPerSector) / 1000000);
-    			FILE1 = _FatData_OpenSesion(8);
-    			if(FILE1) UARTPuts(DebugCom, "Fat File Sesion Init OK\n\r", -1);
-    			else UARTPuts(DebugCom, "Fat File Sesion Init ERROR\n\r", -1);
-    		}
-    		else 													UARTPuts(DebugCom,   "USB1 Fat not detected\n\r" , -1);
-#else
             g_sFatFs2.drv_rw_func.DriveStruct = (void*)g_ulMSCInstance0Usb1;
             g_sFatFs2.drv_rw_func.drv_r_func = USBMSCReadBlock;
             g_sFatFs2.drv_rw_func.drv_w_func = USBMSCWriteBlock;
             if(!f_mount(4, &g_sFatFs2))
             {
-#ifdef usb_host_msc_debug
+#ifdef USBH_MSC_DEBUG_EN
             	if(f_opendir(&g_sDirObject, g_cCwdBuf2) == FR_OK)
                 {
 					if(DebugCom)
@@ -658,19 +629,18 @@ void _usb_msc_host_idle(unsigned int instance)
 						else								{ 				UARTprintf(DebugCom, "None");}
 																			UARTprintf(DebugCom, "\n\r");
 																			//UARTprintf(DebugCom, "MMCSD0 BootSectorAddress:       %u \n\r",(unsigned int)g_sFatFs.);
-																			UARTprintf(DebugCom, "USB1 BytesPerSector:          %d \n\r",/*(int)g_sFatFs.s_size*/512);
-																			UARTprintf(DebugCom, "USB1 SectorsPerCluster:       %d \n\r",(int)g_sFatFs2.csize);
+																			UARTprintf(DebugCom, "USB1 BytesPerSector:             %d \n\r",/*(int)g_sFatFs.s_size*/512);
+																			UARTprintf(DebugCom, "USB1 SectorsPerCluster:          %d \n\r",(int)g_sFatFs2.csize);
 																			//UARTprintf(DebugCom, "MMCSD0 AllocTable1Begin:        %u \n\r",(unsigned int)g_sFatFs.fatbase);
-																			UARTprintf(DebugCom, "USB1 NumberOfFats:            %d \n\r",(int)g_sFatFs2.n_fats);
+																			//UARTprintf(DebugCom, "USB1 NumberOfFats:            %d \n\r",(int)g_sFatFs2.n_fats);
 																			//UARTprintf(DebugCom, "MMCSD0 MediaType:               %d \n\r",Drives_Table[0]->DiskInfo_MediaType);
 																			//UARTprintf(DebugCom, "MMCSD0 AllocTableSize:          %u \n\r",Drives_Table[0]->DiskInfo_AllocTableSize);
-																			UARTprintf(DebugCom, "USB1 DataSectionBegin:        %d \n\r",(int)g_sFatFs2.fatbase);
-																			UARTprintf(DebugCom, "USB1 uSD DiskCapacity:        %uMB\n\r",(unsigned long)((unsigned long long)((unsigned long long)g_sFatFs2.fsize * (unsigned long long)/*g_sFatFs.s_size*/512) / 1000000));
+																			//UARTprintf(DebugCom, "USB1 DataSectionBegin:        %d \n\r",(int)g_sFatFs2.fatbase);
+																			UARTprintf(DebugCom, "MMCSD%d uSD DiskCapacity:        %uMB\n\r",0, (unsigned long)((unsigned long long)((unsigned long long)g_sFatFs2.n_fatent * (unsigned long long)/*g_sFatFs.s_size*/512 *(unsigned long long)g_sFatFs2.csize) / 1000000));
 					}
                 } else  if(DebugCom)										UARTPuts(DebugCom,   "USB1 ERROR oppening path\n\r" , -1);
 #endif
             }else if(DebugCom)												UARTPuts(DebugCom,   "USB1 ERROR mounting disk\n\r" , -1);
-#endif
     	    g_eState1 = STATE_DEVICE_READY;
     	    //}
     	}
@@ -797,43 +767,12 @@ void _usb_msc_host_idle(unsigned int instance)
 				return;
 			}
 
-#ifndef thirdpartyfatfs
-            //deviceRetryOnTimeOut0 = USBMSC_DRIVE_RETRY;
-			Drives_Table[4] = new_(new_fat_disk);
-			Drives_Table[4]->DiskInfo_SdDriverStructAddr = (void*)g_ulMSCInstance0Usb0;
-			//Drives_Table[4]->drive_init = MMCSD_CardInit;
-			Drives_Table[4]->drive_read_page = USBMSCReadBlock0;
-			Drives_Table[4]->drive_write_page = USBMSCWriteBlock0;
-			if(_Fat_Mount(4))
-			{
-																	UARTPuts(DebugCom,   "USB0 drive 4 mounted\n\r" , -1);
-																	UARTPuts(DebugCom,   "USB0 Fat fs detected\n\r" , -1);
-				if(Drives_Table[4]->DiskInfo_FatType == NoFs ){ 	UARTprintf(DebugCom, "USB0 Fs type:                 None\n\r");}
-				if(Drives_Table[4]->DiskInfo_FatType == Fat12){ 	UARTprintf(DebugCom, "USB0 Fs type:                 Fat12\n\r");}
-				if(Drives_Table[4]->DiskInfo_FatType == Fat16){ 	UARTprintf(DebugCom, "USB0 Fs type:                 Fat16\n\r");}
-				if(Drives_Table[4]->DiskInfo_FatType == Fat32){ 	UARTprintf(DebugCom, "USB0 Fs type:                 Fat32\n\r");}
-																	UARTprintf(DebugCom, "USB0 BootSectorAddress:       %u \n\r",Drives_Table[4]->DiskInfo_BootSectorAddress);
-																	UARTprintf(DebugCom, "USB0 BytesPerSector:          %d \n\r",Drives_Table[4]->DiskInfo_BytesPerSector);
-																	UARTprintf(DebugCom, "USB0 SectorsPerCluster:       %d \n\r",Drives_Table[4]->DiskInfo_SectorsPerCluster);
-																	UARTprintf(DebugCom, "USB0 AllocTable1Begin:        %u \n\r",Drives_Table[4]->DiskInfo_AllocTable1Begin);
-																	UARTprintf(DebugCom, "USB0 NumberOfFats:            %d \n\r",Drives_Table[4]->DiskInfo_NumberOfFats);
-																	UARTprintf(DebugCom, "USB0 MediaType:               %d \n\r",Drives_Table[4]->DiskInfo_MediaType);
-																	UARTprintf(DebugCom, "USB0 AllocTableSize:          %u \n\r",Drives_Table[4]->DiskInfo_AllocTableSize);
-																	UARTprintf(DebugCom, "USB0 DataSectionBegin:        %d \n\r",Drives_Table[4]->DiskInfo_DataSectionBegin);
-				if(Drives_Table[4]->DiskInfo_FatType == Fat32)		UARTprintf(DebugCom, "USB0 DiskCapacity:            %uMB\n\r",(unsigned long long)((unsigned long long)Drives_Table[4]->DiskInfo_AllocTableSize * 128 * (unsigned long long)Drives_Table[4]->DiskInfo_SectorsPerCluster * (unsigned long long)Drives_Table[4]->DiskInfo_BytesPerSector) / 1000000);
-				else if(Drives_Table[4]->DiskInfo_FatType == Fat16)	UARTprintf(DebugCom, "USB0 DiskCapacity:            %uMB\n\r",(unsigned long long)((unsigned long long)Drives_Table[4]->DiskInfo_AllocTableSize * 256 * (unsigned long long)Drives_Table[4]->DiskInfo_SectorsPerCluster * (unsigned long long)Drives_Table[4]->DiskInfo_BytesPerSector) / 1000000);
-				FILE1 = _FatData_OpenSesion(4);
-				if(FILE1) UARTPuts(DebugCom, "Fat File Sesion Init OK\n\r", -1);
-				else UARTPuts(DebugCom, "Fat File Sesion Init ERROR\n\r", -1);
-			}
-			else 													UARTPuts(DebugCom,   "USB0 Fat not detected\n\r" , -1);
-#else
             g_sFatFs1.drv_rw_func.DriveStruct = (void*)g_ulMSCInstance0Usb0;
             g_sFatFs1.drv_rw_func.drv_r_func = USBMSCReadBlock;
             g_sFatFs1.drv_rw_func.drv_w_func = USBMSCWriteBlock;
             if(!f_mount(3, &g_sFatFs1))
             {
-#ifdef usb_host_msc_debug
+#ifdef USBH_MSC_DEBUG_EN
                 if(f_opendir(&g_sDirObject, g_cCwdBuf1) == FR_OK)
                 {
 					if(DebugCom)
@@ -842,24 +781,23 @@ void _usb_msc_host_idle(unsigned int instance)
 																			UARTPuts(DebugCom,   "USB0 Fat fs detected\n\r" , -1);
 																			UARTprintf(DebugCom, "USB0 Fs type:                 ");
 						if(g_sFatFs1.fs_type == FS_FAT12)	{ 				UARTprintf(DebugCom, "Fat12");}
-						else if(g_sFatFs1.fs_type == FS_FAT16){ 				UARTprintf(DebugCom, "Fat16");}
-						else if(g_sFatFs1.fs_type == FS_FAT32){ 				UARTprintf(DebugCom, "Fat32");}
+						else if(g_sFatFs1.fs_type == FS_FAT16){ 			UARTprintf(DebugCom, "Fat16");}
+						else if(g_sFatFs1.fs_type == FS_FAT32){ 			UARTprintf(DebugCom, "Fat32");}
 						else								{ 				UARTprintf(DebugCom, "None");}
 																			UARTprintf(DebugCom, "\n\r");
 																			//UARTprintf(DebugCom, "MMCSD0 BootSectorAddress:       %u \n\r",(unsigned int)g_sFatFs.);
 																			UARTprintf(DebugCom, "USB0 BytesPerSector:          %d \n\r",/*(int)g_sFatFs.s_size*/512);
 																			UARTprintf(DebugCom, "USB0 SectorsPerCluster:       %d \n\r",(int)g_sFatFs1.csize);
 																			//UARTprintf(DebugCom, "MMCSD0 AllocTable1Begin:        %u \n\r",(unsigned int)g_sFatFs.fatbase);
-																			UARTprintf(DebugCom, "USB0 NumberOfFats:            %d \n\r",(int)g_sFatFs1.n_fats);
+																			//UARTprintf(DebugCom, "USB0 NumberOfFats:            %d \n\r",(int)g_sFatFs1.n_fats);
 																			//UARTprintf(DebugCom, "MMCSD0 MediaType:               %d \n\r",Drives_Table[0]->DiskInfo_MediaType);
 																			//UARTprintf(DebugCom, "MMCSD0 AllocTableSize:          %u \n\r",Drives_Table[0]->DiskInfo_AllocTableSize);
-																			UARTprintf(DebugCom, "USB0 DataSectionBegin:        %d \n\r",(int)g_sFatFs1.fatbase);
-																			UARTprintf(DebugCom, "USB0 uSD DiskCapacity:        %uMB\n\r",(unsigned long)((unsigned long long)((unsigned long long)g_sFatFs1.fsize * (unsigned long long)/*g_sFatFs.s_size*/512) / 1000000));
+																			//UARTprintf(DebugCom, "USB0 DataSectionBegin:        %d \n\r",(int)g_sFatFs1.fatbase);
+																			UARTprintf(DebugCom, "USBH MSC%d uSD DiskCapacity:        %uMB\n\r",0, (unsigned long)((unsigned long long)((unsigned long long)g_sFatFs1.n_fatent * (unsigned long long)/*g_sFatFs.s_size*/512 * (unsigned long long)g_sFatFs1.csize) / 1000000));
 					}
                 } else  if(DebugCom)										UARTPuts(DebugCom,   "USB0 ERROR oppening path\n\r" , -1);
 #endif
             }else if(DebugCom)												UARTPuts(DebugCom,   "USB0 ERROR mounting disk\n\r" , -1);
-#endif
 			g_eState0 = STATE_DEVICE_READY;
 			//}
 		}
