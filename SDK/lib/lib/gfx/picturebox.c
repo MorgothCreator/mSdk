@@ -19,6 +19,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <stdbool.h>
+#include "main.h"
 #include "picturebox.h"
 #include "picturebox_def.h"
 #include "window_def.h"
@@ -27,7 +28,9 @@
 #include "api/timer_api.h"
 #include "3d.h"
 #include "controls_definition.h"
-#include "bmp/bmp.h"
+#if _USE_BITMAP_LIBRARY == 1
+#include "bmp.h"
+#endif
 extern unsigned int palete_raster_len;
 //#######################################################################################
 static void paint_picturebox(tPictureBox* settings, tDisplay *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len, tControlCommandData* control_comand)
@@ -653,6 +656,7 @@ void picturebox_put_3d_rectangle(tPictureBox* settings, _3d_points *Points, sign
 	picturebox_put_line(settings, (signed int)screenPoints.x[7] + X_offset, (signed int)screenPoints.y[7] + Y_offset, (signed int)screenPoints.x[6] + X_offset, (signed int)screenPoints.y[6] + Y_offset, 1, Color);
 }
 //#######################################################################################
+#if _USE_BITMAP_LIBRARY == 1
 bool picturebox_put_bitmap(tPictureBox* settings, unsigned char *file, signed int X, signed int Y, bool use_transparency, bool scale)
 {
 	tDisplay *pDisplay = settings->Internals.pDisplay;
@@ -664,4 +668,5 @@ bool picturebox_put_fbitmap(tPictureBox* settings, char *path, signed int X, sig
 	tDisplay *pDisplay = settings->Internals.pDisplay;
 	return put_fbitmap(pDisplay, path, settings->Internals.Position.X + X + 2, settings->Internals.Position.Y + Y + 2, use_transparency);
 }
+#endif
 //#######################################################################################

@@ -2,6 +2,7 @@
 #define PICTUREBOX_H_
 //#######################################################################################
 #include <stdbool.h>
+#include "main.h"
 #include "picturebox_def.h"
 #include "api/timer_api.h"
 #include "3d.h"
@@ -24,8 +25,10 @@ void picturebox_put_triangle(tPictureBox* settings, signed int  Ax,signed int  A
 void picturebox_put_string(tPictureBox* settings, print_string_properties *properties);
 void picturebox_put_3d_triangle(tPictureBox* settings, _3d_points *Points, signed int X_offset, signed int Y_offset, double X_Angle, double Y_Angle, double Z_Angle, unsigned int Color);
 void picturebox_put_3d_rectangle(tPictureBox* settings, _3d_points *Points, signed int X_offset, signed int Y_offset, double X_Angle, double Y_Angle, double Z_Angle, unsigned int Color);
+#if _USE_BITMAP_LIBRARY == 1
 bool picturebox_put_bitmap(tPictureBox* settings, unsigned char *file, signed int X, signed int Y, bool use_transparency, bool scale);
 bool picturebox_put_fbitmap(tPictureBox* settings, char *path, signed int X, signed int Y, bool use_transparency, bool scale);
+#endif
 //#######################################################################################
 #ifdef HEADER_INCLUDE_C_FILES
 #include "picturebox.c"
