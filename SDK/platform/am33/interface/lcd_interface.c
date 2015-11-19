@@ -191,8 +191,8 @@ bool SetUpLCD(tDisplay* LcdStruct)
 
     /* Enable raster */
     RasterEnable(SOC_LCDC_0_REGS);
-    unsigned int retVal = 0u;
 #if 0
+    unsigned int retVal = 0u;
 	/* Request DMA Channel and TCC for MMCSD Transmit*/
     retVal = EDMA3RequestChannel(EDMA_INST_BASE, EDMA3_CHANNEL_TYPE_DMA,
 			LCD_DMA_TRANSFER_CHANNEL, LCD_DMA_TRANSFER_CHANNEL,
