@@ -240,6 +240,8 @@
 /* Includes ------------------------------------------------------------------*/
 
 #include <stdio.h>
+#include "main.h"
+#include "board_init.h"
 #include "include/stm32f4xx.h"
 #include "hs_mmcsd_interface.h"
 #include "driver/stm32f4xx_hal_conf.h"
@@ -882,8 +884,8 @@ void _mmcsd_idle(unsigned int unit_nr)
 		res =  BSP_SD_Init();
 		if(res != SD_OK)
 		{
-			if(DebugCom)
-				UARTprintf(DebugCom,   "MMCSD%d ERROR initializing card.\n\r" , 0);
+			//if(DebugCom)
+				//UARTprintf(DebugCom,   "MMCSD%d ERROR initializing card.\n\r" , 0);
 			return;
 		}
 		if(card_detect != NULL)
@@ -895,29 +897,29 @@ void _mmcsd_idle(unsigned int unit_nr)
         {
                     if(f_opendir(&g_sDirObject, g_cCwdBuf0) == FR_OK)
                     {
-#ifdef mmcsd_debug
+#ifdef MMCSD_DEBUG_EN
 						if(DebugCom)
 						{
-																				UARTprintf(DebugCom,   "MMCSD%d drive %d mounted\n\r" , ((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr , ((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr);
-																				UARTprintf(DebugCom,   "MMCSD%d Fat fs detected\n\r" , ((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr);
-																				UARTprintf(DebugCom, "MMCSD%d Fs type:                 " , ((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr);
-							if(g_s_mmcFatFs[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr].fs_type == FS_FAT12)	{
+																				UARTprintf(DebugCom,   "MMCSD%d drive %d mounted\n\r" , 0 , 0);
+																				UARTprintf(DebugCom,   "MMCSD%d Fat fs detected\n\r" , 0);
+																				UARTprintf(DebugCom, "MMCSD%d Fs type:                 " , 0);
+							if(MmcSdFatFs.fs_type == FS_FAT12)	{
 																				UARTprintf(DebugCom, "Fat12");}
-							else if(g_s_mmcFatFs[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr].fs_type == FS_FAT16){
+							else if(MmcSdFatFs.fs_type == FS_FAT16){
 																				UARTprintf(DebugCom, "Fat16");}
-							else if(g_s_mmcFatFs[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr].fs_type == FS_FAT32){
+							else if(MmcSdFatFs.fs_type == FS_FAT32){
 																				UARTprintf(DebugCom, "Fat32");}
 							else								{ 				UARTprintf(DebugCom, "None");}
 																				UARTprintf(DebugCom, "\n\r");
 																				//UARTprintf(DebugCom, "MMCSD0 BootSectorAddress:       %u \n\r",(unsigned int)g_sFatFs.);
-																				UARTprintf(DebugCom, "MMCSD%d BytesPerSector:          %d \n\r",((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr, /*(int)g_sFatFs.s_size*/512);
-																				UARTprintf(DebugCom, "MMCSD%d SectorsPerCluster:       %d \n\r",((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr, (int)g_s_mmcFatFs[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr].csize);
+																				UARTprintf(DebugCom, "MMCSD%d BytesPerSector:          %d \n\r",0, /*(int)g_sFatFs.s_size*/512);
+																				UARTprintf(DebugCom, "MMCSD%d SectorsPerCluster:       %d \n\r",0, (int)MmcSdFatFs.csize);
 																				//UARTprintf(DebugCom, "MMCSD0 AllocTable1Begin:        %u \n\r",(unsigned int)g_sFatFs.fatbase);
-																				UARTprintf(DebugCom, "MMCSD%d NumberOfFats:            %d \n\r",((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr, (int)g_s_mmcFatFs[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr].n_fats);
+																				//UARTprintf(DebugCom, "MMCSD%d NumberOfFats:            %d \n\r",0, (int)MmcSdFatFs.n_fats);
 																				//UARTprintf(DebugCom, "MMCSD0 MediaType:               %d \n\r",Drives_Table[0]->DiskInfo_MediaType);
 																				//UARTprintf(DebugCom, "MMCSD0 AllocTableSize:          %u \n\r",Drives_Table[0]->DiskInfo_AllocTableSize);
-																				UARTprintf(DebugCom, "MMCSD%d DataSectionBegin:        %d \n\r",((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr, (int)g_s_mmcFatFs[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr].fatbase);
-																				UARTprintf(DebugCom, "MMCSD%d uSD DiskCapacity:        %uMB\n\r",((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr, (unsigned long)((unsigned long long)((unsigned long long)g_s_mmcFatFs[((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr].fsize * (unsigned long long)/*g_sFatFs.s_size*/512) / 1000000));
+																				//UARTprintf(DebugCom, "MMCSD%d DataSectionBegin:        %d \n\r",0, (int)MmcSdFatFs.fatbase);
+																				UARTprintf(DebugCom, "MMCSD%d uSD DiskCapacity:        %uMB\n\r",0, (unsigned long)((unsigned long long)((unsigned long long)MmcSdFatFs.n_fatent * (unsigned long long)/*g_sFatFs.s_size*/512 *(unsigned long long)MmcSdFatFs.csize) / 1000000));
 						}
 #endif
                     } else  if(DebugCom)										UARTprintf(DebugCom,   "MMCSD%d ERROR oppening path\n\r" , 0);
