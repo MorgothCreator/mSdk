@@ -273,7 +273,8 @@ bool _gpio_direction(new_gpio *gpio_struct, gpio_type_enum function)
 /*#####################################################*/
 signed int _gpio_in(new_gpio *gpio_struct)
 {
-	if(!gpio_struct) return -1;
+	if(!gpio_struct)
+		return -1;
 	GPIO_TypeDef *BaseAddr = (GPIO_TypeDef *)gpio_struct->BaseAddr;
 	if(gpio_struct->Multipin)
 	{
@@ -286,7 +287,8 @@ signed int _gpio_in(new_gpio *gpio_struct)
 		}
 		return returned_state;
 	}
-	else return HAL_GPIO_ReadPin(BaseAddr, 1 << gpio_struct->Pin);
+	else
+		return HAL_GPIO_ReadPin(BaseAddr, 1 << gpio_struct->Pin);
 }
 /*#####################################################*/
 bool _gpio_up_dn_enable(new_gpio *gpio_struct, bool enable)
