@@ -53,6 +53,17 @@
 #define	_USE_FASTSEEK	1	/* 0:Disable or 1:Enable */
 /* To enable fast seek feature, set _USE_FASTSEEK to 1. */
 
+#define _USE_BUFF_WO_ALIGNMENT  0
+/* This option is available only for usbh diskio interface and allow to disable
+/  the management of the unaligned buffer.
+/  When STM32 USB OTG HS or FS IP is used with internal DMA enabled, this define
+/  must be set to 0 to align data into 32bits through an internal scratch buffer
+/  before being processed by the DMA . Otherwise (DMA not used), this define must
+/  be set to 1 to avoid Data alignment and improve the performance.
+/  Please note that if _USE_BUFF_WO_ALIGNMENT is set to 1 and an unaligned 32bits
+/  buffer is forwarded to the FatFs Write/Read functions, an error will be returned.
+/  (0: default value or 1: unaligned buffer return an error). */
+
 
 
 /*---------------------------------------------------------------------------/

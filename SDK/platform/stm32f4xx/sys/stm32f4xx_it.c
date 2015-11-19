@@ -25,8 +25,10 @@
 #include "stm32f4xx_it.h"
 #include "sys/sysdelay.h"
 #include "interface/hs_mmcsd_interface.h"
+#include "interface/usb_host_msc_interface.h"
 #include "stm32f4xx_hal_dma.h"
 #include "driver/stm32f4xx_hal.h"
+#include "driver/stm32f4xx_hal_hcd.h"
 /** @addtogroup STM32F4_Discovery_Peripheral_Examples
   * @{
   */
@@ -181,6 +183,32 @@ void SDIO_IRQHandler(void)
 {
   BSP_SD_IRQHandler();
 }
+
+/******************************************************************************/
+/*                 STM32F4xx Peripherals Interrupt Handlers                   */
+/*  Add here the Interrupt Handler for the used peripheral(s) (PPP), for the  */
+/*  available peripheral interrupt handler's name please refer to the startup */
+/*  file (startup_stm32f4xx.s).                                               */
+/******************************************************************************/
+
+/**
+  * @brief  This function handles USB-On-The-Go FS global interrupt requests.
+  * @param  None
+  * @retval None
+  */
+void OTG_FS_IRQHandler(void)
+{
+  HAL_HCD_IRQHandler(&hhcd);
+}
+
+/**
+  * @brief  This function handles PPP interrupt request.
+  * @param  None
+  * @retval None
+  */
+/*void PPP_IRQHandler(void)
+{
+}*/
 
 /******************************************************************************/
 /*                 STM32F4xx Peripherals Interrupt Handlers                   */

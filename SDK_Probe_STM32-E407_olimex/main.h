@@ -32,6 +32,10 @@
 #define HARDBTN1_PIN		0
 
 #define HARDBTNS_NR			1
+
+
+#define USBH_MSC_DEBUG_EN
+#define MMCSD_DEBUG_EN
 /*#####################################################*/
 #endif /* MAIN_H_ */
 /*#####################################################*/

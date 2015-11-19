@@ -30,6 +30,7 @@
 #include "api/lcd_def.h"
 #include "api/lcd_api.h"
 #include "api/mmcsd_api.h"
+#include "api/usb_api.h"
 #include "interface/hs_mmcsd_interface.h"
 //#include "lib/gfx/controls_definition.h"
 //#include "lib/fs/fat.h"
@@ -161,5 +162,7 @@ bool board_init()
 /*-----------------------------------------------------*/
 	INIT_MMCSD(0, NULL, LED[0]);
 /*-----------------------------------------------------*/
+	usb_msc_host_init(0, LED[0]);
+	usb_msc_host_idle(0);
 	return true;
 }

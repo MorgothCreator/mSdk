@@ -8,6 +8,7 @@
 #include "main.h"
 #include "board_init.h"
 #include "api/timer_api.h"
+#include "api/usb_api.h"
 #include "device/mpu60x0_9150.h"
 #include "device/ak8975.h"
 #include "device/bmp180.h"
@@ -134,6 +135,8 @@ int main(void)
 			srf02_read(SRF02);
 #endif
 		if(timer_tick(&TimerReadSensors)) {
+			usb_msc_host_idle(0);
+			//IDLE_MMCSD(0);
 			//Time_Update();
 #if _USE_MS5611 == 1
 			ms5611_display_pressure_result(MS5611, MS5611_CONVERT_OSR_1024);
