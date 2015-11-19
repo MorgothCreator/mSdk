@@ -98,11 +98,17 @@
 		mmcsd_init(UNIT_NR, GpioMmcSdDetect, GpioLed); \
 		mmcsd_idle(UNIT_NR)
 /*-----------------------------------------------------*/
+#define IDLE_MMCSD(UNIT_NR) \
+		mmcsd_idle(UNIT_NR)
+/*-----------------------------------------------------*/
 #define INIT_EMMC(UNIT_NR, GpioReset, GpioLed) \
 		gpio_out(GpioReset, 0); \
 		Sysdelay(1); \
 		gpio_out(GpioReset, 1); \
 		mmcsd_init(UNIT_NR, (Gpio_t*)NULL, LED[0]); \
+		mmcsd_idle(UNIT_NR)
+/*-----------------------------------------------------*/
+#define IDLE_EMMC(UNIT_NR) \
 		mmcsd_idle(UNIT_NR)
 /*#####################################################*/
 #define INIT_USB_DEV_MSC_BRIDGE(USB_DEVICE_NR, SLAVE_DEV_CONTROLS_PTR) \
