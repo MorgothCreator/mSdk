@@ -35,6 +35,8 @@
 #define _USE_MPR121			1
 #define _USE_INT_ADC		0
 /*#####################################################*/
+#define _USE_BITMAP_LIBRARY	0
+/*#####################################################*/
 #define LED1_PORT		1
 #define LED1_PIN		7
 
@@ -62,6 +64,10 @@
 #define HARDBTN4_PIN	5
 
 #define HARDBTNS_NR		4
+
+
+#define USBH_MSC_DEBUG_EN
+#define MMCSD_DEBUG_EN
 /*#####################################################*/
 #if _USE_MPU60x0_9150 == 1
 #define USE_MPU60x0_9150 \
