@@ -21,6 +21,7 @@ new_dma_ch* DMA_MMCSD_TRANSMIT = NULL;
 new_dma_ch* DMA_MMCSD_RECEIVE = NULL;
 new_uart* MMCSD = NULL;
 extern new_uart* DebugCom;
+extern SD_Struct_t sd_struct[];
 //#######################################################################################
 uint8_t sd_io_data(void* Struct, uint8_t Value)
 {
@@ -130,8 +131,9 @@ static uint8_t sd_send_cmd(SD_Struct_t *SD_Struct, uint8_t Command, uint32_t Add
 	return Tmp;
 }
 //#######################################################################################
-void sd_init(SD_Struct_t *SD_Struct)
+void sd_init(unsigned int unit_nr)
 {
+	SD_Struct_t *SD_Struct = &sd_struct[unit_nr];
 	//ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
 	//{
 		//if(sd_cs_readstate(SD_Struct) == 0)
@@ -375,7 +377,7 @@ unsigned int _sd_read_page(void *_SD_Struct, void* _Buffer, unsigned long block,
 	return false;
 }
 //#######################################################################################
-unsigned int sd_read_page(void *_SD_Struct, void* _Buffer, unsigned long _block, unsigned int nblks)
+unsigned int MMCSDReadCmdSend(void *_SD_Struct, void* _Buffer, unsigned long _block, unsigned int nblks)
 {
 	unsigned long block = _block;
 	unsigned char* Buffer = (unsigned char*)_Buffer;
@@ -464,7 +466,7 @@ unsigned int  _sd_write_page(void *_SD_Struct, void* _Buffer, unsigned long bloc
 return false;
 }
 //#######################################################################################
-unsigned int sd_write_page(void *_SD_Struct, void* _Buffer, unsigned long _block, unsigned int nblks)
+unsigned int MMCSDWriteCmdSend(void *_SD_Struct, void* _Buffer, unsigned long _block, unsigned int nblks)
 {
 	unsigned long block = _block;
 	unsigned char* Buffer = (unsigned char*)_Buffer;
@@ -478,11 +480,11 @@ unsigned int sd_write_page(void *_SD_Struct, void* _Buffer, unsigned long _block
 	return true;
 }
 //#######################################################################################
-void _mmcsd_init(void *SdStruct, new_gpio* Cs, new_gpio* StatusLed)
+void _mmcsd_init(unsigned int unit_nr, new_gpio* Cs, new_gpio* StatusLed)
 {
-	SD_Struct_t *SD_StructDisk = (SD_Struct_t *)SdStruct;
+	//SD_Struct_t *SD_StructDisk = &sd_struct[unit_nr];
 
-	sd_init(SD_StructDisk);
+	sd_init(unit_nr);
 	//if(SD_StructDisk->SD_Init_OK) return true;
 
 	/*MMCSD = new_(new_uart);
@@ -531,17 +533,18 @@ void _mmcsd_init(void *SdStruct, new_gpio* Cs, new_gpio* StatusLed)
 	DMA_MMCSD_RECEIVE->Dma_Trigers = _Dma_Triger_Off;
 	dma_search_and_use(DMA_MMCSD_RECEIVE, USED_MMCSD_DMA + 4);*/
 /*-----------------------------------------------------*/
-	return false;
+	return;
 }
 //#######################################################################################
-void _mmcsd_idle(void *SdStruct)
+void _mmcsd_idle(unsigned int unit_nr)
 {
-	SD_Struct_t *SD_StructDisk = (SD_Struct_t *)SdStruct;
+	SD_Struct_t *SD_StructDisk = &sd_struct[unit_nr];
+	//SD_Struct_t *SD_StructDisk = (SD_Struct_t *)SdStruct;
 	Drives_Table[SD_StructDisk->DriveNr] = new_(new_fat_disk);
-    Drives_Table[SD_StructDisk->DriveNr]->DiskInfo_SdDriverStructAddr = SdStruct;
+    Drives_Table[SD_StructDisk->DriveNr]->DiskInfo_SdDriverStructAddr = SD_StructDisk;
     //Drives_Table[0]->drive_init = MMCSD_CardInit;
-    Drives_Table[SD_StructDisk->DriveNr]->drive_read_page = sd_read_page;
-    Drives_Table[SD_StructDisk->DriveNr]->drive_write_page = sd_write_page;
+    Drives_Table[SD_StructDisk->DriveNr]->drive_read_page = MMCSDReadCmdSend;
+    Drives_Table[SD_StructDisk->DriveNr]->drive_write_page = MMCSDWriteCmdSend;
     if(_Fat_Mount(SD_StructDisk->DriveNr))
     {
         if(DebugCom)
@@ -568,3 +571,7 @@ void _mmcsd_idle(void *SdStruct)
 
 }
 //#######################################################################################
+void _mmcsd_ioctl(unsigned int unit_nr, unsigned int  command,  unsigned int *buffer)
+{
+	*buffer = 0;
+}

@@ -108,8 +108,11 @@ typedef struct SD_Struct
 extern SD_Struct_t SD_StructDisk1;
 extern SD_Struct_t SD_StructDisk2;
 /*#####################################################*/
-void _mmcsd_init(void *SdStruct, new_gpio* Cs, new_gpio* StatusLed);
-void _mmcsd_idle(void *SdStruct);
+unsigned int MMCSDReadCmdSend(void *_SD_Struct, void* _Buffer, unsigned long _block, unsigned int nblks);
+unsigned int MMCSDWriteCmdSend(void *_SD_Struct, void* _Buffer, unsigned long _block, unsigned int nblks);
+void _mmcsd_init(unsigned int unit_nr, new_gpio* Cs, new_gpio* StatusLed);
+void _mmcsd_idle(unsigned int unit_nr);
+void _mmcsd_ioctl(unsigned int unit_nr, unsigned int  command,  unsigned int *buffer);
 /*#####################################################*/
 #ifdef HEADER_INCLUDE_C_FILES
 #include "hs_mmcsd_interface.c"
