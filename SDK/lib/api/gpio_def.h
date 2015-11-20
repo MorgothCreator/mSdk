@@ -102,6 +102,7 @@ typedef struct
 	gpio_type_enum Direction;
 	bool LastState;
 	bool Multipin;
+	bool inverse;
 	struct {
 		void (*on_state_changed)(void *data, bool state);
 		void *on_state_changed_data;

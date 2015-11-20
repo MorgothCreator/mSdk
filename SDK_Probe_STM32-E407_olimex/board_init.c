@@ -149,6 +149,7 @@ bool board_init()
 /*-----------------------------------------------------*/
 #if defined(LED1_PORT) && defined(LED1_PIN)
 	LED[0] = gpio_assign(LED1_PORT, LED1_PIN, GPIO_DIR_OUTPUT, false);
+	LED[0]->inverse = LED1_INVERSE;
 #endif
 #if defined(LED2_PORT) && defined(LED2_PIN)
 	LED[1] = gpio_assign(LED2_PORT, LED2_PIN, GPIO_DIR_OUTPUT, false);

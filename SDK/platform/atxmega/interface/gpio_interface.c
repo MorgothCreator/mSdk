@@ -110,7 +110,13 @@ bool _gpio_out(new_gpio *gpio_struct, unsigned int State)
 		Port->OUTSET = State & gpio_struct->Pin;
 		Port->OUTCLR = (~State) & gpio_struct->Pin;
 	}
-	else GPIOPinWrite(gpio_struct->BaseAddr, gpio_struct->Pin, State);
+	else 
+	{
+		unsigned int state = State;
+		if(gpio_struct->inverse)
+			state = (~state) & 0x01;
+		GPIOPinWrite(gpio_struct->BaseAddr, gpio_struct->Pin, state);
+	}
 	return true;
 }
 /*#####################################################*/
@@ -130,7 +136,10 @@ bool _gpio_direction(new_gpio *gpio_struct, unsigned int Direction)
 signed int _gpio_in(new_gpio *gpio_struct)
 {
 	if(!gpio_struct) return -1;
-	return GPIOPinRead(gpio_struct->BaseAddr, gpio_struct->Pin);
+	if(gpio_struct->inverse)
+		return (~(GPIOPinRead(gpio_struct->BaseAddr, gpio_struct->Pin)) >> gpio_struct->Pin) & 0x01;
+	else
+		return ((GPIOPinRead(gpio_struct->BaseAddr, gpio_struct->Pin)) >> gpio_struct->Pin) & 0x01;
 }
 /*#####################################################*/
 bool _gpio_up_dn_enable(new_gpio *gpio_struct, bool enable)
@@ -145,3 +154,7 @@ bool _gpio_up_dn(new_gpio *gpio_struct, unsigned char value)
 	return GPIOUpDn(gpio_struct->BaseAddr, gpio_struct->Pin, value);
 }
 /*#####################################################*/
+bool _gpio_function_set(new_gpio *gpio_struct, gpio_type_enum function)
+{
+	return true;
+}

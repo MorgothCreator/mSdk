@@ -8,7 +8,7 @@
 #ifndef MAIN_H_
 #define MAIN_H_
 /*#####################################################*/
-#define _USE_MPU60x0_9150	1
+/*#define _USE_MPU60x0_9150	1
 #define _USE_AK8975			1
 #define _USE_BMP180			1
 #define _USE_MPL3115A2		1
@@ -20,11 +20,12 @@
 #define _USE_LEPTON_FLIR	0
 #define _USE_SHT11 			0
 #define _USE_MPR121			0
-#define _USE_INT_ADC		0
+#define _USE_INT_ADC		0*/
 
 
 #define LED1_PORT			IOC
 #define LED1_PIN			13
+#define LED1_INVERSE		true
 
 #define LEDS_NR				1
 

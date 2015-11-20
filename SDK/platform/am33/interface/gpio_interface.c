@@ -138,8 +138,15 @@ void _gpio_free(new_gpio *gpio_struct)
 bool _gpio_out(new_gpio *gpio_struct, unsigned int State)
 {
 	if(!gpio_struct || gpio_struct == (new_gpio *)-1) return false;
-	if(gpio_struct->Multipin) GPIOMultiplePinsWrite(gpio_struct->BaseAddr, State & gpio_struct->Pin, (~State) & gpio_struct->Pin);
-	else GPIOPinWrite(gpio_struct->BaseAddr, gpio_struct->Pin, State);
+	if(gpio_struct->Multipin)
+		GPIOMultiplePinsWrite(gpio_struct->BaseAddr, State & gpio_struct->Pin, (~State) & gpio_struct->Pin);
+	else
+	{
+		if(gpio_struct->inverse)
+			GPIOPinWrite(gpio_struct->BaseAddr, gpio_struct->Pin, (~State) & 0x01);
+		else
+			GPIOPinWrite(gpio_struct->BaseAddr, gpio_struct->Pin, State);
+	}
 	return true;
 }
 /*#####################################################*/
@@ -169,8 +176,15 @@ bool _gpio_direction(new_gpio *gpio_struct, unsigned int Direction)
 signed int _gpio_in(new_gpio *gpio_struct)
 {
 	if(!gpio_struct || gpio_struct == (new_gpio *)-1) return -1;
-	if(gpio_struct->Multipin) return GPIOMultiplePinsRead(gpio_struct->BaseAddr, gpio_struct->Pin);
-	else return GPIOPinRead(gpio_struct->BaseAddr, gpio_struct->Pin)>>gpio_struct->Pin;
+	if(gpio_struct->Multipin)
+		return GPIOMultiplePinsRead(gpio_struct->BaseAddr, gpio_struct->Pin);
+	else
+	{
+		if(gpio_struct->inverse)
+			return (~(GPIOPinRead(gpio_struct->BaseAddr, gpio_struct->Pin) >> gpio_struct->Pin) & 0x01);
+		else
+			return ((GPIOPinRead(gpio_struct->BaseAddr, gpio_struct->Pin) >> gpio_struct->Pin) & 0x01);
+	}
 }
 /*#####################################################*/
 bool _gpio_up_dn_enable(new_gpio *gpio_struct, bool enable)

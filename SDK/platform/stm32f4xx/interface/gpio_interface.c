@@ -260,8 +260,13 @@ bool _gpio_out(new_gpio *gpio_struct, unsigned int State)
 	}
 	else
 	{
-		if(State) BaseAddr->BSRR |= 1 << gpio_struct->Pin;
-		else  BaseAddr->BSRR |= 1 << (gpio_struct->Pin + 16);
+		unsigned int state = State;
+		if(gpio_struct->inverse)
+			state = (~state) & 0x01;
+		if(state)
+			BaseAddr->BSRR |= 1 << gpio_struct->Pin;
+		else
+			BaseAddr->BSRR |= 1 << (gpio_struct->Pin + 16);
 	}
 	return true;
 }
@@ -288,7 +293,12 @@ signed int _gpio_in(new_gpio *gpio_struct)
 		return returned_state;
 	}
 	else
-		return HAL_GPIO_ReadPin(BaseAddr, 1 << gpio_struct->Pin);
+	{
+		if(gpio_struct->inverse)
+			return (~(HAL_GPIO_ReadPin(BaseAddr, 1 << gpio_struct->Pin) >> gpio_struct->Pin) &0x01);
+		else
+			return (HAL_GPIO_ReadPin(BaseAddr, 1 << gpio_struct->Pin) >> gpio_struct->Pin) &0x01;
+	}
 }
 /*#####################################################*/
 bool _gpio_up_dn_enable(new_gpio *gpio_struct, bool enable)

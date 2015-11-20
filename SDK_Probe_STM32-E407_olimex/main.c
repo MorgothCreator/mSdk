@@ -33,22 +33,22 @@ void heart_beat_service(void) {
 		switch(led_state) {
 			case 0:
 				led_state = 1;
-				gpio_out(LED[0], 0);
+				gpio_out(LED[0], 1);
 				timer_interval(&timer_led, 10);
 				break;
 			case 1:
 				led_state = 2;
-				gpio_out(LED[0], 1);
+				gpio_out(LED[0], 0);
 				timer_interval(&timer_led, 200);
 				break;
 			case 2:
 				led_state = 3;
-				gpio_out(LED[0], 0);
+				gpio_out(LED[0], 1);
 				timer_interval(&timer_led, 10);
 				break;
 			case 3:
 				led_state = 0;
-				gpio_out(LED[0], 1);
+				gpio_out(LED[0], 0);
 				timer_interval(&timer_led, 780);
 				break;
 		}

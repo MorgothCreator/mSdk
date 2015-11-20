@@ -22,6 +22,7 @@ bool _gpio_direction(new_gpio *gpio_struct, unsigned int Direction);
 signed int _gpio_in(new_gpio *gpio_struct);
 bool _gpio_up_dn_enable(new_gpio *gpio_struct, bool value);
 bool _gpio_up_dn(new_gpio *gpio_struct, unsigned char value);
+bool _gpio_function_set(new_gpio *gpio_struct, gpio_type_enum function);
 /*#####################################################*/
 #ifdef HEADER_INCLUDE_C_FILES
 #include "gpio_interface.c"
