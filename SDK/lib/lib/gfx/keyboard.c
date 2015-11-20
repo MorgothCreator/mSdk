@@ -32,7 +32,7 @@
 #include "controls_definition.h"
 //#######################################################################################
 #ifdef FLASH_DEVICE
-const unsigned char kbd_qwerty_keys_little_return[38]  PROGMEM =
+const unsigned int kbd_qwerty_keys_little_return[38]  PROGMEM =
 #else
 static const unsigned int kbd_qwerty_keys_little_return[38] =
 #endif
@@ -43,7 +43,7 @@ static const unsigned int kbd_qwerty_keys_little_return[38] =
 };
 //#######################################################################################
 #ifdef FLASH_DEVICE
-const unsigned char kbd_qwerty_keys_big_return[38]  PROGMEM =
+const unsigned int kbd_qwerty_keys_big_return[38]  PROGMEM =
 #else
 static const unsigned int kbd_qwerty_keys_big_return[38] =
 #endif
@@ -54,7 +54,7 @@ static const unsigned int kbd_qwerty_keys_big_return[38] =
 };
 //#######################################################################################
 #ifdef FLASH_DEVICE
-const unsigned char kbd_qwerty_keys_numeric_return[38]  PROGMEM =
+const unsigned int kbd_qwerty_keys_numeric_return[38]  PROGMEM =
 #else
 static const unsigned int kbd_qwerty_keys_numeric_return[38] =
 #endif
