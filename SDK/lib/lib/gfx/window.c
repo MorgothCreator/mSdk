@@ -104,7 +104,9 @@ void window_set_children_settings(tWindow *settings, bool call_childrens, bool t
 				sClipRegion.sXMax = Window_settings->Internals.Position.X +  Window_settings->Internals.Size.X;
 				sClipRegion.sYMax = Window_settings->Internals.Position.Y +  Window_settings->Internals.Size.Y;
 				clip_limit(&sClipRegion, &Window_settings->WindowMoveLimits);
-				if(control_comand->Cursor == Cursor_Down &&
+				CursorState Cursor = Cursor_NoAction;
+				if(control_comand) Cursor = control_comand->Cursor;
+				if(Cursor == Cursor_Down &&
 						check_if_inside_box(sClipRegion.sXMin,
 							sClipRegion.sYMin,
 								sClipRegion.sXMax,
@@ -116,12 +118,20 @@ void window_set_children_settings(tWindow *settings, bool call_childrens, bool t
 		}
 		Tmp_Children_Cnt++;
 	}
-	CursorState _back = control_comand->Cursor;
-	if(settings->Internals.CursorDownInsideChildrenWindow) control_comand->Cursor = Cursor_NoAction;
+	CursorState _back;
+	if(control_comand)
+	{
+		_back = control_comand->Cursor;
+		if(settings->Internals.CursorDownInsideChildrenWindow) control_comand->Cursor = Cursor_NoAction;
+	}
 	//bool _back_cursor_used = control_comand->CursorCoordonateUsed;
 	Tmp_Children_Cnt = 0;
-	bool back_need_window_refrash = control_comand->WindowRefresh;
-	control_comand->WindowRefresh = false;
+	bool back_need_window_refrash = false;
+	if(control_comand)
+	{
+		back_need_window_refrash = control_comand->WindowRefresh;
+		control_comand->WindowRefresh = false;
+	}
 	while(Tmp_Children_Cnt < settings->Internals.ChildrensNr && settings->Internals.ChildrensNr != 0)
 	{
 		if(settings->Internals.Childrens[Tmp_Children_Cnt] && settings->Internals.Childrens[Tmp_Children_Cnt]->TabLocNr == settings->SelectedTab)
@@ -323,7 +333,7 @@ void window_set_children_settings(tWindow *settings, bool call_childrens, bool t
 		}
 		Tmp_Children_Cnt++;
 	}
-	control_comand->Cursor = _back;
+	if(control_comand) control_comand->Cursor = _back;
 	//if(ParentWindow->Internals.CursorDownInsideChildrenWindow) control_comand->CursorCoordonateUsed = _back_cursor_used;
 	Tmp_Children_Cnt = 0;
 	while(Tmp_Children_Cnt < settings->Internals.ChildrensNr && settings->Internals.ChildrensNr != 0)
@@ -340,7 +350,9 @@ void window_set_children_settings(tWindow *settings, bool call_childrens, bool t
 					if(ChildrenWindowSize->X < (Window_settings->Position.X + Window_settings->Size.X)) ChildrenWindowSize->X = Window_settings->Position.X + Window_settings->Size.X;
 					if(ChildrenWindowSize->Y < (Window_settings->Position.Y + Window_settings->Size.Y)) ChildrenWindowSize->Y = Window_settings->Position.Y + Window_settings->Size.Y;
 				}
-				if(refresh_childrens || control_comand->WindowRefresh) Window_settings->Internals.NeedEntireRefresh = true;
+				bool tmp_win_rfsh = false;
+				if(control_comand) tmp_win_rfsh = control_comand->WindowRefresh;
+				if(refresh_childrens || tmp_win_rfsh) Window_settings->Internals.NeedEntireRefresh = true;
 				if(transfer_settings)
 				{
 					Window_settings->Internals.PositionOffset.X = 3 + settings->Internals.Position.ChildrenPosition_X;
@@ -359,7 +371,7 @@ void window_set_children_settings(tWindow *settings, bool call_childrens, bool t
 		}
 		Tmp_Children_Cnt++;
 	}
-	control_comand->WindowRefresh |= back_need_window_refrash;
+	if(control_comand) control_comand->WindowRefresh |= back_need_window_refrash;
 	if(_back == Cursor_Up || _back == Cursor_NoAction) settings->Internals.CursorDownInsideChildrenWindow = false;
 	if(control_comand) control_comand->Cursor = back;
 	if(settings->Internals.V_ScrollBar && settings->Internals.H_ScrollBar) settings->Internals.pDisplay->sClipRegion = sClipRegion;
