@@ -117,8 +117,56 @@
 #define IDLE_EMMC(UNIT_NR) \
 		mmcsd_idle(UNIT_NR)
 /*#####################################################*/
-#define INIT_USB_DEV_MSC_BRIDGE(USB_DEVICE_NR, SLAVE_DEV_CONTROLS_PTR) \
-	usb_msc_dev_init(USB_DEVICE_NR, SLAVE_DEV_CONTROLS_PTR)
+#define INIT_MMCSD(MMCSD_NR, GPIO_RESET_STRUCT, GPIO_SD_DETECT_STRUCT, ACTIVITY_LED_STRUCT) \
+	gpio_out(GPIO_RESET_STRUCT, 0); \
+	Sysdelay(1); \
+	gpio_out(GPIO_RESET_STRUCT, 1); \
+	mmcsd_init(MMCSD_NR, GPIO_SD_DETECT_STRUCT, ACTIVITY_LED_STRUCT); \
+	mmcsd_idle(MMCSD_NR);
+/*#####################################################*/
+#define INIT_USB_DEV_MSC_TO_MMCSD_BRIDGE(USB_DEVICE_NR, MMCSD_NR, SLAVE_DEV_CONTROLS_NAME, GPIO_RESET_STRUCT, GPIO_SD_DETECT_STRUCT, ACTIVITY_LED_STRUCT) \
+	gpio_out(GPIO_RESET_STRUCT, 0); \
+	Sysdelay(1); \
+	gpio_out(GPIO_RESET_STRUCT, 1); \
+	mmcsd_init(MMCSD_NR, GPIO_SD_DETECT_STRUCT, ACTIVITY_LED_STRUCT); \
+	mmcsd_idle(MMCSD_NR);\
+	UARTPuts(DebugCom, "Bridge USBMSC0 Dev for MMCSD0 Interface.......", -1);\
+	USBD_DRV_RW_FUNC *SLAVE_DEV_CONTROLS_NAME = calloc(1, sizeof(USBD_DRV_RW_FUNC));\
+	SLAVE_DEV_CONTROLS_NAME->controlled_unit_nr = MMCSD_NR;\
+	SLAVE_DEV_CONTROLS_NAME->DriveStruct = &ctrlInfo[MMCSD_NR];\
+	SLAVE_DEV_CONTROLS_NAME->drv_ioctl_func = mmcsd_ioctl;\
+	SLAVE_DEV_CONTROLS_NAME->drv_r_func = mmcsd_read;\
+	SLAVE_DEV_CONTROLS_NAME->drv_w_func = mmcsd_write;\
+	usb_msc_dev_init(USB_DEVICE_NR, (void *)SLAVE_DEV_CONTROLS_NAME);\
+	UARTPuts(DebugCom, "OK.\n\r", -1);
+/*#####################################################*/
+#include "interface/usblib/include/usbhmsc.h"
+#define INIT_USB_DEV_MSC_BRIDGE(USB_DEVICE_NR, USB_HOST_NR, SLAVE_DEV_CONTROLS_NAME, ACTIVITY_LED_STRUCT) \
+	UARTPuts(DebugCom, "Init USBMSC1 Host.......", -1); \
+	usb_msc_host_init(USB_HOST_NR, ACTIVITY_LED_STRUCT); \
+	UARTPuts(DebugCom, "OK.\n\r", -1); \
+    usb_msc_host_idle(USB_HOST_NR); \
+extern tUSBHMSCInstance g_USBHMSCDevice[]; \
+	UARTPuts(DebugCom, "Bridge USBMSC0 Dev for USBMSC1Host Interface.......", -1); \
+	USBD_DRV_RW_FUNC *SLAVE_DEV_CONTROLS_NAME = calloc(1, sizeof(USBD_DRV_RW_FUNC)); \
+	SLAVE_DEV_CONTROLS_NAME->controlled_unit_nr = USB_HOST_NR; \
+	SLAVE_DEV_CONTROLS_NAME->DriveStruct = (void *)&g_USBHMSCDevice[USB_HOST_NR]; \
+	SLAVE_DEV_CONTROLS_NAME->drv_ioctl_func = usb_msc_host_ioctl; \
+	SLAVE_DEV_CONTROLS_NAME->drv_r_func = usb_msc_host_read; \
+	SLAVE_DEV_CONTROLS_NAME->drv_w_func = usb_msc_host_write; \
+	usb_msc_dev_init(USB_DEVICE_NR, SLAVE_DEV_CONTROLS_NAME); \
+	UARTPuts(DebugCom, "OK.\n\r", -1);
+/*#####################################################*/
+#define INIT_USB_MSC_HOST(USB_HOST_NR, ACTIVITY_LED_STRUCT)\
+	UARTPuts(DebugCom, "Init USBMSC1 Host.......", -1);\
+	usb_msc_host_init(USB_HOST_NR, ACTIVITY_LED_STRUCT);\
+	UARTPuts(DebugCom, "OK.\n\r", -1);\
+    usb_msc_host_idle(USB_HOST_NR);
+/*#####################################################*/
+#define INIT_USB_MOUSE_HOST(USB_HOST_NR)\
+	UARTPuts(DebugCom, "Init USBMOUSE1 Host.......", -1);\
+	usb_mouse_host_init(USB_HOST_NR);\
+	UARTPuts(DebugCom, "OK.\n\r", -1);
 /*#####################################################*/
 /*#####################################################*/
 /*#####################################################*/

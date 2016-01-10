@@ -6,6 +6,7 @@
 #include "main.h"
 #include "board_init.h"
 #include "api/timer_api.h"
+#include "api/usb_api.h"
 #include "device/mpu60x0_9150.h"
 #include "device/ak8975.h"
 #include "device/bmp180.h"
@@ -20,7 +21,7 @@
 #include "device/lepton_flir.h"
 
 
-
+#include "interface/hs_mmcsd_interface.h"
 
 
 #include "lib/gfx/controls_definition.h"
@@ -305,14 +306,6 @@ int main(void)
     control_comand.CursorCoordonateUsed = true;
 #endif
 /*******************************************************/
-
-
-
-
-
-
-
-
 #if _USE_SHT11 == 1
 	unsigned char sht11_status_reg = 0;
 	bool sht11_read_mode = false;
@@ -322,14 +315,13 @@ int main(void)
 #endif
     //lan_interface_init();
 	//httpd_init();
-
-
-
-
-
-
-
-	double unu = 1.0;
+/*******************************************************/
+	bool old_connected = false;
+#ifdef BridgeUsbDev0ToMmcSd0
+	if(ctrlInfo[0].connected == false) usb_msc_dev_media_change_state(0, false);
+#elif defined(BridgeUsbDev0ToMmcSd1)
+	if(ctrlInfo[1].connected == false) usb_msc_dev_media_change_state(0, false);
+#endif
 /*******************************************************/
 	unsigned int PwrLoadCount = 0;
 	while(1)
@@ -378,7 +370,32 @@ int main(void)
 
 #endif
         }
-		unu += 0.1;
+#ifdef BridgeUsbDev0ToMmcSd0
+        mmcsd_idle(0);
+        if(old_connected == false && ctrlInfo[0].connected == true)
+        {
+        	old_connected = true;
+        	usb_msc_dev_media_change_state(0, true);
+        }
+        else if(old_connected == true && ctrlInfo[0].connected == false)
+        {
+        	old_connected = false;
+        	usb_msc_dev_media_change_state(0, false);
+        }
+
+#elif defined(BridgeUsbDev0ToMmcSd1)
+        mmcsd_idle(&sdCtrl[1]);
+        if(old_connected == false && sdCtrl[1].connected == true)
+        {
+        	old_connected = true;
+        	usb_msc_dev_media_change_state(1, true);
+        }
+        else if(old_connected == true && sdCtrl[1].connected == false)
+        {
+        	old_connected = false;
+        	usb_msc_dev_media_change_state(1, false);
+        }
+#endif
 		//lwip_idle();
 		heart_beat_service();
 #if _USE_SHT11 == 1

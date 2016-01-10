@@ -26,7 +26,10 @@
 #define USE_BACK_SCREEN
 #define touch
 
-
+#define usb_0_dev_msc
+#define usb_1_msc
+#define BridgeUsbDev0ToMmcSd0
+//#define BridgeUsbDev0ToUsbHost1
 
 
 /*#####################################################*/
