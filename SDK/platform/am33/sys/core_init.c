@@ -39,10 +39,10 @@ inline void _core_init(void)
 	//VfpEnable();
 	//CPUSwitchToUserMode();
 	MMUConfigAndEnable();
-	CacheEnable(CACHE_ICACHE);
+	//CacheEnable(CACHE_ICACHE);
 	CacheEnable(CACHE_ALL);
 	//EnableNeon();
-	//CP15BranchPredictionEnable();
+	CP15BranchPredictionEnable();
 	L3L4_init();
 	//NeonEnable();
 

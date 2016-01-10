@@ -47,6 +47,7 @@
 ******************************************************************************/
 #define CORTEX_A8_L2EN                   (0x02)
 #define PRIMARY_PART_CORTEX_A8           (0xC08) 
+
 /*****************************************************************************
 **                         FUNCTION DEFINITIONS
 ******************************************************************************/
@@ -64,7 +65,7 @@
  *
  * \Note    Disabling Data Cache disables Unified cache also, if present.
  **/
-inline void CacheDisable(unsigned int disFlag)
+void CacheDisable(unsigned int disFlag)
 {
     if(disFlag & CACHE_ICACHE)
     {
@@ -106,8 +107,7 @@ inline void CacheDisable(unsigned int disFlag)
  *
  * \Note    Enabling Data Cache enables Unified cache also, if present.
  **/
-
-inline void CacheEnable(unsigned int enFlag)
+void CacheEnable(unsigned int enFlag)
 {
     if(enFlag & CACHE_ICACHE)
     { 
@@ -136,7 +136,7 @@ inline void CacheEnable(unsigned int enFlag)
  * \return  None.
  *
  **/
-inline void CacheInstInvalidateAll(void)
+void CacheInstInvalidateAll(void)
 {
     CP15ICacheFlush();
 }
@@ -150,7 +150,7 @@ inline void CacheInstInvalidateAll(void)
  * \return  None.
  *
  **/
-inline void CacheInstInvalidateBuff(unsigned int startAddr, unsigned int numBytes)
+void CacheInstInvalidateBuff(unsigned int startAddr, unsigned int numBytes)
 {
     CP15ICacheFlushBuff(startAddr, numBytes);
 }
@@ -163,7 +163,7 @@ inline void CacheInstInvalidateBuff(unsigned int startAddr, unsigned int numByte
  * \return  None.
  *
  **/
-inline void CacheDataCleanInvalidateAll(void)
+void CacheDataCleanInvalidateAll(void)
 {
     CP15DCacheCleanFlush();
 }
@@ -176,7 +176,7 @@ inline void CacheDataCleanInvalidateAll(void)
  * \return  None.
  *
  **/
-inline void CacheDataCleanAll(void)
+void CacheDataCleanAll(void)
 {
     CP15DCacheClean();
 }
@@ -189,7 +189,7 @@ inline void CacheDataCleanAll(void)
  * \return  None.
  *
  **/
-inline void CacheDataInvalidateAll(void)
+void CacheDataInvalidateAll(void)
 {
     CP15DCacheFlush();
 }
@@ -208,7 +208,7 @@ inline void CacheDataInvalidateAll(void)
  * \return  None.
  *
  **/
-inline void CacheDataCleanBuff(unsigned int startAddr, unsigned int numBytes)
+void CacheDataCleanBuff(unsigned int startAddr, unsigned int numBytes)
 {
     CP15DCacheCleanBuff(startAddr, numBytes);
 }
@@ -225,7 +225,7 @@ inline void CacheDataCleanBuff(unsigned int startAddr, unsigned int numBytes)
  * \return  None.
  *
  **/
-inline void CacheDataInvalidateBuff(unsigned int startAddr, unsigned int numBytes)
+void CacheDataInvalidateBuff(unsigned int startAddr, unsigned int numBytes)
 {
     CP15DCacheFlushBuff(startAddr, numBytes);
 }
@@ -240,7 +240,7 @@ inline void CacheDataInvalidateBuff(unsigned int startAddr, unsigned int numByte
  * \return  None.
  *
  **/
-inline void CacheDataCleanInvalidateBuff(unsigned int startAddr, unsigned int numBytes)
+void CacheDataCleanInvalidateBuff(unsigned int startAddr, unsigned int numBytes)
 {
     CP15DCacheCleanFlushBuff(startAddr, numBytes);
 }
