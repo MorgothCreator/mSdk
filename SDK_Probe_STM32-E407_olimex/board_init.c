@@ -161,9 +161,9 @@ bool board_init()
 	LED[3] = gpio_assign(LED4_PORT, LED4_PIN, GPIO_DIR_OUTPUT, false);
 #endif
 /*-----------------------------------------------------*/
-	INIT_MMCSD(0, NULL, LED[0]);
+	INIT_MMCSD(0, NULL, NULL, LED[0]);
 /*-----------------------------------------------------*/
-	usb_msc_host_init(0, LED[0]);
-	usb_msc_host_idle(0);
+	INIT_USB_MSC_HOST(0, LED[0]);
+	//usb_msc_host_idle(0);
 	return true;
 }

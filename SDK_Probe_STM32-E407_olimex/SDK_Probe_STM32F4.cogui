@@ -16,6 +16,10 @@
 <part id="1"/>
 <part id="2"/>
 <part id="5"/>
+<part id="6"/>
+<part id="7"/>
+<part id="8"/>
+<part id="9"/>
 </presentation>
 </folder>
 </info>
@@ -26,7 +30,7 @@
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="board_init.c" partName="board_init.c" path="C:/GitHub/mSdk/SDK_Probe_STM32-E407_olimex/board_init.c" title="board_init.c" tooltip="C:/GitHub/mSdk/SDK_Probe_STM32-E407_olimex/board_init.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/board_init.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="5490" selectionTopPixel="2231"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="5906" selectionTopPixel="2161"/>
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="board_init.h" partName="board_init.h" path="C:/GitHub/mSdk/SDK_Probe_STM32-E407_olimex/board_init.h" title="board_init.h" tooltip="C:/GitHub/mSdk/SDK_Probe_STM32-E407_olimex/board_init.h" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/board_init.h"/>
@@ -34,15 +38,31 @@
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="init_api_def.h" partName="init_api_def.h" path="C:/GitHub/mSdk/SDK/lib/api/init_api_def.h" title="init_api_def.h" tooltip="C:/GitHub/mSdk/SDK/lib/api/init_api_def.h" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/lib/api/init_api_def.h"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="4349" selectionTopPixel="724"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="6555" selectionTopPixel="2497"/>
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="main.c" partName="main.c" path="C:/GitHub/mSdk/SDK_Probe_STM32-E407_olimex/main.c" title="main.c" tooltip="C:/GitHub/mSdk/SDK_Probe_STM32-E407_olimex/main.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/main.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="1177" selectionTopPixel="379"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="1177" selectionTopPixel="2119"/>
 </editor>
-<editor activePart="true" focus="true" id="org.eclipse.cdt.ui.editor.CEditor" name="gpio_interface.c" partName="gpio_interface.c" path="C:/GitHub/mSdk/SDK/platform/stm32f4xx/interface/gpio_interface.c" title="gpio_interface.c" tooltip="C:/GitHub/mSdk/SDK/platform/stm32f4xx/interface/gpio_interface.c" workbook="DefaultEditorWorkbook">
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="gpio_interface.c" partName="gpio_interface.c" path="C:/GitHub/mSdk/SDK/platform/stm32f4xx/interface/gpio_interface.c" title="gpio_interface.c" tooltip="C:/GitHub/mSdk/SDK/platform/stm32f4xx/interface/gpio_interface.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/stm32f4xx/interface/gpio_interface.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="5258" selectionTopPixel="4076"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="5160" selectionTopPixel="4016"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="usb_dev_msc_interface.c" partName="usb_dev_msc_interface.c" path="C:/GitHub/mSdk/SDK/platform/stm32f4xx/interface/usb_dev_msc_interface.c" title="usb_dev_msc_interface.c" tooltip="C:/GitHub/mSdk/SDK/platform/stm32f4xx/interface/usb_dev_msc_interface.c" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/stm32f4xx/interface/usb_dev_msc_interface.c"/>
+<editorState selectionHorizontalPixel="0" selectionLength="25" selectionOffset="234" selectionTopPixel="0"/>
+</editor>
+<editor activePart="true" focus="true" id="org.eclipse.cdt.ui.editor.CEditor" name="usb_host_msc_interface.c" partName="usb_host_msc_interface.c" path="C:/GitHub/mSdk/SDK/platform/stm32f4xx/interface/usb_host_msc_interface.c" title="usb_host_msc_interface.c" tooltip="C:/GitHub/mSdk/SDK/platform/stm32f4xx/interface/usb_host_msc_interface.c" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/stm32f4xx/interface/usb_host_msc_interface.c"/>
+<editorState selectionHorizontalPixel="0" selectionLength="16" selectionOffset="5835" selectionTopPixel="3797"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="usb_host_msc_interface.h" partName="usb_host_msc_interface.h" path="C:/GitHub/mSdk/SDK/platform/stm32f4xx/interface/usb_host_msc_interface.h" title="usb_host_msc_interface.h" tooltip="C:/GitHub/mSdk/SDK/platform/stm32f4xx/interface/usb_host_msc_interface.h" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/stm32f4xx/interface/usb_host_msc_interface.h"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="535" selectionTopPixel="0"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="usb_api.c" partName="usb_api.c" path="C:/GitHub/mSdk/SDK/lib/api/usb_api.c" title="usb_api.c" tooltip="C:/GitHub/mSdk/SDK/lib/api/usb_api.c" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/lib/api/usb_api.c"/>
+<editorState selectionHorizontalPixel="0" selectionLength="22" selectionOffset="1728" selectionTopPixel="300"/>
 </editor>
 </editors>
 <views>
@@ -53,14 +73,16 @@
 </viewState>
 </view>
 <view id="org.coocox.builder.ui.views.ProjectView" partName="Project">
-<viewState CommonNavigator.LINKING_ENABLED="0" horizontalPosition="0" org.eclipse.ui.navigator.resources.workingSets.showTopLevelWorkingSets="0" verticalPosition="2">
+<viewState CommonNavigator.LINKING_ENABLED="0" horizontalPosition="0" org.eclipse.ui.navigator.resources.workingSets.showTopLevelWorkingSets="0" verticalPosition="11">
 <expanded>
 <element path="/SDK_Probe_STM32F4"/>
 <element path="/SDK_Probe_STM32F4/lib"/>
 <element path="/SDK_Probe_STM32F4/lib/api"/>
+<element path="/SDK_Probe_STM32F4/stm32f4xx"/>
+<element path="/SDK_Probe_STM32F4/stm32f4xx/interface"/>
 </expanded>
 <selection>
-<element path="/SDK_Probe_STM32F4/lib/api/init_api_def.h"/>
+<element path="/SDK_Probe_STM32F4/lib/api/usb_api.c"/>
 </selection>
 </viewState>
 </view>
@@ -69,9 +91,8 @@
 </view>
 <view id="org.eclipse.search.ui.views.SearchView" partName="Search">
 <viewState isPinned="false">
-<view IMemento.internal.id="org.eclipse.cdt.ui.pdomSearchViewPage" definitionColumnWidth="150" locationColumnWidth="300" matchColumnWidth="300" org.eclipse.search.lastActivation="4" org.eclipse.search.resultpage.layout="2" showEnclosingDefinitions="true"/>
 <view IMemento.internal.id="" org.eclipse.search.lastActivation="0"/>
-<view IMemento.internal.id="org.eclipse.search.text.FileSearchResultPage" org.eclipse.search.lastActivation="8" org.eclipse.search.resultpage.layout="2" org.eclipse.search.resultpage.limit="1000" org.eclipse.search.resultpage.sorting="2"/>
+<view IMemento.internal.id="org.eclipse.cdt.ui.pdomSearchViewPage" definitionColumnWidth="150" locationColumnWidth="300" matchColumnWidth="300" org.eclipse.search.lastActivation="1" org.eclipse.search.resultpage.layout="2" showEnclosingDefinitions="true"/>
 </viewState>
 </view>
 <view id="org.eclipse.debug.ui.DebugView" partName="Debug">
@@ -282,176 +303,170 @@
 <workingSets/>
 <navigationHistory>
 <editors>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/stm32f4xx/driver/stm32f4xx_hal_sd.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/lib/lib/gfx/jpeg/source/jdapimin.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/lib/lib/gfx/jpeg/source/ckconfig.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/main.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/lib/lib/gfx/jpeg/source/jpegtran.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/stm32f4xx/interface/mcspi_interface.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/stm32f4xx/driver/stm32f4xx_hal_spi.h"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ui.DefaultTextEditor" path="/SDK_Probe_STM32F4/stm32f4xx/sys/stm32f4xx_flash_VG.ld"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ui.DefaultTextEditor" path="/SDK_Probe_STM32F4/stm32f4xx/sys/CoIde_stm32f4xx_flash.ld"/>
-<editor factoryID="org.coocox.builder.ui.persistent.PersistentElementFactory" id="org.coocox.builder.ui.editors.ConfigEditor">
-<org.coocox.builder.ui.editors.ConfigEditor/>
-</editor>
-<editor factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="org.eclipse.ui.DefaultTextEditor" uri="file:/C:/GitHub/mSdk/SDK_Probe_STM32-E407_olimex/arm-gcc-link.ld"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/lib/lib/gfx/jpeg/source/cdjpeg.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/board_init.h"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/stm32f4xx/interface/usb_host_msc_interface.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/stm32f4xx/interface/hs_mmcsd_interface.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/main.h"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/main.h"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/stm32f4xx/interface/gpio_interface.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/board_init.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/board_init.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/stm32f4xx/interface/usb_dev_msc_interface.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/lib/api/init_api_def.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/board_init.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/board_init.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/lib/api/usb_api.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/stm32f4xx/interface/usb_host_msc_interface.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/main.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/stm32f4xx/interface/usb_host_mouse_interface.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/stm32f4xx/driver/USBH_MSC/Class/MSC/Inc/usbh_msc.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/stm32f4xx/driver/USBH_MSC/Class/MSC/Src/usbh_msc.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/stm32f4xx/driver/USBH_MSC/Class/MSC/Src/usbh_msc_scsi.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/stm32f4xx/interface/usb_host_msc_interface.h"/>
 </editors>
-<item historyLabel="jdapimin.c" index="1">
-<position info="not_deleted" x="1053" y="13"/>
-</item>
-<item historyLabel="ckconfig.c" index="2">
-<position info="not_deleted" x="8751" y="0"/>
-</item>
-<item historyLabel="jdapimin.c" index="1">
-<position info="not_deleted" x="1053" y="13"/>
-</item>
-<item historyLabel="main.c" index="3">
-<position info="not_deleted" x="1261" y="3"/>
-</item>
-<item historyLabel="jpegtran.c" index="4">
-<position info="not_deleted" x="12566" y="3"/>
-</item>
-<item historyLabel="main.c" index="3">
-<position info="not_deleted" x="1261" y="3"/>
-</item>
-<item historyLabel="mcspi_interface.c" index="5">
-<position info="not_deleted" x="228" y="40"/>
-</item>
-<item historyLabel="stm32f4xx_hal_spi.h" index="6">
-<position info="not_deleted" x="18237" y="0"/>
-</item>
-<item historyLabel="stm32f4xx_flash_VG.ld" index="7">
-<position info="not_deleted" x="2113" y="0"/>
-</item>
-<item historyLabel="CoIde_stm32f4xx_flash.ld" index="8">
-<position info="not_deleted" x="476" y="0"/>
-</item>
-<item historyLabel="Configuration" index="9"/>
-<item historyLabel="arm-gcc-link.ld" index="10">
-<position info="not_deleted" x="3183" y="0"/>
-</item>
-<item historyLabel="cdjpeg.c" index="11">
-<position info="not_deleted" x="4500" y="0"/>
-</item>
-<item historyLabel="arm-gcc-link.ld" index="10">
-<position info="not_deleted" x="3123" y="31"/>
-</item>
-<item historyLabel="Configuration" index="9"/>
-<item historyLabel="arm-gcc-link.ld" index="10">
-<position info="not_deleted" x="3123" y="31"/>
-</item>
-<item historyLabel="CoIde_stm32f4xx_flash.ld" index="8">
-<position info="not_deleted" x="476" y="0"/>
-</item>
-<item historyLabel="stm32f4xx_flash_VG.ld" index="7">
-<position info="not_deleted" x="2113" y="0"/>
-</item>
-<item historyLabel="stm32f4xx_hal_spi.h" index="6">
-<position info="not_deleted" x="18237" y="0"/>
-</item>
-<item historyLabel="mcspi_interface.c" index="5">
-<position info="not_deleted" x="228" y="40"/>
-</item>
-<item historyLabel="main.c" index="3">
-<position info="not_deleted" x="1261" y="3"/>
-</item>
-<item historyLabel="stm32f4xx_hal_sd.c" index="0">
-<position info="not_deleted" x="0" y="0"/>
-</item>
-<item historyLabel="main.c" index="3">
-<position info="not_deleted" x="1261" y="3"/>
-</item>
-<item historyLabel="board_init.h" index="12">
-<position info="not_deleted" x="519" y="0"/>
-</item>
-<item historyLabel="usb_host_msc_interface.c" index="13">
-<position info="not_deleted" x="9896" y="0"/>
-</item>
-<item historyLabel="hs_mmcsd_interface.c" index="14">
-<position info="not_deleted" x="34158" y="14"/>
-</item>
-<item historyLabel="main.h" index="15">
-<position info="not_deleted" x="771" y="51"/>
-</item>
-<item historyLabel="usb_host_msc_interface.c" index="13">
-<position info="not_deleted" x="9992" y="265"/>
-</item>
-<item historyLabel="hs_mmcsd_interface.c" index="14">
-<position info="not_deleted" x="35807" y="263"/>
-</item>
-<item historyLabel="usb_host_msc_interface.c" index="13">
-<position info="not_deleted" x="9288" y="0"/>
-</item>
-<item historyLabel="main.h" index="16">
-<position info="not_deleted" x="803" y="51"/>
-</item>
-<item historyLabel="gpio_interface.c" index="17">
-<position info="not_deleted" x="0" y="0"/>
-</item>
-<item historyLabel="gpio_interface.c" index="17">
-<position info="not_deleted" x="5463" y="0"/>
-</item>
-<item historyLabel="board_init.c" index="18">
-<position info="not_deleted" x="6016" y="0"/>
-</item>
-<item historyLabel="board_init.h" index="19">
-<position info="not_deleted" x="519" y="0"/>
-</item>
-<item historyLabel="init_api_def.h" index="20">
-<position info="not_deleted" x="4349" y="0"/>
-</item>
-<item historyLabel="board_init.c" index="18">
-<position info="not_deleted" x="6016" y="0"/>
-</item>
-<item historyLabel="main.h" index="16">
-<position info="not_deleted" x="803" y="51"/>
-</item>
-<item historyLabel="init_api_def.h" index="20">
-<position info="not_deleted" x="4349" y="0"/>
-</item>
-<item historyLabel="board_init.c" index="18">
-<position info="not_deleted" x="5491" y="0"/>
-</item>
-<item historyLabel="init_api_def.h" index="20">
-<position info="not_deleted" x="4349" y="0"/>
-</item>
-<item historyLabel="main.h" index="16">
-<position info="not_deleted" x="611" y="0"/>
-</item>
-<item historyLabel="board_init.c" index="18">
-<position info="not_deleted" x="5491" y="0"/>
-</item>
-<item historyLabel="main.c" index="21">
-<position info="not_deleted" x="1177" y="0"/>
-</item>
-<item historyLabel="board_init.c" index="18">
-<position info="not_deleted" x="5491" y="0"/>
-</item>
-<item historyLabel="init_api_def.h" index="20">
-<position info="not_deleted" x="4349" y="0"/>
-</item>
-<item historyLabel="main.h" index="16">
-<position info="not_deleted" x="673" y="12"/>
-</item>
-<item historyLabel="init_api_def.h" index="20">
-<position info="not_deleted" x="4349" y="0"/>
-</item>
-<item historyLabel="board_init.c" index="18">
+<item historyLabel="board_init.c" index="1">
 <position info="not_deleted" x="5490" y="0"/>
 </item>
-<item active="true" historyLabel="gpio_interface.c" index="17">
+<item historyLabel="gpio_interface.c" index="0">
 <position info="not_deleted" x="5790" y="0"/>
+</item>
+<item historyLabel="usb_dev_msc_interface.c" index="2">
+<position info="not_deleted" x="234" y="25"/>
+</item>
+<item historyLabel="init_api_def.h" index="3">
+<position info="not_deleted" x="4349" y="0"/>
+</item>
+<item historyLabel="init_api_def.h" index="3">
+<position info="not_deleted" x="6043" y="47"/>
+</item>
+<item historyLabel="board_init.c" index="4">
+<position info="not_deleted" x="5490" y="0"/>
+</item>
+<item historyLabel="board_init.h" index="5">
+<position info="not_deleted" x="519" y="0"/>
+</item>
+<item historyLabel="board_init.c" index="4">
+<position info="not_deleted" x="5490" y="0"/>
+</item>
+<item historyLabel="init_api_def.h" index="3">
+<position info="not_deleted" x="6043" y="0"/>
+</item>
+<item historyLabel="board_init.c" index="4">
+<position info="not_deleted" x="6052" y="0"/>
+</item>
+<item historyLabel="init_api_def.h" index="3">
+<position info="not_deleted" x="4864" y="0"/>
+</item>
+<item historyLabel="board_init.c" index="4">
+<position/>
+</item>
+<item historyLabel="init_api_def.h" index="3">
+<position info="not_deleted" x="7228" y="0"/>
+</item>
+<item historyLabel="board_init.c" index="4">
+<position/>
+</item>
+<item historyLabel="init_api_def.h" index="3">
+<position info="not_deleted" x="7104" y="17"/>
+</item>
+<item historyLabel="board_init.c" index="4">
+<position info="not_deleted" x="5666" y="0"/>
+</item>
+<item historyLabel="init_api_def.h" index="3">
+<position info="not_deleted" x="7104" y="17"/>
+</item>
+<item historyLabel="board_init.c" index="4">
+<position info="not_deleted" x="5666" y="0"/>
+</item>
+<item historyLabel="init_api_def.h" index="3">
+<position info="not_deleted" x="7104" y="17"/>
+</item>
+<item historyLabel="board_init.c" index="4">
+<position info="not_deleted" x="5666" y="0"/>
+</item>
+<item historyLabel="board_init.h" index="5">
+<position info="not_deleted" x="519" y="0"/>
+</item>
+<item historyLabel="gpio_interface.c" index="0">
+<position info="not_deleted" x="5160" y="0"/>
+</item>
+<item historyLabel="usb_dev_msc_interface.c" index="2">
+<position info="not_deleted" x="234" y="25"/>
+</item>
+<item historyLabel="board_init.c" index="4">
+<position info="not_deleted" x="6034" y="0"/>
+</item>
+<item historyLabel="init_api_def.h" index="3">
+<position info="not_deleted" x="7220" y="0"/>
+</item>
+<item historyLabel="usb_api.c" index="6">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="init_api_def.h" index="3">
+<position info="not_deleted" x="7220" y="0"/>
+</item>
+<item historyLabel="usb_host_msc_interface.c" index="7">
+<position info="not_deleted" x="4918" y="0"/>
+</item>
+<item historyLabel="usb_dev_msc_interface.c" index="2">
+<position info="not_deleted" x="234" y="25"/>
+</item>
+<item historyLabel="usb_host_msc_interface.c" index="7">
+<position info="not_deleted" x="3125" y="0"/>
+</item>
+<item historyLabel="board_init.c" index="4">
+<position info="not_deleted" x="6034" y="0"/>
+</item>
+<item historyLabel="main.c" index="8">
+<position info="not_deleted" x="1177" y="0"/>
+</item>
+<item historyLabel="init_api_def.h" index="3">
+<position info="not_deleted" x="6555" y="0"/>
+</item>
+<item historyLabel="usb_host_mouse_interface.c" index="9">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="init_api_def.h" index="3">
+<position info="not_deleted" x="6555" y="0"/>
+</item>
+<item historyLabel="usb_host_msc_interface.c" index="7">
+<position info="not_deleted" x="3505" y="14"/>
+</item>
+<item historyLabel="usbh_msc.h" index="10">
+<position info="not_deleted" x="4889" y="14"/>
+</item>
+<item historyLabel="usbh_msc.c" index="11">
+<position info="not_deleted" x="24276" y="19"/>
+</item>
+<item historyLabel="usbh_msc_scsi.c" index="12">
+<position info="not_deleted" x="10939" y="0"/>
+</item>
+<item historyLabel="usbh_msc.c" index="11">
+<position info="not_deleted" x="24276" y="19"/>
+</item>
+<item historyLabel="usbh_msc.h" index="10">
+<position info="not_deleted" x="4889" y="14"/>
+</item>
+<item historyLabel="usb_host_msc_interface.c" index="7">
+<position info="not_deleted" x="4899" y="0"/>
+</item>
+<item historyLabel="usb_host_msc_interface.h" index="13">
+<position/>
+</item>
+<item historyLabel="usb_host_msc_interface.c" index="7">
+<position info="not_deleted" x="4899" y="0"/>
+</item>
+<item historyLabel="usb_api.c" index="6">
+<position info="not_deleted" x="1741" y="7"/>
+</item>
+<item historyLabel="usb_host_msc_interface.h" index="13">
+<position/>
+</item>
+<item historyLabel="usb_host_msc_interface.c" index="7">
+<position info="not_deleted" x="5529" y="17"/>
+</item>
+<item historyLabel="usb_api.c" index="6">
+<position info="not_deleted" x="1728" y="22"/>
+</item>
+<item historyLabel="usb_host_msc_interface.h" index="13">
+<position info="not_deleted" x="535" y="0"/>
+</item>
+<item active="true" historyLabel="usb_host_msc_interface.c" index="7">
+<position info="not_deleted" x="5529" y="17"/>
 </item>
 </navigationHistory>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
@@ -460,14 +475,35 @@
 <actionBarAdvisor/>
 </window>
 <mruList>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="usb_api.c" tooltip="SDK_Probe_STM32F4/lib/api/usb_api.c">
+<persistable path="/SDK_Probe_STM32F4/lib/api/usb_api.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="usb_host_msc_interface.h" tooltip="SDK_Probe_STM32F4/stm32f4xx/interface/usb_host_msc_interface.h">
+<persistable path="/SDK_Probe_STM32F4/stm32f4xx/interface/usb_host_msc_interface.h"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="usbh_msc_scsi.c" tooltip="SDK_Probe_STM32F4/stm32f4xx/driver/USBH_MSC/Class/MSC/Src/usbh_msc_scsi.c">
+<persistable path="/SDK_Probe_STM32F4/stm32f4xx/driver/USBH_MSC/Class/MSC/Src/usbh_msc_scsi.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="usbh_msc.c" tooltip="SDK_Probe_STM32F4/stm32f4xx/driver/USBH_MSC/Class/MSC/Src/usbh_msc.c">
+<persistable path="/SDK_Probe_STM32F4/stm32f4xx/driver/USBH_MSC/Class/MSC/Src/usbh_msc.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="usbh_msc.h" tooltip="SDK_Probe_STM32F4/stm32f4xx/driver/USBH_MSC/Class/MSC/Inc/usbh_msc.h">
+<persistable path="/SDK_Probe_STM32F4/stm32f4xx/driver/USBH_MSC/Class/MSC/Inc/usbh_msc.h"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="usb_host_mouse_interface.c" tooltip="SDK_Probe_STM32F4/stm32f4xx/interface/usb_host_mouse_interface.c">
+<persistable path="/SDK_Probe_STM32F4/stm32f4xx/interface/usb_host_mouse_interface.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="usb_host_msc_interface.c" tooltip="SDK_Probe_STM32F4/stm32f4xx/interface/usb_host_msc_interface.c">
+<persistable path="/SDK_Probe_STM32F4/stm32f4xx/interface/usb_host_msc_interface.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="usb_dev_msc_interface.c" tooltip="SDK_Probe_STM32F4/stm32f4xx/interface/usb_dev_msc_interface.c">
+<persistable path="/SDK_Probe_STM32F4/stm32f4xx/interface/usb_dev_msc_interface.c"/>
+</file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="gpio_interface.c" tooltip="SDK_Probe_STM32F4/stm32f4xx/interface/gpio_interface.c">
 <persistable path="/SDK_Probe_STM32F4/stm32f4xx/interface/gpio_interface.c"/>
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="hs_mmcsd_interface.c" tooltip="SDK_Probe_STM32F4/stm32f4xx/interface/hs_mmcsd_interface.c">
 <persistable path="/SDK_Probe_STM32F4/stm32f4xx/interface/hs_mmcsd_interface.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="usb_host_msc_interface.c" tooltip="SDK_Probe_STM32F4/stm32f4xx/interface/usb_host_msc_interface.c">
-<persistable path="/SDK_Probe_STM32F4/stm32f4xx/interface/usb_host_msc_interface.c"/>
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="cdjpeg.c" tooltip="SDK_Probe_STM32F4/lib/lib/gfx/jpeg/source/cdjpeg.c">
 <persistable path="/SDK_Probe_STM32F4/lib/lib/gfx/jpeg/source/cdjpeg.c"/>
@@ -483,27 +519,6 @@
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="stm32f4xx_hal_spi.h" tooltip="SDK_Probe_STM32F4/stm32f4xx/driver/stm32f4xx_hal_spi.h">
 <persistable path="/SDK_Probe_STM32F4/stm32f4xx/driver/stm32f4xx_hal_spi.h"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="mcspi_interface.c" tooltip="SDK_Probe_STM32F4/stm32f4xx/interface/mcspi_interface.c">
-<persistable path="/SDK_Probe_STM32F4/stm32f4xx/interface/mcspi_interface.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="jpegtran.c" tooltip="SDK_Probe_STM32F4/lib/lib/gfx/jpeg/source/jpegtran.c">
-<persistable path="/SDK_Probe_STM32F4/lib/lib/gfx/jpeg/source/jpegtran.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="ckconfig.c" tooltip="SDK_Probe_STM32F4/lib/lib/gfx/jpeg/source/ckconfig.c">
-<persistable path="/SDK_Probe_STM32F4/lib/lib/gfx/jpeg/source/ckconfig.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="jdapimin.c" tooltip="SDK_Probe_STM32F4/lib/lib/gfx/jpeg/source/jdapimin.c">
-<persistable path="/SDK_Probe_STM32F4/lib/lib/gfx/jpeg/source/jdapimin.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="jcapimin.c" tooltip="SDK_Probe_STM32F4/lib/lib/gfx/jpeg/source/jcapimin.c">
-<persistable path="/SDK_Probe_STM32F4/lib/lib/gfx/jpeg/source/jcapimin.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="decode.c" tooltip="SDK_Probe_STM32F4/lib/lib/gfx/jpeg/decode.c">
-<persistable path="/SDK_Probe_STM32F4/lib/lib/gfx/jpeg/decode.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="jpeglib.h" tooltip="SDK_Probe_STM32F4/lib/lib/gfx/jpeg/include/jpeglib.h">
-<persistable path="/SDK_Probe_STM32F4/lib/lib/gfx/jpeg/include/jpeglib.h"/>
 </file>
 </mruList>
 </workbench>
