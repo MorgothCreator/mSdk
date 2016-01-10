@@ -37,7 +37,7 @@ void _gpio_init(unsigned int GpioModuleNr)
 		break;
 	}
 	GPIOModuleClkConfig(GpioModuleNr);
-    GPIOModuleReset(BaseAddr);
+    //GPIOModuleReset(BaseAddr);
 	GPIOModuleEnable(BaseAddr);
 }
 /*#####################################################*/
