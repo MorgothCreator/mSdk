@@ -100,19 +100,19 @@
 			mcspi_open(SPI[SPI_INTERFACE]);\
 		}
 /*#####################################################*/
-#define INIT_MMCSD(UNIT_NR, GpioMmcSdDetect, GpioLed) \
+/*#define INIT_MMCSD(UNIT_NR, GpioMmcSdDetect, GpioLed) \
 		mmcsd_init(UNIT_NR, GpioMmcSdDetect, GpioLed); \
-		mmcsd_idle(UNIT_NR)
+		mmcsd_idle(UNIT_NR)*/
 /*-----------------------------------------------------*/
 #define IDLE_MMCSD(UNIT_NR) \
 		mmcsd_idle(UNIT_NR)
 /*-----------------------------------------------------*/
-#define INIT_EMMC(UNIT_NR, GpioReset, GpioLed) \
+/*#define INIT_EMMC(UNIT_NR, GpioReset, GpioLed) \
 		gpio_out(GpioReset, 0); \
 		Sysdelay(1); \
 		gpio_out(GpioReset, 1); \
 		mmcsd_init(UNIT_NR, (Gpio_t*)NULL, LED[0]); \
-		mmcsd_idle(UNIT_NR)
+		mmcsd_idle(UNIT_NR)*/
 /*-----------------------------------------------------*/
 #define IDLE_EMMC(UNIT_NR) \
 		mmcsd_idle(UNIT_NR)
@@ -140,7 +140,7 @@
 	usb_msc_dev_init(USB_DEVICE_NR, (void *)SLAVE_DEV_CONTROLS_NAME);\
 	UARTPuts(DebugCom, "OK.\n\r", -1);
 /*#####################################################*/
-#include "interface/usblib/include/usbhmsc.h"
+//#include "interface/usblib/include/usbhmsc.h"
 #define INIT_USB_DEV_MSC_BRIDGE(USB_DEVICE_NR, USB_HOST_NR, SLAVE_DEV_CONTROLS_NAME, ACTIVITY_LED_STRUCT) \
 	UARTPuts(DebugCom, "Init USBMSC1 Host.......", -1); \
 	usb_msc_host_init(USB_HOST_NR, ACTIVITY_LED_STRUCT); \
