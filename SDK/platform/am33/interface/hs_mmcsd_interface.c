@@ -585,7 +585,7 @@ void _mmcsd_idle(unsigned int unit_nr)
 																				//UARTprintf(DebugCom, "MMCSD0 MediaType:               %d \n\r",Drives_Table[0]->DiskInfo_MediaType);
 																				//UARTprintf(DebugCom, "MMCSD0 AllocTableSize:          %u \n\r",Drives_Table[0]->DiskInfo_AllocTableSize);
 																				UARTprintf(DebugCom, "MMCSD%d DataSectionBegin:        %d \n\r",unit_nr, (int)g_s_mmcFatFs[unit_nr].fatbase);
-																				UARTprintf(DebugCom, "MMCSD%d uSD DiskCapacity:        %uMB\n\r",unit_nr, (unsigned long)((unsigned long long)((unsigned long long)g_s_mmcFatFs[unit_nr].fsize * (unsigned long long)/*g_sFatFs.s_size*/512) / 1000000));
+																				UARTprintf(DebugCom, "MMCSD%d uSD DiskCapacity:        %uMB\n\r",unit_nr, (unsigned long)((unsigned long long)((unsigned long long)g_s_mmcFatFs[unit_nr].n_fatent * (unsigned long long)/*g_sFatFs.s_size*/512 *(unsigned long long)g_s_mmcFatFs[unit_nr].csize) / 1000000));
 						}
                     } else  if(DebugCom)										UARTprintf(DebugCom,   "MMCSD%d ERROR oppening path\n\r" , unit_nr);
 #endif

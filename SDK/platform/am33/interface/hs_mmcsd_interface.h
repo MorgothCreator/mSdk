@@ -13,7 +13,7 @@
 #include "mmcsdlib/mmcsd_proto.h"
 #include "api/gpio_def.h"
 /*#####################################################*/
-//extern mmcsdCtrlInfo  ctrlInfo;
+extern mmcsdCtrlInfo  ctrlInfo[];
 /*#####################################################*/
 void _mmcsd_init(unsigned int unit_nr, new_gpio* Cs, new_gpio* StatusLed);
 void _mmcsd_idle(unsigned int unit_nr);
