@@ -81,7 +81,7 @@ void McSPIAintcConfigure(unsigned char instance)
 	switch(instance)
 	{
 		case 0:
-	    	IntProtectionDisable();
+	    	//IntProtectionDisable();
 			/* Register McSPIIsr interrupt handler */
 			IntRegister(SYS_INT_SPI0INT, McSPI0Isr);
 
@@ -90,10 +90,10 @@ void McSPIAintcConfigure(unsigned char instance)
 
 			/* Enable system interrupt in AINTC */
 			IntSystemEnable(SYS_INT_SPI0INT);
-	        IntProtectionEnable();
+	        //IntProtectionEnable();
 			break;
 		case 1:
-	    	IntProtectionDisable();
+	    	//IntProtectionDisable();
 			/* Register McSPIIsr interrupt handler */
 			IntRegister(SYS_INT_SPI1INT, McSPI1Isr);
 
@@ -102,7 +102,7 @@ void McSPIAintcConfigure(unsigned char instance)
 
 			/* Enable system interrupt in AINTC */
 			IntSystemEnable(SYS_INT_SPI1INT);
-	        IntProtectionEnable();
+	        //IntProtectionEnable();
 			break;
 	}
 }
@@ -114,22 +114,22 @@ void McSPIAintcUnConfigure(unsigned char instance)
 	switch(instance)
 	{
 		case 0:
-	    	IntProtectionDisable();
+	    	//IntProtectionDisable();
 			/* Enable system interrupt in AINTC */
 			IntSystemDisable(SYS_INT_SPI0INT);
 
 			/* Register McSPIIsr interrupt handler */
 			IntUnRegister(SYS_INT_SPI0INT);
-	        IntProtectionEnable();
+	        //IntProtectionEnable();
 	        break;
 		case 1:
-	    	IntProtectionDisable();
+	    	//IntProtectionDisable();
 			/* Enable system interrupt in AINTC */
 			IntSystemDisable(SYS_INT_SPI1INT);
 
 			/* Register McSPIIsr interrupt handler */
 			IntUnRegister(SYS_INT_SPI1INT);
-	        IntProtectionEnable();
+	        //IntProtectionEnable();
 	        break;
 	}
 }

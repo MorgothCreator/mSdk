@@ -45,13 +45,13 @@ void TouchIntEnable(void)
 */
 void TouchIntRegister(void)
 {
-	IntProtectionDisable();
+	//IntProtectionDisable();
 	IntRegister(SYS_INT_ADC_TSC_GENINT, TouchScreenIsr);
 
     IntPrioritySet(SYS_INT_ADC_TSC_GENINT, 0, AINTC_HOSTINT_ROUTE_IRQ);
 
     IntSystemEnable(SYS_INT_ADC_TSC_GENINT);
-    IntProtectionEnable();
+    //IntProtectionEnable();
 }
 /*#####################################################*/
 /*

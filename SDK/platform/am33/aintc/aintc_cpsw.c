@@ -18,7 +18,7 @@ extern void CPSWCore0TxIsr(void);
 */
 void AintcCPSWIntrSetUp(void)
 {
-	IntProtectionDisable();
+	//IntProtectionDisable();
     /* Register the Receive ISR for Core 0 */
     IntRegister(SYS_INT_3PGSWRXINT0, CPSWCore0RxIsr);
 
@@ -32,7 +32,7 @@ void AintcCPSWIntrSetUp(void)
     /* Enable the system interrupt */
     IntSystemEnable(SYS_INT_3PGSWTXINT0);
     IntSystemEnable(SYS_INT_3PGSWRXINT0);
-    IntProtectionEnable();
+    //IntProtectionEnable();
 }
 
 #endif

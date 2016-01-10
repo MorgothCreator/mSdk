@@ -115,7 +115,7 @@ void I2CAINTCConfigure(new_twi* TwiStruct)
     switch (TwiStruct->TwiNr)
     {
     case 0:
-    	IntProtectionDisable();
+    	//IntProtectionDisable();
         /* Registering the Interrupt Service Routine(ISR). */
         IntRegister(SYS_INT_I2C0INT, I2C0Isr);
 
@@ -124,10 +124,10 @@ void I2CAINTCConfigure(new_twi* TwiStruct)
 
         /* Enabling the system interrupt in AINTC. */
         IntSystemEnable(SYS_INT_I2C0INT);
-        IntProtectionEnable();
+        //IntProtectionEnable();
     	break;
     case 1:
-    	IntProtectionDisable();
+    	//IntProtectionDisable();
         /* Registering the Interrupt Service Routine(ISR). */
         IntRegister(SYS_INT_I2C1INT, I2C1Isr);
 
@@ -136,10 +136,10 @@ void I2CAINTCConfigure(new_twi* TwiStruct)
 
         /* Enabling the system interrupt in AINTC. */
         IntSystemEnable(SYS_INT_I2C1INT);
-        IntProtectionEnable();
+        //IntProtectionEnable();
     	break;
     case 2:
-    	IntProtectionDisable();
+    	//IntProtectionDisable();
         /* Registering the Interrupt Service Routine(ISR). */
         IntRegister(SYS_INT_I2C2INT, I2C2Isr);
 
@@ -148,7 +148,7 @@ void I2CAINTCConfigure(new_twi* TwiStruct)
 
         /* Enabling the system interrupt in AINTC. */
         IntSystemEnable(SYS_INT_I2C2INT);
-        IntProtectionEnable();
+        //IntProtectionEnable();
     	break;
     }
 }
@@ -162,31 +162,31 @@ void I2CAINTCUnConfigure(new_twi* TwiStruct)
     switch (TwiStruct->TwiNr)
     {
     case 0:
-    	IntProtectionDisable();
+    	//IntProtectionDisable();
         /* Enabling the system interrupt in AINTC. */
         IntSystemDisable(SYS_INT_I2C0INT);
 
         /* Registering the Interrupt Service Routine(ISR). */
         IntUnRegister(SYS_INT_I2C0INT);
-        IntProtectionEnable();
+        //IntProtectionEnable();
     	break;
     case 1:
-    	IntProtectionDisable();
+    	//IntProtectionDisable();
         /* Enabling the system interrupt in AINTC. */
     	IntSystemDisable(SYS_INT_I2C1INT);
 
     	/* Registering the Interrupt Service Routine(ISR). */
     	IntUnRegister(SYS_INT_I2C1INT);
-        IntProtectionEnable();
+        //IntProtectionEnable();
     	break;
     case 2:
-    	IntProtectionDisable();
+    	//IntProtectionDisable();
         /* Enabling the system interrupt in AINTC. */
     	IntSystemDisable(SYS_INT_I2C2INT);
 
     	/* Registering the Interrupt Service Routine(ISR). */
     	IntUnRegister(SYS_INT_I2C2INT);
-        IntProtectionEnable();
+        //IntProtectionEnable();
     	break;
     }
 }

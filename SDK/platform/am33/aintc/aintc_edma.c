@@ -137,7 +137,7 @@ static void Edma3CCErrorIsr(void)
 /*#####################################################*/
 void EDMA3AINTCConfigure(void)
 {
-	IntProtectionDisable();
+	//IntProtectionDisable();
     /* Initializing the ARM Interrupt Controller. */
     //IntAINTCInit();
 
@@ -170,7 +170,7 @@ void EDMA3AINTCConfigure(void)
 
     /* Enabling IRQ in CPSR of ARM processor. */
     //IntMasterIRQEnable();
-    IntProtectionEnable();
+    //IntProtectionEnable();
 }
 
 /*#####################################################*/

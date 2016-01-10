@@ -80,7 +80,7 @@ void UARTAINTCConfigure(Uart_t* UartStruct)
     switch (UartStruct->UartNr)
     {
     case 0:
-    	IntProtectionDisable();
+    	//IntProtectionDisable();
         /* Registering the Interrupt Service Routine(ISR). */
         IntRegister(SYS_INT_UART0INT, UART0Isr);
 
@@ -89,10 +89,10 @@ void UARTAINTCConfigure(Uart_t* UartStruct)
 
         /* Enabling the system interrupt in AINTC. */
         IntSystemEnable(SYS_INT_UART0INT);
-        IntProtectionEnable();
+        //IntProtectionEnable();
     	break;
     case 1:
-    	IntProtectionDisable();
+    	//IntProtectionDisable();
         /* Registering the Interrupt Service Routine(ISR). */
         IntRegister(SYS_INT_UART1INT, UART1Isr);
 
@@ -101,10 +101,10 @@ void UARTAINTCConfigure(Uart_t* UartStruct)
 
         /* Enabling the system interrupt in AINTC. */
         IntSystemEnable(SYS_INT_UART1INT);
-        IntProtectionEnable();
+        //IntProtectionEnable();
     	break;
     case 2:
-    	IntProtectionDisable();
+    	//IntProtectionDisable();
         /* Registering the Interrupt Service Routine(ISR). */
         IntRegister(SYS_INT_UART2INT, UART2Isr);
 
@@ -113,10 +113,10 @@ void UARTAINTCConfigure(Uart_t* UartStruct)
 
         /* Enabling the system interrupt in AINTC. */
         IntSystemEnable(SYS_INT_UART2INT);
-        IntProtectionEnable();
+        //IntProtectionEnable();
     	break;
     case 3:
-    	IntProtectionDisable();
+    	//IntProtectionDisable();
         /* Registering the Interrupt Service Routine(ISR). */
         IntRegister(SYS_INT_UART3INT, UART3Isr);
 
@@ -125,10 +125,10 @@ void UARTAINTCConfigure(Uart_t* UartStruct)
 
         /* Enabling the system interrupt in AINTC. */
         IntSystemEnable(SYS_INT_UART3INT);
-        IntProtectionEnable();
+        //IntProtectionEnable();
     	break;
     case 4:
-    	IntProtectionDisable();
+    	//IntProtectionDisable();
         /* Registering the Interrupt Service Routine(ISR). */
         IntRegister(SYS_INT_UART4INT, UART4Isr);
 
@@ -137,10 +137,10 @@ void UARTAINTCConfigure(Uart_t* UartStruct)
 
         /* Enabling the system interrupt in AINTC. */
         IntSystemEnable(SYS_INT_UART4INT);
-        IntProtectionEnable();
+        //IntProtectionEnable();
     	break;
     case 5:
-    	IntProtectionDisable();
+    	//IntProtectionDisable();
         /* Registering the Interrupt Service Routine(ISR). */
         IntRegister(SYS_INT_UART5INT, UART5Isr);
 
@@ -149,7 +149,7 @@ void UARTAINTCConfigure(Uart_t* UartStruct)
 
         /* Enabling the system interrupt in AINTC. */
         IntSystemEnable(SYS_INT_UART5INT);
-        IntProtectionEnable();
+        //IntProtectionEnable();
     	break;
     }
 }
@@ -161,59 +161,59 @@ void UARTAINTCUnConfigure(Uart_t* UartStruct)
     switch (UartStruct->UartNr)
     {
     case 0:
-    	IntProtectionDisable();
+    	//IntProtectionDisable();
         /* Enabling the system interrupt in AINTC. */
         IntSystemDisable(SYS_INT_UART0INT);
 
         /* Registering the Interrupt Service Routine(ISR). */
         IntUnRegister(SYS_INT_UART0INT);
-        IntProtectionEnable();
+        //IntProtectionEnable();
     	break;
     case 1:
-    	IntProtectionDisable();
+    	//IntProtectionDisable();
         /* Enabling the system interrupt in AINTC. */
         IntSystemDisable(SYS_INT_UART1INT);
 
         /* Registering the Interrupt Service Routine(ISR). */
     	IntUnRegister(SYS_INT_UART1INT);
-        IntProtectionEnable();
+        //IntProtectionEnable();
     	break;
     case 2:
-    	IntProtectionDisable();
+    	//IntProtectionDisable();
         /* Enabling the system interrupt in AINTC. */
         IntSystemDisable(SYS_INT_UART2INT);
 
         /* Registering the Interrupt Service Routine(ISR). */
     	IntUnRegister(SYS_INT_UART2INT);
-        IntProtectionEnable();
+        //IntProtectionEnable();
     	break;
     case 3:
-    	IntProtectionDisable();
+    	//IntProtectionDisable();
         /* Enabling the system interrupt in AINTC. */
         IntSystemDisable(SYS_INT_UART3INT);
 
         /* Registering the Interrupt Service Routine(ISR). */
     	IntUnRegister(SYS_INT_UART3INT);
 
-        IntProtectionEnable();
+        //IntProtectionEnable();
     	break;
     case 4:
-    	IntProtectionDisable();
+    	//IntProtectionDisable();
         /* Enabling the system interrupt in AINTC. */
         IntSystemDisable(SYS_INT_UART4INT);
 
         /* Registering the Interrupt Service Routine(ISR). */
     	IntUnRegister(SYS_INT_UART4INT);
-        IntProtectionEnable();
+        //IntProtectionEnable();
     	break;
     case 5:
-    	IntProtectionDisable();
+    	//IntProtectionDisable();
         /* Enabling the system interrupt in AINTC. */
         IntSystemDisable(SYS_INT_UART5INT);
 
         /* Registering the Interrupt Service Routine(ISR). */
     	IntUnRegister(SYS_INT_UART5INT);
-        IntProtectionEnable();
+        //IntProtectionEnable();
     	break;
     }
 }

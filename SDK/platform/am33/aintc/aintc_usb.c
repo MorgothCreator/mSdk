@@ -32,7 +32,7 @@ void CPDMAAINTCConfigure(int usbInstance)
 {
 	if(usbInstance)
 	{
-    	IntProtectionDisable();
+    	//IntProtectionDisable();
 		/* Registering the Interrupt Service Routine(ISR). */
 		IntRegister(SYS_INT_USBSSINT, USB1HostIntHandler);
 
@@ -41,11 +41,11 @@ void CPDMAAINTCConfigure(int usbInstance)
 
 		/* Enabling the system interrupt in AINTC. */
 		IntSystemEnable(SYS_INT_USBSSINT);
-        IntProtectionEnable();
+        //IntProtectionEnable();
 	}
 	else
 	{
-    	IntProtectionDisable();
+    	//IntProtectionDisable();
 	    /* Registering the Interrupt Service Routine(ISR). */
 	    IntRegister(SYS_INT_USBSSINT, USB0HostIntHandler);
 
@@ -54,7 +54,7 @@ void CPDMAAINTCConfigure(int usbInstance)
 
 	    /* Enabling the system interrupt in AINTC. */
 	    IntSystemEnable(SYS_INT_USBSSINT);
-        IntProtectionEnable();
+        //IntProtectionEnable();
 	}
 }
 #endif
@@ -64,7 +64,7 @@ static void USBAINTCConfigure(int usbInstance)
 {
    if(usbInstance)
    {
-	   IntProtectionDisable();
+	   //IntProtectionDisable();
 	   /* Registering the Interrupt Service Routine(ISR). */
 	   IntRegister(SYS_INT_USB1, USB1HostIntHandler);
 
@@ -73,11 +73,11 @@ static void USBAINTCConfigure(int usbInstance)
 
 	   /* Enabling the system interrupt in AINTC. */
 	   IntSystemEnable(SYS_INT_USB1);
-       IntProtectionEnable();
+       //IntProtectionEnable();
    }
    else
    {
-	   IntProtectionDisable();
+	   //IntProtectionDisable();
 	   /* Registering the Interrupt Service Routine(ISR). */
 	   IntRegister(SYS_INT_USB0, USB0HostIntHandler);
 
@@ -86,7 +86,7 @@ static void USBAINTCConfigure(int usbInstance)
 
 	   /* Enabling the system interrupt in AINTC. */
 	   IntSystemEnable(SYS_INT_USB0);
-       IntProtectionEnable();
+       //IntProtectionEnable();
    }
 }
 

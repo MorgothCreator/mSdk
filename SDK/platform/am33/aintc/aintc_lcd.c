@@ -63,7 +63,7 @@ static void LCDIsr(void)
 */
 void LCDAINTCConfigure(void)
 {
-	IntProtectionDisable();
+	//IntProtectionDisable();
     /* Register the ISR in the Interrupt Vector Table.*/
     IntRegister(SYS_INT_LCDCINT, LCDIsr);
 
@@ -71,7 +71,7 @@ void LCDAINTCConfigure(void)
 
     /* Enable the System Interrupts for AINTC.*/
     IntSystemEnable(SYS_INT_LCDCINT);
-    IntProtectionEnable();
+    //IntProtectionEnable();
 }
 /**********************************************/
 /*
@@ -79,13 +79,13 @@ void LCDAINTCConfigure(void)
 */
 void LCDAINTCUnConfigure(void)
 {
-	IntProtectionDisable();
+	//IntProtectionDisable();
     /* Enable the System Interrupts for AINTC.*/
     IntSystemDisable(SYS_INT_LCDCINT);
 
     /* Register the ISR in the Interrupt Vector Table.*/
     IntUnRegister(SYS_INT_LCDCINT);
-    IntProtectionEnable();
+    //IntProtectionEnable();
 }
 /**********************************************/
 
