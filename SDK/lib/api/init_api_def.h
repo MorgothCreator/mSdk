@@ -49,50 +49,56 @@
 /*#####################################################*/
 #define INIT_UART(UART_INTERFACE, TransferRate, _TxPort, _TxPin, _RxPort, _RxPin) \
 		Uart[UART_INTERFACE] = new_(new_uart);\
-		Uart[UART_INTERFACE]->BaudRate = TransferRate;\
-		Uart[UART_INTERFACE]->Priority = 0;\
-		Uart[UART_INTERFACE]->UartNr = UART_INTERFACE;\
-		Uart[UART_INTERFACE]->TxPort = _TxPort;\
-		Uart[UART_INTERFACE]->RxPort = _RxPort;\
-		Uart[UART_INTERFACE]->TxPin = _TxPin;\
-		Uart[UART_INTERFACE]->RxPin = _RxPin;\
-		Uart[UART_INTERFACE]->rxFifoTrigLevel = 1;\
-		Uart[UART_INTERFACE]->txFifoTrigLevel = 1;\
-		uart_open(Uart[UART_INTERFACE])
+		if(Uart[UART_INTERFACE]) {\
+			Uart[UART_INTERFACE]->BaudRate = TransferRate;\
+			Uart[UART_INTERFACE]->Priority = 0;\
+			Uart[UART_INTERFACE]->UartNr = UART_INTERFACE;\
+			Uart[UART_INTERFACE]->TxPort = _TxPort;\
+			Uart[UART_INTERFACE]->RxPort = _RxPort;\
+			Uart[UART_INTERFACE]->TxPin = _TxPin;\
+			Uart[UART_INTERFACE]->RxPin = _RxPin;\
+			Uart[UART_INTERFACE]->rxFifoTrigLevel = 1;\
+			Uart[UART_INTERFACE]->txFifoTrigLevel = 1;\
+			uart_open(Uart[UART_INTERFACE]);\
+		}
 /*#####################################################*/
 #define INIT_TWI(TWI_INTERFACE, _TransferRate, _SclPort, _SclPin, _SdaPort, _SdaPin, _RxBuffSize, _TxBuffSize) \
 		TWI[TWI_INTERFACE] = new_(new_twi);\
-		TWI[TWI_INTERFACE]->BaudRate = _TransferRate;\
-		TWI[TWI_INTERFACE]->TwiNr = TWI_INTERFACE;\
-		TWI[TWI_INTERFACE]->Priority = 0;\
-		TWI[TWI_INTERFACE]->UseDma = false;\
-		TWI[TWI_INTERFACE]->RxBuffSize = _RxBuffSize;\
-		TWI[TWI_INTERFACE]->TxBuffSize = _TxBuffSize;\
-		TWI[TWI_INTERFACE]->BusyTimeOut = 5;\
-		TWI[TWI_INTERFACE]->SclPort = _SclPort;\
-		TWI[TWI_INTERFACE]->SdaPort = _SdaPort;\
-		TWI[TWI_INTERFACE]->SclPin = _SclPin;\
-		TWI[TWI_INTERFACE]->SdaPin = _SdaPin;\
-		twi_open(TWI[TWI_INTERFACE])
+		if(TWI[TWI_INTERFACE]) {\
+			TWI[TWI_INTERFACE]->BaudRate = _TransferRate;\
+			TWI[TWI_INTERFACE]->TwiNr = TWI_INTERFACE;\
+			TWI[TWI_INTERFACE]->Priority = 0;\
+			TWI[TWI_INTERFACE]->UseDma = false;\
+			TWI[TWI_INTERFACE]->RxBuffSize = _RxBuffSize;\
+			TWI[TWI_INTERFACE]->TxBuffSize = _TxBuffSize;\
+			TWI[TWI_INTERFACE]->BusyTimeOut = 5;\
+			TWI[TWI_INTERFACE]->SclPort = _SclPort;\
+			TWI[TWI_INTERFACE]->SdaPort = _SdaPort;\
+			TWI[TWI_INTERFACE]->SclPin = _SclPin;\
+			TWI[TWI_INTERFACE]->SdaPin = _SdaPin;\
+			twi_open(TWI[TWI_INTERFACE]);\
+		}
 /*#####################################################*/
 #define INIT_SPI(SPI_INTERFACE, _TransferRate, _WordSize, _SckPort, _SckPin, _MosiPort, _MosiPin, _MisoPort, _MisoPin, _CsPort, _CsPin) \
 		SPI[SPI_INTERFACE] = new_(new_mcspi); \
-		SPI[SPI_INTERFACE]->CsPort[0] = _CsPort; \
-		SPI[SPI_INTERFACE]->CsPin[0] = _CsPin; \
-		SPI[SPI_INTERFACE]->MisoPort = _MisoPort; \
-		SPI[SPI_INTERFACE]->MisoPin = _MisoPin; \
-		SPI[SPI_INTERFACE]->MosiPort = _MosiPort; \
-		SPI[SPI_INTERFACE]->MosiPin = _MosiPin; \
-		SPI[SPI_INTERFACE]->SckPort = _SckPort; \
-		SPI[SPI_INTERFACE]->SckPin = _SckPin; \
-		SPI[SPI_INTERFACE]->McspiNr = SPI_INTERFACE; \
-		SPI[SPI_INTERFACE]->Cpol = true; \
-		SPI[SPI_INTERFACE]->Cpha = true; \
-		SPI[SPI_INTERFACE]->LsbFirst = false; \
-		SPI[SPI_INTERFACE]->WordSize = _WordSize; \
-		SPI[SPI_INTERFACE]->Slave = false; \
-		SPI[SPI_INTERFACE]->BaudRate = _TransferRate; \
-		mcspi_open(SPI[SPI_INTERFACE])
+		if(SPI[SPI_INTERFACE]) {\
+			SPI[SPI_INTERFACE]->CsPort[0] = _CsPort; \
+			SPI[SPI_INTERFACE]->CsPin[0] = _CsPin; \
+			SPI[SPI_INTERFACE]->MisoPort = _MisoPort; \
+			SPI[SPI_INTERFACE]->MisoPin = _MisoPin; \
+			SPI[SPI_INTERFACE]->MosiPort = _MosiPort; \
+			SPI[SPI_INTERFACE]->MosiPin = _MosiPin; \
+			SPI[SPI_INTERFACE]->SckPort = _SckPort; \
+			SPI[SPI_INTERFACE]->SckPin = _SckPin; \
+			SPI[SPI_INTERFACE]->McspiNr = SPI_INTERFACE; \
+			SPI[SPI_INTERFACE]->Cpol = true; \
+			SPI[SPI_INTERFACE]->Cpha = true; \
+			SPI[SPI_INTERFACE]->LsbFirst = false; \
+			SPI[SPI_INTERFACE]->WordSize = _WordSize; \
+			SPI[SPI_INTERFACE]->Slave = false; \
+			SPI[SPI_INTERFACE]->BaudRate = _TransferRate; \
+			mcspi_open(SPI[SPI_INTERFACE]);\
+		}
 /*#####################################################*/
 #define INIT_MMCSD(UNIT_NR, GpioMmcSdDetect, GpioLed) \
 		mmcsd_init(UNIT_NR, GpioMmcSdDetect, GpioLed); \
