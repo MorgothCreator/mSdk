@@ -33,7 +33,7 @@ void usb_msc_host_init(unsigned int instance, new_gpio* StatusLed);
 void usb_msc_host_idle(unsigned int instance);
 unsigned int usb_msc_host_read(void *_ctrl, void *ptr, unsigned long block, unsigned int nblks);
 unsigned int usb_msc_host_write(void *_ctrl, void *ptr, unsigned long block, unsigned int nblks);
-void usb_msc_host_ioctl(void *_ctrl, unsigned int  command,  unsigned int *buffer);
+void usb_msc_host_ioctl(unsigned int unit_nr, unsigned int  command,  unsigned int *buffer);
 /*-----------------------------------------------------------*/
 void usb_mouse_host_init(unsigned int instance);
 void usb_mouse_host_idle(unsigned int instance, tControlCommandData *control_comand);

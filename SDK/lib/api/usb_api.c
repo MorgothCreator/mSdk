@@ -47,9 +47,9 @@ unsigned int usb_msc_host_write(void *_ctrl, void *ptr, unsigned long block, uns
 	return USBMSCWriteBlock(_ctrl, ptr, block, nblks);
 }
 
-void usb_msc_host_ioctl(void *_ctrl, unsigned int  command,  unsigned int *buffer)
+void usb_msc_host_ioctl(unsigned int unit_nr, unsigned int  command,  unsigned int *buffer)
 {
-	_usb_msc_host_ioctl(_ctrl, command, buffer);
+	_usb_msc_host_ioctl(unit_nr, command, buffer);
 }
 /*-----------------------------------------------------------*/
 void usb_mouse_host_init(unsigned int instance)
