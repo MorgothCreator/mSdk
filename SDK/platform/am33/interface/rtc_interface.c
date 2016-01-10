@@ -324,7 +324,7 @@ void _RTCModuleClkConfig(void)
 */
 void RtcIntRegister(void)
 {
-	IntProtectionDisable();
+	//IntProtectionDisable();
 	/* Registering the Interrupt Service Routine(ISR). */
     IntRegister(SYS_INT_RTCINT, RTCIsr);
 
@@ -334,7 +334,7 @@ void RtcIntRegister(void)
     /* Enabling the system interrupt in AINTC. */
     IntSystemEnable(SYS_INT_RTCINT);
 
-    IntProtectionEnable();
+    //IntProtectionEnable();
 }
 
 /*

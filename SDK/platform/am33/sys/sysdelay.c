@@ -86,7 +86,7 @@ void SysDelayTimerSetup(void)
     /* This function will enable clocks for the DMTimer7 instance */
     DMTimer2ModuleClkConfig(TimerClkSource_CLK_M_OSC);
 
-	IntProtectionDisable();
+	//IntProtectionDisable();
     /* Registering DMTimerIsr */
     IntRegister(SYS_INT_TINT2, DMTimerIsr);
 
@@ -96,7 +96,7 @@ void SysDelayTimerSetup(void)
     /* Enable the system interrupt */
     IntSystemEnable(SYS_INT_TINT2);
 
-    IntProtectionEnable();
+    //IntProtectionEnable();
     DMTimerCounterSet(SOC_DMTIMER_2_REGS, TIMER_INITIAL_COUNT);
 
     /* Load the load register with the reload count value */
