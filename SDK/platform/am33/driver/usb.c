@@ -2747,7 +2747,7 @@ USBRxChAbort(unsigned int ulBase, unsigned int ulEndpoint)
 	rx_csr &= (~MUSB_RXCSR_DMAENAB);
 	HWREGH(ulBase + ulRegister) = rx_csr;
 	/* 250 microsecond delay needed - we dont have that granularity*/
-    Sysdelay(1);
+    Sysdelay(2);
 	/* Flush FIFO of the endpoint */
 	rx_csr = HWREGH(ulBase + ulRegister);
 

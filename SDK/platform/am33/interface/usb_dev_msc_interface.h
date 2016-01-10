@@ -14,10 +14,11 @@
 #define GET_SECTOR_SIZE 2
 
 typedef struct {
+	unsigned char		controlled_unit_nr;
 	void*				DriveStruct;
 	unsigned int		(*drv_r_func)(void*, void*, unsigned long, unsigned int);
 	unsigned int		(*drv_w_func)(void*, void*, unsigned long, unsigned int);
-	void				(*drv_ioctl_func)(void *_ctrl, unsigned int, unsigned int*);
+	void				(*drv_ioctl_func)(unsigned int unit_nr, unsigned int, unsigned int*);
 }USBD_DRV_RW_FUNC;
 
 extern USBD_DRV_RW_FUNC drv_rw_func[];

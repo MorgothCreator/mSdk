@@ -121,9 +121,10 @@ bool mpr121_idle(mpr121_t *structure, mpr121_ret_t *return_keys)
 			return false;
 	}
 	unsigned short keys;
-	mpr121_read_short(structure, 0, &keys);
-	unsigned short keys_back = keys;
 	bool return_new_event = false;
+	if(!mpr121_read_short(structure, 0, &keys))
+		return return_new_event;
+	unsigned short keys_back = keys;
 	int cnt = 0;
 	mpr121_ret_t return_keys_tmp;
 	return_keys_tmp.pushed = 0;

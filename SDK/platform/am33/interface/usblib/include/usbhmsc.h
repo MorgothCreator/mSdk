@@ -36,7 +36,7 @@
 extern "C"
 {
 #endif
-
+#include "usbhost.h"
 //*****************************************************************************
 //
 //! \addtogroup usblib_host_class

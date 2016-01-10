@@ -210,8 +210,11 @@ USBDMSCStorageNumBlocks(void * pvDrive)
     // Read the number of sectors.
     //
     //disk_ioctl(0, GET_SECTOR_COUNT, &ulSectorCount);
+	unsigned int status = CPUIntStatus();
+	CPUirqe();
     if(drv_rw_func[0].drv_ioctl_func)
-    	drv_rw_func[0].drv_ioctl_func(drv_rw_func[0].DriveStruct, GET_SECTOR_COUNT, &ulSectorCount);
+    	drv_rw_func[0].drv_ioctl_func(drv_rw_func[0].controlled_unit_nr, GET_SECTOR_COUNT, &ulSectorCount);
+	if(status & 0x80) CPUirqd();
     return(ulSectorCount);
 }
 

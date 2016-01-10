@@ -54,6 +54,7 @@ extern new_uart* DebugCom;
 new_gpio *LedStatusUsb0 = NULL;
 new_gpio *LedStatusUsb1 = NULL;
 
+
 void USBHCDEvents(void *pvData);
 
 //*****************************************************************************
@@ -484,9 +485,10 @@ unsigned int USBMSCWriteBlock(void *_ctrl, void *ptr, unsigned long block,
 
 }
 
-void _usb_msc_host_ioctl(void *ctrl, unsigned int  command,  unsigned int *buffer)
+
+void _usb_msc_host_ioctl(unsigned int unit_nr, unsigned int  command,  unsigned int *buffer)
 {
-	tUSBHMSCInstance * _ctrl = (tUSBHMSCInstance *)ctrl;
+	tUSBHMSCInstance * _ctrl = &g_USBHMSCDevice[unit_nr];//(tUSBHMSCInstance *)ctrl;
     switch(command)
     {
 
