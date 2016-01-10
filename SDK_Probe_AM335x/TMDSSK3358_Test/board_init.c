@@ -155,11 +155,14 @@ inline bool board_init()
 /*-----------------------------------------------------*/
 	ScreenBuff = new_(new_screen);
 	ScreenBuff->raster_timings = &lcd_TFT43_TMDSSK3358;
-	ScreenBuff->BackLightLevel = 60;
-	ScreenBuff->PmicTwiModuleStruct = TWI[0];
+	//ScreenBuff->BackLightLevel = 60;
+	//ScreenBuff->PmicTwiModuleStruct = TWI[0];
+	ScreenBuff->BackLight = gpio_assign(IOD, 17, GPIO_DIR_OUTPUT, false);
 	screen_init(ScreenBuff);
 	UARTprintf(DebugCom, "LCD display initialize successful for %dx%d resolution, %d Bit bus.\n\r" , ScreenBuff->raster_timings->X, ScreenBuff->raster_timings->Y, ScreenBuff->raster_timings->bus_size);
 
+	TouchScreen = new_(new_touchscreen);
+	//TouchScreen->TwiStruct = TWI[1];
 	TouchScreen->screen_max_x = (double)ScreenBuff->raster_timings->X;
 	TouchScreen->screen_max_y = (double)ScreenBuff->raster_timings->Y;
 	TouchScreen->pDisplay = ScreenBuff;

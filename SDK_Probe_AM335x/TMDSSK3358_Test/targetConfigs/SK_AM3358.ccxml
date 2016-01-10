@@ -12,22 +12,25 @@
             <instance XML_version="1.2" href="drivers/tixds100v2etbcs.xml" id="drivers" xml="tixds100v2etbcs.xml" xmlpath="drivers"/>
             <instance XML_version="1.2" href="drivers/tixds100v2pru.xml" id="drivers" xml="tixds100v2pru.xml" xmlpath="drivers"/>
             <platform XML_version="1.2" id="platform_0">
-                <instance XML_version="1.2" desc="EVMAM3358_0" href="boards/evmam3358.xml" id="EVMAM3358_0" xml="evmam3358.xml" xmlpath="boards"/>
-                <board XML_version="1.2" description="AM3358 EVM Board" id="EVMAM3358_0">
+                <instance XML_version="1.2" desc="SK_AM3358_0" href="boards/sk_am3358.xml" id="SK_AM3358_0" xml="sk_am3358.xml" xmlpath="boards"/>
+                <board XML_version="1.2" description="AM3358 StarterKit Board" id="SK_AM3358_0">
                     <device HW_revision="1" XML_version="1.2" description="AM33x - Cortex A8 Embedded Processor" id="AM3358_0" partnum="AM3358" simulation="no">
                         <router HW_revision="1.0" XML_version="1.2" description="ICEPick_D Router" id="IcePick_D_0" isa="ICEPICK_D">
                             <subpath id="subpath_11">
                                 <router HW_revision="1.0" XML_version="1.2" description="CS_DAP Router" id="CS_DAP_M3" isa="CS_DAP">
                                     <subpath id="M3_wakeupSS_sp">
-                                        <cpu HW_revision="1.0" XML_version="1.2" desc="M3_wakeupSS_0" description="Cortex_M3 CPU" deviceSim="false" id="M3_wakeupSS" isa="Cortex_M3"/>
+                                        <cpu HW_revision="1.0" XML_version="1.2" desc="M3_wakeupSS_0" description="Cortex_M3 CPU" deviceSim="false" id="M3_wakeupSS" isa="Cortex_M3">
+                                            <property Type="choicelist" Value="1" id="bypass"/>
+                                        </cpu>
                                     </subpath>
                                 </router>
                             </subpath>
                         <subpath id="subpath_12">
                                 <router HW_revision="1.0" XML_version="1.2" description="CS_DAP Router" id="CS_DAP_0" isa="CS_DAP">
                                     <subpath id="ModenaSS">
-                                        <cpu HW_revision="1.0" XML_version="1.2" description="Cortex_A8 CPU" deviceSim="false" id="CortexA8" isa="Cortex_A8">
-                                            <property Type="filepathfield" Value="..\..\..\..\AM335X_StarterWare_02_00_01_01\tools\gel\AM335x_SK_1.2.gel" id="GEL File"/>
+                                        <cpu HW_revision="1.0" XML_version="1.2" desc="CortxA8" description="Cortex_A8 CPU" deviceSim="false" id="CortexA8" isa="Cortex_A8">
+                                            <property Type="filepathfield" Value="..\..\emulation\boards\sk_am3358\gel\AM3358_StarterKit_Rev1_2.gel" id="GEL File"/>
+                                        <property Type="choicelist" Value="0" id="bypass"/>
                                         </cpu>
                                     </subpath>
                                 </router>

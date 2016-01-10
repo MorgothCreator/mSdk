@@ -20,6 +20,15 @@
 #include "device/mpl3115a2.h"
 #include "device/mpr121.h"
 #include "device/lepton_flir.h"
+
+
+#define lcd
+#define USE_BACK_SCREEN
+#define touch
+
+
+
+
 /*#####################################################*/
 #define _USE_MPU60x0_9150	0
 #define _USE_AK8975			0
