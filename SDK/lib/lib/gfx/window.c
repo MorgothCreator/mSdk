@@ -118,7 +118,7 @@ void window_set_children_settings(tWindow *settings, bool call_childrens, bool t
 		}
 		Tmp_Children_Cnt++;
 	}
-	CursorState _back;
+	CursorState _back = Cursor_NoAction;
 	if(control_comand)
 	{
 		_back = control_comand->Cursor;
