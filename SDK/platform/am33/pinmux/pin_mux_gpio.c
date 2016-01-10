@@ -113,8 +113,8 @@ void gpio_mux_setup(unsigned char PortNr, unsigned char PinNr, unsigned char Mod
 	else if(PortNr == 1)
 	{
 		if(PinNr <= 7)                 HWREG(SOC_CONTROL_REGS + CONTROL_CONF_GPMC_AD(PinNr))       = CONTROL_CONF_MUXMODE(Mode) | (PUD_Enable << 0x03) | (PuTypeSel << 0x04)| (RxActive << 0x05) |  (SlevCtrl << 0x06);
-		else if(PinNr >= 12 || PinNr <= 15) HWREG(SOC_CONTROL_REGS + CONTROL_CONF_GPMC_AD(PinNr))       = CONTROL_CONF_MUXMODE(Mode) | (PUD_Enable << 0x03) | (PuTypeSel << 0x04)| (RxActive << 0x05) |  (SlevCtrl << 0x06);
-		else if(PinNr >= 16 || PinNr <= 27) HWREG(SOC_CONTROL_REGS + CONTROL_CONF_GPMC_A((PinNr - 16))) = CONTROL_CONF_MUXMODE(Mode) | (PUD_Enable << 0x03) | (PuTypeSel << 0x04)| (RxActive << 0x05) |  (SlevCtrl << 0x06);
+		else if(PinNr >= 12 && PinNr <= 15) HWREG(SOC_CONTROL_REGS + CONTROL_CONF_GPMC_AD(PinNr))       = CONTROL_CONF_MUXMODE(Mode) | (PUD_Enable << 0x03) | (PuTypeSel << 0x04)| (RxActive << 0x05) |  (SlevCtrl << 0x06);
+		else if(PinNr >= 16 && PinNr <= 27) HWREG(SOC_CONTROL_REGS + CONTROL_CONF_GPMC_A((PinNr - 16))) = CONTROL_CONF_MUXMODE(Mode) | (PUD_Enable << 0x03) | (PuTypeSel << 0x04)| (RxActive << 0x05) |  (SlevCtrl << 0x06);
 		else
 		{
 			switch(PinNr)
@@ -148,7 +148,7 @@ void gpio_mux_setup(unsigned char PortNr, unsigned char PinNr, unsigned char Mod
 	}
 	else if(PortNr == 2)
 	{
-		if(PinNr >= 6 || PinNr <= 17) HWREG(SOC_CONTROL_REGS + CONTROL_CONF_LCD_DATA(PinNr-6))       = CONTROL_CONF_MUXMODE(Mode) | (PUD_Enable << 0x03) | (PuTypeSel << 0x04)| (RxActive << 0x05) |  (SlevCtrl << 0x06);
+		if(PinNr >= 6 && PinNr <= 17) HWREG(SOC_CONTROL_REGS + CONTROL_CONF_LCD_DATA(PinNr-6))       = CONTROL_CONF_MUXMODE(Mode) | (PUD_Enable << 0x03) | (PuTypeSel << 0x04)| (RxActive << 0x05) |  (SlevCtrl << 0x06);
 		else
 		{
 			switch(PinNr)
