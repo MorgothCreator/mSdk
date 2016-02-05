@@ -472,7 +472,7 @@ void enableCoreTxDMA(unsigned short usbDevInst, unsigned int ulEndpoint)
     {
         --timeout;
     }
-    while (((HWREGH(usbInstance->usbInstCoreBaseAddress + ulRegister) & 0x2) == 0x02)&& (timeout > 0));
+    while (((HWREGH(usbInstance->usbInstCoreBaseAddress + ulRegister) & 0x2) == 0x02)&&timeout);
 
     /* Clear Autoset */
     HWREGH(usbInstance->usbInstCoreBaseAddress + ulRegister)&= CPDMA_TX_CLR_AUTO_SET;
@@ -549,7 +549,7 @@ void disableCoreRxDMA(unsigned short usbDevInst, unsigned int ulEndpoint)
     {
        --timeout;
     }
-    while (((HWREGH(usbInstance->usbInstCoreBaseAddress + ulRegister) & 0x1) == 0x01)&& (timeout > 0));
+    while (((HWREGH(usbInstance->usbInstCoreBaseAddress + ulRegister) & 0x1) == 0x01)&& timeout);
 
     /* Clear DMAReqEnab */
     HWREGH(usbInstance->usbInstCoreBaseAddress + ulRegister)&= CPDMA_RX_CLR_REQ_ENABLE;
@@ -580,7 +580,7 @@ void disableCoreTxDMA(unsigned short usbDevInst, unsigned int ulEndpoint)
     {
         --timeout;
     }
-    while (((HWREGH(usbInstance->usbInstCoreBaseAddress + ulRegister) & 0x2) == 0x02)&& (timeout > 0));
+    while (((HWREGH(usbInstance->usbInstCoreBaseAddress + ulRegister) & 0x2) == 0x02)&& timeout);
 
     /* Clear AUTOSET */
     HWREGH(usbInstance->usbInstCoreBaseAddress + ulRegister)&=CPDMA_TX_CLR_AUTO_SET;
@@ -1184,7 +1184,7 @@ unsigned int dmaTxCompletion(unsigned short usbDevInst, unsigned int ulEndpoint 
     if(state == DMA_TX_COMPLETED)
     do{
             -- timeout;
-      }while (((HWREGH(usbInstance->usbInstCoreBaseAddress + ulRegister) & 0x2) == 0x02)&& (timeout > 0) );
+      }while (((HWREGH(usbInstance->usbInstCoreBaseAddress + ulRegister) & 0x2) == 0x02)&& timeout );
 
     CacheInv((unsigned int)completed_bd->buffAdd, sizeof(completed_bd->buffAdd));
 
@@ -1229,7 +1229,7 @@ unsigned int dmaTxCompletion(unsigned short usbDevInst, unsigned int ulEndpoint 
     if(state == DMA_TX_COMPLETED)
         do{
             -- timeout;
-        }while (((HWREGH(usbInstance->usbInstCoreBaseAddress + ulRegister) & 0x2) == 0x02)&& (timeout > 0) );
+        }while (((HWREGH(usbInstance->usbInstCoreBaseAddress + ulRegister) & 0x2) == 0x02)&& timeout );
 
     CacheDataInvalidateBuff((unsigned int)completed_bd->buffAdd, sizeof(completed_bd->buffAdd));
 
@@ -1709,11 +1709,10 @@ int Cppi41DmaRxChTeardown(unsigned short usbDevInst, unsigned int ulEndpoint )
             TeardownStatus = DescHeaderPtr->pktLength ;
             continue;
         }
-      --TimeOut;
-    } while(TimeOut > 0);
+    } while(--TimeOut);
 
     /* We have got TD in the completion Q */
-    if (TimeOut <= 0)
+    if (TimeOut)
     {
         /* Now we need to free the Rx BD - if not read the Submit Q */
         if ( !completed_bd )
@@ -1821,10 +1820,10 @@ int Cppi41DmaTxChTeardown(unsigned short usbDevInst, unsigned int ulEndpoint )
             TeardownStatus = DescHeaderPtr->pktLength ;
             continue;
         }
-      --TimeOut;
-    } while(TimeOut > 0);
+
+    } while(--TimeOut);
     /* We have got TD in the completion Q */
-    if (TimeOut <= 0)
+    if (TimeOut)
     {
         /* Now we need to free the Tx BD - if not read the Submit Q */
         if ( !completed_bd )
@@ -2022,9 +2021,9 @@ void print_pend ( )
     pend0 = HWREG(USB_OTGBASE + CPDMA_PEND_0_REGISTER);
     pend1 = HWREG(USB_OTGBASE + CPDMA_PEND_1_REGISTER);
     pend2 = HWREG(USB_OTGBASE + CPDMA_PEND_2_REGISTER);
-    pend3 = HWREG(USB_OTGBASE + CPDMA_PEND_3_REGISTER);*/
+    pend3 = HWREG(USB_OTGBASE + CPDMA_PEND_3_REGISTER);
 
-    /*ConsoleUtilsPrintf("\t\t%s: %s = %x\n\n", __FUNCTION__, " pend0 ", pend0);
+    ConsoleUtilsPrintf("\t\t%s: %s = %x\n\n", __FUNCTION__, " pend0 ", pend0);
     ConsoleUtilsPrintf("\t\t%s: %s = %x\n\n", __FUNCTION__, " pend1 ", pend1);
     ConsoleUtilsPrintf("\t\t%s: %s = %x\n\n", __FUNCTION__, " pend2 ", pend2);
     ConsoleUtilsPrintf("\t\t%s: %s = %x\n\n", __FUNCTION__, " pend3 ", pend3);*/

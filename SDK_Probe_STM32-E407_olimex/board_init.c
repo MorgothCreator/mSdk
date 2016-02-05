@@ -128,7 +128,7 @@ bool board_init()
 /*-----------------------------------------------------*/
 	//INIT_MPR121(MPR121, 0);
 /*-----------------------------------------------------*/
-	//INIT_LEPTON_FLIR(LEPTON_FLIR, 1, 0);
+	INIT_LEPTON_FLIR(LEPTON_FLIR, 1, 0);
 /*-----------------------------------------------------*/
 #if defined(HARDBTN1_PORT) && defined(HARDBTN1_PIN)
 	HARDBTN[0] = gpio_assign(HARDBTN1_PORT, HARDBTN1_PIN, GPIO_DIR_INPUT, false);
