@@ -43,7 +43,7 @@ At this moment is supported the next platforms:
 
   --
 
-9) STM32F4xx (ODeV & CoIDE).
+9) STM32F4xx (CoIDE).
 
   <a href="http://www.st.com/web/catalog/tools/FM116/SC959/SS1532/PF252419">Discovery Board.</a>
   
@@ -111,25 +111,33 @@ Done API's for every platform:
 		USART
 		TWI.
 		ADC (not ready).
+	CC13xx and CC26xx:
+		GPIO.
+		SPI.
+		UART.
 
 Supported devices (this drivers works on all platforms that has API's for used communicatiun busses):
 
 	24c I2C EEProm device.
+	45db SPI Flash memory.
 	ADXL345 I2C accelerometer device.
 	AR1020 I2C touchscreen device.
+	BMP180 I2C barometer and temperature sensor device.
 	DS1307 I2C RTC device.
+	DXL actuators from Dynamixel.
 	FT5x06 I2C capacitive touchscreen device.
+	HIH6130-HIH6131 I2C hidrometer and temperature sensor device(only STM32F4 controllers for now).
+	Lepton FLIR termal image sensor SPI device.
 	MHC5883 I2C compass device.
+	MMCSD_SPI a driver to support MMC and SD/SDHC memory card using SPI interface.
 	MPU60x0 I2C accelerometer, giroscope and temperature sensor device.
 	MS5611 I2C pressure & temperature sensor device.
+	MPL3115A2 I2C altitude & temperature sensor device.
+	MPR121 I2C touch sensor 12 buttons.
+	MPU9150 I2C accelerometer, giroscope, compass(AK8975) and temperature sensor device.
 	SHT11 custom software interface humidity and temperature device.
 	SRF02 I2C ultrasonic range finder device.
 	SST25VF SPI flash memory device.
 	TPS65217 I2C PMIC device.
 	TPS65910 I2C PMIC device.
-	DXL actuators from Dynamixel.
-	BMP180 I2C barometer and temperature sensor device.
-	MPU9150 I2C accelerometer, giroscope, compass(AK8975) and temperature sensor device.
 	AK8975 I2C compass sensor device.
-	HIH6130-HIH6131 I2C hidrometer and temperature sensor device(only STM32F4 controllers for now).
-	Lepton FLIR termal image sensor SPI device.
