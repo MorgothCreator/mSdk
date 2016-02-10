@@ -25,6 +25,7 @@
 #include "api/twi_def.h"
 #include "api/twi_api.h"
 #include "api/timer_api.h"
+#include "api/uart_api.h"
 
 
 bool ak8975_start_measure(AK8975_t *structure) {

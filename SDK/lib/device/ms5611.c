@@ -177,8 +177,8 @@ bool ms5611_display_pressure_result(MS5611_t *structure, unsigned char osr)
 #else
 	float PressureInt = 0;
 	float PressureDec = modff(((float)Pressure)/100.0, &PressureInt);
-	float TemperatureInt = 0;
-	float TemperatureDec = modff(((float)Pressure)/100.0, &Temperature);
+	float TemperatureInt = (float)Temperature;
+	float TemperatureDec = modff(((float)Pressure)/100.0, &TemperatureInt);
 	UARTprintf(DebugCom, "MS5611: P = %d.%u milibar, T = %d.%u gr celsius\n\r", (signed int)PressureInt, (unsigned int)(PressureDec * 100.0), (signed int)TemperatureInt, (unsigned int)(TemperatureDec * 100.0));
 #endif
 	return true;

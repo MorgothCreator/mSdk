@@ -5,7 +5,7 @@
  *      Author: Morgoth
  */
 
-#include "stdbool.h"
+/*#include "stdbool.h"
 #include "api/gpio_def.h"
 #include "api/gpio_api.h"
 #include "include/hw/soc_AM335x.h"
@@ -22,5 +22,5 @@ bool tda19988_init()
               (0 << CONTROL_CONF_XDMA_EVENT_INTR0_CONF_XDMA_EVENT_INTR0_SLEWCTRL_SHIFT);
     return false;
 }
-
+*/
 

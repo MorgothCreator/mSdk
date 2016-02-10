@@ -26,6 +26,7 @@
 #include "api/gpio_def.h"
 #include "api/gpio_api.h"
 #include "api/timer_api.h"
+#include "api/uart_api.h"
 #include "interface/gpio_interface_def.h"
 
 #ifdef HAVE_GPIO_OUT_OPEN_DRAIN

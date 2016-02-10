@@ -21,6 +21,7 @@
 
 #include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
 #include "board_init.h"
 #include "lepton_flir.h"
 #include "api/gpio_api.h"

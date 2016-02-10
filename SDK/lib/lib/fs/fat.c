@@ -28,7 +28,7 @@
 #include "fat.h"
 #include "board_init.h"
 #include "sys/plat_properties.h"
-#include "../../api/uart_api.h"
+#include "api/uart_api.h"
 #include "../string_lib.h"
 #ifdef USE_UNIONS
 #include "general/unions.h"

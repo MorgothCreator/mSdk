@@ -148,9 +148,9 @@ I2SChannelConfigure(uint32_t ui32Base, uint32_t ui32Chan0Cfg,
     // Check the arguments.
     //
     ASSERT(I2SBaseValid(ui32Base));
-    ASSERT(ui32Chan0Cfg & (I2S_CHAN_CFG_MASK | I2S_LINE_MASK))
-    ASSERT(ui32Chan1Cfg & (I2S_CHAN_CFG_MASK | I2S_LINE_MASK))
-    ASSERT(ui32Chan2Cfg & (I2S_CHAN_CFG_MASK | I2S_LINE_MASK))
+    ASSERT(ui32Chan0Cfg & (I2S_CHAN_CFG_MASK | I2S_LINE_MASK));
+    ASSERT(ui32Chan1Cfg & (I2S_CHAN_CFG_MASK | I2S_LINE_MASK));
+    ASSERT(ui32Chan2Cfg & (I2S_CHAN_CFG_MASK | I2S_LINE_MASK));
 
     ui32InChan = 0;
     ui32OutChan = 0;

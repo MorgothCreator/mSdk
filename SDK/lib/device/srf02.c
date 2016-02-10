@@ -10,6 +10,7 @@
 #include "board_init.h"
 #include "api/twi_api.h"
 #include "api/timer_api.h"
+#include "api/uart_api.h"
 
 bool srf02_start(SRF02_t *structure, SRF02_COMMANDS command) {
 	if(structure->busy)

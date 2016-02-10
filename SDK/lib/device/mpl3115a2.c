@@ -20,6 +20,7 @@
  */
 
 #include <stdbool.h>
+#include <string.h>
 #include "mpl3115a2.h"
 #include "board_init.h"
 #include "api/twi_api.h"
