@@ -133,6 +133,7 @@ extern uint32_t _bss;
 extern uint32_t _ebss;
 extern uint32_t _estack;
 
+
 //*****************************************************************************
 //
 //! The vector table. Note that the proper constructs must be placed on this to
@@ -239,7 +240,6 @@ ResetISR(void)
           "        it      lt\n"
           "        strlt   r2, [r0], #4\n"
           "        blt     zero_loop");
-
    //
    // Call the application's entry point.
    //

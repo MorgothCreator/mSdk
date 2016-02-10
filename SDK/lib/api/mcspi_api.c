@@ -42,7 +42,13 @@ bool mcspi_transfer(Mcspi_t *McspiStruct, unsigned int NumOfBytesSend, unsigned 
 	return true;
 }
 
-unsigned char mcspi_send_byte(Mcspi_t *McspiStruct, unsigned char byte) {
+unsigned char mcspi_send_byte(Mcspi_t *McspiStruct, unsigned char byte)
+{
 	return _mcspi_SendByte(McspiStruct, byte);
+}
+
+bool mcspi_set_baud(Mcspi_t *McspiStruct, unsigned long baud)
+{
+	return _mcspi_set_baud(McspiStruct, baud);
 }
 

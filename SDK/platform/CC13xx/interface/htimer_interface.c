@@ -1,7 +1,7 @@
 /*
- *  lib/api/mcspi_api.h
+ *  interface/htimer_interface.c
  *
- *  Copyright (C) 2013  Iulian Gheorghiu <morgoth.creator@gmail.com>
+ *  Copyright (C) 2014  Iulian Gheorghiu <morgoth.creator@gmail.com>
  *
  *  This file is part of Multiplatform SDK.
  *
@@ -18,25 +18,14 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+/*#####################################################*/
+#include "stdbool.h"
+#include "htimer_interface.h"
+#include "api/htimer_api_def.h"
+/*#####################################################*/
+/*#####################################################*/
+bool _htimer_init(Htimer_t *structure){
+	return false;
+}
 
-#ifndef MCSPI_API_H_
-#define MCSPI_API_H_
-/*#####################################################*/
-#include <stdbool.h>
-#include "api/mcspi_def.h"
-//#include "aintc/aintc_mcspi.h"
-//#include "clk/clk_mcspi.h"
-#include "interface/mcspi_interface.h"
-/*#####################################################*/
-bool mcspi_transfer(Mcspi_t *McspiStruct, unsigned int NumOfBytesSend, unsigned int NumOfBytesReceive);
-bool mcspi_open(Mcspi_t *McspiStruct);
-void mcspi_close(Mcspi_t *McspiStruct);
-unsigned char mcspi_send_byte(Mcspi_t *McspiStruct, unsigned char byte);
-bool mcspi_set_baud(Mcspi_t *McspiStruct, unsigned long baud);
-/*#####################################################*/
-#ifdef HEADER_INCLUDE_C_FILES
-#include "mcspi_api.c"
-#endif
-/*#####################################################*/
-#endif /* MCSPI_API_H_ */
-/*#####################################################*/
+
