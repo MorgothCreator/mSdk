@@ -22,11 +22,6 @@
 //new_dma_ch* DMA_MMCSD_TRANSMIT = NULL;
 //new_dma_ch* DMA_MMCSD_RECEIVE = NULL;
 
-#define PATH_BUF_SIZE   4
-//static char g_cCwdBuf0[PATH_BUF_SIZE] = "0:/";
-//static char g_cCwdBuf1[PATH_BUF_SIZE] = "1:/";
-//char *g_cCwdBuf[2] = {g_cCwdBuf0, g_cCwdBuf1};
-FATFS g_s_mmcFatFs[3];
 DIR g_sDirObject;
 
 /* MMC/SD command */
@@ -61,7 +56,6 @@ DIR g_sDirObject;
 
 
 
-new_uart* MMCSD = NULL;
 extern new_uart* DebugCom;
 extern new_mmcsd_spi *MMCSD_SPI[];
 //#######################################################################################
@@ -439,41 +433,7 @@ void mmcsd_spi_init(unsigned int unit_nr, new_gpio* Cs, new_gpio* StatusLed)
 void mmcsd_spi_idle(unsigned int unit_nr)
 {
 	SD_Struct_t *SD_StructDisk = MMCSD_SPI[unit_nr];
-	/*//SD_Struct_t *SD_StructDisk = (SD_Struct_t *)SdStruct;
-	Drives_Table[SD_StructDisk->DriveNr] = new_(new_fat_disk);
-    Drives_Table[SD_StructDisk->DriveNr]->DiskInfo_SdDriverStructAddr = SD_StructDisk;
-    //Drives_Table[0]->drive_init = MMCSD_CardInit;
-    Drives_Table[SD_StructDisk->DriveNr]->drive_read_page = MMCSD_SPI_ReadCmdSend;
-    Drives_Table[SD_StructDisk->DriveNr]->drive_write_page = MMCSD_SPI_WriteCmdSend;
-    if(_Fat_Mount(SD_StructDisk->DriveNr))
-    {
-        if(DebugCom)
-        {
-																					UARTprintf(DebugCom, "MMCSD%d drive mounted\n\r" , (signed long)SD_StructDisk->DriveNr);
-																					UARTprintf(DebugCom, "MMCSD%d Fat fs detected\n\r" , (signed long)SD_StructDisk->DriveNr);
-			if(Drives_Table[SD_StructDisk->DriveNr]->DiskInfo_FatType == NoFs ){ 	UARTprintf(DebugCom, "MMCSD%d Fs type:                 None\n\r" , (signed long)SD_StructDisk->DriveNr);}
-			if(Drives_Table[SD_StructDisk->DriveNr]->DiskInfo_FatType == Fat12){ 	UARTprintf(DebugCom, "MMCSD%d Fs type:                 Fat12\n\r" , (signed long)SD_StructDisk->DriveNr);}
-			if(Drives_Table[SD_StructDisk->DriveNr]->DiskInfo_FatType == Fat16){ 	UARTprintf(DebugCom, "MMCSD%d Fs type:                 Fat16\n\r" , (signed long)SD_StructDisk->DriveNr);}
-			if(Drives_Table[SD_StructDisk->DriveNr]->DiskInfo_FatType == Fat32){ 	UARTprintf(DebugCom, "MMCSD%d Fs type:                 Fat32\n\r" , (signed long)SD_StructDisk->DriveNr);}
-																					UARTprintf(DebugCom, "MMCSD%d BootSectorAddress:       %u \n\r" , (signed long)SD_StructDisk->DriveNr, (unsigned long)Drives_Table[SD_StructDisk->DriveNr]->DiskInfo_BootSectorAddress);
-																					UARTprintf(DebugCom, "MMCSD%d BytesPerSector:          %d \n\r" , (signed long)SD_StructDisk->DriveNr, (signed long)Drives_Table[SD_StructDisk->DriveNr]->DiskInfo_BytesPerSector);
-																					UARTprintf(DebugCom, "MMCSD%d SectorsPerCluster:       %d \n\r" , (signed long)SD_StructDisk->DriveNr, (signed long)Drives_Table[SD_StructDisk->DriveNr]->DiskInfo_SectorsPerCluster);
-																					UARTprintf(DebugCom, "MMCSD%d AllocTable1Begin:        %u \n\r" , (signed long)SD_StructDisk->DriveNr, (unsigned long)Drives_Table[SD_StructDisk->DriveNr]->DiskInfo_AllocTable1Begin);
-																					UARTprintf(DebugCom, "MMCSD%d NumberOfFats:            %d \n\r" , (signed long)SD_StructDisk->DriveNr, (signed long)Drives_Table[SD_StructDisk->DriveNr]->DiskInfo_NumberOfFats);
-																					UARTprintf(DebugCom, "MMCSD%d MediaType:               %d \n\r" , (signed long)SD_StructDisk->DriveNr, (signed long)Drives_Table[SD_StructDisk->DriveNr]->DiskInfo_MediaType);
-																					UARTprintf(DebugCom, "MMCSD%d AllocTableSize:          %u \n\r" , (signed long)SD_StructDisk->DriveNr, (unsigned long)Drives_Table[SD_StructDisk->DriveNr]->DiskInfo_AllocTableSize);
-																					UARTprintf(DebugCom, "MMCSD%d DataSectionBegin:        %u \n\r" , (signed long)SD_StructDisk->DriveNr, (unsigned long)Drives_Table[SD_StructDisk->DriveNr]->DiskInfo_DataSectionBegin);
-			if(Drives_Table[0]->DiskInfo_FatType == Fat32)							UARTprintf(DebugCom, "MMCSD%d uSD DiskCapacity:        %uMB\n\r" , (signed long)SD_StructDisk->DriveNr, (unsigned long)((unsigned long long)((unsigned long long)Drives_Table[SD_StructDisk->DriveNr]->DiskInfo_AllocTableSize * 128 * (unsigned long long)Drives_Table[SD_StructDisk->DriveNr]->DiskInfo_SectorsPerCluster * (unsigned long long)Drives_Table[SD_StructDisk->DriveNr]->DiskInfo_BytesPerSector) / 1000000));
-			else if(Drives_Table[0]->DiskInfo_FatType == Fat16)						UARTprintf(DebugCom, "MMCSD%d uSD DiskCapacity:        %uMB\n\r" , (signed long)SD_StructDisk->DriveNr, (unsigned long)((unsigned long long)((unsigned long long)Drives_Table[SD_StructDisk->DriveNr]->DiskInfo_AllocTableSize * 256 * (unsigned long long)Drives_Table[SD_StructDisk->DriveNr]->DiskInfo_SectorsPerCluster * (unsigned long long)Drives_Table[SD_StructDisk->DriveNr]->DiskInfo_BytesPerSector) / 1000000));
-        }
-    }
-    else if(DebugCom)																UARTprintf(DebugCom,   "MMCSD%d Fat not detected\n\r" , (signed long)SD_StructDisk->DriveNr);
-*/
-
-
-
-
-    if(!gpio_in(SD_StructDisk->SD_Present)/*(HSMMCSDCardPresent(&ctrlInfo)) == 1*/ || (int)(SD_StructDisk->SD_Present) == 0 || (int)(SD_StructDisk->SD_Present) == -1)
+    if(!gpio_in(SD_StructDisk->SD_Present) || (int)(SD_StructDisk->SD_Present) == 0 || (int)(SD_StructDisk->SD_Present) == -1)
     {
         if(SD_StructDisk->initFlg)
         {
@@ -525,15 +485,8 @@ void mmcsd_spi_idle(unsigned int unit_nr)
         {
         	SD_StructDisk->connected = false;
         	SD_StructDisk->initFlg = 1;
-#ifdef mmcsd_debug
-#ifndef thirdpartyfatfs
-        	if(_FatData_CloseSesion(FILE1) == 1 && DebugCom != NULL)						UARTPuts(DebugCom, "MMCSD0 Session closed\n\r" , -1);
-        	FILE1 = NULL;
-        	if(_Fat_Unmount(0) == 1 && DebugCom != NULL)									UARTPuts(DebugCom, "MMCSD0 unmount\n\r" , -1);
-
-#else
-        	UARTprintf(DebugCom,   "MMCSD%d Disconnected\n\r" , ((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr);
-#endif
+#ifdef MMCSD_DEBUG_EN
+        	UARTprintf(DebugCom,   "MMCSD%d Disconnected\n\r" , unit_nr);
 #endif
         }
     }

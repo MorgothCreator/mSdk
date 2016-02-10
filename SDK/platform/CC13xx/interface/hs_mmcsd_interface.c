@@ -9,6 +9,17 @@
 #include "api/gpio_def.h"
 
 /*#####################################################*/
+/*#####################################################*/
+unsigned int MMCSDWriteCmdSend(void *_ctrl, void *ptr, unsigned long block, unsigned int nblks)
+{
+	return 0;
+}
+/*#####################################################*/
+unsigned int MMCSDReadCmdSend(void *_ctrl, void *ptr, unsigned long block, unsigned int nblks)
+{
+	return 0;
+}
+/*#####################################################*/
 void _mmcsd_init(unsigned int unit_nr, new_gpio* Cs, new_gpio* StatusLed)
 {
 

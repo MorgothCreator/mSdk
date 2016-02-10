@@ -66,6 +66,7 @@ void UARTBaudRateSet(Uart_t* UartSettings, unsigned long BaudRate)
 {
 	if(!UartSettings) return;
 	_UARTBaudSetRate(UartSettings->BaseAddr, BaudRate);
+	UartSettings->BaudRate = BaudRate;
 }
 /*#####################################################*/
 /**

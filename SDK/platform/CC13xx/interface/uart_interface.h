@@ -13,7 +13,7 @@
 /*#####################################################*/
 bool _uart_open(Uart_t* UartSettings);
 bool _uart_close(Uart_t *UartSettings);
-void _UARTBaudSetRate(Uart_t *UartSettings, unsigned long BaudRate);
+void _UARTBaudSetRate(unsigned int BaseAddr, unsigned long BaudRate);
 void _UARTCharPut(unsigned int BaseAddr, unsigned char byteTx);
 unsigned char _UARTCharGet(unsigned int BaseAddr);
 bool _UARTCharPutNonBlocking(unsigned int BaseAddr, unsigned char byteTx);

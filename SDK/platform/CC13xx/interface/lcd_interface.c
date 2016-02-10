@@ -22,7 +22,7 @@
 
 bool SetUpLCD(tDisplay* LcdStruct)
 {
-	screen_open(LcdStruct);
+	//screen_open(LcdStruct);
 	return true;
 }
 
@@ -102,23 +102,23 @@ bool _screen_copy(tDisplay *pDisplayTo, tDisplay *pDisplayFrom, bool put_cursor,
 //#######################################################################################
 void _put_rectangle(tDisplay *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len, bool fill, unsigned int color)
 {
-	screen_draw_rectangle(pDisplay, x_start, y_start, x_len, y_len, fill, color);
+	//screen_draw_rectangle(pDisplay, x_start, y_start, x_len, y_len, fill, color);
 	return;
 }
 //#######################################################################################
 void _put_pixel(tDisplay *pDisplay, signed int X, signed int Y, unsigned int color)
 {
-	screen_put_pixel16(pDisplay, X, Y, color);
+	//screen_put_pixel16(pDisplay, X, Y, color);
 }
 //#######################################################################################
 void _screen_put_horizontal_line(tDisplay *pDisplay, signed int X1, signed int X2, signed int Y, unsigned char width, unsigned int color)
 {
-	screen_put_horizontal_line(pDisplay, X1, X2, Y, width, color);
+	//screen_put_horizontal_line(pDisplay, X1, X2, Y, width, color);
 }
 //#######################################################################################
 void _screen_put_vertical_line(tDisplay *pDisplay, signed int X1, signed int X2, signed int Y, unsigned char width, unsigned int color)
 {
-	screen_put_vertical_line(pDisplay, X1, X2, Y, width, color);
+	//screen_put_vertical_line(pDisplay, X1, X2, Y, width, color);
 }
 //#######################################################################################
 void _screen_put_rgb_array_16(void *_pDisplay, unsigned short *rgb_buffer, unsigned int x1, unsigned int y1,unsigned int width, unsigned int height)
