@@ -155,3 +155,9 @@ void _mcspi_close(Mcspi_t *McspiStruct)
 	}
 }
 /*#####################################################*/
+bool _mcspi_set_baud(Mcspi_t *McspiStruct, unsigned long baud)
+{
+	/* Configure the McSPI bus clock depending on clock mode. */
+	McSPIClkConfig(McspiStruct->BaseAddr, MCSPI_IN_CLK, McspiStruct->BaudRate, McspiStruct->Channel, MCSPI_CLK_MODE_0);
+	return true;
+}
