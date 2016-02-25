@@ -13,10 +13,8 @@
 #include "api/gpio_api.h"
 #include "api/uart_def.h"
 #include "api/uart_api.h"
-#include "driver/uart.h"
-//#include "driver/dma.h"
 #include "lib/fs/fat.h"
-#include "general/unions.h"
+//#include "general/unions.h"
 #include "sys/sysdelay.h"
 //#######################################################################################
 //new_dma_ch* DMA_MMCSD_TRANSMIT = NULL;
