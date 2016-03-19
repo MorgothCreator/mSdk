@@ -65,8 +65,8 @@
 //#####################################
 
 #ifndef CCFG_FORCE_VDDR_HH
-#define CCFG_FORCE_VDDR_HH                              0x0        // Use default VDDR trim
-// #define CCFG_FORCE_VDDR_HH                           0x1        // Force VDDR voltage to the factory HH setting (FCFG1..VDDR_TRIM_HH)
+//#define CCFG_FORCE_VDDR_HH                              0x0        // Use default VDDR trim
+ #define CCFG_FORCE_VDDR_HH                           0x1        // Force VDDR voltage to the factory HH setting (FCFG1..VDDR_TRIM_HH)
 #endif
 
 //*****************************************************************************
@@ -106,8 +106,8 @@
 //#####################################
 
 #ifndef SET_CCFG_SIZE_AND_DIS_FLAGS_DIS_XOSC_OVR
-// #define SET_CCFG_SIZE_AND_DIS_FLAGS_DIS_XOSC_OVR     0x0        // Enable override
-#define SET_CCFG_SIZE_AND_DIS_FLAGS_DIS_XOSC_OVR        0x1        // Disable override
+ #define SET_CCFG_SIZE_AND_DIS_FLAGS_DIS_XOSC_OVR     0x0        // Enable override
+//#define SET_CCFG_SIZE_AND_DIS_FLAGS_DIS_XOSC_OVR        0x1        // Disable override
 #endif
 
 #ifndef SET_CCFG_MODE_CONF_1_DELTA_IBIAS_INIT

@@ -54,7 +54,7 @@
 //! @{
 
 #include <stdint.h>
-#include <driverlib/rf_mailbox.h>
+#include "rf_mailbox.h"
 
 typedef struct __RFC_STRUCT rfc_command_s rfc_command_t;
 typedef struct __RFC_STRUCT rfc_radioOp_s rfc_radioOp_t;
