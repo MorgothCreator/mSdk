@@ -20,6 +20,7 @@
  */
 
 #include <stdbool.h>
+#include <stdio.h>
 #include "mhc5883.h"
 #include "board_init.h"
 #include "api/twi_api.h"
@@ -30,6 +31,8 @@
 
 bool mhc5883_sample_nr_set(MHC5883_t *structure, unsigned char Value)
 {
+	if(structure == NULL)
+		return false;
 	Twi_t *TwiStruct = structure->TWI;
 	TwiStruct->MasterSlaveAddr = MHC5883_ADDR;
 	TwiStruct->TxBuff[0] = MHC5883_CONFIG_REG_A;
@@ -43,6 +46,8 @@ bool mhc5883_sample_nr_set(MHC5883_t *structure, unsigned char Value)
 
 bool mhc5883_data_output_rate_set(MHC5883_t *structure, unsigned char Value)
 {
+	if(structure == NULL)
+		return false;
 	Twi_t *TwiStruct = structure->TWI;
 	TwiStruct->MasterSlaveAddr = MHC5883_ADDR;
 	TwiStruct->TxBuff[0] = MHC5883_CONFIG_REG_A;
@@ -56,6 +61,8 @@ bool mhc5883_data_output_rate_set(MHC5883_t *structure, unsigned char Value)
 
 bool mhc5883_measurament_mode_set(MHC5883_t *structure, unsigned char Value)
 {
+	if(structure == NULL)
+		return false;
 	Twi_t *TwiStruct = structure->TWI;
 	TwiStruct->MasterSlaveAddr = MHC5883_ADDR;
 	TwiStruct->TxBuff[0] = MHC5883_CONFIG_REG_A;
@@ -69,6 +76,8 @@ bool mhc5883_measurament_mode_set(MHC5883_t *structure, unsigned char Value)
 
 bool mhc5883_gain_set(MHC5883_t *structure, unsigned char Value)
 {
+	if(structure == NULL)
+		return false;
 	Twi_t *TwiStruct = structure->TWI;
 	TwiStruct->MasterSlaveAddr = MHC5883_ADDR;
 	TwiStruct->TxBuff[0] = MHC5883_CONFIG_REG_B;
@@ -82,6 +91,8 @@ bool mhc5883_gain_set(MHC5883_t *structure, unsigned char Value)
 
 bool mhc5883_mode_set(MHC5883_t *structure, unsigned char Value)
 {
+	if(structure == NULL)
+		return false;
 	Twi_t *TwiStruct = structure->TWI;
 	TwiStruct->MasterSlaveAddr = MHC5883_ADDR;
 	TwiStruct->TxBuff[0] = MHC5883_MODE_REG;
@@ -95,6 +106,8 @@ bool mhc5883_mode_set(MHC5883_t *structure, unsigned char Value)
 
 bool mhc5883_data_get(MHC5883_t *structure, signed short *X_Axis, signed short *Y_Axis, signed short *Z_Axis)
 {
+	if(structure == NULL)
+		return false;
 	Twi_t *TwiStruct = structure->TWI;
 	TwiStruct->MasterSlaveAddr = MHC5883_ADDR;
 	TwiStruct->TxBuff[0] = MHC5883_DATA_OUT_X_H;
@@ -108,6 +121,8 @@ bool mhc5883_data_get(MHC5883_t *structure, signed short *X_Axis, signed short *
 
 bool mhc5883_display_result(MHC5883_t *structure)
 {
+	if(structure == NULL)
+		return false;
 	signed short Xc = 0;
 	signed short Yc = 0;
 	signed short Zc = 0;

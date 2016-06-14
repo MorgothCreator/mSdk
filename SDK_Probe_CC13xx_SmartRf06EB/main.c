@@ -59,6 +59,11 @@ static uint16_t seqNumber = 0;
 
 static unsigned char send_buff[0xFF];
 
+static rfc_CMD_FS_POWERUP_t RF_cmdFsPowerup =
+{
+	.commandNo = CMD_FS_POWERUP
+};
+
 static rfc_CMD_START_RAT_t RF_cmdStartRat =
 {
 	.commandNo = CMD_START_RAT
@@ -110,6 +115,7 @@ static rfc_CMD_RX_TEST_t RF_cmdRxTest =
 };
 static volatile rfc_CMD_RX_TEST_t rfc_CMD_RX_TEST;
 
+static rfc_CMD_FS_POWERUP_t rfc_CMD_FS_POWERUP;
 static rfc_CMD_START_RAT_t rfc_CMD_START_RAT;
 static rfc_CMD_ABORT_t rfc_CMD_ABORT;
 static rfc_CMD_STOP_t rfc_CMD_STOP;
@@ -134,7 +140,7 @@ typedef enum{
 }trans_status_e;
 
 
-trans_status_e rf_send_pocket(unsigned char *buff, unsigned char len, unsigned char addr, uint32_t ui32Freq)
+trans_status_e rf_send_pocket(unsigned char *buff, unsigned char len, unsigned char addr, unsigned long ui32Freq)
 {
 	if(/*rfc_CMD_PROP_RX.status == IDLE || */
 			rfc_CMD_PROP_RX.status == PENDING ||
@@ -150,9 +156,9 @@ trans_status_e rf_send_pocket(unsigned char *buff, unsigned char len, unsigned c
 		memcpy((rfc_CMD_FS_t *)&rfc_CMD_FS, &RF_cmdFs, sizeof(rfc_CMD_FS_t));
 		rfc_CMD_FS.synthConf.bTxMode = 1;
 		 /* Set the frequency */
-		/*rfc_CMD_FS.frequency = (uint16_t)(ui32Freq / 1000000);
-		rfc_CMD_FS.fractFreq = (uint16_t) (((uint64_t)ui32Freq -
-		            (rfc_CMD_FS.frequency * 1000000)) * 65536 / 1000000);*/
+		ui32Freq /= 1000;
+		rfc_CMD_FS.frequency = (uint16_t)(ui32Freq / 1000);
+		rfc_CMD_FS.fractFreq = ((ui32Freq - (rfc_CMD_FS.frequency * 1000)) * 65);
 		result= RFCDoorbellSendTo((unsigned long)&rfc_CMD_FS);
 		if(result != 1)
 			return trans_status_Err;
@@ -164,18 +170,18 @@ trans_status_e rf_send_pocket(unsigned char *buff, unsigned char len, unsigned c
 		if(cnt == 2500)
 			return trans_status_Err;
 	//}
-
+	for(cnt = 0; cnt < 2500; cnt++);
 	memcpy((rfc_CMD_PROP_TX_t *)&rfc_CMD_PROP_TX, &RF_cmdPropTx, sizeof(rfc_CMD_PROP_TX_t));
-	rfc_CMD_PROP_TX.startTrigger.triggerType = TRIG_NOW;
-	//rfc_CMD_PROP_TX.startTrigger.pastTrig = 1;
+	rfc_CMD_PROP_TX.startTrigger.triggerType = TRIG_ABSTIME;
+	rfc_CMD_PROP_TX.startTrigger.pastTrig = 1;
 	rfc_CMD_PROP_TX.startTime = 0;
 	memcpy(send_buff + 3, buff, len);
 	send_buff[0] = addr;
 	send_buff[1] = (uint8_t)(seqNumber >> 8);
 	send_buff[2] = (uint8_t)(seqNumber);
 	rfc_CMD_PROP_TX.pPkt = send_buff;
-	rfc_CMD_PROP_TX.pktLen = len + 2;
-	rfc_CMD_PROP_TX.pktConf.bFsOff = 1;
+	rfc_CMD_PROP_TX.pktLen = len + 3;
+	rfc_CMD_PROP_TX.pktConf.bFsOff = 0;
 	result= RFCDoorbellSendTo((unsigned long)&rfc_CMD_PROP_TX);
 	if(result != 1)
 		return trans_status_Err;
@@ -231,6 +237,7 @@ trans_status_e rf_receive_packet(unsigned char *buff, unsigned char *len, unsign
 	rfc_CMD_PROP_RX.startTime = 0;
 	rfc_CMD_PROP_RX.address0 = addr1;
 	rfc_CMD_PROP_RX.address1 = addr2;
+	rfc_CMD_PROP_RX.pktConf.bChkAddress = 0;
 	result= RFCDoorbellSendTo((unsigned long)&rfc_CMD_PROP_RX);
 	if(result != 1)
 		return trans_status_Err;
@@ -256,7 +263,8 @@ trans_status_e rf_receive_packet(unsigned char *buff, unsigned char *len, unsign
 	memcpy(&rfc_CMD_GET_RSSI, &RF_cmdGetRssi, sizeof(rfc_CMD_GET_RSSI_t));
 	result= RFCDoorbellSendTo((unsigned long)&rfc_CMD_GET_RSSI);
 	while(result < 3 && result >= 0);
-	UARTprintf(DebugCom, "RSSI = %d.\r\n" , result);
+	signed char rssi = result >> 16;
+	UARTprintf(DebugCom, "RSSI = %d.\r\n" , (long) rssi);
 	//*rssi = result;
 	*len = 0;
 	return trans_status_Timeout;
@@ -269,6 +277,7 @@ int rf_rssi(long *rssi)
 	result= RFCDoorbellSendTo((unsigned long)&rfc_CMD_GET_RSSI);
 	while(result < 3 && result >= 0);
 	*rssi = result;
+	return 0;
 }
 
 int rf_abort()
@@ -276,8 +285,12 @@ int rf_abort()
 	memcpy(&rfc_CMD_ABORT, &RF_cmdAbort, sizeof(rfc_CMD_ABORT_t));
 	return RFCDoorbellSendTo((unsigned long)&rfc_CMD_ABORT);
 }
+#define RX_MODE	0
+#define TX_MODE	1
+#define RX_TX_MODE	TX_MODE
 
 int main(void) {
+	rf_patch_cpe_genfsk();
 	board_init();
 	OSCHF_TurnOnXosc();
 	do{}while(!OSCHF_AttemptToSwitchToXosc());
@@ -299,12 +312,22 @@ int main(void) {
 	result= RFCDoorbellSendTo((unsigned long)&rfc_CMD_GET_FW_INFO);
 	for(cnt = 0; cnt < 2500; cnt++);
 
+
+	//rfc_CMD_FS_POWERUP_t
+	/*memcpy((rfc_CMD_FS_POWERUP_t *)&rfc_CMD_FS_POWERUP, &RF_cmdFsPowerup, sizeof(rfc_CMD_FS_POWERUP_t));
+	result= RFCDoorbellSendTo((unsigned long)&rfc_CMD_FS_POWERUP);
+	while(result != 1);*/
+
 	memcpy((rfc_CMD_PROP_RADIO_DIV_SETUP_t *)&rfc_CMD_PROP_RADIO_DIV_SETUP, &RF_cmdPropRadioDivSetup, sizeof(rfc_CMD_PROP_RADIO_DIV_SETUP_t));
 	result= RFCDoorbellSendTo((unsigned long)&rfc_CMD_PROP_RADIO_DIV_SETUP);
 	while(rfc_CMD_PROP_RADIO_DIV_SETUP.status < 3);
 
 	memcpy((rfc_CMD_FS_t *)&rfc_CMD_FS, &RF_cmdFs, sizeof(rfc_CMD_FS_t));
+#if RX_TX_MODE == TX_MODE
+	rfc_CMD_FS.synthConf.bTxMode = 1;
+#else
 	rfc_CMD_FS.synthConf.bTxMode = 0;
+#endif
 	result= RFCDoorbellSendTo((unsigned long)&rfc_CMD_FS);
 	while(rfc_CMD_FS.status < 3);
 	//time = RF_getCurrentTime();
@@ -317,6 +340,9 @@ int main(void) {
 
 	RFQueue_defineQueue(&dataQueue,  rxDataEntryBuffer, sizeof(rxDataEntryBuffer), NUM_DATA_ENTRIES, MAX_LENGTH + NUM_APPENDED_BYTES);
 
+	//unsigned short FracFreq = 0;
+	unsigned long Freq = 0x930b51de;
+	Freq = 868000000;
 	while(1)
 	{
 		/*for(cnt = 0; cnt < 2500000; cnt++);
@@ -359,17 +385,18 @@ int main(void) {
 		else
 			gpio_out(LED[3], 0);
 
-#define RX_MODE	0
-#define TX_MODE	1
-#define RX_TX_MODE	RX_MODE
 
 		//long rssi;
 		//rf_rssi(&rssi);
 		//UARTprintf(DebugCom, "RSSI = %d.\n\r" , rssi);
 #if RX_TX_MODE == TX_MODE
-		for(cnt = 0; cnt < 250000; cnt++);
-		rf_send_pocket((unsigned char *)"Cutare", sizeof("Cutare"), 0x04, 868000000);
-		UARTPuts(DebugCom, "Packet send\r\n", -1);
+		for(cnt = 0; cnt < 1; cnt++);
+		if(rf_send_pocket((unsigned char *)"Cutare", sizeof("Cutare"), 0x04, Freq) == trans_status_Ok)
+			UARTprintf(DebugCom, "Packet send %u\r\n", Freq);
+		else
+			UARTPuts(DebugCom, "ERROR sending packet\r\n", -1);
+		//rfc_CMD_PROP_TX.syncWord = Freq;
+		//Freq += 100;
 #endif
 #if RX_TX_MODE == RX_MODE
 		unsigned char buff[0xFF];

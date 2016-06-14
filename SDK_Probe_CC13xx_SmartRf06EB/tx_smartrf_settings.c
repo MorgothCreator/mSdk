@@ -36,31 +36,34 @@
 // Overrides for CMD_PROP_RADIO_DIV_SETUP
 unsigned long pOverrides[] =
 {
-	    // override_synth_prop_863_970_div5.xml
-	    HW_REG_OVERRIDE(0x4038,0x003A),
-	    HW_REG_OVERRIDE(0x4020,0x7F00),
-	    HW_REG_OVERRIDE(0x4064,0x0040),
-	    (uint32_t)0x000684A3,
-	    (uint32_t)0xC0040141,
-	    (uint32_t)0x0533B107,
-	    (uint32_t)0x0A480583,
-	    (uint32_t)0x7AB80603,
-	    ADI_REG_OVERRIDE(1,4,0x9F),
-	    ADI_HALFREG_OVERRIDE(1,7,0x4,0x4),
-	    (uint32_t)0x02010403,
-	    (uint32_t)0x00108463,
-	    (uint32_t)0x04B00243,
-	    // override_phy_gfsk_rx_rssi.xml
-	    HW_REG_OVERRIDE(0x6084,0x35F1),
-	    (uint32_t)0x00038883,
-	    (uint32_t)0x00FB88A3,
-	    // override_phy_agc_reflevel_0x1a.xml
-	    HW_REG_OVERRIDE(0x6088,0x001A),
-	    // override_phy_rx_aaf_bw_0xd.xml
-	    ADI_HALFREG_OVERRIDE(0,61,0xF,0xD),
-	    // TX power override
-	    ADI_REG_OVERRIDE(0,12,0xF8),
-	    (uint32_t)0xFFFFFFFF,
+    // override_synth_prop_863_970_div5.xml
+    ADI_HALFREG_OVERRIDE(0,61,0xF,0xD),
+    HW_REG_OVERRIDE(0x4038,0x003A),
+    HW_REG_OVERRIDE(0x4020,0x7F00),
+    HW_REG_OVERRIDE(0x4064,0x0040),
+    (uint32_t)0x000684A3,
+    (uint32_t)0xC0040141,
+    (uint32_t)0x0533B107,
+    (uint32_t)0x0A480583,
+    (uint32_t)0x7AB80603,
+    ADI_REG_OVERRIDE(1,4,0x9F),
+    ADI_HALFREG_OVERRIDE(1,7,0x4,0x4),
+    (uint32_t)0x02010403,
+    (uint32_t)0x00108463,
+    (uint32_t)0x04B00243,
+    // override_phy_gfsk_rx_rssi.xml
+    HW_REG_OVERRIDE(0x6084,0x35F1),
+    (uint32_t)0x00038883,
+    (uint32_t)0x00FB88A3,
+    // override_phy_agc_reflevel_0x1a.xml
+    HW_REG_OVERRIDE(0x6088,0x001A),
+    // override_phy_rx_aaf_bw_0xd.xml
+    ADI_HALFREG_OVERRIDE(0,61,0xF,0xD),
+    // override_phy_agc_reflevel_0x1a.xml
+    HW_REG_OVERRIDE(0x6088,0x001A),
+    // TX power override
+    ADI_REG_OVERRIDE(0,12,0xF8),
+    (uint32_t)0xFFFFFFFF,
 };
 
 
@@ -170,7 +173,7 @@ const rfc_CMD_PROP_RX_t RF_cmdPropRx =
 	    .rxConf.bIncludeCrc = 0x0,
 	    .rxConf.bAppendRssi = 0x0,
 	    .rxConf.bAppendTimestamp = 0x0,
-	    .rxConf.bAppendStatus = 0x0,
+	    .rxConf.bAppendStatus = 0x1,
 	    .syncWord = 0x930b51de,
 	    .maxPktLen = 0x7d, // MAKE SURE DATA ENTRY IS LARGE ENOUGH
 	    .address0 = 0xaa,
@@ -183,3 +186,6 @@ const rfc_CMD_PROP_RX_t RF_cmdPropRx =
 	    .pQueue = 0, // INSERT APPLICABLE POINTER: (dataQueue_t*)&xxx
 	    .pOutput = 0, // INSERT APPLICABLE POINTER: (uint8_t*)&xxx
 };
+
+//10010011000010110101000111011110
+//01111011100010101101000011001001

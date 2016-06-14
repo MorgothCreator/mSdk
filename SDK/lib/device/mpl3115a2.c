@@ -55,27 +55,27 @@ bool mpl3115a2_reg_write(MPL3115A2_t *structure, unsigned char reg, unsigned cha
 	return true;
 }
 
-bool mpl3115a2_get_alt_temp(MPL3115A2_t *structure, float *altitude, float *temperature) {
+bool mpl3115a2_get_alt_temp(MPL3115A2_t *structure, unsigned char oversample, float *altitude, float *temperature) {
 	unsigned long out_p = 0;
 	unsigned short out_t = 0;
 	unsigned char tmp_buff[3];
 	unsigned char tmp;
-	tmp = 0xB8;
+	tmp = (1 << 7) | (0x04 << oversample);
 	if(!mpl3115a2_reg_write(structure, MPL3115A2_CTRL_REG1, &tmp, 1))
 		return false;
 	tmp = 0x07;
 	if(!mpl3115a2_reg_write(structure, MPL3115A2_PT_DATA_CFG, &tmp, 1))
 		return false;
-	tmp = 0xB9;
+	tmp = (1 << 7) | (0x04 << oversample) | 1;
 	if(!mpl3115a2_reg_write(structure, MPL3115A2_CTRL_REG1, &tmp, 1))
 		return false;
 	unsigned int timeout = 1000;
 	do {
-		sys_delay(2);
 		if(!mpl3115a2_reg_read(structure, MPL3115A2_STATUS, &tmp, 1))
 			return false;
 		if(!timeout--)
 			return false;
+		sys_delay(2);
 	}while(!(tmp & 0x08));
 	if(!mpl3115a2_reg_read(structure, MPL3115A2_OUT_P_MSB, tmp_buff, 3))
 		return false;
@@ -83,7 +83,9 @@ bool mpl3115a2_get_alt_temp(MPL3115A2_t *structure, float *altitude, float *temp
 	if(!mpl3115a2_reg_read(structure, MPL3115A2_OUT_T_MSB, tmp_buff, 2))
 		return false;
 	out_t = ((tmp_buff[0] << 8) + tmp_buff[1]) >> 4;
-	*altitude = ((float)out_p) / 16.0;
+	if(!mpl3115a2_reg_read(structure, MPL3115A2_OFF_H, &tmp, 1))
+		return false;
+	*altitude = (44330.77 * (1 - ((float)out_p / (float)101326) * 0.1902632) + tmp) / 1000;
 	*temperature = ((float)out_t) / 16.0;
 	return true;
 }

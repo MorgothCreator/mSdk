@@ -106,8 +106,8 @@
 //#####################################
 
 #ifndef SET_CCFG_SIZE_AND_DIS_FLAGS_DIS_XOSC_OVR
- #define SET_CCFG_SIZE_AND_DIS_FLAGS_DIS_XOSC_OVR     0x0        // Enable override
-//#define SET_CCFG_SIZE_AND_DIS_FLAGS_DIS_XOSC_OVR        0x1        // Disable override
+ //#define SET_CCFG_SIZE_AND_DIS_FLAGS_DIS_XOSC_OVR     0x0        // Enable override
+#define SET_CCFG_SIZE_AND_DIS_FLAGS_DIS_XOSC_OVR        0x1        // Disable override
 #endif
 
 #ifndef SET_CCFG_MODE_CONF_1_DELTA_IBIAS_INIT

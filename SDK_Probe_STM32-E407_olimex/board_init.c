@@ -9,8 +9,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+
+
 #include "main.h"
 #include "stm32f4xx_conf.h"
+
+#include "board/OLIMEX_STM32H407.h"
+#include "board/OLIMEX_STM32E407.h"
+#include "board/STM32F429I-DISCO.h"
+
 #include "sys/system_stm32f4xx.h"
 #include "board_init.h"
 
@@ -120,7 +127,7 @@ bool board_init()
 /*-----------------------------------------------------*/
 	//INIT_SHT11(SHT11, IOB, 12, IOB, 13);
 /*-----------------------------------------------------*/
-	//INIT_ADXL345(ADXL345, 0);
+	INIT_ADXL345(ADXL345, 0);
 /*-----------------------------------------------------*/
 	INIT_HIH613x(HIH613x, 0);
 /*-----------------------------------------------------*/

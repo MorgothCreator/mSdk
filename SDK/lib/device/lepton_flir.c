@@ -120,7 +120,7 @@ unsigned short CalcCRC16Bytes(unsigned int count, char *buffer) {
 }
 
 bool lepton_run_command(LEPTON_FLIR_t *structure, unsigned short commandID) {
-	if(!structure->TWI)
+	if(structure == NULL || !structure->TWI)
 		return false;
     unsigned short statusReg;
     signed short statusCode;
@@ -216,7 +216,7 @@ bool lepton_run_command(LEPTON_FLIR_t *structure, unsigned short commandID) {
 
 
 bool lepton_reg_write(LEPTON_FLIR_t *structure, unsigned short commandID, unsigned short *attributePtr, unsigned short attributeWordLength) {
-	if(!structure->TWI)
+	if(structure == NULL || !structure->TWI)
 		return false;
     unsigned short statusReg;
     signed short statusCode;
@@ -343,7 +343,7 @@ bool lepton_reg_write(LEPTON_FLIR_t *structure, unsigned short commandID, unsign
 }
 
 bool lepton_reg_read(LEPTON_FLIR_t *structure, unsigned short commandID, unsigned short *attributePtr, unsigned short attributeWordLength) {
-	if(!structure->TWI)
+	if(structure == NULL || !structure->TWI)
 		return false;
     unsigned short statusReg;
     signed short statusCode;
@@ -490,6 +490,8 @@ bool lepton_reg_read(LEPTON_FLIR_t *structure, unsigned short commandID, unsigne
 }
 
 bool lepton_flir_get_image(LEPTON_FLIR_t *structure, unsigned short *image) {
+	if(structure == NULL || structure->SPI == NULL || image == NULL)
+		return false;
 	Sysdelay(200);
 	unsigned char line_buff[LEPTON_FLIR_LINE_SIZE];
 	unsigned char checkByte = 0x0F;
@@ -518,7 +520,7 @@ bool lepton_flir_get_image(LEPTON_FLIR_t *structure, unsigned short *image) {
 }
 
 bool lepton_direct_write_buff(LEPTON_FLIR_t *structure, unsigned short *attributePtr, unsigned short attributeWordLength) {
-	if(!structure->TWI)
+	if(!structure || !structure->TWI)
 		return false;
 	Twi_t *TwiStruct = structure->TWI;
 	TwiStruct->MasterSlaveAddr = LEPTON_FLIR_ADDR;
@@ -534,7 +536,7 @@ bool lepton_direct_write_buff(LEPTON_FLIR_t *structure, unsigned short *attribut
 }
 
 bool lepton_direct_write_reg(LEPTON_FLIR_t *structure, unsigned short regAddress, unsigned short regValue) {
-	if(!structure->TWI)
+	if(!structure || !structure->TWI)
 		return false;
 	Twi_t *TwiStruct = structure->TWI;
 	TwiStruct->MasterSlaveAddr = LEPTON_FLIR_ADDR;

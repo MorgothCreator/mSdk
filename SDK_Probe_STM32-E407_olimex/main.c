@@ -198,11 +198,11 @@ int main(void)
 #endif
 #if _USE_MPL3115A2 == 1
 			float mpl3115a2_altitude = 0.0, mpl3115a2_temp = 0.0;
-			bool mpl3115a2_status = mpl3115a2_get_alt_temp(MPL3115A2, &mpl3115a2_altitude, &mpl3115a2_temp);
+			bool mpl3115a2_status = mpl3115a2_get_alt_temp(MPL3115A2, 2, &mpl3115a2_altitude, &mpl3115a2_temp);
 #endif
 #if _USE_LEPTON_FLIR == 1
 			memset(flir_buff, 0, ((LEPTON_FLIR_LINE_SIZE - 4) * LEPTON_FLIR_LINES_NR));
-			lepton_flir_get_image(LEPTON_FLIR, flir_buff);
+			bool lepton_new_data = lepton_flir_get_image(LEPTON_FLIR, flir_buff);
 #endif
 /*
  * Display results.
@@ -217,7 +217,7 @@ int main(void)
 #endif
 #if _USE_MPL3115A2 == 1
 			if(mpl3115a2_status) {
-				UARTprintf(DebugCom, "MPL3115A1: T = %3.2f, P = %3.2f, Alt = %4.2f\n\r", mpl3115a2_temp, 0.0, mpl3115a2_altitude);
+				UARTprintf(DebugCom, "MPL3115A1: T = %3.3f, P = %3.5f, Alt = %4.3f\n\r", mpl3115a2_temp, 0.0, mpl3115a2_altitude);
 			}
 #endif
 #if _USE_HIH613x == 1
@@ -270,8 +270,10 @@ int main(void)
 			}
 #endif
 #if _USE_LEPTON_FLIR == 1
-			UARTPuts(DebugCom, (char *)flir_buff, ((LEPTON_FLIR_LINE_SIZE - 4) * LEPTON_FLIR_LINES_NR));
+			if(lepton_new_data)
+				UARTPuts(DebugCom, (char *)flir_buff, ((LEPTON_FLIR_LINE_SIZE - 4) * LEPTON_FLIR_LINES_NR));
 #endif
+			UARTprintf(DebugCom, "--------------------------------------------------------------------------------\r\n");
 		}
 	}
 }
