@@ -87,8 +87,11 @@
 /*#####################################################*/
 timer(sd_timer_delay);
 /*#####################################################*/
-bool _mmcsd_init(void *SdStruct, signed int CardDetectPortNr, signed int CardDetectPinNr, new_gpio* StatusLed);
-void _mmcsd_idle(void *SdStruct);
+void _mmcsd_ioctl(unsigned int unit_nr, unsigned int  command,  unsigned int *buffer);
+unsigned int MMCSDReadCmdSend(void *SdStruct, void *ptr, unsigned long block, unsigned int nblks);
+void _mmcsd_ioctl(unsigned int unit_nr, unsigned int  command,  unsigned int *buffer);
+void _mmcsd_init(unsigned int unit_nr, new_gpio* CardDetect, new_gpio* StatusLed);
+void _mmcsd_idle(unsigned int unit_nr);
 /*#####################################################*/
 #ifdef HEADER_INCLUDE_C_FILES
 #include "hs_mmcsd_interface.c"

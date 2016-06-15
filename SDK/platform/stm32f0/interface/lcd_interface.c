@@ -31,22 +31,12 @@ void _lcd_disable()
 //#######################################################################################
 void _screen_backlight_on(tDisplay *pDisplay)
 {
-	switch(pDisplay->LcdType)
-	{
-	case MI0283:
-			gpio_out(pDisplay->BackLight, 1);
-			return;
-	}
+
 }
 //#######################################################################################
 void _screen_backlight_off(tDisplay *pDisplay)
 {
-	switch(pDisplay->LcdType)
-	{
-	case MI0283:
-		gpio_out(pDisplay->BackLight, 0);
-		return;
-	}
+
 }
 //#######################################################################################
 void _box_cache_clean(tDisplay *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len)

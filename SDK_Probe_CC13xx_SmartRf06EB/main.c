@@ -180,7 +180,7 @@ trans_status_e rf_send_pocket(unsigned char *buff, unsigned char len, unsigned c
 	send_buff[1] = (uint8_t)(seqNumber >> 8);
 	send_buff[2] = (uint8_t)(seqNumber);
 	rfc_CMD_PROP_TX.pPkt = send_buff;
-	rfc_CMD_PROP_TX.pktLen = len + 3;
+	rfc_CMD_PROP_TX.pktLen = len + 2;
 	rfc_CMD_PROP_TX.pktConf.bFsOff = 0;
 	result= RFCDoorbellSendTo((unsigned long)&rfc_CMD_PROP_TX);
 	if(result != 1)
@@ -217,6 +217,9 @@ trans_status_e rf_receive_packet(unsigned char *buff, unsigned char *len, unsign
 		/*rfc_CMD_FS.frequency = (uint16_t)(ui32Freq / 1000000);
 		rfc_CMD_FS.fractFreq = (uint16_t) (((uint64_t)ui32Freq -
 		            (rfc_CMD_FS.frequency * 1000000)) * 65536 / 1000000);*/
+		ui32Freq /= 1000;
+		rfc_CMD_FS.frequency = (uint16_t)(ui32Freq / 1000);
+		rfc_CMD_FS.fractFreq = ((ui32Freq - (rfc_CMD_FS.frequency * 1000)) * 65);
 		result= RFCDoorbellSendTo((unsigned long)&rfc_CMD_FS);
 		if(result != 1)
 			return trans_status_Err;
@@ -287,7 +290,7 @@ int rf_abort()
 }
 #define RX_MODE	0
 #define TX_MODE	1
-#define RX_TX_MODE	TX_MODE
+#define RX_TX_MODE	RX_MODE
 
 int main(void) {
 	rf_patch_cpe_genfsk();
@@ -319,17 +322,18 @@ int main(void) {
 	while(result != 1);*/
 
 	memcpy((rfc_CMD_PROP_RADIO_DIV_SETUP_t *)&rfc_CMD_PROP_RADIO_DIV_SETUP, &RF_cmdPropRadioDivSetup, sizeof(rfc_CMD_PROP_RADIO_DIV_SETUP_t));
+	//rfc_CMD_PROP_RADIO_DIV_SETUP.symbolRate.preScale
 	result= RFCDoorbellSendTo((unsigned long)&rfc_CMD_PROP_RADIO_DIV_SETUP);
 	while(rfc_CMD_PROP_RADIO_DIV_SETUP.status < 3);
 
-	memcpy((rfc_CMD_FS_t *)&rfc_CMD_FS, &RF_cmdFs, sizeof(rfc_CMD_FS_t));
+	/*memcpy((rfc_CMD_FS_t *)&rfc_CMD_FS, &RF_cmdFs, sizeof(rfc_CMD_FS_t));
 #if RX_TX_MODE == TX_MODE
 	rfc_CMD_FS.synthConf.bTxMode = 1;
 #else
 	rfc_CMD_FS.synthConf.bTxMode = 0;
 #endif
 	result= RFCDoorbellSendTo((unsigned long)&rfc_CMD_FS);
-	while(rfc_CMD_FS.status < 3);
+	while(rfc_CMD_FS.status < 3);*/
 	//time = RF_getCurrentTime();
 
 	/*memcpy((rfc_CMD_RX_TEST_t *)&rfc_CMD_RX_TEST, &RF_cmdRxTest, sizeof(rfc_CMD_RX_TEST_t));
@@ -390,7 +394,7 @@ int main(void) {
 		//rf_rssi(&rssi);
 		//UARTprintf(DebugCom, "RSSI = %d.\n\r" , rssi);
 #if RX_TX_MODE == TX_MODE
-		for(cnt = 0; cnt < 1; cnt++);
+		for(cnt = 0; cnt < 250000; cnt++);
 		if(rf_send_pocket((unsigned char *)"Cutare", sizeof("Cutare"), 0x04, Freq) == trans_status_Ok)
 			UARTprintf(DebugCom, "Packet send %u\r\n", Freq);
 		else
@@ -417,6 +421,7 @@ int main(void) {
 		}
 		else
 			rf_abort();
+		Freq += 100;
 #endif
 	}
 	return 0;

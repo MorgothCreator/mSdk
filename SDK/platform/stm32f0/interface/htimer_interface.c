@@ -21,10 +21,11 @@
 /*#####################################################*/
 #include "stdbool.h"
 #include "htimer_interface.h"
+#include "api/htimer_api_def.h"
 /*#####################################################*/
 /*#####################################################*/
 bool htimer_init(Htimer_t *structure){
-
+	return false;
 }
 
 

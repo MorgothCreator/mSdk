@@ -119,9 +119,9 @@
 #endif
 
 #include <stdint.h>                      /*!< standard types definitions                      */
+#include "include/stm32f0xx.h"
 #include "core_cmInstr.h"                /*!< Core Instruction Access                         */
 #include "core_cmFunc.h"                 /*!< Core Function Access                            */
-
 #endif /* __CORE_CM0_H_GENERIC */
 
 #ifndef __CMSIS_GENERIC
@@ -154,7 +154,7 @@
   #define   __I     volatile const       /*!< defines 'read only' permissions                 */
 #endif
 #define     __O     volatile             /*!< defines 'write only' permissions                */
-#define     __IO    volatile             /*!< defines 'read / write' permissions              */
+#define     volatile    volatile             /*!< defines 'read / write' permissions              */
 
 /*@} end of group CMSIS_core_definitions */
 
@@ -266,16 +266,16 @@ typedef union
  */
 typedef struct
 {
-  __IO uint32_t ISER[1];                 /*!< Offset: 0x000 (R/W)  Interrupt Set Enable Register           */
+  volatile uint32_t ISER[1];                 /*!< Offset: 0x000 (R/W)  Interrupt Set Enable Register           */
        uint32_t RESERVED0[31];
-  __IO uint32_t ICER[1];                 /*!< Offset: 0x080 (R/W)  Interrupt Clear Enable Register          */
+  volatile uint32_t ICER[1];                 /*!< Offset: 0x080 (R/W)  Interrupt Clear Enable Register          */
        uint32_t RSERVED1[31];
-  __IO uint32_t ISPR[1];                 /*!< Offset: 0x100 (R/W)  Interrupt Set Pending Register           */
+  volatile uint32_t ISPR[1];                 /*!< Offset: 0x100 (R/W)  Interrupt Set Pending Register           */
        uint32_t RESERVED2[31];
-  __IO uint32_t ICPR[1];                 /*!< Offset: 0x180 (R/W)  Interrupt Clear Pending Register         */
+  volatile uint32_t ICPR[1];                 /*!< Offset: 0x180 (R/W)  Interrupt Clear Pending Register         */
        uint32_t RESERVED3[31];
        uint32_t RESERVED4[64];
-  __IO uint32_t IP[8];                   /*!< Offset: 0x300 (R/W)  Interrupt Priority Register              */
+  volatile uint32_t IP[8];                   /*!< Offset: 0x300 (R/W)  Interrupt Priority Register              */
 }  NVIC_Type;
 
 /*@} end of group CMSIS_NVIC */
@@ -292,14 +292,14 @@ typedef struct
 typedef struct
 {
   __I  uint32_t CPUID;                   /*!< Offset: 0x000 (R/ )  CPUID Base Register                                   */
-  __IO uint32_t ICSR;                    /*!< Offset: 0x004 (R/W)  Interrupt Control and State Register                  */
+  volatile uint32_t ICSR;                    /*!< Offset: 0x004 (R/W)  Interrupt Control and State Register                  */
        uint32_t RESERVED0;
-  __IO uint32_t AIRCR;                   /*!< Offset: 0x00C (R/W)  Application Interrupt and Reset Control Register      */
-  __IO uint32_t SCR;                     /*!< Offset: 0x010 (R/W)  System Control Register                               */
-  __IO uint32_t CCR;                     /*!< Offset: 0x014 (R/W)  Configuration Control Register                        */
+  volatile uint32_t AIRCR;                   /*!< Offset: 0x00C (R/W)  Application Interrupt and Reset Control Register      */
+  volatile uint32_t SCR;                     /*!< Offset: 0x010 (R/W)  System Control Register                               */
+  volatile uint32_t CCR;                     /*!< Offset: 0x014 (R/W)  Configuration Control Register                        */
        uint32_t RESERVED1;
-  __IO uint32_t SHP[2];                  /*!< Offset: 0x01C (R/W)  System Handlers Priority Registers. [0] is RESERVED   */
-  __IO uint32_t SHCSR;                   /*!< Offset: 0x024 (R/W)  System Handler Control and State Register             */
+  volatile uint32_t SHP[2];                  /*!< Offset: 0x01C (R/W)  System Handlers Priority Registers. [0] is RESERVED   */
+  volatile uint32_t SHCSR;                   /*!< Offset: 0x024 (R/W)  System Handler Control and State Register             */
 } SCB_Type;
 
 /* SCB CPUID Register Definitions */
@@ -396,9 +396,9 @@ typedef struct
  */
 typedef struct
 {
-  __IO uint32_t CTRL;                    /*!< Offset: 0x000 (R/W)  SysTick Control and Status Register */
-  __IO uint32_t LOAD;                    /*!< Offset: 0x004 (R/W)  SysTick Reload Value Register       */
-  __IO uint32_t VAL;                     /*!< Offset: 0x008 (R/W)  SysTick Current Value Register      */
+  volatile uint32_t CTRL;                    /*!< Offset: 0x000 (R/W)  SysTick Control and Status Register */
+  volatile uint32_t LOAD;                    /*!< Offset: 0x004 (R/W)  SysTick Reload Value Register       */
+  volatile uint32_t VAL;                     /*!< Offset: 0x008 (R/W)  SysTick Current Value Register      */
   __I  uint32_t CALIB;                   /*!< Offset: 0x00C (R/ )  SysTick Calibration Register        */
 } SysTick_Type;
 
@@ -641,7 +641,7 @@ static __INLINE uint32_t SysTick_Config(uint32_t ticks)
   if (ticks > SysTick_LOAD_RELOAD_Msk)  return (1);            /* Reload value impossible */
 
   SysTick->LOAD  = (ticks & SysTick_LOAD_RELOAD_Msk) - 1;      /* set reload register */
-  NVIC_SetPriority (SysTick_IRQn, (1<<__NVIC_PRIO_BITS) - 1);  /* set Priority for Cortex-M0 System Interrupts */
+  NVIC_SetPriority (-1/*SysTick_IRQn*/, (1<<__NVIC_PRIO_BITS) - 1);  /* set Priority for Cortex-M0 System Interrupts */
   SysTick->VAL   = 0;                                          /* Load the SysTick Counter Value */
   SysTick->CTRL  = SysTick_CTRL_CLKSOURCE_Msk |
                    SysTick_CTRL_TICKINT_Msk   |

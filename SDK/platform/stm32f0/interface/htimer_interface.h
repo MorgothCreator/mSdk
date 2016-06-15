@@ -9,6 +9,7 @@
 #define HTIMER_INTERFACE_H_
 /*#####################################################*/
 #include "stdbool.h"
+#include "api/htimer_api_def.h"
 /*#####################################################*/
 bool htimer_init(Htimer_t *structure);
 /*#####################################################*/

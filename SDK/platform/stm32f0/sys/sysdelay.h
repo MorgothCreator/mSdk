@@ -10,6 +10,7 @@
 //#####################################################
 void SysDelayTimerSetup(void);
 void Sysdelay(unsigned int milliSec);
+extern volatile unsigned long long STimerCnt;
 //#####################################################
 #ifdef HEADER_INCLUDE_C_FILES
 #include "sysdelay.c"

@@ -11,13 +11,83 @@
 <folder appearance="1" expanded="2">
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
 <part id="0"/>
+<part id="1"/>
+<part id="2"/>
+<part id="4"/>
+<part id="5"/>
+<part id="3"/>
+<part id="7"/>
+<part id="6"/>
+<part id="8"/>
+<part id="9"/>
+<part id="10"/>
+<part id="11"/>
+<part id="12"/>
+<part id="13"/>
+<part id="14"/>
 </presentation>
 </folder>
 </info>
 </editorArea>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="uart_interface.c" partName="uart_interface.c" path="C:/GitHub/mSdk/SDK/platform/stm32f0/interface/uart_interface.c" title="uart_interface.c" tooltip="C:/GitHub/mSdk/SDK/platform/stm32f0/interface/uart_interface.c" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F0/stm32f0/interface/uart_interface.c"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="2030" selectionTopPixel="880"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="stm32f0xx_hal_gpio_ex.h" partName="stm32f0xx_hal_gpio_ex.h" path="C:/GitHub/mSdk/SDK/platform/stm32f0/driver/stm32f0xx_hal_gpio_ex.h" title="stm32f0xx_hal_gpio_ex.h" tooltip="C:/GitHub/mSdk/SDK/platform/stm32f0/driver/stm32f0xx_hal_gpio_ex.h" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F0/stm32f0/driver/stm32f0xx_hal_gpio_ex.h"/>
+<editorState selectionHorizontalPixel="0" selectionLength="15" selectionOffset="13276" selectionTopPixel="3480"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="stm32f0xx_hal_gpio.h" partName="stm32f0xx_hal_gpio.h" path="C:/GitHub/mSdk/SDK/platform/stm32f0/driver/stm32f0xx_hal_gpio.h" title="stm32f0xx_hal_gpio.h" tooltip="C:/GitHub/mSdk/SDK/platform/stm32f0/driver/stm32f0xx_hal_gpio.h" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F0/stm32f0/driver/stm32f0xx_hal_gpio.h"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="0" selectionTopPixel="1080"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="stm32f0xx_hal_conf.h" partName="stm32f0xx_hal_conf.h" path="C:/GitHub/mSdk/SDK/platform/stm32f0/driver/stm32f0xx_hal_conf.h" title="stm32f0xx_hal_conf.h" tooltip="C:/GitHub/mSdk/SDK/platform/stm32f0/driver/stm32f0xx_hal_conf.h" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F0/stm32f0/driver/stm32f0xx_hal_conf.h"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="6648" selectionTopPixel="2211"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="gpio_interface.c" partName="gpio_interface.c" path="C:/GitHub/mSdk/SDK/platform/stm32f0/interface/gpio_interface.c" title="gpio_interface.c" tooltip="C:/GitHub/mSdk/SDK/platform/stm32f0/interface/gpio_interface.c" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F0/stm32f0/interface/gpio_interface.c"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="792" selectionTopPixel="1252"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="gpio_interface.h" partName="gpio_interface.h" path="C:/GitHub/mSdk/SDK/platform/stm32f0/interface/gpio_interface.h" title="gpio_interface.h" tooltip="C:/GitHub/mSdk/SDK/platform/stm32f0/interface/gpio_interface.h" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F0/stm32f0/interface/gpio_interface.h"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="109" selectionTopPixel="0"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="system_stm32f0xx.c" partName="system_stm32f0xx.c" path="C:/GitHub/mSdk/SDK/platform/stm32f0/sys/system_stm32f0xx.c" title="system_stm32f0xx.c" tooltip="C:/GitHub/mSdk/SDK/platform/stm32f0/sys/system_stm32f0xx.c" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F0/stm32f0/sys/system_stm32f0xx.c"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="6188" selectionTopPixel="1311"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="board_properties.h" partName="board_properties.h" path="C:/GitHub/mSdk/SDK_Probe_STM32F0/board_properties.h" title="board_properties.h" tooltip="C:/GitHub/mSdk/SDK_Probe_STM32F0/board_properties.h" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F0/board_properties.h"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="318" selectionTopPixel="13"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="system_stm32f0xx.h" partName="system_stm32f0xx.h" path="C:/GitHub/mSdk/SDK/platform/stm32f0/sys/system_stm32f0xx.h" title="system_stm32f0xx.h" tooltip="C:/GitHub/mSdk/SDK/platform/stm32f0/sys/system_stm32f0xx.h" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F0/stm32f0/sys/system_stm32f0xx.h"/>
+<editorState selectionHorizontalPixel="0" selectionLength="14" selectionOffset="3083" selectionTopPixel="694"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="stm32f0xx_hal_rcc.c" partName="stm32f0xx_hal_rcc.c" path="C:/GitHub/mSdk/SDK/platform/stm32f0/driver/stm32f0xx_hal_rcc.c" title="stm32f0xx_hal_rcc.c" tooltip="C:/GitHub/mSdk/SDK/platform/stm32f0/driver/stm32f0xx_hal_rcc.c" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F0/stm32f0/driver/stm32f0xx_hal_rcc.c"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="4593" selectionTopPixel="1002"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="stm32f0xx_hal_rcc_ex.c" partName="stm32f0xx_hal_rcc_ex.c" path="C:/GitHub/mSdk/SDK/platform/stm32f0/driver/stm32f0xx_hal_rcc_ex.c" title="stm32f0xx_hal_rcc_ex.c" tooltip="C:/GitHub/mSdk/SDK/platform/stm32f0/driver/stm32f0xx_hal_rcc_ex.c" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F0/stm32f0/driver/stm32f0xx_hal_rcc_ex.c"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="5496" selectionTopPixel="1205"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="timer_api.c" partName="timer_api.c" path="C:/GitHub/mSdk/SDK/lib/api/timer_api.c" title="timer_api.c" tooltip="C:/GitHub/mSdk/SDK/lib/api/timer_api.c" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F0/lib/api/timer_api.c"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="1029" selectionTopPixel="24"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="sysdelay.c" partName="sysdelay.c" path="C:/GitHub/mSdk/SDK/platform/stm32f0/sys/sysdelay.c" title="sysdelay.c" tooltip="C:/GitHub/mSdk/SDK/platform/stm32f0/sys/sysdelay.c" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F0/stm32f0/sys/sysdelay.c"/>
+<editorState selectionHorizontalPixel="0" selectionLength="40" selectionOffset="374" selectionTopPixel="0"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="sysdelay.h" partName="sysdelay.h" path="C:/GitHub/mSdk/SDK/platform/stm32f0/sys/sysdelay.h" title="sysdelay.h" tooltip="C:/GitHub/mSdk/SDK/platform/stm32f0/sys/sysdelay.h" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F0/stm32f0/sys/sysdelay.h"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="314" selectionTopPixel="0"/>
+</editor>
 <editor activePart="true" focus="true" id="org.coocox.builder.ui.editors.ConfigEditor" name="" partName="Configuration" title="Configuration" tooltip="" workbook="DefaultEditorWorkbook">
 <input factoryID="org.coocox.builder.ui.persistent.PersistentElementFactory">
-<org.coocox.builder.ui.editors.ConfigEditor horizontalPosition="0" subTagIndex="1" verticalPosition="0"/>
+<org.coocox.builder.ui.editors.ConfigEditor horizontalPosition="0" subTagIndex="2" verticalPosition="0"/>
 </input>
 </editor>
 </editors>
@@ -26,7 +96,10 @@
 <viewState CommonNavigator.LINKING_ENABLED="0" horizontalPosition="0" org.eclipse.ui.navigator.resources.workingSets.showTopLevelWorkingSets="0" verticalPosition="0">
 <expanded>
 <element path="/SDK_Probe_STM32F0"/>
-<element path="/SDK_Probe_STM32F0/discovery_simple"/>
+<element path="/SDK_Probe_STM32F0/lib"/>
+<element path="/SDK_Probe_STM32F0/stm32f0"/>
+<element path="/SDK_Probe_STM32F0/stm32f0/interface"/>
+<element path="/SDK_Probe_STM32F0/stm32f0/sys"/>
 </expanded>
 <selection>
 <element path="/SDK_Probe_STM32F0"/>
@@ -36,7 +109,8 @@
 <view id="org.eclipse.search.ui.views.SearchView" partName="Search">
 <viewState isPinned="false">
 <view IMemento.internal.id="" org.eclipse.search.lastActivation="0"/>
-<view IMemento.internal.id="org.eclipse.cdt.ui.pdomSearchViewPage" definitionColumnWidth="150" locationColumnWidth="300" matchColumnWidth="300" org.eclipse.search.lastActivation="1" org.eclipse.search.resultpage.layout="2" showEnclosingDefinitions="true"/>
+<view IMemento.internal.id="org.eclipse.search.text.FileSearchResultPage" org.eclipse.search.lastActivation="6" org.eclipse.search.resultpage.layout="2" org.eclipse.search.resultpage.limit="1000" org.eclipse.search.resultpage.sorting="2"/>
+<view IMemento.internal.id="org.eclipse.cdt.ui.pdomSearchViewPage" definitionColumnWidth="150" locationColumnWidth="300" matchColumnWidth="300" org.eclipse.search.lastActivation="7" org.eclipse.search.resultpage.layout="2" showEnclosingDefinitions="true"/>
 </viewState>
 </view>
 <view id="org.eclipse.ui.console.ConsoleView" partName="Console">
@@ -55,6 +129,7 @@
 <alwaysOnActionSet id="org.eclipse.ui.actionSet.keyBindings"/>
 <alwaysOnActionSet id="org.eclipse.ui.actionSet.openFiles"/>
 <alwaysOnActionSet id="org.eclipse.debug.ui.breakpointActionSet"/>
+<alwaysOnActionSet id="org.coocox.userspace.actionSet"/>
 <hide_menu_item_id id="org.coocox.codebugger.configuration.showMemoryAction"/>
 <hide_menu_item_id id="org.eclipse.jdt.ui.refactoring.menu"/>
 <hide_menu_item_id id="org.coocox.codebugger.configuration.ShowDisassemblyAction"/>
@@ -127,190 +202,171 @@
 <workingSets/>
 <navigationHistory>
 <editors>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F0/stm32f0/driver/stm32f0xx_dac.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F0/stm32f0/driver/stm32f0xx_gpio.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F0/stm32f0/driver/stm32f0xx_comp.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F0/stm32f0/driver/stm32f0xx_crc.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F0/stm32f0/driver/stm32f0xx_dbgmcu.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F0/stm32f0/driver/stm32f0xx_dma.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F0/stm32f0/driver/stm32f0xx_exti.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F0/stm32f0/driver/stm32f0xx_flash.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F0/stm32f0/driver/stm32f0xx_i2c.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F0/stm32f0/driver/stm32f0xx_iwdg.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F0/stm32f0/driver/stm32f0xx_misc.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F0/stm32f0/driver/stm32f0xx_pwr.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F0/stm32f0/driver/stm32f0xx_rcc.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F0/stm32f0/driver/stm32f0xx_rtc.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F0/stm32f0/driver/stm32f0xx_spi.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F0/stm32f0/driver/stm32f0xx_syscfg.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F0/stm32f0/driver/stm32f0xx_tim.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F0/stm32f0/driver/stm32f0xx_usart.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F0/stm32f0/driver/stm32f0xx_wwdg.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F0/stm32f0/interface/uart_interface.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F0/stm32f0/driver/stm32f0xx_hal_conf.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F0/stm32f0/interface/gpio_interface.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F0/stm32f0/interface/gpio_interface.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F0/stm32f0/sys/system_stm32f0xx.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F0/board_properties.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F0/stm32f0/sys/system_stm32f0xx.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F0/stm32f0/driver/stm32f0xx_hal_rcc.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F0/stm32f0/driver/stm32f0xx_hal_rcc_ex.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F0/stm32f0/include/system_stm32f0xx.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F0/lib/api/timer_api.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F0/stm32f0/sys/sysdelay.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F0/stm32f0/sys/sysdelay.h"/>
 <editor factoryID="org.coocox.builder.ui.persistent.PersistentElementFactory" id="org.coocox.builder.ui.editors.ConfigEditor">
 <org.coocox.builder.ui.editors.ConfigEditor horizontalPosition="0" subTagIndex="2" verticalPosition="0"/>
 </editor>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F0/lib/lib/gfx/jpg/IJG/jdmainct.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F0/lib/lib/gfx/jpg/IJG/jpeglib.h"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F0/lib/lib/gfx/jpg/IJG/jdmaster.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F0/lib/lib/gfx/jpg/IJG/jdapistd.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F0/lib/lib/gfx/jpg/IJG/jcmaster.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F0/lib/lib/gfx/jpg/IJG/jcmainct.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F0/lib/lib/gfx/jpg/IJG/jcapistd.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F0/lib/device/ds1307.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F0/discovery_simple/board_properties.h"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F0/lib/lib/gfx/png/png.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F0/stm32f0/driver/stm32f0xx_rtc.c"/>
-<editor factoryID="org.coocox.builder.ui.persistent.PersistentElementFactory" id="org.coocox.builder.ui.editors.ConfigEditor">
-<org.coocox.builder.ui.editors.ConfigEditor/>
-</editor>
-<editor factoryID="org.coocox.builder.ui.persistent.PersistentElementFactory" id="org.coocox.builder.ui.editors.ConfigEditor">
-<org.coocox.builder.ui.editors.ConfigEditor/>
-</editor>
-<editor factoryID="org.coocox.builder.ui.persistent.PersistentElementFactory" id="org.coocox.builder.ui.editors.ConfigEditor">
-<org.coocox.builder.ui.editors.ConfigEditor horizontalPosition="0" subTagIndex="1" verticalPosition="0"/>
-</editor>
-<editor factoryID="org.coocox.builder.ui.persistent.PersistentElementFactory" id="org.coocox.builder.ui.editors.ConfigEditor">
-<org.coocox.builder.ui.editors.ConfigEditor horizontalPosition="0" subTagIndex="1" verticalPosition="0"/>
-</editor>
 </editors>
-<item historyLabel="stm32f0xx_comp.c" index="2">
-<position info="not_deleted" x="4404" y="0"/>
+<item historyLabel="uart_interface.c" index="0">
+<position info="not_deleted" x="5373" y="79"/>
 </item>
-<item historyLabel="stm32f0xx_crc.c" index="3">
-<position info="not_deleted" x="2553" y="0"/>
+<item historyLabel="uart_interface.c" index="0">
+<position info="not_deleted" x="2495" y="0"/>
 </item>
-<item historyLabel="stm32f0xx_dac.c" index="0">
-<position info="not_deleted" x="4620" y="0"/>
+<item historyLabel="uart_interface.c" index="0">
+<position info="not_deleted" x="5396" y="0"/>
 </item>
-<item historyLabel="stm32f0xx_dbgmcu.c" index="4">
-<position info="not_deleted" x="1473" y="0"/>
+<item historyLabel="gpio_interface.c" index="2">
+<position info="not_deleted" x="792" y="0"/>
 </item>
-<item historyLabel="stm32f0xx_dma.c" index="5">
-<position info="not_deleted" x="3908" y="0"/>
+<item historyLabel="gpio_interface.h" index="3">
+<position info="not_deleted" x="109" y="0"/>
 </item>
-<item historyLabel="stm32f0xx_exti.c" index="6">
-<position info="not_deleted" x="3428" y="0"/>
+<item historyLabel="uart_interface.c" index="0">
+<position info="not_deleted" x="5373" y="79"/>
 </item>
-<item historyLabel="stm32f0xx_flash.c" index="7">
-<position info="not_deleted" x="3483" y="0"/>
+<item historyLabel="uart_interface.c" index="0">
+<position info="not_deleted" x="302" y="0"/>
 </item>
-<item historyLabel="stm32f0xx_gpio.c" index="1">
-<position info="not_deleted" x="4126" y="0"/>
+<item historyLabel="uart_interface.c" index="0">
+<position info="not_deleted" x="2030" y="0"/>
 </item>
-<item historyLabel="stm32f0xx_i2c.c" index="8">
-<position info="not_deleted" x="3996" y="0"/>
+<item historyLabel="system_stm32f0xx.c" index="4">
+<position/>
 </item>
-<item historyLabel="stm32f0xx_iwdg.c" index="9">
-<position info="not_deleted" x="5393" y="0"/>
+<item historyLabel="stm32f0xx_hal_conf.h" index="1">
+<position info="not_deleted" x="3272" y="0"/>
 </item>
-<item historyLabel="stm32f0xx_misc.c" index="10">
-<position info="not_deleted" x="1309" y="0"/>
+<item historyLabel="system_stm32f0xx.c" index="4">
+<position/>
 </item>
-<item historyLabel="stm32f0xx_pwr.c" index="11">
-<position info="not_deleted" x="1542" y="0"/>
+<item historyLabel="board_properties.h" index="5">
+<position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="stm32f0xx_rcc.c" index="12">
-<position info="not_deleted" x="2961" y="0"/>
+<item historyLabel="system_stm32f0xx.c" index="4">
+<position/>
 </item>
-<item historyLabel="stm32f0xx_rtc.c" index="13">
-<position info="not_deleted" x="12520" y="0"/>
+<item historyLabel="board_properties.h" index="5">
+<position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="stm32f0xx_spi.c" index="14">
-<position info="not_deleted" x="4639" y="0"/>
+<item historyLabel="system_stm32f0xx.c" index="4">
+<position/>
 </item>
-<item historyLabel="stm32f0xx_syscfg.c" index="15">
-<position info="not_deleted" x="2230" y="0"/>
+<item historyLabel="stm32f0xx_hal_conf.h" index="1">
+<position info="not_deleted" x="6648" y="0"/>
 </item>
-<item historyLabel="stm32f0xx_tim.c" index="16">
-<position info="not_deleted" x="5592" y="0"/>
+<item historyLabel="system_stm32f0xx.c" index="4">
+<position/>
 </item>
-<item historyLabel="stm32f0xx_usart.c" index="17">
-<position info="not_deleted" x="3981" y="0"/>
+<item historyLabel="system_stm32f0xx.c" index="4">
+<position info="not_deleted" x="13376" y="0"/>
 </item>
-<item historyLabel="stm32f0xx_wwdg.c" index="18">
-<position info="not_deleted" x="4129" y="0"/>
+<item historyLabel="system_stm32f0xx.h" index="6">
+<position info="not_deleted" x="3501" y="0"/>
 </item>
-<item historyLabel="stm32f0xx_iwdg.c" index="9">
-<position info="not_deleted" x="5393" y="0"/>
+<item historyLabel="board_properties.h" index="5">
+<position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="Configuration" index="19"/>
-<item historyLabel="jdmainct.c" index="20">
-<position info="not_deleted" x="8157" y="59"/>
+<item historyLabel="system_stm32f0xx.c" index="4">
+<position info="not_deleted" x="13376" y="0"/>
 </item>
-<item historyLabel="jdmainct.c" index="20">
-<position info="not_deleted" x="21201" y="9"/>
+<item historyLabel="system_stm32f0xx.h" index="6">
+<position info="not_deleted" x="2208" y="0"/>
 </item>
-<item historyLabel="jdmainct.c" index="20">
-<position info="not_deleted" x="8296" y="0"/>
+<item historyLabel="system_stm32f0xx.c" index="4">
+<position info="not_deleted" x="13376" y="0"/>
 </item>
-<item historyLabel="jpeglib.h" index="21">
-<position info="not_deleted" x="17297" y="9"/>
+<item historyLabel="stm32f0xx_hal_rcc.c" index="7">
+<position info="not_deleted" x="41474" y="33"/>
 </item>
-<item historyLabel="jpeglib.h" index="21">
-<position info="not_deleted" x="27361" y="9"/>
+<item historyLabel="stm32f0xx_hal_rcc.c" index="7">
+<position info="not_deleted" x="4593" y="0"/>
 </item>
-<item historyLabel="jdmaster.c" index="22">
-<position info="not_deleted" x="17962" y="9"/>
+<item historyLabel="board_properties.h" index="5">
+<position info="not_deleted" x="318" y="0"/>
 </item>
-<item historyLabel="jdapistd.c" index="23">
-<position info="not_deleted" x="6371" y="9"/>
+<item historyLabel="stm32f0xx_hal_rcc_ex.c" index="8">
+<position info="not_deleted" x="20313" y="0"/>
 </item>
-<item historyLabel="jcmaster.c" index="24">
-<position info="not_deleted" x="20107" y="9"/>
+<item historyLabel="system_stm32f0xx.c" index="4">
+<position info="not_deleted" x="6111" y="7"/>
 </item>
-<item historyLabel="jcmainct.c" index="25">
-<position info="not_deleted" x="9315" y="9"/>
+<item historyLabel="system_stm32f0xx.h" index="6">
+<position info="not_deleted" x="2208" y="0"/>
 </item>
-<item historyLabel="jcapistd.c" index="26">
-<position info="not_deleted" x="4348" y="78"/>
+<item historyLabel="system_stm32f0xx.c" index="4">
+<position info="not_deleted" x="6119" y="13"/>
 </item>
-<item historyLabel="jcapistd.c" index="26">
-<position info="not_deleted" x="4605" y="0"/>
+<item historyLabel="system_stm32f0xx.h" index="9">
+<position info="not_deleted" x="3098" y="13"/>
 </item>
-<item historyLabel="jcapistd.c" index="26">
-<position info="not_deleted" x="4359" y="9"/>
+<item historyLabel="system_stm32f0xx.c" index="4">
+<position info="not_deleted" x="6119" y="13"/>
 </item>
-<item historyLabel="Configuration" index="19"/>
-<item historyLabel="ds1307.c" index="27">
-<position info="not_deleted" x="4491" y="13"/>
+<item historyLabel="system_stm32f0xx.h" index="6">
+<position info="not_deleted" x="3083" y="14"/>
 </item>
-<item historyLabel="board_properties.h" index="28">
-<position info="not_deleted" x="639" y="13"/>
+<item historyLabel="system_stm32f0xx.c" index="4">
+<position info="not_deleted" x="6188" y="0"/>
 </item>
-<item historyLabel="ds1307.c" index="27">
-<position info="not_deleted" x="4491" y="0"/>
+<item historyLabel="stm32f0xx_hal_rcc_ex.c" index="8">
+<position info="not_deleted" x="20312" y="0"/>
 </item>
-<item historyLabel="board_properties.h" index="28">
-<position info="not_deleted" x="631" y="0"/>
+<item historyLabel="system_stm32f0xx.c" index="4">
+<position info="not_deleted" x="6188" y="0"/>
 </item>
-<item historyLabel="ds1307.c" index="27">
-<position info="not_deleted" x="4491" y="0"/>
+<item historyLabel="system_stm32f0xx.h" index="6">
+<position info="not_deleted" x="3083" y="14"/>
 </item>
-<item historyLabel="board_properties.h" index="28">
-<position info="not_deleted" x="599" y="0"/>
+<item historyLabel="stm32f0xx_hal_rcc_ex.c" index="8">
+<position info="not_deleted" x="20312" y="0"/>
 </item>
-<item historyLabel="ds1307.c" index="27">
-<position info="not_deleted" x="5994" y="0"/>
+<item historyLabel="stm32f0xx_hal_rcc_ex.c" index="8">
+<position info="not_deleted" x="5496" y="0"/>
 </item>
-<item historyLabel="board_properties.h" index="28">
-<position info="not_deleted" x="291" y="0"/>
+<item historyLabel="timer_api.c" index="10">
+<position info="not_deleted" x="1897" y="3"/>
 </item>
-<item historyLabel="png.c" index="29">
-<position info="not_deleted" x="113227" y="0"/>
+<item historyLabel="timer_api.c" index="10">
+<position info="not_deleted" x="1926" y="0"/>
 </item>
-<item historyLabel="board_properties.h" index="28">
-<position info="not_deleted" x="289" y="33"/>
+<item historyLabel="timer_api.c" index="10">
+<position info="not_deleted" x="1029" y="0"/>
 </item>
-<item historyLabel="png.c" index="29">
-<position info="not_deleted" x="113657" y="0"/>
+<item historyLabel="sysdelay.c" index="11">
+<position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="stm32f0xx_rtc.c" index="30">
-<position info="not_deleted" x="16969" y="0"/>
+<item historyLabel="sysdelay.h" index="12">
+<position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="Configuration" index="31"/>
-<item historyLabel="" index="32"/>
-<item historyLabel="Configuration" index="33"/>
-<item active="true" historyLabel="Configuration" index="34"/>
+<item historyLabel="timer_api.c" index="10">
+<position info="not_deleted" x="1029" y="0"/>
+</item>
+<item historyLabel="sysdelay.c" index="11">
+<position info="not_deleted" x="374" y="0"/>
+</item>
+<item historyLabel="sysdelay.h" index="12">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="sysdelay.c" index="11">
+<position info="not_deleted" x="374" y="40"/>
+</item>
+<item historyLabel="sysdelay.h" index="12">
+<position info="not_deleted" x="314" y="0"/>
+</item>
+<item active="true" historyLabel="Configuration" index="13"/>
 </navigationHistory>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
 </page>
@@ -320,60 +376,50 @@
 <mruList>
 <file factoryID="org.coocox.builder.ui.persistent.PersistentElementFactory" id="org.coocox.builder.ui.editors.ConfigEditor" name="" tooltip="">
 <persistable>
-<org.coocox.builder.ui.editors.ConfigEditor horizontalPosition="0" subTagIndex="1" verticalPosition="0"/>
+<org.coocox.builder.ui.editors.ConfigEditor horizontalPosition="0" subTagIndex="2" verticalPosition="0"/>
 </persistable>
 </file>
-<file factoryID="org.coocox.builder.ui.persistent.PersistentElementFactory" id="org.coocox.builder.ui.editors.ConfigEditor" name="" tooltip="">
-<persistable>
-<org.coocox.builder.ui.editors.ConfigEditor horizontalPosition="0" subTagIndex="1" verticalPosition="0"/>
-</persistable>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="sysdelay.h" tooltip="SDK_Probe_STM32F0/stm32f0/sys/sysdelay.h">
+<persistable path="/SDK_Probe_STM32F0/stm32f0/sys/sysdelay.h"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="main.c" tooltip="SDK_Probe_STM32F0/main.c">
-<persistable path="/SDK_Probe_STM32F0/main.c"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="sysdelay.c" tooltip="SDK_Probe_STM32F0/stm32f0/sys/sysdelay.c">
+<persistable path="/SDK_Probe_STM32F0/stm32f0/sys/sysdelay.c"/>
 </file>
-<file factoryID="org.coocox.component.ui.editors.repository.RepositoryElementFactory" id="org.coocox.builder.ui.editors.repository.RepositoryBrowser" name="Repository" tooltip="Repository">
-<persistable>
-<subPage/>
-</persistable>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="timer_api.c" tooltip="SDK_Probe_STM32F0/lib/api/timer_api.c">
+<persistable path="/SDK_Probe_STM32F0/lib/api/timer_api.c"/>
 </file>
-<file factoryID="org.coocox.builder.ui.persistent.PersistentElementFactory" id="org.coocox.welcome.ui.WelcomePage" name="" tooltip="">
-<persistable>
-<org.coocox.welcome.ui.WelcomePage/>
-</persistable>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="system_stm32f0xx.h" tooltip="SDK_Probe_STM32F0/stm32f0/include/system_stm32f0xx.h">
+<persistable path="/SDK_Probe_STM32F0/stm32f0/include/system_stm32f0xx.h"/>
 </file>
-<file factoryID="org.coocox.builder.ui.persistent.PersistentElementFactory" id="org.coocox.builder.ui.editors.ConfigEditor" name="" tooltip="">
-<persistable>
-<org.coocox.builder.ui.editors.ConfigEditor horizontalPosition="0" subTagIndex="1" verticalPosition="0"/>
-</persistable>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="stm32f0xx_hal_rcc_ex.c" tooltip="SDK_Probe_STM32F0/stm32f0/driver/stm32f0xx_hal_rcc_ex.c">
+<persistable path="/SDK_Probe_STM32F0/stm32f0/driver/stm32f0xx_hal_rcc_ex.c"/>
 </file>
-<file factoryID="org.coocox.builder.ui.persistent.PersistentElementFactory" id="org.coocox.builder.ui.editors.ConfigEditor" name="" tooltip="">
-<persistable>
-<org.coocox.builder.ui.editors.ConfigEditor horizontalPosition="0" subTagIndex="1" verticalPosition="0"/>
-</persistable>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="stm32f0xx_hal_rcc.c" tooltip="SDK_Probe_STM32F0/stm32f0/driver/stm32f0xx_hal_rcc.c">
+<persistable path="/SDK_Probe_STM32F0/stm32f0/driver/stm32f0xx_hal_rcc.c"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="board_init.c" tooltip="SDK_Probe_STM32F4/discovery_simple/board_init.c">
-<persistable path="/SDK_Probe_STM32F4/discovery_simple/board_init.c"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="system_stm32f0xx.h" tooltip="SDK_Probe_STM32F0/stm32f0/sys/system_stm32f0xx.h">
+<persistable path="/SDK_Probe_STM32F0/stm32f0/sys/system_stm32f0xx.h"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="core_init.c" tooltip="SDK_Probe_STM32F4/stm32f4xx/sys/core_init.c">
-<persistable path="/SDK_Probe_STM32F4/stm32f4xx/sys/core_init.c"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="board_properties.h" tooltip="SDK_Probe_STM32F0/board_properties.h">
+<persistable path="/SDK_Probe_STM32F0/board_properties.h"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="sysdelay.c" tooltip="SDK_Probe_STM32F4/stm32f4xx/sys/sysdelay.c">
-<persistable path="/SDK_Probe_STM32F4/stm32f4xx/sys/sysdelay.c"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="system_stm32f0xx.c" tooltip="SDK_Probe_STM32F0/stm32f0/sys/system_stm32f0xx.c">
+<persistable path="/SDK_Probe_STM32F0/stm32f0/sys/system_stm32f0xx.c"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="system_stm32f4xx.c" tooltip="SDK_Probe_STM32F4/stm32f4xx/sys/system_stm32f4xx.c">
-<persistable path="/SDK_Probe_STM32F4/stm32f4xx/sys/system_stm32f4xx.c"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="gpio_interface.h" tooltip="SDK_Probe_STM32F0/stm32f0/interface/gpio_interface.h">
+<persistable path="/SDK_Probe_STM32F0/stm32f0/interface/gpio_interface.h"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.asm.AsmEditor" name="startup_stm32f40xx.S" tooltip="SDK_Probe_STM32F4/stm32f4xx/sys/startup_stm32f40xx.S">
-<persistable path="/SDK_Probe_STM32F4/stm32f4xx/sys/startup_stm32f40xx.S"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="gpio_interface.c" tooltip="SDK_Probe_STM32F0/stm32f0/interface/gpio_interface.c">
+<persistable path="/SDK_Probe_STM32F0/stm32f0/interface/gpio_interface.c"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ui.DefaultTextEditor" name="CoIde_stm32f4xx_flash.ld" tooltip="SDK_Probe_STM32F4/stm32f4xx/sys/CoIde_stm32f4xx_flash.ld">
-<persistable path="/SDK_Probe_STM32F4/stm32f4xx/sys/CoIde_stm32f4xx_flash.ld"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="uart_api.c" tooltip="SDK_Probe_STM32F0/lib/api/uart_api.c">
+<persistable path="/SDK_Probe_STM32F0/lib/api/uart_api.c"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="stm32f10x_rcc.h" tooltip="SDK_Probe_STM32F10x/stm32f10x/driver/stm32f10x_rcc.h">
-<persistable path="/SDK_Probe_STM32F10x/stm32f10x/driver/stm32f10x_rcc.h"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="stm32f0xx_hal_conf.h" tooltip="SDK_Probe_STM32F0/stm32f0/driver/stm32f0xx_hal_conf.h">
+<persistable path="/SDK_Probe_STM32F0/stm32f0/driver/stm32f0xx_hal_conf.h"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="stm32f0xx_rtc.c" tooltip="SDK_Probe_STM32F0/stm32f0/driver/stm32f0xx_rtc.c">
-<persistable path="/SDK_Probe_STM32F0/stm32f0/driver/stm32f0xx_rtc.c"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="stm32f0xx_hal_uart.c" tooltip="SDK_Probe_STM32F0/stm32f0/driver/stm32f0xx_hal_uart.c">
+<persistable path="/SDK_Probe_STM32F0/stm32f0/driver/stm32f0xx_hal_uart.c"/>
 </file>
 </mruList>
 </workbench>

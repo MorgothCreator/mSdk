@@ -140,7 +140,7 @@ void deselect (SD_Struct_t *SD_Struct)
 /* Select card and wait for ready                                        */
 /*-----------------------------------------------------------------------*/
 
-int select (SD_Struct_t *SD_Struct)	/* 1:OK, 0:Timeout */
+int _select (SD_Struct_t *SD_Struct)	/* 1:OK, 0:Timeout */
 {
 	sd_cs_assert(SD_Struct);
 	sd_io_data(SD_Struct, 0xFF);	/* Dummy clock (force DO enabled) */
@@ -172,7 +172,7 @@ BYTE send_cmd (		/* Return value: R1 resp (bit7==1:Failed to send) */
 
 	/* Select card */
 	deselect(SD_Struct);
-	if (!select(SD_Struct))
+	if (!_select(SD_Struct))
 		return 0xFF;
 
 	/* Send command packet */

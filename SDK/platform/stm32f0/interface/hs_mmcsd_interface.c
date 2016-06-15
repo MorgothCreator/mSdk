@@ -14,11 +14,26 @@
 #include "api/uart_api.h"
 #include "lib/fs/fat.h"
 //#######################################################################################
-bool _mmcsd_init(void *SdStruct, signed int CardDetectPortNr, signed int CardDetectPinNr, new_gpio* StatusLed)
+void _mmcsd_ioctl(unsigned int unit_nr, unsigned int  command,  unsigned int *buffer)
 {
-	return false;
+
 }
-void _mmcsd_idle(void *SdStruct)
+
+unsigned int MMCSDReadCmdSend(void *SdStruct, void *ptr, unsigned long block, unsigned int nblks)
+{
+	return 0;
+}
+
+unsigned int MMCSDWriteCmdSend(void *SdStruct, void *ptr, unsigned long block, unsigned int nblks)
+{
+	return 0;
+}
+
+void _mmcsd_init(unsigned int unit_nr, new_gpio* CardDetect, new_gpio* StatusLed)
+{
+
+}
+void _mmcsd_idle(unsigned int unit_nr)
 {
 
 }
