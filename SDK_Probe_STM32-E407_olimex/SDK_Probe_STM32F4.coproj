@@ -226,11 +226,11 @@
     <File name="stm32f4xx/driver/stm32f4xx_hal_sai_ex.h" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_hal_sai_ex.h" type="1"/>
     <File name="stm32f4xx/driver/USBH_MSC/Core/Src/usbh_pipes.c" path="../SDK/platform/stm32f4xx/driver/USBH_MSC/Core/Src/usbh_pipes.c" type="1"/>
     <File name="lib/lib/buffers/ring_buff.c" path="../SDK/lib/lib/buffers/ring_buff.c" type="1"/>
-    <File name="stm32f4xx/driver/stm32f4xx_hal_hcd.h" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_hal_hcd.h" type="1"/>
+    <File name="stm32f4xx/interface/lcd_interface.h" path="../SDK/platform/stm32f4xx/interface/lcd_interface.h" type="1"/>
     <File name="stm32f4xx/driver/stm32f4xx_hal_usart.h" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_hal_usart.h" type="1"/>
     <File name="lib/lib" path="" type="2"/>
-    <File name="stm32f4xx/interface/lcd_interface.h" path="../SDK/platform/stm32f4xx/interface/lcd_interface.h" type="1"/>
     <File name="lib/protocols/nmea.c" path="../SDK/lib/protocols/nmea.c" type="1"/>
+    <File name="stm32f4xx/driver/stm32f4xx_hal_hcd.h" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_hal_hcd.h" type="1"/>
     <File name="stm32f4xx/driver/stm32f4xx_hal_pwr_ex.c" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_hal_pwr_ex.c" type="1"/>
     <File name="lib/lib/gfx/listbox.h" path="../SDK/lib/lib/gfx/listbox.h" type="1"/>
     <File name="stm32f4xx/driver/stm32f4xx_hal_fmpi2c_ex.c" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_hal_fmpi2c_ex.c" type="1"/>
@@ -344,9 +344,9 @@
     <File name="stm32f4xx/driver/stm32f4xx_hal_tim.c" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_hal_tim.c" type="1"/>
     <File name="stm32f4xx/driver/USBH_MSC/Class/MSC" path="" type="2"/>
     <File name="stm32f4xx/driver/stm32f4xx_hal_sdram.c" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_hal_sdram.c" type="1"/>
-    <File name="lib/api/htimer_api.h" path="../SDK/lib/api/htimer_api.h" type="1"/>
     <File name="stm32f4xx/sys/Include/core_cm0plus.h" path="../SDK/platform/stm32f4xx/sys/Include/core_cm0plus.h" type="1"/>
     <File name="lib/api/htimer_api_def.h" path="../SDK/lib/api/htimer_api_def.h" type="1"/>
+    <File name="lib/api/htimer_api.h" path="../SDK/lib/api/htimer_api.h" type="1"/>
     <File name="stm32f4xx/driver/USBH_MSC/Core/Src/usbh_core.c" path="../SDK/platform/stm32f4xx/driver/USBH_MSC/Core/Src/usbh_core.c" type="1"/>
     <File name="lib/app/app_util" path="" type="2"/>
     <File name="stm32f4xx/driver/stm32f4xx_hal_rcc_ex.h" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_hal_rcc_ex.h" type="1"/>
@@ -477,9 +477,9 @@
     <File name="stm32f4xx/include/stm32f407xx.h" path="../SDK/platform/stm32f4xx/include/stm32f407xx.h" type="1"/>
     <File name="stm32f4xx/interface/twi_interface.h" path="../SDK/platform/stm32f4xx/interface/twi_interface.h" type="1"/>
     <File name="lib/api/mcspi_api.c" path="../SDK/lib/api/mcspi_api.c" type="1"/>
-    <File name="lib/lib/gfx/checkbox.h" path="../SDK/lib/lib/gfx/checkbox.h" type="1"/>
     <File name="stm32f4xx/driver/stm32f4xx_hal_dac.c" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_hal_dac.c" type="1"/>
     <File name="lib/device/tps65217.h" path="../SDK/lib/device/tps65217.h" type="1"/>
+    <File name="lib/lib/gfx/checkbox.h" path="../SDK/lib/lib/gfx/checkbox.h" type="1"/>
     <File name="lib/lib/gfx/gfx_gui_paint.c" path="../SDK/lib/lib/gfx/gfx_gui_paint.c" type="1"/>
     <File name="stm32f4xx/interface/usb_host_msc_interface.h" path="../SDK/platform/stm32f4xx/interface/usb_host_msc_interface.h" type="1"/>
     <File name="stm32f4xx/driver/stm32f4xx_hal_i2s_ex.h" path="../SDK/platform/stm32f4xx/driver/stm32f4xx_hal_i2s_ex.h" type="1"/>
