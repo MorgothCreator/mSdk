@@ -24,7 +24,7 @@
 #include "api/htimer_api_def.h"
 /*#####################################################*/
 /*#####################################################*/
-bool htimer_init(Htimer_t *structure){
+bool _htimer_init(Htimer_t *structure){
 	return false;
 }
 

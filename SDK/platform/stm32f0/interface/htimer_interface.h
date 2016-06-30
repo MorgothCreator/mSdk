@@ -11,7 +11,7 @@
 #include "stdbool.h"
 #include "api/htimer_api_def.h"
 /*#####################################################*/
-bool htimer_init(Htimer_t *structure);
+bool _htimer_init(Htimer_t *structure);
 /*#####################################################*/
 #ifdef HEADER_INCLUDE_C_FILES
 #include "htimer_interface.c"
