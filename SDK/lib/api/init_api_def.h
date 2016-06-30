@@ -47,6 +47,7 @@
 /*#####################################################*/
 /*########    Internal devices and sensors   ##########*/
 /*#####################################################*/
+/* UART_INTERFACE, TransferRate, _TxPort, _TxPin, _RxPort, _RxPin */
 #define INIT_UART(UART_INTERFACE, TransferRate, _TxPort, _TxPin, _RxPort, _RxPin) \
 		Uart[UART_INTERFACE] = new_(new_uart);\
 		if(Uart[UART_INTERFACE]) {\
@@ -62,6 +63,7 @@
 			uart_open(Uart[UART_INTERFACE]);\
 		}
 /*#####################################################*/
+/* TWI_INTERFACE, _TransferRate, _SclPort, _SclPin, _SdaPort, _SdaPin, _RxBuffSize, _TxBuffSize */
 #define INIT_TWI(TWI_INTERFACE, _TransferRate, _SclPort, _SclPin, _SdaPort, _SdaPin, _RxBuffSize, _TxBuffSize) \
 		TWI[TWI_INTERFACE] = new_(new_twi);\
 		if(TWI[TWI_INTERFACE]) {\
@@ -79,6 +81,7 @@
 			twi_open(TWI[TWI_INTERFACE]);\
 		}
 /*#####################################################*/
+/* SPI_INTERFACE, _TransferRate, _WordSize, _SckPort, _SckPin, _MosiPort, _MosiPin, _MisoPort, _MisoPin, _CsPort, _CsPin */
 #define INIT_SPI(SPI_INTERFACE, _TransferRate, _WordSize, _SckPort, _SckPin, _MosiPort, _MosiPin, _MisoPort, _MisoPin, _CsPort, _CsPin) \
 		SPI[SPI_INTERFACE] = new_(new_mcspi); \
 		if(SPI[SPI_INTERFACE]) {\
@@ -104,6 +107,13 @@
 		mmcsd_init(UNIT_NR, GpioMmcSdDetect, GpioLed); \
 		mmcsd_idle(UNIT_NR)*/
 /*-----------------------------------------------------*/
+/*
+ * This macro can be used if you have card detect pin attached to this unit,
+ * and is needed to be called for example every 100ms to detect if a card is inserted or removed,
+ * if a card is inserted this macro will detect and mount the filesystem, for now is supported only FAT12, FAT16 and FAT32.
+ *
+ * UNIT_NR
+ */
 #define IDLE_MMCSD(UNIT_NR) \
 		mmcsd_idle(UNIT_NR)
 /*-----------------------------------------------------*/
@@ -114,9 +124,28 @@
 		mmcsd_init(UNIT_NR, (Gpio_t*)NULL, LED[0]); \
 		mmcsd_idle(UNIT_NR)*/
 /*-----------------------------------------------------*/
+/*
+ * This macro can be used if you have card detect pin attached to this unit,
+ * and is needed to be called for example every 100ms to detect if a card is inserted or removed,
+ * if a card is inserted this macro will detect and mount the filesystem, for now is supported only FAT12, FAT16 and FAT32.
+ *
+ * UNIT_NR
+ */
 #define IDLE_EMMC(UNIT_NR) \
 		mmcsd_idle(UNIT_NR)
 /*#####################################################*/
+/*
+ * This macro initialize selected MMC interface and mount a eMMC, MMC or SD-SDHC memory if detected.
+ *
+ * Case1: For the eMMC memory is mandatory to provide GPIO_RESET_STRUCT with a Gpio_t or new_gpio structure,
+ *       but you not need to provide GPIO_SD_DETECT_STRUCT you need provide a NULL pointer.
+ * Case2: For MMC and SD-SDHC you can provide GPIO_SD_DETECT_STRUCT if you used,
+ *       you don't need to provide GPIO_RESET_STRUCT you need to provide a NULL pointer.
+ *
+ * ACTIVITY_LED_STRUCT = a Gpio_t or new_gpio provided to controll an activity led, if you do not use an activity led you need to provide a NULL pointer.
+ *
+ * MMCSD_NR, GPIO_RESET_STRUCT, GPIO_SD_DETECT_STRUCT, ACTIVITY_LED_STRUCT
+ */
 #define INIT_MMCSD(MMCSD_NR, GPIO_RESET_STRUCT, GPIO_SD_DETECT_STRUCT, ACTIVITY_LED_STRUCT) \
 	gpio_out(GPIO_RESET_STRUCT, 0); \
 	Sysdelay(1); \
@@ -124,6 +153,26 @@
 	mmcsd_init(MMCSD_NR, GPIO_SD_DETECT_STRUCT, ACTIVITY_LED_STRUCT); \
 	mmcsd_idle(MMCSD_NR);
 /*#####################################################*/
+/*
+ * This macro initialize the desired USB HOST MSC interface and MMCSD interface and bridge them together.
+ *
+ *
+ * USB_DEVICE_NR = USB interface number.
+ *
+ * MMCSD_NR = MMCSD interface number.
+ *
+ * SLAVE_DEV_CONTROLS_NAME = Is a neme provided by the programmer to be attached to the master with slave controll functions and structure,
+ * 								this is automatically allocated by this macro and attached to the master controll interface, in this case USB device MSC.
+ *
+ * GPIO_RESET_STRUCT = a Gpio_t or new_gpio provided to controll reset pin of a eMMC memory, if you don't use eMMC memory provide a NULL pointer.
+ *
+ * GPIO_SD_DETECT_STRUCT = a Gpio_t or new_gpio provided to detect a card when is inserted or removed,
+ * 								if you don't use the card detect pin or you use a eMMC memory you need to provide a NULL pointer.
+ *
+ * ACTIVITY_LED_STRUCT = a Gpio_t or new_gpio provided to controll an activity led, if you do not use an activity led you need to provide a NULL pointer.
+ *
+ * USB_DEVICE_NR, MMCSD_NR, SLAVE_DEV_CONTROLS_NAME, GPIO_RESET_STRUCT, GPIO_SD_DETECT_STRUCT, ACTIVITY_LED_STRUCT
+ */
 #define INIT_USB_DEV_MSC_TO_MMCSD_BRIDGE(USB_DEVICE_NR, MMCSD_NR, SLAVE_DEV_CONTROLS_NAME, GPIO_RESET_STRUCT, GPIO_SD_DETECT_STRUCT, ACTIVITY_LED_STRUCT) \
 	gpio_out(GPIO_RESET_STRUCT, 0); \
 	Sysdelay(1); \
@@ -141,6 +190,20 @@
 	UARTPuts(DebugCom, "OK.\n\r", -1);
 /*#####################################################*/
 //#include "interface/usblib/include/usbhmsc.h"
+/*
+ * This macro initialize the desired USB HOST MSC interface and USB DEVICE MSC interface and bridge them together.
+ *
+ *
+ * USB_DEVICE_NR = USB device interface number.
+ *
+ * USB_HOST_NR = USB host interface number.
+ *
+ * SLAVE_DEV_CONTROLS_NAME = Is a neme provided by the programmer to be attached to the master with slave controll functions and structure,
+ * 								this is automatically allocated by this macro and attached to the master controll interface, in this case USB device MSC.
+ *
+ * ACTIVITY_LED_STRUCT = a Gpio_t or new_gpio provided to controll an activity led, if you do not use an activity led you need to provide a NULL pointer.
+ *
+ * USB_DEVICE_NR, USB_HOST_NR, SLAVE_DEV_CONTROLS_NAME, ACTIVITY_LED_STRUCT */
 #define INIT_USB_DEV_MSC_BRIDGE(USB_DEVICE_NR, USB_HOST_NR, SLAVE_DEV_CONTROLS_NAME, ACTIVITY_LED_STRUCT) \
 	UARTPuts(DebugCom, "Init USBMSC1 Host.......", -1); \
 	usb_msc_host_init(USB_HOST_NR, ACTIVITY_LED_STRUCT); \
@@ -157,16 +220,43 @@ extern tUSBHMSCInstance g_USBHMSCDevice[]; \
 	usb_msc_dev_init(USB_DEVICE_NR, SLAVE_DEV_CONTROLS_NAME); \
 	UARTPuts(DebugCom, "OK.\n\r", -1);
 /*#####################################################*/
+/*
+ * This macro initialize the desired USB HOST MSC interface .
+ *
+ * For this to work you need to initialize a drive structure and attach to the
+ *
+ * USB_HOST_NR = USB host interface number.
+ *
+ * ACTIVITY_LED_STRUCT = a Gpio_t or new_gpio provided to controll an activity led, if you do not use an activity led you need to provide a NULL pointer.
+ *
+ * USB_HOST_NR, ACTIVITY_LED_STRUCT
+ */
 #define INIT_USB_MSC_HOST(USB_HOST_NR, ACTIVITY_LED_STRUCT)\
 	UARTPuts(DebugCom, "Init USBMSC1 Host.......", -1);\
 	usb_msc_host_init(USB_HOST_NR, ACTIVITY_LED_STRUCT);\
 	UARTPuts(DebugCom, "OK.\n\r", -1);\
     usb_msc_host_idle(USB_HOST_NR);
 /*#####################################################*/
+/*
+ * This macro initialize an USB host interface for mouse controll.
+ *
+ * USB_HOST_NR
+ */
 #define INIT_USB_MOUSE_HOST(USB_HOST_NR)\
 	UARTPuts(DebugCom, "Init USBMOUSE1 Host.......", -1);\
 	usb_mouse_host_init(USB_HOST_NR);\
 	UARTPuts(DebugCom, "OK.\n\r", -1);
+/*#####################################################*/
+/*
+ * This macro need to be callad every several miliseconds to read mouse cursor from USB mouse.
+ *
+ * You need to allocate a tControlCommandData for DATA_STRUCT
+ *
+ * USB_HOST_NR, DATA_STRUCT
+ */
+#define USB_MOUSE_IDLE(USB_HOST_NR, DATA_STRUCT)\
+	usb_mouse_host_idle(USB_HOST_NR, DATA_STRUCT);
+
 /*#####################################################*/
 /*#####################################################*/
 /*#####################################################*/

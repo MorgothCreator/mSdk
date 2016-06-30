@@ -180,12 +180,12 @@ typedef struct Window_s
 		//	signed int Y;
 		//}PositionFullScreen;
 		controls_caption_t Caption;
-		unsigned int ButonCnt;
+		/*unsigned int ButtonCnt;
 		unsigned int CheckBoxCnt;
 		unsigned int ListBoxCnt;
 		unsigned int ProgressBarCnt;
 		unsigned int ScrollBarCnt;
-		unsigned int TextBoxCnt;
+		unsigned int TextBoxCnt;*/
 		signed int HeaderTouchDownPointX;
 		signed int HeaderTouchDownPointY;
 		signed int WindowTouchDownPointX;
@@ -252,33 +252,93 @@ typedef struct Window_s
 }tWindow;
 //#######################################################################################
 /* Definitions to add new private items to a parent window */
+/*
+ * This macro will allocate and add a Button to desired Window.
+ *
+ * window_addr = Window structure pointer.
+ * button_name = Button name.
+ */
 #define window_new_button(window_addr, button_name)\
 			tButton *button_name = (tButton *)window_add_children(window_addr, WindowButtonChildren, #button_name)
 
+/*
+ * This macro will allocate and add a CheckBox to desired Window.
+ *
+ * window_addr = Window structure pointer.
+ * button_name = CheckBox name.
+ */
 #define window_new_checkbox(window_addr, checkbox_name)\
 			tCheckBox *checkbox_name = (tCheckBox *)window_add_children(window_addr, WindowCheckboxChildren, #checkbox_name)
 
+/*
+ * This macro will allocate and add a ListBox to desired Window.
+ *
+ * window_addr = Window structure pointer.
+ * button_name = ListBox name.
+ */
 #define window_new_listbox(window_addr, listbox_name)\
 			tListBox *listbox_name = (tListBox *)window_add_children(window_addr, WindowListboxChildren, #listbox_name)
 
+/*
+ * This macro will allocate and add a ProgressBar to desired Window.
+ *
+ * window_addr = Window structure pointer.
+ * button_name = ProgressBar name.
+ */
 #define window_new_progressbar(window_addr, progressbar_name)\
 			tProgressBar *progressbar_name = (tProgressBar *)window_add_children(window_addr, WindowProgressbarChildren, #progressbar_name)
 
+/*
+ * This macro will allocate and add a ScrollBar to desired Window.
+ *
+ * window_addr = Window structure pointer.
+ * button_name = ScrollBar name.
+ */
 #define window_new_scrollbar(window_addr, scrollbar_name)\
 			tScrollBar *scrollbar_name = (tScrollBar *)window_add_children(window_addr, WindowScrollbarChildren, #scrollbar_name)
 
+/*
+ * This macro will allocate and add a TextBox to desired Window.
+ *
+ * window_addr = Window structure pointer.
+ * button_name = TextBox name.
+ */
 #define window_new_textbox(window_addr, textbox_name)\
 			tTextBox *textbox_name = (tTextBox *)window_add_children(window_addr, WindowTextboxChildren, #textbox_name)
 
+/*
+ * This macro will allocate and add a PictureBox to desired Window.
+ *
+ * window_addr = Window structure pointer.
+ * button_name = PictureBox name.
+ */
 #define window_new_picturebox(window_addr, picturebox_name)\
 			tPictureBox *picturebox_name = (tPictureBox *)window_add_children(window_addr, WindowPictureboxChildren, #picturebox_name)
 
+/*
+ * This macro will allocate and add a Keyboard to desired Window.
+ *
+ * window_addr = Window structure pointer.
+ * button_name = Keyboard name.
+ */
 #define window_new_keyboard(window_addr, keyboard_name)\
 			tVKbd_Qwerty *keyboard_name = (tVKbd_Qwerty *)window_add_children(window_addr, WindowKeyboardChildren, #keyboard_name)
 
+/*
+ * This macro will allocate and add a Window to desired Window.
+ *
+ * window_addr = Window structure pointer.
+ * button_name = Window name.
+ */
 #define window_new_window(window_addr, window_name)\
 			tWindow *window_name = (tWindow *)window_add_children(window_addr, WindowWindowChildren, #window_name)
 
+/*
+ * This macro will allocate and add a TabGroup to desired Window.
+ *
+ * window_addr = Window structure pointer.
+ * button_name = TabGroup name.
+ */
 #define window_new_tab_group(window_addr, tab_group_name)\
 			tWindow *tab_group_name = (tWindow *)window_add_children(window_addr, WindowTabGroupChildren, #tab_group_name)
 //#######################################################################################
@@ -363,33 +423,103 @@ typedef struct Window_s
 			(tWindow *)window_add_children(window_addr, WindowTabGroupChildren, #tab_group_name)
 //#######################################################################################
 /* Definitions to add new private items to a parent tab group */
+/*
+ * This macro will allocate and add a Button to desired Tab inside desired TabGroup.
+ *
+ * window_addr = Tab group structure pointer.
+ * button_name = Button name.
+ * tab_nr = Tab number where to register this button.
+ */
 #define tab_group_new_button(window_addr, button_name, tab_nr)\
 			tButton *button_name = (tButton *)tab_group_add_children(window_addr, WindowButtonChildren, #button_name, tab_nr)
 
+/*
+ * This macro will allocate and add a CheckBox to desired Tab inside desired TabGroup.
+ *
+ * window_addr = Tab group structure pointer.
+ * button_name = CheckBox name.
+ * tab_nr = Tab number where to register this CheckBox.
+ */
 #define tab_group_new_checkbox(window_addr, checkbox_name, tab_nr)\
 			tCheckBox *checkbox_name = (tCheckBox *)tab_group_add_children(window_addr, WindowCheckboxChildren, #checkbox_name, tab_nr)
 
+/*
+ * This macro will allocate and add a ListBox to desired Tab inside desired TabGroup.
+ *
+ * window_addr = Tab group structure pointer.
+ * button_name = ListBox name.
+ * tab_nr = Tab number where to register this ListBox.
+ */
 #define tab_group_new_listbox(window_addr, listbox_name, tab_nr)\
 			tListBox *listbox_name = (tListBox *)tab_group_add_children(window_addr, WindowListboxChildren, #listbox_name, tab_nr)
 
+/*
+ * This macro will allocate and add a ProgressBar to desired Tab inside desired TabGroup.
+ *
+ * window_addr = Tab group structure pointer.
+ * button_name = ProgressBar name.
+ * tab_nr = Tab number where to register this ProgressBar.
+ */
 #define tab_group_new_progressbar(window_addr, progressbar_name, tab_nr)\
 			tProgressBar *progressbar_name = (tProgressBar *)tab_group_add_children(window_addr, WindowProgressbarChildren, #progressbar_name, tab_nr)
 
+/*
+ * This macro will allocate and add a ScrollBar to desired Tab inside desired TabGroup.
+ *
+ * window_addr = Tab group structure pointer.
+ * button_name = ScrollBar name.
+ * tab_nr = Tab number where to register this ScrollBar.
+ */
 #define tab_group_new_scrollbar(window_addr, scrollbar_name, tab_nr)\
 			tScrollBar *scrollbar_name = (tScrollBar *)tab_group_add_children(window_addr, WindowScrollbarChildren, #scrollbar_name, tab_nr)
 
+/*
+ * This macro will allocate and add a TextBox to desired Tab inside desired TabGroup.
+ *
+ * window_addr = Tab group structure pointer.
+ * button_name = TextBox name.
+ * tab_nr = Tab number where to register this TextBox.
+ */
 #define tab_group_new_textbox(window_addr, textbox_name, tab_nr)\
 			tTextBox *textbox_name = (tTextBox *)tab_group_add_children(window_addr, WindowTextboxChildren, #textbox_name, tab_nr)
 
+/*
+ * This macro will allocate and add a PictureBox to desired Tab inside desired TabGroup.
+ *
+ * window_addr = Tab group structure pointer.
+ * button_name = PictureBox name.
+ * tab_nr = Tab number where to register this PictureBox.
+ */
 #define tab_group_new_picturebox(window_addr, picturebox_name, tab_nr)\
 			tPictureBox *picturebox_name = (tPictureBox *)tab_group_add_children(window_addr, WindowPictureboxChildren, #picturebox_name, tab_nr)
 
+/*
+ * This macro will allocate and add a Keyboard to desired Tab inside desired TabGroup.
+ *
+ * window_addr = Tab group structure pointer.
+ * button_name = Keyboard name.
+ * tab_nr = Tab number where to register this Keyboard.
+ */
 #define tab_group_new_keyboard(window_addr, keyboard_name, tab_nr)\
 			tVKbd_Qwerty *keyboard_name = (tVKbd_Qwerty *)tab_group_add_children(window_addr, WindowKeyboardChildren, #keyboard_name, tab_nr)
 
+/*
+ * This macro will allocate and add a Window to desired Tab inside desired TabGroup.
+ *
+ * window_addr = Tab group structure pointer.
+ * button_name = Window name.
+ * tab_nr = Tab number where to register this Window.
+ */
 #define tab_group_new_window(window_addr, window_name, tab_nr)\
 			tWindow *window_name = (tWindow *)tab_group_add_children(window_addr, WindowWindowChildren, #window_name, tab_nr)
 
+/*
+ * This macro will allocate and add a TabGroup to desired Tab inside desired TabGroup.
+ *
+ * window_addr = Tab group structure pointer.
+ * button_name = TabGroup name.
+ * tab_nr = Tab number where to register this TabGroup.
+ */
 #define tab_group_new_tab_group(window_addr, window_name, tab_nr)\
 			tWindow *window_name = (tWindow *)tab_group_add_children(window_addr, WindowTabGroupChildren, #window_name, tab_nr)
 //#######################################################################################

@@ -346,7 +346,7 @@ int main(void)
 				control_comand.Cursor = (CursorState)TouchScreen->TouchResponse.touch_event1;
 #endif
 #ifdef usb_1_mouse
-	            usb_mouse_host_idle(1, &control_comand);
+				USB_MOUSE_IDLE(1, &control_comand);
 #elif defined(usb_1_msc)
 	            usb_msc_host_idle(1);
 #endif
