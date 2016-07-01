@@ -36,6 +36,10 @@ typedef struct
 	gpio_port_enum MisoPort;
 	gpio_port_enum SckPort;
 	gpio_port_enum CsPort[4];
+	Gpio_t *Gpio_Mosi;
+	Gpio_t *Gpio_Miso;
+	Gpio_t *Gpio_Sck;
+	Gpio_t *Gpio_Cs[4];
 	volatile bool interrupted;
 	volatile unsigned char Channel;
 	volatile unsigned int BaseAddr;

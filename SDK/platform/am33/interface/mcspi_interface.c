@@ -18,6 +18,14 @@ extern Mcspi_Int_Service_t Mcspi_Int_Service;
 /*#####################################################*/
 #define MCSPI_IN_CLK                     (48000000u)
 /*#####################################################*/
+void _mcspi_assert(Mcspi_t *McspiStruct)
+{
+	McSPICSAssert(McspiStruct->BaseAddr, McspiStruct->Channel);
+}
+void _mcspi_deassert(Mcspi_t *McspiStruct)
+{
+	McSPICSDeAssert(McspiStruct->BaseAddr, McspiStruct->Channel);
+}
 /*
 ** This function will activate/deactivate CS line and also enable Tx and Rx
 ** interrupts of McSPI peripheral.
@@ -26,7 +34,8 @@ void _mcspi_transfer(Mcspi_t *McspiStruct)
 {
 	McspiStruct->BuffTmp = McspiStruct->Buff;
 	/* SPIEN line is forced to low state.*/
-    McSPICSAssert(McspiStruct->BaseAddr, McspiStruct->Channel);
+    if(!McspiStruct->DisableCsHandle)
+    	McSPICSAssert(McspiStruct->BaseAddr, McspiStruct->Channel);
 
     /* Enable the Tx/Rx interrupts of McSPI.*/
     McSPIIntEnable(McspiStruct->BaseAddr, MCSPI_INT_TX_EMPTY(McspiStruct->Channel) |
@@ -41,7 +50,8 @@ void _mcspi_transfer(Mcspi_t *McspiStruct)
     McspiStruct->flag = 1;
 
     /* Force SPIEN line to the inactive state.*/
-    McSPICSDeAssert(McspiStruct->BaseAddr, McspiStruct->Channel);
+    if(!McspiStruct->DisableCsHandle)
+    	McSPICSDeAssert(McspiStruct->BaseAddr, McspiStruct->Channel);
 
     /* Disable the McSPI channel.*/
     McSPIChannelDisable(McspiStruct->BaseAddr, McspiStruct->Channel);

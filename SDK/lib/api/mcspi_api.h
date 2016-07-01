@@ -28,6 +28,8 @@
 //#include "clk/clk_mcspi.h"
 #include "interface/mcspi_interface.h"
 /*#####################################################*/
+void mcspi_assert(Mcspi_t *McspiStruct);
+void mcspi_deassert(Mcspi_t *McspiStruct);
 bool mcspi_transfer(Mcspi_t *McspiStruct, unsigned int NumOfBytesSend, unsigned int NumOfBytesReceive);
 bool mcspi_open(Mcspi_t *McspiStruct);
 void mcspi_close(Mcspi_t *McspiStruct);

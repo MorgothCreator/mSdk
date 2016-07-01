@@ -286,6 +286,15 @@ void _mcspi_close(new_mcspi *McspiStruct)
 
 
 /*#####################################################*/
+void _mcspi_assert(Mcspi_t *McspiStruct)
+{
+	HAL_GPIO_WritePin(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[McspiStruct->CsSelect]], 1 << McspiStruct->CsPin[McspiStruct->CsSelect], GPIO_PIN_RESET);
+}
+void _mcspi_deassert(Mcspi_t *McspiStruct)
+{
+	HAL_GPIO_WritePin(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[McspiStruct->CsSelect]], 1 << McspiStruct->CsPin[McspiStruct->CsSelect], GPIO_PIN_SET);
+}
+/*#####################################################*/
 bool _mcspi_transfer(Mcspi_t *McspiStruct)
 {
 	/*McspiStruct->numOfBytes = NumOfBytesSend + NumOfBytesReceive;

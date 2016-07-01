@@ -12,6 +12,8 @@
 #include <stdbool.h>
 #include "api/mcspi_def.h"
 
+void _mcspi_assert(Mcspi_t *McspiStruct);
+void _mcspi_deassert(Mcspi_t *McspiStruct);
 bool _mcspi_open(new_mcspi *McspiStruct);
 void _mcspi_close(new_mcspi *McspiStruct);
 unsigned char _mcspi_SendByte(Mcspi_t *McspiStruct, unsigned char byte);

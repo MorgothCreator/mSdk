@@ -20,6 +20,15 @@ void _mcspi_close(new_mcspi *McspiStruct)
 	//spi_disable(McspiStruct);
 }
 /*#####################################################*/
+void _mcspi_assert(Mcspi_t *McspiStruct)
+{
+	//McSPICSAssert(McspiStruct->BaseAddr, McspiStruct->Channel);
+}
+void _mcspi_deassert(Mcspi_t *McspiStruct)
+{
+	//McSPICSDeAssert(McspiStruct->BaseAddr, McspiStruct->Channel);
+}
+/*#####################################################*/
 bool _mcspi_transfer(Mcspi_t *McspiStruct)
 {
 	/*McspiStruct->numOfBytes = NumOfBytesSend + NumOfBytesReceive;

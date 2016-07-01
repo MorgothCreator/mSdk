@@ -14,6 +14,8 @@
 
 bool _mcspi_open(new_mcspi *McspiStruct);
 void _mcspi_close(new_mcspi *McspiStruct);
+void _mcspi_assert(Mcspi_t *McspiStruct);
+void _mcspi_deassert(Mcspi_t *McspiStruct);
 bool _mcspi_transfer(Mcspi_t *McspiStruct);
 
 #ifdef HEADER_INCLUDE_C_FILES
