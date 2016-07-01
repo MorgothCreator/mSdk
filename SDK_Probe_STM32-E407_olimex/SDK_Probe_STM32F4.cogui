@@ -15,14 +15,13 @@
 <part id="2"/>
 <part id="3"/>
 <part id="4"/>
-<part id="5"/>
 </presentation>
 </folder>
 </info>
 </editorArea>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="main.h" partName="main.h" path="C:/GitHub/mSdk/SDK_Probe_STM32-E407_olimex/main.h" title="main.h" tooltip="C:/GitHub/mSdk/SDK_Probe_STM32-E407_olimex/main.h" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/main.h"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="611" selectionTopPixel="0"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="238" selectionTopPixel="0"/>
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="main.c" partName="main.c" path="C:/GitHub/mSdk/SDK_Probe_STM32-E407_olimex/main.c" title="main.c" tooltip="C:/GitHub/mSdk/SDK_Probe_STM32-E407_olimex/main.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/main.c"/>
@@ -32,17 +31,13 @@
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/board_init.c"/>
 <editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="5781" selectionTopPixel="2400"/>
 </editor>
-<editor id="org.eclipse.cdt.ui.editor.CEditor" name="init_api_def.h" partName="init_api_def.h" path="C:/GitHub/mSdk/SDK/lib/api/init_api_def.h" title="init_api_def.h" tooltip="C:/GitHub/mSdk/SDK/lib/api/init_api_def.h" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/lib/api/init_api_def.h"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="10861" selectionTopPixel="4264"/>
+<editor activePart="true" focus="true" id="org.eclipse.cdt.ui.editor.CEditor" name="mcspi_interface.c" partName="mcspi_interface.c" path="C:/GitHub/mSdk/SDK/platform/stm32f4xx/interface/mcspi_interface.c" title="mcspi_interface.c" tooltip="C:/GitHub/mSdk/SDK/platform/stm32f4xx/interface/mcspi_interface.c" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/stm32f4xx/interface/mcspi_interface.c"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="8559" selectionTopPixel="4634"/>
 </editor>
-<editor id="org.eclipse.cdt.ui.editor.CEditor" name="usb_api.c" partName="usb_api.c" path="C:/GitHub/mSdk/SDK/lib/api/usb_api.c" title="usb_api.c" tooltip="C:/GitHub/mSdk/SDK/lib/api/usb_api.c" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/lib/api/usb_api.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="18" selectionOffset="1254" selectionTopPixel="0"/>
-</editor>
-<editor activePart="true" focus="true" id="org.eclipse.cdt.ui.editor.CEditor" name="usb_host_msc_interface.c" partName="usb_host_msc_interface.c" path="C:/GitHub/mSdk/SDK/platform/stm32f4xx/interface/usb_host_msc_interface.c" title="usb_host_msc_interface.c" tooltip="C:/GitHub/mSdk/SDK/platform/stm32f4xx/interface/usb_host_msc_interface.c" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/stm32f4xx/interface/usb_host_msc_interface.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="6611" selectionTopPixel="4905"/>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="mcspi_interface.h" partName="mcspi_interface.h" path="C:/GitHub/mSdk/SDK/platform/stm32f4xx/interface/mcspi_interface.h" title="mcspi_interface.h" tooltip="C:/GitHub/mSdk/SDK/platform/stm32f4xx/interface/mcspi_interface.h" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/SDK_Probe_STM32F4/stm32f4xx/interface/mcspi_interface.h"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="288" selectionTopPixel="0"/>
 </editor>
 </editors>
 <views>
@@ -68,7 +63,6 @@
 <view id="org.eclipse.search.ui.views.SearchView" partName="Search">
 <viewState isPinned="false">
 <view IMemento.internal.id="" org.eclipse.search.lastActivation="0"/>
-<view IMemento.internal.id="org.eclipse.cdt.ui.pdomSearchViewPage" definitionColumnWidth="150" locationColumnWidth="300" matchColumnWidth="300" org.eclipse.search.lastActivation="1" org.eclipse.search.resultpage.layout="2" showEnclosingDefinitions="true"/>
 </viewState>
 </view>
 <view id="org.eclipse.debug.ui.DebugView" partName="Debug">
@@ -151,7 +145,7 @@
 </folder>
 </info>
 <info folder="true" part="org.eclipse.ui.internal.ViewStack@1430c94" ratio="0.6992561" ratioLeft="658" ratioRight="283" relationship="4" relative="org.eclipse.ui.internal.ViewStack@1b37c99">
-<folder activePageID="org.eclipse.search.ui.views.SearchView" appearance="2" expanded="2">
+<folder activePageID="org.eclipse.ui.console.ConsoleView" appearance="2" expanded="2">
 <page content="org.eclipse.ui.console.ConsoleView" label="Console"/>
 <page content="org.eclipse.search.ui.views.SearchView" label="Search"/>
 <page content="org.eclipse.search.ui.views.SearchView:1" label="Search"/>
@@ -281,7 +275,6 @@
 <workingSets/>
 <navigationHistory>
 <editors>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/board_init.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/main.h"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/board_init.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/stm32f4xx/Board/STM32F429I-DISCO.h"/>
@@ -301,150 +294,153 @@
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/board_init.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/lib/api/usb_api.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/stm32f4xx/interface/usb_host_msc_interface.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/main.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/stm32f4xx/interface/mcspi_interface.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/SDK_Probe_STM32F4/stm32f4xx/interface/mcspi_interface.h"/>
 </editors>
-<item historyLabel="board_init.c" index="0">
-<position info="not_deleted" x="4162" y="0"/>
-</item>
-<item historyLabel="main.h" index="1">
-<position info="not_deleted" x="557" y="0"/>
-</item>
-<item historyLabel="board_init.c" index="2">
-<position info="not_deleted" x="4281" y="0"/>
-</item>
-<item historyLabel="main.h" index="1">
-<position info="not_deleted" x="422" y="0"/>
-</item>
-<item historyLabel="STM32F429I-DISCO.h" index="3">
+<item historyLabel="STM32F429I-DISCO.h" index="2">
 <position info="not_deleted" x="221" y="0"/>
 </item>
-<item historyLabel="OLIMEX_STM23H407.h" index="4">
+<item historyLabel="OLIMEX_STM23H407.h" index="3">
 <position info="not_deleted" x="223" y="0"/>
 </item>
-<item historyLabel="OLIMEX_STM23E407.h" index="5">
+<item historyLabel="OLIMEX_STM23E407.h" index="4">
 <position info="not_deleted" x="223" y="0"/>
 </item>
-<item historyLabel="STM32F429I-DISCO.h" index="3">
+<item historyLabel="STM32F429I-DISCO.h" index="2">
 <position info="not_deleted" x="0" y="223"/>
 </item>
-<item historyLabel="OLIMEX_STM23H407.h" index="4">
+<item historyLabel="OLIMEX_STM23H407.h" index="3">
 <position info="not_deleted" x="223" y="0"/>
 </item>
-<item historyLabel="OLIMEX_STM23E407.h" index="5">
+<item historyLabel="OLIMEX_STM23E407.h" index="4">
 <position info="not_deleted" x="223" y="0"/>
 </item>
-<item historyLabel="OLIMEX_STM23H407.h" index="4">
+<item historyLabel="OLIMEX_STM23H407.h" index="3">
 <position info="not_deleted" x="7" y="16"/>
 </item>
-<item historyLabel="OLIMEX_STM23E407.h" index="5">
+<item historyLabel="OLIMEX_STM23E407.h" index="4">
 <position info="not_deleted" x="20" y="0"/>
 </item>
-<item historyLabel="OLIMEX_STM23H407.h" index="4">
+<item historyLabel="OLIMEX_STM23H407.h" index="3">
 <position info="not_deleted" x="7" y="16"/>
 </item>
-<item historyLabel="main.h" index="1">
+<item historyLabel="main.h" index="0">
 <position info="not_deleted" x="611" y="0"/>
 </item>
-<item historyLabel="STM32F429I-DISCO.h" index="3">
+<item historyLabel="STM32F429I-DISCO.h" index="2">
 <position info="not_deleted" x="213" y="0"/>
 </item>
-<item historyLabel="OLIMEX_STM23H407.h" index="4">
+<item historyLabel="OLIMEX_STM23H407.h" index="3">
 <position info="not_deleted" x="213" y="0"/>
 </item>
-<item historyLabel="OLIMEX_STM23E407.h" index="5">
+<item historyLabel="OLIMEX_STM23E407.h" index="4">
 <position info="not_deleted" x="213" y="0"/>
 </item>
-<item historyLabel="STM32F429I-DISCO.h" index="3">
+<item historyLabel="STM32F429I-DISCO.h" index="2">
 <position info="not_deleted" x="7" y="16"/>
 </item>
-<item historyLabel="Configuration" index="6"/>
-<item historyLabel="OLIMEX_STM23H407.h" index="4">
+<item historyLabel="Configuration" index="5"/>
+<item historyLabel="OLIMEX_STM23H407.h" index="3">
 <position info="not_deleted" x="103" y="0"/>
 </item>
-<item historyLabel="STM32F429I-DISCO.h" index="3">
+<item historyLabel="STM32F429I-DISCO.h" index="2">
 <position info="not_deleted" x="7" y="16"/>
 </item>
-<item historyLabel="main.h" index="1">
+<item historyLabel="main.h" index="0">
 <position info="not_deleted" x="611" y="0"/>
 </item>
-<item historyLabel="board_init.c" index="2">
+<item historyLabel="board_init.c" index="1">
 <position info="not_deleted" x="4281" y="0"/>
 </item>
-<item historyLabel="main.h" index="1">
+<item historyLabel="main.h" index="0">
 <position info="not_deleted" x="611" y="0"/>
 </item>
-<item historyLabel="board_init.c" index="2">
+<item historyLabel="board_init.c" index="1">
 <position/>
 </item>
-<item historyLabel="STM32F429I-DISCO.h" index="3">
+<item historyLabel="STM32F429I-DISCO.h" index="2">
 <position info="not_deleted" x="7" y="16"/>
 </item>
-<item historyLabel="OLIMEX_STM23H407.h" index="4">
+<item historyLabel="OLIMEX_STM23H407.h" index="3">
 <position info="not_deleted" x="7" y="16"/>
 </item>
-<item historyLabel="board_init.c" index="2">
+<item historyLabel="board_init.c" index="1">
 <position info="not_deleted" x="200" y="0"/>
 </item>
-<item historyLabel="Configuration" index="6"/>
-<item historyLabel="board_init.c" index="2">
+<item historyLabel="Configuration" index="5"/>
+<item historyLabel="board_init.c" index="1">
 <position info="not_deleted" x="202" y="0"/>
 </item>
-<item historyLabel="system_stm32f4xx.c" index="7">
+<item historyLabel="system_stm32f4xx.c" index="6">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="board_init.c" index="2">
+<item historyLabel="board_init.c" index="1">
 <position info="not_deleted" x="458" y="0"/>
 </item>
-<item historyLabel="sys_arch.c" index="8">
+<item historyLabel="sys_arch.c" index="7">
 <position/>
 </item>
-<item historyLabel="board_init.c" index="2">
+<item historyLabel="board_init.c" index="1">
 <position info="not_deleted" x="458" y="0"/>
 </item>
-<item historyLabel="sys_arch.c" index="8">
+<item historyLabel="sys_arch.c" index="7">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="board_init.c" index="2">
+<item historyLabel="board_init.c" index="1">
 <position info="not_deleted" x="458" y="0"/>
 </item>
-<item historyLabel="board_init.c" index="2">
+<item historyLabel="board_init.c" index="1">
 <position info="not_deleted" x="1598" y="0"/>
 </item>
-<item historyLabel="OLIMEX_STM32H407.h" index="9">
+<item historyLabel="OLIMEX_STM32H407.h" index="8">
 <position info="not_deleted" x="7" y="16"/>
 </item>
-<item historyLabel="Configuration" index="10"/>
-<item historyLabel="OLIMEX_STM32H407.h" index="9">
+<item historyLabel="Configuration" index="9"/>
+<item historyLabel="OLIMEX_STM32H407.h" index="8">
 <position info="not_deleted" x="60" y="0"/>
 </item>
-<item historyLabel="main.h" index="1">
+<item historyLabel="main.h" index="0">
 <position info="not_deleted" x="611" y="0"/>
 </item>
-<item historyLabel="board_init.c" index="2">
+<item historyLabel="board_init.c" index="1">
 <position info="not_deleted" x="252" y="0"/>
 </item>
-<item historyLabel="OLIMEX_STM32H407.h" index="9">
+<item historyLabel="OLIMEX_STM32H407.h" index="8">
 <position info="not_deleted" x="60" y="0"/>
 </item>
-<item historyLabel="board_init.c" index="2">
+<item historyLabel="board_init.c" index="1">
 <position info="not_deleted" x="252" y="0"/>
 </item>
-<item historyLabel="init_api_def.h" index="11">
+<item historyLabel="init_api_def.h" index="10">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="syscalls.c" index="12">
+<item historyLabel="syscalls.c" index="11">
 <position info="not_deleted" x="2139" y="0"/>
 </item>
-<item historyLabel="init_api_def.h" index="11">
+<item historyLabel="init_api_def.h" index="10">
 <position info="not_deleted" x="10306" y="0"/>
 </item>
-<item historyLabel="board_init.c" index="13">
+<item historyLabel="board_init.c" index="12">
 <position info="not_deleted" x="5781" y="0"/>
 </item>
-<item historyLabel="usb_api.c" index="14">
+<item historyLabel="usb_api.c" index="13">
 <position info="not_deleted" x="1254" y="18"/>
 </item>
-<item active="true" historyLabel="usb_host_msc_interface.c" index="15">
-<position info="not_deleted" x="7361" y="18"/>
+<item historyLabel="usb_host_msc_interface.c" index="14">
+<position info="not_deleted" x="6611" y="0"/>
+</item>
+<item historyLabel="main.h" index="15">
+<position info="not_deleted" x="238" y="0"/>
+</item>
+<item historyLabel="mcspi_interface.c" index="16">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="mcspi_interface.h" index="17">
+<position info="not_deleted" x="288" y="0"/>
+</item>
+<item active="true" historyLabel="mcspi_interface.c" index="16">
+<position info="not_deleted" x="0" y="0"/>
 </item>
 </navigationHistory>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
@@ -453,6 +449,12 @@
 <actionBarAdvisor/>
 </window>
 <mruList>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="mcspi_interface.h" tooltip="SDK_Probe_STM32F4/stm32f4xx/interface/mcspi_interface.h">
+<persistable path="/SDK_Probe_STM32F4/stm32f4xx/interface/mcspi_interface.h"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="mcspi_interface.c" tooltip="SDK_Probe_STM32F4/stm32f4xx/interface/mcspi_interface.c">
+<persistable path="/SDK_Probe_STM32F4/stm32f4xx/interface/mcspi_interface.c"/>
+</file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="usb_host_msc_interface.c" tooltip="SDK_Probe_STM32F4/stm32f4xx/interface/usb_host_msc_interface.c">
 <persistable path="/SDK_Probe_STM32F4/stm32f4xx/interface/usb_host_msc_interface.c"/>
 </file>
@@ -491,12 +493,6 @@
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="system_stm32f0xx.c" tooltip="SDK_Probe_STM32F0/stm32f0/sys/system_stm32f0xx.c">
 <persistable path="/SDK_Probe_STM32F0/stm32f0/sys/system_stm32f0xx.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="gpio_interface.h" tooltip="SDK_Probe_STM32F0/stm32f0/interface/gpio_interface.h">
-<persistable path="/SDK_Probe_STM32F0/stm32f0/interface/gpio_interface.h"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="gpio_interface.c" tooltip="SDK_Probe_STM32F0/stm32f0/interface/gpio_interface.c">
-<persistable path="/SDK_Probe_STM32F0/stm32f0/interface/gpio_interface.c"/>
 </file>
 </mruList>
 </workbench>
