@@ -11,8 +11,8 @@
 #include <stdbool.h>
 #include <string.h>
 #include "main.h"
-#include "stm32f4xx_conf.h"
-#include "sys/system_stm32f4xx.h"
+#include "stm32f0xx_conf.h"
+#include "sys/system_stm32f0xx.h"
 #include "api/init_api_def.h"
 #include "api/core_init_api.h"
 #include "api/gpio_def.h"
