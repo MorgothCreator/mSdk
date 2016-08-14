@@ -1722,7 +1722,7 @@ static void dopr (Uart_t* UartSettings, char *buffer, size_t maxlen, const char 
 	break;
       case 'p':
 	strvalue = va_arg (args, void *);
-	fmtint (UartSettings, buffer, &currlen, maxlen, (long) strvalue, 16, min, max, flags);
+	fmtint (UartSettings, buffer, &currlen, maxlen, strvalue, 16, min, max, flags);
 	break;
       case 'n':
 	if (cflags == DP_C_SHORT)

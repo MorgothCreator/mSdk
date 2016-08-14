@@ -18,7 +18,7 @@
 #include "driver/stm32f4xx_hal_gpio.h"
 #include "driver/stm32f4xx_hal_rcc.h"
 
-#include "lib/device/ili9341.h"
+#include "device/ili9341.h"
 
 #ifdef SSD2119
 /** @defgroup stm32f4_discovery_LCD_Private define
@@ -849,7 +849,7 @@ void _screen_clear(tDisplay *pDisplay, unsigned int color)
 }
 #else
 
-bool SetUpLCD(tDisplay* LcdStruct)
+bool SetUpLCD(void* LcdStruct)
 {
 	return false;
 }
@@ -857,7 +857,6 @@ bool SetUpLCD(tDisplay* LcdStruct)
 /**********************************************/
 void _lcd_enable()
 {
-
 }
 /**********************************************/
 void _lcd_disable()
@@ -865,63 +864,63 @@ void _lcd_disable()
 
 }
 //#######################################################################################
-void _screen_backlight_on(tDisplay *pDisplay)
+void _screen_backlight_on(void *pDisplay)
 {
 
 }
 //#######################################################################################
-void _screen_backlight_off(tDisplay *pDisplay)
+void _screen_backlight_off(void *pDisplay)
 {
 
 }
 //#######################################################################################
-bool _screen_copy(tDisplay *pDisplayTo, tDisplay *pDisplayFrom, bool put_cursor, signed int X, signed int Y, unsigned int color)
+bool _screen_copy(void *pDisplayTo, void *pDisplayFrom, bool put_cursor, signed int X, signed int Y, unsigned int color)
 {
 
 	return true;
 }
 //#######################################################################################
-void _box_cache_clean(tDisplay *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len)
+void _box_cache_clean(void *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len)
 {
 
 }
 //#######################################################################################
-void _put_rectangle(tDisplay *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len, bool fill, unsigned int color)
+void _put_rectangle(void *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len, bool fill, unsigned int color)
 {
 
 }
 //#######################################################################################
-void _put_pixel(tDisplay *pDisplay, signed int X, signed int Y, unsigned int color)
+void _put_pixel(void *pDisplay, signed int X, signed int Y, unsigned int color)
 {
 
 }
 //#######################################################################################
-void _screen_put_rgb_array_16(void *_pDisplay, unsigned short *rgb_buffer, unsigned int x1, unsigned int y1,unsigned int width, unsigned int height)
+void _screen_put_rgb_array_16(void *pDisplay, unsigned short *rgb_buffer, unsigned int x1, unsigned int y1,unsigned int width, unsigned int height)
 {
 
 }
 //#######################################################################################
-void _screen_put_rgb_array_24(void *_pDisplay, unsigned char *rgb_buffer, unsigned long x1, unsigned long y1,unsigned long width, unsigned long height)
+void _screen_put_rgb_array_24(void *pDisplay, unsigned char *rgb_buffer, unsigned long x1, unsigned long y1,unsigned long width, unsigned long height)
 {
 
 }
 //#######################################################################################
-void _screen_put_rgb_array_32(void *_pDisplay, unsigned char *rgb_buffer, unsigned int x1, unsigned int y1,unsigned int width, unsigned int height)
+void _screen_put_rgb_array_32(void *pDisplay, unsigned char *rgb_buffer, unsigned int x1, unsigned int y1,unsigned int width, unsigned int height)
 {
 
 }
 //#######################################################################################
-void _screen_put_horizontal_line(tDisplay *pDisplay, signed int X1, signed int X2, signed int Y, unsigned char width, unsigned int color)
+void _screen_put_horizontal_line(void *pDisplay, signed int X1, signed int X2, signed int Y, unsigned char width, unsigned int color)
 {
 
 }
 //#######################################################################################
-void _screen_put_vertical_line(tDisplay *pDisplay, signed int Y1, signed int Y2, signed int X, unsigned char width, unsigned int color)
+void _screen_put_vertical_line(void *pDisplay, signed int Y1, signed int Y2, signed int X, unsigned char width, unsigned int color)
 {
 
 }
 //#######################################################################################
-void _screen_clear(tDisplay *pDisplay, unsigned int color)
+void _screen_clear(void *pDisplay, unsigned int color)
 {
 
 }

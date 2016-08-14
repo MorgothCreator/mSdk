@@ -39,9 +39,9 @@
 
 /* Includes ------------------------------------------------------------------*/
 
-#include "usbh_msc.h"
-#include "usbh_msc_bot.h"    
-#include "usbh_msc_scsi.h"
+#include "driver/USBH_MSC/Class/MSC/inc/usbh_msc.h"
+#include "driver/USBH_MSC/Class/MSC/inc/usbh_msc_bot.h"
+#include "driver/USBH_MSC/Class/MSC/inc/usbh_msc_scsi.h"
 
 
 /** @addtogroup USBH_LIB

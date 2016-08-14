@@ -12,7 +12,7 @@
 #include "driver/stm32f4xx_hal_rcc.h"
 #include "sys/system_stm32f4xx.h"
 #include "api/gpio_def.h"
-#include "stm32f4xx_hal_gpio.h"
+#include "driver/stm32f4xx_hal_gpio.h"
 
 GPIO_TypeDef* GET_GPIO_PORT_ADDR[] = { GPIOA
 #ifdef GPIOB
@@ -166,7 +166,8 @@ void _gpio_init(unsigned int GpioModuleNr)
 new_gpio *_gpio_assign(unsigned int PortNr, unsigned int Pin, gpio_type_enum function, bool Multipin)
 {
 	new_gpio* GpioStruct = new_(new_gpio);
-	if(GpioStruct == NULL) return NULL;
+	if(GpioStruct == NULL)
+		return NULL;
 	unsigned int BaseAddr = 0;
 	switch (PortNr)
 	{
@@ -244,19 +245,22 @@ new_gpio *_gpio_assign(unsigned int PortNr, unsigned int Pin, gpio_type_enum fun
 /*#####################################################*/
 void _gpio_free(new_gpio *gpio_struct)
 {
-	if(!gpio_struct) return;
+	if(!gpio_struct)
+		return;
 	HAL_GPIO_DeInit((GPIO_TypeDef*)gpio_struct->BaseAddr, 1 << gpio_struct->Pin);
 	free(gpio_struct);
 }
 /*#####################################################*/
 bool _gpio_out(new_gpio *gpio_struct, unsigned int State)
 {
-	if(!gpio_struct) return false;
+	if(!gpio_struct)
+		return false;
 	GPIO_TypeDef *BaseAddr = (GPIO_TypeDef *)gpio_struct->BaseAddr;
 	if(gpio_struct->Multipin)
 	{
-		BaseAddr->BSRR |= State & gpio_struct->Pin;
-		BaseAddr->BSRR |= (State & gpio_struct->Pin) << 16;
+		//BaseAddr->BSRR |= State & gpio_struct->Pin;
+		//BaseAddr->BSRR |= ((~State) & gpio_struct->Pin) << 16;
+		BaseAddr->ODR = (BaseAddr->ODR & ~gpio_struct->Pin) | (State & gpio_struct->Pin);
 	}
 	else
 	{
@@ -283,14 +287,14 @@ signed int _gpio_in(new_gpio *gpio_struct)
 	GPIO_TypeDef *BaseAddr = (GPIO_TypeDef *)gpio_struct->BaseAddr;
 	if(gpio_struct->Multipin)
 	{
-		int cnt = 0;
+		/*int cnt = 0;
 		int returned_state = 0;
 		for(; cnt < 16; cnt ++)
 		{
 			if(gpio_struct->Pin & (1 << cnt))
 				returned_state |= HAL_GPIO_ReadPin(BaseAddr, 1 << cnt) << cnt;
-		}
-		return returned_state;
+		}*/
+		return BaseAddr->IDR & gpio_struct->Pin;
 	}
 	else
 	{
@@ -343,7 +347,10 @@ bool _gpio_function_set(new_gpio *gpio_struct, gpio_type_enum function)
 	GPIO_TypeDef *BaseAddr = (GPIO_TypeDef *)gpio_struct->BaseAddr;
 
 	GPIO_InitTypeDef  GPIO_InitStructure;
-	GPIO_InitStructure.Pin = 1 << gpio_struct->Pin;
+	if(gpio_struct->Multipin == false)
+		GPIO_InitStructure.Pin = 1 << gpio_struct->Pin;
+	else
+		GPIO_InitStructure.Pin = gpio_struct->Pin;
 	switch(function)
 	{
 	case GPIO_AIN:
@@ -363,18 +370,18 @@ bool _gpio_function_set(new_gpio *gpio_struct, gpio_type_enum function)
 		GPIO_InitStructure.Pull = GPIO_PULLUP;
 		break;
 	case GPIO_OUT_OPEN_DRAIN:
-		GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
+		GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_OD;
 		//GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;
 		break;
 	case GPIO_OUT_PUSH_PULL:
-		GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_OD;
+		GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
 		//GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
 		break;
 	default:
 		return false;
 
 	}
-	GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
+	GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
 	HAL_GPIO_Init((GPIO_TypeDef *)BaseAddr, &GPIO_InitStructure);
 	return true;
 }

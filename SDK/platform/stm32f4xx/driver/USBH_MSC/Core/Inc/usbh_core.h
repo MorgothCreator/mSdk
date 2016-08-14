@@ -34,7 +34,7 @@
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "usbh_conf.h"
+#include "driver/USBH_MSC/Class/MSC/usbh_conf.h"
 #include "usbh_def.h"
 #include "usbh_ioreq.h"
 #include "usbh_pipes.h"

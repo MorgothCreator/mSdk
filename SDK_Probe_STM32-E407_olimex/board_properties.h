@@ -8,8 +8,8 @@
 #ifndef BOARD_PROPERTIES_H_
 #define BOARD_PROPERTIES_H_
 /*#####################################################*/
-#define ExtQ_FreqMhz		12
-#define ExtQ_FreqHz			12000000
+#define ExtQ_FreqMhz		8
+#define ExtQ_FreqHz			8000000
 #define CoreFreq_Mhz		168
 //#define USE_SELECTED_FONTS
 //#define INT_SIZE_IS_2_BYTES

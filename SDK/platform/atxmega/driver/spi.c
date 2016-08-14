@@ -94,99 +94,99 @@ bool spi_enable(Mcspi_t *SpiStruct)
 		SpiStruct->UserData = calloc(1, sizeof(SPI_UserData_t));
 		if(!SpiStruct->UserData) return false;
 		SPI_UserData_t *UserData = (SPI_UserData_t *)SpiStruct->UserData;
-		UserData->Cs_PinMask = 1 << (SpiStruct->Cs0Pin & 0x07);
-		switch (SpiStruct->Cs0Pin >> 3)
+		UserData->Cs_PinMask = 1 << (SpiStruct->CsPin[0] & 0x07);
+		switch (SpiStruct->CsPort[0] >> 3)
 		{
-			#ifdef PORTA
+#ifdef PORTA
 			case 0:
 			UserData->Cs_Port = &PORTA;
 			break;
-			#endif
-			#ifdef PORTB
+#endif
+#ifdef PORTB
 			case 1:
 			UserData->Cs_Port = &PORTB;
 			break;
-			#endif
-			#ifdef PORTC
+#endif
+#ifdef PORTC
 			case 2:
 			UserData->Cs_Port = &PORTC;
 			break;
-			#endif
-			#ifdef PORTD
+#endif
+#ifdef PORTD
 			case 3:
 			UserData->Cs_Port = &PORTD;
 			break;
-			#endif
-			#ifdef PORTE
+#endif
+#ifdef PORTE
 			case 4:
 			UserData->Cs_Port = &PORTE;
 			break;
-			#endif
-			#ifdef PORTF
+#endif
+#ifdef PORTF
 			case 5:
 			UserData->Cs_Port = &PORTF;
 			break;
-			#endif
-			#ifdef PORTG
+#endif
+#ifdef PORTG
 			case 6:
 			UserData->Cs_Port = &PORTG;
 			break;
-			#endif
-			#ifdef PORTH
+#endif
+#ifdef PORTH
 			case 7:
 			UserData->Cs_Port = &PORTH;
 			break;
-			#endif
-			#ifdef PORTI
+#endif
+#ifdef PORTI
 			case 8:
 			UserData->Cs_Port = &PORTI;
 			break;
-			#endif
-			#ifdef PORTJ
+#endif
+#ifdef PORTJ
 			case 9:
 			UserData->Cs_Port = &PORTJ;
 			break;
-			#endif
-			#ifdef PORTK
+#endif
+#ifdef PORTK
 			case 10:
 			UserData->Cs_Port = &PORTK;
 			break;
-			#endif
-			#ifdef PORTL
+#endif
+#ifdef PORTL
 			case 11:
 			UserData->Cs_Port = &PORTL;
 			break;
-			#endif
-			#ifdef PORTM
+#endif
+#ifdef PORTM
 			case 12:
 			UserData->Cs_Port = &PORTM;
 			break;
-			#endif
-			#ifdef PORTN
+#endif
+#ifdef PORTN
 			case 13:
 			UserData->Cs_Port = &PORTN;
 			break;
-			#endif
-			#ifdef PORTO
+#endif
+#ifdef PORTO
 			case 14:
 			UserData->Cs_Port = &PORTO;
 			break;
-			#endif
-			#ifdef PORTP
+#endif
+#ifdef PORTP
 			case 15:
 			UserData->Cs_Port = &PORTP;
 			break;
-			#endif
-			#ifdef PORTQ
+#endif
+#ifdef PORTQ
 			case 16:
 			UserData->Cs_Port = &PORTQ;
 			break;
-			#endif
-			#ifdef PORTR
+#endif
+#ifdef PORTR
 			case 17:
 			UserData->Cs_Port = &PORTR;
 			break;
-			#endif
+#endif
 		}
 		UserData->Cs_Port->DIRSET = UserData->Cs_PinMask;
 		UserData->Cs_Port->OUTSET = UserData->Cs_PinMask;

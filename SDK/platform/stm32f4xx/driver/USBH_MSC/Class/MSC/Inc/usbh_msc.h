@@ -34,7 +34,7 @@
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "usbh_core.h"
+#include "driver/USBH_MSC/core/inc/usbh_core.h"
 #include "usbh_msc_bot.h"
 #include "usbh_msc_scsi.h"
 

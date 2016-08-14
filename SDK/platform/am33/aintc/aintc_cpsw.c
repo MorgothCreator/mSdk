@@ -9,7 +9,7 @@
 #include "aintc_cpsw.h"
 #include "../include/interrupt.h"
 
-#ifdef UseLwip
+#ifdef USE_LWIP
 
 extern void CPSWCore0RxIsr(void);
 extern void CPSWCore0TxIsr(void);

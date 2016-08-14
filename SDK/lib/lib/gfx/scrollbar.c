@@ -33,15 +33,16 @@
 #include "sys/plat_properties.h"
 #include "gfx_gui_paint.h"
 //#######################################################################################
-static void paint_scrollbar(tScrollBar* settings, tDisplay *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len, tControlCommandData* control_comand)
+static void paint_scrollbar(tScrollBar* settings, void *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len, tControlCommandData* control_comand)
 {
+	tDisplay* LcdStruct = (tDisplay *) pDisplay;
 	tWindow *ParentWindow = (tWindow*)settings->Internals.ParentWindow;
-	tRectangle back_up_clip = pDisplay->sClipRegion;
-	pDisplay->sClipRegion.sXMin = x_start;
-	pDisplay->sClipRegion.sYMin = y_start;
-	pDisplay->sClipRegion.sXMax = x_start + x_len;
-	pDisplay->sClipRegion.sYMax = y_start + y_len;
-	clip_limit(&pDisplay->sClipRegion, &back_up_clip);
+	tRectangle back_up_clip = LcdStruct->sClipRegion;
+	LcdStruct->sClipRegion.sXMin = x_start;
+	LcdStruct->sClipRegion.sYMin = y_start;
+	LcdStruct->sClipRegion.sXMax = x_start + x_len;
+	LcdStruct->sClipRegion.sYMax = y_start + y_len;
+	clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
 	if(settings->Internals.NeedEntireRefresh == true || settings->Internals.NeedEntireRepaint == true || settings->Internals.Control.Initiated == false)
 	{
 		if(settings->Enabled)
@@ -305,13 +306,13 @@ static void paint_scrollbar(tScrollBar* settings, tDisplay *pDisplay, signed int
 		control_comand->Cursor = back;
 	}
 
-	pDisplay->sClipRegion.sXMin = x_start;
-	pDisplay->sClipRegion.sYMin = y_start;
-	pDisplay->sClipRegion.sXMax = x_start + x_len;
-	pDisplay->sClipRegion.sYMax = y_start + y_len;
-	clip_limit(&pDisplay->sClipRegion, &back_up_clip);
-	box_cache_clean(pDisplay, x_start, y_start, x_len, y_len);
-	pDisplay->sClipRegion = back_up_clip;
+	LcdStruct->sClipRegion.sXMin = x_start;
+	LcdStruct->sClipRegion.sYMin = y_start;
+	LcdStruct->sClipRegion.sXMax = x_start + x_len;
+	LcdStruct->sClipRegion.sYMax = y_start + y_len;
+	clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
+	LcdStruct->lcd_func.box_cache_clean(pDisplay, x_start, y_start, x_len, y_len);
+	LcdStruct->sClipRegion = back_up_clip;
 	settings->Internals.NeedEntireRefresh = false;
 }
 //#######################################################################################
@@ -381,24 +382,29 @@ void scrollbar(tScrollBar *settings, tControlCommandData* control_comand)
 		ButtonSettings->Internals.ContinuouslyPushTimerDisabled = true;
 		ButtonSettings->Enabled = settings->Enabled;
 		ButtonSettings->Color.Scren = settings->Color.Scren;
+		ButtonSettings->Color.Enabled.BackGround = settings->Color.Enabled.BackGround;
 
 		settings->Internals.BtnUpSettings = new_button(settings->Internals.ParentWindow);
 		tButton* BtnUpSettings = settings->Internals.BtnUpSettings;
 		BtnUpSettings->Internals.NoPaintBackGround = true;
 		BtnUpSettings->Enabled = settings->Enabled;
 		BtnUpSettings->Color.Scren = settings->Color.Scren;
+		BtnUpSettings->Color.Enabled.BackGround = settings->Color.Enabled.BackGround;
 
 		settings->Internals.BtnDnSettings = new_button(settings->Internals.ParentWindow);
 		tButton* BtnDnSettings = settings->Internals.BtnDnSettings;
 		BtnDnSettings->Internals.NoPaintBackGround = true;
 		BtnDnSettings->Enabled = settings->Enabled;
 		BtnDnSettings->Color.Scren = settings->Color.Scren;
+		BtnDnSettings->Color.Enabled.BackGround = settings->Color.Enabled.BackGround;
 		if(settings->Size.X < settings->Size.Y)
 		{
 			settings->Internals.BtnSettings->Position.X = 2;
 			settings->Internals.BtnSettings->Position.Y = settings->Size.X;
 			settings->Internals.BtnSettings->Internals.PositionOffset.Y = settings->Internals.Position.Y - ParentWindow->Internals.Position.Y;
 			settings->Internals.BtnSettings->Internals.PositionOffset.X = settings->Internals.Position.X - ParentWindow->Internals.Position.X;
+			settings->Internals.BtnSettings->Size.X = settings->Internals.Size.X - 4;
+			//settings->Internals.BtnSettings->Size.Y = settings->Internals.Size.X - 4;
 
 			BtnUpSettings->Position.X = 2;
 			BtnUpSettings->Position.Y = 2;
@@ -420,6 +426,8 @@ void scrollbar(tScrollBar *settings, tControlCommandData* control_comand)
 			settings->Internals.BtnSettings->Position.Y = 2;
 			settings->Internals.BtnSettings->Internals.PositionOffset.X = settings->Internals.Position.X - ParentWindow->Internals.Position.X;
 			settings->Internals.BtnSettings->Internals.PositionOffset.Y = settings->Internals.Position.Y - ParentWindow->Internals.Position.Y;
+			//settings->Internals.BtnSettings->Size.X = settings->Internals.Size.Y - 4;
+			settings->Internals.BtnSettings->Size.Y = settings->Internals.Size.Y - 4;
 			/* Left */
 			BtnUpSettings->Position.X = 2;
 			BtnUpSettings->Position.Y = 2;
@@ -474,7 +482,8 @@ void scrollbar(tScrollBar *settings, tControlCommandData* control_comand)
 	signed int Y_StartBox = settings->Internals.Position.Y;
 	signed int X_LenBox = settings->Internals.Size.X;
 	signed int Y_LenBox = settings->Internals.Size.Y;
-	tDisplay *pDisplay = settings->Internals.pDisplay;
+	void *pDisplay = settings->Internals.pDisplay;
+	tDisplay* LcdStruct = (tDisplay *) pDisplay;
 
 	/*Clear background of box with actual painted dimensions and positions if they been changed*/
 	if(settings->Internals.NeedEntireRefresh == true || settings->Internals.OldStateVisible != settings->Visible)
@@ -482,15 +491,15 @@ void scrollbar(tScrollBar *settings, tControlCommandData* control_comand)
 		if(!settings->Internals.NoPaintBackGround || !settings->Visible)
 		{
 			settings->Internals.OldStateVisible = settings->Visible;
-			tRectangle back_up_clip = pDisplay->sClipRegion;
-			pDisplay->sClipRegion.sXMin = X_StartBox;
-			pDisplay->sClipRegion.sYMin = Y_StartBox;
-			pDisplay->sClipRegion.sXMax = X_StartBox + X_LenBox;
-			pDisplay->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
-			clip_limit(&pDisplay->sClipRegion, &back_up_clip);
-			put_rectangle(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, true, settings->Color.Scren);
-			box_cache_clean(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox);
-			pDisplay->sClipRegion = back_up_clip;
+			tRectangle back_up_clip = LcdStruct->sClipRegion;
+			LcdStruct->sClipRegion.sXMin = X_StartBox;
+			LcdStruct->sClipRegion.sYMin = Y_StartBox;
+			LcdStruct->sClipRegion.sXMax = X_StartBox + X_LenBox;
+			LcdStruct->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
+			clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
+			LcdStruct->lcd_func.put_rectangle(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, true, settings->Color.Scren);
+			LcdStruct->lcd_func.box_cache_clean(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox);
+			LcdStruct->sClipRegion = back_up_clip;
 			if(!settings->Visible) return;
 		}
 		settings->Internals.NeedEntireRefresh = true;
@@ -526,12 +535,12 @@ void scrollbar(tScrollBar *settings, tControlCommandData* control_comand)
 		Y_LenBox = settings->Internals.Size.Y;
 		//CursorState _cursor = control_comand->Cursor;
 		//control_comand->Cursor = Cursor_Up;
-		tRectangle back_up_clip = pDisplay->sClipRegion;
-		pDisplay->sClipRegion.sXMin = X_StartBox;
-		pDisplay->sClipRegion.sYMin = Y_StartBox;
-		pDisplay->sClipRegion.sXMax = X_StartBox + X_LenBox;
-		pDisplay->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
-		clip_limit(&pDisplay->sClipRegion, &back_up_clip);
+		tRectangle back_up_clip = LcdStruct->sClipRegion;
+		LcdStruct->sClipRegion.sXMin = X_StartBox;
+		LcdStruct->sClipRegion.sYMin = Y_StartBox;
+		LcdStruct->sClipRegion.sXMax = X_StartBox + X_LenBox;
+		LcdStruct->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
+		clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
 
 		if(settings->Size.X < settings->Size.Y)
 		{
@@ -549,7 +558,7 @@ void scrollbar(tScrollBar *settings, tControlCommandData* control_comand)
 		}
 
 		paint_scrollbar(settings, pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, control_comand);
-		pDisplay->sClipRegion = back_up_clip;
+		LcdStruct->sClipRegion = back_up_clip;
 		//control_comand->Cursor = _cursor;
 		settings->Internals.ParentWindowStateEnabled = ParentWindow->Internals.OldStateEnabled;
 		settings->Internals.OldStateVisible = settings->Visible;
@@ -565,16 +574,16 @@ void scrollbar(tScrollBar *settings, tControlCommandData* control_comand)
 	{
 		settings->Internals.OldStateCursor = control_comand->Cursor;
 	}
-	tRectangle back_up_clip = pDisplay->sClipRegion;
-	pDisplay->sClipRegion.sXMin = X_StartBox;
-	pDisplay->sClipRegion.sYMin = Y_StartBox;
-	pDisplay->sClipRegion.sXMax = X_StartBox + X_LenBox;
-	pDisplay->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
-	clip_limit(&pDisplay->sClipRegion, &back_up_clip);
+	tRectangle back_up_clip = LcdStruct->sClipRegion;
+	LcdStruct->sClipRegion.sXMin = X_StartBox;
+	LcdStruct->sClipRegion.sYMin = Y_StartBox;
+	LcdStruct->sClipRegion.sXMax = X_StartBox + X_LenBox;
+	LcdStruct->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
+	clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
 	if(control_comand->Cursor)paint_scrollbar(settings, pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, control_comand);
-	pDisplay->sClipRegion = back_up_clip;
+	LcdStruct->sClipRegion = back_up_clip;
 	bool inside_window = check_if_inside_box(X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, control_comand->X, control_comand->Y);
-	bool _inside_window = check_if_inside_box(pDisplay->sClipRegion.sXMin, pDisplay->sClipRegion.sYMin, pDisplay->sClipRegion.sXMax - pDisplay->sClipRegion.sXMin, pDisplay->sClipRegion.sYMax - pDisplay->sClipRegion.sYMin, control_comand->X, control_comand->Y);
+	bool _inside_window = check_if_inside_box(LcdStruct->sClipRegion.sXMin, LcdStruct->sClipRegion.sYMin, LcdStruct->sClipRegion.sXMax - LcdStruct->sClipRegion.sXMin, LcdStruct->sClipRegion.sYMax - LcdStruct->sClipRegion.sYMin, control_comand->X, control_comand->Y);
 	if(!_inside_window) inside_window = false;
 	if(inside_window == true && control_comand->Cursor == Cursor_Down) settings->Internals.CursorDownInsideBox = true;
 	if(settings->Internals.CursorDownInsideBox == true && (control_comand->Cursor == Cursor_Up || control_comand->Cursor == Cursor_NoAction)) settings->Internals.CursorDownInsideBox = false;

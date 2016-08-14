@@ -82,7 +82,7 @@ controlscolor controls_color =
 		.Control_Color_Disabled_BackGround = COLOR_24_to_16((0x37)/2,(0x37)/2,(0x37)/2),
 		.Control_Color_Disabled_WindowBorder = COLOR_24_to_16(0x98, 0x9C, 0xB6),
 		.Control_Color_Disabled_WindowHeader = COLOR_24_to_16(0x98, 0x9C, 0xB6),
-	COLOR_24_to_16(0x98, 0x9C, 0xB6),
+		.Scren = COLOR_24_to_16(0x98, 0x9C, 0xB6),
 #ifdef USE_FONT_CMSS14B
 	.DefaultFont = (tFont*)&g_sFontCmss14b
 #else
@@ -149,8 +149,8 @@ unsigned int controlls_change_color(unsigned int color, double value)
 }
 #endif
 //#######################################################################################
-bool screen_copy(tDisplay *pDisplayTo, tDisplay *pDisplayFrom, bool put_cursor, signed int X, signed int Y, unsigned int color)
-{
+//bool screen_copy(tDisplay *pDisplayTo, tDisplay *pDisplayFrom, bool put_cursor, signed int X, signed int Y, unsigned int color)
+//{
 	/*if(pDisplayTo->raster_timings->X != pDisplayFrom->raster_timings->X || pDisplayTo->raster_timings->Y != pDisplayFrom->raster_timings->Y) return false;
 	//memcpy((void *)pDisplayTo->DisplayData, (void *)pDisplayFrom->DisplayData, (sizeof(unsigned int) * pDisplayFrom->Height * pDisplayFrom->Width) + 32);
 	//box_cache_clean(pDisplayTo, 0, 0, pDisplayFrom->Width, pDisplayFrom->Height);
@@ -168,8 +168,8 @@ bool screen_copy(tDisplay *pDisplayTo, tDisplay *pDisplayFrom, bool put_cursor, 
 		CacheDataCleanInvalidateBuff((unsigned int)((unsigned int*)(ScreenBuff + (pDisplayFrom->raster_timings->X * LineCnt))), (sizeof(ScreenBuff[0]) * pDisplayTo->raster_timings->X) + 64);
 	}
 	return true;*/
-	return _screen_copy(pDisplayTo, pDisplayFrom, put_cursor, X, Y, color);
-}
+//	return _screen_copy(pDisplayTo, pDisplayFrom, put_cursor, X, Y, color);
+//}
 //#######################################################################################
 void clip_limit(tRectangle *limited, tRectangle *limits)
 {
@@ -179,12 +179,13 @@ void clip_limit(tRectangle *limited, tRectangle *limits)
 	if(limited->sYMax >= limits->sYMax) limited->sYMax = limits->sYMax;
 }
 //#######################################################################################
-void TouchPaintPoint(tDisplay *pDisplay, signed int X, signed int Y, unsigned int color)
+void TouchPaintPoint(void *pDisplay, signed int X, signed int Y, unsigned int color)
 {
-	put_horizontal_line(pDisplay, X- 7, 6, Y, 1, color);
-	put_horizontal_line(pDisplay, X+ 2, 6, Y, 1, color);
-	put_vertical_line(pDisplay, Y- 7, 6, X, 1, color);
-	put_vertical_line(pDisplay, Y+ 2, 6, X, 1, color);
+	tDisplay* LcdStruct = (tDisplay *) pDisplay;
+	LcdStruct->lcd_func.put_horizontal_line(pDisplay, X- 7, 6, Y, 1, color);
+	LcdStruct->lcd_func.put_horizontal_line(pDisplay, X+ 2, 6, Y, 1, color);
+	LcdStruct->lcd_func.put_vertical_line(pDisplay, Y- 7, 6, X, 1, color);
+	LcdStruct->lcd_func.put_vertical_line(pDisplay, Y+ 2, 6, X, 1, color);
 }
 //#######################################################################################
 bool check_if_inside_box(signed int x_start, signed int y_start, signed int x_len, signed int y_len, signed int x_point, signed int y_point)
@@ -194,9 +195,10 @@ bool check_if_inside_box(signed int x_start, signed int y_start, signed int x_le
 	else return false;
 }
 //#######################################################################################
-void put_pixel(tDisplay *pDisplay, signed int X, signed int Y, unsigned int color);
-void put_circle(tDisplay *pDisplay, signed int x, signed int y, signed int _radius, unsigned char fill, unsigned int color)
+//void put_pixel(void *pDisplay, signed int X, signed int Y, unsigned int color);
+void put_circle(void *pDisplay, signed int x, signed int y, signed int _radius, unsigned char fill, unsigned int color)
 {
+	tDisplay* LcdStruct = (tDisplay *) pDisplay;
 	signed int radius = _radius;
 	if(radius < 0) radius = ~radius;
 	signed int a, b, P;
@@ -229,27 +231,27 @@ void put_circle(tDisplay *pDisplay, signed int x, signed int y, signed int _radi
 
 		 if(_Tmp7 != Tmp7)
 		 {
-			put_horizontal_line(pDisplay,Tmp2, Tmp1, Tmp7, 1, color);
-			put_horizontal_line(pDisplay,Tmp2, Tmp1, Tmp8, 1, color);
+			 LcdStruct->lcd_func.put_horizontal_line(pDisplay,Tmp2, Tmp1, Tmp7, 1, color);
+			 LcdStruct->lcd_func.put_horizontal_line(pDisplay,Tmp2, Tmp1, Tmp8, 1, color);
 		 }
          if(_Tmp5 != Tmp5)
 		 {
-			put_horizontal_line(pDisplay,Tmp4, Tmp3, Tmp5, 1, color);
-			put_horizontal_line(pDisplay,Tmp4, Tmp3, Tmp6, 1, color);
+        	 LcdStruct->lcd_func.put_horizontal_line(pDisplay,Tmp4, Tmp3, Tmp5, 1, color);
+        	 LcdStruct->lcd_func.put_horizontal_line(pDisplay,Tmp4, Tmp3, Tmp6, 1, color);
 		 }
       _Tmp5 = Tmp5;
       _Tmp7 = Tmp7;
       }
       else
       {
-		put_pixel(pDisplay,Tmp1, Tmp7, color);
-		put_pixel(pDisplay,Tmp3, Tmp5, color);
-		put_pixel(pDisplay,Tmp2, Tmp7, color);
-		put_pixel(pDisplay,Tmp4, Tmp5, color);
-		put_pixel(pDisplay,Tmp3, Tmp6, color);
-		put_pixel(pDisplay,Tmp1, Tmp8, color);
-		put_pixel(pDisplay,Tmp2, Tmp8, color);
-		put_pixel(pDisplay,Tmp4, Tmp6, color);
+    	  LcdStruct->lcd_func.put_pixel(pDisplay,Tmp1, Tmp7, color);
+    	  LcdStruct->lcd_func.put_pixel(pDisplay,Tmp3, Tmp5, color);
+    	  LcdStruct->lcd_func.put_pixel(pDisplay,Tmp2, Tmp7, color);
+    	  LcdStruct->lcd_func.put_pixel(pDisplay,Tmp4, Tmp5, color);
+    	  LcdStruct->lcd_func.put_pixel(pDisplay,Tmp3, Tmp6, color);
+    	  LcdStruct->lcd_func.put_pixel(pDisplay,Tmp1, Tmp8, color);
+    	  LcdStruct->lcd_func.put_pixel(pDisplay,Tmp2, Tmp8, color);
+    	  LcdStruct->lcd_func.put_pixel(pDisplay,Tmp4, Tmp6, color);
       }
 
       if(P < 0)
@@ -259,8 +261,9 @@ void put_circle(tDisplay *pDisplay, signed int x, signed int y, signed int _radi
     } while(a <= b);
 }
 //#######################################################################################
-void put_line(tDisplay *pDisplay, signed int X1, signed int Y1, signed int X2, signed int Y2, unsigned char width, unsigned int color)
+void put_line(void *pDisplay, signed int X1, signed int Y1, signed int X2, signed int Y2, unsigned char width, unsigned int color)
 {
+	tDisplay* LcdStruct = (tDisplay *) pDisplay;
 	/*if(X1 > X2)
 	{
 		int Tmp = X1;
@@ -298,7 +301,7 @@ void put_line(tDisplay *pDisplay, signed int X1, signed int Y1, signed int X2, s
 			Dy = -Dy;
 			TwoDy = -TwoDy;
 		}
-		put_pixel(pDisplay,X1,Y1, color);
+		LcdStruct->lcd_func.put_pixel(pDisplay,X1,Y1, color);
 		if ((Dx != 0) || (Dy != 0))
 		{
 			if (Dy <= Dx)
@@ -313,7 +316,7 @@ void put_line(tDisplay *pDisplay, signed int X1, signed int Y1, signed int X2, s
 						CurrentY += Yinc;
 						TwoDxAccumulatedError -= TwoDx;
 					}
-					put_pixel(pDisplay,CurrentX,CurrentY, color);
+					LcdStruct->lcd_func.put_pixel(pDisplay,CurrentX,CurrentY, color);
 				}
 				while (CurrentX != X2);
 			}
@@ -329,7 +332,7 @@ void put_line(tDisplay *pDisplay, signed int X1, signed int Y1, signed int X2, s
 						CurrentX += Xinc;
 						TwoDyAccumulatedError -= TwoDy;
 					}
-					put_pixel(pDisplay,CurrentX,CurrentY, color);
+					LcdStruct->lcd_func.put_pixel(pDisplay,CurrentX,CurrentY, color);
 				}
 				while (CurrentY != Y2);
 			}
@@ -376,14 +379,15 @@ void put_line(tDisplay *pDisplay, signed int X1, signed int Y1, signed int X2, s
 		  for(i=0; i<=dx; ++i)
 		  {
 #ifdef Use_FastDrawBar
-			 screen_draw_vertical_line(pContext,Y1+ (-half_width), Y1+ (half_width+width%2), X1, 1);
+			  LcdStruct->lcd_func.screen_draw_vertical_line(pContext,Y1+ (-half_width), Y1+ (half_width+width%2), X1, 1);
 #else
 			 for(j=-half_width; j<half_width+width%2; ++j)
 			 {
 				 signed int temp;
 
 				temp = dx*X1+dy*(Y1+j);    // Use more RAM to increase speed
-				if(temp+c1 >= 0 && temp+c2 <=0) put_pixel(pDisplay,X1, Y1+j, color);
+				if(temp+c1 >= 0 && temp+c2 <=0)
+					LcdStruct->lcd_func.put_pixel(pDisplay,X1, Y1+j, color);
 			 }
 #endif
 			 if(P < 0)
@@ -418,14 +422,15 @@ void put_line(tDisplay *pDisplay, signed int X1, signed int Y1, signed int X2, s
 				Y1 += addy;
 			 }
 #ifdef Use_FastDrawBar
-			 put_horizontal_line(pContext,(X1+(-half_width)), (X1+(half_width+width%2)), Y1, 1);
+			 LcdStruct->lcd_func.put_horizontal_line(pContext,(X1+(-half_width)), (X1+(half_width+width%2)), Y1, 1);
 #else
 			 for(j=-half_width; j<half_width+width%2; ++j)
 			 {
 				 signed int temp;
 
 				temp = dx*X1+dy*(Y1+j);    // Use more RAM to increase speed
-				if(temp+c1 >= 0 && temp+c2 <= 0) put_pixel(pDisplay,X1+j, Y1, color);
+				if(temp+c1 >= 0 && temp+c2 <= 0)
+					LcdStruct->lcd_func.put_pixel(pDisplay,X1+j, Y1, color);
 			 }
 #endif
 		  }
@@ -433,8 +438,9 @@ void put_line(tDisplay *pDisplay, signed int X1, signed int Y1, signed int X2, s
 	}
 }
 //#######################################################################################
-void elipseplot(tDisplay *pDisplay, signed int xc,signed int yc,signed int x,signed int y, unsigned char Fill, unsigned int color)
+void elipseplot(void *pDisplay, signed int xc,signed int yc,signed int x,signed int y, unsigned char Fill, unsigned int color)
 {
+	tDisplay* LcdStruct = (tDisplay *) pDisplay;
 	int Tmp1 = xc +x;
 	int Tmp2 = xc -x;
 	int Tmp3 = yc +y;
@@ -442,20 +448,21 @@ void elipseplot(tDisplay *pDisplay, signed int xc,signed int yc,signed int x,sig
 
 	if(Fill)
 	{
-		put_horizontal_line(pDisplay,Tmp2, Tmp1, Tmp3, 1, color);
-		put_horizontal_line(pDisplay,Tmp2, Tmp1, Tmp4, 1, color);
+		LcdStruct->lcd_func.put_horizontal_line(pDisplay,Tmp2, Tmp1, Tmp3, 1, color);
+		LcdStruct->lcd_func.put_horizontal_line(pDisplay,Tmp2, Tmp1, Tmp4, 1, color);
 	}
 	else
 	{
-		put_pixel(pDisplay,(unsigned int)(Tmp1),(unsigned int)(Tmp3), color);
-		put_pixel(pDisplay,(unsigned int)(Tmp2),(unsigned int)(Tmp3), color);
-		put_pixel(pDisplay,(unsigned int)(Tmp1),(unsigned int)(Tmp4), color);
-		put_pixel(pDisplay,(unsigned int)(Tmp2),(unsigned int)(Tmp4), color);
+		LcdStruct->lcd_func.put_pixel(pDisplay,(unsigned int)(Tmp1),(unsigned int)(Tmp3), color);
+		LcdStruct->lcd_func.put_pixel(pDisplay,(unsigned int)(Tmp2),(unsigned int)(Tmp3), color);
+		LcdStruct->lcd_func.put_pixel(pDisplay,(unsigned int)(Tmp1),(unsigned int)(Tmp4), color);
+		LcdStruct->lcd_func.put_pixel(pDisplay,(unsigned int)(Tmp2),(unsigned int)(Tmp4), color);
 	}
 }
 //----------------------------------------------------------------------------------------
-void put_elipse(tDisplay *pDisplay, signed int xc,signed int yc,signed int _rx,signed int _ry, unsigned char Fill, unsigned int color)
+void put_elipse(void *pDisplay, signed int xc,signed int yc,signed int _rx,signed int _ry, unsigned char Fill, unsigned int color)
 {
+	//tDisplay* LcdStruct = (tDisplay *) pDisplay;
 	signed int rx = _rx;
 	if(rx < 0) rx = 0xFFFFFFFF - rx;
 	signed int ry = _ry;
@@ -469,7 +476,7 @@ void put_elipse(tDisplay *pDisplay, signed int xc,signed int yc,signed int _rx,s
 	int y=ry;
 	int py=torx2*y;
 	int px=0;
-	void elipseplot(tDisplay *,signed int,signed int,signed int,signed int,unsigned char, unsigned int);
+	void elipseplot(void *,signed int,signed int,signed int,signed int,unsigned char, unsigned int);
 	elipseplot(pDisplay,xc,yc,x,y,Fill, color);
 	p=/*round(*/ry2-(rx2*ry)+(0.25*rx2)/*)*/;
 	while(px<py)
@@ -516,8 +523,9 @@ void triangle_swap_nibble(signed int* a,signed int *b)
 	*b=t;
 }
 
-void put_triangle(tDisplay *pDisplay, signed int  Ax,signed int  Ay,signed int  Bx,signed int  By,signed int  Cx,signed int  Cy, unsigned char Fill, unsigned int color)
+void put_triangle(void *pDisplay, signed int  Ax,signed int  Ay,signed int  Bx,signed int  By,signed int  Cx,signed int  Cy, unsigned char Fill, unsigned int color)
 {
+	//tDisplay* LcdStruct = (tDisplay *) pDisplay;
 	signed long dx1,dx2,dx3;
 	signed long Sx,Ex;
 	unsigned int Sy,Ey;
@@ -591,34 +599,34 @@ static unsigned char _NumLeadingZeros(unsigned int x)
 	return count;
 }
 //#######################################################################################
-void string_select_get(tDisplay *pDisplay, tFont *pFont, char *pcString, bool WordWrap, signed int lLength, signed int *Start, signed int *SelStartReturn, signed int *SelLenReturn, signed int _XPush, signed int _YPush, signed int _XPull, signed int _YPull, signed int lX, signed int lY, unsigned int *return_command)
+void string_select_get(void *pDisplay, tFont *pFont, char *pcString, bool WordWrap, signed int lLength, signed int *Start, signed int *SelStartReturn, signed int *SelLenReturn, signed int _XPush, signed int _YPush, signed int _XPull, signed int _YPull, signed int lX, signed int lY, unsigned int *return_command)
 {
-
-	if(pDisplay->sClipRegion.sXMin > _XPull)
+	tDisplay* LcdStruct = (tDisplay *) pDisplay;
+	if(LcdStruct->sClipRegion.sXMin > _XPull)
 	{
 		*return_command = ReturnCommand_GoLeft;
-		unsigned int tmp = pDisplay->sClipRegion.sXMin - _XPull;
+		unsigned int tmp = LcdStruct->sClipRegion.sXMin - _XPull;
 		if(tmp > ReturnCommand_MaxValue) tmp = ReturnCommand_MaxValue;
 		*return_command |= tmp;
 	}
-	if(pDisplay->sClipRegion.sXMax < _XPull)
+	if(LcdStruct->sClipRegion.sXMax < _XPull)
 	{
 		*return_command = ReturnCommand_GoRight;
-		unsigned int tmp = _XPull - pDisplay->sClipRegion.sXMax;
+		unsigned int tmp = _XPull - LcdStruct->sClipRegion.sXMax;
 		if(tmp > ReturnCommand_MaxValue) tmp = ReturnCommand_MaxValue;
 		*return_command |= tmp;
 	}
-	if(pDisplay->sClipRegion.sYMin > _YPull)
+	if(LcdStruct->sClipRegion.sYMin > _YPull)
 	{
 		*return_command = ReturnCommand_GoUp;
-		unsigned int tmp = pDisplay->sClipRegion.sYMin - _YPull;
+		unsigned int tmp = LcdStruct->sClipRegion.sYMin - _YPull;
 		if(tmp > ReturnCommand_MaxValue) tmp = ReturnCommand_MaxValue;
 		*return_command |= tmp;
 	}
-	if(pDisplay->sClipRegion.sYMax < _YPull)
+	if(LcdStruct->sClipRegion.sYMax < _YPull)
 	{
 		*return_command = ReturnCommand_GoDn;
-		unsigned int tmp = _YPull - pDisplay->sClipRegion.sYMax;
+		unsigned int tmp = _YPull - LcdStruct->sClipRegion.sYMax;
 		if(tmp > ReturnCommand_MaxValue) tmp = ReturnCommand_MaxValue;
 		*return_command |= tmp;
 	}
@@ -695,7 +703,7 @@ void string_select_get(tDisplay *pDisplay, tFont *pFont, char *pcString, bool Wo
         // string.  If there is not a glyph for the next character, replace it
         // with a ".".
         //
-        if(((StringLengthOfEveryRow - pDisplay->sClipRegion.sXMin) + read_data_byte(pucData[read_data_word(pusOffset[*pcString - ' ']) + 1]) >= (pDisplay->sClipRegion.sXMax - pDisplay->sClipRegion.sXMin) && WordWrap == true))
+        if(((StringLengthOfEveryRow - LcdStruct->sClipRegion.sXMin) + read_data_byte(pucData[read_data_word(pusOffset[*pcString - ' ']) + 1]) >= (LcdStruct->sClipRegion.sXMax - LcdStruct->sClipRegion.sXMin) && WordWrap == true))
         {
             //pucData = 0;
 
@@ -744,8 +752,9 @@ void string_select_get(tDisplay *pDisplay, tFont *pFont, char *pcString, bool Wo
 
 }
 //#######################################################################################
-StringProperties_t string_properties_get(tDisplay *pDisplay, tFont *pFont, char *pcString, bool WordWrap, signed int lLength)
+StringProperties_t string_properties_get(void *pDisplay, tFont *pFont, char *pcString, bool WordWrap, signed int lLength)
 {
+	tDisplay* LcdStruct = (tDisplay *) pDisplay;
 	StringProperties_t StringReturnProperties;
 
 	volatile signed int FirstRowLength_Pixels = 0;
@@ -795,7 +804,7 @@ StringProperties_t string_properties_get(tDisplay *pDisplay, tFont *pFont, char 
         // string.  If there is not a glyph for the next character, replace it
         // with a ".".
         //
-        if((StringLengthOfEveryRow + read_data_byte(pucData[read_data_word(pusOffset[*pcString - ' ']) + 1]) >= (pDisplay->sClipRegion.sXMax - pDisplay->sClipRegion.sXMin) && WordWrap == true))
+        if((StringLengthOfEveryRow + read_data_byte(pucData[read_data_word(pusOffset[*pcString - ' ']) + 1]) >= (LcdStruct->sClipRegion.sXMax - LcdStruct->sClipRegion.sXMin) && WordWrap == true))
         {
         	//pucData = 0;
 
@@ -899,8 +908,9 @@ unsigned char char_height_get(tFont *pFont)
 	return read_data_byte(pFont->ucHeight);
 }
 //#######################################################################################
-signed int string_width_get(tDisplay *pDisplay, tFont *pFont, char *pcString, signed int lLength)
+signed int string_width_get(void *pDisplay, tFont *pFont, char *pcString, signed int lLength)
 {
+	//tDisplay* LcdStruct = (tDisplay *) pDisplay;
     const unsigned short *pusOffset;
     const unsigned char *pucData;
     signed int lWidth;
@@ -1004,7 +1014,8 @@ signed int string_rows_get(char *pcString, signed int lLength)
 //#######################################################################################
 signed int put_string(print_string_properties *properties)
 {
-	tDisplay *pDisplay = properties->pDisplay;
+	void *pDisplay = properties->pDisplay;
+	tDisplay* LcdStruct = (tDisplay *) pDisplay;
 	tFont *pFont = properties->pFont;
 	char *pcString = properties->pcString;
 	signed int lLength = properties->lLength;
@@ -1046,9 +1057,8 @@ signed int put_string(print_string_properties *properties)
     //
     // Check the arguments.
     //
-    if(!pDisplay) return 0;
-    if(!pFont) return 0;
-    if(!pcString) return 0;
+    if(!pDisplay || !pFont || !pcString)
+    	return 0;
 
     unsigned int CharCount = 0;
 	unsigned int ChCount = 0;
@@ -1115,7 +1125,7 @@ signed int put_string(print_string_properties *properties)
 				pcString++;
 			}
 
-	        if(lX + read_data_byte(pucData[1]) >= pDisplay->sClipRegion.sXMax && WordWrap == true)
+	        if(lX + read_data_byte(pucData[1]) >= LcdStruct->sClipRegion.sXMax && WordWrap == true)
 	    	{
 	        	lX = lXBackup;
 	        	lY += read_data_byte(pFont->ucHeight);
@@ -1124,7 +1134,7 @@ signed int put_string(print_string_properties *properties)
 			//
 			// See if the entire character is to the left of the clipping region.
 			//
-			if((lX + read_data_byte(pucData[1])) < pDisplay->sClipRegion.sXMin)
+			if((lX + read_data_byte(pucData[1])) < LcdStruct->sClipRegion.sXMin)
 			{
 				//
 				// Increment the X coordinate by the width of the character.
@@ -1145,7 +1155,7 @@ signed int put_string(print_string_properties *properties)
 				//
 				// See if the bottom of the clipping region has been exceeded.
 				//
-				if((lY + lY0) > pDisplay->sClipRegion.sYMax)
+				if((lY + lY0) > LcdStruct->sClipRegion.sYMax)
 				{
 					//
 					// Stop drawing this character.
@@ -1347,7 +1357,7 @@ signed int put_string(print_string_properties *properties)
 					//
 					// See if the bottom of the clipping region has been exceeded.
 					//
-					if((lY + lY0) > pDisplay->sClipRegion.sYMax)
+					if((lY + lY0) > LcdStruct->sClipRegion.sYMax)
 					{
 						//
 						// Ignore the remainder of the on pixels.
@@ -1373,9 +1383,10 @@ signed int put_string(print_string_properties *properties)
 						// horizontal line that corresponds to the sequence of on
 						// pixels.
 						//
-						if(((lY + lY0) >= pDisplay->sClipRegion.sYMin) && _ulOpaque)
+						if(((lY + lY0) >= LcdStruct->sClipRegion.sYMin) && _ulOpaque)
 						{
-							if(ulVisible == true) put_horizontal_line(pDisplay, lX + lX0, lCount, lY + lY0, 1, background_color);
+							if(ulVisible == true)
+								LcdStruct->lcd_func.put_horizontal_line(pDisplay, lX + lX0, lCount, lY + lY0, 1, background_color);
 						}
 
 						//
@@ -1400,14 +1411,16 @@ signed int put_string(print_string_properties *properties)
 						// If this pixel is within the clipping region, then draw
 						// it.
 						//
-						if(((lX + lX0) >= pDisplay->sClipRegion.sXMin) &&
-						   ((lX + lX0) <= pDisplay->sClipRegion.sXMax) &&
-						   ((lY + lY0) >= pDisplay->sClipRegion.sYMin) && _ulOpaque == true)
+						if(((lX + lX0) >= LcdStruct->sClipRegion.sXMin) &&
+						   ((lX + lX0) <= LcdStruct->sClipRegion.sXMax) &&
+						   ((lY + lY0) >= LcdStruct->sClipRegion.sYMin) && _ulOpaque == true)
 						{
 #ifdef USE_16_BIT_COLOR_DEPTH
-							if(ulVisible == true) put_pixel(pDisplay, lX + lX0, lY + lY0, background_color);
+							if(ulVisible == true)
+								LcdStruct->lcd_func.put_pixel(pDisplay, lX + lX0, lY + lY0, background_color);
 #else
-							if(ulVisible == true) put_pixel(pDisplay, lX + lX0, lY + lY0, background_color<<8);
+							if(ulVisible == true)
+								LcdStruct->lcd_func.put_pixel(pDisplay, lX + lX0, lY + lY0, background_color<<8);
 #endif
 						}
 
@@ -1449,7 +1462,7 @@ signed int put_string(print_string_properties *properties)
 					//
 					// See if the bottom of the clipping region has been exceeded.
 					//
-					if((lY + lY0) > pDisplay->sClipRegion.sYMax)
+					if((lY + lY0) > LcdStruct->sClipRegion.sYMax)
 					{
 						//
 						// Ignore the remainder of the on pixels.
@@ -1475,9 +1488,10 @@ signed int put_string(print_string_properties *properties)
 						// horizontal line that corresponds to the sequence of on
 						// pixels.
 						//
-						if((lY + lY0) >= pDisplay->sClipRegion.sYMin)
+						if((lY + lY0) >= LcdStruct->sClipRegion.sYMin)
 						{
-							if(ulVisible == true) put_horizontal_line(pDisplay, lX + lX0, lCount, lY + lY0, 1, foreground_color);
+							if(ulVisible == true)
+								LcdStruct->lcd_func.put_horizontal_line(pDisplay, lX + lX0, lCount, lY + lY0, 1, foreground_color);
 						}
 
 						//
@@ -1502,14 +1516,16 @@ signed int put_string(print_string_properties *properties)
 						// If this pixel is within the clipping region, then draw
 						// it.
 						//
-						if(((lX + lX0) >= pDisplay->sClipRegion.sXMin) &&
-						   ((lX + lX0) <= pDisplay->sClipRegion.sXMax) &&
-						   ((lY + lY0) >= pDisplay->sClipRegion.sYMin))
+						if(((lX + lX0) >= LcdStruct->sClipRegion.sXMin) &&
+						   ((lX + lX0) <= LcdStruct->sClipRegion.sXMax) &&
+						   ((lY + lY0) >= LcdStruct->sClipRegion.sYMin))
 						{
 #ifdef USE_16_BIT_COLOR_DEPTH
-							if(ulVisible == true) put_pixel(pDisplay, lX + lX0, lY + lY0, foreground_color);
+							if(ulVisible == true)
+								LcdStruct->lcd_func.put_pixel(pDisplay, lX + lX0, lY + lY0, foreground_color);
 #else
-							if(ulVisible == true) put_pixel(pDisplay, lX + lX0, lY + lY0, foreground_color<<8);
+							if(ulVisible == true)
+								LcdStruct->lcd_func.put_pixel(pDisplay, lX + lX0, lY + lY0, foreground_color<<8);
 #endif
 						}
 
@@ -1555,7 +1571,8 @@ signed int put_string(print_string_properties *properties)
 //#######################################################################################
 signed int put_string_tiny_chr(print_string_properties *properties)
 {
-	tDisplay *pDisplay = properties->pDisplay;
+	void *pDisplay = properties->pDisplay;
+	tDisplay* LcdStruct = (tDisplay *) pDisplay;
 	//tFont *pFont = properties->pFont;
 	char *pcString = properties->pcString;
 	signed int lLength = properties->lLength;
@@ -1622,7 +1639,7 @@ signed int put_string_tiny_chr(print_string_properties *properties)
 			{
 				Tmp = chWidth;
 			}
-			if(Cursor_X + Tmp >= pDisplay->sClipRegion.sXMin && Cursor_X < pDisplay->sClipRegion.sXMax + Tmp && Cursor_Y + chHeight >= pDisplay->sClipRegion.sYMin && Cursor_Y < pDisplay->sClipRegion.sYMax + chHeight)
+			if(Cursor_X + Tmp >= LcdStruct->sClipRegion.sXMin && Cursor_X < LcdStruct->sClipRegion.sXMax + Tmp && Cursor_Y + chHeight >= LcdStruct->sClipRegion.sYMin && Cursor_Y < LcdStruct->sClipRegion.sYMax + chHeight)
 			{
 				if(ulVisible)
 				{
@@ -1639,11 +1656,12 @@ signed int put_string_tiny_chr(print_string_properties *properties)
 						{
 							if (Temp & 0x1)
 							{
-								put_pixel(pDisplay, XX + Cursor_X, YY + Cursor_Y, foreground_color);
+								LcdStruct->lcd_func.put_pixel(pDisplay, XX + Cursor_X, YY + Cursor_Y, foreground_color);
 							}
 							else
 							{
-								if(ulOpaque) put_pixel(pDisplay, XX + Cursor_X, YY + Cursor_Y, background_color);
+								if(ulOpaque)
+									LcdStruct->lcd_func.put_pixel(pDisplay, XX + Cursor_X, YY + Cursor_Y, background_color);
 							}
 							Temp = Temp >>1;
 						}
@@ -1674,7 +1692,7 @@ signed int put_string_tiny_chr(print_string_properties *properties)
 					ScreenStruct->CharHeight = chHeight;
 					return EOF;
 				}*/
-				if((Cursor_X + chWidth > pDisplay->sClipRegion.sXMax) && WordWrap == true)
+				if((Cursor_X + chWidth > LcdStruct->sClipRegion.sXMax) && WordWrap == true)
 				{
 					Cursor_Y += chHeight;
 					Cursor_X = lX;
@@ -1686,8 +1704,9 @@ signed int put_string_tiny_chr(print_string_properties *properties)
 }
 
 //#######################################################################################
-signed int string_width_get_tiny_chr(tDisplay *pDisplay, tFont *pFont, char *pcString, signed int lLength)
+signed int string_width_get_tiny_chr(void *pDisplay, tFont *pFont, char *pcString, signed int lLength)
 {
+	tDisplay* LcdStruct = (tDisplay *) pDisplay;
 	signed char chWidth = 0;
 	//signed char chWidth_Tmp = 0;
 	signed int CharPtr;

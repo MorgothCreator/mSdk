@@ -21,6 +21,7 @@
 
 #include "stdbool.h"
 #include "math.h"
+#include "board_init.h"
 #include "mpu60x0_9150.h"
 #include "board_init.h"
 #include "api/twi_api.h"
@@ -28,6 +29,8 @@
 #include "api/uart_api.h"
 #include "api/uart_def.h"
 #include "api/timer_api.h"
+
+extern new_uart* DebugCom;
 
 bool mpu60x0_9150_sample_rate_divider_set(MPU60x0_9150_t *structure, unsigned char Value)
 {

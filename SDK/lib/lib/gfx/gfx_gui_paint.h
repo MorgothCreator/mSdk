@@ -166,7 +166,7 @@ typedef struct Gfx_res_s {
 }Gfx_res_t;
 /*#####################################################*/
 extern Gfx_res_t sysem_gui_res;
-void gui_put_item(tDisplay *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len, unsigned int int_color, unsigned int border_color, CursorState cursor, GUI_PAINT_STYLE style, bool enabled);
+void gui_put_item(void *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len, unsigned int int_color, unsigned int border_color, CursorState cursor, GUI_PAINT_STYLE style, bool enabled);
 /*#####################################################*/
 #ifdef HEADER_INCLUDE_C_FILES
 #include "gfx_gui_paint.c"

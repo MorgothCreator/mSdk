@@ -33,23 +33,25 @@
 #include "lib/string_lib.h"
 #include "gfx_gui_paint.h"
 //#######################################################################################
-static bool paint_listbox_item(tListBox *_settings, listbox_item* settings, tDisplay *pDisplay, signed int x_start, signed int y_start, tControlCommandData* control_comand, bool Pushed, bool Paint)
+static bool paint_listbox_item(tListBox *_settings, listbox_item* settings, void *pDisplay, signed int x_start, signed int y_start, tControlCommandData* control_comand, bool Pushed, bool Paint)
 {
-	if(!settings) return false;
+	if(!settings)
+		return false;
+	tDisplay* LcdStruct = (tDisplay *) pDisplay;
 	tWindow *ParentWindow = (tWindow*)_settings->Internals.ParentWindow;
 	bool inside_window = check_if_inside_box(x_start, y_start, settings->Size.X, settings->Size.Y, control_comand->X, control_comand->Y);
-	bool _inside_window = check_if_inside_box(pDisplay->sClipRegion.sXMin, pDisplay->sClipRegion.sYMin, pDisplay->sClipRegion.sXMax - pDisplay->sClipRegion.sXMin, pDisplay->sClipRegion.sYMax - pDisplay->sClipRegion.sYMin, control_comand->X, control_comand->Y);
+	bool _inside_window = check_if_inside_box(LcdStruct->sClipRegion.sXMin, LcdStruct->sClipRegion.sYMin, LcdStruct->sClipRegion.sXMax - LcdStruct->sClipRegion.sXMin, LcdStruct->sClipRegion.sYMax - LcdStruct->sClipRegion.sYMin, control_comand->X, control_comand->Y);
 	if(!_inside_window) inside_window = false;
 	//if(!inside_window && !EntireRefresh && !settings->CursorDownInsideBox) return false;
 	//if(inside_window == true/* && control_comand->Cursor == Cursor_Down*/) settings->CursorDownInsideBox = true;
 	if(Paint)
 	{
-		tRectangle back_up_clip = pDisplay->sClipRegion;
-		pDisplay->sClipRegion.sXMin = x_start;
-		pDisplay->sClipRegion.sYMin = y_start;
-		pDisplay->sClipRegion.sXMax = x_start + settings->Size.X;
-		pDisplay->sClipRegion.sYMax = y_start + settings->Size.Y;
-		clip_limit(&pDisplay->sClipRegion, &back_up_clip);
+		tRectangle back_up_clip = LcdStruct->sClipRegion;
+		LcdStruct->sClipRegion.sXMin = x_start;
+		LcdStruct->sClipRegion.sYMin = y_start;
+		LcdStruct->sClipRegion.sXMax = x_start + settings->Size.X;
+		LcdStruct->sClipRegion.sYMax = y_start + settings->Size.Y;
+		clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
 		if((!_settings->Enabled || !ParentWindow->Internals.OldStateEnabled) && _settings->Internals.Control.Initiated == true)
 			gui_put_item(pDisplay, x_start, y_start, settings->Size.X, settings->Size.Y, settings->Color.Disabled.Buton, settings->Color.Disabled.Border, Cursor_NoAction,PAINT_STYLE_ROUNDED_CORNERS , false);
 		else {
@@ -60,11 +62,11 @@ static bool paint_listbox_item(tListBox *_settings, listbox_item* settings, tDis
 		}
 		if(settings->Caption.Text)
 		{
-			pDisplay->sClipRegion.sXMin = x_start + 4;
-			pDisplay->sClipRegion.sYMin = y_start + 4;
-			pDisplay->sClipRegion.sXMax = ((x_start + settings->Size.X) - 4);
-			pDisplay->sClipRegion.sYMax = ((y_start + settings->Size.Y) - 4);
-			clip_limit(&pDisplay->sClipRegion, &back_up_clip);
+			LcdStruct->sClipRegion.sXMin = x_start + 4;
+			LcdStruct->sClipRegion.sYMin = y_start + 4;
+			LcdStruct->sClipRegion.sXMax = ((x_start + settings->Size.X) - 4);
+			LcdStruct->sClipRegion.sYMax = ((y_start + settings->Size.Y) - 4);
+			clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
 
 			signed int x_str_location = x_start + 4;
 			signed int y_str_location = y_start + 4;
@@ -99,13 +101,13 @@ static bool paint_listbox_item(tListBox *_settings, listbox_item* settings, tDis
 			}
 			put_string(&properties);
 		}
-		pDisplay->sClipRegion.sXMin = x_start;
-		pDisplay->sClipRegion.sYMin = y_start;
-		pDisplay->sClipRegion.sXMax = x_start + settings->Size.X;
-		pDisplay->sClipRegion.sYMax = y_start + settings->Size.Y;
-		clip_limit(&pDisplay->sClipRegion, &back_up_clip);
-		box_cache_clean(pDisplay, x_start, y_start, settings->Size.X, settings->Size.Y);
-		pDisplay->sClipRegion = back_up_clip;
+		LcdStruct->sClipRegion.sXMin = x_start;
+		LcdStruct->sClipRegion.sYMin = y_start;
+		LcdStruct->sClipRegion.sXMax = x_start + settings->Size.X;
+		LcdStruct->sClipRegion.sYMax = y_start + settings->Size.Y;
+		clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
+		LcdStruct->lcd_func.box_cache_clean(pDisplay, x_start, y_start, settings->Size.X, settings->Size.Y);
+		LcdStruct->sClipRegion = back_up_clip;
 		control_comand->WindowRefresh |= true;
 	}
 	return inside_window;
@@ -223,7 +225,8 @@ void listbox(tListBox *settings, tControlCommandData* control_comand)
 	signed int Y_StartBox = settings->Internals.Position.Y;
 	signed int X_LenBox = settings->Internals.Size.X;
 	signed int Y_LenBox = settings->Internals.Size.Y;
-	tDisplay *pDisplay = settings->Internals.pDisplay;
+	void *pDisplay = settings->Internals.pDisplay;
+	tDisplay* LcdStruct = (tDisplay *) pDisplay;
 
 	/*Clear background of box with actual painted dimensions and positions if they been changed*/
 	if(settings->Internals.NeedEntireRefresh == true || settings->Internals.OldStateVisible != settings->Visible)
@@ -231,15 +234,15 @@ void listbox(tListBox *settings, tControlCommandData* control_comand)
 		if(!settings->Internals.NoPaintBackGround || !settings->Visible)
 		{
 			settings->Internals.OldStateVisible = settings->Visible;
-			tRectangle back_up_clip = pDisplay->sClipRegion;
-			pDisplay->sClipRegion.sXMin = X_StartBox;
-			pDisplay->sClipRegion.sYMin = Y_StartBox;
-			pDisplay->sClipRegion.sXMax = X_StartBox + X_LenBox;
-			pDisplay->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
-			clip_limit(&pDisplay->sClipRegion, &back_up_clip);
-			put_rectangle(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, true, settings->Color.Scren);
-			box_cache_clean(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox);
-			pDisplay->sClipRegion = back_up_clip;
+			tRectangle back_up_clip = LcdStruct->sClipRegion;
+			LcdStruct->sClipRegion.sXMin = X_StartBox;
+			LcdStruct->sClipRegion.sYMin = Y_StartBox;
+			LcdStruct->sClipRegion.sXMax = X_StartBox + X_LenBox;
+			LcdStruct->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
+			clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
+			LcdStruct->lcd_func.put_rectangle(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, true, settings->Color.Scren);
+			LcdStruct->lcd_func.box_cache_clean(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox);
+			LcdStruct->sClipRegion = back_up_clip;
 			if(!settings->Visible) return;
 		}
 	}
@@ -293,36 +296,36 @@ void listbox(tListBox *settings, tControlCommandData* control_comand)
 			settings->Items[CntDisplayItems]->Size.Y = settings->Internals.Size.ItemSizeY;
 		}
 
-		tRectangle back_up_clip = pDisplay->sClipRegion;
-		pDisplay->sClipRegion.sXMin = X_StartBox;
-		pDisplay->sClipRegion.sYMin = Y_StartBox;
-		pDisplay->sClipRegion.sXMax = X_StartBox + X_LenBox;
-		pDisplay->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
-		clip_limit(&pDisplay->sClipRegion, &back_up_clip);
+		tRectangle back_up_clip = LcdStruct->sClipRegion;
+		LcdStruct->sClipRegion.sXMin = X_StartBox;
+		LcdStruct->sClipRegion.sYMin = Y_StartBox;
+		LcdStruct->sClipRegion.sXMax = X_StartBox + X_LenBox;
+		LcdStruct->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
+		clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
 		unsigned int color = controls_color.Control_Color_Enabled_Border_Pull;
 		if((!settings->Enabled || !ParentWindow->Internals.OldStateEnabled) && settings->Internals.Control.Initiated == true) {
 			color = settings->Color.Disabled.Border;
-			put_horizontal_line(pDisplay, X_StartBox, X_LenBox, Y_StartBox, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
-			put_horizontal_line(pDisplay, X_StartBox, X_LenBox, (Y_StartBox + Y_LenBox) - 1, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
+			LcdStruct->lcd_func.put_horizontal_line(pDisplay, X_StartBox, X_LenBox, Y_StartBox, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
+			LcdStruct->lcd_func.put_horizontal_line(pDisplay, X_StartBox, X_LenBox, (Y_StartBox + Y_LenBox) - 1, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
 
-			put_vertical_line(pDisplay, Y_StartBox, Y_LenBox, X_StartBox, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
-			put_vertical_line(pDisplay, Y_StartBox, Y_LenBox, (X_StartBox + X_LenBox) - 1, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
+			LcdStruct->lcd_func.put_vertical_line(pDisplay, Y_StartBox, Y_LenBox, X_StartBox, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
+			LcdStruct->lcd_func.put_vertical_line(pDisplay, Y_StartBox, Y_LenBox, (X_StartBox + X_LenBox) - 1, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
 		} else {
 		//put_rectangle(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, false, controlls_change_color(color, -3));
-		put_horizontal_line(pDisplay, X_StartBox, X_LenBox, Y_StartBox, 1, controlls_change_color(color, +BORDER_LINE_ONE_LIGHT));
-		put_horizontal_line(pDisplay, X_StartBox, X_LenBox, (Y_StartBox + Y_LenBox) - 1, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
+			LcdStruct->lcd_func.put_horizontal_line(pDisplay, X_StartBox, X_LenBox, Y_StartBox, 1, controlls_change_color(color, +BORDER_LINE_ONE_LIGHT));
+			LcdStruct->lcd_func.put_horizontal_line(pDisplay, X_StartBox, X_LenBox, (Y_StartBox + Y_LenBox) - 1, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
 
-		put_vertical_line(pDisplay, Y_StartBox, Y_LenBox, X_StartBox, 1, controlls_change_color(color, +BORDER_LINE_ONE_LIGHT));
-		put_vertical_line(pDisplay, Y_StartBox, Y_LenBox, (X_StartBox + X_LenBox) - 1, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
+			LcdStruct->lcd_func.put_vertical_line(pDisplay, Y_StartBox, Y_LenBox, X_StartBox, 1, controlls_change_color(color, +BORDER_LINE_ONE_LIGHT));
+			LcdStruct->lcd_func.put_vertical_line(pDisplay, Y_StartBox, Y_LenBox, (X_StartBox + X_LenBox) - 1, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
 		}
 
 
 		if(settings->Enabled)
-			put_rectangle(pDisplay, X_StartBox + 1, Y_StartBox + 1, X_LenBox - 2, Y_LenBox - 2, true, settings->Color.Enabled.BackGround);
+			LcdStruct->lcd_func.put_rectangle(pDisplay, X_StartBox + 1, Y_StartBox + 1, X_LenBox - 2, Y_LenBox - 2, true, settings->Color.Enabled.BackGround);
 		else
-			put_rectangle(pDisplay, X_StartBox + 1, Y_StartBox + 1, X_LenBox - 2, Y_LenBox - 2, true, settings->Color.Disabled.BackGround);
+			LcdStruct->lcd_func.put_rectangle(pDisplay, X_StartBox + 1, Y_StartBox + 1, X_LenBox - 2, Y_LenBox - 2, true, settings->Color.Disabled.BackGround);
 
-		box_cache_clean(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox);
+		LcdStruct->lcd_func.box_cache_clean(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox);
 
 
 		CursorState cursor = control_comand->Cursor;
@@ -346,7 +349,7 @@ void listbox(tListBox *settings, tControlCommandData* control_comand)
 		settings->Internals.ScrollBar->Internals.NeedEntireRefresh = true;
 		scrollbar(settings->Internals.ScrollBar, control_comand);
 
-		pDisplay->sClipRegion = back_up_clip;
+		LcdStruct->sClipRegion = back_up_clip;
 		settings->Internals.ParentWindowStateEnabled = ParentWindow->Internals.OldStateEnabled;
 		settings->Internals.OldStateVisible = settings->Visible;
 		settings->Internals.OldStateEnabled = settings->Enabled;
@@ -365,7 +368,7 @@ void listbox(tListBox *settings, tControlCommandData* control_comand)
 	}
 	/* Check if inside window */
 	bool inside_window = check_if_inside_box(X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, control_comand->X, control_comand->Y);
-	bool _inside_window = check_if_inside_box(pDisplay->sClipRegion.sXMin, pDisplay->sClipRegion.sYMin, pDisplay->sClipRegion.sXMax - pDisplay->sClipRegion.sXMin, pDisplay->sClipRegion.sYMax - pDisplay->sClipRegion.sYMin, control_comand->X, control_comand->Y);
+	bool _inside_window = check_if_inside_box(LcdStruct->sClipRegion.sXMin, LcdStruct->sClipRegion.sYMin, LcdStruct->sClipRegion.sXMax - LcdStruct->sClipRegion.sXMin, LcdStruct->sClipRegion.sYMax - LcdStruct->sClipRegion.sYMin, control_comand->X, control_comand->Y);
 	if(!_inside_window) inside_window = false;
 	if(control_comand->Cursor == Cursor_Down && inside_window == true) settings->Internals.CursorDownInsideBox = true;
 
@@ -386,12 +389,12 @@ void listbox(tListBox *settings, tControlCommandData* control_comand)
 			settings->Internals.OldItemStartOnBox = settings->Internals.ItemStartOnBox;
 			items_position_has_changed = true;
 		}
-		tRectangle back_up_clip = pDisplay->sClipRegion;
-		pDisplay->sClipRegion.sXMin = X_StartBox;
-		pDisplay->sClipRegion.sYMin = Y_StartBox;
-		pDisplay->sClipRegion.sXMax = X_StartBox + X_LenBox;
-		pDisplay->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
-		clip_limit(&pDisplay->sClipRegion, &back_up_clip);
+		tRectangle back_up_clip = LcdStruct->sClipRegion;
+		LcdStruct->sClipRegion.sXMin = X_StartBox;
+		LcdStruct->sClipRegion.sYMin = Y_StartBox;
+		LcdStruct->sClipRegion.sXMax = X_StartBox + X_LenBox;
+		LcdStruct->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
+		clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
 		unsigned int EndDisplayedItems = ((settings->Size.Y - 4) / settings->Size.ItemSizeY) + settings->Internals.ItemStartOnBox;
 		for(CntDisplayItems = settings->Internals.ItemStartOnBox; CntDisplayItems < EndDisplayedItems; CntDisplayItems++)
 		{
@@ -418,7 +421,7 @@ void listbox(tListBox *settings, tControlCommandData* control_comand)
 				}
 			}
 		}
-		pDisplay->sClipRegion = back_up_clip;
+		LcdStruct->sClipRegion = back_up_clip;
 	}
 	if(control_comand->Cursor == Cursor_Down && inside_window == true && settings->Internals.CursorDownInsideBox == true)settings->Events.CursorDown = true;
 	if(settings->Events.OnDown.CallBack && control_comand->Cursor == Cursor_Down && inside_window == true && settings->Internals.CursorDownInsideBox == true)

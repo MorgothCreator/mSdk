@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Atmel Studio Solution File, Format Version 11.00
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "Test_MikroXmegaBoard", "Test_MikroXmegaBoard\Test_MikroXmegaBoard.cproj", "{F2F32CEB-958D-47A8-A0A2-07CD15EF9593}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|AVR = Debug|AVR
+		Release|AVR = Release|AVR
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F2F32CEB-958D-47A8-A0A2-07CD15EF9593}.Debug|AVR.ActiveCfg = Debug|AVR
+		{F2F32CEB-958D-47A8-A0A2-07CD15EF9593}.Debug|AVR.Build.0 = Debug|AVR
+		{F2F32CEB-958D-47A8-A0A2-07CD15EF9593}.Release|AVR.ActiveCfg = Release|AVR
+		{F2F32CEB-958D-47A8-A0A2-07CD15EF9593}.Release|AVR.Build.0 = Release|AVR
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

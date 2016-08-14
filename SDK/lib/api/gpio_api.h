@@ -28,6 +28,15 @@
 #include "gpio_def.h"
 #include "interface/gpio_interface.h"
 /*#####################################################*/
+#define GPIO_FAST_SET_PIN(base_addr, pin)\
+		_GPIO_FAST_SET_PIN(base_addr, pin)
+
+#define GPIO_FAST_CLEAR_PIN(base_addr, pin)\
+		_GPIO_FAST_CLEAR_PIN(base_addr, pin)
+
+#define GPIO_FAST_WRITE_MULTI_PIN(base_addr, mask, pin_mask)\
+		_GPIO_FAST_WRITE_MULTI_PIN(base_addr, mask, pin_mask)
+/*#####################################################*/
 void gpio_init(gpio_port_enum GpioModuleNr);
 new_gpio *gpio_assign(gpio_port_enum PortNr, unsigned char PinNr, gpio_type_enum function, bool Multipin);
 void gpio_free(new_gpio *gpio_struct);

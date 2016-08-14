@@ -8,6 +8,7 @@
 #ifndef ADC_DEF_H_
 #define ADC_DEF_H_
 /*#####################################################*/
+#include <stdbool.h>
 #include "interface/adc_interface_def.h"
 /*#####################################################*/
 typedef enum
@@ -48,14 +49,14 @@ typedef enum
 /*#####################################################*/
 typedef enum
 {
-	ADC_INT_REF_DISABLED = 0,
-	ADC_INT_REF_Enabled
+	ADC_INT_REF_DISABLE = 0,
+	ADC_INT_REF_ENABLE
 }ADC_INT_REF_en;
 /*#####################################################*/
 typedef enum
 {
-	ADC_INT_TEMP_SENSOR_DISABLED = 0,
-	ADC_INT_TEMP_SENSOR_Enabled
+	ADC_INT_TEMP_SENSOR_DISABLE = 0,
+	ADC_INT_TEMP_SENSOR_ENABLE
 }ADC_INT_TEMP_SENSOR_en;
 /*#####################################################*/
 typedef enum
@@ -87,7 +88,7 @@ typedef enum
 	ADC_EXT_TRIG_ADGE_RIS_FAL,
 }ADC_EXT_TRIG_ADGE_en;
 /*#####################################################*/
-typedef struct
+typedef struct Adc_s
 {
 	void *BaseAddr;							/*!< Here will be the base address of ADC module. This will be write on ADC initialization  */
 
@@ -123,7 +124,13 @@ typedef struct
 
 	void *DmaChBaseAddr;
 
-	unsigned int ConvResult[ADC_CHANNELS_NR_PER_UNIT];
+	volatile unsigned int ChannelCount;
+
+	volatile bool EndOfConversion;
+
+	unsigned int EnabledChannelsNr;
+
+	volatile unsigned int ConvResult[ADC_CHANNELS_NR_PER_UNIT];
 
 	unsigned char SampleTime[ADC_CHANNELS_NR_PER_UNIT];/*!< Sample time, watch the ADC controller documentation */
 }Adc_t;
@@ -136,9 +143,9 @@ typedef struct
 #endif
 #define free_adc(address) free(address);
 /*#####################################################*/
-#ifdef HEADER_INCLUDE_C_FILES
-#include "adc_def.c"
-#endif
+//#ifdef HEADER_INCLUDE_C_FILES
+//#include "adc_def.c"
+//#endif
 /*#####################################################*/
 #endif /* ADC_DEF_H_ */
 /*#####################################################*/

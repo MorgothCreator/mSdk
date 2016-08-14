@@ -15,6 +15,7 @@
 #include "driver/stm32f4xx_hal_rcc.h"
 #include "driver/stm32f4xx_hal_spi.h"
 #include "driver/stm32f4xx_hal_gpio.h"
+#include "driver/stm32f4xx_hal_gpio_ex.h"
 #include "gpio_interface.h"
 //#include "driver/spi.h"
 
@@ -93,17 +94,24 @@ bool _mcspi_open(new_mcspi *McspiStruct)
   //SPIx_SCK_GPIO_CLK_ENABLE();
   //SPIx_MISO_GPIO_CLK_ENABLE();
   //SPIx_MOSI_GPIO_CLK_ENABLE();
+  GPIO_InitTypeDef GPIO_InitStruct;
+  GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
+  GPIO_InitStruct.Pull      = GPIO_PULLUP;
+  GPIO_InitStruct.Speed     = GPIO_SPEED_FAST;
   /* Enable SPI3 clock */
   switch(McspiStruct->McspiNr)
   {
   case 0:
 	  __HAL_RCC_SPI1_CLK_ENABLE();
+	  GPIO_InitStruct.Alternate = GPIO_AF5_SPI1;
 	  break;
   case 1:
 	  __HAL_RCC_SPI2_CLK_ENABLE();
+	  GPIO_InitStruct.Alternate = GPIO_AF5_SPI2;
 	  break;
   case 2:
 	  __HAL_RCC_SPI3_CLK_ENABLE();
+	  GPIO_InitStruct.Alternate = GPIO_AF6_SPI3;
 	  break;
 #if defined(STM32F427xx) || defined(STM32F429xx) || defined(STM32F437xx) || defined(STM32F439xx)
   case 3:
@@ -135,31 +143,37 @@ bool _mcspi_open(new_mcspi *McspiStruct)
 	  return false;
   }
 
+  SpiHandle->Instance               = _SPI_[McspiStruct->McspiNr];
+  SpiHandle->Init.BaudRatePrescaler = (McspiStruct->BaudRate << 3) & SPI_BAUDRATEPRESCALER_256;
+  SpiHandle->Init.Direction         = SPI_DIRECTION_2LINES;
+  SpiHandle->Init.CLKPhase          = SPI_PHASE_1EDGE;
+  SpiHandle->Init.CLKPolarity       = SPI_POLARITY_LOW;
+  SpiHandle->Init.CRCCalculation    = SPI_CRCCALCULATION_DISABLE;
+  SpiHandle->Init.CRCPolynomial     = 7;
+  SpiHandle->Init.DataSize          = SPI_DATASIZE_8BIT;
+  SpiHandle->Init.FirstBit          = SPI_FIRSTBIT_MSB;
+  SpiHandle->Init.NSS               = SPI_NSS_SOFT;
+  SpiHandle->Init.TIMode            = SPI_TIMODE_DISABLE;
+  SpiHandle->Init.Mode 				= SPI_MODE_MASTER;
+  if(HAL_SPI_Init(SpiHandle) != HAL_OK)
+  	  return false;
+  //__HAL_SPI_ENABLE(SpiHandle);
   /*##-2- Configure peripheral GPIO ##########################################*/
   /* SPI SCK GPIO pin configuration  */
-  GPIO_InitTypeDef GPIO_InitStruct;
-  GPIO_InitStruct.Pin       = 1 << McspiStruct->SckPin;
-  GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
-  GPIO_InitStruct.Pull      = GPIO_PULLUP;
-  GPIO_InitStruct.Speed     = GPIO_SPEED_FAST;
-  GPIO_InitStruct.Alternate = GPIO_AF5_SPI1;
 
+  GPIO_InitStruct.Pin       = 1 << McspiStruct->SckPin;
   HAL_GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->SckPort], &GPIO_InitStruct);
 
   /* SPI MISO GPIO pin configuration  */
   GPIO_InitStruct.Pin = 1 << McspiStruct->MisoPin;
-  GPIO_InitStruct.Alternate = GPIO_AF5_SPI1;
-
   HAL_GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->MisoPort], &GPIO_InitStruct);
 
   /* SPI MOSI GPIO pin configuration  */
   GPIO_InitStruct.Pin = 1 << McspiStruct->MosiPin;
-  GPIO_InitStruct.Alternate = GPIO_AF5_SPI1;
-
-  HAL_GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->MisoPort], &GPIO_InitStruct);
+  HAL_GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->MosiPort], &GPIO_InitStruct);
 
 
-	//GPIO_InitStructure.Alternate = GPIO_Mode_OUT;
+  //GPIO_InitStructure.Alternate = GPIO_Mode_OUT;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
@@ -187,20 +201,6 @@ bool _mcspi_open(new_mcspi *McspiStruct)
 		GPIO_InitStruct.Pin = 1 << McspiStruct->CsPin[3];
 		HAL_GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[3]], &GPIO_InitStruct);
 	}
-	  SpiHandle->Instance               = _SPI_[McspiStruct->McspiNr];
-	  SpiHandle->Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16;
-	  SpiHandle->Init.Direction         = SPI_DIRECTION_2LINES;
-	  SpiHandle->Init.CLKPhase          = SPI_PHASE_1EDGE;
-	  SpiHandle->Init.CLKPolarity       = SPI_POLARITY_HIGH;
-	  SpiHandle->Init.CRCCalculation    = SPI_CRCCALCULATION_DISABLE;
-	  SpiHandle->Init.CRCPolynomial     = 7;
-	  SpiHandle->Init.DataSize          = SPI_DATASIZE_8BIT;
-	  SpiHandle->Init.FirstBit          = SPI_FIRSTBIT_MSB;
-	  SpiHandle->Init.NSS               = SPI_NSS_SOFT;
-	  SpiHandle->Init.TIMode            = SPI_TIMODE_DISABLE;
-	  SpiHandle->Init.Mode 				= SPI_MODE_MASTER;
-	  if(HAL_SPI_Init(SpiHandle) != HAL_OK)
-	  	  return false;
 	  return true;
 }
 
@@ -309,10 +309,27 @@ bool _mcspi_transfer(Mcspi_t *McspiStruct)
 	//	McspiStruct->Buff[transfer_cnt] = _mcspi_SendByte(McspiStruct, McspiStruct->Buff[transfer_cnt]);
 	//}
 	SPI_HandleTypeDef *hspi = (SPI_HandleTypeDef *)McspiStruct->UserData;
-	HAL_SPI_TransmitReceive(hspi, McspiStruct->Buff, McspiStruct->Buff, McspiStruct->numOfBytes, 10);
+	HAL_SPI_TransmitReceive(hspi, (unsigned char *)McspiStruct->Buff, (unsigned char *)McspiStruct->Buff, McspiStruct->numOfBytes, 10);
 
 	if(!McspiStruct->DisableCsHandle)
 		HAL_GPIO_WritePin(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[McspiStruct->CsSelect]], 1 << McspiStruct->CsPin[McspiStruct->CsSelect], GPIO_PIN_SET);
 	return true;
 }
 /*#####################################################*/
+bool _mcspi_set_baud(Mcspi_t *McspiStruct, unsigned long baud)
+{
+	SPI_HandleTypeDef *hspi = (SPI_HandleTypeDef *)McspiStruct->UserData;
+	hspi->Instance->CR1 &= ~SPI_BAUDRATEPRESCALER_256;
+	hspi->Instance->CR1 |= SPI_BAUDRATEPRESCALER_256 & (baud << 3);
+	return false;
+}
+/*#####################################################*/
+unsigned char _mcspi_SendByte(Mcspi_t *McspiStruct, unsigned char byte)
+{
+	SPI_HandleTypeDef *hspi = (SPI_HandleTypeDef *)McspiStruct->UserData;
+	unsigned char tmp = byte;
+	HAL_SPI_TransmitReceive(hspi, &tmp, &tmp, 1, 100);
+	return tmp;
+}
+/*#####################################################*/
+

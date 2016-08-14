@@ -31,43 +31,44 @@
 #include "lib/generic.h"
 #include "sys/plat_properties.h"
 //#######################################################################################
-static void paint_progressbar(tProgressBar* settings, tDisplay *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len, tControlCommandData* control_comand)
+static void paint_progressbar(tProgressBar* settings, void *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len, tControlCommandData* control_comand)
 {
 	unsigned int color = 0;
+	tDisplay* LcdStruct = (tDisplay *) pDisplay;
 	tWindow *ParentWindow = (tWindow*)settings->Internals.ParentWindow;
-	tRectangle back_up_clip = pDisplay->sClipRegion;
-	pDisplay->sClipRegion.sXMin = x_start;
-	pDisplay->sClipRegion.sYMin = y_start;
-	pDisplay->sClipRegion.sXMax = x_start + x_len;
-	pDisplay->sClipRegion.sYMax = y_start + y_len;
-	clip_limit(&pDisplay->sClipRegion, &back_up_clip);
+	tRectangle back_up_clip = LcdStruct->sClipRegion;
+	LcdStruct->sClipRegion.sXMin = x_start;
+	LcdStruct->sClipRegion.sYMin = y_start;
+	LcdStruct->sClipRegion.sXMax = x_start + x_len;
+	LcdStruct->sClipRegion.sYMax = y_start + y_len;
+	clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
 	color = controls_color.Control_Color_Enabled_Border_Pull;
 	if((!settings->Enabled || !ParentWindow->Internals.OldStateEnabled) && settings->Internals.Control.Initiated == true) {
 		color = settings->Color.Disabled.Border;
-		put_horizontal_line(pDisplay, x_start, x_len, y_start, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
-		put_horizontal_line(pDisplay, x_start + 1, x_len - 2, y_start + 1, 1, controlls_change_color(color, -BORDER_LINE_TWO_DARK));
+		LcdStruct->lcd_func.put_horizontal_line(pDisplay, x_start, x_len, y_start, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
+		LcdStruct->lcd_func.put_horizontal_line(pDisplay, x_start + 1, x_len - 2, y_start + 1, 1, controlls_change_color(color, -BORDER_LINE_TWO_DARK));
 
-		put_horizontal_line(pDisplay, x_start + 1, x_len - 2, y_start + y_len - 2, 1, controlls_change_color(color, -BORDER_LINE_TWO_DARK));
-		put_horizontal_line(pDisplay, x_start, x_len, (y_start + y_len) - 1, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
+		LcdStruct->lcd_func.put_horizontal_line(pDisplay, x_start + 1, x_len - 2, y_start + y_len - 2, 1, controlls_change_color(color, -BORDER_LINE_TWO_DARK));
+		LcdStruct->lcd_func.put_horizontal_line(pDisplay, x_start, x_len, (y_start + y_len) - 1, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
 
-		put_vertical_line(pDisplay, y_start, y_len, x_start, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
-		put_vertical_line(pDisplay, y_start + 1, y_len - 2, x_start + 1, 1, controlls_change_color(color, -BORDER_LINE_TWO_DARK));
+		LcdStruct->lcd_func.put_vertical_line(pDisplay, y_start, y_len, x_start, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
+		LcdStruct->lcd_func.put_vertical_line(pDisplay, y_start + 1, y_len - 2, x_start + 1, 1, controlls_change_color(color, -BORDER_LINE_TWO_DARK));
 
-		put_vertical_line(pDisplay, y_start + 1, y_len - 2, x_start + x_len - 2, 1, controlls_change_color(color, -BORDER_LINE_TWO_DARK));
-		put_vertical_line(pDisplay, y_start, y_len, (x_start + x_len) - 1, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
+		LcdStruct->lcd_func.put_vertical_line(pDisplay, y_start + 1, y_len - 2, x_start + x_len - 2, 1, controlls_change_color(color, -BORDER_LINE_TWO_DARK));
+		LcdStruct->lcd_func.put_vertical_line(pDisplay, y_start, y_len, (x_start + x_len) - 1, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
 	}
 	else {
-		put_horizontal_line(pDisplay, x_start, x_len, y_start, 1, controlls_change_color(color, +BORDER_LINE_ONE_LIGHT));
-		put_horizontal_line(pDisplay, x_start + 1, x_len - 2, y_start + 1, 1, controlls_change_color(color, +BORDER_LINE_TWO_LIGHT));
+		LcdStruct->lcd_func.put_horizontal_line(pDisplay, x_start, x_len, y_start, 1, controlls_change_color(color, +BORDER_LINE_ONE_LIGHT));
+		LcdStruct->lcd_func.put_horizontal_line(pDisplay, x_start + 1, x_len - 2, y_start + 1, 1, controlls_change_color(color, +BORDER_LINE_TWO_LIGHT));
 
-		put_horizontal_line(pDisplay, x_start + 1, x_len - 2, y_start + y_len - 2, 1, controlls_change_color(color, -BORDER_LINE_TWO_DARK));
-		put_horizontal_line(pDisplay, x_start, x_len, (y_start + y_len) - 1, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
+		LcdStruct->lcd_func.put_horizontal_line(pDisplay, x_start + 1, x_len - 2, y_start + y_len - 2, 1, controlls_change_color(color, -BORDER_LINE_TWO_DARK));
+		LcdStruct->lcd_func.put_horizontal_line(pDisplay, x_start, x_len, (y_start + y_len) - 1, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
 
-		put_vertical_line(pDisplay, y_start, y_len, x_start, 1, controlls_change_color(color, +BORDER_LINE_ONE_LIGHT));
-		put_vertical_line(pDisplay, y_start + 1, y_len - 2, x_start + 1, 1, controlls_change_color(color, +BORDER_LINE_TWO_LIGHT));
+		LcdStruct->lcd_func.put_vertical_line(pDisplay, y_start, y_len, x_start, 1, controlls_change_color(color, +BORDER_LINE_ONE_LIGHT));
+		LcdStruct->lcd_func.put_vertical_line(pDisplay, y_start + 1, y_len - 2, x_start + 1, 1, controlls_change_color(color, +BORDER_LINE_TWO_LIGHT));
 
-		put_vertical_line(pDisplay, y_start + 1, y_len - 2, x_start + x_len - 2, 1, controlls_change_color(color, -BORDER_LINE_TWO_DARK));
-		put_vertical_line(pDisplay, y_start, y_len, (x_start + x_len) - 1, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
+		LcdStruct->lcd_func.put_vertical_line(pDisplay, y_start + 1, y_len - 2, x_start + x_len - 2, 1, controlls_change_color(color, -BORDER_LINE_TWO_DARK));
+		LcdStruct->lcd_func.put_vertical_line(pDisplay, y_start, y_len, (x_start + x_len) - 1, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
 
 	}
 
@@ -75,16 +76,16 @@ static void paint_progressbar(tProgressBar* settings, tDisplay *pDisplay, signed
 	//put_rectangle(pDisplay, x_start + 1, y_start + 1, x_len - 2, y_len - 2, false, controlls_change_color(color, -2));
 	color = controls_color.Control_Color_Enabled_Buton_Pull;
 	if(!settings->Enabled || !ParentWindow->Internals.OldStateEnabled) color = settings->Color.Disabled.Buton;
-	put_rectangle(pDisplay, x_start + 2, y_start + 2, x_len - 4, y_len - 4, true, color);
+	LcdStruct->lcd_func.put_rectangle(pDisplay, x_start + 2, y_start + 2, x_len - 4, y_len - 4, true, color);
 	signed int Position = to_percentage(settings->MinimValue, settings->MaximValue, settings->Size.X - 8, settings->Value);
-	put_rectangle(pDisplay, x_start + 4, y_start + 4, Position, y_len - 8, true, controlls_change_color(color, -2));
+	LcdStruct->lcd_func.put_rectangle(pDisplay, x_start + 4, y_start + 4, Position, y_len - 8, true, controlls_change_color(color, -2));
 	if(settings->Internals.Caption.Text)
 	{
-		pDisplay->sClipRegion.sXMin = x_start + 4;
-		pDisplay->sClipRegion.sYMin = y_start + 4;
-		pDisplay->sClipRegion.sXMax = ((x_start + x_len) - 4);
-		pDisplay->sClipRegion.sYMax = ((y_start + y_len) - 4);
-		clip_limit(&pDisplay->sClipRegion, &back_up_clip);
+		LcdStruct->sClipRegion.sXMin = x_start + 4;
+		LcdStruct->sClipRegion.sYMin = y_start + 4;
+		LcdStruct->sClipRegion.sXMax = ((x_start + x_len) - 4);
+		LcdStruct->sClipRegion.sYMax = ((y_start + y_len) - 4);
+		clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
 		signed int x_str_location;
 		signed int y_str_location;
 		if(settings->Internals.Caption.WordWrap)
@@ -123,13 +124,13 @@ static void paint_progressbar(tProgressBar* settings, tDisplay *pDisplay, signed
 		put_string(&properties);
 	}
 
-	pDisplay->sClipRegion.sXMin = x_start;
-	pDisplay->sClipRegion.sYMin = y_start;
-	pDisplay->sClipRegion.sXMax = x_start + x_len;
-	pDisplay->sClipRegion.sYMax = y_start + y_len;
-	clip_limit(&pDisplay->sClipRegion, &back_up_clip);
-	box_cache_clean(pDisplay, x_start, y_start, x_len, y_len);
-	pDisplay->sClipRegion = back_up_clip;
+	LcdStruct->sClipRegion.sXMin = x_start;
+	LcdStruct->sClipRegion.sYMin = y_start;
+	LcdStruct->sClipRegion.sXMax = x_start + x_len;
+	LcdStruct->sClipRegion.sYMax = y_start + y_len;
+	clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
+	LcdStruct->lcd_func.box_cache_clean(pDisplay, x_start, y_start, x_len, y_len);
+	LcdStruct->sClipRegion = back_up_clip;
 	control_comand->WindowRefresh |= true;
 }
 //#######################################################################################
@@ -254,7 +255,8 @@ void progressbar(tProgressBar *settings, tControlCommandData* control_comand)
 	int Y_StartBox = settings->Internals.Position.Y;
 	int X_LenBox = settings->Internals.Size.X;
 	int Y_LenBox = settings->Internals.Size.Y;
-	tDisplay *pDisplay = settings->Internals.pDisplay;
+	void *pDisplay = settings->Internals.pDisplay;
+	tDisplay* LcdStruct = (tDisplay *) pDisplay;
 
 	/*Clear background of box with actual painted dimensions and positions if they been changed*/
 	if(settings->Internals.NeedEntireRefresh == true || settings->Internals.OldStateVisible != settings->Visible)
@@ -262,15 +264,15 @@ void progressbar(tProgressBar *settings, tControlCommandData* control_comand)
 		if(!settings->Internals.NoPaintBackGround || !settings->Visible)
 		{
 			settings->Internals.OldStateVisible = settings->Visible;
-			tRectangle back_up_clip = pDisplay->sClipRegion;
-			pDisplay->sClipRegion.sXMin = X_StartBox;
-			pDisplay->sClipRegion.sYMin = Y_StartBox;
-			pDisplay->sClipRegion.sXMax = X_StartBox + X_LenBox;
-			pDisplay->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
-			clip_limit(&pDisplay->sClipRegion, &back_up_clip);
-			put_rectangle(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, true, settings->Color.Scren);
-			box_cache_clean(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox);
-			pDisplay->sClipRegion = back_up_clip;
+			tRectangle back_up_clip = LcdStruct->sClipRegion;
+			LcdStruct->sClipRegion.sXMin = X_StartBox;
+			LcdStruct->sClipRegion.sYMin = Y_StartBox;
+			LcdStruct->sClipRegion.sXMax = X_StartBox + X_LenBox;
+			LcdStruct->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
+			clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
+			LcdStruct->lcd_func.put_rectangle(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, true, settings->Color.Scren);
+			LcdStruct->lcd_func.box_cache_clean(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox);
+			LcdStruct->sClipRegion = back_up_clip;
 			if(!settings->Visible) return;
 		}
 		settings->Internals.NeedEntireRefresh = true;
@@ -311,17 +313,17 @@ void progressbar(tProgressBar *settings, tControlCommandData* control_comand)
 		settings->Internals.Caption.Text = gfx_change_str(settings->Internals.Caption.Text, settings->Caption.Text);
 		settings->Caption.Text = settings->Internals.Caption.Text;
 
-		tRectangle back_up_clip = pDisplay->sClipRegion;
-		pDisplay->sClipRegion.sXMin = X_StartBox;
-		pDisplay->sClipRegion.sYMin = Y_StartBox;
-		pDisplay->sClipRegion.sXMax = X_StartBox + X_LenBox;
-		pDisplay->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
-		clip_limit(&pDisplay->sClipRegion, &back_up_clip);
+		tRectangle back_up_clip = LcdStruct->sClipRegion;
+		LcdStruct->sClipRegion.sXMin = X_StartBox;
+		LcdStruct->sClipRegion.sYMin = Y_StartBox;
+		LcdStruct->sClipRegion.sXMax = X_StartBox + X_LenBox;
+		LcdStruct->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
+		clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
 		CursorState Cursor = control_comand->Cursor;
 		control_comand->Cursor = Cursor_Up;
 		paint_progressbar(settings, pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, control_comand);
 		control_comand->Cursor = Cursor;
-		pDisplay->sClipRegion = back_up_clip;
+		LcdStruct->sClipRegion = back_up_clip;
 		control_comand->WindowRefresh = true;
 
 		settings->Internals.ParentWindowStateEnabled = ParentWindow->Internals.OldStateEnabled;
@@ -335,7 +337,7 @@ void progressbar(tProgressBar *settings, tControlCommandData* control_comand)
 	}
 	/* Check if inside window */
 	bool inside_window = check_if_inside_box(X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, control_comand->X, control_comand->Y);
-	bool _inside_window = check_if_inside_box(pDisplay->sClipRegion.sXMin, pDisplay->sClipRegion.sYMin, pDisplay->sClipRegion.sXMax - pDisplay->sClipRegion.sXMin, pDisplay->sClipRegion.sYMax - pDisplay->sClipRegion.sYMin, control_comand->X, control_comand->Y);
+	bool _inside_window = check_if_inside_box(LcdStruct->sClipRegion.sXMin, LcdStruct->sClipRegion.sYMin, LcdStruct->sClipRegion.sXMax - LcdStruct->sClipRegion.sXMin, LcdStruct->sClipRegion.sYMax - LcdStruct->sClipRegion.sYMin, control_comand->X, control_comand->Y);
 	if(!_inside_window) inside_window = false;
 
 	if(control_comand->Cursor != Cursor_NoAction &&
@@ -373,14 +375,14 @@ void progressbar(tProgressBar *settings, tControlCommandData* control_comand)
 				if(settings->Value < settings->MinimValue) settings->Value = settings->MinimValue;
 			}
 		}
-		tRectangle back_up_clip = pDisplay->sClipRegion;
-		pDisplay->sClipRegion.sXMin = X_StartBox;
-		pDisplay->sClipRegion.sYMin = Y_StartBox;
-		pDisplay->sClipRegion.sXMax = X_StartBox + X_LenBox;
-		pDisplay->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
-		clip_limit(&pDisplay->sClipRegion, &back_up_clip);
+		tRectangle back_up_clip = LcdStruct->sClipRegion;
+		LcdStruct->sClipRegion.sXMin = X_StartBox;
+		LcdStruct->sClipRegion.sYMin = Y_StartBox;
+		LcdStruct->sClipRegion.sXMax = X_StartBox + X_LenBox;
+		LcdStruct->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
+		clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
 		if(settings->Internals.CursorDownInsideBox) paint_progressbar(settings, pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, control_comand);
-		pDisplay->sClipRegion = back_up_clip;
+		LcdStruct->sClipRegion = back_up_clip;
 	}
 	if(control_comand->Cursor && settings->Internals.CursorDownInsideBox) control_comand->CursorCoordonateUsed |= true;
 	if(settings->Internals.CursorDownInsideBox == true && (control_comand->Cursor == Cursor_Up || control_comand->Cursor == Cursor_NoAction)) settings->Internals.CursorDownInsideBox = false;

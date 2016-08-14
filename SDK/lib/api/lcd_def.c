@@ -7,6 +7,25 @@
 
 #include "lcd_def.h"
 
+RASTER_TIMINGS lcd_MI0283 =
+{
+/*X size*/		240,
+/*Y size*/		320,
+/*ref clk*/		0,
+/*pll M*/		0,
+/*pll N*/		0,
+/*pll M2*/		0,
+/*raster clk*/	0,
+/*palete len*/	0,
+/*bus size*/	8,
+/*hsw*/			0,
+/*hfp*/			0,
+/*hbp*/			0,
+/*vsw*/			0,
+/*vfp*/			0,
+/*vbp*/			0
+};
+
 RASTER_TIMINGS lcd_S035Q01_beaglebone_exp =
 {
 /*X size*/		320,

@@ -43,6 +43,7 @@
 								<option id="com.ti.ccstudio.buildDefinitions.TMS470_GNU_4.0.compilerID.DEBUG.1411184358" name="Generate debug information (-g)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_GNU_4.0.compilerID.DEBUG" value="true" valueType="boolean"/>
 								<option id="com.ti.ccstudio.buildDefinitions.TMS470_GNU_4.0.compilerID.DEFINE.785937980" name="Define symbols (-D)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_GNU_4.0.compilerID.DEFINE" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="MMCSD_DEBUG_EN"/>
+									<listOptionValue builtIn="false" value="DOXYGEN"/>
 									<listOptionValue builtIn="false" value="_DOXYGEN"/>
 									<listOptionValue builtIn="false" value="_TINY_PRINT_"/>
 									<listOptionValue builtIn="false" value="gcc"/>
@@ -89,7 +90,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="CC13xx/sys/ccfg.c|CC13xx/driver/bin|driver/bin|driverlib/bin" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="lib/api/lan_api.c|lib/app/lan|CC13xx/sys/ccfg.c|CC13xx/driver/bin|driver/bin|driverlib/bin" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

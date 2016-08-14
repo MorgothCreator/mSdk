@@ -35,6 +35,11 @@
 			<type>2</type>
 			<locationURI>PARENT-2-PROJECT_LOC/SDK/lib</locationURI>
 		</link>
+		<link>
+			<name>net</name>
+			<type>2</type>
+			<locationURI>PARENT-2-PROJECT_LOC/SDK/third_party/net</locationURI>
+		</link>
 	</linkedResources>
 	<variableList>
 		<variable>

@@ -88,9 +88,12 @@
 #define SDIO_FIFO_ADDRESS                ((unsigned long)0x40012C80)
 //extern HAL_SD_CardInfoTypedef SDCardInfo;
 /*#####################################################*/
-#define IsNoCard						0
-#define IsSd							1
-#define IsSdhc							2
+typedef enum
+{
+	IsNoCard = 0,
+	IsSd,
+	IsSdhc,
+}mmcsd_type_e;
 
 /**
   * @brief SD Card information structure

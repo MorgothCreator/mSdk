@@ -1,5 +1,5 @@
-#ifdef STM32F429I_DISCO
-
+#ifndef STM32F429I_DISCO
+#define STM32F429I_DISCO
 
 #define LED1_PORT			IOC
 #define LED1_PIN			13

@@ -228,15 +228,15 @@ unsigned int USBMSCWriteBlock(void *_ctrl, void *ptr, unsigned long block,
 
 void _usb_msc_host_ioctl(unsigned int unit_nr, unsigned int  command,  unsigned int *buffer)
 {
-	HCD_HandleTypeDef * _ctrl = &hUSB_Host[unit_nr];//(HCD_HandleTypeDef *)ctrl;
-	  DRESULT res = RES_ERROR;
+	//HCD_HandleTypeDef * _ctrl = (HCD_HandleTypeDef *)&hUSB_Host[unit_nr];//(HCD_HandleTypeDef *)ctrl;
+	  //DRESULT res = RES_ERROR;
 	  MSC_LUNTypeDef info;
 	  unsigned char lun = unit_nr;
 	  switch (command)
 	  {
 	  /* Make sure that no pending write process */
 	  case CTRL_SYNC:
-	    res = RES_OK;
+	    //res = RES_OK;
 	    break;
 
 	  /* Get number of sectors on the disk (DWORD) */
@@ -244,11 +244,11 @@ void _usb_msc_host_ioctl(unsigned int unit_nr, unsigned int  command,  unsigned 
 	    if(USBH_MSC_GetLUNInfo(&hUSB_Host[unit_nr], lun, &info) == USBH_OK)
 	    {
 	      *(DWORD*)buffer = info.capacity.block_nbr;
-	      res = RES_OK;
+	      //res = RES_OK;
 	    }
 	    else
 	    {
-	      res = RES_ERROR;
+	      //res = RES_ERROR;
 	    }
 	    break;
 
@@ -257,11 +257,11 @@ void _usb_msc_host_ioctl(unsigned int unit_nr, unsigned int  command,  unsigned 
 	    if(USBH_MSC_GetLUNInfo(&hUSB_Host[unit_nr], lun, &info) == USBH_OK)
 	    {
 	      *(DWORD*)buffer = info.capacity.block_size;
-	      res = RES_OK;
+	      //res = RES_OK;
 	    }
 	    else
 	    {
-	      res = RES_ERROR;
+	      //res = RES_ERROR;
 	    }
 	    break;
 
@@ -271,16 +271,16 @@ void _usb_msc_host_ioctl(unsigned int unit_nr, unsigned int  command,  unsigned 
 	    if(USBH_MSC_GetLUNInfo(&hUSB_Host[unit_nr], lun, &info) == USBH_OK)
 	    {
 	      *(DWORD*)buffer = info.capacity.block_size;
-	      res = RES_OK;
+	      //res = RES_OK;
 	    }
 	    else
 	    {
-	      res = RES_ERROR;
+	      //res = RES_ERROR;
 	    }
 	    break;
 
-	  default:
-	    res = RES_PARERR;
+	  //default:
+	    //res = RES_PARERR;
 	  }
 
 	  return;// res;
@@ -373,9 +373,9 @@ void _usb_msc_host_idle(unsigned int instance)
 						}
 #endif
             }
-        	else  if(DebugCom)										UARTprintf(DebugCom,   "MMCSD%d ERROR oppening path\n\r" , 0);
+        	else  if(DebugCom)										UARTprintf(DebugCom,   "USBH %d ERROR oppening path\n\r" , 0);
         }
-        else  if(DebugCom)												UARTprintf(DebugCom,   "MMCSD%d ERROR mounting disk\n\r" , 0);
+        else  if(DebugCom)												UARTprintf(DebugCom,   "USBH %d ERROR mounting disk\n\r" , 0);
         Appli_state = APPLICATION_IDLE;
         break;
 

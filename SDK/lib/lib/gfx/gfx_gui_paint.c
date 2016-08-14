@@ -34,11 +34,12 @@ void _gui_put_simple_item(signed int x, signed int y, signed int x_size, signed 
 	signed int radius = sys_def_gui_res.corner_radius;
 	if(radius < 0) radius = ~radius;
 	signed int a, b, P;
-	tDisplay *pDisplay = sys_def_gui_res.pDisplay;
+	void *pDisplay = sys_def_gui_res.pDisplay;
+	tDisplay* LcdStruct = (tDisplay *) pDisplay;
 	signed int __x_size = x_size, __y_size = y_size;
 	if(__x_size < 0) __x_size = ~__x_size;
 	if(__y_size < 0) __y_size = ~__y_size;
-	unsigned int _color = color << 8;
+	unsigned int _color = color;// << 8;
 
    a = 0;
    b = radius;
@@ -68,27 +69,27 @@ void _gui_put_simple_item(signed int x, signed int y, signed int x_size, signed 
 
 		 if(_Tmp7 != Tmp7)
 		 {
-			put_horizontal_line(pDisplay,Tmp2, Tmp1 - Tmp2, Tmp7, 1, color);
-			put_horizontal_line(pDisplay,Tmp2, Tmp1 - Tmp2, Tmp8, 1, color);
+			 LcdStruct->lcd_func.put_horizontal_line(pDisplay,Tmp2, Tmp1 - Tmp2, Tmp7, 1, color);
+			 LcdStruct->lcd_func.put_horizontal_line(pDisplay,Tmp2, Tmp1 - Tmp2, Tmp8, 1, color);
 		 }
          if(_Tmp5 != Tmp5)
 		 {
-			put_horizontal_line(pDisplay,Tmp4, Tmp3 - Tmp4, Tmp5, 1, color);
-			put_horizontal_line(pDisplay,Tmp4, Tmp3 - Tmp4, Tmp6, 1, color);
+        	 LcdStruct->lcd_func.put_horizontal_line(pDisplay,Tmp4, Tmp3 - Tmp4, Tmp5, 1, color);
+        	 LcdStruct->lcd_func.put_horizontal_line(pDisplay,Tmp4, Tmp3 - Tmp4, Tmp6, 1, color);
 		 }
       _Tmp5 = Tmp5;
       _Tmp7 = Tmp7;
       }
       else
       {
-		put_pixel(pDisplay,Tmp1, Tmp7, _color);
-		put_pixel(pDisplay,Tmp3, Tmp5, _color);
-		put_pixel(pDisplay,Tmp2, Tmp7, _color);
-		put_pixel(pDisplay,Tmp4, Tmp5, _color);
-		put_pixel(pDisplay,Tmp3, Tmp6, _color);
-		put_pixel(pDisplay,Tmp1, Tmp8, _color);
-		put_pixel(pDisplay,Tmp2, Tmp8, _color);
-		put_pixel(pDisplay,Tmp4, Tmp6, _color);
+    	  LcdStruct->lcd_func.put_pixel(pDisplay,Tmp1, Tmp7, _color);
+    	  LcdStruct->lcd_func.put_pixel(pDisplay,Tmp3, Tmp5, _color);
+    	  LcdStruct->lcd_func.put_pixel(pDisplay,Tmp2, Tmp7, _color);
+    	  LcdStruct->lcd_func.put_pixel(pDisplay,Tmp4, Tmp5, _color);
+    	  LcdStruct->lcd_func.put_pixel(pDisplay,Tmp3, Tmp6, _color);
+    	  LcdStruct->lcd_func.put_pixel(pDisplay,Tmp1, Tmp8, _color);
+    	  LcdStruct->lcd_func.put_pixel(pDisplay,Tmp2, Tmp8, _color);
+    	  LcdStruct->lcd_func.put_pixel(pDisplay,Tmp4, Tmp6, _color);
       }
 
       if(P < 0)
@@ -98,17 +99,18 @@ void _gui_put_simple_item(signed int x, signed int y, signed int x_size, signed 
     } while(a <= b);
    if(!fill)
    {
-		put_horizontal_line(pDisplay ,x + radius + 1, x_size - (radius + radius) - 2, y, 1, color);
-		put_horizontal_line(pDisplay ,x + radius + 1, x_size - (radius + radius) - 2, (y + y_size) - 1, 1, color);
-		put_vertical_line(pDisplay ,y + radius + 1, y_size - (radius + radius) - 2, x, 1, color);
-		put_vertical_line(pDisplay ,y + radius + 1, y_size - (radius + radius) - 2, (x + x_size) - 1, 1, color);
+	   LcdStruct->lcd_func.put_horizontal_line(pDisplay ,x + radius + 1, x_size - (radius + radius) - 2, y, 1, color);
+	   LcdStruct->lcd_func.put_horizontal_line(pDisplay ,x + radius + 1, x_size - (radius + radius) - 2, (y + y_size) - 1, 1, color);
+	   LcdStruct->lcd_func.put_vertical_line(pDisplay ,y + radius + 1, y_size - (radius + radius) - 2, x, 1, color);
+	   LcdStruct->lcd_func.put_vertical_line(pDisplay ,y + radius + 1, y_size - (radius + radius) - 2, (x + x_size) - 1, 1, color);
    } else {
-		put_rectangle(pDisplay, x, y + radius + 1, x_size, y_size - (radius + radius) - 2, true, color);
+	   LcdStruct->lcd_func.put_rectangle(pDisplay, x, y + radius + 1, x_size, y_size - (radius + radius) - 2, true, color);
    }
 }
 /*#####################################################*/
-void gui_put_item(tDisplay *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len, unsigned int int_color, unsigned int border_color, CursorState cursor, GUI_PAINT_STYLE style, bool enabled)
+void gui_put_item(void *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len, unsigned int int_color, unsigned int border_color, CursorState cursor, GUI_PAINT_STYLE style, bool enabled)
 {
+	tDisplay* LcdStruct = (tDisplay *) pDisplay;
 	sys_def_gui_res.pDisplay = pDisplay;
 	switch(style) {
 		case PAINT_STYLE_ROUNDED_CORNERS:
@@ -118,51 +120,53 @@ void gui_put_item(tDisplay *pDisplay, signed int x_start, signed int y_start, si
 			break;
 		case PAINT_STYLE_DEFAULT:
 		default:
-			if(enabled) {
+			if(enabled)
+			{
 				switch(cursor) {
 					case Cursor_Down:
 					case Cursor_Move:
-						put_rectangle(pDisplay, x_start + 2, y_start + 2, x_len - 4, y_len - 4, true, int_color);
-						put_horizontal_line(pDisplay, x_start, x_len, y_start, 1, controlls_change_color(border_color, -BORDER_LINE_ONE_DARK));
-						put_horizontal_line(pDisplay, x_start + 1, x_len - 2, y_start + 1, 1, controlls_change_color(border_color, -BORDER_LINE_TWO_DARK));
+						LcdStruct->lcd_func.put_rectangle(pDisplay, x_start + 2, y_start + 2, x_len - 4, y_len - 4, true, int_color);
+						LcdStruct->lcd_func.put_horizontal_line(pDisplay, x_start, x_len, y_start, 1, controlls_change_color(border_color, -BORDER_LINE_ONE_DARK));
+						LcdStruct->lcd_func.put_horizontal_line(pDisplay, x_start + 1, x_len - 2, y_start + 1, 1, controlls_change_color(border_color, -BORDER_LINE_TWO_DARK));
 
-						put_horizontal_line(pDisplay, x_start + 1, x_len - 2, y_start + y_len - 2, 1, controlls_change_color(border_color, +BORDER_LINE_TWO_LIGHT));
-						put_horizontal_line(pDisplay, x_start, x_len, (y_start + y_len) - 1, 1, controlls_change_color(border_color, +BORDER_LINE_ONE_LIGHT));
+						LcdStruct->lcd_func.put_horizontal_line(pDisplay, x_start + 1, x_len - 2, y_start + y_len - 2, 1, controlls_change_color(border_color, +BORDER_LINE_TWO_LIGHT));
+						LcdStruct->lcd_func.put_horizontal_line(pDisplay, x_start, x_len, (y_start + y_len) - 1, 1, controlls_change_color(border_color, +BORDER_LINE_ONE_LIGHT));
 
-						put_vertical_line(pDisplay, y_start, y_len, x_start, 1, controlls_change_color(border_color, -BORDER_LINE_ONE_DARK));
-						put_vertical_line(pDisplay, y_start + 1, y_len - 2, x_start + 1, 1, controlls_change_color(border_color, -BORDER_LINE_TWO_DARK));
+						LcdStruct->lcd_func.put_vertical_line(pDisplay, y_start, y_len, x_start, 1, controlls_change_color(border_color, -BORDER_LINE_ONE_DARK));
+						LcdStruct->lcd_func.put_vertical_line(pDisplay, y_start + 1, y_len - 2, x_start + 1, 1, controlls_change_color(border_color, -BORDER_LINE_TWO_DARK));
 
-						put_vertical_line(pDisplay, y_start + 1, y_len - 2, x_start + x_len - 2, 1, controlls_change_color(border_color, +BORDER_LINE_TWO_LIGHT));
-						put_vertical_line(pDisplay, y_start, y_len, (x_start + x_len) - 1, 1, controlls_change_color(border_color, +BORDER_LINE_ONE_LIGHT));
+						LcdStruct->lcd_func.put_vertical_line(pDisplay, y_start + 1, y_len - 2, x_start + x_len - 2, 1, controlls_change_color(border_color, +BORDER_LINE_TWO_LIGHT));
+						LcdStruct->lcd_func.put_vertical_line(pDisplay, y_start, y_len, (x_start + x_len) - 1, 1, controlls_change_color(border_color, +BORDER_LINE_ONE_LIGHT));
 						break;
 					default:
-						put_rectangle(pDisplay, x_start + 2, y_start + 2, x_len - 4, y_len - 4, true, int_color);
-						put_horizontal_line(pDisplay, x_start, x_len, y_start, 1, controlls_change_color(border_color, +BORDER_LINE_ONE_LIGHT));
-						put_horizontal_line(pDisplay, x_start + 1, x_len - 2, y_start + 1, 1, controlls_change_color(border_color, +BORDER_LINE_TWO_LIGHT));
+						LcdStruct->lcd_func.put_rectangle(pDisplay, x_start + 2, y_start + 2, x_len - 4, y_len - 4, true, int_color);
+						LcdStruct->lcd_func.put_horizontal_line(pDisplay, x_start, x_len, y_start, 1, controlls_change_color(border_color, +BORDER_LINE_ONE_LIGHT));
+						LcdStruct->lcd_func.put_horizontal_line(pDisplay, x_start + 1, x_len - 2, y_start + 1, 1, controlls_change_color(border_color, +BORDER_LINE_TWO_LIGHT));
 
-						put_horizontal_line(pDisplay, x_start + 1, x_len - 2, y_start + y_len - 2, 1, controlls_change_color(border_color, -BORDER_LINE_TWO_DARK));
-						put_horizontal_line(pDisplay, x_start, x_len, (y_start + y_len) - 1, 1, controlls_change_color(border_color, -BORDER_LINE_ONE_DARK));
+						LcdStruct->lcd_func.put_horizontal_line(pDisplay, x_start + 1, x_len - 2, y_start + y_len - 2, 1, controlls_change_color(border_color, -BORDER_LINE_TWO_DARK));
+						LcdStruct->lcd_func.put_horizontal_line(pDisplay, x_start, x_len, (y_start + y_len) - 1, 1, controlls_change_color(border_color, -BORDER_LINE_ONE_DARK));
 
-						put_vertical_line(pDisplay, y_start, y_len, x_start, 1, controlls_change_color(border_color, +BORDER_LINE_ONE_LIGHT));
-						put_vertical_line(pDisplay, y_start + 1, y_len - 2, x_start + 1, 1, controlls_change_color(border_color, +BORDER_LINE_TWO_LIGHT));
+						LcdStruct->lcd_func.put_vertical_line(pDisplay, y_start, y_len, x_start, 1, controlls_change_color(border_color, +BORDER_LINE_ONE_LIGHT));
+						LcdStruct->lcd_func.put_vertical_line(pDisplay, y_start + 1, y_len - 2, x_start + 1, 1, controlls_change_color(border_color, +BORDER_LINE_TWO_LIGHT));
 
-						put_vertical_line(pDisplay, y_start + 1, y_len - 2, x_start + x_len - 2, 1, controlls_change_color(border_color, -BORDER_LINE_TWO_DARK));
-						put_vertical_line(pDisplay, y_start, y_len, (x_start + x_len) - 1, 1, controlls_change_color(border_color, -BORDER_LINE_ONE_DARK));
+						LcdStruct->lcd_func.put_vertical_line(pDisplay, y_start + 1, y_len - 2, x_start + x_len - 2, 1, controlls_change_color(border_color, -BORDER_LINE_TWO_DARK));
+						LcdStruct->lcd_func.put_vertical_line(pDisplay, y_start, y_len, (x_start + x_len) - 1, 1, controlls_change_color(border_color, -BORDER_LINE_ONE_DARK));
 						break;
 				}
-			} else {
-				put_rectangle(pDisplay, x_start + 2, y_start + 2, x_len - 4, y_len - 4, true, int_color);
-				put_horizontal_line(pDisplay, x_start, x_len, y_start, 1, controlls_change_color(border_color, -BORDER_LINE_ONE_LIGHT));
-				put_horizontal_line(pDisplay, x_start + 1, x_len - 2, y_start + 1, 1, controlls_change_color(border_color, -BORDER_LINE_TWO_LIGHT));
+			} else
+			{
+				LcdStruct->lcd_func.put_rectangle(pDisplay, x_start + 2, y_start + 2, x_len - 4, y_len - 4, true, int_color);
+				LcdStruct->lcd_func.put_horizontal_line(pDisplay, x_start, x_len, y_start, 1, controlls_change_color(border_color, -BORDER_LINE_ONE_LIGHT));
+				LcdStruct->lcd_func.put_horizontal_line(pDisplay, x_start + 1, x_len - 2, y_start + 1, 1, controlls_change_color(border_color, -BORDER_LINE_TWO_LIGHT));
 
-				put_horizontal_line(pDisplay, x_start + 1, x_len - 2, y_start + y_len - 2, 1, controlls_change_color(border_color, -BORDER_LINE_TWO_LIGHT));
-				put_horizontal_line(pDisplay, x_start, x_len, (y_start + y_len) - 1, 1, controlls_change_color(border_color, -BORDER_LINE_ONE_LIGHT));
+				LcdStruct->lcd_func.put_horizontal_line(pDisplay, x_start + 1, x_len - 2, y_start + y_len - 2, 1, controlls_change_color(border_color, -BORDER_LINE_TWO_LIGHT));
+				LcdStruct->lcd_func.put_horizontal_line(pDisplay, x_start, x_len, (y_start + y_len) - 1, 1, controlls_change_color(border_color, -BORDER_LINE_ONE_LIGHT));
 
-				put_vertical_line(pDisplay, y_start, y_len, x_start, 1, controlls_change_color(border_color, -BORDER_LINE_ONE_LIGHT));
-				put_vertical_line(pDisplay, y_start + 1, y_len - 2, x_start + 1, 1, controlls_change_color(border_color, -BORDER_LINE_TWO_LIGHT));
+				LcdStruct->lcd_func.put_vertical_line(pDisplay, y_start, y_len, x_start, 1, controlls_change_color(border_color, -BORDER_LINE_ONE_LIGHT));
+				LcdStruct->lcd_func.put_vertical_line(pDisplay, y_start + 1, y_len - 2, x_start + 1, 1, controlls_change_color(border_color, -BORDER_LINE_TWO_LIGHT));
 
-				put_vertical_line(pDisplay, y_start + 1, y_len - 2, x_start + x_len - 2, 1, controlls_change_color(border_color, -BORDER_LINE_TWO_LIGHT));
-				put_vertical_line(pDisplay, y_start, y_len, (x_start + x_len) - 1, 1, controlls_change_color(border_color, -BORDER_LINE_ONE_LIGHT));
+				LcdStruct->lcd_func.put_vertical_line(pDisplay, y_start + 1, y_len - 2, x_start + x_len - 2, 1, controlls_change_color(border_color, -BORDER_LINE_TWO_LIGHT));
+				LcdStruct->lcd_func.put_vertical_line(pDisplay, y_start, y_len, (x_start + x_len) - 1, 1, controlls_change_color(border_color, -BORDER_LINE_ONE_LIGHT));
 		}
 	}
 }

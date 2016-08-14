@@ -97,24 +97,25 @@ static const unsigned char kbd_qwerty_keys_numeric[][6] =
 		"^"   ," ","&"," ","/","sl","quot","'" ,"space" ,"Lef","Dn","Rig"
 };
 //#######################################################################################
-static void paint_v_keyboard(tVKbd_Qwerty* settings, tDisplay *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len, tControlCommandData* control_comand, bool refrash)
+static void paint_v_keyboard(tVKbd_Qwerty* settings, void *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len, tControlCommandData* control_comand, bool refrash)
 {
 	unsigned int color = 0;
+	tDisplay* LcdStruct = (tDisplay *) pDisplay;
 	tWindow *ParentWindow = (tWindow*)settings->Internals.ParentWindow;
-	tRectangle back_up_clip = pDisplay->sClipRegion;
-	pDisplay->sClipRegion.sXMin = x_start;
-	pDisplay->sClipRegion.sYMin = y_start;
-	pDisplay->sClipRegion.sXMax = x_start + x_len;
-	pDisplay->sClipRegion.sYMax = y_start + y_len;
-	clip_limit(&pDisplay->sClipRegion, &back_up_clip);
+	tRectangle back_up_clip = LcdStruct->sClipRegion;
+	LcdStruct->sClipRegion.sXMin = x_start;
+	LcdStruct->sClipRegion.sYMin = y_start;
+	LcdStruct->sClipRegion.sXMax = x_start + x_len;
+	LcdStruct->sClipRegion.sYMax = y_start + y_len;
+	clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
 
 	if(refrash)
 	{
 		color = controls_color.Control_Color_Enabled_Border_Pull;
-		put_rectangle(pDisplay, x_start, y_start, x_len, y_len, false, controlls_change_color(color, -3));
-		put_rectangle(pDisplay, x_start + 1, y_start + 1, x_len - 2, y_len - 2, false, controlls_change_color(color, -2));
+		LcdStruct->lcd_func.put_rectangle(pDisplay, x_start, y_start, x_len, y_len, false, controlls_change_color(color, -3));
+		LcdStruct->lcd_func.put_rectangle(pDisplay, x_start + 1, y_start + 1, x_len - 2, y_len - 2, false, controlls_change_color(color, -2));
 		color = controls_color.Control_Color_Enabled_Buton_Pull;
-		put_rectangle(pDisplay, x_start + 2, y_start + 2, x_len - 4, y_len - 4, true, color);
+		LcdStruct->lcd_func.put_rectangle(pDisplay, x_start + 2, y_start + 2, x_len - 4, y_len - 4, true, color);
 		signed int key_size_x = ((settings->Size.X - 4 - (settings->kbd_border_size << 1))/13) - settings->key_space_size;
 		signed int key_size_y = ((settings->Size.Y - 4 - (settings->kbd_border_size << 1))/3) - settings->key_space_size;
 
@@ -224,13 +225,13 @@ static void paint_v_keyboard(tVKbd_Qwerty* settings, tDisplay *pDisplay, signed 
 		}
 	}
 
-	pDisplay->sClipRegion.sXMin = x_start;
-	pDisplay->sClipRegion.sYMin = y_start;
-	pDisplay->sClipRegion.sXMax = x_start + x_len;
-	pDisplay->sClipRegion.sYMax = y_start + y_len;
-	clip_limit(&pDisplay->sClipRegion, &back_up_clip);
-	box_cache_clean(pDisplay, x_start, y_start, x_len, y_len);
-	pDisplay->sClipRegion = back_up_clip;
+	LcdStruct->sClipRegion.sXMin = x_start;
+	LcdStruct->sClipRegion.sYMin = y_start;
+	LcdStruct->sClipRegion.sXMax = x_start + x_len;
+	LcdStruct->sClipRegion.sYMax = y_start + y_len;
+	clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
+	LcdStruct->lcd_func.box_cache_clean(pDisplay, x_start, y_start, x_len, y_len);
+	LcdStruct->sClipRegion = back_up_clip;
 }
 //#######################################################################################
 void v_keyboard(tVKbd_Qwerty *settings, tControlCommandData* control_comand)
@@ -300,7 +301,8 @@ void v_keyboard(tVKbd_Qwerty *settings, tControlCommandData* control_comand)
 	signed int Y_StartBox = settings->Internals.Position.Y;
 	signed int X_LenBox = settings->Internals.Size.X;
 	signed int Y_LenBox = settings->Internals.Size.Y;
-	tDisplay *pDisplay = settings->Internals.pDisplay;
+	void *pDisplay = settings->Internals.pDisplay;
+	tDisplay* LcdStruct = (tDisplay *) pDisplay;
 
 	/*Clear background of box with actual painted dimensions and positions if they been changed*/
 	if(settings->Internals.NeedEntireRefresh == true || (settings->Internals.OldStateVisible != settings->Visible && settings->Visible == false))
@@ -308,15 +310,15 @@ void v_keyboard(tVKbd_Qwerty *settings, tControlCommandData* control_comand)
 		if(!settings->Internals.NoPaintBackGround)
 		{
 			settings->Internals.OldStateVisible = settings->Visible;
-			tRectangle back_up_clip = pDisplay->sClipRegion;
-			pDisplay->sClipRegion.sXMin = X_StartBox;
-			pDisplay->sClipRegion.sYMin = Y_StartBox;
-			pDisplay->sClipRegion.sXMax = X_StartBox + X_LenBox;
-			pDisplay->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
-			clip_limit(&pDisplay->sClipRegion, &back_up_clip);
-			put_rectangle(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, true, settings->Color.Scren);
-			box_cache_clean(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox);
-			pDisplay->sClipRegion = back_up_clip;
+			tRectangle back_up_clip = LcdStruct->sClipRegion;
+			LcdStruct->sClipRegion.sXMin = X_StartBox;
+			LcdStruct->sClipRegion.sYMin = Y_StartBox;
+			LcdStruct->sClipRegion.sXMax = X_StartBox + X_LenBox;
+			LcdStruct->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
+			clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
+			LcdStruct->lcd_func.put_rectangle(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, true, settings->Color.Scren);
+			LcdStruct->lcd_func.box_cache_clean(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox);
+			LcdStruct->sClipRegion = back_up_clip;
 		}
 	}
 

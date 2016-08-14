@@ -24,6 +24,12 @@
 #include "interface/adc_interface.h"
 #include "stdbool.h"
 /*#####################################################*/
+bool adc_start_conversion(Adc_t *Adc_s)
+{
+	return _adc_start_conversion(Adc_s);
+}
+
+
 bool adc_init(Adc_t *Adc_s)
 {
 	return _adc_init(Adc_s);

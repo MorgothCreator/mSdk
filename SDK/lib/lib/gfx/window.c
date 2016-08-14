@@ -447,24 +447,31 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 		settings->Internals.NormalScreenPosition.X = settings->Position.X;
 		settings->Internals.NormalScreenPosition.Y = settings->Position.Y;
 		settings->Internals.Header.Close = new_button(settings->Internals.ParentWindow);
-		if(!settings->Internals.Header.Close) return;
+		if(!settings->Internals.Header.Close)
+			return;
 
 		settings->Internals.Header.MaxMin = new_checkbox(settings->Internals.ParentWindow);
-		if(!settings->Internals.Header.MaxMin) return;
-		if(settings->Internals.FullScreen) settings->Internals.Header.MaxMin->Cheched = false;
-		else settings->Internals.Header.MaxMin->Cheched = true;
+		if(!settings->Internals.Header.MaxMin)
+			return;
+		if(settings->Internals.FullScreen)
+			settings->Internals.Header.MaxMin->Cheched = false;
+		else
+			settings->Internals.Header.MaxMin->Cheched = true;
 
 		settings->Internals.H_ScrollBar = new_scrollbar(settings->Internals.ParentWindow);
 		settings->Internals.V_ScrollBar = new_scrollbar(settings->Internals.ParentWindow);
 
 		settings->Internals.Header.Minimize = new_button(settings->Internals.ParentWindow);
-		if(!settings->Internals.Header.Minimize) return;
+		if(!settings->Internals.Header.Minimize)
+			return;
 
 		settings->Internals.Header.TabGroupScrollLeft = new_button(settings->Internals.ParentWindow);
-		if(!settings->Internals.Header.TabGroupScrollLeft) return;
+		if(!settings->Internals.Header.TabGroupScrollLeft)
+			return;
 
 		settings->Internals.Header.TabGroupScrollRight = new_button(settings->Internals.ParentWindow);
-		if(!settings->Internals.Header.TabGroupScrollRight) return;
+		if(!settings->Internals.Header.TabGroupScrollRight)
+			return;
 
 		//settings->Internals.Header.TabGroupTabsList = (tCheckBox **)calloc(1, sizeof(tCheckBox *));
 		//if(!settings->Internals.Header.TabGroupTabsList) return;
@@ -505,7 +512,13 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 													settings->Internals.WindowMoveLimits.sXMax != settings->WindowMoveLimits.sXMax ||
 														settings->Internals.WindowMoveLimits.sYMax != settings->WindowMoveLimits.sYMax ||
 															settings->Internals.HideHeader != settings->HideHeader ||
-																settings->Internals.OldTabGroupMode != settings->Internals.TabGroupMode)
+																settings->Internals.OldTabGroupMode != settings->Internals.TabGroupMode ||
+																	settings->Internals.CloseButonEnabled != settings->CloseButonEnabled ||
+																		settings->Internals.CloseButonVisible != settings->CloseButonVisible ||
+																			settings->Internals.MaxMinEnabled != settings->MaxMinEnabled ||
+																				settings->Internals.MaxMinVisible != settings->MaxMinVisible ||
+																					settings->Internals.MinimizeButonEnabled != settings->MinimizeButonEnabled ||
+																						settings->Internals.MinimizeButonVisible != settings->MinimizeButonVisible)
 			settings->Internals.NeedEntireRefresh = true;
 	}
 	else
@@ -523,7 +536,13 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 													settings->Internals.WindowMoveLimits.sXMax != settings->WindowMoveLimits.sXMax ||
 														settings->Internals.WindowMoveLimits.sYMax != settings->WindowMoveLimits.sYMax ||
 															settings->Internals.HideHeader != settings->HideHeader ||
-																settings->Internals.OldTabGroupMode != settings->Internals.TabGroupMode)
+																settings->Internals.OldTabGroupMode != settings->Internals.TabGroupMode ||
+																	settings->Internals.CloseButonEnabled != settings->CloseButonEnabled ||
+																		settings->Internals.CloseButonVisible != settings->CloseButonVisible ||
+																			settings->Internals.MaxMinEnabled != settings->MaxMinEnabled ||
+																				settings->Internals.MaxMinVisible != settings->MaxMinVisible ||
+																					settings->Internals.MinimizeButonEnabled != settings->MinimizeButonEnabled ||
+																						settings->Internals.MinimizeButonVisible != settings->MinimizeButonVisible)
 			settings->Internals.NeedEntireRefresh = true;
 	}
 
@@ -534,7 +553,8 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 	signed int Y_StartBox = settings->Internals.Position.Y;
 	signed int X_LenBox = settings->Internals.Size.X;
 	signed int Y_LenBox = settings->Internals.Size.Y;
-	tDisplay *pDisplay = settings->Internals.pDisplay;
+	void *pDisplay = settings->Internals.pDisplay;
+	tDisplay* LcdStruct = (tDisplay *) pDisplay;
 
 	/*Clear background of box with actual painted dimensions and positions if they been changed*/
 	if(settings->Internals.NeedEntireRefresh == true || settings->Internals.OldStateVisible != settings->Visible)
@@ -542,17 +562,18 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 		if(!settings->Internals.NoPaintBackGround || !settings->Visible)
 		{
 			settings->Internals.OldStateVisible = settings->Visible;
-			tRectangle back_up_clip = pDisplay->sClipRegion;
-			pDisplay->sClipRegion.sXMin = X_StartBox;
-			pDisplay->sClipRegion.sYMin = Y_StartBox;
-			pDisplay->sClipRegion.sXMax = X_StartBox + X_LenBox;
-			pDisplay->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
-			clip_limit(&pDisplay->sClipRegion, &back_up_clip);
-			clip_limit(&pDisplay->sClipRegion, &settings->WindowMoveLimits);
-			put_rectangle(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, true, settings->Color.Scren);
-			box_cache_clean(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox);
-			pDisplay->sClipRegion = back_up_clip;
-			if(!settings->Visible) return;
+			tRectangle back_up_clip = LcdStruct->sClipRegion;
+			LcdStruct->sClipRegion.sXMin = X_StartBox;
+			LcdStruct->sClipRegion.sYMin = Y_StartBox;
+			LcdStruct->sClipRegion.sXMax = X_StartBox + X_LenBox;
+			LcdStruct->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
+			clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
+			clip_limit(&LcdStruct->sClipRegion, &settings->WindowMoveLimits);
+			LcdStruct->lcd_func.put_rectangle(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, true, settings->Color.Scren);
+			LcdStruct->lcd_func.box_cache_clean(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox);
+			LcdStruct->sClipRegion = back_up_clip;
+			if(!settings->Visible)
+				return;
 		}
 		settings->Internals.NeedEntireRefresh = true;
 	}
@@ -588,6 +609,12 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 		settings->Internals.WindowMoveLimits.sXMax = settings->WindowMoveLimits.sXMax;
 		settings->Internals.WindowMoveLimits.sYMax = settings->WindowMoveLimits.sYMax;
 		settings->Internals.OldTabGroupMode = settings->Internals.TabGroupMode;
+		settings->Internals.CloseButonEnabled = settings->CloseButonEnabled;
+		settings->Internals.CloseButonVisible = settings->CloseButonVisible;
+		settings->Internals.MaxMinEnabled = settings->MaxMinEnabled;
+		settings->Internals.MaxMinVisible = settings->MaxMinVisible;
+		settings->Internals.MinimizeButonEnabled = settings->MinimizeButonEnabled;
+		settings->Internals.MinimizeButonVisible = settings->MinimizeButonVisible;
 		settings->Internals.HideHeader = settings->HideHeader;
 		X_StartBox = settings->Internals.Position.X;
 		Y_StartBox = settings->Internals.Position.Y;
@@ -617,6 +644,8 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 		settings->Internals.Header.Close->Internals.IsChildren = true;
 		settings->Internals.Header.Close->Internals.NoPaintBackGround = true;
 		settings->Internals.Header.Close->Internals.NeedEntireRefresh = true;
+		settings->Internals.Header.Close->Enabled = settings->Internals.CloseButonEnabled;
+		settings->Internals.Header.Close->Visible = settings->Internals.CloseButonVisible;
 
 		settings->Internals.Header.MaxMin->Size.X = header_btn_size;
 		settings->Internals.Header.MaxMin->Size.Y = header_btn_size;
@@ -633,6 +662,8 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 		settings->Internals.Header.MaxMin->Caption.Text = NULL;
 		settings->Internals.Header.MaxMin->Internals.NoPaintBackGround = true;
 		settings->Internals.Header.MaxMin->Internals.NeedEntireRefresh = true;
+		settings->Internals.Header.MaxMin->Enabled = settings->Internals.MaxMinEnabled;
+		settings->Internals.Header.MaxMin->Visible = settings->Internals.MaxMinVisible;
 
 		settings->Internals.Header.Minimize->Size.X = header_btn_size;
 		settings->Internals.Header.Minimize->Size.Y = header_btn_size;
@@ -650,6 +681,8 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 		settings->Internals.Header.Minimize->Internals.NoPaintBackGround = true;
 		settings->Internals.Header.Minimize->Internals.IsChildren = true;
 		settings->Internals.Header.Minimize->Internals.NeedEntireRefresh = true;
+		settings->Internals.Header.Minimize->Enabled = settings->Internals.MinimizeButonEnabled;
+		settings->Internals.Header.Minimize->Visible = settings->Internals.MinimizeButonVisible;
 
 		settings->Internals.Header.TabGroupScrollLeft->Size.X = header_btn_size;
 		settings->Internals.Header.TabGroupScrollLeft->Size.Y = header_btn_size;
@@ -715,23 +748,23 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 		settings->Internals.V_ScrollBar->Internals.NeedEntireRefresh = true;
 		settings->Internals.V_ScrollBar->Internals.NoPaintBackGround = true;
 
-		tRectangle back_up_clip = pDisplay->sClipRegion;
-		pDisplay->sClipRegion.sXMin = X_StartBox;
-		pDisplay->sClipRegion.sYMin = Y_StartBox;
-		pDisplay->sClipRegion.sXMax = X_StartBox + X_LenBox;
-		pDisplay->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
-		clip_limit(&pDisplay->sClipRegion, &back_up_clip);
-		clip_limit(&pDisplay->sClipRegion, &settings->WindowMoveLimits);
-		put_horizontal_line(pDisplay, X_StartBox, X_LenBox, Y_StartBox, 1, controlls_change_color(settings->WindowColor.Enabled.WindowBorder, +BORDER_LINE_TWO_DARK));
-		put_horizontal_line(pDisplay, X_StartBox, X_LenBox, (Y_StartBox + Y_LenBox) - 1, 1, controlls_change_color(settings->WindowColor.Enabled.WindowBorder, -BORDER_LINE_TWO_DARK));
+		tRectangle back_up_clip = LcdStruct->sClipRegion;
+		LcdStruct->sClipRegion.sXMin = X_StartBox;
+		LcdStruct->sClipRegion.sYMin = Y_StartBox;
+		LcdStruct->sClipRegion.sXMax = X_StartBox + X_LenBox;
+		LcdStruct->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
+		clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
+		clip_limit(&LcdStruct->sClipRegion, &settings->WindowMoveLimits);
+		LcdStruct->lcd_func.put_horizontal_line(pDisplay, X_StartBox, X_LenBox, Y_StartBox, 1, controlls_change_color(settings->WindowColor.Enabled.WindowBorder, +BORDER_LINE_TWO_DARK));
+		LcdStruct->lcd_func.put_horizontal_line(pDisplay, X_StartBox, X_LenBox, (Y_StartBox + Y_LenBox) - 1, 1, controlls_change_color(settings->WindowColor.Enabled.WindowBorder, -BORDER_LINE_TWO_DARK));
 
-		put_vertical_line(pDisplay, Y_StartBox, Y_LenBox, X_StartBox, 1, controlls_change_color(settings->WindowColor.Enabled.WindowBorder, +BORDER_LINE_TWO_DARK));
-		put_vertical_line(pDisplay, Y_StartBox, Y_LenBox, (X_StartBox + X_LenBox) - 1, 1, controlls_change_color(settings->WindowColor.Enabled.WindowBorder, -BORDER_LINE_TWO_DARK));
+		LcdStruct->lcd_func.put_vertical_line(pDisplay, Y_StartBox, Y_LenBox, X_StartBox, 1, controlls_change_color(settings->WindowColor.Enabled.WindowBorder, +BORDER_LINE_TWO_DARK));
+		LcdStruct->lcd_func.put_vertical_line(pDisplay, Y_StartBox, Y_LenBox, (X_StartBox + X_LenBox) - 1, 1, controlls_change_color(settings->WindowColor.Enabled.WindowBorder, -BORDER_LINE_TWO_DARK));
 
 		//put_rectangle(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, false, settings->WindowColor.Enabled.WindowBorder);
-		put_rectangle(pDisplay, X_StartBox + 1, Y_StartBox + 1, X_LenBox - 2, HeaderSize - 1, true, settings->WindowColor.Enabled.WindowHeader);
-		put_rectangle(pDisplay, X_StartBox + 1, (Y_StartBox + HeaderSize) - 1, X_LenBox - 2, Y_LenBox - HeaderSize - 0, true, controls_color.Scren);
-		box_cache_clean(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox);
+		LcdStruct->lcd_func.put_rectangle(pDisplay, X_StartBox + 1, Y_StartBox + 1, X_LenBox - 2, HeaderSize - 1, true, settings->WindowColor.Enabled.WindowHeader);
+		LcdStruct->lcd_func.put_rectangle(pDisplay, X_StartBox + 1, (Y_StartBox + HeaderSize) - 1, X_LenBox - 2, Y_LenBox - HeaderSize - 0, true, controls_color.Scren);
+		LcdStruct->lcd_func.box_cache_clean(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox);
 
 
 		CursorState cursor = control_comand->Cursor;
@@ -791,25 +824,25 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 
 		if(settings->Internals.OldTabGroupMode)
 		{
-			tRectangle back_up_clip_header = pDisplay->sClipRegion;
+			tRectangle back_up_clip_header = LcdStruct->sClipRegion;
 			signed int _X_StartBox_, _Y_StartBox_, _X_LenBox_, _Y_LenBox_;;
 			_X_StartBox_ = (settings->Internals.Position.X + header_btn_space + 2);
 			_X_LenBox_ = (settings->Internals.Size.X + settings->Internals.Position.X) - header_btn_space - 2;
 			_Y_StartBox_ = (2 + settings->Internals.Position.Y);
 			_Y_LenBox_ = (2 + settings->Internals.Position.Y) + header_btn_size;
-			pDisplay->sClipRegion.sXMin = _X_StartBox_;
-			pDisplay->sClipRegion.sXMax = _X_LenBox_;
-			pDisplay->sClipRegion.sYMin = _Y_StartBox_;
-			pDisplay->sClipRegion.sYMax = _Y_LenBox_;
-			clip_limit(&pDisplay->sClipRegion, &back_up_clip_header);
-			clip_limit(&pDisplay->sClipRegion, &settings->WindowMoveLimits);
-			put_rectangle(pDisplay, _X_StartBox_, _Y_StartBox_, _X_LenBox_ - _X_StartBox_, _Y_LenBox_ - _Y_StartBox_, false, settings->WindowColor.Enabled.WindowBorder);
-			pDisplay->sClipRegion.sXMin = _X_StartBox_ + 1;
-			pDisplay->sClipRegion.sXMax = _X_LenBox_ - 1;
-			pDisplay->sClipRegion.sYMin = _Y_StartBox_ + 1;
-			pDisplay->sClipRegion.sYMax = _Y_LenBox_ - 1;
-			clip_limit(&pDisplay->sClipRegion, &back_up_clip_header);
-			clip_limit(&pDisplay->sClipRegion, &settings->WindowMoveLimits);
+			LcdStruct->sClipRegion.sXMin = _X_StartBox_;
+			LcdStruct->sClipRegion.sXMax = _X_LenBox_;
+			LcdStruct->sClipRegion.sYMin = _Y_StartBox_;
+			LcdStruct->sClipRegion.sYMax = _Y_LenBox_;
+			clip_limit(&LcdStruct->sClipRegion, &back_up_clip_header);
+			clip_limit(&LcdStruct->sClipRegion, &settings->WindowMoveLimits);
+			LcdStruct->lcd_func.put_rectangle(pDisplay, _X_StartBox_, _Y_StartBox_, _X_LenBox_ - _X_StartBox_, _Y_LenBox_ - _Y_StartBox_, false, settings->WindowColor.Enabled.WindowBorder);
+			LcdStruct->sClipRegion.sXMin = _X_StartBox_ + 1;
+			LcdStruct->sClipRegion.sXMax = _X_LenBox_ - 1;
+			LcdStruct->sClipRegion.sYMin = _Y_StartBox_ + 1;
+			LcdStruct->sClipRegion.sYMax = _Y_LenBox_ - 1;
+			clip_limit(&LcdStruct->sClipRegion, &back_up_clip_header);
+			clip_limit(&LcdStruct->sClipRegion, &settings->WindowMoveLimits);
 			unsigned int TabGroupCnt = 0;
 			while(TabGroupCnt < settings->Internals.Header.TabGroupTabsListNr && settings->Internals.Header.TabGroupTabsList[TabGroupCnt])
 			{
@@ -824,7 +857,7 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 
 			//pDisplay->sClipRegion = back_up_clip_header;
 		}
-		pDisplay->sClipRegion = back_up_clip;
+		LcdStruct->sClipRegion = back_up_clip;
 		//control_comand->Comand = control_comand_comand;
 		control_comand->Cursor = cursor;
 
@@ -837,13 +870,13 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 		return;
 	}
 
-	tRectangle back_up_clip = pDisplay->sClipRegion;
-	pDisplay->sClipRegion.sXMin = X_StartBox;
-	pDisplay->sClipRegion.sYMin = Y_StartBox;
-	pDisplay->sClipRegion.sXMax = X_StartBox + X_LenBox;
-	pDisplay->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
-	clip_limit(&pDisplay->sClipRegion, &back_up_clip);
-	clip_limit(&pDisplay->sClipRegion, &settings->WindowMoveLimits);
+	tRectangle back_up_clip = LcdStruct->sClipRegion;
+	LcdStruct->sClipRegion.sXMin = X_StartBox;
+	LcdStruct->sClipRegion.sYMin = Y_StartBox;
+	LcdStruct->sClipRegion.sXMax = X_StartBox + X_LenBox;
+	LcdStruct->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
+	clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
+	clip_limit(&LcdStruct->sClipRegion, &settings->WindowMoveLimits);
 	if(settings->Internals.OldTabGroupMode == false)
 	{
 		if(settings->Internals.HideHeader == false) {
@@ -857,7 +890,8 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 		button(settings->Internals.Header.TabGroupScrollLeft, control_comand);
 		button(settings->Internals.Header.TabGroupScrollRight, control_comand);
 		signed int HeaderSize = 0;
-		if(settings->Internals.HideHeader == false) HeaderSize = settings->Internals.Header.Size.Y;
+		if(settings->Internals.HideHeader == false)
+			HeaderSize = settings->Internals.Header.Size.Y;
 		unsigned int header_btn_size = HeaderSize - 6;
 		unsigned int header_btn_space = HeaderSize - 5;
 		bool TabGroupSelectorPositionHasChanged = false;
@@ -894,22 +928,22 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 		_X_LenBox_ = (settings->Internals.Size.X + settings->Internals.Position.X) - header_btn_space - 2;
 		_Y_StartBox_ = (2 + settings->Internals.Position.Y);
 		_Y_LenBox_ = (2 + settings->Internals.Position.Y) + header_btn_size;
-		tRectangle back_up_clip_header = pDisplay->sClipRegion;
+		tRectangle back_up_clip_header = LcdStruct->sClipRegion;
 		if(TabGroupSelectorPositionHasChanged || settings->Internals.Header.OldTabGroupTabsListNr != settings->Internals.Header.TabGroupTabsListNr)
 		{
-			pDisplay->sClipRegion.sXMin = _X_StartBox_;
-			pDisplay->sClipRegion.sXMax = _X_LenBox_;
-			pDisplay->sClipRegion.sYMin = _Y_StartBox_;
-			pDisplay->sClipRegion.sYMax = _Y_LenBox_;
+			LcdStruct->sClipRegion.sXMin = _X_StartBox_;
+			LcdStruct->sClipRegion.sXMax = _X_LenBox_;
+			LcdStruct->sClipRegion.sYMin = _Y_StartBox_;
+			LcdStruct->sClipRegion.sYMax = _Y_LenBox_;
 			//clip_limit(&pDisplay->sClipRegion, &back_up_clip_header);
-			clip_limit(&pDisplay->sClipRegion, &settings->WindowMoveLimits);
-			put_rectangle(pDisplay, _X_StartBox_, _Y_StartBox_, _X_LenBox_ - _X_StartBox_, _Y_LenBox_ - _Y_StartBox_, false, settings->WindowColor.Enabled.WindowBorder);
-			pDisplay->sClipRegion.sXMin = _X_StartBox_ + 1;
-			pDisplay->sClipRegion.sXMax = _X_LenBox_ - 1;
-			pDisplay->sClipRegion.sYMin = _Y_StartBox_ + 1;
-			pDisplay->sClipRegion.sYMax = _Y_LenBox_ - 1;
-			clip_limit(&pDisplay->sClipRegion, &back_up_clip_header);
-			clip_limit(&pDisplay->sClipRegion, &settings->WindowMoveLimits);
+			clip_limit(&LcdStruct->sClipRegion, &settings->WindowMoveLimits);
+			LcdStruct->lcd_func.put_rectangle(pDisplay, _X_StartBox_, _Y_StartBox_, _X_LenBox_ - _X_StartBox_, _Y_LenBox_ - _Y_StartBox_, false, settings->WindowColor.Enabled.WindowBorder);
+			LcdStruct->sClipRegion.sXMin = _X_StartBox_ + 1;
+			LcdStruct->sClipRegion.sXMax = _X_LenBox_ - 1;
+			LcdStruct->sClipRegion.sYMin = _Y_StartBox_ + 1;
+			LcdStruct->sClipRegion.sYMax = _Y_LenBox_ - 1;
+			clip_limit(&LcdStruct->sClipRegion, &back_up_clip_header);
+			clip_limit(&LcdStruct->sClipRegion, &settings->WindowMoveLimits);
 			unsigned int TabGroupCnt = 0;
 			CursorState cursor = control_comand->Cursor;
 			control_comand->Cursor = Cursor_Up;
@@ -929,28 +963,32 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 		}
 		else
 		{
-			pDisplay->sClipRegion.sXMin = _X_StartBox_ + 1;
-			pDisplay->sClipRegion.sXMax = _X_LenBox_ - 1;
-			pDisplay->sClipRegion.sYMin = _Y_StartBox_ + 1;
-			pDisplay->sClipRegion.sYMax = _Y_LenBox_ - 1;
-			clip_limit(&pDisplay->sClipRegion, &back_up_clip_header);
-			clip_limit(&pDisplay->sClipRegion, &settings->WindowMoveLimits);
+			LcdStruct->sClipRegion.sXMin = _X_StartBox_ + 1;
+			LcdStruct->sClipRegion.sXMax = _X_LenBox_ - 1;
+			LcdStruct->sClipRegion.sYMin = _Y_StartBox_ + 1;
+			LcdStruct->sClipRegion.sYMax = _Y_LenBox_ - 1;
+			clip_limit(&LcdStruct->sClipRegion, &back_up_clip_header);
+			clip_limit(&LcdStruct->sClipRegion, &settings->WindowMoveLimits);
 			unsigned int TabGroupCnt = 0;
-			while(TabGroupCnt < settings->Internals.Header.TabGroupTabsListNr && settings->Internals.Header.TabGroupTabsList[TabGroupCnt]) {
+			while(TabGroupCnt < settings->Internals.Header.TabGroupTabsListNr && settings->Internals.Header.TabGroupTabsList[TabGroupCnt])
+			{
 				checkbox(settings->Internals.Header.TabGroupTabsList[TabGroupCnt], control_comand);
-				if(settings->Internals.Header.TabGroupTabsList[TabGroupCnt]->Events.Checked) {
+				if(settings->Internals.Header.TabGroupTabsList[TabGroupCnt]->Events.Checked)
+				{
 					settings->Internals.Header.TabGroupTabsList[TabGroupCnt]->Events.Checked = false;
 					//settings->Internals.TabChanged = true;
 					settings->Internals.NeedEntireRefresh = true;
 					settings->SelectedTab = TabGroupCnt;
 					unsigned int TabGroupCntUncheck = 0;
-					for(; TabGroupCntUncheck < settings->Internals.Header.TabGroupTabsListNr; TabGroupCntUncheck++) {
-						if(TabGroupCntUncheck != TabGroupCnt) settings->Internals.Header.TabGroupTabsList[TabGroupCntUncheck]->Cheched = false;
+					for(; TabGroupCntUncheck < settings->Internals.Header.TabGroupTabsListNr; TabGroupCntUncheck++)
+					{
+						if(TabGroupCntUncheck != TabGroupCnt)
+							settings->Internals.Header.TabGroupTabsList[TabGroupCntUncheck]->Cheched = false;
 					}
 				}
 				TabGroupCnt++;
 			}
-			pDisplay->sClipRegion = back_up_clip_header;
+			LcdStruct->sClipRegion = back_up_clip_header;
 		}
 	}
 
@@ -996,7 +1034,8 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 	scrollbar(settings->Internals.H_ScrollBar, control_comand);
 	scrollbar(settings->Internals.V_ScrollBar, control_comand);
 	ChildrenWindowSize_t ChildrenWindowSize;
-	if(check_if_inside_box(X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, control_comand->X, control_comand->Y) && control_comand->Cursor == Cursor_Down) settings->Internals.CursorDownInsideBox = true;
+	if(check_if_inside_box(X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, control_comand->X, control_comand->Y) && control_comand->Cursor == Cursor_Down)
+		settings->Internals.CursorDownInsideBox = true;
 	bool _back_coordonate_used = control_comand->CursorCoordonateUsed;
 	if(settings->Internals.FullScreen == false && control_comand->CursorCoordonateUsed == false)
 	{
@@ -1005,7 +1044,8 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 		int Resize_Size_X = settings->Internals.Size.ScrollBarSize - 4;
 		int Resize_Size_Y = settings->Internals.Size.ScrollBarSize - 4;
 
-		if(check_if_inside_box(Resize_Position_X, Resize_Position_Y, Resize_Size_X, Resize_Size_Y, control_comand->X, control_comand->Y) && control_comand->Cursor == Cursor_Down && control_comand->CursorCoordonateUsed == false) control_comand->CursorCoordonateUsed = true;
+		if(check_if_inside_box(Resize_Position_X, Resize_Position_Y, Resize_Size_X, Resize_Size_Y, control_comand->X, control_comand->Y) && control_comand->Cursor == Cursor_Down && control_comand->CursorCoordonateUsed == false)
+			control_comand->CursorCoordonateUsed = true;
 	}
 	window_set_children_settings(settings, true, false, control_comand, false, &ChildrenWindowSize);
 	control_comand->CursorCoordonateUsed = _back_coordonate_used;
@@ -1067,9 +1107,10 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 		settings->Internals.H_ScrollBar->Events.ValueChanged = false;
 		settings->Internals.V_ScrollBar->Events.ValueChanged = false;
 		signed int HeaderSize = 0;
-		if(settings->Internals.HideHeader == false) HeaderSize = settings->Internals.Header.Size.Y;
-		put_rectangle(pDisplay, X_StartBox + 1, (Y_StartBox + HeaderSize) - 1, X_LenBox - 3 - settings->Internals.V_ScrollBar->Size.X, Y_LenBox - settings->Internals.H_ScrollBar->Size.Y - 1 - HeaderSize, true, /*controlls_change_color(*/controls_color.Scren/*, 1.2)*/);
-		box_cache_clean(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox);
+		if(settings->Internals.HideHeader == false)
+			HeaderSize = settings->Internals.Header.Size.Y;
+		LcdStruct->lcd_func.put_rectangle(pDisplay, X_StartBox + 1, (Y_StartBox + HeaderSize) - 1, X_LenBox - 3 - settings->Internals.V_ScrollBar->Size.X, Y_LenBox - settings->Internals.H_ScrollBar->Size.Y - 1 - HeaderSize, true, /*controlls_change_color(*/controls_color.Scren/*, 1.2)*/);
+		LcdStruct->lcd_func.box_cache_clean(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox);
 		settings->Internals.Position.ChildrenPosition_X = -settings->Internals.H_ScrollBar->Value;
 		settings->Internals.Position.ChildrenPosition_Y = -settings->Internals.V_ScrollBar->Value;
 		CursorState cursor = control_comand->Cursor;
@@ -1078,9 +1119,10 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 		control_comand->Cursor = cursor;
 		control_comand->CursorCoordonateUsed = true;
 	}
-	pDisplay->sClipRegion = back_up_clip;
+	LcdStruct->sClipRegion = back_up_clip;
 
-	if(full_screen_has_changed_state) return;
+	if(full_screen_has_changed_state)
+		return;
 
 	if(settings->Internals.FullScreen == false && control_comand->CursorCoordonateUsed == false && settings->Internals.OldTabGroupMode == false)
 	{
@@ -1089,7 +1131,8 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 		int Resize_Size_X = settings->Internals.Size.ScrollBarSize - 4;
 		int Resize_Size_Y = settings->Internals.Size.ScrollBarSize - 4;
 
-		if(check_if_inside_box(Resize_Position_X, Resize_Position_Y, Resize_Size_X, Resize_Size_Y, control_comand->X, control_comand->Y) && control_comand->Cursor == Cursor_Down && control_comand->CursorCoordonateUsed == false) settings->Internals.CursorDownOnResizeBtn = true;
+		if(check_if_inside_box(Resize_Position_X, Resize_Position_Y, Resize_Size_X, Resize_Size_Y, control_comand->X, control_comand->Y) && control_comand->Cursor == Cursor_Down && control_comand->CursorCoordonateUsed == false)
+			settings->Internals.CursorDownOnResizeBtn = true;
 		/* If is in sizeable window, from here begin to calculate the resize of window using touchscreen */
 		if(settings->Internals.CursorDownOnResizeBtn == true)
 		{
@@ -1118,8 +1161,10 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 		}
 
 		signed int HeaderSize = 0;
-		if(settings->Internals.HideHeader == false) HeaderSize = settings->Internals.Header.Size.Y;
-		if(check_if_inside_box(X_StartBox + 1, Y_StartBox + 1, X_LenBox - 2, HeaderSize - 2, control_comand->X, control_comand->Y) && control_comand->Cursor == Cursor_Down && control_comand->CursorCoordonateUsed == false) settings->Internals.CursorDownOnHeader = true;
+		if(settings->Internals.HideHeader == false)
+			HeaderSize = settings->Internals.Header.Size.Y;
+		if(check_if_inside_box(X_StartBox + 1, Y_StartBox + 1, X_LenBox - 2, HeaderSize - 2, control_comand->X, control_comand->Y) && control_comand->Cursor == Cursor_Down && control_comand->CursorCoordonateUsed == false)
+			settings->Internals.CursorDownOnHeader = true;
 		/* If is in sizeable window, from here begin to calculate the move of window using touchscreen */
 
 		if(settings->Internals.CursorDownOnHeader == true)
@@ -1153,7 +1198,8 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 		settings->Internals.CursorDownOnResizeBtn = false;
 		settings->Internals.CursorDownInsideBox = false;
 	}
-	if(control_comand->Cursor != Cursor_NoAction && settings->Internals.CursorDownInsideBox == true) control_comand->CursorCoordonateUsed |= true;
+	if(control_comand->Cursor != Cursor_NoAction && settings->Internals.CursorDownInsideBox == true)
+		control_comand->CursorCoordonateUsed |= true;
 }
 //#######################################################################################
 tWindow *new_window_tab_group(void *ParentWindow, tDisplay *ScreenDisplay)
@@ -1210,7 +1256,12 @@ tWindow *new_window_tab_group(void *ParentWindow, tDisplay *ScreenDisplay)
 	settings->StateChangedOn = Cursor_Up;
 	settings->Visible = true;
 	settings->Enabled = true;
-
+	settings->CloseButonEnabled = true;
+	settings->CloseButonVisible = true;
+	settings->MaxMinEnabled = true;
+	settings->MaxMinVisible = true;
+	settings->MinimizeButonEnabled = true;
+	settings->MinimizeButonVisible = true;
 	if(ParentWindow)
 	{
 		settings->WindowMoveLimits = _ParentWindow->WindowMoveLimits;

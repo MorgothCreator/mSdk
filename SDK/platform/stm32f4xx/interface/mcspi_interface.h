@@ -18,6 +18,7 @@ bool _mcspi_open(new_mcspi *McspiStruct);
 void _mcspi_close(new_mcspi *McspiStruct);
 unsigned char _mcspi_SendByte(Mcspi_t *McspiStruct, unsigned char byte);
 bool _mcspi_transfer(Mcspi_t *McspiStruct);
+bool _mcspi_set_baud(Mcspi_t *McspiStruct, unsigned long baud);
 
 #ifdef HEADER_INCLUDE_C_FILES
 #include "mcspi_interface.c"

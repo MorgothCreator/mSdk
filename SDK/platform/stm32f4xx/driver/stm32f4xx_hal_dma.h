@@ -108,7 +108,7 @@ typedef struct
                                       @note The burst mode is possible only if the address Increment mode is enabled. */
 
   uint32_t PeriphBurst;          /*!< Specifies the Burst transfer configuration for the peripheral transfers. 
-                                      It specifies the amount of data to be transferred in a single non interruptable 
+                                      It specifies the amount of data to be transferred in a single non interruptible
                                       transaction. 
                                       This parameter can be a value of @ref DMA_Peripheral_burst
                                       @note The burst mode is possible only if the address Increment mode is enabled. */

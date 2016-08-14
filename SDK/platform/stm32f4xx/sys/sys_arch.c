@@ -32,11 +32,12 @@
 
 /* lwIP includes. */
 #include "sys_arch.h"
-#include "lwip/debug.h"
+#include "cc.h"
+/*#include "lwip/debug.h"
 #include "lwip/def.h"
 #include "lwip/sys.h"
 #include "lwip/mem.h"
-#include "lwip/stats.h"
+#include "lwip/stats.h"*/
 //#include "FreeRTOS.h"
 //#include "task.h"
 

@@ -32,15 +32,16 @@
 #include "controls_definition.h"
 #include "gfx_gui_paint.h"
 //#######################################################################################
-static void paint_button(tButton* settings, tDisplay *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len, tControlCommandData* control_comand)
+static void paint_button(tButton* settings, void *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len, tControlCommandData* control_comand)
 {
+	tDisplay* LcdStruct = (tDisplay *) pDisplay;
 	tWindow *ParentWindow = (tWindow*)settings->Internals.ParentWindow;
-	tRectangle back_up_clip = pDisplay->sClipRegion;
-	pDisplay->sClipRegion.sXMin = x_start;
-	pDisplay->sClipRegion.sYMin = y_start;
-	pDisplay->sClipRegion.sXMax = x_start + x_len;
-	pDisplay->sClipRegion.sYMax = y_start + y_len;
-	clip_limit(&pDisplay->sClipRegion, &back_up_clip);
+	tRectangle back_up_clip = LcdStruct->sClipRegion;
+	LcdStruct->sClipRegion.sXMin = x_start;
+	LcdStruct->sClipRegion.sYMin = y_start;
+	LcdStruct->sClipRegion.sXMax = x_start + x_len;
+	LcdStruct->sClipRegion.sYMax = y_start + y_len;
+	clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
 	CursorState cursor = control_comand->Cursor;
 	if((!settings->Enabled || !ParentWindow->Internals.OldStateEnabled) && settings->Internals.Control.Initiated == true)
 		gui_put_item(pDisplay, x_start, y_start, x_len, y_len, settings->Color.Disabled.Border, settings->Color.Disabled.Border, cursor,PAINT_STYLE_ROUNDED_CORNERS , false);
@@ -53,14 +54,14 @@ static void paint_button(tButton* settings, tDisplay *pDisplay, signed int x_sta
 
 	if(settings->Internals.Caption.Text)
 	{
-		pDisplay->sClipRegion.sXMin = x_start + 2;
-		pDisplay->sClipRegion.sYMin = y_start + 2;
-		pDisplay->sClipRegion.sXMax = ((x_start + x_len) - 2);
-		pDisplay->sClipRegion.sYMax = ((y_start + y_len) - 2);
-		clip_limit(&pDisplay->sClipRegion, &back_up_clip);
+		LcdStruct->sClipRegion.sXMin = x_start + 2;
+		LcdStruct->sClipRegion.sYMin = y_start + 2;
+		LcdStruct->sClipRegion.sXMax = ((x_start + x_len) - 2);
+		LcdStruct->sClipRegion.sYMax = ((y_start + y_len) - 2);
+		clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
 
-		signed int x_str_location = pDisplay->sClipRegion.sXMin;
-		signed int y_str_location = pDisplay->sClipRegion.sYMin;
+		signed int x_str_location = LcdStruct->sClipRegion.sXMin;
+		signed int y_str_location = LcdStruct->sClipRegion.sYMin;
 		if(settings->Caption.TextAlign == Align_Center){
 			StringProperties_t str_properties = string_properties_get(pDisplay, settings->Internals.Caption.Font, settings->Internals.Caption.Text, settings->Internals.Caption.WordWrap, -1);
 			x_str_location = x_start + ((x_len>>1)-(str_properties.StringRowsMaxLength_Pixels>>1));
@@ -99,13 +100,13 @@ static void paint_button(tButton* settings, tDisplay *pDisplay, signed int x_sta
 		}
 		put_string(&properties);
 	}
-	pDisplay->sClipRegion.sXMin = x_start;
-	pDisplay->sClipRegion.sYMin = y_start;
-	pDisplay->sClipRegion.sXMax = x_start + x_len;
-	pDisplay->sClipRegion.sYMax = y_start + y_len;
-	clip_limit(&pDisplay->sClipRegion, &back_up_clip);
-	box_cache_clean(pDisplay, x_start, y_start, x_len, y_len);
-	pDisplay->sClipRegion = back_up_clip;
+	LcdStruct->sClipRegion.sXMin = x_start;
+	LcdStruct->sClipRegion.sYMin = y_start;
+	LcdStruct->sClipRegion.sXMax = x_start + x_len;
+	LcdStruct->sClipRegion.sYMax = y_start + y_len;
+	clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
+	LcdStruct->lcd_func.box_cache_clean(pDisplay, x_start, y_start, x_len, y_len);
+	LcdStruct->sClipRegion = back_up_clip;
 	control_comand->WindowRefresh |= true;
 }
 //#######################################################################################
@@ -178,8 +179,10 @@ void button(tButton *settings, tControlCommandData* control_comand)
 									settings->Internals.Caption.TextAlign != settings->Caption.TextAlign ||
 										settings->Internals.Caption.WordWrap != settings->Caption.WordWrap ||
 											settings->Internals.OldStateEnabled != settings->Enabled ||
-												ParentWindow->Internals.OldStateEnabled != settings->Internals.ParentWindowStateEnabled)
-													settings->Internals.NeedEntireRefresh = true;
+												settings->Internals.OldStateVisible != settings->Visible ||
+													ParentWindow->Internals.OldStateEnabled != settings->Internals.ParentWindowStateEnabled/* ||
+														ParentWindow->Internals.OldStateVisible != settings->Internals.ParentWindowStateEnabled*/)
+		settings->Internals.NeedEntireRefresh = true;
 	}
 	else
 	{
@@ -191,8 +194,9 @@ void button(tButton *settings, tControlCommandData* control_comand)
 								settings->Internals.Caption.Text != settings->Caption.Text ||
 									settings->Internals.Caption.TextAlign != settings->Caption.TextAlign ||
 										settings->Internals.Caption.WordWrap != settings->Caption.WordWrap ||
-											settings->Internals.OldStateEnabled != settings->Enabled)
-												settings->Internals.NeedEntireRefresh = true;
+											settings->Internals.OldStateEnabled != settings->Enabled ||
+												settings->Internals.OldStateVisible != settings->Visible)
+		settings->Internals.NeedEntireRefresh = true;
 	}
 
 	//CursorState cursor = control_comand->Cursor;
@@ -204,7 +208,8 @@ void button(tButton *settings, tControlCommandData* control_comand)
 	signed int Y_StartBox = settings->Internals.Position.Y;
 	signed int X_LenBox = settings->Internals.Size.X;
 	signed int Y_LenBox = settings->Internals.Size.Y;
-	tDisplay *pDisplay = ParentWindow->Internals.pDisplay;
+	void *pDisplay = ParentWindow->Internals.pDisplay;
+	tDisplay* LcdStruct = (tDisplay *) pDisplay;
 
 	/*Clear background of box with actual painted dimensions and positions if they been changed*/
 	if(settings->Internals.NeedEntireRefresh == true || settings->Internals.OldStateVisible != settings->Visible)
@@ -212,15 +217,15 @@ void button(tButton *settings, tControlCommandData* control_comand)
 		if(!settings->Internals.NoPaintBackGround || !settings->Visible)
 		{
 			settings->Internals.OldStateVisible = settings->Visible;
-			tRectangle back_up_clip = pDisplay->sClipRegion;
-			pDisplay->sClipRegion.sXMin = X_StartBox;
-			pDisplay->sClipRegion.sYMin = Y_StartBox;
-			pDisplay->sClipRegion.sXMax = X_StartBox + X_LenBox;
-			pDisplay->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
-			clip_limit(&pDisplay->sClipRegion, &back_up_clip);
-			put_rectangle(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, true, settings->Color.Scren);
-			box_cache_clean(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox);
-			pDisplay->sClipRegion = back_up_clip;
+			tRectangle back_up_clip = LcdStruct->sClipRegion;
+			LcdStruct->sClipRegion.sXMin = X_StartBox;
+			LcdStruct->sClipRegion.sYMin = Y_StartBox;
+			LcdStruct->sClipRegion.sXMax = X_StartBox + X_LenBox;
+			LcdStruct->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
+			clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
+			LcdStruct->lcd_func.put_rectangle(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, true, settings->Color.Enabled.BackGround);
+			LcdStruct->lcd_func.box_cache_clean(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox);
+			LcdStruct->sClipRegion = back_up_clip;
 			if(!settings->Visible) return;
 		}
 		settings->Internals.NeedEntireRefresh = true;
@@ -267,8 +272,9 @@ void button(tButton *settings, tControlCommandData* control_comand)
 	}
 	/* Check if inside window */
 	bool inside_window = check_if_inside_box(X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, control_comand->X, control_comand->Y);
-	bool _inside_window = check_if_inside_box(pDisplay->sClipRegion.sXMin, pDisplay->sClipRegion.sYMin, pDisplay->sClipRegion.sXMax - pDisplay->sClipRegion.sXMin, pDisplay->sClipRegion.sYMax - pDisplay->sClipRegion.sYMin, control_comand->X, control_comand->Y);
-	if(!_inside_window) inside_window = false;
+	bool _inside_window = check_if_inside_box(LcdStruct->sClipRegion.sXMin, LcdStruct->sClipRegion.sYMin, LcdStruct->sClipRegion.sXMax - LcdStruct->sClipRegion.sXMin, LcdStruct->sClipRegion.sYMax - LcdStruct->sClipRegion.sYMin, control_comand->X, control_comand->Y);
+	if(!_inside_window)
+		inside_window = false;
 	if((control_comand->Cursor == Cursor_Up || control_comand->Cursor == Cursor_Down) &&
 			settings->Internals.OldStateCursor != control_comand->Cursor &&
 				(inside_window == true || settings->Internals.CursorDownInsideBox == true) &&
@@ -309,8 +315,10 @@ void button(tButton *settings, tControlCommandData* control_comand)
 			settings->Events.OnMove.CallbackReturnData = settings->Events.OnMove.CallBack(settings->Events.OnMove.CallbackData);
 		}
 	}
-	if(control_comand->Cursor && settings->Internals.CursorDownInsideBox) control_comand->CursorCoordonateUsed |= true;
-	if(settings->Internals.CursorDownInsideBox == true && (control_comand->Cursor == Cursor_Up || control_comand->Cursor == Cursor_NoAction)) settings->Internals.CursorDownInsideBox = false;
+	if(control_comand->Cursor && settings->Internals.CursorDownInsideBox)
+		control_comand->CursorCoordonateUsed |= true;
+	if(settings->Internals.CursorDownInsideBox == true && (control_comand->Cursor == Cursor_Up || control_comand->Cursor == Cursor_NoAction))
+		settings->Internals.CursorDownInsideBox = false;
 	//control_comand->CursorCoordonateUsed |= settings->Internals.CursorDownInsideBox;
 	//control_comand->WindowRefresh |= true;
 	return;

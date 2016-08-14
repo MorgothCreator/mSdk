@@ -31,19 +31,20 @@
 #include "sys/plat_properties.h"
 #include "gfx_gui_paint.h"
 //#######################################################################################
-static void paint_checkbox(tCheckBox* settings, tDisplay *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len, tControlCommandData* control_comand)
+static void paint_checkbox(tCheckBox* settings, void *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len, tControlCommandData* control_comand)
 {
+	tDisplay* LcdStruct = (tDisplay *) pDisplay;
 	unsigned int color = 0;
 	tWindow *ParentWindow = (tWindow*)settings->Internals.ParentWindow;
-	tRectangle back_up_clip = pDisplay->sClipRegion;
+	tRectangle back_up_clip = LcdStruct->sClipRegion;
 	CursorState cursor = control_comand->Cursor;
 	if(settings->Style == checkbox_style_normal)
 	{
-		pDisplay->sClipRegion.sXMin = x_start;
-		pDisplay->sClipRegion.sYMin = y_start;
-		pDisplay->sClipRegion.sXMax = x_start + x_len;
-		pDisplay->sClipRegion.sYMax = y_start + y_len;
-		clip_limit(&pDisplay->sClipRegion, &back_up_clip);
+		LcdStruct->sClipRegion.sXMin = x_start;
+		LcdStruct->sClipRegion.sYMin = y_start;
+		LcdStruct->sClipRegion.sXMax = x_start + x_len;
+		LcdStruct->sClipRegion.sYMax = y_start + y_len;
+		clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
 		if((!settings->Enabled || !ParentWindow->Internals.OldStateEnabled) && settings->Internals.Control.Initiated == true)
 			gui_put_item(pDisplay, x_start, y_start, x_len, y_len, settings->Color.Disabled.Border, settings->Color.Disabled.Border, cursor,PAINT_STYLE_ROUNDED_CORNERS , false);
 		else {
@@ -53,15 +54,15 @@ static void paint_checkbox(tCheckBox* settings, tDisplay *pDisplay, signed int x
 				gui_put_item(pDisplay, x_start, y_start, x_len, y_len, controls_color.Control_Color_Enabled_Buton_Pull, controls_color.Control_Color_Enabled_Border_Pull, cursor,PAINT_STYLE_ROUNDED_CORNERS , true);
 		}
 		if(settings->Cheched == true)
-			put_rectangle(pDisplay, x_start + 4, y_start + 4, y_len - 8, y_len - 8, true, controlls_change_color(color, -3));
+			LcdStruct->lcd_func.put_rectangle(pDisplay, x_start + 4, y_start + 4, y_len - 8, y_len - 8, true, controlls_change_color(color, -3));
 	}
 	else
 	{
-		pDisplay->sClipRegion.sXMin = x_start;
-		pDisplay->sClipRegion.sYMin = y_start;
-		pDisplay->sClipRegion.sXMax = x_start + x_len;
-		pDisplay->sClipRegion.sYMax = y_start + y_len;
-		clip_limit(&pDisplay->sClipRegion, &back_up_clip);
+		LcdStruct->sClipRegion.sXMin = x_start;
+		LcdStruct->sClipRegion.sYMin = y_start;
+		LcdStruct->sClipRegion.sXMax = x_start + x_len;
+		LcdStruct->sClipRegion.sYMax = y_start + y_len;
+		clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
 		if(settings->Cheched == true) {
 			gui_put_item(pDisplay, x_start, y_start, x_len, y_len, controls_color.Control_Color_Enabled_Buton_Push, controls_color.Control_Color_Enabled_Border_Push, cursor,PAINT_STYLE_ROUNDED_CORNERS , true);
 		}
@@ -81,40 +82,40 @@ static void paint_checkbox(tCheckBox* settings, tDisplay *pDisplay, signed int x
 		{
 			StringProperties_t str_properties = string_properties_get(pDisplay, settings->Internals.Caption.Font, settings->Internals.Caption.Text, settings->Internals.Caption.WordWrap, -1);
 			if(settings->Style == checkbox_style_normal) {
-				pDisplay->sClipRegion.sXMin = x_start + y_len + 4;
-				pDisplay->sClipRegion.sYMin = y_start + 4;
-				pDisplay->sClipRegion.sXMax = ((x_start + x_len) - 4);
-				pDisplay->sClipRegion.sYMax = ((y_start + y_len) - 4);
-				clip_limit(&pDisplay->sClipRegion, &back_up_clip);
+				LcdStruct->sClipRegion.sXMin = x_start + y_len + 4;
+				LcdStruct->sClipRegion.sYMin = y_start + 4;
+				LcdStruct->sClipRegion.sXMax = ((x_start + x_len) - 4);
+				LcdStruct->sClipRegion.sYMax = ((y_start + y_len) - 4);
+				clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
 				x_str_location = x_start + (((x_len - y_len)>>1)-(str_properties.StringRowsMaxLength_Pixels>>1));
 			}
 			else {
-				pDisplay->sClipRegion.sXMin = x_start + 4;
-				pDisplay->sClipRegion.sYMin = y_start + 4;
-				pDisplay->sClipRegion.sXMax = ((x_start + x_len) - 4);
-				pDisplay->sClipRegion.sYMax = ((y_start + y_len) - 4);
-				clip_limit(&pDisplay->sClipRegion, &back_up_clip);
+				LcdStruct->sClipRegion.sXMin = x_start + 4;
+				LcdStruct->sClipRegion.sYMin = y_start + 4;
+				LcdStruct->sClipRegion.sXMax = ((x_start + x_len) - 4);
+				LcdStruct->sClipRegion.sYMax = ((y_start + y_len) - 4);
+				clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
 				x_str_location = x_start + ((x_len>>1)-(str_properties.StringRowsMaxLength_Pixels>>1));
 			}
 			y_str_location = y_start + ((y_len>>1)-(str_properties.StringColsHeight_Pixels>>1));
 		}else
 		{
 			if(settings->Style == checkbox_style_normal) {
-				pDisplay->sClipRegion.sXMin = x_start + y_len + 4;
-				pDisplay->sClipRegion.sYMin = y_start + 4;
-				pDisplay->sClipRegion.sXMax = ((x_start + x_len) - 4);
-				pDisplay->sClipRegion.sYMax = ((y_start + y_len) - 4);
-				clip_limit(&pDisplay->sClipRegion, &back_up_clip);
+				LcdStruct->sClipRegion.sXMin = x_start + y_len + 4;
+				LcdStruct->sClipRegion.sYMin = y_start + 4;
+				LcdStruct->sClipRegion.sXMax = ((x_start + x_len) - 4);
+				LcdStruct->sClipRegion.sYMax = ((y_start + y_len) - 4);
+				clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
 				x_str_location = x_start + y_len + 4;
 				unsigned char CharHeight = char_height_get(settings->Internals.Caption.Font);
 				y_str_location = y_start + ((settings->Internals.Size.Y>>1)-(CharHeight>>1));
 			}
 			else {
-				pDisplay->sClipRegion.sXMin = x_start + 4;
-				pDisplay->sClipRegion.sYMin = y_start + 4;
-				pDisplay->sClipRegion.sXMax = ((x_start + x_len) - 4);
-				pDisplay->sClipRegion.sYMax = ((y_start + y_len) - 4);
-				clip_limit(&pDisplay->sClipRegion, &back_up_clip);
+				LcdStruct->sClipRegion.sXMin = x_start + 4;
+				LcdStruct->sClipRegion.sYMin = y_start + 4;
+				LcdStruct->sClipRegion.sXMax = ((x_start + x_len) - 4);
+				LcdStruct->sClipRegion.sYMax = ((y_start + y_len) - 4);
+				clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
 				x_str_location = x_start + 4;
 				y_str_location = y_start + 4;
 			}
@@ -153,13 +154,13 @@ static void paint_checkbox(tCheckBox* settings, tDisplay *pDisplay, signed int x
 		}
 		put_string(&properties);
 	}
-	pDisplay->sClipRegion.sXMin = x_start;
-	pDisplay->sClipRegion.sYMin = y_start;
-	pDisplay->sClipRegion.sXMax = x_start + x_len;
-	pDisplay->sClipRegion.sYMax = y_start + y_len;
-	clip_limit(&pDisplay->sClipRegion, &back_up_clip);
-	box_cache_clean(pDisplay, x_start, y_start, x_len, y_len);
-	pDisplay->sClipRegion = back_up_clip;
+	LcdStruct->sClipRegion.sXMin = x_start;
+	LcdStruct->sClipRegion.sYMin = y_start;
+	LcdStruct->sClipRegion.sXMax = x_start + x_len;
+	LcdStruct->sClipRegion.sYMax = y_start + y_len;
+	clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
+	LcdStruct->lcd_func.box_cache_clean(pDisplay, x_start, y_start, x_len, y_len);
+	LcdStruct->sClipRegion = back_up_clip;
 	control_comand->WindowRefresh |= true;
 }
 //#######################################################################################
@@ -232,8 +233,9 @@ void checkbox(tCheckBox *settings, tControlCommandData* control_comand)
 									settings->Internals.Caption.Text != settings->Caption.Text ||
 										settings->Internals.Caption.WordWrap != settings->Caption.WordWrap ||
 											settings->Internals.OldStateEnabled != settings->Enabled ||
-												ParentWindow->Internals.OldStateEnabled != settings->Internals.ParentWindowStateEnabled)
-													settings->Internals.NeedEntireRefresh = true;
+												settings->Internals.OldStateVisible != settings->Visible ||
+													ParentWindow->Internals.OldStateEnabled != settings->Internals.ParentWindowStateEnabled)
+		settings->Internals.NeedEntireRefresh = true;
 	}
 	else
 	{
@@ -245,15 +247,17 @@ void checkbox(tCheckBox *settings, tControlCommandData* control_comand)
 							settings->Internals.Caption.TextAlign != settings->Caption.TextAlign ||
 								settings->Internals.Caption.Text != settings->Caption.Text ||
 									settings->Internals.Caption.WordWrap != settings->Caption.WordWrap ||
-										settings->Internals.OldStateEnabled != settings->Enabled)
-											settings->Internals.NeedEntireRefresh = true;
+										settings->Internals.OldStateEnabled != settings->Enabled ||
+											settings->Internals.OldStateVisible != settings->Visible)
+		settings->Internals.NeedEntireRefresh = true;
 	}
 
 	int X_StartBox = settings->Internals.Position.X;
 	int Y_StartBox = settings->Internals.Position.Y;
 	int X_LenBox = settings->Internals.Size.X;
 	int Y_LenBox = settings->Internals.Size.Y;
-	tDisplay *pDisplay = settings->Internals.pDisplay;
+	void *pDisplay = settings->Internals.pDisplay;
+	tDisplay* LcdStruct = (tDisplay *) pDisplay;
 
 	/*Clear background of box with actual painted dimensions and positions if they been changed*/
 	if(settings->Internals.NeedEntireRefresh == true || settings->Internals.OldStateVisible != settings->Visible)
@@ -261,15 +265,15 @@ void checkbox(tCheckBox *settings, tControlCommandData* control_comand)
 		if(!settings->Internals.NoPaintBackGround || !settings->Visible)
 		{
 			settings->Internals.OldStateVisible = settings->Visible;
-			tRectangle back_up_clip = pDisplay->sClipRegion;
-			pDisplay->sClipRegion.sXMin = X_StartBox;
-			pDisplay->sClipRegion.sYMin = Y_StartBox;
-			pDisplay->sClipRegion.sXMax = X_StartBox + X_LenBox;
-			pDisplay->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
-			clip_limit(&pDisplay->sClipRegion, &back_up_clip);
-			put_rectangle(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, true, settings->Color.Scren);
-			box_cache_clean(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox);
-			pDisplay->sClipRegion = back_up_clip;
+			tRectangle back_up_clip = LcdStruct->sClipRegion;
+			LcdStruct->sClipRegion.sXMin = X_StartBox;
+			LcdStruct->sClipRegion.sYMin = Y_StartBox;
+			LcdStruct->sClipRegion.sXMax = X_StartBox + X_LenBox;
+			LcdStruct->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
+			clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
+			LcdStruct->lcd_func.put_rectangle(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, true, settings->Color.Scren);
+			LcdStruct->lcd_func.box_cache_clean(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox);
+			LcdStruct->sClipRegion = back_up_clip;
 			if(!settings->Visible) return;
 		}
 		settings->Internals.NeedEntireRefresh = true;
@@ -323,7 +327,7 @@ void checkbox(tCheckBox *settings, tControlCommandData* control_comand)
 	}
 	/* Check if inside window */
 	bool inside_window = check_if_inside_box(X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, control_comand->X, control_comand->Y);
-	bool _inside_window = check_if_inside_box(pDisplay->sClipRegion.sXMin, pDisplay->sClipRegion.sYMin, pDisplay->sClipRegion.sXMax - pDisplay->sClipRegion.sXMin, pDisplay->sClipRegion.sYMax - pDisplay->sClipRegion.sYMin, control_comand->X, control_comand->Y);
+	bool _inside_window = check_if_inside_box(LcdStruct->sClipRegion.sXMin, LcdStruct->sClipRegion.sYMin, LcdStruct->sClipRegion.sXMax - LcdStruct->sClipRegion.sXMin, LcdStruct->sClipRegion.sYMax - LcdStruct->sClipRegion.sYMin, control_comand->X, control_comand->Y);
 	if(!_inside_window) inside_window = false;
 
 	/*if((control_comand->Cursor == Cursor_Up || control_comand->Cursor == Cursor_Down) &&
@@ -337,7 +341,7 @@ void checkbox(tCheckBox *settings, tControlCommandData* control_comand)
 		if(((control_comand->Cursor == Cursor_Up || control_comand->Cursor == Cursor_Down) &&
 			settings->Internals.OldStateCursor != control_comand->Cursor &&
 				(inside_window == true || settings->Internals.CursorDownInsideBox == true) &&
-					settings->Visible == true) ||
+					settings->Visible == true && settings->Enabled == true) ||
 						(settings->Internals.OldStateCheched != settings->Cheched &&
 								settings->Visible == true && settings->Enabled == true &&
 									control_comand->CursorCoordonateUsed == false))
@@ -399,14 +403,14 @@ void checkbox(tCheckBox *settings, tControlCommandData* control_comand)
 			}
 		}
 		settings->Internals.OldStateCheched = settings->Cheched;
-		tRectangle back_up_clip = pDisplay->sClipRegion;
-		pDisplay->sClipRegion.sXMin = X_StartBox;
-		pDisplay->sClipRegion.sYMin = Y_StartBox;
-		pDisplay->sClipRegion.sXMax = X_StartBox + X_LenBox;
-		pDisplay->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
-		clip_limit(&pDisplay->sClipRegion, &back_up_clip);
+		tRectangle back_up_clip = LcdStruct->sClipRegion;
+		LcdStruct->sClipRegion.sXMin = X_StartBox;
+		LcdStruct->sClipRegion.sYMin = Y_StartBox;
+		LcdStruct->sClipRegion.sXMax = X_StartBox + X_LenBox;
+		LcdStruct->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
+		clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
 		paint_checkbox(settings, pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, control_comand);
-		pDisplay->sClipRegion = back_up_clip;
+		LcdStruct->sClipRegion = back_up_clip;
 	}
 	if(settings->Events.OnMove.CallBack && control_comand->Cursor == Cursor_Move && inside_window == true && settings->Internals.CursorDownInsideBox == true && settings->Visible && settings->Enabled == true)
 	{

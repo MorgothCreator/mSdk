@@ -201,21 +201,6 @@
 			<locationURI>PARENT-4-PROJECT_LOC/GitHub/mSdk/SDK/lib/api/lcd_def.h</locationURI>
 		</link>
 		<link>
-			<name>lib/api/lwip_api.c</name>
-			<type>1</type>
-			<locationURI>PARENT-4-PROJECT_LOC/GitHub/mSdk/SDK/lib/api/lwip_api.c</locationURI>
-		</link>
-		<link>
-			<name>lib/api/lwip_api.h</name>
-			<type>1</type>
-			<locationURI>PARENT-4-PROJECT_LOC/GitHub/mSdk/SDK/lib/api/lwip_api.h</locationURI>
-		</link>
-		<link>
-			<name>lib/api/lwip_def.h</name>
-			<type>1</type>
-			<locationURI>PARENT-4-PROJECT_LOC/GitHub/mSdk/SDK/lib/api/lwip_def.h</locationURI>
-		</link>
-		<link>
 			<name>lib/api/mcspi_api.c</name>
 			<type>1</type>
 			<locationURI>PARENT-4-PROJECT_LOC/GitHub/mSdk/SDK/lib/api/mcspi_api.c</locationURI>

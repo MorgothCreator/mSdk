@@ -33,66 +33,67 @@
 #include "lib/string_lib.h"
 #include "sys/plat_properties.h"
 //#######################################################################################
-static void paint_textbox(tTextBox* settings, tDisplay *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len, tControlCommandData* control_comand)
+static void paint_textbox(tTextBox* settings, void *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len, tControlCommandData* control_comand)
 {
 	//if(control_comand->CursorCoordonateUsed && !settings->Internals.NeedEntireRefresh && !settings->Internals.NeedEntireRepaint) return;
 
+	tDisplay* LcdStruct = (tDisplay *) pDisplay;
 	tWindow *ParentWindow = (tWindow*)settings->Internals.ParentWindow;
-	tRectangle back_up_clip = pDisplay->sClipRegion;
-	pDisplay->sClipRegion.sXMin = x_start;
-	pDisplay->sClipRegion.sYMin = y_start;
-	pDisplay->sClipRegion.sXMax = x_start + x_len;
-	pDisplay->sClipRegion.sYMax = y_start + y_len;
-	clip_limit(&pDisplay->sClipRegion, &back_up_clip);
+	tRectangle back_up_clip = LcdStruct->sClipRegion;
+	LcdStruct->sClipRegion.sXMin = x_start;
+	LcdStruct->sClipRegion.sYMin = y_start;
+	LcdStruct->sClipRegion.sXMax = x_start + x_len;
+	LcdStruct->sClipRegion.sYMax = y_start + y_len;
+	clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
 	unsigned int color = settings->Color.Enabled.Buton.Pull;
 	if(!settings->Enabled || !ParentWindow->Internals.OldStateEnabled) color = settings->Color.Disabled.Buton;
 	if(settings->Internals.NeedEntireRefresh)
 	{
 		if((!settings->Enabled || !ParentWindow->Internals.OldStateEnabled) && settings->Internals.Control.Initiated == true) {
-			put_horizontal_line(pDisplay, x_start, x_len, y_start, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
-			put_horizontal_line(pDisplay, x_start + 1, x_len - 2, y_start + 1, 1, controlls_change_color(color, -BORDER_LINE_TWO_DARK));
+			LcdStruct->lcd_func.put_horizontal_line(pDisplay, x_start, x_len, y_start, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
+			LcdStruct->lcd_func.put_horizontal_line(pDisplay, x_start + 1, x_len - 2, y_start + 1, 1, controlls_change_color(color, -BORDER_LINE_TWO_DARK));
 
-			put_horizontal_line(pDisplay, x_start + 1, x_len - 2, y_start + y_len - 2, 1, controlls_change_color(color, -BORDER_LINE_TWO_DARK));
-			put_horizontal_line(pDisplay, x_start, x_len, (y_start + y_len) - 1, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
+			LcdStruct->lcd_func.put_horizontal_line(pDisplay, x_start + 1, x_len - 2, y_start + y_len - 2, 1, controlls_change_color(color, -BORDER_LINE_TWO_DARK));
+			LcdStruct->lcd_func.put_horizontal_line(pDisplay, x_start, x_len, (y_start + y_len) - 1, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
 
-			put_vertical_line(pDisplay, y_start, y_len, x_start, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
-			put_vertical_line(pDisplay, y_start + 1, y_len - 2, x_start + 1, 1, controlls_change_color(color, -BORDER_LINE_TWO_DARK));
+			LcdStruct->lcd_func.put_vertical_line(pDisplay, y_start, y_len, x_start, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
+			LcdStruct->lcd_func.put_vertical_line(pDisplay, y_start + 1, y_len - 2, x_start + 1, 1, controlls_change_color(color, -BORDER_LINE_TWO_DARK));
 
-			put_vertical_line(pDisplay, y_start + 1, y_len - 2, x_start + x_len - 2, 1, controlls_change_color(color, -BORDER_LINE_TWO_DARK));
-			put_vertical_line(pDisplay, y_start, y_len, (x_start + x_len) - 1, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
+			LcdStruct->lcd_func.put_vertical_line(pDisplay, y_start + 1, y_len - 2, x_start + x_len - 2, 1, controlls_change_color(color, -BORDER_LINE_TWO_DARK));
+			LcdStruct->lcd_func.put_vertical_line(pDisplay, y_start, y_len, (x_start + x_len) - 1, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
 		} else {
-			put_horizontal_line(pDisplay, x_start, x_len, y_start, 1, controlls_change_color(color, +BORDER_LINE_ONE_LIGHT));
-			put_horizontal_line(pDisplay, x_start + 1, x_len - 2, y_start + 1, 1, controlls_change_color(color, +BORDER_LINE_TWO_LIGHT));
+			LcdStruct->lcd_func.put_horizontal_line(pDisplay, x_start, x_len, y_start, 1, controlls_change_color(color, +BORDER_LINE_ONE_LIGHT));
+			LcdStruct->lcd_func.put_horizontal_line(pDisplay, x_start + 1, x_len - 2, y_start + 1, 1, controlls_change_color(color, +BORDER_LINE_TWO_LIGHT));
 
-			put_horizontal_line(pDisplay, x_start + 1, x_len - 2, y_start + y_len - 2, 1, controlls_change_color(color, -BORDER_LINE_TWO_DARK));
-			put_horizontal_line(pDisplay, x_start, x_len, (y_start + y_len) - 1, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
+			LcdStruct->lcd_func.put_horizontal_line(pDisplay, x_start + 1, x_len - 2, y_start + y_len - 2, 1, controlls_change_color(color, -BORDER_LINE_TWO_DARK));
+			LcdStruct->lcd_func.put_horizontal_line(pDisplay, x_start, x_len, (y_start + y_len) - 1, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
 
-			put_vertical_line(pDisplay, y_start, y_len, x_start, 1, controlls_change_color(color, +BORDER_LINE_ONE_LIGHT));
-			put_vertical_line(pDisplay, y_start + 1, y_len - 2, x_start + 1, 1, controlls_change_color(color, +BORDER_LINE_TWO_LIGHT));
+			LcdStruct->lcd_func.put_vertical_line(pDisplay, y_start, y_len, x_start, 1, controlls_change_color(color, +BORDER_LINE_ONE_LIGHT));
+			LcdStruct->lcd_func.put_vertical_line(pDisplay, y_start + 1, y_len - 2, x_start + 1, 1, controlls_change_color(color, +BORDER_LINE_TWO_LIGHT));
 
-			put_vertical_line(pDisplay, y_start + 1, y_len - 2, x_start + x_len - 2, 1, controlls_change_color(color, -BORDER_LINE_TWO_DARK));
-			put_vertical_line(pDisplay, y_start, y_len, (x_start + x_len) - 1, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
+			LcdStruct->lcd_func.put_vertical_line(pDisplay, y_start + 1, y_len - 2, x_start + x_len - 2, 1, controlls_change_color(color, -BORDER_LINE_TWO_DARK));
+			LcdStruct->lcd_func.put_vertical_line(pDisplay, y_start, y_len, (x_start + x_len) - 1, 1, controlls_change_color(color, -BORDER_LINE_ONE_DARK));
 
 		}
 		//put_rectangle(pDisplay, x_start, y_start, x_len, y_len, false, controlls_change_color(color, -3));
 		//put_rectangle(pDisplay, x_start + 1, y_start + 1, x_len - 2, y_len - 2, false, controlls_change_color(color, -2));
-		put_rectangle(pDisplay, x_start + 2, y_start + 2, x_len - 4 - settings->Internals.Size.ScrollSize, y_len - 4 - settings->Internals.Size.ScrollSize, true, color);
+		LcdStruct->lcd_func.put_rectangle(pDisplay, x_start + 2, y_start + 2, x_len - 4 - settings->Internals.Size.ScrollSize, y_len - 4 - settings->Internals.Size.ScrollSize, true, color);
 		control_comand->WindowRefresh |= true;
-		pDisplay->sClipRegion.sXMin = x_start;
-		pDisplay->sClipRegion.sYMin = y_start;
-		pDisplay->sClipRegion.sXMax = x_start + x_len;
-		pDisplay->sClipRegion.sYMax = y_start + y_len;
-		clip_limit(&pDisplay->sClipRegion, &back_up_clip);
-		box_cache_clean(pDisplay, x_start, y_start, x_len, y_len);
-		pDisplay->sClipRegion = back_up_clip;
+		LcdStruct->sClipRegion.sXMin = x_start;
+		LcdStruct->sClipRegion.sYMin = y_start;
+		LcdStruct->sClipRegion.sXMax = x_start + x_len;
+		LcdStruct->sClipRegion.sYMax = y_start + y_len;
+		clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
+		LcdStruct->lcd_func.box_cache_clean(pDisplay, x_start, y_start, x_len, y_len);
+		LcdStruct->sClipRegion = back_up_clip;
 	}
 	if(settings->Text)
 	{
-		pDisplay->sClipRegion.sXMin = x_start + 4;
-		pDisplay->sClipRegion.sYMin = y_start + 4;
-		pDisplay->sClipRegion.sXMax = ((x_start + x_len) - 4 - settings->Internals.Size.ScrollSize);
-		pDisplay->sClipRegion.sYMax = ((y_start + y_len) - 4 - settings->Internals.Size.ScrollSize);
-		clip_limit(&pDisplay->sClipRegion, &back_up_clip);
+		LcdStruct->sClipRegion.sXMin = x_start + 4;
+		LcdStruct->sClipRegion.sYMin = y_start + 4;
+		LcdStruct->sClipRegion.sXMax = ((x_start + x_len) - 4 - settings->Internals.Size.ScrollSize);
+		LcdStruct->sClipRegion.sYMax = ((y_start + y_len) - 4 - settings->Internals.Size.ScrollSize);
+		clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
 
 		signed int x_str_location = x_start + 4;
 		signed int y_str_location = y_start + 4;
@@ -160,13 +161,13 @@ static void paint_textbox(tTextBox* settings, tDisplay *pDisplay, signed int x_s
 
 			if(CommandReceived || settings->Internals.NeedEntireRefresh)
 			{
-				pDisplay->sClipRegion = back_up_clip;
-				tRectangle _back_up_clip = pDisplay->sClipRegion;
-				pDisplay->sClipRegion.sXMin = x_start;
-				pDisplay->sClipRegion.sYMin = y_start;
-				pDisplay->sClipRegion.sXMax = x_start + x_len;
-				pDisplay->sClipRegion.sYMax = y_start + y_len;
-				clip_limit(&pDisplay->sClipRegion, &back_up_clip);
+				LcdStruct->sClipRegion = back_up_clip;
+				tRectangle _back_up_clip = LcdStruct->sClipRegion;
+				LcdStruct->sClipRegion.sXMin = x_start;
+				LcdStruct->sClipRegion.sYMin = y_start;
+				LcdStruct->sClipRegion.sXMax = x_start + x_len;
+				LcdStruct->sClipRegion.sYMax = y_start + y_len;
+				clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
 				ControlCommands ComandBeck = control_comand->Comand;
 				control_comand->Comand = Control_Refresh;
 				CursorState cursor = control_comand->Cursor;
@@ -186,22 +187,22 @@ static void paint_textbox(tTextBox* settings, tDisplay *pDisplay, signed int x_s
 				control_comand->Comand = ComandBeck;
 				control_comand->Cursor = cursor;
 
-				pDisplay->sClipRegion = _back_up_clip;
+				LcdStruct->sClipRegion = _back_up_clip;
 			}
 		}
 
 		if(Start != settings->SelStart || Len != settings->SelLen || settings->Internals.Hscrollbar->Events.ValueChanged == true || settings->Internals.Vscrollbar->Events.ValueChanged == true || settings->Internals.NeedEntireRefresh == true|| settings->Internals.NeedEntireRepaint == true || CommandReceived != Control_Nop)
 		{
-			pDisplay->sClipRegion.sXMin = x_start + 4;
-			pDisplay->sClipRegion.sYMin = y_start + 4;
-			pDisplay->sClipRegion.sXMax = ((x_start + x_len) - 4 - settings->Internals.Size.ScrollSize);
-			pDisplay->sClipRegion.sYMax = ((y_start + y_len) - 4 - settings->Internals.Size.ScrollSize);
-			clip_limit(&pDisplay->sClipRegion, &back_up_clip);
+			LcdStruct->sClipRegion.sXMin = x_start + 4;
+			LcdStruct->sClipRegion.sYMin = y_start + 4;
+			LcdStruct->sClipRegion.sXMax = ((x_start + x_len) - 4 - settings->Internals.Size.ScrollSize);
+			LcdStruct->sClipRegion.sYMax = ((y_start + y_len) - 4 - settings->Internals.Size.ScrollSize);
+			clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
 			settings->Internals.Vscrollbar->Events.ValueChanged = false;
 			settings->Internals.Hscrollbar->Events.ValueChanged = false;
 			settings->SelStart = Start;
 			settings->SelLen = Len;
-			put_rectangle(pDisplay, x_start + 2, y_start + 2, x_len - 4 - settings->Internals.Size.ScrollSize, y_len - 4 - settings->Internals.Size.ScrollSize, true, color);
+			LcdStruct->lcd_func.put_rectangle(pDisplay, x_start + 2, y_start + 2, x_len - 4 - settings->Internals.Size.ScrollSize, y_len - 4 - settings->Internals.Size.ScrollSize, true, color);
 			print_string_properties properties;
 			properties.pDisplay = pDisplay;
 			properties.pFont = settings->Font;
@@ -224,15 +225,15 @@ static void paint_textbox(tTextBox* settings, tDisplay *pDisplay, signed int x_s
 			}
 			put_string(&properties);
 			control_comand->WindowRefresh |= true;
-			pDisplay->sClipRegion.sXMin = x_start;
-			pDisplay->sClipRegion.sYMin = y_start;
-			pDisplay->sClipRegion.sXMax = x_start + x_len;
-			pDisplay->sClipRegion.sYMax = y_start + y_len;
-			clip_limit(&pDisplay->sClipRegion, &back_up_clip);
-			box_cache_clean(pDisplay, x_start, y_start, x_len, y_len);
+			LcdStruct->sClipRegion.sXMin = x_start;
+			LcdStruct->sClipRegion.sYMin = y_start;
+			LcdStruct->sClipRegion.sXMax = x_start + x_len;
+			LcdStruct->sClipRegion.sYMax = y_start + y_len;
+			clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
+			LcdStruct->lcd_func.box_cache_clean(pDisplay, x_start, y_start, x_len, y_len);
 		}
 	}
-	pDisplay->sClipRegion = back_up_clip;
+	LcdStruct->sClipRegion = back_up_clip;
 }
 //#######################################################################################
 void textbox(void *_settings, tControlCommandData* control_comand)
@@ -332,7 +333,8 @@ void textbox(void *_settings, tControlCommandData* control_comand)
 	signed int Y_StartBox = settings->Internals.Position.Y;
 	signed int X_LenBox = settings->Internals.Size.X;
 	signed int Y_LenBox = settings->Internals.Size.Y;
-	tDisplay *pDisplay = settings->Internals.pDisplay;
+	void *pDisplay = settings->Internals.pDisplay;
+	tDisplay* LcdStruct = (tDisplay *) pDisplay;
 
 	/*Clear background of box with actual painted dimensions and positions if they been changed*/
 	if(settings->Internals.NeedEntireRefresh == true || settings->Internals.OldStateVisible != settings->Visible)
@@ -340,15 +342,15 @@ void textbox(void *_settings, tControlCommandData* control_comand)
 		if(!settings->Internals.NoPaintBackGround || !settings->Visible)
 		{
 			settings->Internals.OldStateVisible = settings->Visible;
-			tRectangle back_up_clip = pDisplay->sClipRegion;
-			pDisplay->sClipRegion.sXMin = X_StartBox;
-			pDisplay->sClipRegion.sYMin = Y_StartBox;
-			pDisplay->sClipRegion.sXMax = X_StartBox + X_LenBox;
-			pDisplay->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
-			clip_limit(&pDisplay->sClipRegion, &back_up_clip);
-			put_rectangle(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, true, settings->Color.Scren);
-			box_cache_clean(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox);
-			pDisplay->sClipRegion = back_up_clip;
+			tRectangle back_up_clip = LcdStruct->sClipRegion;
+			LcdStruct->sClipRegion.sXMin = X_StartBox;
+			LcdStruct->sClipRegion.sYMin = Y_StartBox;
+			LcdStruct->sClipRegion.sXMax = X_StartBox + X_LenBox;
+			LcdStruct->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
+			clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
+			LcdStruct->lcd_func.put_rectangle(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, true, settings->Color.Scren);
+			LcdStruct->lcd_func.box_cache_clean(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox);
+			LcdStruct->sClipRegion = back_up_clip;
 			if(!settings->Visible) return;
 		}
 		settings->Internals.NeedEntireRefresh = true;
@@ -385,14 +387,14 @@ void textbox(void *_settings, tControlCommandData* control_comand)
 		Y_LenBox = settings->Internals.Size.Y;
 
 
-		tRectangle back_up_clip = pDisplay->sClipRegion;
-		pDisplay->sClipRegion.sXMin = settings->Internals.Position.X + 4;
-		pDisplay->sClipRegion.sYMin = settings->Internals.Position.Y + 4;
-		pDisplay->sClipRegion.sXMax = ((settings->Internals.Position.X + settings->Internals.Size.X) - 4 - settings->Internals.Size.ScrollSize);
-		pDisplay->sClipRegion.sYMax = ((settings->Internals.Position.Y + settings->Internals.Size.Y) - 4 - settings->Internals.Size.ScrollSize);
-		clip_limit(&pDisplay->sClipRegion, &back_up_clip);
+		tRectangle back_up_clip = LcdStruct->sClipRegion;
+		LcdStruct->sClipRegion.sXMin = settings->Internals.Position.X + 4;
+		LcdStruct->sClipRegion.sYMin = settings->Internals.Position.Y + 4;
+		LcdStruct->sClipRegion.sXMax = ((settings->Internals.Position.X + settings->Internals.Size.X) - 4 - settings->Internals.Size.ScrollSize);
+		LcdStruct->sClipRegion.sYMax = ((settings->Internals.Position.Y + settings->Internals.Size.Y) - 4 - settings->Internals.Size.ScrollSize);
+		clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
 		StringProperties_t StrProperties = string_properties_get(settings->Internals.pDisplay, settings->Internals.Caption.Font, settings->Text, settings->Internals.Caption.WordWrap, -1);
-		pDisplay->sClipRegion = back_up_clip;
+		LcdStruct->sClipRegion = back_up_clip;
 
 		settings->Internals.Vscrollbar->Maximum = StrProperties.StringColsHeight_Pixels - (settings->Internals.Size.Y - 6 - settings->Size.ScrollSize);
 		if(settings->Internals.Vscrollbar->Maximum < 0) settings->Internals.Vscrollbar->Maximum = 0;
@@ -421,12 +423,12 @@ void textbox(void *_settings, tControlCommandData* control_comand)
 		settings->Internals.Hscrollbar->Size.X = settings->Internals.Size.X - 4 - settings->Size.ScrollSize;
 		settings->Internals.Hscrollbar->Size.Y = settings->Size.ScrollSize;
 
-		back_up_clip = pDisplay->sClipRegion;
-		pDisplay->sClipRegion.sXMin = X_StartBox;
-		pDisplay->sClipRegion.sYMin = Y_StartBox;
-		pDisplay->sClipRegion.sXMax = X_StartBox + X_LenBox;
-		pDisplay->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
-		clip_limit(&pDisplay->sClipRegion, &back_up_clip);
+		back_up_clip = LcdStruct->sClipRegion;
+		LcdStruct->sClipRegion.sXMin = X_StartBox;
+		LcdStruct->sClipRegion.sYMin = Y_StartBox;
+		LcdStruct->sClipRegion.sXMax = X_StartBox + X_LenBox;
+		LcdStruct->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
+		clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
 		if(settings->Internals.NeedEntireRepaint) control_comand->Comand = Control_Refresh;
 		settings->Internals.Vscrollbar->Internals.NoPaintBackGround = true;
 		settings->Internals.Vscrollbar->Enabled = settings->Enabled;
@@ -441,7 +443,7 @@ void textbox(void *_settings, tControlCommandData* control_comand)
 		if(control_comand->CursorCoordonateUsed) control_comand->Cursor = Cursor_NoAction;
 		paint_textbox(settings, pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, control_comand);
 		control_comand->Cursor = _back;
-		pDisplay->sClipRegion = back_up_clip;
+		LcdStruct->sClipRegion = back_up_clip;
 		settings->Internals.ParentWindowStateEnabled = ParentWindow->Internals.OldStateEnabled;
 		settings->Internals.OldStateVisible = settings->Visible;
 		settings->Internals.OldStateEnabled = settings->Enabled;
@@ -454,13 +456,13 @@ void textbox(void *_settings, tControlCommandData* control_comand)
 
 	/* Check if inside window */
 	bool _inside_window = check_if_inside_box(X_StartBox + 2, Y_StartBox + 2, X_LenBox - 2 - settings->Internals.Size.ScrollSize, Y_LenBox - 2 - settings->Internals.Size.ScrollSize, control_comand->X, control_comand->Y);
-	bool __inside_window = check_if_inside_box(pDisplay->sClipRegion.sXMin, pDisplay->sClipRegion.sYMin, pDisplay->sClipRegion.sXMax - pDisplay->sClipRegion.sXMin, pDisplay->sClipRegion.sYMax - pDisplay->sClipRegion.sYMin, control_comand->X, control_comand->Y);
+	bool __inside_window = check_if_inside_box(LcdStruct->sClipRegion.sXMin, LcdStruct->sClipRegion.sYMin, LcdStruct->sClipRegion.sXMax - LcdStruct->sClipRegion.sXMin, LcdStruct->sClipRegion.sYMax - LcdStruct->sClipRegion.sYMin, control_comand->X, control_comand->Y);
 	if(!__inside_window) _inside_window = false;
 
 	if(_inside_window == true && control_comand->Cursor == Cursor_Down) settings->Internals.CursorDownInsideTextBox = true;
 
 	bool inside_window = check_if_inside_box(X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, control_comand->X, control_comand->Y);
-	__inside_window = check_if_inside_box(pDisplay->sClipRegion.sXMin, pDisplay->sClipRegion.sYMin, pDisplay->sClipRegion.sXMax - pDisplay->sClipRegion.sXMin, pDisplay->sClipRegion.sYMax - pDisplay->sClipRegion.sYMin, control_comand->X, control_comand->Y);
+	__inside_window = check_if_inside_box(LcdStruct->sClipRegion.sXMin, LcdStruct->sClipRegion.sYMin, LcdStruct->sClipRegion.sXMax - LcdStruct->sClipRegion.sXMin, LcdStruct->sClipRegion.sYMax - LcdStruct->sClipRegion.sYMin, control_comand->X, control_comand->Y);
 	if(!__inside_window) inside_window = false;
 	if((control_comand->Cursor != Cursor_NoAction) &&
 				(inside_window == true || settings->Internals.CursorDownInsideBox == true) &&
@@ -500,17 +502,17 @@ void textbox(void *_settings, tControlCommandData* control_comand)
 		}
 		CursorState cursor = control_comand->Cursor;
 		if(settings->Internals.CursorDownInsideTextBox) control_comand->Cursor = Cursor_Up;
-		tRectangle back_up_clip = pDisplay->sClipRegion;
-		pDisplay->sClipRegion.sXMin = X_StartBox;
-		pDisplay->sClipRegion.sYMin = Y_StartBox;
-		pDisplay->sClipRegion.sXMax = X_StartBox + X_LenBox;
-		pDisplay->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
-		clip_limit(&pDisplay->sClipRegion, &back_up_clip);
+		tRectangle back_up_clip = LcdStruct->sClipRegion;
+		LcdStruct->sClipRegion.sXMin = X_StartBox;
+		LcdStruct->sClipRegion.sYMin = Y_StartBox;
+		LcdStruct->sClipRegion.sXMax = X_StartBox + X_LenBox;
+		LcdStruct->sClipRegion.sYMax = Y_StartBox + Y_LenBox;
+		clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
 		scrollbar(settings->Internals.Vscrollbar, control_comand);
 		scrollbar(settings->Internals.Hscrollbar, control_comand);
 		control_comand->Cursor = cursor;
 		paint_textbox(settings, pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, control_comand);
-		pDisplay->sClipRegion = back_up_clip;
+		LcdStruct->sClipRegion = back_up_clip;
 	}
 	if(control_comand->Cursor != Cursor_NoAction && inside_window && (settings->Internals.CursorDownInsideBox/* || settings->Internals.CursorDownInsideTextBox*/)) control_comand->CursorCoordonateUsed |= true;
 	if(settings->Internals.CursorDownInsideBox == true && (control_comand->Cursor == Cursor_Up || control_comand->Cursor == Cursor_NoAction)) settings->Internals.CursorDownInsideBox = false;

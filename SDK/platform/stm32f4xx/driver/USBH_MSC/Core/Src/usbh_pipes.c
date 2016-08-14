@@ -26,7 +26,7 @@
   */ 
 
 /* Includes ------------------------------------------------------------------*/
-#include "usbh_pipes.h"
+#include "driver/USBH_MSC/core/inc/usbh_pipes.h"
 
 /** @addtogroup USBH_LIB
   * @{

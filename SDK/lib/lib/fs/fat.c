@@ -63,7 +63,7 @@ IndexAllocResult _FatReadFsInfo(DiskInfo_t *fatinfo)
 {
 	if(!fatinfo) return Fat_NoDiskInserted;
 	//DiskInfo_t *fatinfo = stream->_cookie;
-	if(fatinfo->drive_read_page(fatinfo->DiskInfo_SdDriverStructAddr,fatinfo->DiskInfo_Buff1, 0, 1) == True);// || RES_WRPRT)
+	if(fatinfo->drive_read_page(fatinfo->DiskInfo_SdDriverStructAddr,fatinfo->DiskInfo_Buff1, 0, 1) == True)// || RES_WRPRT)
 	{
 		if((fatinfo->DiskInfo_Buff1[0x0036] == 'F' &&
 			fatinfo->DiskInfo_Buff1[0x0036+1] == 'A' &&
@@ -637,7 +637,7 @@ void _FatData_ReadPointedFileDetails(FileInfo_t *fileinfo)
 	unsigned long Pointer = fileinfo->FileInfo_PointerInDirectory<<5;
 	unsigned char Attr = fileinfo->FileInfo_BufferAddr[(Pointer & (((unsigned long)fileinfo->FileInfo_DiskInfo->DiskInfo_SectorsPerCluster<<9)-1)) + 0x0B];
 	fileinfo->FileInfo_PointedFileInDirectory_Attribute = Attr;
-	if(_FatData_GetLongFileName(fileinfo));
+	if(_FatData_GetLongFileName(fileinfo)){}
 	else 
 	{
 		memset(fileinfo->FileInfo_PointedFileInDirectoryLongFileName, 32, 12);

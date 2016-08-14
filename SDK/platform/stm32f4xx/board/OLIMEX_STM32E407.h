@@ -1,4 +1,5 @@
-#ifdef OLIMEX_STM32E407
+#ifndef OLIMEX_STM32E407
+#define OLIMEX_STM32E407
 
 
 #define LED1_PORT			IOC

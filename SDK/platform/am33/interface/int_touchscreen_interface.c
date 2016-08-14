@@ -263,7 +263,7 @@ bool TouchIdle(LcdTouch_t* structure)
  *
  *     Description: Ask the user to touch the predefined coordinates
  *                  and read the correspoding touch screen driver values.
- *                  Collect 3 sets of values and pass to the
+ *                  Collect 4 sets of values and pass to the
  *                  setCalibrationMatrix() function.
  */
 timer(TimerTouchCalibrate);

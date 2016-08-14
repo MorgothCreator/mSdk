@@ -24,6 +24,8 @@ extern const rfc_CMD_PROP_RADIO_DIV_SETUP_t RF_cmdPropRadioDivSetup;
 extern const rfc_CMD_FS_t RF_cmdFs;
 extern const rfc_CMD_PROP_TX_t RF_cmdPropTx;
 extern const rfc_CMD_PROP_RX_t RF_cmdPropRx;
+extern const rfc_CMD_TX_TEST_t RF_cmdTxTest;
+extern const rfc_CMD_RX_TEST_t RF_cmdRxTest;
 
 
 

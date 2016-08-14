@@ -28,49 +28,101 @@
 #include "driver/rf_common_cmd.h"
 #include "driver/rf_prop_cmd.h"
 #include <driver/rfc.h>
-//#include <rf_patches/rf_patch_cpe_genfsk.h>
+#include "driver/rf.h"
+#include "general/rf_patch_cpe_genfsk.h"
 #include "tx_smartrf_settings.h"
 
+// TI-RTOS RF Mode Object
+/*RF_Mode RF_prop =
+{
+    .rfMode = RF_MODE_PROPRIETARY_SUB_1,
+    .cpePatchFxn = &rf_patch_cpe_genfsk,
+    .mcePatchFxn = 0,
+    .rfePatchFxn = 0,
+};*/
 
 
 // Overrides for CMD_PROP_RADIO_DIV_SETUP
 unsigned long pOverrides[] =
 {
-    // override_synth_prop_863_970_div5.xml
-    ADI_HALFREG_OVERRIDE(0,61,0xF,0xD),
-    HW_REG_OVERRIDE(0x4038,0x003A),
-    HW_REG_OVERRIDE(0x4020,0x7F00),
-    HW_REG_OVERRIDE(0x4064,0x0040),
-    (uint32_t)0x000684A3,
-    (uint32_t)0xC0040141,
-    (uint32_t)0x0533B107,
-    (uint32_t)0x0A480583,
-    (uint32_t)0x7AB80603,
-    ADI_REG_OVERRIDE(1,4,0x9F),
-    ADI_HALFREG_OVERRIDE(1,7,0x4,0x4),
-    (uint32_t)0x02010403,
-    (uint32_t)0x00108463,
-    (uint32_t)0x04B00243,
-    // override_phy_gfsk_rx_rssi.xml
-    HW_REG_OVERRIDE(0x6084,0x35F1),
-    (uint32_t)0x00038883,
-    (uint32_t)0x00FB88A3,
-    // override_phy_agc_reflevel_0x1a.xml
-    HW_REG_OVERRIDE(0x6088,0x001A),
-    // override_phy_rx_aaf_bw_0xd.xml
-    ADI_HALFREG_OVERRIDE(0,61,0xF,0xD),
-    // override_phy_agc_reflevel_0x1a.xml
-    HW_REG_OVERRIDE(0x6088,0x001A),
-    // TX power override
-    ADI_REG_OVERRIDE(0,12,0xF8),
-    (uint32_t)0xFFFFFFFF,
+	    // override_synth_prop_863_970_div5.xml
+	    ADI_HALFREG_OVERRIDE(0,61,0xF,0xD),
+	    HW_REG_OVERRIDE(0x4038,0x003A),
+	    HW_REG_OVERRIDE(0x4020,0x7F00),
+	    HW_REG_OVERRIDE(0x4064,0x0040),
+	    (uint32_t)0x000684A3,
+	    (uint32_t)0xC0040141,
+	    (uint32_t)0x0533B107,
+	    (uint32_t)0x0A480583,
+	    (uint32_t)0x7AB80603,
+	    ADI_REG_OVERRIDE(1,4,0x9F),
+	    ADI_HALFREG_OVERRIDE(1,7,0x4,0x4),
+	    (uint32_t)0x02010403,
+	    (uint32_t)0x00108463,
+	    (uint32_t)0x04B00243,
+	    // override_phy_gfsk_rx_rssi.xml
+	    HW_REG_OVERRIDE(0x6084,0x35F1),
+	    (uint32_t)0x00038883,
+	    (uint32_t)0x00FB88A3,
+	    // override_phy_agc_reflevel_0x1a.xml
+	    HW_REG_OVERRIDE(0x6088,0x001A),
+	    // override_phy_rx_aaf_bw_0xd.xml
+	    ADI_HALFREG_OVERRIDE(0,61,0xF,0xD),
+	    // override_phy_agc_reflevel_0x1a.xml
+	    HW_REG_OVERRIDE(0x6088,0x001A),
+	    // TX power override
+	    ADI_REG_OVERRIDE(0,12,0xF8),
+	    (uint32_t)0xFFFFFFFF,
 };
 
 
 // CMD_PROP_RADIO_DIV_SETUP
 const rfc_CMD_PROP_RADIO_DIV_SETUP_t RF_cmdPropRadioDivSetup =
 {
-    .commandNo = 0x3807,
+	    .commandNo = 0x3807,
+	    .status = 0x0000,
+	    .pNextOp = 0, // INSERT APPLICABLE POINTER: (uint8_t*)&xxx
+	    .startTime = 0x00000000,
+	    .startTrigger.triggerType = 0x0,
+	    .startTrigger.bEnaCmd = 0x0,
+	    .startTrigger.triggerNo = 0x0,
+	    .startTrigger.pastTrig = 0x0,
+	    .condition.rule = 0x1,
+	    .condition.nSkip = 0x0,
+	    .modulation.modType = 0x1,
+	    .modulation.deviation = 0x64,
+	    .symbolRate.preScale = 0xf,
+	    .symbolRate.rateWord = 0x8000,
+	    .rxBw = 0x24,
+	    .preamConf.nPreamBytes = 0x4,
+	    .preamConf.preamMode = 0x0,
+	    .formatConf.nSwBits = 0x20,
+	    .formatConf.bBitReversal = 0x0,
+	    .formatConf.bMsbFirst = 0x1,
+	    .formatConf.fecMode = 0x0,
+	    .formatConf.whitenMode = 0x0,
+	    .config.frontEndMode = 0x0,
+	    .config.biasMode = 0x1,
+	    .config.bNoFsPowerUp = 0x0,
+	    .txPower = 0xa73f,
+	    .pRegOverride = (unsigned long *)pOverrides,
+	    .centerFreq = 0x0364,
+	    .intFreq = 0x8000,
+	    .loDivider = 0x05,
+};
+
+// Overrides for CMD_RADIO_SETUP
+unsigned long  pOverrides1[] =
+{
+    // TX power override
+    ADI_REG_OVERRIDE(0,12,0xF8),
+    (uint32_t)0xFFFFFFFF,
+};
+
+// CMD_RADIO_SETUP
+rfc_CMD_RADIO_SETUP_t RF_cmdRadioSetup =
+{
+    .commandNo = 0x0802,
     .status = 0x0000,
     .pNextOp = 0, // INSERT APPLICABLE POINTER: (uint8_t*)&xxx
     .startTime = 0x00000000,
@@ -80,70 +132,61 @@ const rfc_CMD_PROP_RADIO_DIV_SETUP_t RF_cmdPropRadioDivSetup =
     .startTrigger.pastTrig = 0x0,
     .condition.rule = 0x1,
     .condition.nSkip = 0x0,
-    .modulation.modType = 0x1,
-    .modulation.deviation = 0x64,
-    .symbolRate.preScale = 0xf,
-    .symbolRate.rateWord = 0x8000,
-    .rxBw = 0x24,
-    .preamConf.nPreamBytes = 0x4,
-    .preamConf.preamMode = 0x0,
-    .formatConf.nSwBits = 0x20,
-    .formatConf.bBitReversal = 0x0,
-    .formatConf.bMsbFirst = 0x1,
-    .formatConf.fecMode = 0x0,
-    .formatConf.whitenMode = 0x0,
-    .config.frontEndMode = 0x0,
-    .config.biasMode = 0x1,
-    .config.bNoFsPowerUp = 0x0,
-    .txPower = 0xa73f,
-    .pRegOverride = (unsigned long *)pOverrides,
-    .centerFreq = 868,
-    .intFreq = 0x8000,
+    .mode = 0x01,
     .loDivider = 0x05,
+    .config.frontEndMode = 0x0,
+    .config.biasMode = 0x0,
+    .config.bNoFsPowerUp = 0x0,
+    .txPower.IB = 0x0,
+    .txPower.GC = 0x0,
+    .txPower.boost = 0x0,
+    .txPower.tempCoeff = 0x0,
+    .pRegOverride = (unsigned long *)pOverrides1,
 };
+
 
 // CMD_FS
 const rfc_CMD_FS_t RF_cmdFs =
 {
-    .commandNo = 0x0803,
-    .status = 0x0000,
-    .pNextOp = 0, // INSERT APPLICABLE POINTER: (uint8_t*)&xxx
-    .startTime = 0x00000000,
-    .startTrigger.triggerType = 0x0,
-    .startTrigger.bEnaCmd = 0x0,
-    .startTrigger.triggerNo = 0x0,
-    .startTrigger.pastTrig = 0x0,
-    .condition.rule = 0x1,
-    .condition.nSkip = 0x0,
-    .frequency = 868,
-    .fractFreq = 0x0000,
-    .synthConf.bTxMode = 0x0,
-    .synthConf.refFreq = 0x0,
-    .__dummy0 = 0x00,
-    .midPrecal = 0x00,
-    .ktPrecal = 0x00,
-    .tdcPrecal = 0x0000,
+	    .commandNo = 0x0803,
+	    .status = 0x0000,
+	    .pNextOp = 0, // INSERT APPLICABLE POINTER: (uint8_t*)&xxx
+	    .startTime = 0x00000000,
+	    .startTrigger.triggerType = 0x0,
+	    .startTrigger.bEnaCmd = 0x0,
+	    .startTrigger.triggerNo = 0x0,
+	    .startTrigger.pastTrig = 0x0,
+	    .condition.rule = 0x1,
+	    .condition.nSkip = 0x0,
+	    .frequency = 0x0364,
+	    .fractFreq = 0x0000,
+	    .synthConf.bTxMode = 0x0,
+	    .synthConf.refFreq = 0x0,
+	    .__dummy0 = 0x00,
+	    .midPrecal = 0x00,
+	    .ktPrecal = 0x00,
+	    .tdcPrecal = 0x0000,
 };
 
 // CMD_PROP_TX
 const rfc_CMD_PROP_TX_t RF_cmdPropTx =
 {
-    .commandNo = 0x3801,
-    .status = 0x0000,
-    .pNextOp = 0, // INSERT APPLICABLE POINTER: (uint8_t*)&xxx
-    .startTime = 0x00000000,
-    .startTrigger.triggerType = 0x1,
-    .startTrigger.bEnaCmd = 0x0,
-    .startTrigger.triggerNo = 0x0,
-    .startTrigger.pastTrig = 0x0,
-    .condition.rule = 0x1,
-    .condition.nSkip = 0x0,
-    .pktConf.bFsOff = 0x0,
-    .pktConf.bUseCrc = 0x1,
-    .pktConf.bVarLen = 0x1,
-    .pktLen = 0x1e, // SET APPLICATION PAYLOAD LENGTH
-    .syncWord = 0x930b51de,
-    .pPkt = 0, // INSERT APPLICABLE POINTER: (uint8_t*)&xxx
+	    .commandNo = 0x3801,
+	    .status = 0x0000,
+	    .pNextOp = 0, // INSERT APPLICABLE POINTER: (uint8_t*)&xxx
+	    .startTime = 0x00000000,
+	    .startTrigger.triggerType = 0x0,
+	    .startTrigger.bEnaCmd = 0x0,
+	    .startTrigger.triggerNo = 0x0,
+	    .startTrigger.pastTrig = 0x0,
+	    .condition.rule = 0x1,
+	    .condition.nSkip = 0x0,
+	    .pktConf.bFsOff = 0x1,
+	    .pktConf.bUseCrc = 0x1,
+	    .pktConf.bVarLen = 0x1,
+	    .pktLen = 0x1e, // SET APPLICATION PAYLOAD LENGTH
+	    .syncWord = 0x930b51de,
+	    .pPkt = 0, // INSERT APPLICABLE POINTER: (uint8_t*)&xxx
 };
 
 // CMD_PROP_RX
@@ -164,7 +207,7 @@ const rfc_CMD_PROP_RX_t RF_cmdPropRx =
 	    .pktConf.bRepeatNok = 0x0,
 	    .pktConf.bUseCrc = 0x1,
 	    .pktConf.bVarLen = 0x1,
-	    .pktConf.bChkAddress = 0x1,
+	    .pktConf.bChkAddress = 0x0,
 	    .pktConf.endType = 0x0,
 	    .pktConf.filterOp = 0x0,
 	    .rxConf.bAutoFlushIgnored = 0x0,
@@ -187,5 +230,55 @@ const rfc_CMD_PROP_RX_t RF_cmdPropRx =
 	    .pOutput = 0, // INSERT APPLICABLE POINTER: (uint8_t*)&xxx
 };
 
+// CMD_RX_TEST
+const rfc_CMD_RX_TEST_t RF_cmdRxTest =
+{
+    .commandNo = 0x0807,
+    .status = 0x0000,
+    .pNextOp = 0, // INSERT APPLICABLE POINTER: (uint8_t*)&xxx
+    .startTime = 0x00000000,
+    .startTrigger.triggerType = 0x0,
+    .startTrigger.bEnaCmd = 0x0,
+    .startTrigger.triggerNo = 0x0,
+    .startTrigger.pastTrig = 0x0,
+    .condition.rule = 0x1,
+    .condition.nSkip = 0x0,
+    .config.bEnaFifo = 0x0,
+    .config.bFsOff = 0x0,
+    .config.bNoSync = 0x1,
+    .endTrigger.triggerType = 0x1,
+    .endTrigger.bEnaCmd = 0x0,
+    .endTrigger.triggerNo = 0x0,
+    .endTrigger.pastTrig = 0x0,
+    .syncWord = 0x930b51de,
+    .endTime = 0x00000000,
+};
+
+// CMD_TX_TEST
+const rfc_CMD_TX_TEST_t RF_cmdTxTest =
+{
+    .commandNo = 0x0808,
+    .status = 0x0000,
+    .pNextOp = 0, // INSERT APPLICABLE POINTER: (uint8_t*)&xxx
+    .startTime = 0x00000000,
+    .startTrigger.triggerType = 0x0,
+    .startTrigger.bEnaCmd = 0x0,
+    .startTrigger.triggerNo = 0x0,
+    .startTrigger.pastTrig = 0x0,
+    .condition.rule = 0x1,
+    .condition.nSkip = 0x0,
+    .config.bUseCw = 0x0,
+    .config.bFsOff = 0x1,
+    .config.whitenMode = 0x2,
+    .__dummy0 = 0x00,
+    .txWord = 0xaaaa,
+    .__dummy1 = 0x00,
+    .endTrigger.triggerType = 0x1,
+    .endTrigger.bEnaCmd = 0x0,
+    .endTrigger.triggerNo = 0x0,
+    .endTrigger.pastTrig = 0x0,
+    .syncWord = 0x930b51de,
+    .endTime = 0x00000000,
+};
 //10010011000010110101000111011110
 //01111011100010101101000011001001

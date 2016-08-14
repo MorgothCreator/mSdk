@@ -34,8 +34,8 @@
 #endif 
 
 /* Includes ------------------------------------------------------------------*/
-#include "diskio.h"
-#include "ff.h"
+#include "lib/fat_fs/inc/diskio.h"
+#include "lib/fat_fs/inc/ff.h"
 
 /* Exported types ------------------------------------------------------------*/
 

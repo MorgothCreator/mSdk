@@ -7,6 +7,7 @@
 #include "board_init.h"
 #include "api/timer_api.h"
 #include "api/usb_api.h"
+#include "device/ft5x06.h"
 #include "device/mpu60x0_9150.h"
 #include "device/ak8975.h"
 #include "device/bmp180.h"
@@ -50,7 +51,7 @@ volatile unsigned char ScreenReRefreshCnt = 0;
 
 
 //#include "interface/lwip/lwip_hardware_init.h"
-//#include "lib/lwip/simple_fs_httpd.h"
+#include <app/lan/httpd.h>
 
 timer(timer_led);
 timer(TimerScanTouch);
@@ -314,7 +315,7 @@ int main(void)
 	unsigned short flir_buff[((LEPTON_FLIR_LINE_SIZE / 2) - 2) * LEPTON_FLIR_LINES_NR];
 #endif
     //lan_interface_init();
-	//httpd_init();
+	httpd_init(0, 0);
 /*******************************************************/
 	bool old_connected = false;
 #ifdef BridgeUsbDev0ToMmcSd0

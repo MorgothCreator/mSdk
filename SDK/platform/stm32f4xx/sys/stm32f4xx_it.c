@@ -26,12 +26,17 @@
 #include "sys/sysdelay.h"
 #include "interface/hs_mmcsd_interface.h"
 #include "interface/usb_host_msc_interface.h"
-#include "stm32f4xx_hal_dma.h"
+#include "driver/stm32f4xx_hal_dma.h"
 #include "driver/stm32f4xx_hal.h"
 #include "driver/stm32f4xx_hal_hcd.h"
+#include "driver/stm32f4xx_hal_gpio.h"
+#include "driver/stm32f4xx_hal_adc.h"
+#include "lwipopts.h"
 /** @addtogroup STM32F4_Discovery_Peripheral_Examples
   * @{
   */
+
+extern ADC_HandleTypeDef    AdcHandle;
 
 /** @addtogroup FLASH_Program
   * @{
@@ -210,6 +215,15 @@ void OTG_FS_IRQHandler(void)
 {
 }*/
 
+/**
+  * @brief  This function handles External line 8 interrupt request.
+  * @param  None
+  * @retval None
+  */
+void EXTI9_5_IRQHandler(void)
+{
+  HAL_GPIO_EXTI_IRQHandler(MFX_IRQOUT_PIN);
+}
 /******************************************************************************/
 /*                 STM32F4xx Peripherals Interrupt Handlers                   */
 /*  Add here the Interrupt Handler for the used peripheral(s) (PPP), for the  */
@@ -217,6 +231,24 @@ void OTG_FS_IRQHandler(void)
 /*  file (startup_stm32f4xx.s).                                               */
 /******************************************************************************/
 
+/**
+* @brief  This function handles DMA interrupt request.
+* @param  None
+* @retval None
+*/
+void DMA2_Stream0_IRQHandler(void)
+{
+  HAL_DMA_IRQHandler(AdcHandle.DMA_Handle);
+}
+/**
+  * @brief  This function handles ADC interrupt request.
+  * @param  None
+  * @retval None
+  */
+void ADC_IRQHandler(void)
+{
+  HAL_ADC_IRQHandler(&AdcHandle);
+}
 /**
   * @brief  This function handles PPP interrupt request.
   * @param  None

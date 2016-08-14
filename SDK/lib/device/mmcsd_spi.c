@@ -202,7 +202,7 @@ BYTE send_cmd (		/* Return value: R1 resp (bit7==1:Failed to send) */
 bool _mmcsd_spi_init(unsigned int unit_nr)
 {
 	SD_Struct_t *SD_Struct = MMCSD_SPI[unit_nr];
-	SD_Struct->HardUnitSetBaudFunc((void *)SD_Struct->HardUnitStruct, 400000);			/* Set fast clock */
+	SD_Struct->HardUnitSetBaudFunc((void *)SD_Struct->HardUnitStruct, 7);			/* Set fast clock */
 	sd_cs_deassert(SD_Struct);
 	BYTE n, cmd, ty, ocr[4];
 	SD_Struct->SD_Hc = IsSd;
@@ -245,7 +245,7 @@ bool _mmcsd_spi_init(unsigned int unit_nr)
 
 	if (ty)
 	{			/* OK */
-		SD_Struct->HardUnitSetBaudFunc((void *)SD_Struct->HardUnitStruct, 10000000);			/* Set fast clock */
+		SD_Struct->HardUnitSetBaudFunc((void *)SD_Struct->HardUnitStruct, 0);			/* Set fast clock */
 		SD_Struct->SD_Init_OK = true;
 	} else
 	{			/* Failed */
@@ -444,9 +444,9 @@ void mmcsd_spi_idle(unsigned int unit_nr)
         		SD_StructDisk->g_s_mmcFatFs.drv_rw_func.drv_w_func = MMCSD_SPI_WriteCmdSend;
                 if(!f_mount(unit_nr, &SD_StructDisk->g_s_mmcFatFs))
                 {
-#ifdef MMCSD_DEBUG_EN
                     if(f_opendir(&g_sDirObject, "0:/") == FR_OK)
                     {
+#ifdef MMCSD_DEBUG_EN
 						if(DebugCom)
 						{
 																				UARTprintf(DebugCom,   "MMCSD%d drive %d mounted\n\r" , unit_nr , unit_nr);
@@ -468,8 +468,8 @@ void mmcsd_spi_idle(unsigned int unit_nr)
 																				unsigned long tmp = (unsigned long long)((unsigned long long)SD_StructDisk->g_s_mmcFatFs.n_fatent * (unsigned long long)/*g_sFatFs.s_size*/512 *(unsigned long long)SD_StructDisk->g_s_mmcFatFs.csize) >> 20/* / 1000000*/;
 																				UARTprintf(DebugCom, "MMCSD%d uSD DiskCapacity:        %uMB\n\r",unit_nr, tmp);
 						}
-                    } else  if(DebugCom)										UARTprintf(DebugCom,   "MMCSD%d ERROR oppening path\n\r" , unit_nr);
 #endif
+                    } else  if(DebugCom)										UARTprintf(DebugCom,   "MMCSD%d ERROR oppening path\n\r" , unit_nr);
                 }
                 else if(DebugCom)												UARTprintf(DebugCom,   "MMCSD%d ERROR mounting disk\n\r" , unit_nr);
         	}

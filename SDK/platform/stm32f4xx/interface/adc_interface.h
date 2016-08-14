@@ -10,6 +10,7 @@
 #include "stdbool.h"
 #include "api/adc_def.h"
 /*#####################################################*/
+bool _adc_start_conversion(Adc_t *Adc_s);
 bool _adc_init(Adc_t *Adc_s);
 
 

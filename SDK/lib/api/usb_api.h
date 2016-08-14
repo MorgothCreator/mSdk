@@ -47,7 +47,7 @@ unsigned int usb_com_dev_send(unsigned char* buff, unsigned int nbytes);
 /*-----------------------------------------------------------*/
 
 #ifdef HEADER_INCLUDE_C_FILES
-#include "usb_msc_host_api.c"
+#include "usb_api.c"
 #endif
 
 #endif /* USB_MSC_HOST_API_H_ */

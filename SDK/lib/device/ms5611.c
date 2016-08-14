@@ -137,7 +137,7 @@ bool ms5611_read(MS5611_t *structure, unsigned char osr, signed int *Pressure, s
 		return false;
 	unsigned int tmp = structure->prom_data.C5 * ( 1<<8 );
 	dT = D2 - tmp;
-	TEMP = 2000 + dT * structure->prom_data.C6 /(1 << 23);
+	TEMP = 2000 + dT * structure->prom_data.C6 /((unsigned long)(1 << 23));
 	OFF = ((signed long long)structure->prom_data.C2 * (signed long long)(1 << 16)) + (((signed long long)structure->prom_data.C4 * (signed long long)dT) / (signed long long)( 1<<7 ));
 	SENS = ((signed long long)structure->prom_data.C1 * (signed long long)(1 << 15)) + (((signed long long)structure->prom_data.C3 * (signed long long)dT) / (signed long long)( 1<<8 ));
 

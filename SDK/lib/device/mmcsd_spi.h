@@ -15,6 +15,7 @@
 #include "api/mcspi_def.h"
 #include "lib/fs/fat.h"
 #include "lib/fat_fs/inc/ff.h"
+#include "interface/hs_mmcsd_interface.h"
 /*#####################################################*/
 #define _Disk_ErrInit					1
 #define _Disk_ErrReset					2
@@ -85,13 +86,6 @@
 #define SdDriverDelaysConstant			20
 #define NumberOfIdleBytes				65536
 /*#####################################################*/
-typedef enum
-{
-	IsNoCard = 0,
-	IsSd,
-	IsSdhc,
-}sd_type_e;
-/*#####################################################*/
 timer(sd_timer_delay);
 /*#####################################################*/
 typedef struct SD_Init_Return
@@ -107,7 +101,7 @@ typedef struct SD_Struct
 	//void* SD_SPI_Struct_Addr;
 	bool connected;
 	unsigned int initFlg;
-	sd_type_e SD_Hc;
+	mmcsd_type_e SD_Hc;
 	Gpio_t * CS_Port;
 	Gpio_t * SD_Present;
 	unsigned char CS_PinMask;

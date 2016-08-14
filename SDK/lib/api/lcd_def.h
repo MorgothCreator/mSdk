@@ -26,6 +26,7 @@
 #include "twi_def.h"
 #include "gpio_def.h"
 #include "sys/plat_properties.h"
+//#include "lib/gfx/controls_definition.h"
 /**********************************************/
 #ifdef FLASH_DEVICE
 #define read_data_byte(addr) pgm_read_byte(&addr)
@@ -41,7 +42,7 @@
 #define TFT43AB_OMAP35x 2
 #define VGA 3
 #define LVDS 4
-#define MI0283 5
+#define MI0283_ 5
 #define HD 6
 #define FHD 7
 //*****************************************************************************
@@ -66,13 +67,14 @@ typedef struct
 	unsigned int vbp;
 }RASTER_TIMINGS;
 //*****************************************************************************
-RASTER_TIMINGS lcd_S035Q01_beaglebone_exp;
-RASTER_TIMINGS lcd_TFT43AB_OMAP35x_devkit8600_exp;
-RASTER_TIMINGS lcd_TFT43_TMDSSK3358;
-RASTER_TIMINGS lcd_AT070TN92_beaglebone_exp;
-RASTER_TIMINGS lcd_720p_480_60hz_beaglebone_exp;
-RASTER_TIMINGS lcd_720p_50hz_beaglebone_exp;
-RASTER_TIMINGS lcd_1080p_24hz_beaglebone_exp;
+extern RASTER_TIMINGS lcd_MI0283;
+extern RASTER_TIMINGS lcd_S035Q01_beaglebone_exp;
+extern RASTER_TIMINGS lcd_TFT43AB_OMAP35x_devkit8600_exp;
+extern RASTER_TIMINGS lcd_TFT43_TMDSSK3358;
+extern RASTER_TIMINGS lcd_AT070TN92_beaglebone_exp;
+extern RASTER_TIMINGS lcd_720p_480_60hz_beaglebone_exp;
+extern RASTER_TIMINGS lcd_720p_50hz_beaglebone_exp;
+extern RASTER_TIMINGS lcd_1080p_24hz_beaglebone_exp;
 //*****************************************************************************
 //
 //! This structure defines the extents of a rectangle.  All points greater than
@@ -148,6 +150,66 @@ typedef struct
 }
 tFont;
 /**********************************************/
+typedef struct{
+	void *pDisplay;
+	tFont *pFont;
+	char *pcString;
+	signed int lLength;
+	unsigned int foreground_color;
+	unsigned int background_color;
+	bool ulOpaque;
+	bool ulVisible;
+	bool WordWrap;
+	signed int lX;
+	signed int lY;
+	signed int _SelStart;
+	signed int _SelLen;
+}print_string_properties;
+/*#####################################################*/
+typedef struct
+{
+	unsigned long long TimerScrollInterval;
+	unsigned int Foreground_Color;
+	unsigned int Background_Color;
+	signed int X_Location;
+	signed int Y_Location;
+	bool ulOpaque;
+	bool ulVisible;
+	bool WordWrap;
+	bool TimerInitialized;
+	tRectangle sClipRegion;
+	STimer_t TimerScroll;
+	tFont *pFont;
+	char *Str;
+	char *Pstr;
+	signed int(*string_width_get_function)(void *, tFont *, char *, signed int);
+	signed int(*print_function)(print_string_properties *);
+}graphic_strings_t;
+/*#####################################################*/
+typedef struct
+{
+	bool (*init)(void* pDisplay);
+	void (*enable)(void* pDisplay);
+	void (*disable)(void* pDisplay);
+	void (*backlight_on)(void *pDisplay);
+	void (*backlight_off)(void *pDisplay);
+	bool (*copy)(void *pDisplayTo, void *pDisplayFrom, bool put_cursor, signed int X, signed int Y, unsigned int color);
+	void (*box_cache_clean)(void *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len);
+	void (*put_rectangle)(void *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len, bool fill, unsigned int color);
+	void (*put_pixel)(void *pDisplay, signed int X, signed int Y, unsigned int color);
+	void (*put_rgb_array_16)(void *pDisplay, unsigned short *rgb_buffer, unsigned int x1, unsigned int y1,unsigned int width, unsigned int height);
+	void (*put_rgb_array_24)(void *pDisplay, unsigned char *rgb_buffer, unsigned long x1, unsigned long y1,unsigned long width, unsigned long height);
+	void (*put_rgb_array_32)(void *pDisplay, unsigned char *rgb_buffer, unsigned int x1, unsigned int y1,unsigned int width, unsigned int height);
+	void (*put_horizontal_line)(void *pDisplay, signed int X1, signed int X2, signed int Y, unsigned char width, unsigned int color);
+	void (*put_vertical_line)(void *pDisplay, signed int Y1, signed int Y2, signed int X, unsigned char width, unsigned int color);
+	void (*clear)(void *pDisplay, unsigned int color);
+	void (*put_circle)(void *pDisplay, signed int x, signed int y, signed int _radius, unsigned char fill, unsigned int color);
+	void (*put_line)(void *pDisplay, signed int X1, signed int Y1, signed int X2, signed int Y2, unsigned char width, unsigned int color);
+	void (*put_elipse)(void *pDisplay, signed int xc,signed int yc,signed int _rx,signed int _ry, unsigned char Fill, unsigned int color);
+	void (*put_triangle)(void *pDisplay, signed int  Ax,signed int  Ay,signed int  Bx,signed int  By,signed int  Cx,signed int  Cy, unsigned char Fill, unsigned int color);
+	signed int (*put_string)(print_string_properties *properties);
+}LCD_FUNC;
+/**********************************************/
 typedef struct sDisplay
 {
 	unsigned short Orientation;
@@ -171,6 +233,7 @@ typedef struct sDisplay
 	Twi_t* PmicTwiModuleStruct;
 	RASTER_TIMINGS *raster_timings;
 	RASTER_TIMINGS *old_raster_timings;
+	LCD_FUNC lcd_func;
 	void *UserData;
 }tDisplay;
 //*****************************************************************************

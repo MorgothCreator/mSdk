@@ -26,9 +26,49 @@
   */ 
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f4xx_hal.h"
-#include "usbh_core.h"
-#include "stm32f4xx_hal_rcc.h"
+//#include "include/stm32f4xx.h"
+#include "driver/stm32f4xx_hal.h"
+#include "driver/USBH_MSC/core/inc/usbh_core.h"
+#include "driver/stm32f4xx_hal_rcc.h"
+#include "driver/stm32f4xx_hal_gpio_ex.h"
+
+#if defined(STM32F405xx)
+  #include "include/stm32f405xx.h"
+#elif defined(STM32F415xx)
+  #include "include/stm32f415xx.h"
+#elif defined(STM32F407xx)
+  #include "include/stm32f407xx.h"
+#elif defined(STM32F417xx)
+  #include "include/stm32f417xx.h"
+#elif defined(STM32F427xx)
+  #include "include/stm32f427xx.h"
+#elif defined(STM32F437xx)
+  #include "include/stm32f437xx.h"
+#elif defined(STM32F429xx)
+  #include "include/stm32f429xx.h"
+#elif defined(STM32F439xx)
+  #include "include/stm32f439xx.h"
+#elif defined(STM32F401xC)
+  #include "include/stm32f401xc.h"
+#elif defined(STM32F401xE)
+  #include "include/stm32f401xe.h"
+#elif defined(STM32F410Tx)
+  #include "include/stm32f410tx.h"
+#elif defined(STM32F410Cx)
+  #include "include/stm32f410cx.h"
+#elif defined(STM32F410Rx)
+  #include "include/stm32f410rx.h"
+#elif defined(STM32F411xE)
+  #include "include/stm32f411xe.h"
+#elif defined(STM32F446xx)
+  #include "include/stm32f446xx.h"
+#elif defined(STM32F469xx)
+  #include "include/stm32f469xx.h"
+#elif defined(STM32F479xx)
+  #include "include/stm32f479xx.h"
+#else
+ #error "Please select first the target STM32F4xx device used in your application (in stm32f4xx.h file)"
+#endif
 
 HCD_HandleTypeDef hhcd;
 

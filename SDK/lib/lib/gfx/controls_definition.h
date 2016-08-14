@@ -61,42 +61,6 @@
 #define BORDER_LINE_ONE_DARK		3
 #define BORDER_LINE_TWO_DARK		2
 /*#####################################################*/
-typedef struct{
-	tDisplay *pDisplay;
-	tFont *pFont;
-	char *pcString;
-	signed int lLength;
-	unsigned int foreground_color;
-	unsigned int background_color;
-	bool ulOpaque;
-	bool ulVisible;
-	bool WordWrap;
-	signed int lX;
-	signed int lY;
-	signed int _SelStart;
-	signed int _SelLen;
-}print_string_properties;
-/*#####################################################*/
-typedef struct
-{
-	unsigned long long TimerScrollInterval;
-	unsigned int Foreground_Color;
-	unsigned int Background_Color;
-	signed int X_Location;
-	signed int Y_Location;
-	bool ulOpaque;
-	bool ulVisible;
-	bool WordWrap;
-	bool TimerInitialized;
-	tRectangle sClipRegion;
-	STimer_t TimerScroll;
-	tFont *pFont;
-	char *Str;
-	char *Pstr;
-	signed int(*string_width_get_function)(tDisplay *, tFont *, char *, signed int);
-	signed int(*print_function)(print_string_properties *);
-}graphic_strings_t;
-/*#####################################################*/
 typedef struct
 {
 	unsigned int Control_Color_Enabled_Ink_Pull;
@@ -392,26 +356,26 @@ static const unsigned char CharTable6x8[] =
 	0x14,0x36,0x77,0x36,0x14,0x00 };//			128								
 /*#####################################################*/
 unsigned int controlls_change_color(unsigned int color, double value);
-bool screen_copy(tDisplay *pDisplayTo, tDisplay *pDisplayFrom, bool put_cursor, signed int X, signed int Y, unsigned int color);
+bool screen_copy(void *pDisplayTo, void *pDisplayFrom, bool put_cursor, signed int X, signed int Y, unsigned int color);
 void clip_limit(tRectangle *limited, tRectangle *limits);
-void TouchPaintPoint(tDisplay *pDisplay, signed int X, signed int Y, unsigned int color);
+void TouchPaintPoint(void *pDisplay, signed int X, signed int Y, unsigned int color);
 bool check_if_inside_box(signed int x_start, signed int y_start, signed int x_len, signed int y_len, signed int x_point, signed int y_point);
-void put_circle(tDisplay *pDisplay, signed int x, signed int y, signed int _radius, unsigned char fill, unsigned int color);
-void put_line(tDisplay *pDisplay, signed int X1, signed int Y1, signed int X2, signed int Y2, unsigned char width, unsigned int color);
-void put_elipse(tDisplay *pDisplay, signed int xc,signed int yc,signed int _rx,signed int _ry, unsigned char Fill, unsigned int color);
-void put_triangle(tDisplay *pDisplay, signed int  Ax,signed int  Ay,signed int  Bx,signed int  By,signed int  Cx,signed int  Cy, unsigned char Fill, unsigned int color);
+void put_circle(void *pDisplay, signed int x, signed int y, signed int _radius, unsigned char fill, unsigned int color);
+void put_line(void *pDisplay, signed int X1, signed int Y1, signed int X2, signed int Y2, unsigned char width, unsigned int color);
+void put_elipse(void *pDisplay, signed int xc,signed int yc,signed int _rx,signed int _ry, unsigned char Fill, unsigned int color);
+void put_triangle(void *pDisplay, signed int  Ax,signed int  Ay,signed int  Bx,signed int  By,signed int  Cx,signed int  Cy, unsigned char Fill, unsigned int color);
 
 
-void put_horizontal_line(tDisplay *pDisplay, signed int X1, signed int X2, signed int Y, unsigned char width, unsigned int color);
-void put_vertical_line(tDisplay *pDisplay, signed int Y1, signed int Y2, signed int X, unsigned char width, unsigned int color);
-void string_select_get(tDisplay *pDisplay, tFont *pFont, char *pcString, bool WordWrap, signed int lLength, signed int *Start, signed int *SelStartReturn, signed int *SelLenReturn, signed int _XPush, signed int _YPush, signed int _XPull, signed int _YPull, signed int lX, signed int lY, unsigned int *return_command);
-StringProperties_t string_properties_get(tDisplay *pDisplay, tFont *pFont, char *pcString, bool WordWrap, signed int lLength);
+//void put_horizontal_line(tDisplay *pDisplay, signed int X1, signed int X2, signed int Y, unsigned char width, unsigned int color);
+//void put_vertical_line(tDisplay *pDisplay, signed int Y1, signed int Y2, signed int X, unsigned char width, unsigned int color);
+void string_select_get(void *pDisplay, tFont *pFont, char *pcString, bool WordWrap, signed int lLength, signed int *Start, signed int *SelStartReturn, signed int *SelLenReturn, signed int _XPush, signed int _YPush, signed int _XPull, signed int _YPull, signed int lX, signed int lY, unsigned int *return_command);
+StringProperties_t string_properties_get(void *pDisplay, tFont *pFont, char *pcString, bool WordWrap, signed int lLength);
 unsigned char char_height_get(tFont *pFont);
-signed int string_width_get(tDisplay *pDisplay, tFont *pFont, char *pcString, signed int lLength);
+signed int string_width_get(void *pDisplay, tFont *pFont, char *pcString, signed int lLength);
 signed int string_rows_get(char *pcString, signed int lLength);
 signed int put_string(print_string_properties *properties);
 signed int put_string_tiny_chr(print_string_properties *properties);
-signed int string_width_get_tiny_chr(tDisplay *pDisplay, tFont *pFont, char *pcString, signed int lLength);
+signed int string_width_get_tiny_chr(void *pDisplay, tFont *pFont, char *pcString, signed int lLength);
 /*#####################################################*/
 #ifdef HEADER_INCLUDE_C_FILES
 #include "controls_definition.c"

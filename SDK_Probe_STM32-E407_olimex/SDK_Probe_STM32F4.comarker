@@ -16,8 +16,8 @@
 <attrib name="registered" value="true"/>
 <attrib name="path" value="/SDK_Probe_STM32F4/lib/device/mpl3115a2.c"/>
 <attrib name="org.eclipse.cdt.debug.core.sourceHandle" value="C:\GitHub\mSdk\SDK\lib\device\mpl3115a2.c"/>
-<attrib name="org.eclipse.cdt.debug.core.ignoreCount" value="0"/>
 <attrib name="org.eclipse.debug.core.enabled" value="true"/>
+<attrib name="org.eclipse.cdt.debug.core.ignoreCount" value="0"/>
 </marker>
 </breakpoint>
 </breakpoints>
