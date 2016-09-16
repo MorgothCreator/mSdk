@@ -1107,7 +1107,7 @@ FileInfo_t *_FatData_SearchFileDirectory(unsigned int DriveNr, char *Str, unsign
 	while (Ptr1 != Ptr2 && Ptr2 != NULL)
 	{
 		//UARTprintf(DebugCom, "Pointed file: %s\n\r" , str_to_upercase(fileinfo->FileInfo_PointedFileInDirectoryLongFileName));
-		while(!memcmp(str_to_upercase(Ptr1), str_to_upercase(fileinfo->FileInfo_PointedFileInDirectoryLongFileName), Ptr2 - Ptr1) && Response)
+		//while(!memcmp(str_to_upercase(Ptr1), str_to_upercase(fileinfo->FileInfo_PointedFileInDirectoryLongFileName), Ptr2 - Ptr1) && Response)
 		{
 			Response = _FatData_Dn(fileinfo);
 			//UARTprintf(DebugCom, "Pointed file: %s\n\r" , str_to_upercase(fileinfo->FileInfo_PointedFileInDirectoryLongFileName));
@@ -1124,7 +1124,7 @@ FileInfo_t *_FatData_SearchFileDirectory(unsigned int DriveNr, char *Str, unsign
 	}			
 	while (1)
 	{
-		if(!memcmp(str_to_upercase(Ptr1), str_to_upercase(fileinfo->FileInfo_PointedFileInDirectoryLongFileName), strlen(Ptr1)))
+		/*if(!memcmp(str_to_upercase(Ptr1), str_to_upercase(fileinfo->FileInfo_PointedFileInDirectoryLongFileName), strlen(Ptr1)))
 		{
 			//UARTprintf(DebugCom, "File finded: %s\n\r" , str_to_upercase(fileinfo->FileInfo_PointedFileInDirectoryLongFileName));
 			if(fileinfo->FileInfo_PointedFileInDirectory_Address == 0 || fileinfo->FileInfo_PointedFileInDirectory_FileSize == 0) 
@@ -1159,7 +1159,7 @@ FileInfo_t *_FatData_SearchFileDirectory(unsigned int DriveNr, char *Str, unsign
 				*Status = FileSearch_Status_File_not_exist;
 				return NULL;
 			}
-		}		
+		}		*/
 	}	
 	//return fileinfo;
 }

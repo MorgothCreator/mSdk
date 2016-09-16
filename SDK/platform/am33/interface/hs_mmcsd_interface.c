@@ -608,7 +608,7 @@ void _mmcsd_idle(unsigned int unit_nr)
         	if(_Fat_Unmount(0) == 1 && DebugCom != NULL)									UARTPuts(DebugCom, "MMCSD0 unmount\n\r" , -1);
 
 #else
-        	UARTprintf(DebugCom,   "MMCSD%d Disconnected\n\r" , ((mmcsdCtrlInfo*)SdCtrlStruct)->SdNr);
+        	UARTprintf(DebugCom,   "MMCSD%d Disconnected\n\r" , ((mmcsdCtrlInfo*)ctrlInfo)->SdNr);
 #endif
 #endif
         	/* Reinitialize all the state variables */

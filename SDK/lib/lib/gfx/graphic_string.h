@@ -25,7 +25,7 @@
 #include "api/lcd_def.h"
 #include "controls_definition.h"
 /*#####################################################*/
-char *gfx_change_str(char *dest, char *src);
+char *gfx_change_str(String_t *dest, String_t *src);
 bool put_roll_string(tDisplay *pDisplay, graphic_strings_t *StringsStruct);
 #ifdef FLASH_DEVICE
 bool put_roll_string_P(tDisplay *pDisplay, graphic_strings_t *StringsStruct);

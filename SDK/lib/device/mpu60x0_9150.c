@@ -19,8 +19,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "stdbool.h"
-#include "math.h"
+#include <stdbool.h>
+#include <math.h>
 #include "board_init.h"
 #include "mpu60x0_9150.h"
 #include "board_init.h"

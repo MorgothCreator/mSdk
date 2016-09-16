@@ -52,7 +52,7 @@ static void paint_button(tButton* settings, void *pDisplay, signed int x_start, 
 			gui_put_item(pDisplay, x_start, y_start, x_len, y_len, controls_color.Control_Color_Enabled_Buton_Pull, controls_color.Control_Color_Enabled_Border_Pull, cursor,PAINT_STYLE_ROUNDED_CORNERS , true);
 	}
 
-	if(settings->Internals.Caption.Text)
+	if(settings->Caption.Text->text || settings->Caption.Text->len)
 	{
 		LcdStruct->sClipRegion.sXMin = x_start + 2;
 		LcdStruct->sClipRegion.sYMin = y_start + 2;
@@ -63,14 +63,15 @@ static void paint_button(tButton* settings, void *pDisplay, signed int x_start, 
 		signed int x_str_location = LcdStruct->sClipRegion.sXMin;
 		signed int y_str_location = LcdStruct->sClipRegion.sYMin;
 		if(settings->Caption.TextAlign == Align_Center){
-			StringProperties_t str_properties = string_properties_get(pDisplay, settings->Internals.Caption.Font, settings->Internals.Caption.Text, settings->Internals.Caption.WordWrap, -1);
+			StringProperties_t str_properties = string_properties_get(pDisplay, settings->Internals.Caption.Font, settings->Caption.Text->text, settings->Internals.Caption.WordWrap, -1);
 			x_str_location = x_start + ((x_len>>1)-(str_properties.StringRowsMaxLength_Pixels>>1));
 			y_str_location = y_start + ((y_len>>1)-(str_properties.StringColsHeight_Pixels>>1));
 		}
 		print_string_properties properties;
+		memset(&properties, 0, sizeof(print_string_properties));
 		properties.pDisplay = pDisplay;
 		properties.pFont = settings->Internals.Caption.Font;
-		properties.pcString = settings->Internals.Caption.Text;
+		properties.pcString = String.Clone(properties.pcString, settings->Caption.Text);
 		properties.lLength = -1;
 		//properties.foreground_color = settings->Color.Enabled.Ink.Push;
 		//properties.background_color = settings->Color.Enabled.Buton.Push;
@@ -99,6 +100,7 @@ static void paint_button(tButton* settings, void *pDisplay, signed int x_start, 
 				properties.background_color = settings->Color.Disabled.Buton;
 		}
 		put_string(&properties);
+		str_free(properties.pcString);
 	}
 	LcdStruct->sClipRegion.sXMin = x_start;
 	LcdStruct->sClipRegion.sYMin = y_start;
@@ -175,14 +177,17 @@ void button(tButton *settings, tControlCommandData* control_comand)
 					settings->Size.X != settings->Internals.Size.X ||
 						settings->Size.Y != settings->Internals.Size.Y ||
 							settings->Internals.Caption.Font != settings->Caption.Font ||
-								settings->Internals.Caption.Text != settings->Caption.Text ||
+								settings->Caption.Text->modifyed == true ||
 									settings->Internals.Caption.TextAlign != settings->Caption.TextAlign ||
 										settings->Internals.Caption.WordWrap != settings->Caption.WordWrap ||
 											settings->Internals.OldStateEnabled != settings->Enabled ||
 												settings->Internals.OldStateVisible != settings->Visible ||
 													ParentWindow->Internals.OldStateEnabled != settings->Internals.ParentWindowStateEnabled/* ||
 														ParentWindow->Internals.OldStateVisible != settings->Internals.ParentWindowStateEnabled*/)
-		settings->Internals.NeedEntireRefresh = true;
+		{
+			settings->Internals.NeedEntireRefresh = true;
+			settings->Caption.Text->modifyed = false;
+		}
 	}
 	else
 	{
@@ -191,12 +196,15 @@ void button(tButton *settings, tControlCommandData* control_comand)
 					settings->Size.X != settings->Internals.Size.X ||
 						settings->Size.Y != settings->Internals.Size.Y ||
 							settings->Internals.Caption.Font != settings->Caption.Font ||
-								settings->Internals.Caption.Text != settings->Caption.Text ||
+								settings->Caption.Text->modifyed == true ||
 									settings->Internals.Caption.TextAlign != settings->Caption.TextAlign ||
 										settings->Internals.Caption.WordWrap != settings->Caption.WordWrap ||
 											settings->Internals.OldStateEnabled != settings->Enabled ||
 												settings->Internals.OldStateVisible != settings->Visible)
-		settings->Internals.NeedEntireRefresh = true;
+		{
+			settings->Internals.NeedEntireRefresh = true;
+			settings->Caption.Text->modifyed = false;
+		}
 	}
 
 	//CursorState cursor = control_comand->Cursor;
@@ -250,7 +258,7 @@ void button(tButton *settings, tControlCommandData* control_comand)
 		settings->Internals.Size.X = settings->Size.X;
 		settings->Internals.Size.Y = settings->Size.Y;
 		settings->Internals.Caption.Font = settings->Caption.Font;
-		settings->Internals.Caption.Text = settings->Caption.Text;
+		//settings->Internals.Caption.Text = settings->Caption.Text;
 		settings->Internals.Caption.TextAlign = settings->Caption.TextAlign;
 		settings->Internals.Caption.WordWrap = settings->Caption.WordWrap;
 		if(settings->Size.X == 0 || settings->Size.Y == 0) return;
@@ -258,8 +266,8 @@ void button(tButton *settings, tControlCommandData* control_comand)
 		Y_StartBox = settings->Internals.Position.Y;
 		X_LenBox = settings->Internals.Size.X;
 		Y_LenBox = settings->Internals.Size.Y;
-		settings->Internals.Caption.Text = gfx_change_str(settings->Internals.Caption.Text, settings->Caption.Text);
-		settings->Caption.Text = settings->Internals.Caption.Text;
+		//gfx_change_str(settings->Internals.Caption.Text, settings->Caption.Text);
+		//settings->Caption.Text = settings->Internals.Caption.Text;
 		paint_button(settings, pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, control_comand);
 		settings->Internals.ParentWindowStateEnabled = ParentWindow->Internals.OldStateEnabled;
 		settings->Internals.OldStateVisible = settings->Visible;
@@ -334,7 +342,7 @@ tButton *new_button(void *ParentWindow)
 	settings->Caption.TextAlign = Align_Center;
 	settings->Caption.WordWrap = true;
 	settings->Caption.Font = controls_color.DefaultFont;
-	//settings->Caption.Text = "Button";
+	settings->Caption.Text = str_set(settings->Caption.Text, "Button");
 	//settings->Caption.Text = malloc(sizeof("Textbox") + 1);
 	//strcpy(settings->Caption.Text, "Textbox");
 
@@ -370,8 +378,10 @@ bool free_button(tButton* settings)
 
 	settings->Visible = false;
 	button(settings, &comand);
-	if(settings->Internals.Caption.Text) free(settings->Internals.Caption.Text);
-	if(settings->Caption.Text) free(settings->Caption.Text);
+	if(settings->Internals.Caption.Text->text)
+		free(settings->Internals.Caption.Text->text);
+	if(settings->Caption.Text->text)
+		free(settings->Caption.Text->text);
 	if(settings) free(settings);
 	return true;
 }

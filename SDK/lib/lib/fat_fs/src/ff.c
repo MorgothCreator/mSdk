@@ -4142,9 +4142,9 @@ TCHAR* f_gets (
 			}
 		}
 #endif
-#if _USE_STRFUNC >= 2
-		if (c == '\r') continue;	/* Strip '\r' */
-#endif
+//#if _USE_STRFUNC >= 2
+//		if (c == '\r') continue;	/* Strip '\r' */
+//#endif
 		*p++ = c;
 		n++;
 		if (c == '\n') break;		/* Break on EOL */
@@ -4170,9 +4170,9 @@ int f_putc (
 	BYTE s[3];
 
 
-#if _USE_STRFUNC >= 2
-	if (c == '\n') f_putc ('\r', fp);	/* LF -> CRLF conversion */
-#endif
+//#if _USE_STRFUNC >= 2
+//	if (c == '\n') f_putc ('\r', fp);	/* LF -> CRLF conversion */
+//#endif
 
 #if _LFN_UNICODE	/* Write the character in UTF-8 encoding */
 	if (c < 0x80) {			/* 7-bit */

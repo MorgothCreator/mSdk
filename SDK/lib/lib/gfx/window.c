@@ -496,6 +496,92 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 		window_set_children_settings(settings, false, true, control_comand, false, &ChildrenWindowSize);
 		settings->Internals.NeedEntireRefresh = true;
 	}
+
+	bool text_caption_has_changed = false;
+	signed int X_StartBox = settings->Internals.Position.X;
+	signed int Y_StartBox = settings->Internals.Position.Y;
+	signed int X_LenBox = settings->Internals.Size.X;
+	signed int Y_LenBox = settings->Internals.Size.Y;
+	void *pDisplay = settings->Internals.pDisplay;
+	tDisplay* LcdStruct = (tDisplay *) pDisplay;
+
+	if(ParentWindow != NULL && settings != ParentWindow)
+	{
+			if(settings->Internals.Caption.Font != settings->Caption.Font ||
+					settings->Caption.Text->modifyed == true ||
+						settings->Internals.Caption.TextAlign != settings->Caption.TextAlign ||
+							settings->Internals.Caption.WordWrap != settings->Caption.WordWrap)
+			{
+				text_caption_has_changed = true;
+			}
+	}
+	else
+	{
+		if(settings->Internals.Caption.Font != settings->Caption.Font ||
+				settings->Caption.Text->modifyed == true ||
+					settings->Internals.Caption.TextAlign != settings->Caption.TextAlign ||
+						settings->Internals.Caption.WordWrap != settings->Caption.WordWrap)
+		{
+			text_caption_has_changed = true;
+		}
+	}
+
+	if(text_caption_has_changed && !settings->Internals.OldTabGroupMode && settings->Internals.Control.Initiated == true)
+	{
+		tRectangle back_up_clip = LcdStruct->sClipRegion;
+		settings->Internals.Caption.Font = settings->Caption.Font;
+		settings->Caption.Text->modifyed = false;
+		settings->Internals.Caption.TextAlign = settings->Caption.TextAlign;
+		settings->Internals.Caption.WordWrap = settings->Caption.WordWrap;
+		signed int HeaderSize = 0;
+		if(settings->Internals.HideHeader == false)
+			HeaderSize = settings->Internals.Header.Size.Y;
+		unsigned int header_btn_size = HeaderSize - 6;
+		//unsigned int header_btn_space = HeaderSize - 5;
+		tRectangle back_up_clip_header = LcdStruct->sClipRegion;
+		signed int _X_StartBox_, _Y_StartBox_, _X_LenBox_, _Y_LenBox_;;
+		_X_StartBox_ = (settings->Internals.Position.X + 2);
+		_X_LenBox_ = (settings->Internals.Size.X + settings->Internals.Position.X) - ((header_btn_size + 2) * 3);
+		_Y_StartBox_ = (2 + settings->Internals.Position.Y);
+		_Y_LenBox_ = (2 + settings->Internals.Position.Y) + header_btn_size;
+		LcdStruct->sClipRegion.sXMin = _X_StartBox_ + 1;
+		LcdStruct->sClipRegion.sXMax = _X_LenBox_ - 1;
+		LcdStruct->sClipRegion.sYMin = _Y_StartBox_ + 1;
+		LcdStruct->sClipRegion.sYMax = _Y_LenBox_ - 1;
+		clip_limit(&LcdStruct->sClipRegion, &back_up_clip_header);
+		clip_limit(&LcdStruct->sClipRegion, &settings->WindowMoveLimits);
+		signed int x_str_location = LcdStruct->sClipRegion.sXMin;
+		signed int y_str_location = LcdStruct->sClipRegion.sYMin;
+		LcdStruct->lcd_func.put_rectangle(pDisplay, _X_StartBox_ + 1, _Y_StartBox_ + 1, _X_LenBox_ - 2, _Y_LenBox_ - 1, true, settings->WindowColor.Enabled.WindowHeader);
+		//LcdStruct->lcd_func.put_rectangle(pDisplay, X_StartBox + 1, (Y_StartBox + HeaderSize) - 1, X_LenBox - 2, Y_LenBox - HeaderSize - 0, true, controls_color.Scren);
+		LcdStruct->lcd_func.box_cache_clean(pDisplay, _X_StartBox_, _Y_StartBox_, _X_LenBox_, _Y_LenBox_);
+		if(settings->Caption.TextAlign == Align_Center){
+			StringProperties_t str_properties = string_properties_get(pDisplay, settings->Internals.Caption.Font, settings->Caption.Text->text, settings->Internals.Caption.WordWrap, -1);
+			x_str_location = _X_StartBox_ + ((_X_LenBox_>>1)-(str_properties.StringRowsMaxLength_Pixels>>1));
+			y_str_location = _Y_StartBox_ + ((_Y_LenBox_>>1)-(str_properties.StringColsHeight_Pixels>>1));
+		}
+		print_string_properties properties;
+		memset(&properties, 0, sizeof(print_string_properties));
+		properties.pDisplay = pDisplay;
+		properties.pFont = settings->Internals.Caption.Font;
+		properties.pcString = String.Clone(properties.pcString, settings->Caption.Text);
+		properties.lLength = -1;
+		//properties.foreground_color = settings->Color.Enabled.Ink.Push;
+		//properties.background_color = settings->Color.Enabled.Buton.Push;
+		properties.ulOpaque = false;
+		properties.ulVisible = true;
+		properties.WordWrap = settings->Internals.Caption.WordWrap;
+		properties.lX = x_str_location;
+		properties.lY = y_str_location;
+		properties._SelStart = 0;
+		properties._SelLen = 0;
+		properties.foreground_color = settings->Color.Enabled.Ink.Pull;
+		properties.background_color = settings->Color.Enabled.Buton.Pull;
+		put_string(&properties);
+		str_free(properties.pcString);
+		LcdStruct->sClipRegion = back_up_clip;
+	}
+
 	/* Verify if position on size has been modified */
 	if(ParentWindow != NULL && settings != ParentWindow)
 	{
@@ -503,10 +589,10 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 				(settings->Position.Y + ParentWindow->Internals.Position.Y + settings->Internals.PositionOffset.Y) != settings->Internals.Position.Y ||
 					settings->Size.X != settings->Internals.Size.X ||
 						settings->Size.Y != settings->Internals.Size.Y ||
-							settings->Internals.Caption.Font != settings->Caption.Font ||
-								settings->Internals.Caption.Text != settings->Caption.Text ||
-									settings->Internals.Caption.TextAlign != settings->Caption.TextAlign ||
-										settings->Internals.Caption.WordWrap != settings->Caption.WordWrap ||
+							//settings->Internals.Caption.Font != settings->Caption.Font ||
+								//settings->Caption.Text->modifyed == true ||
+									//settings->Internals.Caption.TextAlign != settings->Caption.TextAlign ||
+										//settings->Internals.Caption.WordWrap != settings->Caption.WordWrap ||
 											settings->Internals.WindowMoveLimits.sXMin != settings->WindowMoveLimits.sXMin ||
 												settings->Internals.WindowMoveLimits.sYMin != settings->WindowMoveLimits.sYMin ||
 													settings->Internals.WindowMoveLimits.sXMax != settings->WindowMoveLimits.sXMax ||
@@ -519,7 +605,10 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 																				settings->Internals.MaxMinVisible != settings->MaxMinVisible ||
 																					settings->Internals.MinimizeButonEnabled != settings->MinimizeButonEnabled ||
 																						settings->Internals.MinimizeButonVisible != settings->MinimizeButonVisible)
+		{
 			settings->Internals.NeedEntireRefresh = true;
+			settings->Caption.Text->modifyed = false;
+		}
 	}
 	else
 	{
@@ -527,10 +616,10 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 				settings->Position.Y != settings->Internals.Position.Y ||
 					settings->Size.X != settings->Internals.Size.X ||
 						settings->Size.Y != settings->Internals.Size.Y ||
-							settings->Internals.Caption.Font != settings->Caption.Font ||
-								settings->Internals.Caption.Text != settings->Caption.Text ||
-									settings->Internals.Caption.TextAlign != settings->Caption.TextAlign ||
-										settings->Internals.Caption.WordWrap != settings->Caption.WordWrap ||
+							//settings->Internals.Caption.Font != settings->Caption.Font ||
+								//settings->Caption.Text->modifyed == true ||
+									//settings->Internals.Caption.TextAlign != settings->Caption.TextAlign ||
+										//settings->Internals.Caption.WordWrap != settings->Caption.WordWrap ||
 											settings->Internals.WindowMoveLimits.sXMin != settings->WindowMoveLimits.sXMin ||
 												settings->Internals.WindowMoveLimits.sYMin != settings->WindowMoveLimits.sYMin ||
 													settings->Internals.WindowMoveLimits.sXMax != settings->WindowMoveLimits.sXMax ||
@@ -543,18 +632,14 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 																				settings->Internals.MaxMinVisible != settings->MaxMinVisible ||
 																					settings->Internals.MinimizeButonEnabled != settings->MinimizeButonEnabled ||
 																						settings->Internals.MinimizeButonVisible != settings->MinimizeButonVisible)
+		{
 			settings->Internals.NeedEntireRefresh = true;
+			settings->Caption.Text->modifyed = false;
+		}
 	}
 
 	//if(settings->Internals.Caption.Text != NULL && settings->Caption.Text != NULL && strcmp(settings->Internals.Caption.Text, settings->Caption.Text) == NULL)
 		//settings->Internals.NeedEntireRefresh = true;
-
-	signed int X_StartBox = settings->Internals.Position.X;
-	signed int Y_StartBox = settings->Internals.Position.Y;
-	signed int X_LenBox = settings->Internals.Size.X;
-	signed int Y_LenBox = settings->Internals.Size.Y;
-	void *pDisplay = settings->Internals.pDisplay;
-	tDisplay* LcdStruct = (tDisplay *) pDisplay;
 
 	/*Clear background of box with actual painted dimensions and positions if they been changed*/
 	if(settings->Internals.NeedEntireRefresh == true || settings->Internals.OldStateVisible != settings->Visible)
@@ -599,10 +684,10 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 		}
 		settings->Internals.Size.X = settings->Size.X;
 		settings->Internals.Size.Y = settings->Size.Y;
-		settings->Internals.Caption.Font = settings->Caption.Font;
-		settings->Internals.Caption.Text = settings->Caption.Text;
-		settings->Internals.Caption.TextAlign = settings->Caption.TextAlign;
-		settings->Internals.Caption.WordWrap = settings->Caption.WordWrap;
+		//settings->Internals.Caption.Font = settings->Caption.Font;
+		////settings->Internals.Caption.Text = settings->Caption.Text;
+		//settings->Internals.Caption.TextAlign = settings->Caption.TextAlign;
+		//settings->Internals.Caption.WordWrap = settings->Caption.WordWrap;
 		settings->Internals.Size.ScrollBarSize = settings->Size.ScrollBarSize;
 		settings->Internals.WindowMoveLimits.sXMin = settings->WindowMoveLimits.sXMin;
 		settings->Internals.WindowMoveLimits.sYMin = settings->WindowMoveLimits.sYMin;
@@ -620,11 +705,12 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 		Y_StartBox = settings->Internals.Position.Y;
 		X_LenBox = settings->Internals.Size.X;
 		Y_LenBox = settings->Internals.Size.Y;
-		settings->Internals.Caption.Text = gfx_change_str(settings->Internals.Caption.Text, settings->Caption.Text);
-		settings->Caption.Text = settings->Internals.Caption.Text;
+		//settings->Internals.Caption.Text = gfx_change_str(settings->Internals.Caption.Text, settings->Caption.Text);
+		//settings->Caption.Text = settings->Internals.Caption.Text;
 
 		signed int HeaderSize = 0;
-		if(settings->Internals.HideHeader == false) HeaderSize = settings->Internals.Header.Size.Y;
+		if(settings->Internals.HideHeader == false)
+			HeaderSize = settings->Internals.Header.Size.Y;
 		unsigned int header_btn_size = HeaderSize - 6;
 		unsigned int header_btn_space = HeaderSize - 5;
 
@@ -640,7 +726,7 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 			settings->Internals.Header.Close->Position.X = (settings->Internals.Size.X) - header_btn_space - 1;
 			settings->Internals.Header.Close->Position.Y = 2;
 		}
-		settings->Internals.Header.Close->Caption.Text = NULL;
+		settings->Internals.Header.Close->Caption.Text = str_clear(settings->Internals.Header.Close->Caption.Text);
 		settings->Internals.Header.Close->Internals.IsChildren = true;
 		settings->Internals.Header.Close->Internals.NoPaintBackGround = true;
 		settings->Internals.Header.Close->Internals.NeedEntireRefresh = true;
@@ -659,7 +745,7 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 			settings->Internals.Header.MaxMin->Position.X = (settings->Internals.Size.X) - (header_btn_space << 1) - 1;
 			settings->Internals.Header.MaxMin->Position.Y = 2;
 		}
-		settings->Internals.Header.MaxMin->Caption.Text = NULL;
+		settings->Internals.Header.MaxMin->Caption.Text = str_clear(settings->Internals.Header.MaxMin->Caption.Text);
 		settings->Internals.Header.MaxMin->Internals.NoPaintBackGround = true;
 		settings->Internals.Header.MaxMin->Internals.NeedEntireRefresh = true;
 		settings->Internals.Header.MaxMin->Enabled = settings->Internals.MaxMinEnabled;
@@ -677,7 +763,7 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 			settings->Internals.Header.Minimize->Position.X = (settings->Internals.Size.X) - ((header_btn_space << 1) + header_btn_space) - 1;
 			settings->Internals.Header.Minimize->Position.Y = 2;
 		}
-		settings->Internals.Header.Minimize->Caption.Text = NULL;
+		settings->Internals.Header.Minimize->Caption.Text = str_clear(settings->Internals.Header.Minimize->Caption.Text);
 		settings->Internals.Header.Minimize->Internals.NoPaintBackGround = true;
 		settings->Internals.Header.Minimize->Internals.IsChildren = true;
 		settings->Internals.Header.Minimize->Internals.NeedEntireRefresh = true;
@@ -696,7 +782,7 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 			settings->Internals.Header.TabGroupScrollLeft->Position.X = (settings->Internals.Position.X + 2);
 			settings->Internals.Header.TabGroupScrollLeft->Position.Y = 2;
 		}
-		settings->Internals.Header.TabGroupScrollLeft->Caption.Text = "L";
+		settings->Internals.Header.TabGroupScrollLeft->Caption.Text = str_set(settings->Internals.Header.TabGroupScrollLeft->Caption.Text, "L");
 		settings->Internals.Header.TabGroupScrollLeft->Caption.WordWrap = false;
 		//settings->Internals.Header.TabGroupScrollLeft->Caption.Font = &g_sFontCm12;
 		settings->Internals.Header.TabGroupScrollLeft->Internals.NoPaintBackGround = true;
@@ -715,7 +801,7 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 			settings->Internals.Header.TabGroupScrollRight->Position.X = (settings->Internals.Size.X) - header_btn_space - 1;
 			settings->Internals.Header.TabGroupScrollRight->Position.Y = 2;
 		}
-		settings->Internals.Header.TabGroupScrollRight->Caption.Text = "R";
+		settings->Internals.Header.TabGroupScrollRight->Caption.Text = str_set(settings->Internals.Header.TabGroupScrollRight->Caption.Text, "R");
 		settings->Internals.Header.TabGroupScrollRight->Caption.WordWrap = false;
 		//settings->Internals.Header.TabGroupScrollRight->Caption.Font = &g_sFontCm12;
 		settings->Internals.Header.TabGroupScrollRight->Internals.NoPaintBackGround = true;
@@ -857,6 +943,55 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 
 			//pDisplay->sClipRegion = back_up_clip_header;
 		}
+		else
+		{
+			tRectangle back_up_clip_header = LcdStruct->sClipRegion;
+			signed int _X_StartBox_, _Y_StartBox_, _X_LenBox_, _Y_LenBox_;;
+			_X_StartBox_ = (settings->Internals.Position.X + 2);
+			_X_LenBox_ = (settings->Internals.Size.X + settings->Internals.Position.X) - ((header_btn_size + 2) * 3);
+			_Y_StartBox_ = (2 + settings->Internals.Position.Y);
+			_Y_LenBox_ = (2 + settings->Internals.Position.Y) + header_btn_size;
+			/*LcdStruct->sClipRegion.sXMin = _X_StartBox_;
+			LcdStruct->sClipRegion.sXMax = _X_LenBox_;
+			LcdStruct->sClipRegion.sYMin = _Y_StartBox_;
+			LcdStruct->sClipRegion.sYMax = _Y_LenBox_;
+			clip_limit(&LcdStruct->sClipRegion, &back_up_clip_header);
+			clip_limit(&LcdStruct->sClipRegion, &settings->WindowMoveLimits);
+			LcdStruct->lcd_func.put_rectangle(pDisplay, _X_StartBox_, _Y_StartBox_, _X_LenBox_ - _X_StartBox_, _Y_LenBox_ - _Y_StartBox_, false, settings->WindowColor.Enabled.WindowBorder);*/
+			LcdStruct->sClipRegion.sXMin = _X_StartBox_ + 1;
+			LcdStruct->sClipRegion.sXMax = _X_LenBox_ - 1;
+			LcdStruct->sClipRegion.sYMin = _Y_StartBox_ + 1;
+			LcdStruct->sClipRegion.sYMax = _Y_LenBox_ - 1;
+			clip_limit(&LcdStruct->sClipRegion, &back_up_clip_header);
+			clip_limit(&LcdStruct->sClipRegion, &settings->WindowMoveLimits);
+			signed int x_str_location = LcdStruct->sClipRegion.sXMin;
+			signed int y_str_location = LcdStruct->sClipRegion.sYMin;
+			if(settings->Caption.TextAlign == Align_Center){
+				StringProperties_t str_properties = string_properties_get(pDisplay, settings->Internals.Caption.Font, settings->Caption.Text->text, settings->Internals.Caption.WordWrap, -1);
+				x_str_location = _X_StartBox_ + ((_X_LenBox_>>1)-(str_properties.StringRowsMaxLength_Pixels>>1));
+				y_str_location = _Y_StartBox_ + ((_Y_LenBox_>>1)-(str_properties.StringColsHeight_Pixels>>1));
+			}
+			print_string_properties properties;
+			memset(&properties, 0, sizeof(print_string_properties));
+			properties.pDisplay = pDisplay;
+			properties.pFont = settings->Internals.Caption.Font;
+			properties.pcString = String.Clone(properties.pcString, settings->Caption.Text);
+			properties.lLength = -1;
+			//properties.foreground_color = settings->Color.Enabled.Ink.Push;
+			//properties.background_color = settings->Color.Enabled.Buton.Push;
+			properties.ulOpaque = false;
+			properties.ulVisible = true;
+			properties.WordWrap = settings->Internals.Caption.WordWrap;
+			properties.lX = x_str_location;
+			properties.lY = y_str_location;
+			properties._SelStart = 0;
+			properties._SelLen = 0;
+			properties.foreground_color = settings->Color.Enabled.Ink.Pull;
+			properties.background_color = settings->Color.Enabled.Buton.Pull;
+			put_string(&properties);
+			str_free(properties.pcString);
+
+		}
 		LcdStruct->sClipRegion = back_up_clip;
 		//control_comand->Comand = control_comand_comand;
 		control_comand->Cursor = cursor;
@@ -869,7 +1004,6 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 		//control_comand->WindowRefresh |= true;
 		return;
 	}
-
 	tRectangle back_up_clip = LcdStruct->sClipRegion;
 	LcdStruct->sClipRegion.sXMin = X_StartBox;
 	LcdStruct->sClipRegion.sYMin = Y_StartBox;
@@ -1222,7 +1356,7 @@ tWindow *new_window_tab_group(void *ParentWindow, tDisplay *ScreenDisplay)
 	settings->Caption.TextAlign = Align_Center;
 	settings->Caption.WordWrap = false;
 	settings->Caption.Font = controls_color.DefaultFont;
-	settings->Caption.Text = "Window";
+	settings->Caption.Text = str_set(settings->Caption.Text, "Window");
 	//settings->Caption.Text = malloc(sizeof("Textbox") + 1);
 	//strcpy(settings->Caption.Text, "Textbox");
 
@@ -1369,8 +1503,9 @@ void* window_tabgroup_add_children(struct Window_s *settings, unsigned int child
 		((tButton *)children_addr)->Enabled = settings->Enabled;
 		((tButton *)children_addr)->Visible = settings->Visible;
 		((tButton *)children_addr)->Color = settings->Color;
-		((tButton *)children_addr)->Caption.Text = malloc(strlen(children_name) + 1);
-		strcpy(((tButton *)children_addr)->Caption.Text, children_name);
+		((tButton *)children_addr)->Caption.Text = str_set(((tButton *)children_addr)->Caption.Text, children_name);
+		//((tButton *)children_addr)->Caption.Text = malloc(strlen(children_name) + 1);
+		//strcpy(((tButton *)children_addr)->Caption.Text, children_name);
 		((tButton *)children_addr)->Internals.ParentWindow = (void*)settings;
 		break;
 	case WindowCheckboxChildren:
@@ -1385,8 +1520,9 @@ void* window_tabgroup_add_children(struct Window_s *settings, unsigned int child
 		((tCheckBox *)children_addr)->Enabled = settings->Enabled;
 		((tCheckBox *)children_addr)->Visible = settings->Visible;
 		((tCheckBox *)children_addr)->Color = settings->Color;
-		((tCheckBox *)children_addr)->Caption.Text = malloc(strlen(children_name) + 1);
-		strcpy(((tCheckBox *)children_addr)->Caption.Text, children_name);
+		((tCheckBox *)children_addr)->Caption.Text = str_set(((tCheckBox *)children_addr)->Caption.Text, children_name);
+		//((tCheckBox *)children_addr)->Caption.Text = malloc(strlen(children_name) + 1);
+		//strcpy(((tCheckBox *)children_addr)->Caption.Text, children_name);
 		((tCheckBox *)children_addr)->Internals.ParentWindow = (void*)settings;
 		break;
 	case WindowListboxChildren:
@@ -1401,8 +1537,9 @@ void* window_tabgroup_add_children(struct Window_s *settings, unsigned int child
 		((tListBox *)children_addr)->Enabled = settings->Enabled;
 		((tListBox *)children_addr)->Visible = settings->Visible;
 		((tListBox *)children_addr)->Color = settings->Color;
-		((tListBox *)children_addr)->Caption.Text = malloc(strlen(children_name) + 1);
-		strcpy(((tListBox *)children_addr)->Caption.Text, children_name);
+		((tListBox *)children_addr)->Caption.Text = str_set(((tListBox *)children_addr)->Caption.Text, children_name);
+		//((tListBox *)children_addr)->Caption.Text = malloc(strlen(children_name) + 1);
+		//strcpy(((tListBox *)children_addr)->Caption.Text, children_name);
 		((tListBox *)children_addr)->Internals.ParentWindow = (void*)settings;
 		break;
 	case WindowProgressbarChildren:
@@ -1417,8 +1554,9 @@ void* window_tabgroup_add_children(struct Window_s *settings, unsigned int child
 		((tProgressBar *)children_addr)->Enabled = settings->Enabled;
 		((tProgressBar *)children_addr)->Visible = settings->Visible;
 		((tProgressBar *)children_addr)->Color = settings->Color;
-		((tProgressBar *)children_addr)->Caption.Text = malloc(strlen(children_name) + 1);
-		strcpy(((tProgressBar *)children_addr)->Caption.Text, children_name);
+		((tProgressBar *)children_addr)->Caption.Text = str_set(((tProgressBar *)children_addr)->Caption.Text, children_name);
+		//((tProgressBar *)children_addr)->Caption.Text = malloc(strlen(children_name) + 1);
+		//strcpy(((tProgressBar *)children_addr)->Caption.Text, children_name);
 		((tProgressBar *)children_addr)->Internals.ParentWindow = (void*)settings;
 		break;
 	case WindowScrollbarChildren:
@@ -1445,8 +1583,8 @@ void* window_tabgroup_add_children(struct Window_s *settings, unsigned int child
 		((tTextBox *)children_addr)->Enabled = settings->Enabled;
 		((tTextBox *)children_addr)->Visible = settings->Visible;
 		((tTextBox *)children_addr)->Color = settings->Color;
-		((tTextBox *)children_addr)->Text = malloc(strlen(children_name) + 1);
-		strcpy(((tTextBox *)children_addr)->Text, children_name);
+		((tTextBox *)children_addr)->Text = str_set(((tTextBox *)children_addr)->Text, children_name);
+		//strcpy(((tTextBox *)children_addr)->Text, children_name);
 		((tTextBox *)children_addr)->Internals.ParentWindow = (void*)settings;
 		break;
 	case WindowPictureboxChildren:
@@ -1475,8 +1613,9 @@ void* window_tabgroup_add_children(struct Window_s *settings, unsigned int child
 		((tWindow *)children_addr)->Enabled = settings->Enabled;
 		((tWindow *)children_addr)->Visible = settings->Visible;
 		((tWindow *)children_addr)->Color = settings->Color;
-		((tWindow *)children_addr)->Caption.Text = malloc(strlen(children_name) + 1);
-		strcpy(((tWindow *)children_addr)->Caption.Text, children_name);
+		((tWindow *)children_addr)->Caption.Text = str_set(((tWindow *)children_addr)->Caption.Text, children_name);
+		//((tWindow *)children_addr)->Caption.Text = malloc(strlen(children_name) + 1);
+		//strcpy(((tWindow *)children_addr)->Caption.Text, children_name);
 		((tWindow *)children_addr)->Internals.ParentWindow = (void*)settings;
 		break;
 	case WindowTabGroupChildren:
@@ -1487,8 +1626,9 @@ void* window_tabgroup_add_children(struct Window_s *settings, unsigned int child
 		((tWindow *)children_addr)->Enabled = settings->Enabled;
 		((tWindow *)children_addr)->Visible = settings->Visible;
 		((tWindow *)children_addr)->Color = settings->Color;
-		((tWindow *)children_addr)->Caption.Text = malloc(strlen(children_name) + 1);
-		strcpy(((tWindow *)children_addr)->Caption.Text, children_name);
+		((tWindow *)children_addr)->Caption.Text = str_set(((tWindow *)children_addr)->Caption.Text, children_name);
+		//((tWindow *)children_addr)->Caption.Text = malloc(strlen(children_name) + 1);
+		//strcpy(((tWindow *)children_addr)->Caption.Text, children_name);
 		((tWindow *)children_addr)->Internals.ParentWindow = (void*)settings;
 		((tWindow *)children_addr)->Internals.FullScreen = false;
 		((tWindow *)children_addr)->Internals.TabGroupMode = true;
@@ -1560,11 +1700,11 @@ signed int tab_group_new_tab(struct Window_s *settings, char *tab_name)
 		if(!settings->Internals.Header.TabGroupTabsList[settings->Internals.Header.TabGroupTabsListNr]) return -1;
 		if(!settings->Internals.Header.TabGroupTabsListNr) settings->Internals.Header.TabGroupTabsList[settings->Internals.Header.TabGroupTabsListNr]->Cheched = true;
 		settings->Internals.Header.TabGroupTabsList[settings->Internals.Header.TabGroupTabsListNr]->Caption.Font = (tFont *)controls_color.DefaultFont;
-		settings->Internals.Header.TabGroupTabsList[settings->Internals.Header.TabGroupTabsListNr]->Caption.Text = malloc(strlen(tab_name) + 1);
+		settings->Internals.Header.TabGroupTabsList[settings->Internals.Header.TabGroupTabsListNr]->Caption.Text = str_set(settings->Internals.Header.TabGroupTabsList[settings->Internals.Header.TabGroupTabsListNr]->Caption.Text, tab_name);
 		settings->Internals.Header.TabGroupTabsList[settings->Internals.Header.TabGroupTabsListNr]->Caption.WordWrap = true;
 		settings->Internals.Header.TabGroupTabsList[settings->Internals.Header.TabGroupTabsListNr]->Caption.TextAlign = Align_Center;
 		settings->Internals.Header.TabGroupTabsList[settings->Internals.Header.TabGroupTabsListNr]->Internals.NoPaintBackGround = true;
-		strcpy(settings->Internals.Header.TabGroupTabsList[settings->Internals.Header.TabGroupTabsListNr]->Caption.Text, tab_name);
+		//strcpy(settings->Internals.Header.TabGroupTabsList[settings->Internals.Header.TabGroupTabsListNr]->Caption.Text, tab_name);
 		//settings->Internals.Header.TabGroupTabsList[settings->Internals.Header.TabGroupTabsListNr]->Color.Scren = controls_color.Control_Color_Enabled_Buton_Pull;
 		//settings->Internals.Header.TabGroupTabsList[settings->Internals.Header.TabGroupTabsListNr]->Color.Enabled.Buton.Push = controls_color.Control_Color_Enabled_Buton_Push;
 		//settings->Internals.Header.TabGroupTabsList[settings->Internals.Header.TabGroupTabsListNr]->Color.Enabled.Buton.Pull = controls_color.Control_Color_Enabled_Buton_Pull;

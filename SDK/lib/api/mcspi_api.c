@@ -61,7 +61,7 @@ void mcspi_close(Mcspi_t *McspiStruct)
 		free(McspiStruct->Gpio_Cs[3]);
 }
 
-/*void mcspi_assert(Mcspi_t *McspiStruct)
+void mcspi_assert(Mcspi_t *McspiStruct)
 {
 	_mcspi_assert(McspiStruct);
 }
@@ -69,7 +69,7 @@ void mcspi_close(Mcspi_t *McspiStruct)
 void mcspi_deassert(Mcspi_t *McspiStruct)
 {
 	_mcspi_deassert(McspiStruct);
-}*/
+}
 
 bool mcspi_transfer(Mcspi_t *McspiStruct, unsigned int NumOfBytesSend, unsigned int NumOfBytesReceive)
 {

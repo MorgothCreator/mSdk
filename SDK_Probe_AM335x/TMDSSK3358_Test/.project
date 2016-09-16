@@ -41,14 +41,4 @@
 			<locationURI>PARENT-2-PROJECT_LOC/SDK/third_party/net</locationURI>
 		</link>
 	</linkedResources>
-	<variableList>
-		<variable>
-			<name>LIBRARY</name>
-			<value>file:/C:/GitHub/mSdk/SDK/lib</value>
-		</variable>
-		<variable>
-			<name>PLAT</name>
-			<value>file:/C:/GitHub/mSdk/SDK/platform/am33</value>
-		</variable>
-	</variableList>
 </projectDescription>

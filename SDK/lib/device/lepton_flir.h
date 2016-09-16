@@ -202,7 +202,7 @@ typedef struct LEPTON_FLIR_s{
 	bool busy;
 	Mcspi_t* SPI;
 	Twi_t* TWI;
-	unsigned char CsNr;
+	unsigned char spi_instance;
 	//unsigned char Stage;
 }LEPTON_FLIR_t;
 /*#####################################################*/

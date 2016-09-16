@@ -100,7 +100,7 @@
 
 #ifdef HAL_RCC_MODULE_ENABLED
 
-extern unsigned long SystemCoreClock;          /*!< System Clock Frequency (Core Clock) */
+extern unsigned long FCPU;          /*!< System Clock Frequency (Core Clock) */
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /** @addtogroup RCC_Private_Constants
@@ -1048,8 +1048,8 @@ __weak uint32_t HAL_RCC_GetSysClockFreq(void)
   */
 uint32_t HAL_RCC_GetHCLKFreq(void)
 {
-  SystemCoreClock = HAL_RCC_GetSysClockFreq() >> APBAHBPrescTable[(RCC->CFGR & RCC_CFGR_HPRE)>> POSITION_VAL(RCC_CFGR_HPRE)];
-  return SystemCoreClock;
+	FCPU = HAL_RCC_GetSysClockFreq() >> APBAHBPrescTable[(RCC->CFGR & RCC_CFGR_HPRE)>> POSITION_VAL(RCC_CFGR_HPRE)];
+  return FCPU;
 }
 
 /**

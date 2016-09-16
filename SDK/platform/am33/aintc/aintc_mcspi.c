@@ -31,31 +31,31 @@ static void McSPIIsr(Mcspi_t *McspiStruct)
 
     while(intCode)
     {
-        if(MCSPI_INT_TX_EMPTY(McspiStruct->Channel) == (intCode & MCSPI_INT_TX_EMPTY(McspiStruct->Channel)))
+        if(MCSPI_INT_TX_EMPTY(McspiStruct->CsSelect) == (intCode & MCSPI_INT_TX_EMPTY(McspiStruct->CsSelect)))
         {
-            McSPIIntStatusClear(McspiStruct->BaseAddr, MCSPI_INT_TX_EMPTY(McspiStruct->Channel));
+            McSPIIntStatusClear(McspiStruct->BaseAddr, MCSPI_INT_TX_EMPTY(McspiStruct->CsSelect));
 
             McspiStruct->numOfBytes--;
 
-            McSPITransmitData(McspiStruct->BaseAddr,(unsigned int)(*McspiStruct->BuffTmp++), McspiStruct->Channel);
+            McSPITransmitData(McspiStruct->BaseAddr,(unsigned int)(*McspiStruct->BuffTmp++), McspiStruct->CsSelect);
 
             if(!McspiStruct->numOfBytes)
             {
-                McSPIIntDisable(McspiStruct->BaseAddr, MCSPI_INT_TX_EMPTY(McspiStruct->Channel));
+                McSPIIntDisable(McspiStruct->BaseAddr, MCSPI_INT_TX_EMPTY(McspiStruct->CsSelect));
 
-                McSPIIntStatusClear(McspiStruct->BaseAddr, MCSPI_INT_TX_EMPTY(McspiStruct->Channel));
+                McSPIIntStatusClear(McspiStruct->BaseAddr, MCSPI_INT_TX_EMPTY(McspiStruct->CsSelect));
             }
         }
 
-        if(MCSPI_INT_RX_FULL(McspiStruct->Channel) == (intCode & MCSPI_INT_RX_FULL(McspiStruct->Channel)))
+        if(MCSPI_INT_RX_FULL(McspiStruct->CsSelect) == (intCode & MCSPI_INT_RX_FULL(McspiStruct->CsSelect)))
         {
-            McSPIIntStatusClear(McspiStruct->BaseAddr, MCSPI_INT_RX_FULL(McspiStruct->Channel));
+            McSPIIntStatusClear(McspiStruct->BaseAddr, MCSPI_INT_RX_FULL(McspiStruct->CsSelect));
 
-            *McspiStruct->BuffTmp++ = (unsigned char) McSPIReceiveData(McspiStruct->BaseAddr, McspiStruct->Channel);
+            *McspiStruct->BuffTmp++ = (unsigned char) McSPIReceiveData(McspiStruct->BaseAddr, McspiStruct->CsSelect);
 
             if(!(McspiStruct->numOfBytes))
             {
-                McSPIIntDisable(McspiStruct->BaseAddr, MCSPI_INT_RX_FULL(McspiStruct->Channel));
+                McSPIIntDisable(McspiStruct->BaseAddr, MCSPI_INT_RX_FULL(McspiStruct->CsSelect));
 
                 McspiStruct->flag = 0;
             }

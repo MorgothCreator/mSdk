@@ -7,6 +7,8 @@
 
 #ifndef CONSOLE_H_
 #define CONSOLE_H_
+
+#include "lib/string_lib.h"
 //#######################################################
 #define CONSOLE_ARGS	2
 #define new_console(name) char *name[CONSOLE_ARGS] = {NULL, NULL}
@@ -41,7 +43,7 @@ typedef struct{
 	int cnt;
 	int rx_cnt;
 	int app_order;
-	char *rx_data;
+	String_t *rx_data;
     char *path;
     int child_arg_nr;
     char **child_arg;

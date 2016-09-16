@@ -1017,7 +1017,7 @@ signed int put_string(print_string_properties *properties)
 	void *pDisplay = properties->pDisplay;
 	tDisplay* LcdStruct = (tDisplay *) pDisplay;
 	tFont *pFont = properties->pFont;
-	char *pcString = properties->pcString;
+	char *pcString = properties->pcString->text;
 	signed int lLength = properties->lLength;
 	unsigned int foreground_color = properties->foreground_color;
 	unsigned int background_color = properties->background_color;
@@ -1574,7 +1574,7 @@ signed int put_string_tiny_chr(print_string_properties *properties)
 	void *pDisplay = properties->pDisplay;
 	tDisplay* LcdStruct = (tDisplay *) pDisplay;
 	//tFont *pFont = properties->pFont;
-	char *pcString = properties->pcString;
+	char *pcString = properties->pcString->text;
 	signed int lLength = properties->lLength;
 	unsigned int foreground_color = properties->foreground_color;
 	unsigned int background_color = properties->background_color;

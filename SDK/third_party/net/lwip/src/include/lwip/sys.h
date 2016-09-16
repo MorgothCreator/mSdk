@@ -33,7 +33,7 @@
 #define __LWIP_SYS_H__
 
 #include "lwip/opt.h"
-
+#include "interface/lwip/ports/cpsw/include/arch/sys_arch.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -42,9 +42,9 @@ extern "C" {
 
 /* For a totally minimal and standalone system, we provide null
    definitions of the sys_ functions. */
-typedef u8_t sys_sem_t;
+//typedef u8_t sys_sem_t;
 typedef u8_t sys_mutex_t;
-typedef u8_t sys_mbox_t;
+//typedef u8_t sys_mbox_t;
 //typedef u8_t sys_prot_t;
 typedef u8_t sys_port_t;
  

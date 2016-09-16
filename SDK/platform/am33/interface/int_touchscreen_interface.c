@@ -273,8 +273,8 @@ timer(TimerTouchCalibrate);
 void TouchCalibrate(LcdTouch_t* structure, tDisplay *pDisplay)
 {
     timer_interval(&TimerTouchCalibrate, 25);
-	put_rectangle(pDisplay, 0, 0, pDisplay->raster_timings->X, pDisplay->raster_timings->Y, true, ClrBlack);
-	box_cache_clean(pDisplay, 0, 0, pDisplay->raster_timings->X, pDisplay->raster_timings->Y);
+    pDisplay->lcd_func.put_rectangle(pDisplay, 0, 0, pDisplay->raster_timings->X, pDisplay->raster_timings->Y, true, ClrBlack);
+    pDisplay->lcd_func.box_cache_clean(pDisplay, 0, 0, pDisplay->raster_timings->X, pDisplay->raster_timings->Y);
 	double TouchX = 0, TouchY = 0;
 	double screen_max_x = structure->screen_max_x;
 	double screen_max_y = structure->screen_max_y;
@@ -290,7 +290,7 @@ void TouchCalibrate(LcdTouch_t* structure, tDisplay *pDisplay)
 	double LcdTouch_D_Calibration_Value;
 
 	TouchPaintPoint(pDisplay, (((double)pDisplay->raster_timings->X * (double)12.5) / (double)100), (((double)pDisplay->raster_timings->Y * (double)12.5) / (double)100), ClrRed);
-	box_cache_clean(pDisplay, 0, 0, pDisplay->raster_timings->X, pDisplay->raster_timings->Y);
+	pDisplay->lcd_func.box_cache_clean(pDisplay, 0, 0, pDisplay->raster_timings->X, pDisplay->raster_timings->Y);
 	//CacheDataCleanBuff((unsigned int)&pDisplay->DisplayData + 32, pDisplay->Width * pDisplay->Height * 4);
 	double Xbuffer[FilterTouchCalibrateSize];
 	double Ybuffer[FilterTouchCalibrateSize];
@@ -326,13 +326,13 @@ void TouchCalibrate(LcdTouch_t* structure, tDisplay *pDisplay)
 	//TouchY = structure->TouchResponse.y1;
 	LcdTouch_L_Calibration_Value = (double)TouchX;
 	LcdTouch_U_Calibration_Value = (double)TouchY;
-	put_rectangle(pDisplay, 0, 0, pDisplay->raster_timings->X, pDisplay->raster_timings->Y, true, ClrBlack);
-	box_cache_clean(pDisplay, 0, 0, pDisplay->raster_timings->X, pDisplay->raster_timings->Y);
+	pDisplay->lcd_func.put_rectangle(pDisplay, 0, 0, pDisplay->raster_timings->X, pDisplay->raster_timings->Y, true, ClrBlack);
+	pDisplay->lcd_func.box_cache_clean(pDisplay, 0, 0, pDisplay->raster_timings->X, pDisplay->raster_timings->Y);
 	//CacheDataCleanBuff((unsigned int)&pDisplay->DisplayData + 32, pDisplay->Width * pDisplay->Height * 4);
 	//delay(500);
 
 	TouchPaintPoint(pDisplay, (double)pDisplay->raster_timings->X - (((double)pDisplay->raster_timings->X * (double)12.5) / (double)100), (((double)pDisplay->raster_timings->Y * (double)12.5) / (double)100), ClrRed);
-	box_cache_clean(pDisplay, 0, 0, pDisplay->raster_timings->X, pDisplay->raster_timings->Y);
+	pDisplay->lcd_func.box_cache_clean(pDisplay, 0, 0, pDisplay->raster_timings->X, pDisplay->raster_timings->Y);
 	//CacheDataCleanBuff((unsigned int)&pDisplay->DisplayData + 32, pDisplay->Width * pDisplay->Height * 4);
 	Cnt = 0;
 	Cnt1 = 0;
@@ -366,13 +366,13 @@ void TouchCalibrate(LcdTouch_t* structure, tDisplay *pDisplay)
 	//TouchY = structure->TouchResponse.y1;
 	LcdTouch_R_Calibration_Value = (double)TouchX;
 	LcdTouch_U_Calibration_Value += (double)TouchY;
-	put_rectangle(pDisplay, 0, 0, pDisplay->raster_timings->X, pDisplay->raster_timings->Y, true, ClrBlack);
-	box_cache_clean(pDisplay, 0, 0, pDisplay->raster_timings->X, pDisplay->raster_timings->Y);
+	pDisplay->lcd_func.put_rectangle(pDisplay, 0, 0, pDisplay->raster_timings->X, pDisplay->raster_timings->Y, true, ClrBlack);
+	pDisplay->lcd_func.box_cache_clean(pDisplay, 0, 0, pDisplay->raster_timings->X, pDisplay->raster_timings->Y);
 	//CacheDataCleanBuff((unsigned int)&pDisplay->DisplayData + 32, pDisplay->Width * pDisplay->Height * 4);
 	//delay(500);
 
 	TouchPaintPoint(pDisplay, (double)pDisplay->raster_timings->X - (((double)pDisplay->raster_timings->X * (double)12.5) / (double)100), (double)pDisplay->raster_timings->Y - (((double)pDisplay->raster_timings->Y * (double)12.5) / (double)100), ClrRed);
-	box_cache_clean(pDisplay, 0, 0, pDisplay->raster_timings->X, pDisplay->raster_timings->Y);
+	pDisplay->lcd_func.box_cache_clean(pDisplay, 0, 0, pDisplay->raster_timings->X, pDisplay->raster_timings->Y);
 	//CacheDataCleanBuff((unsigned int)&pDisplay->DisplayData + 32, pDisplay->Width * pDisplay->Height * 4);
 	Cnt = 0;
 	Cnt1 = 0;
@@ -406,13 +406,13 @@ void TouchCalibrate(LcdTouch_t* structure, tDisplay *pDisplay)
 	//TouchY = structure->TouchResponse.y1;
 	LcdTouch_R_Calibration_Value += (double)TouchX;
 	LcdTouch_D_Calibration_Value = (double)TouchY;
-	put_rectangle(pDisplay, 0, 0, pDisplay->raster_timings->X, pDisplay->raster_timings->Y, true, ClrBlack);
-	box_cache_clean(pDisplay, 0, 0, pDisplay->raster_timings->X, pDisplay->raster_timings->Y);
+	pDisplay->lcd_func.put_rectangle(pDisplay, 0, 0, pDisplay->raster_timings->X, pDisplay->raster_timings->Y, true, ClrBlack);
+	pDisplay->lcd_func.box_cache_clean(pDisplay, 0, 0, pDisplay->raster_timings->X, pDisplay->raster_timings->Y);
 	//CacheDataCleanBuff((unsigned int)&pDisplay->DisplayData + 32, pDisplay->Width * pDisplay->Height * 4);
 	//delay(500);
 
 	TouchPaintPoint(pDisplay,  (((double)pDisplay->raster_timings->X * (double)12.5) / (double)100), (double)pDisplay->raster_timings->Y - (((double)pDisplay->raster_timings->Y * (double)12.5) / (double)100), ClrRed);
-	box_cache_clean(pDisplay, 0, 0, pDisplay->raster_timings->X, pDisplay->raster_timings->Y);
+	pDisplay->lcd_func.box_cache_clean(pDisplay, 0, 0, pDisplay->raster_timings->X, pDisplay->raster_timings->Y);
 	//CacheDataCleanBuff((unsigned int)&pDisplay->DisplayData + 32, pDisplay->Width * pDisplay->Height * 4);
 	Cnt = 0;
 	Cnt1 = 0;
@@ -446,8 +446,8 @@ void TouchCalibrate(LcdTouch_t* structure, tDisplay *pDisplay)
 	//TouchY = structure->TouchResponse.y1;
 	LcdTouch_L_Calibration_Value += (double)TouchX;
 	LcdTouch_D_Calibration_Value += (double)TouchY;
-	put_rectangle(pDisplay, 0, 0, pDisplay->raster_timings->X, pDisplay->raster_timings->Y, true, ClrBlack);
-	box_cache_clean(pDisplay, 0, 0, pDisplay->raster_timings->X, pDisplay->raster_timings->Y);
+	pDisplay->lcd_func.put_rectangle(pDisplay, 0, 0, pDisplay->raster_timings->X, pDisplay->raster_timings->Y, true, ClrBlack);
+	pDisplay->lcd_func.box_cache_clean(pDisplay, 0, 0, pDisplay->raster_timings->X, pDisplay->raster_timings->Y);
 	//CacheDataCleanBuff((unsigned int)&pDisplay->DisplayData + 32, pDisplay->Width * pDisplay->Height * 4);
 
 	LcdTouch_L_Calibration_Value /= 2;

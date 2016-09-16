@@ -299,9 +299,9 @@ signed int _gpio_in(new_gpio *gpio_struct)
 	else
 	{
 		if(gpio_struct->inverse)
-			return (~(HAL_GPIO_ReadPin(BaseAddr, 1 << gpio_struct->Pin) >> gpio_struct->Pin) &0x01);
+			return ~(HAL_GPIO_ReadPin(BaseAddr, 1 << gpio_struct->Pin));
 		else
-			return (HAL_GPIO_ReadPin(BaseAddr, 1 << gpio_struct->Pin) >> gpio_struct->Pin) &0x01;
+			return HAL_GPIO_ReadPin(BaseAddr, 1 << gpio_struct->Pin);
 	}
 }
 /*#####################################################*/

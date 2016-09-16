@@ -87,7 +87,7 @@
 /* #define HAL_SMARTCARD_MODULE_ENABLED  */
 /* #define HAL_WWDG_MODULE_ENABLED     */
 #define HAL_CORTEX_MODULE_ENABLED   
-/*#define HAL_PCD_MODULE_ENABLED*/
+#define HAL_PCD_MODULE_ENABLED
 #define HAL_HCD_MODULE_ENABLED
 
 
@@ -111,7 +111,7 @@
   *        (when HSI is used as system clock source, directly or through the PLL). 
   */
 #if !defined  (HSI_VALUE)
-  #define HSI_VALUE    ((uint32_t)ExtQ_FreqMhz * 1000000) /*!< Value of the Internal oscillator in Hz*/
+  #define HSI_VALUE    ((uint32_t)16 * 1000000) /*!< Value of the Internal oscillator in Hz*/
 #endif /* HSI_VALUE */
 
 /**

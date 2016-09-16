@@ -79,7 +79,7 @@ static void paint_progressbar(tProgressBar* settings, void *pDisplay, signed int
 	LcdStruct->lcd_func.put_rectangle(pDisplay, x_start + 2, y_start + 2, x_len - 4, y_len - 4, true, color);
 	signed int Position = to_percentage(settings->MinimValue, settings->MaximValue, settings->Size.X - 8, settings->Value);
 	LcdStruct->lcd_func.put_rectangle(pDisplay, x_start + 4, y_start + 4, Position, y_len - 8, true, controlls_change_color(color, -2));
-	if(settings->Internals.Caption.Text)
+	if(settings->Caption.Text->text || settings->Caption.Text->len)
 	{
 		LcdStruct->sClipRegion.sXMin = x_start + 4;
 		LcdStruct->sClipRegion.sYMin = y_start + 4;
@@ -90,7 +90,7 @@ static void paint_progressbar(tProgressBar* settings, void *pDisplay, signed int
 		signed int y_str_location;
 		if(settings->Internals.Caption.WordWrap)
 		{
-			StringProperties_t str_properties = string_properties_get(pDisplay, settings->Internals.Caption.Font, settings->Internals.Caption.Text, settings->Internals.Caption.WordWrap, -1);
+			StringProperties_t str_properties = string_properties_get(pDisplay, settings->Internals.Caption.Font, settings->Internals.Caption.Text->text, settings->Internals.Caption.WordWrap, -1);
 			x_str_location = x_start + ((x_len>>1)-(str_properties.StringRowsMaxLength_Pixels>>1));
 			y_str_location = y_start + ((y_len>>1)-(str_properties.StringColsHeight_Pixels>>1));
 		}else
@@ -100,9 +100,10 @@ static void paint_progressbar(tProgressBar* settings, void *pDisplay, signed int
 			y_str_location = y_start + ((settings->Internals.Size.Y>>1)-(CharHeight>>1));
 		}
 		print_string_properties properties;
+		memset(&properties, 0, sizeof(print_string_properties));
 		properties.pDisplay = pDisplay;
 		properties.pFont = settings->Caption.Font;
-		properties.pcString = settings->Caption.Text;
+		properties.pcString = String.Clone(properties.pcString, settings->Caption.Text);
 		properties.lLength = -1;
 		//properties.foreground_color = settings->Color.Enabled.Ink.Push;
 		//properties.background_color = settings->Color.Enabled.Buton.Push;
@@ -122,6 +123,7 @@ static void paint_progressbar(tProgressBar* settings, void *pDisplay, signed int
 			properties.background_color = settings->Color.Disabled.Buton;
 		}
 		put_string(&properties);
+		str_free(properties.pcString);
 	}
 
 	LcdStruct->sClipRegion.sXMin = x_start;
@@ -225,14 +227,17 @@ void progressbar(tProgressBar *settings, tControlCommandData* control_comand)
 						settings->Size.Y != settings->Internals.Size.Y ||
 							settings->Internals.Caption.Font != settings->Caption.Font ||
 								settings->Internals.Caption.TextAlign != settings->Caption.TextAlign ||
-									settings->Internals.Caption.Text != settings->Caption.Text ||
+									settings->Caption.Text->modifyed == true ||
 										settings->Internals.Caption.WordWrap != settings->Caption.WordWrap ||
 											settings->Internals.OldMinimValue != settings->MinimValue ||
 												settings->Internals.OldMaximValue != settings->MaximValue ||
 													settings->Internals.OldValue != settings->Value ||
 														settings->Internals.OldStateEnabled != settings->Enabled ||
 															ParentWindow->Internals.OldStateEnabled != settings->Internals.ParentWindowStateEnabled)
-																settings->Internals.NeedEntireRefresh = true;
+		{
+			settings->Internals.NeedEntireRefresh = true;
+			settings->Caption.Text->modifyed = false;
+		}
 	}
 	else
 	{
@@ -242,13 +247,16 @@ void progressbar(tProgressBar *settings, tControlCommandData* control_comand)
 						settings->Size.Y != settings->Internals.Size.Y ||
 							settings->Internals.Caption.Font != settings->Caption.Font ||
 								settings->Internals.Caption.TextAlign != settings->Caption.TextAlign ||
-									settings->Internals.Caption.Text != settings->Caption.Text ||
+									settings->Caption.Text->modifyed == true ||
 										settings->Internals.Caption.WordWrap != settings->Caption.WordWrap ||
 											settings->Internals.OldMinimValue != settings->MinimValue ||
 												settings->Internals.OldMaximValue != settings->MaximValue ||
 													settings->Internals.OldValue != settings->Value ||
 														settings->Internals.OldStateEnabled != settings->Enabled)
-															settings->Internals.NeedEntireRefresh = true;
+		{
+			settings->Internals.NeedEntireRefresh = true;
+			settings->Caption.Text->modifyed = false;
+		}
 	}
 
 	int X_StartBox = settings->Internals.Position.X;
@@ -310,8 +318,8 @@ void progressbar(tProgressBar *settings, tControlCommandData* control_comand)
 		Y_StartBox = settings->Internals.Position.Y;
 		X_LenBox = settings->Internals.Size.X;
 		Y_LenBox = settings->Internals.Size.Y;
-		settings->Internals.Caption.Text = gfx_change_str(settings->Internals.Caption.Text, settings->Caption.Text);
-		settings->Caption.Text = settings->Internals.Caption.Text;
+		//settings->Internals.Caption.Text = gfx_change_str(settings->Internals.Caption.Text, settings->Caption.Text);
+		//settings->Caption.Text = settings->Internals.Caption.Text;
 
 		tRectangle back_up_clip = LcdStruct->sClipRegion;
 		LcdStruct->sClipRegion.sXMin = X_StartBox;
@@ -404,7 +412,7 @@ tProgressBar *new_progressbar(void *ParentWindow)
 	settings->Caption.TextAlign = Align_Left;
 	settings->Caption.WordWrap = true;
 	settings->Caption.Font = controls_color.DefaultFont;
-	settings->Caption.Text = "Progressbar";
+	settings->Caption.Text = str_set(settings->Caption.Text, "Progressbar");
 	//settings->Caption.Text = malloc(sizeof("Textbox") + 1);
 	//strcpy(settings->Caption.Text, "Textbox");
 
@@ -443,8 +451,10 @@ bool free_progressbar(tProgressBar* settings)
 
 	settings->Visible = false;
 	progressbar(settings, &comand);
-	if(settings->Internals.Caption.Text) free(settings->Internals.Caption.Text);
-	if(settings->Caption.Text) free(settings->Caption.Text);
+	if(settings->Internals.Caption.Text->text)
+		free(settings->Internals.Caption.Text->text);
+	if(settings->Caption.Text->text)
+		free(settings->Caption.Text->text);
 	if(settings) free(settings);
 	return true;
 }

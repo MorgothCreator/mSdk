@@ -40,6 +40,7 @@ void usb_mouse_host_idle(unsigned int instance, tControlCommandData *control_com
 /*-----------------------------------------------------------*/
 void usb_msc_dev_init(unsigned int instance, void *slave_controls);
 void usb_msc_dev_media_change_state(unsigned int instance, bool media_is_present);
+bool usb_msc_dev_media_connected(unsigned int instance);
 /*-----------------------------------------------------------*/
 void usb_com_dev_init(unsigned int instance);
 unsigned int usb_com_dev_receive(unsigned char* buff);

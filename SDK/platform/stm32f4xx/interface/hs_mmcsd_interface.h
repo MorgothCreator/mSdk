@@ -65,6 +65,7 @@
 #include "driver/stm32f4xx_hal_gpio.h"
 #include "api/gpio_def.h"
 #include "api/gpio_api.h"
+#include "api/mmcsd_api.h"
 
 #ifdef __cplusplus
  extern "C" {
@@ -88,13 +89,6 @@
 #define SDIO_FIFO_ADDRESS                ((unsigned long)0x40012C80)
 //extern HAL_SD_CardInfoTypedef SDCardInfo;
 /*#####################################################*/
-typedef enum
-{
-	IsNoCard = 0,
-	IsSd,
-	IsSdhc,
-}mmcsd_type_e;
-
 /**
   * @brief SD Card information structure
   */

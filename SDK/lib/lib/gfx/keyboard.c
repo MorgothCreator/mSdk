@@ -352,9 +352,12 @@ void v_keyboard(tVKbd_Qwerty *settings, tControlCommandData* control_comand)
 		unsigned char CntInitKeys = 0;
 		for(; CntInitKeys < sizeof(settings->Internals.Keys)/sizeof(settings->Internals.Keys[0]); CntInitKeys++)
 		{
-			if(settings->Internals.keboard_type == Kbd_Qwerty_LittleLetters) settings->Internals.Keys[CntInitKeys]->Caption.Text = (char *)kbd_qwerty_keys_little[CntInitKeys];
-			else if(settings->Internals.keboard_type == Kbd_Qwerty_BigLetters) settings->Internals.Keys[CntInitKeys]->Caption.Text = (char *)kbd_qwerty_keys_big[CntInitKeys];
-			else if(settings->Internals.keboard_type == Kbd_Qwerty_Numeric) settings->Internals.Keys[CntInitKeys]->Caption.Text = (char *)kbd_qwerty_keys_numeric[CntInitKeys];
+			if(settings->Internals.keboard_type == Kbd_Qwerty_LittleLetters)
+				settings->Internals.Keys[CntInitKeys]->Caption.Text->text = (char *)kbd_qwerty_keys_little[CntInitKeys];
+			else if(settings->Internals.keboard_type == Kbd_Qwerty_BigLetters)
+				settings->Internals.Keys[CntInitKeys]->Caption.Text->text = (char *)kbd_qwerty_keys_big[CntInitKeys];
+			else if(settings->Internals.keboard_type == Kbd_Qwerty_Numeric)
+				settings->Internals.Keys[CntInitKeys]->Caption.Text->text = (char *)kbd_qwerty_keys_numeric[CntInitKeys];
 			settings->Internals.Keys[CntInitKeys]->Internals.NeedEntireRefresh = true;
 		}
 		//CursorState back = control_comand->Cursor;
@@ -417,8 +420,9 @@ tVKbd_Qwerty *new_v_keyboard(void *ParentWindow)
 	{
 		settings->Internals.Keys[CntInitKeys] = new_button(settings->Internals.ParentWindow);
 		settings->Internals.Keys[CntInitKeys]->Caption.WordWrap = false;
-		if(settings->Internals.Keys[CntInitKeys]->Caption.Text) free(settings->Internals.Keys[CntInitKeys]->Caption.Text);
-		settings->Internals.Keys[CntInitKeys]->Caption.Text = (char *)kbd_qwerty_keys_little[CntInitKeys];
+		if(settings->Internals.Keys[CntInitKeys]->Caption.Text->text)
+			free(settings->Internals.Keys[CntInitKeys]->Caption.Text->text);
+		settings->Internals.Keys[CntInitKeys]->Caption.Text->text = (char *)kbd_qwerty_keys_little[CntInitKeys];
 	}
 	return settings;
 }

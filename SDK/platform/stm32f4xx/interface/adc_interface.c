@@ -107,7 +107,7 @@ bool _adc_start_conversion(Adc_t *Adc_s)
 	unsigned int ChCntEnChannels = 0;
 	for(; ChCnt < 18; ChCnt++)
 	{
-		if(Adc_s->EnCh[ChCnt])
+		if(Adc_s->EnCh[ChCnt] - 1)
 			ChCntEnChannels++;
 	}
 	Adc_s->ChannelCount = 0;
@@ -217,7 +217,7 @@ bool _adc_init(Adc_t *Adc_s)
 	/* Enable GPIO clock */
 	for(; ChCnt < 18; ChCnt++) {
 		if(Adc_s->EnCh[ChCnt]) {
-			switch(Adc_s->EnCh[ChCnt]) {
+			switch(Adc_s->EnCh[ChCnt] - 1) {
 			case 0:
 			case 1:
 			case 2:
@@ -407,7 +407,7 @@ bool _adc_init(Adc_t *Adc_s)
 				break;
 			}
 			ADC_ChannelConfTypeDef sConfig;
-			sConfig.Channel = Adc_s->EnCh[ChCnt];
+			sConfig.Channel = Adc_s->EnCh[ChCnt] - 1;
 			sConfig.Rank = RankCnt;
 			sConfig.SamplingTime = Adc_s->SampleTime[ChCnt];
 
@@ -420,7 +420,7 @@ bool _adc_init(Adc_t *Adc_s)
 	HAL_ADC_Init(&AdcHandle[Adc_s->UnitNr]);
 
 
-	DMA_Stream_TypeDef *DMA_Stream;
+	/*DMA_Stream_TypeDef *DMA_Stream;
 	//int DMA_Type;
 	switch(Adc_s->DmaUnitNr)
 	{
@@ -504,7 +504,7 @@ bool _adc_init(Adc_t *Adc_s)
 		break;
 	default:
 		return false;
-	}
+	}*/
 	/* DMA1 channel1 configuration ----------------------------------------------*/
 	/*DMA_InitStructure[Adc_s->UnitNr].Instance = DMA_Stream;
 	DMA_InitStructure[Adc_s->UnitNr].Init.Channel = (Adc_s->DmaChannel << 25) & 0x0E000000;

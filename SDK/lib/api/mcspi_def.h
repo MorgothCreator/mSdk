@@ -41,7 +41,7 @@ typedef struct
 	Gpio_t *Gpio_Sck;
 	Gpio_t *Gpio_Cs[4];
 	volatile bool interrupted;
-	volatile unsigned char Channel;
+	//volatile unsigned char Channel;
 	volatile unsigned int BaseAddr;
 	volatile unsigned long BaudRate;
 	volatile unsigned int BuffSize;

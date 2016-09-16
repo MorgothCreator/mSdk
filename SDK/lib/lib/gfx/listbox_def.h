@@ -10,6 +10,7 @@
 
 #include "controls_definition.h"
 #include "scrollbar_def.h"
+#include "lib/string_lib.h"
 
 //#######################################################################################
 typedef struct
@@ -22,7 +23,7 @@ typedef struct
 	struct
 	{
 		Align TextAlign;
-		char *Text;
+		String_t *Text;
 		bool WordWrap;
 		tFont* Font;
 	}Caption;
@@ -43,6 +44,7 @@ typedef struct
 		signed int Y;
 		signed int ItemSizeY;
 		signed int ScrollSize;
+		signed int MinScrollBtnSize;
 	}Size;
 	controls_caption_t Caption;
 	controls_color_struct_t Color;
@@ -92,6 +94,7 @@ typedef struct
 			signed int Y;
 			signed int ItemSizeY;
 			signed int ScrollSize;
+			signed int MinScrollBtnSize;
 		}Size;
 		controls_caption_t Caption;
 		bool OldStateVisible;

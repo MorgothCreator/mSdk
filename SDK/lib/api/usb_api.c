@@ -71,6 +71,12 @@ void usb_msc_dev_media_change_state(unsigned int instance, bool media_is_present
 {
 	_usb_msc_dev_media_change_state(instance, media_is_present);
 }
+
+bool usb_msc_dev_media_connected(unsigned int instance)
+{
+	return _usb_msc_dev_media_connected(instance);
+}
+
 /*-----------------------------------------------------------*/
 void usb_com_dev_init(unsigned int instance)
 {

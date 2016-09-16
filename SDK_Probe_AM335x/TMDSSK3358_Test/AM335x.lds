@@ -1,38 +1,48 @@
-/*
-* Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
-*/
-/*
-*  Redistribution and use in source and binary forms, with or without
-*  modification, are permitted provided that the following conditions
-*  are met:
-*
-*    Redistributions of source code must retain the above copyright
-*    notice, this list of conditions and the following disclaimer.
-*
-*    Redistributions in binary form must reproduce the above copyright
-*    notice, this list of conditions and the following disclaimer in the
-*    documentation and/or other materials provided with the
-*    distribution.
-*
-*    Neither the name of Texas Instruments Incorporated nor the names of
-*    its contributors may be used to endorse or promote products derived
-*    from this software without specific prior written permission.
-*
-*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-*  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-*  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-*  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-*  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-*  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-*  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-*  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-*  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-*  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-*  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*
-*/
+/****************************************************************************/
+/*  AM335x.lds                                                              */
+/*  Copyright (c) 2014  Texas Instruments Incorporated                      */
+/*  Author: Rafael de Souza                                                 */
+/*                                                                          */
+/*    Description: This file is a sample linker command file that can be    */
+/*                 used for linking programs built with the GCC compiler    */
+/*                 and running the resulting .out file on an AM335x device. */
+/*                 Use it as a guideline.  You will want to                 */
+/*                 change the memory layout to match your specific          */
+/*                 target system.  You may want to change the allocation    */
+/*                 scheme according to the size of your program.            */
+/*                                                                          */
+/****************************************************************************/
 
-/* ld script for StarterWare AM335x */
+
+/* Linker script to place sections and symbol values. Should be used together
+ * with other linker script that defines memory region DDR0.
+ * It references following symbols, which must be defined in code:
+ *   Entry : Entry of reset handler
+ * 
+ * It defines following symbols, which code can use without definition:
+ *   __exidx_start
+ *   __exidx_end
+ *   __etext
+ *   __data_start__
+ *   __preinit_array_start
+ *   __preinit_array_end
+ *   __init_array_start
+ *   __init_array_end
+ *   __fini_array_start
+ *   __fini_array_end
+ *   __data_end__
+ *   __bss_start__
+ *   __bss_end__
+ *   __end__
+ *   end
+ *   __HeapLimit
+ *   __HeapBase        - To be compatible with Linaro's semihosting support 
+ *   __StackLimit
+ *   __StackTop
+ *   __StackBase    - To be compatible with Linaro's semihosting support 
+ *   __stack
+ */
+ENTRY(Entry)
 
 /*
 ** The stack is kept at end of the image, and its size is 128 MB.
@@ -42,7 +52,8 @@
 
 MEMORY
 {
-    DDR0 :   o = 0x80000000,  l = 0x20000000  /* 512MB external DDR Bank 0 */
+    OCMC :   o = 0x40300000,  l = 0xFFFF      /* 64k L3 OCMC SRAM */
+    DDR0 :   o = 0x80000000,  l = 0x10000000  /* 256MB external DDR Bank 0 */
 }
 
 OUTPUT_FORMAT("elf32-littlearm", "elf32-littlearm", "elf32-littlearm")
@@ -51,11 +62,12 @@ OUTPUT_ARCH(arm)
 SECTIONS
 {
 
-        .startcode :
+        .rsthand :
         {
-            . = ALIGN(4);
-            *init.o      (.text)
+			. = ALIGN(4);
+        	*init.o      (.text)
         } >DDR0
+
 
         .text :
         {
@@ -70,13 +82,27 @@ SECTIONS
             *(.data*)
         } >DDR0
 
+        /*iram_start = (ADDR (.data) + SIZEOF (.data));
+        .reloc_iram :
+        AT (iram_start)
+        {
+            . = ALIGN(4);
+            relocstart = . ;
+                *("IRAM_CODE")
+                *("IRAM_DATA")
+            relocend = . ;
+            . = ALIGN(4);
+        } >OCMC*/
+
         .bss :
         {
             . = ALIGN(4);
             _bss_start = .;
+            __bss_start__ = .;
             *(.bss*)
             *(COMMON)
             _bss_end = .;
+            __bss_end__ = .;
         } >DDR0
 
         .heap :
@@ -86,7 +112,7 @@ SECTIONS
             end = __end__;
             __HeapBase = __end__;
             *(.heap*)
-            . = . + 0x100000;
+            . = . + HEAPSIZE;
             __HeapLimit = .;
         } >DDR0
 
@@ -97,7 +123,8 @@ SECTIONS
             *(.stack*)
             . = . + 0x7FFFFF8;
             __StackTop = .;
-        } >DDR0
         _stack = __StackTop;
+        __stack = __StackTop;
+        } >DDR0
 
 }

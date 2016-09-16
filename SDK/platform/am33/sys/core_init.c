@@ -20,6 +20,7 @@
 #include "driver/cpu.h"
 //#include "startup.c"
 
+unsigned long FCPU = 1000000000;
 
 inline void VfpEnable(void)
 {

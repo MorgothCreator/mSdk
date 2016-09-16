@@ -60,7 +60,7 @@ static bool paint_listbox_item(tListBox *_settings, listbox_item* settings, void
 			else
 				gui_put_item(pDisplay, x_start, y_start, settings->Size.X, settings->Size.Y, controls_color.Control_Color_Enabled_Buton_Pull, controls_color.Control_Color_Enabled_Border_Pull, Cursor_Up,PAINT_STYLE_ROUNDED_CORNERS , true);
 		}
-		if(settings->Caption.Text)
+		if(settings->Caption.Text->text || settings->Caption.Text->len)
 		{
 			LcdStruct->sClipRegion.sXMin = x_start + 4;
 			LcdStruct->sClipRegion.sYMin = y_start + 4;
@@ -72,15 +72,16 @@ static bool paint_listbox_item(tListBox *_settings, listbox_item* settings, void
 			signed int y_str_location = y_start + 4;
 			if(settings->Caption.TextAlign == Align_Center)
 			{
-				StringProperties_t str_properties = string_properties_get(pDisplay, settings->Caption.Font, settings->Caption.Text, settings->Caption.WordWrap, -1);
+				StringProperties_t str_properties = string_properties_get(pDisplay, settings->Caption.Font, settings->Caption.Text->text, settings->Caption.WordWrap, -1);
 				x_str_location = x_start + ((settings->Size.X>>1)-(str_properties.StringRowsMaxLength_Pixels>>1));
 				y_str_location = y_start + ((settings->Size.Y>>1)-(str_properties.StringColsHeight_Pixels>>1));
 			}
 
 			print_string_properties properties;
+			memset(&properties, 0, sizeof(print_string_properties));
 			properties.pDisplay = pDisplay;
 			properties.pFont = settings->Caption.Font;
-			properties.pcString = settings->Caption.Text;
+			properties.pcString = String.Clone(properties.pcString, settings->Caption.Text);
 			properties.lLength = -1;
 			//properties.foreground_color = settings->Color.Enabled.Ink.Push;
 			//properties.background_color = settings->Color.Enabled.Buton.Push;
@@ -100,6 +101,7 @@ static bool paint_listbox_item(tListBox *_settings, listbox_item* settings, void
 				properties.background_color = settings->Color.Enabled.Buton.Pull;
 			}
 			put_string(&properties);
+			str_free(properties.pcString);
 		}
 		LcdStruct->sClipRegion.sXMin = x_start;
 		LcdStruct->sClipRegion.sYMin = y_start;
@@ -196,12 +198,16 @@ void listbox(tListBox *settings, tControlCommandData* control_comand)
 							settings->Internals.Size.ItemSizeY != settings->Size.ItemSizeY ||
 								settings->Internals.Size.ScrollSize != settings->Size.ScrollSize ||
 									settings->Internals.Caption.Font != settings->Caption.Font ||
-										settings->Internals.Caption.Text != settings->Caption.Text ||
+									settings->Caption.Text->modifyed == true ||
 											settings->Internals.Caption.TextAlign != settings->Caption.TextAlign ||
 												settings->Internals.Caption.WordWrap != settings->Caption.WordWrap ||
 													settings->Internals.OldStateEnabled != settings->Enabled ||
-														ParentWindow->Internals.OldStateEnabled != settings->Internals.ParentWindowStateEnabled)
-															settings->Internals.NeedEntireRefresh = true;
+														settings->Internals.Size.MinScrollBtnSize != settings->Size.MinScrollBtnSize ||
+															ParentWindow->Internals.OldStateEnabled != settings->Internals.ParentWindowStateEnabled)
+		{
+			settings->Internals.NeedEntireRefresh = true;
+			settings->Caption.Text->modifyed = false;
+		}
 	}
 	else
 	{
@@ -212,11 +218,15 @@ void listbox(tListBox *settings, tControlCommandData* control_comand)
 							settings->Internals.Size.ItemSizeY != settings->Size.ItemSizeY ||
 								settings->Internals.Size.ScrollSize != settings->Size.ScrollSize ||
 									settings->Internals.Caption.Font != settings->Caption.Font ||
-										settings->Internals.Caption.Text != settings->Caption.Text ||
+									settings->Caption.Text->modifyed == true ||
 											settings->Internals.Caption.TextAlign != settings->Caption.TextAlign ||
 												settings->Internals.Caption.WordWrap != settings->Caption.WordWrap ||
-													settings->Internals.OldStateEnabled != settings->Enabled)
-														settings->Internals.NeedEntireRefresh = true;
+													settings->Internals.Size.MinScrollBtnSize != settings->Size.MinScrollBtnSize ||
+														settings->Internals.OldStateEnabled != settings->Enabled)
+		{
+			settings->Internals.NeedEntireRefresh = true;
+			settings->Caption.Text->modifyed = false;
+		}
 	}
 	//if(settings->Internals.Caption.Text != NULL && settings->Caption.Text != NULL && strcmp(settings->Internals.Caption.Text, settings->Caption.Text) == NULL)
 		//settings->Internals.NeedEntireRefresh = true;
@@ -271,7 +281,7 @@ void listbox(tListBox *settings, tControlCommandData* control_comand)
 		settings->Internals.Size.ItemSizeY = settings->Size.ItemSizeY;
 		settings->Internals.Size.ScrollSize = settings->Size.ScrollSize;
 		settings->Internals.Caption.Font = settings->Caption.Font;
-		settings->Internals.Caption.Text = settings->Caption.Text;
+		//settings->Internals.Caption.Text = settings->Caption.Text;
 		settings->Internals.Caption.TextAlign = settings->Caption.TextAlign;
 		settings->Internals.Caption.WordWrap = settings->Caption.WordWrap;
 
@@ -283,6 +293,8 @@ void listbox(tListBox *settings, tControlCommandData* control_comand)
 		settings->Internals.ScrollBar->Size.Y = settings->Internals.Size.Y - 4;
 		settings->Internals.ScrollBar->Maximum = settings->ItemsCount - ((settings->Size.Y - 4) / settings->Size.ItemSizeY);
 		settings->Internals.ScrollBar->Enabled = settings->Enabled;
+		settings->Internals.ScrollBar->Size.MinBtnSize = settings->Size.MinScrollBtnSize;
+		settings->Internals.Size.MinScrollBtnSize = settings->Size.MinScrollBtnSize;
 		if(settings->Size.X == 0 || settings->Size.Y == 0) return;
 
 		X_StartBox = settings->Internals.Position.X;
@@ -451,23 +463,18 @@ void* listbox_item_insert(void* _settings, char* text, unsigned int location)
 	if(!_settings) return NULL;
 	tListBox* settings = _settings;
 	listbox_item* item_settings = (listbox_item*)calloc(1, sizeof(listbox_item));
-	if(!item_settings) return false;
+	if(!item_settings)
+		return false;
 
 	memcpy((void*)&item_settings->Color, (void*)&settings->Color, sizeof(item_settings->Color));
 
 	memcpy((void*)&item_settings->Caption, (void*)&settings->Caption, sizeof(item_settings->Caption));
-
+	//item_settings->Caption.Text->initialized = false;
 	item_settings->Size.X = settings->AlwaisShowScrollbar? settings->Size.X - 4 : settings->Size.X - settings->Internals.Size.ScrollSize - 5;
 	item_settings->Size.Y = settings->Internals.Size.ItemSizeY;
 
-	item_settings->Caption.Text = malloc(strlen(text) + 1);
-	if(!item_settings->Caption.Text)
-	{
-		free(item_settings);
-		return false;
-	}
-	strcpy(item_settings->Caption.Text, text);
-	item_settings->Caption.Text = str_remove_new_line(item_settings->Caption.Text);
+	item_settings->Caption.Text = str_set(NULL, text);
+	str_remove_new_line(item_settings->Caption.Text);
 
 	//item_settings->Caption.Font = settings->Internals.Caption.Font;
 	//item_settings->Caption.TextAlign = settings->Internals.Caption.TextAlign;
@@ -479,7 +486,7 @@ void* listbox_item_insert(void* _settings, char* text, unsigned int location)
 	listbox_item **Tmp = (listbox_item **)realloc(settings->Items, sizeof(void*) * (settings->ItemsCount + 1));
 	if(!Tmp)
 	{
-		free(item_settings->Caption.Text);
+		//free(item_settings->Caption.Text.text);
 		free(item_settings);
 		return NULL;
 	}
@@ -505,9 +512,9 @@ bool listbox_item_remove(void* _settings, unsigned int location)
 {
 	tListBox* settings = _settings;
 	if(location >= settings->ItemsCount) return false;
-	char *Tmp = settings->Items[location]->Caption.Text;
-	if(Tmp) free(Tmp);
-	if(settings->Items[location]) free(settings->Items[location]);
+	settings->Items[location]->Caption.Text = str_free(settings->Items[location]->Caption.Text);
+	if(settings->Items[location])
+		free(settings->Items[location]);
 	if(settings->ItemsCount - 1 != 0)
 	{
 		unsigned int TmpCntItemsToMove = location +1;
@@ -538,8 +545,10 @@ bool listbox_item_remove_all(void* _settings)
 	unsigned int TmpCntItemsToMove = settings->ItemsCount;
 	for(; TmpCntItemsToMove > 0; TmpCntItemsToMove--)
 	{
-		if(settings->Items[TmpCntItemsToMove - 1]->Caption.Text) free(settings->Items[TmpCntItemsToMove - 1]->Caption.Text);
-		if(settings->Items[TmpCntItemsToMove - 1]) free(settings->Items[TmpCntItemsToMove - 1]);
+		if(settings->Items[TmpCntItemsToMove - 1]->Caption.Text->text)
+			free(settings->Items[TmpCntItemsToMove - 1]->Caption.Text->text);
+		if(settings->Items[TmpCntItemsToMove - 1])
+			free(settings->Items[TmpCntItemsToMove - 1]);
 	}
 	settings->SelectedItem = 0;
 	settings->ItemsCount = 0;
@@ -569,7 +578,8 @@ tListBox *new_listbox(void *ParentWindow)
 	settings->Caption.TextAlign = Align_Left;
 	settings->Caption.WordWrap = true;
 	settings->Caption.Font = controls_color.DefaultFont;
-	settings->Caption.Text = "Item..";
+
+	settings->Caption.Text = str_set(settings->Caption.Text, "Item..");
 	//settings->Caption.Text = malloc(sizeof("Textbox") + 1);
 	//strcpy(settings->Caption.Text, "Textbox");
 
@@ -623,13 +633,17 @@ bool free_listbox(void* _settings)
 	unsigned int TmpCntItemsToMove = 0;
 	for(; TmpCntItemsToMove > settings->ItemsCount; TmpCntItemsToMove++)
 	{
-		char *Tmp = settings->Items[TmpCntItemsToMove]->Caption.Text;
-		if(Tmp) free(Tmp);
-		if(settings->Items[TmpCntItemsToMove]) free(settings->Items[TmpCntItemsToMove]);
+		char *Tmp = settings->Items[TmpCntItemsToMove]->Caption.Text->text;
+		if(Tmp)
+			free(Tmp);
+		if(settings->Items[TmpCntItemsToMove])
+			free(settings->Items[TmpCntItemsToMove]);
 	}
 
-	if(settings->Internals.Caption.Text) free(settings->Internals.Caption.Text);
-	if(settings->Caption.Text) free(settings->Caption.Text);
+	if(settings->Internals.Caption.Text->text)
+		free(settings->Internals.Caption.Text->text);
+	if(settings->Caption.Text->text)
+		free(settings->Caption.Text->text);
 	if(settings) free(settings);
 	return true;
 }

@@ -13,12 +13,12 @@
 //#include <util/atomic.h>
 //#include "general/unions.h"
 #include "mi0283.h"
+#include "api/gpio_api.h"
 #include "board_init.h"
 #include "board_properties.h"
 //#include "driver/ebi.h"
 //#include "driver/dma.h"
 #include "api/lcd_def.h"
-#include "api/gpio_api.h"
 //#######################################################################################
 extern unsigned long FCPU;
 //#######################################################################################
@@ -209,6 +209,8 @@ void tft_reset(tDisplay* LcdStruct)
     write(LcdStruct, 0x07);
  	gpio_out(Struct->LCD_DISPLAY_CS, 1);
 
+ 	cnt = FCPU / 1000;
+ 	while(cnt--);
     wr_cmd(LcdStruct, 0xB6);                       // display function control
     write(LcdStruct, 0x0A);
     write(LcdStruct, 0x82);
@@ -225,7 +227,7 @@ void tft_reset(tDisplay* LcdStruct)
     wr_cmd(LcdStruct, 0x29);                     // display on
  	gpio_out(Struct->LCD_DISPLAY_CS, 1);
 
- 	cnt = FCPU / 1000;
+ 	cnt = FCPU / 5000;
  	while(cnt--);
    // wr_cmd(LcdStruct, 0xB8);                     // COLMOD_PIXEL_FORMAT_SET
     //write(LcdStruct, 0x07);                 // 16 bit pixel

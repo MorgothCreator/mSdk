@@ -42,8 +42,9 @@
 typedef struct F25xxx_Struct
 {
 	Mcspi_t* F25xxx_Spi_Struct;
-	Gpio_t *WP_Port;
-	Gpio_t *Hold_Port;
+	Gpio_t *wp;
+	Gpio_t *hold;
+	unsigned char spi_instance;
 	unsigned char F25xxx_Id[5];
 }sst25vf_t;
 //#####################################################
@@ -53,7 +54,7 @@ typedef struct F25xxx_Struct
 #endif
 #define free_sst25vf(address) free(address);
 //#####################################################
-bool sst25vf_init(sst25vf_t *Settings, unsigned char Wp_PortNr, unsigned char Wp_PinNr, unsigned char Hold_PortNr, unsigned char Hold_PinNr);
+bool sst25vf_init(sst25vf_t *Settings);
 unsigned char sst25vf_read_status(sst25vf_t *Settings, unsigned char *Data);
 unsigned char sst25vf_write_status(sst25vf_t *Settings, unsigned char Data);
 bool sst25vf_enable_block_protection(sst25vf_t *Settings);

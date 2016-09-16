@@ -73,14 +73,14 @@ static void paint_checkbox(tCheckBox* settings, void *pDisplay, signed int x_sta
 		//put_rectangle(pDisplay, x_start + 1, y_start + 1, x_len - 2, y_len - 2, false, controlls_change_color(color, -2));
 		//put_rectangle(pDisplay, x_start + 2, y_start + 2, x_len - 4, y_len - 4, true, color);
 	}
-	if(settings->Internals.Caption.Text)
+	if(settings->Caption.Text->text || settings->Caption.Text->len)
 	{
 		signed int x_str_location;
 		signed int y_str_location;
 
-		if(settings->Internals.Caption.WordWrap)
+		if(settings->Caption.WordWrap)
 		{
-			StringProperties_t str_properties = string_properties_get(pDisplay, settings->Internals.Caption.Font, settings->Internals.Caption.Text, settings->Internals.Caption.WordWrap, -1);
+			StringProperties_t str_properties = string_properties_get(pDisplay, settings->Caption.Font, settings->Caption.Text->text, settings->Caption.WordWrap, -1);
 			if(settings->Style == checkbox_style_normal) {
 				LcdStruct->sClipRegion.sXMin = x_start + y_len + 4;
 				LcdStruct->sClipRegion.sYMin = y_start + 4;
@@ -121,9 +121,10 @@ static void paint_checkbox(tCheckBox* settings, void *pDisplay, signed int x_sta
 			}
 		}
 		print_string_properties properties;
+		memset(&properties, 0, sizeof(print_string_properties));
 		properties.pDisplay = pDisplay;
 		properties.pFont = settings->Internals.Caption.Font;
-		properties.pcString = settings->Internals.Caption.Text;
+		properties.pcString = String.Clone(properties.pcString, settings->Caption.Text);
 		properties.lLength = -1;
 		//properties.foreground_color = settings->Color.Enabled.Ink.Push;
 		//properties.background_color = settings->Color.Enabled.Buton.Push;
@@ -153,6 +154,7 @@ static void paint_checkbox(tCheckBox* settings, void *pDisplay, signed int x_sta
 				properties.background_color = settings->Color.Disabled.Buton;
 		}
 		put_string(&properties);
+		str_free(properties.pcString);
 	}
 	LcdStruct->sClipRegion.sXMin = x_start;
 	LcdStruct->sClipRegion.sYMin = y_start;
@@ -230,12 +232,15 @@ void checkbox(tCheckBox *settings, tControlCommandData* control_comand)
 						settings->Size.Y != settings->Internals.Size.Y ||
 							settings->Internals.Caption.Font != settings->Caption.Font ||
 								settings->Internals.Caption.TextAlign != settings->Caption.TextAlign ||
-									settings->Internals.Caption.Text != settings->Caption.Text ||
+									settings->Caption.Text->modifyed == true ||
 										settings->Internals.Caption.WordWrap != settings->Caption.WordWrap ||
 											settings->Internals.OldStateEnabled != settings->Enabled ||
 												settings->Internals.OldStateVisible != settings->Visible ||
 													ParentWindow->Internals.OldStateEnabled != settings->Internals.ParentWindowStateEnabled)
-		settings->Internals.NeedEntireRefresh = true;
+		{
+			settings->Internals.NeedEntireRefresh = true;
+			settings->Caption.Text->modifyed = false;
+		}
 	}
 	else
 	{
@@ -245,11 +250,14 @@ void checkbox(tCheckBox *settings, tControlCommandData* control_comand)
 					settings->Size.Y != settings->Internals.Size.Y ||
 						settings->Internals.Caption.Font != settings->Caption.Font ||
 							settings->Internals.Caption.TextAlign != settings->Caption.TextAlign ||
-								settings->Internals.Caption.Text != settings->Caption.Text ||
+								settings->Caption.Text->modifyed == true ||
 									settings->Internals.Caption.WordWrap != settings->Caption.WordWrap ||
 										settings->Internals.OldStateEnabled != settings->Enabled ||
 											settings->Internals.OldStateVisible != settings->Visible)
-		settings->Internals.NeedEntireRefresh = true;
+		{
+			settings->Internals.NeedEntireRefresh = true;
+			settings->Caption.Text->modifyed = false;
+		}
 	}
 
 	int X_StartBox = settings->Internals.Position.X;
@@ -308,8 +316,8 @@ void checkbox(tCheckBox *settings, tControlCommandData* control_comand)
 		Y_StartBox = settings->Internals.Position.Y;
 		X_LenBox = settings->Internals.Size.X;
 		Y_LenBox = settings->Internals.Size.Y;
-		settings->Internals.Caption.Text = gfx_change_str(settings->Internals.Caption.Text, settings->Caption.Text);
-		settings->Caption.Text = settings->Internals.Caption.Text;
+		//settings->Internals.Caption.Text = gfx_change_str(settings->Internals.Caption.Text.text, settings->Caption.Text);
+		//settings->Caption.Text = settings->Internals.Caption.Text;
 
 		CursorState Cursor = control_comand->Cursor;
 		control_comand->Cursor = Cursor_Up;
@@ -437,7 +445,7 @@ tCheckBox *new_checkbox(void *ParentWindow)
 	settings->Caption.TextAlign = Align_Left;
 	settings->Caption.WordWrap = true;
 	settings->Caption.Font = controls_color.DefaultFont;
-	settings->Caption.Text = "CheckBox";
+	settings->Caption.Text = str_set(settings->Caption.Text, "CheckBox");
 	//settings->Caption.Text = malloc(sizeof("Textbox") + 1);
 	//strcpy(settings->Caption.Text, "Textbox");
 
@@ -473,8 +481,10 @@ bool free_checkbox(tCheckBox* settings)
 
 	settings->Visible = false;
 	checkbox(settings, &comand);
-	if(settings->Internals.Caption.Text) free(settings->Internals.Caption.Text);
-	if(settings->Caption.Text) free(settings->Caption.Text);
+	if(settings->Internals.Caption.Text->text)
+		free(settings->Internals.Caption.Text->text);
+	if(settings->Caption.Text->text)
+		free(settings->Caption.Text->text);
 	if(settings) free(settings);
 	return true;
 }

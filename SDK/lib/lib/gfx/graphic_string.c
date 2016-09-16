@@ -27,17 +27,19 @@
 #include "../../api/lcd_api.h"
 #include "../../api/timer_api.h"
 #include "controls_definition.h"
+#include "lib/string_lib.h"
 //#######################################################################################
-char *gfx_change_str(char *dest, char *src)
+char *gfx_change_str(String_t *dest, String_t *src)
 {
-	if(src && (dest != src || strcmp(dest, src)))
+	/*if(src && (dest != src || strcmp(dest, src)))
 	{
 		if(dest) free(dest);
 		char *dertination = (char*)malloc(strlen(src) + 1);
 		strcpy(dertination, src);
 		return dertination;
-	}
-	return dest;
+	}*/
+	memcpy(dest, src, sizeof(String_t));
+	return dest->text;
 }
 //#######################################################################################
 bool _put_roll_string(tDisplay *pDisplay, graphic_strings_t *StringsStruct)
@@ -54,7 +56,7 @@ bool _put_roll_string(tDisplay *pDisplay, graphic_strings_t *StringsStruct)
 	pDisplay->sClipRegion = StringsStruct->sClipRegion;
 	if(!StringsStruct->WordWrap && timer_tick(&StringsStruct->TimerScroll))
 	{
-		if(StringsStruct->X_Location + StringsStruct->string_width_get_function(pDisplay, StringsStruct->pFont, StringsStruct->Str, -1) < pDisplay->sClipRegion.sXMin)
+		if(StringsStruct->X_Location + StringsStruct->string_width_get_function(pDisplay, StringsStruct->pFont, StringsStruct->Str->text, -1) < pDisplay->sClipRegion.sXMin)
 		{
 			StringsStruct->X_Location =  StringsStruct->sClipRegion.sXMin;
 			Return = false;
@@ -62,11 +64,13 @@ bool _put_roll_string(tDisplay *pDisplay, graphic_strings_t *StringsStruct)
 		if(Return)
 		{
 			
-			put_rectangle(pDisplay, pDisplay->sClipRegion.sXMin, pDisplay->sClipRegion.sYMin, pDisplay->sClipRegion.sXMax, pDisplay->sClipRegion.sYMax, true, StringsStruct->Background_Color);
+			pDisplay->lcd_func.put_rectangle(pDisplay, pDisplay->sClipRegion.sXMin, pDisplay->sClipRegion.sYMin, pDisplay->sClipRegion.sXMax, pDisplay->sClipRegion.sYMax, true, StringsStruct->Background_Color);
 			print_string_properties properties;
+			memset(&properties, 0, sizeof(print_string_properties));
 			properties.pDisplay = pDisplay;
 			properties.pFont = StringsStruct->pFont;
-			properties.pcString = StringsStruct->Str;
+			properties.pcString = str_clone(properties.pcString, StringsStruct->Str);
+			//properties.pcString = StringsStruct->Str;
 			properties.lLength = -1;
 			properties.foreground_color = StringsStruct->Foreground_Color;
 			properties.background_color = StringsStruct->Background_Color;
@@ -77,8 +81,8 @@ bool _put_roll_string(tDisplay *pDisplay, graphic_strings_t *StringsStruct)
 			properties.lY = StringsStruct->Y_Location;
 			properties._SelStart = 0;
 			properties._SelLen = 0;
-			put_string(&properties);
-			box_cache_clean(pDisplay, pDisplay->sClipRegion.sXMin, pDisplay->sClipRegion.sYMin, pDisplay->sClipRegion.sXMax, pDisplay->sClipRegion.sYMax);
+			pDisplay->lcd_func.put_string(&properties);
+			pDisplay->lcd_func.box_cache_clean(pDisplay, pDisplay->sClipRegion.sXMin, pDisplay->sClipRegion.sYMin, pDisplay->sClipRegion.sXMax, pDisplay->sClipRegion.sYMax);
 			StringsStruct->X_Location--;
 		}
 	}

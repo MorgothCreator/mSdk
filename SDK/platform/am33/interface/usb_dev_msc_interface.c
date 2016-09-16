@@ -353,3 +353,8 @@ void _usb_msc_dev_init(unsigned int instance, void *slave_controls)
 #endif
 
 }
+
+bool _usb_msc_dev_media_connected(unsigned int instance)
+{
+	return true;
+}

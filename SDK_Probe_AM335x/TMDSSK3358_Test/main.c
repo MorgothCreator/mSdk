@@ -50,8 +50,6 @@ volatile unsigned char ScreenReRefreshCnt = 0;
 #endif
 
 
-//#include "interface/lwip/lwip_hardware_init.h"
-#include <app/lan/httpd.h>
 
 timer(timer_led);
 timer(TimerScanTouch);
@@ -297,9 +295,9 @@ int main(void)
     listbox_item_remove(ListBox1, 3);
 
 
-    string(TextBoxString, "Multiplatform SDK to create standalone applications\n\r1\n\r2\n\r3\n\r4\n\r5\n\r6\n\r7\n\r8\n\r9\n\r10\n\r11\n\r12\n\r13\n\r14\n\r15\n\r16\n\r17\n\r18");
-    TextBox1->text(TextBox1, TextBoxString);
-    TextBox1->text(TextBox1, TextBox1->to_uper(TextBox1));
+    //string(TextBoxString, "Multiplatform SDK to create standalone applications\n\r1\n\r2\n\r3\n\r4\n\r5\n\r6\n\r7\n\r8\n\r9\n\r10\n\r11\n\r12\n\r13\n\r14\n\r15\n\r16\n\r17\n\r18");
+    TextBox1->Text = String.Set(TextBox1->Text, "Multiplatform SDK to create standalone applications\n\r1\n\r2\n\r3\n\r4\n\r5\n\r6\n\r7\n\r8\n\r9\n\r10\n\r11\n\r12\n\r13\n\r14\n\r15\n\r16\n\r17\n\r18");
+    String.ToUperCase(TextBox1->Text);
 
 
     tControlCommandData control_comand;
@@ -314,8 +312,6 @@ int main(void)
 #if _USE_LEPTON_FLIR == 1
 	unsigned short flir_buff[((LEPTON_FLIR_LINE_SIZE / 2) - 2) * LEPTON_FLIR_LINES_NR];
 #endif
-    //lan_interface_init();
-	httpd_init(0, 0);
 /*******************************************************/
 	bool old_connected = false;
 #ifdef BridgeUsbDev0ToMmcSd0

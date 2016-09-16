@@ -43,7 +43,7 @@
 /*
 ** lwIP Compile Time Options for StarterWare.
 */
-#include "lwiplib.h"
+#include "interface/lwip/ports/cpsw/include/lwiplib.h"
 
 /*
 ** lwIP high-level API/Stack/IPV4/SNMP/Network Interface/PPP codes
@@ -116,7 +116,7 @@
 #include "locator.c"
 #endif
 
-#include "netif/cpswif.h"
+#include "include/netif/cpswif.h"
 #include "lwip/dhcp.h"
 #include "lwip/src/include/lwip/init.h"
 #include "sys/sysdelay.h"

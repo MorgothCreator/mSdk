@@ -11,7 +11,7 @@
 #include "main.h"
 
 
-void lan_init(unsigned char instance, unsigned long ip);
+extern void lan_init(unsigned char instance, unsigned long ip);
 
 #ifdef HEADER_INCLUDE_C_FILES
 #include "lwip_api.c"

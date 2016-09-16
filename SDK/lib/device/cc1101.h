@@ -519,7 +519,7 @@ typedef struct
 	sCC1101Gdo *gdo[3];  // Interface for GDOx
 	volatile bool sleep;        // Chip sleep flag
 	STimer_t timer;
-	unsigned char spi_channel;
+	unsigned char spi_instance;
 } sCC1101Phy;
 
 bool CC1101_read(sCC1101Phy* phy, unsigned char address, unsigned char *Buff, unsigned int DataLen);

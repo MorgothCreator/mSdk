@@ -7,10 +7,10 @@
 /**********************************************/
 #include "aintc_lcd.h"
 #include "api/lcd_def.h"
-#include "../include/hw/hw_types.h"
-#include "../include/raster.h"
-#include "../include/interrupt.h"
-#include "../include/hw/soc_AM335x.h"
+#include "include/hw/hw_types.h"
+#include "include/raster.h"
+#include "include/interrupt.h"
+#include "include/hw/soc_AM335x.h"
 /**********************************************/
 extern tDisplay* ScreenRander;
 /**

@@ -38,8 +38,7 @@ int _cat(int argc, char *argv[])
     	argv[0] = calloc(1, sizeof(CAT_STRUCT));
     	if(!argv[0]) return (int)&"ERROR\n\r";
         settings = (CAT_STRUCT *)argv[0];
-        if(!strcmp(argv[2], "-help"));
-        else
+        if(strcmp(argv[2], "-help"));
         {
 			char open_mode = FA_OPEN_EXISTING || FA_READ;
 			if(argv[3])
@@ -51,10 +50,10 @@ int _cat(int argc, char *argv[])
 				else if(!strcmp(argv[3], "w+") || !strcmp(argv[3], "W+"))  open_mode = FA_READ | FA_WRITE | FA_CREATE_ALWAYS;
 				else if(!strcmp(argv[3], "a+") || !strcmp(argv[3], "A+"))  open_mode = FA_READ | FA_WRITE | FA_CREATE_ALWAYS;
 			}
-			char *tmp = calloc(1, strlen(argv[1]) + 1);
-			strcpy(tmp, argv[1]);
-			tmp = path_append_parse(tmp, (char *)argv[2]);
-			fresult = f_open(&settings->g_sFilObject, tmp, open_mode);
+			string(tmp_arg1, argv[1]);
+			string(tmp_arg2, argv[2]);
+			path_append_parse(&tmp_arg1, &tmp_arg2);
+			fresult = f_open(&settings->g_sFilObject, tmp_arg1.text, open_mode);
 			settings->fresult = fresult;
 			/*
 			** Check for error and return if there is a problem.

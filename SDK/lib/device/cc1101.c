@@ -21,9 +21,9 @@ bool CC1101_read(sCC1101Phy* phy, unsigned char address, unsigned char *Buff, un
 	if(!phy || !phy->SpiStruct)
 		return false;
 	Mcspi_t* SpiStruct = phy->SpiStruct;
-	if(!SpiStruct->Gpio_Cs[phy->spi_channel])
+	if(!SpiStruct->Gpio_Cs[phy->spi_instance])
 		return false;
-	SpiStruct->Channel = phy->spi_channel;
+	SpiStruct->CsSelect = phy->spi_instance;
 	SpiStruct->DisableCsHandle = true;
 	mcspi_assert(SpiStruct);
 	timer_interval(&phy->timer, CC1101_MAX_TIMEOUT);
@@ -65,16 +65,16 @@ bool CC1101_write(sCC1101Phy* phy, unsigned char address, unsigned char *Buff, u
 	if(!phy || !phy->SpiStruct)
 		return false;
 	Mcspi_t* SpiStruct = phy->SpiStruct;
-	if(!SpiStruct->Gpio_Cs[phy->spi_channel])
+	if(!SpiStruct->Gpio_Cs[phy->spi_instance])
 		return false;
-	SpiStruct->Channel = phy->spi_channel;
+	SpiStruct->CsSelect = phy->spi_instance;
 	SpiStruct->DisableCsHandle = true;
 	mcspi_assert(SpiStruct);
 	timer_interval(&phy->timer, CC1101_MAX_TIMEOUT);
 	while(!timer_tick(&phy->timer) && gpio_in(SpiStruct->Gpio_Miso));
 	if(gpio_in(SpiStruct->Gpio_Miso))
 	{
-		gpio_out(SpiStruct->Gpio_Cs[phy->spi_channel], true);
+		gpio_out(SpiStruct->Gpio_Cs[phy->spi_instance], true);
 		SpiStruct->DisableCsHandle = false;
 		return false;
 	}

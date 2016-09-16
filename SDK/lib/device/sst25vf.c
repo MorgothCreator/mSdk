@@ -10,19 +10,14 @@
 #include "api/mcspi_api.h"
 #include "api/gpio_def.h"
 #include "api/gpio_api.h"
+#include "lib/fat_fs/inc/ff.h"
 
-bool sst25vf_init(sst25vf_t *Settings, unsigned char Wp_PortNr, unsigned char Wp_PinNr, unsigned char Hold_PortNr, unsigned char Hold_PinNr)
+bool sst25vf_init(sst25vf_t *Settings)
 {
-	Settings->WP_Port = gpio_assign(Wp_PortNr, Wp_PinNr, GPIO_OUT_PUSH_PULL, false);
-	Settings->Hold_Port = gpio_assign(Hold_PortNr, Hold_PinNr, GPIO_OUT_PUSH_PULL, false);
-	if(!Settings->WP_Port && !Settings->Hold_Port)
-	{
-		gpio_free(Settings->WP_Port);
-		gpio_free(Settings->Hold_Port);
-		return false;
-	}
-	gpio_out(Settings->WP_Port, 1);
-	gpio_out(Settings->Hold_Port, 1);
+	if(Settings->wp)
+		gpio_out(Settings->wp, 1);
+	if(Settings->hold)
+		gpio_out(Settings->hold, 1);
 	return true;
 }
 
@@ -237,5 +232,28 @@ bool sst25vf_read(sst25vf_t *Settings, unsigned long addr, unsigned int num_of_b
 		buff[TmpCnt] = buff[TmpCnt + 4];
 	return true;
 }
+
+/*void sst25vf_ioctl(unsigned int unit_nr, unsigned int  command,  unsigned int *buffer)
+{
+    switch(command)
+    {
+
+        case GET_SECTOR_COUNT:
+        {
+           *buffer = 1048576 / 512;
+            break;
+        }
+        case GET_SECTOR_SIZE:
+        {
+            *buffer = 512;
+            break;
+        }
+        default:
+        {
+            *buffer = 0;
+            break;
+        }
+    }
+}*/
 
 

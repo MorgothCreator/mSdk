@@ -40,8 +40,8 @@
  * ALL RIGHTS RESERVED
  */
 
-#include "locator.h"
-#include "lwiplib.h"
+#include "interface/lwip/ports/cpsw/include/locator.h"
+#include "interface/lwip/ports/cpsw/include/lwiplib.h"
 
 /******************************************************************************
 **                      INTERNAL MACRO DEFINITIONS

@@ -31,7 +31,7 @@
 #if _USE_BITMAP_LIBRARY == 1
 #include "bmp.h"
 #endif
-extern unsigned int palete_raster_len;
+//extern unsigned int palete_raster_len;
 //#######################################################################################
 static void paint_picturebox(tPictureBox* settings, void *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len, tControlCommandData* control_comand)
 {

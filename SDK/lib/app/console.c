@@ -66,7 +66,7 @@ int console(int argc, char *argv[])
 		argv[0] = calloc(1, sizeof(CONSOLE_STRUCT));
 		settings = (CONSOLE_STRUCT *)argv[0];
 		settings->path = malloc(2);
-		settings->rx_data = calloc(1, 1);
+		settings->rx_data = new_(new_string);
 		strcpy(settings->path, "/");
 		//argv[2] = malloc(sizeof(char *));
 	}
@@ -80,10 +80,11 @@ int console(int argc, char *argv[])
 	    	char _a_[2];
 	    	_a_[0] = rx_c;
 	    	_a_[1] = 0;
-	    	if(rx_c != '\n' && rx_c != '\r') settings->rx_data = str_append(settings->rx_data, _a_);
+	    	if(rx_c != '\n' && rx_c != '\r')
+	    		str_paste(settings->rx_data, _a_);
 	    	else
 	    	{
-	    		char *a = settings->rx_data;
+	    		char *a = settings->rx_data->text;
 	    		int a_len = 0;
 	    		while((a_len = strlen(a)) != 0)
 	    		{
@@ -179,7 +180,7 @@ int console(int argc, char *argv[])
 	    				}
 	    			} else a++;
 	    		}
-	    		settings->rx_data = str_clear(settings->rx_data);
+	    		str_clear(settings->rx_data);
 	    	}
 	    }
 		if(settings->app)

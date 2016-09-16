@@ -46,10 +46,10 @@ int _ls(int argc, char *argv[])
         	settings->g_sFileInfo.lfname = settings->lfn_tmp;
 			settings->g_sFileInfo.lfsize = 255;
 #endif
-			char *tmp = calloc(1, strlen(argv[1]) + 1);
-			strcpy(tmp, argv[1]);
-			tmp = path_append_parse(tmp, (char *)argv[2]);
-			fresult = f_opendir(&settings->g_sDirObject, tmp);
+			string(tmp_arg1, argv[1]);
+			string(tmp_arg2, argv[2]);
+			path_append_parse(&tmp_arg1, &tmp_arg2);
+			fresult = f_opendir(&settings->g_sDirObject, tmp_arg1.text);
 			settings->fresult = fresult;
 			/*
 			** Check for error and return if there is a problem.

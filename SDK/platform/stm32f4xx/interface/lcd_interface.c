@@ -18,7 +18,7 @@
 #include "driver/stm32f4xx_hal_gpio.h"
 #include "driver/stm32f4xx_hal_rcc.h"
 
-#include "device/ili9341.h"
+//#include "device/ili9341.h"
 
 #ifdef SSD2119
 /** @defgroup stm32f4_discovery_LCD_Private define

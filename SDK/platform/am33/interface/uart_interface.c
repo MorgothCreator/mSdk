@@ -12,10 +12,11 @@
 #include "api/uart_def.h"
 #include "edma3_interface.h"
 #include "api/edma_api.h"
-#include "../pinmux/pin_mux_uart.h"
-#include "../aintc/aintc_uart.h"
-#include "../clk/clk_uart.h"
-#include "../include/uart_irda_cir.h"
+#include "pinmux/pin_mux_uart.h"
+#include "aintc/aintc_uart.h"
+#include "clk/clk_uart.h"
+#include "include/uart_irda_cir.h"
+#include "include/edma.h"
 /*#####################################################*/
 void uart0tx_callback(unsigned int tccNum, unsigned int status)
 {

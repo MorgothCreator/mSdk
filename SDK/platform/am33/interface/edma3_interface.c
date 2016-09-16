@@ -11,6 +11,7 @@
 #include "mmcsdlib/hs_mmcsdlib.h"
 #include "mmcsdlib/mmcsd_proto.h"
 #include "api/edma_api.h"
+#include "clk/clk_edma.h"
 
 extern void (*cb_Fxn[EDMA3_NUM_TCC]) (unsigned int tcc, unsigned int status);
 

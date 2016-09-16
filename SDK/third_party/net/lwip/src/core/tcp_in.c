@@ -55,7 +55,7 @@
 #include "lwip/inet_chksum.h"
 #include "lwip/stats.h"
 #include "lwip/snmp.h"
-#include "perf.h"
+#include "interface/lwip/ports/cpsw/include/arch/perf.h"
 
 /* These variables are global to all functions involved in the input
    processing of TCP segments. They are set by the tcp_input()

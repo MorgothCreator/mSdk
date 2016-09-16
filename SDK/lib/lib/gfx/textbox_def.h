@@ -11,6 +11,7 @@
 
 #include "controls_definition.h"
 #include "scrollbar_def.h"
+#include "lib/string_lib.h"
 //#######################################################################################
 typedef struct
 {
@@ -101,7 +102,7 @@ typedef struct
 	signed int SelStart;
 	signed int SelLen;
 	Align TextAlign;
-	char *Text;
+	String_t *Text;
 	bool WordWrap;
 	tFont* Font;
 	CursorState StateChangedOn;
@@ -110,8 +111,8 @@ typedef struct
 	void (*text)(void* _settings, char* string);
 	void (*append)(void* _settings, char* string);
 	void (*insert)(void* _settings, char* string, unsigned int location);
-	char *(*to_uper)(void* _settings);
-	char *(*to_lower)(void* _settings);
+	void (*to_uper)(void* _settings);
+	void (*to_lower)(void* _settings);
 	void (*font)(void* _settings, tFont* font);
 	void (*wordwrap)(void* _settings, bool word_wrap);
 	void (*align)(void* _settings, bool align);

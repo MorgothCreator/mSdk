@@ -53,6 +53,7 @@
 #include "device/mpr121.h"
 #include "device/lepton_flir.h"
 
+
 new_uart* Uart[6] = {NULL};
 new_uart* DebugCom = NULL;
 new_twi* TWI[3] = {NULL};
@@ -147,7 +148,7 @@ inline bool board_init()
 /*-----------------------------------------------------*/
 	INIT_MPR121(MPR121, 0);
 /*-----------------------------------------------------*/
-	INIT_LEPTON_FLIR(LEPTON_FLIR, 1, 0);
+	INIT_LEPTON_FLIR(LEPTON_FLIR, 1, 0, 0);
 /*-----------------------------------------------------*/
 	/* Init uSD */
 	//INIT_MMCSD(0, NULL, gpio_assign(0, 6, GPIO_IN_PULL_UP, false), LED[2]);
@@ -180,7 +181,7 @@ inline bool board_init()
 	//ScreenBuff->BackLightLevel = 60;
 	//ScreenBuff->PmicTwiModuleStruct = TWI[0];
 	ScreenBuff->BackLight = gpio_assign(IOD, 17, GPIO_OUT_PUSH_PULL, false);
-	screen_init(ScreenBuff);
+	lcd_init(ScreenBuff);
 	UARTprintf(DebugCom, "LCD display initialize successful for %dx%d resolution, %d Bit bus.\n\r" , ScreenBuff->raster_timings->X, ScreenBuff->raster_timings->Y, ScreenBuff->raster_timings->bus_size);
 
 	TouchScreen = new_(new_touchscreen);
@@ -192,7 +193,7 @@ inline bool board_init()
 	UARTPuts(DebugCom, "Init calibration of LCD resistive touch screen....." , -1);
 	TouchCalibrate(TouchScreen, ScreenBuff);
 	UARTPuts(DebugCom, "OK.\n\r" , -1);
-	put_rectangle(ScreenBuff, 0, 0, ScreenBuff->raster_timings->X, ScreenBuff->raster_timings->Y, true, controls_color.Scren);
-	box_cache_clean(ScreenBuff, 0, 0, ScreenBuff->raster_timings->X, ScreenBuff->raster_timings->Y);
+	ScreenBuff->lcd_func.put_rectangle(ScreenBuff, 0, 0, ScreenBuff->raster_timings->X, ScreenBuff->raster_timings->Y, true, controls_color.Scren);
+	ScreenBuff->lcd_func.box_cache_clean(ScreenBuff, 0, 0, ScreenBuff->raster_timings->X, ScreenBuff->raster_timings->Y);
 	return true;
 }

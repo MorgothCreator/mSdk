@@ -6,7 +6,7 @@
  */
 #include <api/lan_api.h>
 #include "api/uart_api.h"
-#include "interface/lan_interface.h"
+//#include "interface/lan_interface.h"
 
 
 #ifdef USE_LWIP

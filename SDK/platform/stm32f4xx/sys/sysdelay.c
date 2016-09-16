@@ -8,7 +8,7 @@
 #include "sysdelay.h"
 #include "sys/include/core_cm4.h"
 
-extern unsigned long SystemCoreClock;
+extern unsigned long FCPU;
 /******************************************************************************
 **                      INTERNAL VARIABLE DEFINITIONS
 *******************************************************************************/
@@ -17,7 +17,7 @@ volatile unsigned long long STimerCnt;
 //#####################################################
 void SysDelayTimerSetup(void)
 {
-	SysTick_Config(SystemCoreClock / 1000);
+	SysTick_Config(FCPU / 1000);
 }
 //#####################################################
 void Sysdelay(unsigned int milliSec)

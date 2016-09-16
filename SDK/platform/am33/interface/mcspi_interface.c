@@ -20,11 +20,11 @@ extern Mcspi_Int_Service_t Mcspi_Int_Service;
 /*#####################################################*/
 void _mcspi_assert(Mcspi_t *McspiStruct)
 {
-	McSPICSAssert(McspiStruct->BaseAddr, McspiStruct->Channel);
+	McSPICSAssert(McspiStruct->BaseAddr, McspiStruct->CsSelect);
 }
 void _mcspi_deassert(Mcspi_t *McspiStruct)
 {
-	McSPICSDeAssert(McspiStruct->BaseAddr, McspiStruct->Channel);
+	McSPICSDeAssert(McspiStruct->BaseAddr, McspiStruct->CsSelect);
 }
 /*
 ** This function will activate/deactivate CS line and also enable Tx and Rx
@@ -35,14 +35,14 @@ void _mcspi_transfer(Mcspi_t *McspiStruct)
 	McspiStruct->BuffTmp = McspiStruct->Buff;
 	/* SPIEN line is forced to low state.*/
     if(!McspiStruct->DisableCsHandle)
-    	McSPICSAssert(McspiStruct->BaseAddr, McspiStruct->Channel);
+    	McSPICSAssert(McspiStruct->BaseAddr, McspiStruct->CsSelect);
 
     /* Enable the Tx/Rx interrupts of McSPI.*/
-    McSPIIntEnable(McspiStruct->BaseAddr, MCSPI_INT_TX_EMPTY(McspiStruct->Channel) |
-                   MCSPI_INT_RX_FULL(McspiStruct->Channel));
+    McSPIIntEnable(McspiStruct->BaseAddr, MCSPI_INT_TX_EMPTY(McspiStruct->CsSelect) |
+                   MCSPI_INT_RX_FULL(McspiStruct->CsSelect));
 
     /* Enable the McSPI channel for communication.*/
-    McSPIChannelEnable(McspiStruct->BaseAddr, McspiStruct->Channel);
+    McSPIChannelEnable(McspiStruct->BaseAddr, McspiStruct->CsSelect);
 
     /* Wait until control returns back from McSPI ISR.*/
     while(McspiStruct->flag);
@@ -51,10 +51,10 @@ void _mcspi_transfer(Mcspi_t *McspiStruct)
 
     /* Force SPIEN line to the inactive state.*/
     if(!McspiStruct->DisableCsHandle)
-    	McSPICSDeAssert(McspiStruct->BaseAddr, McspiStruct->Channel);
+    	McSPICSDeAssert(McspiStruct->BaseAddr, McspiStruct->CsSelect);
 
     /* Disable the McSPI channel.*/
-    McSPIChannelDisable(McspiStruct->BaseAddr, McspiStruct->Channel);
+    McSPIChannelDisable(McspiStruct->BaseAddr, McspiStruct->CsSelect);
 }
 /*#####################################################*/
 unsigned char _mcspi_SendByte(Mcspi_t *McspiStruct, unsigned char byte) {
@@ -104,22 +104,22 @@ static void McSPISetUp(Mcspi_t *McspiStruct)
     McSPIMasterModeEnable(McspiStruct->BaseAddr);
 
     /* Perform the necessary configuration for master mode.*/
-    McSPIMasterModeConfig(McspiStruct->BaseAddr, MCSPI_SINGLE_CH, MCSPI_TX_RX_MODE, MCSPI_DATA_LINE_COMM_MODE_1, McspiStruct->Channel);
+    McSPIMasterModeConfig(McspiStruct->BaseAddr, MCSPI_SINGLE_CH, MCSPI_TX_RX_MODE, MCSPI_DATA_LINE_COMM_MODE_1, McspiStruct->CsSelect);
 
     /* Configure the McSPI bus clock depending on clock mode. */
-    McSPIClkConfig(McspiStruct->BaseAddr, MCSPI_IN_CLK, McspiStruct->BaudRate, McspiStruct->Channel, MCSPI_CLK_MODE_0);
+    McSPIClkConfig(McspiStruct->BaseAddr, MCSPI_IN_CLK, McspiStruct->BaudRate, McspiStruct->CsSelect, MCSPI_CLK_MODE_0);
 
     /* Configure the word length.*/
-    McSPIWordLengthSet(McspiStruct->BaseAddr, MCSPI_WORD_LENGTH(8), McspiStruct->Channel);
+    McSPIWordLengthSet(McspiStruct->BaseAddr, MCSPI_WORD_LENGTH(8), McspiStruct->CsSelect);
 
     /* Set polarity of SPIEN to low.*/
-    McSPICSPolarityConfig(McspiStruct->BaseAddr, MCSPI_CS_POL_LOW, McspiStruct->Channel);
+    McSPICSPolarityConfig(McspiStruct->BaseAddr, MCSPI_CS_POL_LOW, McspiStruct->CsSelect);
 
     /* Enable the transmitter FIFO of McSPI peripheral.*/
-    McSPITxFIFOConfig(McspiStruct->BaseAddr, MCSPI_TX_FIFO_ENABLE, McspiStruct->Channel);
+    McSPITxFIFOConfig(McspiStruct->BaseAddr, MCSPI_TX_FIFO_ENABLE, McspiStruct->CsSelect);
 
     /* Enable the receiver FIFO of McSPI peripheral.*/
-    McSPIRxFIFOConfig(McspiStruct->BaseAddr, MCSPI_RX_FIFO_ENABLE, McspiStruct->Channel);
+    McSPIRxFIFOConfig(McspiStruct->BaseAddr, MCSPI_RX_FIFO_ENABLE, McspiStruct->CsSelect);
 }
 /*#####################################################*/
 bool _mcspi_open(Mcspi_t *McspiStruct)
@@ -168,6 +168,6 @@ void _mcspi_close(Mcspi_t *McspiStruct)
 bool _mcspi_set_baud(Mcspi_t *McspiStruct, unsigned long baud)
 {
 	/* Configure the McSPI bus clock depending on clock mode. */
-	McSPIClkConfig(McspiStruct->BaseAddr, MCSPI_IN_CLK, McspiStruct->BaudRate, McspiStruct->Channel, MCSPI_CLK_MODE_0);
+	McSPIClkConfig(McspiStruct->BaseAddr, MCSPI_IN_CLK, McspiStruct->BaudRate, McspiStruct->CsSelect, MCSPI_CLK_MODE_0);
 	return true;
 }

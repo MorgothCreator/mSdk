@@ -30,7 +30,7 @@
  *
  */
 
-#include "arch/perf.h"
+#include "include/arch/perf.h"
 
 void
 perf_init(char *fname)

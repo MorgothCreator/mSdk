@@ -195,6 +195,7 @@
 #include "stm32f4xx_hal.h"
 #include "stm32f4xx_hal_conf.h"
 
+extern unsigned long FCPU;          /*!< System Clock Frequency (Core Clock) */
 /** @addtogroup STM32F4xx_HAL_Driver
   * @{
   */
@@ -430,7 +431,7 @@ HAL_StatusTypeDef HAL_ADC_Start(ADC_HandleTypeDef* hadc)
     
     /* Delay for ADC stabilization time */
     /* Compute number of CPU cycles to wait for */
-    counter = (ADC_STAB_DELAY_US * (SystemCoreClock / 1000000));
+    counter = (ADC_STAB_DELAY_US * (FCPU / 1000000));
     while(counter != 0)
     {
       counter--;
@@ -659,7 +660,7 @@ HAL_StatusTypeDef HAL_ADC_Start_IT(ADC_HandleTypeDef* hadc)
     
     /* Delay for ADC stabilization time */
     /* Compute number of CPU cycles to wait for */
-    counter = (ADC_STAB_DELAY_US * (SystemCoreClock / 1000000));
+    counter = (ADC_STAB_DELAY_US * (FCPU / 1000000));
     while(counter != 0)
     {
       counter--;
@@ -915,7 +916,7 @@ HAL_StatusTypeDef HAL_ADC_Start_DMA(ADC_HandleTypeDef* hadc, uint32_t* pData, ui
     
     /* Delay for ADC stabilization time */
     /* Compute number of CPU cycles to wait for */
-    counter = (ADC_STAB_DELAY_US * (SystemCoreClock / 1000000));
+    counter = (ADC_STAB_DELAY_US * (FCPU / 1000000));
     while(counter != 0)
     {
       counter--;
@@ -1128,7 +1129,7 @@ HAL_StatusTypeDef HAL_ADC_ConfigChannel(ADC_HandleTypeDef* hadc, ADC_ChannelConf
     {
       /* Delay for temperature sensor stabilization time */
       /* Compute number of CPU cycles to wait for */
-      counter = (ADC_TEMPSENSOR_DELAY_US * (SystemCoreClock / 1000000));
+      counter = (ADC_TEMPSENSOR_DELAY_US * (FCPU / 1000000));
       while(counter != 0)
       {
         counter--;

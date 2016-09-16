@@ -26,6 +26,7 @@
 #include "twi_def.h"
 #include "gpio_def.h"
 #include "sys/plat_properties.h"
+#include "lib/string_lib.h"
 //#include "lib/gfx/controls_definition.h"
 /**********************************************/
 #ifdef FLASH_DEVICE
@@ -151,9 +152,10 @@ typedef struct
 tFont;
 /**********************************************/
 typedef struct{
+	tRectangle Capsule;
 	void *pDisplay;
 	tFont *pFont;
-	char *pcString;
+	String_t *pcString;
 	signed int lLength;
 	unsigned int foreground_color;
 	unsigned int background_color;
@@ -180,8 +182,8 @@ typedef struct
 	tRectangle sClipRegion;
 	STimer_t TimerScroll;
 	tFont *pFont;
-	char *Str;
-	char *Pstr;
+	String_t *Str;
+	String_t *Pstr;
 	signed int(*string_width_get_function)(void *, tFont *, char *, signed int);
 	signed int(*print_function)(print_string_properties *);
 }graphic_strings_t;
@@ -213,9 +215,6 @@ typedef struct
 typedef struct sDisplay
 {
 	unsigned short Orientation;
-	//signed int Width;
-	//signed int Height;
-	//unsigned int LcdType;
 	bool touch_invert_x;
 	bool touch_invert_y;
 	bool pmic_back_light;
@@ -227,7 +226,6 @@ typedef struct sDisplay
 	unsigned int BackColor;
 	unsigned int InkColor;
 	signed int Buff_Offset;
-	//volatile bool TransferComplte;
     tRectangle sClipRegion;
 	Gpio_t* BackLight;
 	Twi_t* PmicTwiModuleStruct;

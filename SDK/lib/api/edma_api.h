@@ -22,15 +22,19 @@
 #ifndef EDMA_API_H_
 #define EDMA_API_H_
 /*#####################################################*/
-//#include "include/edma.h"
-//#include "aintc/aintc_edma.h"
-//#include "clk/clk_edma.h"
+#include "include/interrupt.h"
+#include "include/edma.h"
+#include "include/hw/hw_control_AM335x.h"
+#include "include/hw/soc_AM335x.h"
+#include "include/hw/hw_cm_wkup.h"
+#include "include/hw/hw_cm_per.h"
+#include "include/hw/hw_types.h"
 /*#####################################################*/
 /* EDMA3 Event queue number. */
 #define EVT_QUEUE_NUM             (0)
 /*#####################################################*/
 /* EDMA callback function array */
-//extern void (*cb_Fxn[EDMA3_NUM_TCC]) (unsigned int tcc, unsigned int status);
+extern void (*cb_Fxn[EDMA3_NUM_TCC]) (unsigned int tcc, unsigned int status);
 //extern Uart_Int_Service_t Uart_Int_Service;
 /*#####################################################*/
 #ifdef HEADER_INCLUDE_C_FILES

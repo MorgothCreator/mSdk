@@ -52,8 +52,8 @@
 #include "netif/etharp.h"
 #include "netif/ppp_oe.h"
 #include "lwip/err.h"
-#include "netif/cpswif.h"
-#include "arch/cc.h"
+#include "interface/lwip/ports/cpsw/include/netif/cpswif.h"
+#include "interface/lwip/ports/cpsw/include/arch/cc.h"
 
 /* DriverLib Header Files required for this interface driver. */
 #include "include/cpsw.h"

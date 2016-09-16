@@ -13,8 +13,6 @@
 #include "driver/stm32f4xx_hal_rcc.h"
 //#include "driver/core.h"
 
-unsigned long CoreFreq = 0;
-
 void _core_init(void)
 {
 	//SystemInit();

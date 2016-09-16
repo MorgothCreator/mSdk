@@ -10,6 +10,8 @@
 /*#####################################################*/
 #include "sys/mmu.h"
 
+#define NO_I_TO_A_IN_STD_LIB
+
 #define DEFAULT_FONT g_sFontCmss14b
 //#define USE_FONT_CMSS14B
 #define USE_ALL_FONTS

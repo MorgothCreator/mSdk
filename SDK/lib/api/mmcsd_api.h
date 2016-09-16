@@ -24,6 +24,13 @@
 /*#####################################################*/
 #include "gpio_def.h"
 /*#####################################################*/
+typedef enum
+{
+	IsNoCard = 0,
+	IsSd,
+	IsSdhc,
+}mmcsd_type_e;
+/*#####################################################*/
 void mmcsd_init(unsigned int unit_nr, new_gpio* Cs, new_gpio* StatusLed);
 void mmcsd_idle(unsigned int unit_nr);
 void mmcsd_ioctl(unsigned int unit_nr, unsigned int  command,  unsigned int *buffer);

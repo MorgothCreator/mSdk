@@ -52,6 +52,7 @@
 #include "device/mpr121.h"
 #include "device/lepton_flir.h"
 
+extern unsigned long FCPU;
 
 extern new_uart* Uart[];
 extern new_uart* DebugCom;

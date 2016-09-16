@@ -11,48 +11,62 @@
 #include "../app_result.h"
 #include "lib/string_lib.h"
 
-char *path_append_parse(char *path, char *rel_path)
+String_t *path_append_parse(String_t *path, String_t *rel_path)
 {
-	if(!path || !rel_path) return path;
-	char *a = path;
-	char *b = rel_path;
-	if(*b == 0) return a;
-	if(*a == 0) return str_append(a, "/");
-	if(*b == ':' && b[1] == '/')
+	if(!path || !rel_path)
+		return NULL;
+	String_t *a = path;
+	String_t *b = rel_path;
+	if(str_char_at(b, 0) == 0)
+		return path;
+	if(str_char_at(a, 0) == 0)
+		return str_paste(a, "/");
+	if(str_char_at(b, 0) == ':' && str_char_at(b, 1) == '/')
 	{
-		a = str_clear(a);
-		a = str_append(a, "/");
+		str_clear(a);
+		str_paste(a, "/");
 	}
-	while(*b == '/' && strlen(b) > 1) b++;
-	if(a[strlen(a)- 1] == '/' && *b == '/') b++;
-	while(strlen(b))
+	unsigned int ptr_a = 0;
+	unsigned int ptr_b = 0;
+	while(b->text[0] == '/' && b->len > 1)
+		ptr_b++;
+	if(str_char_at(a, a->len - 1) == '/' && b->text[ptr_b] == '/')
+		ptr_b++;
+	while(b->len - ptr_b)
 	{
-		if(b[0] != 0 && b[0] == '.' && b[1] == '.' && b[1] != 0 && b[2] != 0 && b[2] == '/')
+		if(b->text[0] != 0 && b->text[0] == '.' && b->text[1] == '.' && b->text[1] != 0 && b->text[2] != 0 && b->text[2] == '/')
 		{
-			int a_len = strlen(a);
+			int a_len = a->len - ptr_a;
 			if(a_len > 1)
 			{
-				char *_a = (char *)(a + a_len - 1);
-				while(_a != a && *--_a != '/');
-				*(_a/* + 1*/) = 0;
-				a_len = strlen(a);
+				unsigned int _a = a_len - 1;
+				while(a->len - _a != 0 && a->text[--_a] != '/');
+				a->text[_a/* + 1*/] = 0;
+				a_len = a->len - _a;
 				if(!a_len)
-					strcat(a, "/");
-				a = realloc(a, a_len + 1);
+					str_paste(a, "/");
+				//a = realloc(a, a_len + 1);
 			}
-			b = (char *)(b + 3);
+			//b = (char *)(b + 3);
+			ptr_b += 3;
 		}
 		else
 		{
-			char *_b = b;
+			unsigned int _b = b->len - ptr_b;
 			//int _b_len = strlen(_b);
-			while(*b != '/' && *b != 0) b++;
-			a = realloc(a, strlen(a) + (b - _b) + 3);
-			if(*_b != '/' && a[strlen(a) - 1] != '/')
-				strcat(a, "/");
-			strncat(a, _b, (b - _b) + 1);
-			if(*b == '/') b++;
+			while(b->text[ptr_b] != '/' && b->len - ptr_b != 0)
+				ptr_b++;
+			//a = realloc(a, strlen(a) + (b - _b) + 3);
+			if(b->text[_b] != '/' && a->text[a->len - ptr_a] != '/')
+				str_paste(a, "/");
+			char* _tmp_a_substring = str_substring(a, _b, (ptr_b - _b) + 1);
+			str_paste(a, _tmp_a_substring);
+			if(_tmp_a_substring)
+				free(_tmp_a_substring);
+			//strncat(a, _b, (b - _b) + 1);
+			if(b->text[ptr_b] == '/')
+				ptr_b++;
 		}
 	}
-	return a;
+	return STR_OK;
 }

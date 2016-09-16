@@ -383,6 +383,7 @@ void scrollbar(tScrollBar *settings, tControlCommandData* control_comand)
 		ButtonSettings->Enabled = settings->Enabled;
 		ButtonSettings->Color.Scren = settings->Color.Scren;
 		ButtonSettings->Color.Enabled.BackGround = settings->Color.Enabled.BackGround;
+		ButtonSettings->Caption.Text = str_clear(ButtonSettings->Caption.Text);
 
 		settings->Internals.BtnUpSettings = new_button(settings->Internals.ParentWindow);
 		tButton* BtnUpSettings = settings->Internals.BtnUpSettings;
@@ -390,6 +391,7 @@ void scrollbar(tScrollBar *settings, tControlCommandData* control_comand)
 		BtnUpSettings->Enabled = settings->Enabled;
 		BtnUpSettings->Color.Scren = settings->Color.Scren;
 		BtnUpSettings->Color.Enabled.BackGround = settings->Color.Enabled.BackGround;
+		BtnUpSettings->Caption.Text = str_clear(BtnUpSettings->Caption.Text);
 
 		settings->Internals.BtnDnSettings = new_button(settings->Internals.ParentWindow);
 		tButton* BtnDnSettings = settings->Internals.BtnDnSettings;
@@ -397,6 +399,8 @@ void scrollbar(tScrollBar *settings, tControlCommandData* control_comand)
 		BtnDnSettings->Enabled = settings->Enabled;
 		BtnDnSettings->Color.Scren = settings->Color.Scren;
 		BtnDnSettings->Color.Enabled.BackGround = settings->Color.Enabled.BackGround;
+		BtnDnSettings->Caption.Text = str_clear(BtnDnSettings->Caption.Text);
+
 		if(settings->Size.X < settings->Size.Y)
 		{
 			settings->Internals.BtnSettings->Position.X = 2;

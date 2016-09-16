@@ -499,6 +499,7 @@ bool lepton_flir_get_image(LEPTON_FLIR_t *structure, unsigned short *image) {
 	structure->SPI->Buff = line_buff;
 	// loop while discard packets
 	while((checkByte & 0x0F) == 0x0f) {
+		structure->SPI->CsSelect = structure->spi_instance;
 		mcspi_transfer(structure->SPI, 0, LEPTON_FLIR_LINE_SIZE);
 		checkByte = structure->SPI->Buff[0];
 		packet_nr = structure->SPI->Buff[1];
@@ -512,6 +513,7 @@ bool lepton_flir_get_image(LEPTON_FLIR_t *structure, unsigned short *image) {
 			memcpy(&image[packet_nr * 80], (void *)&structure->SPI->Buff[4], 160);
 		}
 		// read next packet
+		structure->SPI->CsSelect = structure->spi_instance;
 		mcspi_transfer(structure->SPI, 0, LEPTON_FLIR_LINE_SIZE);
 		packet_nr = structure->SPI->Buff[1];
 	}

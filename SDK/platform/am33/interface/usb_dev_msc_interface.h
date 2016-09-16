@@ -25,6 +25,7 @@ extern USBD_DRV_RW_FUNC drv_rw_func[];
 
 void _usb_msc_dev_media_change_state(unsigned int instance, bool media_is_present);
 void _usb_msc_dev_init(unsigned int instance, void *slave_controls);
+bool _usb_msc_dev_media_connected(unsigned int instance);
 
 
 #endif /* USB_DEV_MSC_INTERFACE_H_ */

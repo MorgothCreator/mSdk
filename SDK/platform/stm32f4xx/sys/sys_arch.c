@@ -32,7 +32,7 @@
 
 /* lwIP includes. */
 #include "sys_arch.h"
-#include "cc.h"
+//#include "cc.h"
 /*#include "lwip/debug.h"
 #include "lwip/def.h"
 #include "lwip/sys.h"
@@ -55,7 +55,7 @@
   sys_arch_protect() is only required if your port is supporting an operating
   system.
 */
-sys_prot_t sys_arch_protect(void)
+unsigned int sys_arch_protect(void)
 {
 	portDISABLE_INTERRUPTS();
 	return 1;
@@ -67,7 +67,7 @@ sys_prot_t sys_arch_protect(void)
   more information. This function is only required if your port is supporting
   an operating system.
 */
-void sys_arch_unprotect(sys_prot_t pval)
+void sys_arch_unprotect(unsigned  pval)
 {
 	( void ) pval;
 	portENABLE_INTERRUPTS();

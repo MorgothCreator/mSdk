@@ -29,6 +29,7 @@
 #include "driver/stm32f4xx_hal_dma.h"
 #include "driver/stm32f4xx_hal.h"
 #include "driver/stm32f4xx_hal_hcd.h"
+#include "driver/stm32f4xx_hal_pcd.h"
 #include "driver/stm32f4xx_hal_gpio.h"
 #include "driver/stm32f4xx_hal_adc.h"
 #include "lwipopts.h"
@@ -37,6 +38,7 @@
   */
 
 extern ADC_HandleTypeDef    AdcHandle;
+extern PCD_HandleTypeDef hpcd;
 
 /** @addtogroup FLASH_Program
   * @{
@@ -201,10 +203,26 @@ void SDIO_IRQHandler(void)
   * @param  None
   * @retval None
   */
+#ifndef USE_USB_DEV
 void OTG_FS_IRQHandler(void)
 {
   HAL_HCD_IRQHandler(&hhcd);
 }
+#else
+/**
+  * @brief  This function handles USB-On-The-Go FS global interrupt request.
+  * @param  None
+  * @retval None
+  */
+#ifdef USE_USB_FS
+void OTG_FS_IRQHandler(void)
+#else
+void OTG_HS_IRQHandler(void)
+#endif
+{
+  HAL_PCD_IRQHandler(&hpcd);
+}
+#endif
 
 /**
   * @brief  This function handles PPP interrupt request.

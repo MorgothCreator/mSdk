@@ -239,7 +239,7 @@ extern unsigned int g_ulMSCInstance0Usb1;//UsbMsc driver
 		ScreenBuff->raster_timings = &lcd_S035Q01_beaglebone_exp;
 		ScreenBuff->BackLightLevel = 60;
 		ScreenBuff->PmicTwiModuleStruct = TWI[0];
-		screen_init(ScreenBuff);
+		ScreenBuff->lcd_func.init(ScreenBuff);
 		UARTprintf(DebugCom, "LCD display initialize successful for %dx%d resolution, %d Bit bus.\n\r" , ScreenBuff->raster_timings->X, ScreenBuff->raster_timings->Y, ScreenBuff->raster_timings->bus_size);
 
 		TouchScreen->screen_max_x = (double)ScreenBuff->raster_timings->X;
@@ -249,8 +249,8 @@ extern unsigned int g_ulMSCInstance0Usb1;//UsbMsc driver
 		UARTPuts(DebugCom, "Init calibration of LCD resistive touch screen....." , -1);
 		TouchCalibrate(TouchScreen, ScreenBuff);
 		UARTPuts(DebugCom, "OK.\n\r" , -1);
-		put_rectangle(ScreenBuff, 0, 0, ScreenBuff->raster_timings->X, ScreenBuff->raster_timings->Y, true, controls_color.Scren);
-		box_cache_clean(ScreenBuff, 0, 0, ScreenBuff->raster_timings->X, ScreenBuff->raster_timings->Y);
+		ScreenBuff->lcd_func.put_rectangle(ScreenBuff, 0, 0, ScreenBuff->raster_timings->X, ScreenBuff->raster_timings->Y, true, controls_color.Scren);
+		ScreenBuff->lcd_func.box_cache_clean(ScreenBuff, 0, 0, ScreenBuff->raster_timings->X, ScreenBuff->raster_timings->Y);
 #endif
 	}
 	else
@@ -273,14 +273,14 @@ extern unsigned int g_ulMSCInstance0Usb1;//UsbMsc driver
 			ScreenBuff->raster_timings = &lcd_AT070TN92_beaglebone_exp;
 			ScreenBuff->BackLightPort = 1;
 			ScreenBuff->BackLightPin = 18;
-			screen_init(ScreenBuff);
+			ScreenBuff->lcd_func.init(ScreenBuff);
 			TouchScreen->screen_max_x = ScreenBuff->raster_timings->X;
 			TouchScreen->screen_max_y = ScreenBuff->raster_timings->Y;
 			TouchScreen->pDisplay = ScreenBuff;
 			UARTprintf(DebugCom, "LCD display initialize successful for %dx%d resolution, %d Bit bus.\n\r" , ScreenBuff->raster_timings->X, ScreenBuff->raster_timings->Y, ScreenBuff->raster_timings->bus_size);
-			put_rectangle(ScreenBuff, 0, 0, ScreenBuff->raster_timings->X, ScreenBuff->raster_timings->Y, true, controls_color.Scren);
-			box_cache_clean(ScreenBuff, 0, 0, ScreenBuff->raster_timings->X, ScreenBuff->raster_timings->Y);
-			backlight_on(ScreenBuff);
+			ScreenBuff->lcd_func.put_rectangle(ScreenBuff, 0, 0, ScreenBuff->raster_timings->X, ScreenBuff->raster_timings->Y, true, controls_color.Scren);
+			ScreenBuff->lcd_func.box_cache_clean(ScreenBuff, 0, 0, ScreenBuff->raster_timings->X, ScreenBuff->raster_timings->Y);
+			ScreenBuff->lcd_func.backlight_on(ScreenBuff);
 		}
 		else
 		{
@@ -298,7 +298,7 @@ extern unsigned int g_ulMSCInstance0Usb1;//UsbMsc driver
 			ScreenBuff->raster_timings = &HDMI_DISPLAY_MODE_STRUCT;
 			ScreenBuff->BackLightPort = 1;
 			ScreenBuff->BackLightPin = 18;
-			screen_init(ScreenBuff);
+			ScreenBuff->lcd_func.init(ScreenBuff);
 #ifdef touch
 			TouchScreen->screen_max_x = ScreenBuff->raster_timings->X;
 			TouchScreen->screen_max_y = ScreenBuff->raster_timings->Y;
@@ -309,9 +309,9 @@ extern unsigned int g_ulMSCInstance0Usb1;//UsbMsc driver
 			UARTPuts(DebugCom, "OK.\n\r" , -1);
 #endif
 			UARTprintf(DebugCom, "LCD display initialize successful for %dx%d resolution, %d Bit bus.\n\r" , ScreenBuff->raster_timings->X, ScreenBuff->raster_timings->Y, ScreenBuff->raster_timings->bus_size);
-			put_rectangle(ScreenBuff, 0, 0, ScreenBuff->raster_timings->X, ScreenBuff->raster_timings->Y, true, controls_color.Scren);
-			box_cache_clean(ScreenBuff, 0, 0, ScreenBuff->raster_timings->X, ScreenBuff->raster_timings->Y);
-			backlight_on(ScreenBuff);
+			ScreenBuff->lcd_func.put_rectangle(ScreenBuff, 0, 0, ScreenBuff->raster_timings->X, ScreenBuff->raster_timings->Y, true, controls_color.Scren);
+			ScreenBuff->lcd_func.box_cache_clean(ScreenBuff, 0, 0, ScreenBuff->raster_timings->X, ScreenBuff->raster_timings->Y);
+			ScreenBuff->lcd_func.backlight_on(ScreenBuff);
 		}
 #endif
 	}

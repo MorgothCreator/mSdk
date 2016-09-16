@@ -20,7 +20,7 @@
 #include "device/20x20MatrixLedUartSpiDma.h"
 #endif
 
-bool SetUpLCD(tDisplay* LcdStruct)
+bool SetUpLCD(void* LcdStruct)
 {
 	//screen_open(LcdStruct);
 	return true;
@@ -37,9 +37,10 @@ void _lcd_disable()
 	
 }
 //#######################################################################################
-void _screen_backlight_on(tDisplay *pDisplay)
+void _screen_backlight_on(void *pDisplay)
 {
-	if(pDisplay->pmic_back_light)
+	tDisplay* LcdStruct = (tDisplay *) pDisplay;
+	if(LcdStruct->pmic_back_light)
 	{
 #ifdef pmic_backlight_enable
 		pmic_backlight_enable(pDisplay->PmicTwiModuleStruct);
@@ -50,14 +51,15 @@ void _screen_backlight_on(tDisplay *pDisplay)
 	}
 	else
 	{
-		if(pDisplay->invert_backlight) gpio_out(pDisplay->BackLight, 0);
-		else gpio_out(pDisplay->BackLight, 1);
+		if(LcdStruct->invert_backlight) gpio_out(LcdStruct->BackLight, 0);
+		else gpio_out(LcdStruct->BackLight, 1);
 	}
 }
 //#######################################################################################
-void _screen_backlight_off(tDisplay *pDisplay)
+void _screen_backlight_off(void *pDisplay)
 {
-	if(pDisplay->pmic_back_light)
+	tDisplay* LcdStruct = (tDisplay *) pDisplay;
+	if(LcdStruct->pmic_back_light)
 	{
 #ifdef pmic_backlight_enable
 		pmic_backlight_enable(pDisplay->PmicTwiModuleStruct);
@@ -68,28 +70,30 @@ void _screen_backlight_off(tDisplay *pDisplay)
 	}
 	else
 	{
-		if(pDisplay->invert_backlight) gpio_out(pDisplay->BackLight, 1);
-		else gpio_out(pDisplay->BackLight, 0);
+		if(LcdStruct->invert_backlight) gpio_out(LcdStruct->BackLight, 1);
+		else gpio_out(LcdStruct->BackLight, 0);
 	}
 }
 //#######################################################################################
-void _box_cache_clean(tDisplay *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len)
+void _box_cache_clean(void *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len)
 {
 	
 }
 //#######################################################################################
-bool _screen_copy(tDisplay *pDisplayTo, tDisplay *pDisplayFrom, bool put_cursor, signed int X, signed int Y, unsigned int color)
+bool _screen_copy(void *pDisplayTo, void *pDisplayFrom, bool put_cursor, signed int X, signed int Y, unsigned int color)
 {
-	if(pDisplayTo->raster_timings->X != pDisplayFrom->raster_timings->X || pDisplayTo->raster_timings->Y != pDisplayFrom->raster_timings->Y)
+	tDisplay* LcdStructTo = (tDisplay *) pDisplayTo;
+	tDisplay* LcdStructFrom = (tDisplay *) pDisplayFrom;
+	if(LcdStructTo->raster_timings->X != LcdStructFrom->raster_timings->X || LcdStructTo->raster_timings->Y != LcdStructFrom->raster_timings->Y)
 	return false;
-	CacheDataCleanBuff((unsigned int)pDisplayFrom->DisplayData, (pDisplayFrom->raster_timings->X * pDisplayFrom->raster_timings->Y * sizeof(pDisplayFrom->DisplayData[0])) + (pDisplayFrom->raster_timings->palete_len * sizeof(pDisplayFrom->DisplayData[0])));
+	CacheDataCleanBuff((unsigned int)LcdStructFrom->DisplayData, (LcdStructFrom->raster_timings->X * LcdStructFrom->raster_timings->Y * sizeof(LcdStructFrom->DisplayData[0])) + (LcdStructFrom->raster_timings->palete_len * sizeof(LcdStructFrom->DisplayData[0])));
 	signed int LineCnt = 0;
-	volatile unsigned int* ScreenBuff = pDisplayTo->DisplayData + pDisplayTo->raster_timings->palete_len;
-	volatile unsigned int* _ScreenBuff = pDisplayFrom->DisplayData + pDisplayTo->raster_timings->palete_len;
+	volatile unsigned int* ScreenBuff = LcdStructTo->DisplayData + LcdStructTo->raster_timings->palete_len;
+	volatile unsigned int* _ScreenBuff = LcdStructFrom->DisplayData + LcdStructTo->raster_timings->palete_len;
 
-	for(; LineCnt < pDisplayTo->raster_timings->Y; LineCnt ++)
+	for(; LineCnt < LcdStructTo->raster_timings->Y; LineCnt ++)
 	{
-		memcpy((void *)(ScreenBuff + (pDisplayFrom->raster_timings->X * LineCnt)), (void *)(_ScreenBuff + (pDisplayFrom->raster_timings->X * LineCnt)), (sizeof(ScreenBuff[0]) * pDisplayTo->raster_timings->X));
+		memcpy((void *)(ScreenBuff + (LcdStructFrom->raster_timings->X * LineCnt)), (void *)(_ScreenBuff + (LcdStructFrom->raster_timings->X * LineCnt)), (sizeof(ScreenBuff[0]) * LcdStructTo->raster_timings->X));
 		if(put_cursor == true && LineCnt >= Y && LineCnt <= Y + 2)
 		{
 			unsigned int cnt_x = X;
@@ -100,29 +104,30 @@ bool _screen_copy(tDisplay *pDisplayTo, tDisplay *pDisplayFrom, bool put_cursor,
 	return true;
 }
 //#######################################################################################
-void _put_rectangle(tDisplay *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len, bool fill, unsigned int color)
+void _put_rectangle(void *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len, bool fill, unsigned int color)
 {
 	//screen_draw_rectangle(pDisplay, x_start, y_start, x_len, y_len, fill, color);
 	return;
 }
 //#######################################################################################
-void _put_pixel(tDisplay *pDisplay, signed int X, signed int Y, unsigned int color)
+void _put_pixel(void *pDisplay, signed int X, signed int Y, unsigned int color)
 {
 	//screen_put_pixel16(pDisplay, X, Y, color);
 }
 //#######################################################################################
-void _screen_put_horizontal_line(tDisplay *pDisplay, signed int X1, signed int X2, signed int Y, unsigned char width, unsigned int color)
+void _screen_put_horizontal_line(void *pDisplay, signed int X1, signed int X2, signed int Y, unsigned char width, unsigned int color)
 {
 	//screen_put_horizontal_line(pDisplay, X1, X2, Y, width, color);
 }
 //#######################################################################################
-void _screen_put_vertical_line(tDisplay *pDisplay, signed int X1, signed int X2, signed int Y, unsigned char width, unsigned int color)
+void _screen_put_vertical_line(void *pDisplay, signed int X1, signed int X2, signed int Y, unsigned char width, unsigned int color)
 {
 	//screen_put_vertical_line(pDisplay, X1, X2, Y, width, color);
 }
 //#######################################################################################
-void _screen_put_rgb_array_16(void *_pDisplay, unsigned short *rgb_buffer, unsigned int x1, unsigned int y1,unsigned int width, unsigned int height)
+void _screen_put_rgb_array_16(void *pDisplay, unsigned short *rgb_buffer, unsigned int x1, unsigned int y1,unsigned int width, unsigned int height)
 {
+	//tDisplay* LcdStruct = (tDisplay *) pDisplay;
 	/*tDisplay *pDisplay = (tDisplay *)_pDisplay;
 	///Write rgb array to video memory
 	unsigned char *Buff = (unsigned char *)rgb_buffer;
@@ -149,8 +154,9 @@ void _screen_put_rgb_array_16(void *_pDisplay, unsigned short *rgb_buffer, unsig
 	//lcd.dblbuf = dblbuf;*/
 }
 //#######################################################################################
-void _screen_put_rgb_array_24(void *_pDisplay, unsigned char *rgb_buffer, unsigned long x1, unsigned long y1,unsigned long width, unsigned long height)
+void _screen_put_rgb_array_24(void *pDisplay, unsigned char *rgb_buffer, unsigned long x1, unsigned long y1,unsigned long width, unsigned long height)
 {
+	//tDisplay* LcdStruct = (tDisplay *) pDisplay;
 	/*tDisplay *pDisplay = (tDisplay *)_pDisplay;
 	unsigned char *Buff = rgb_buffer;
 	int   y;
@@ -171,8 +177,9 @@ void _screen_put_rgb_array_24(void *_pDisplay, unsigned char *rgb_buffer, unsign
 	}*/
 }
 //#######################################################################################
-void _screen_put_rgb_array_32(void *_pDisplay, unsigned char *rgb_buffer, unsigned int x1, unsigned int y1,unsigned int width, unsigned int height)
+void _screen_put_rgb_array_32(void *pDisplay, unsigned char *rgb_buffer, unsigned int x1, unsigned int y1,unsigned int width, unsigned int height)
 {
+	//tDisplay* LcdStruct = (tDisplay *) pDisplay;
 	/*tDisplay *pDisplay = (tDisplay *)_pDisplay;
 	int   y;
 	int _y = 0;
@@ -193,7 +200,8 @@ void _screen_put_rgb_array_32(void *_pDisplay, unsigned char *rgb_buffer, unsign
 	}*/
 }
 //#######################################################################################
-void _screen_clear(tDisplay *pDisplay, unsigned int color)
+void _screen_clear(void *pDisplay, unsigned int color)
 {
-	_put_rectangle(pDisplay, 0, 0, pDisplay->raster_timings->X, pDisplay->raster_timings->Y, true, color);
+	tDisplay* LcdStruct = (tDisplay *) pDisplay;
+	_put_rectangle(pDisplay, 0, 0, LcdStruct->raster_timings->X, LcdStruct->raster_timings->Y, true, color);
 }

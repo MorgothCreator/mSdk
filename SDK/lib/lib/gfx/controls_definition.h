@@ -31,6 +31,7 @@
 #include "../../api/timer_api.h"
 #include "interface/lcd_interface.h"
 #include "api/lcd_def.h"
+#include "lib/string_lib.h"
 /*#####################################################*/
 #define FONT_FMT_UNCOMPRESSED   0x00
 #define ABSENT_CHAR_REPLACEMENT '.'
@@ -204,7 +205,7 @@ typedef struct
 typedef struct
 {
 	Align TextAlign;
-	char *Text;
+	String_t *Text;
 	bool WordWrap;
 	tFont* Font;
 }controls_caption_t;

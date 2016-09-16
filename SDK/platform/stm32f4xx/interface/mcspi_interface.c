@@ -19,7 +19,7 @@
 #include "gpio_interface.h"
 //#include "driver/spi.h"
 
-extern unsigned long CoreFreq;
+//extern unsigned long CoreFreq;
 #define SPIn                             6
 
 /*const uint32_t SPI_CLK[] = {
@@ -97,7 +97,7 @@ bool _mcspi_open(new_mcspi *McspiStruct)
   GPIO_InitTypeDef GPIO_InitStruct;
   GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
   GPIO_InitStruct.Pull      = GPIO_PULLUP;
-  GPIO_InitStruct.Speed     = GPIO_SPEED_FAST;
+  GPIO_InitStruct.Speed     = GPIO_SPEED_HIGH;
   /* Enable SPI3 clock */
   switch(McspiStruct->McspiNr)
   {
@@ -175,27 +175,27 @@ bool _mcspi_open(new_mcspi *McspiStruct)
 
   //GPIO_InitStructure.Alternate = GPIO_Mode_OUT;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+  GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-	if(McspiStruct->CsPort[0])
+	if(McspiStruct->CsPort[0] || McspiStruct->CsPin[0])
 	{
 		  _gpio_init(McspiStruct->CsPort[0]);
 		GPIO_InitStruct.Pin = 1 << McspiStruct->CsPin[0];
 		HAL_GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[0]], &GPIO_InitStruct);
 	}
-	if(McspiStruct->CsPort[1])
+	if(McspiStruct->CsPort[1] || McspiStruct->CsPin[1])
 	{
 		  _gpio_init(McspiStruct->CsPort[1]);
 		GPIO_InitStruct.Pin = 1 << McspiStruct->CsPin[1];
 		HAL_GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[1]], &GPIO_InitStruct);
 	}
-	if(McspiStruct->CsPort[2])
+	if(McspiStruct->CsPort[2] || McspiStruct->CsPin[2])
 	{
 		  _gpio_init(McspiStruct->CsPort[2]);
 		GPIO_InitStruct.Pin = 1 << McspiStruct->CsPin[2];
 		HAL_GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[2]], &GPIO_InitStruct);
 	}
-	if(McspiStruct->CsPort[3])
+	if(McspiStruct->CsPort[3] || McspiStruct->CsPin[3])
 	{
 		  _gpio_init(McspiStruct->CsPort[3]);
 		GPIO_InitStruct.Pin = 1 << McspiStruct->CsPin[3];
@@ -264,19 +264,19 @@ void _mcspi_close(new_mcspi *McspiStruct)
   /* Configure SPI MOSI as alternate function  */
   HAL_GPIO_DeInit(GET_GPIO_PORT_ADDR[McspiStruct->MosiPort], 1 << McspiStruct->MosiPin);
 
-  if(McspiStruct->CsPort[0])
+  if(McspiStruct->CsPort[0] || McspiStruct->CsPin[0])
   	{
   		HAL_GPIO_DeInit(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[0]], 1 << McspiStruct->CsPin[0]);
   	}
-  	if(McspiStruct->CsPort[1])
+  	if(McspiStruct->CsPort[1] || McspiStruct->CsPin[1])
   	{
   		HAL_GPIO_DeInit(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[1]], 1 << McspiStruct->CsPin[1]);
   	}
-  	if(McspiStruct->CsPort[2])
+  	if(McspiStruct->CsPort[2] || McspiStruct->CsPin[2])
   	{
   		HAL_GPIO_DeInit(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[2]], 1 << McspiStruct->CsPin[2]);
   	}
-  	if(McspiStruct->CsPort[3])
+  	if(McspiStruct->CsPort[3] || McspiStruct->CsPin[3])
   	{
   		HAL_GPIO_DeInit(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[3]], 1 << McspiStruct->CsPin[3]);
   	}
@@ -328,7 +328,7 @@ unsigned char _mcspi_SendByte(Mcspi_t *McspiStruct, unsigned char byte)
 {
 	SPI_HandleTypeDef *hspi = (SPI_HandleTypeDef *)McspiStruct->UserData;
 	unsigned char tmp = byte;
-	HAL_SPI_TransmitReceive(hspi, &tmp, &tmp, 1, 100);
+	HAL_SPI_TransmitReceive(hspi, &tmp, &tmp, 1, 10);
 	return tmp;
 }
 /*#####################################################*/

@@ -64,8 +64,7 @@ void timer_disable(STimer_t *S_Timer_Struct)
 //#####################################################
 bool timer_tick(STimer_t *S_Timer_Struct)
 {
-	if(S_Timer_Struct->S_Timmer_TickValue & (unsigned long long)INT64_MIN);
-	else
+	if(!(S_Timer_Struct->S_Timmer_TickValue & (unsigned long long)INT64_MIN))
 	{
 		unsigned long long Temp1 = S_Timer_Struct->S_Timmer_TickValue & (unsigned long long)INT64_MAX;
 		unsigned long long Temp2 = STimerCnt & (unsigned long long)INT64_MAX;

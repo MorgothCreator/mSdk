@@ -117,6 +117,7 @@
 #include "stm32f4xx_hal.h"
 #include "stm32f4xx_hal_conf.h"
 
+extern unsigned long FCPU;          /*!< System Clock Frequency (Core Clock) */
 /** @addtogroup STM32F4xx_HAL_Driver
   * @{
   */
@@ -204,7 +205,7 @@ HAL_StatusTypeDef HAL_ADCEx_InjectedStart(ADC_HandleTypeDef* hadc)
     
     /* Delay for temperature sensor stabilization time */
     /* Compute number of CPU cycles to wait for */
-    counter = (ADC_STAB_DELAY_US * (SystemCoreClock / 1000000));
+    counter = (ADC_STAB_DELAY_US * (FCPU / 1000000));
     while(counter != 0)
     {
       counter--;
@@ -279,7 +280,7 @@ HAL_StatusTypeDef HAL_ADCEx_InjectedStart_IT(ADC_HandleTypeDef* hadc)
     
     /* Delay for temperature sensor stabilization time */
     /* Compute number of CPU cycles to wait for */
-    counter = (ADC_STAB_DELAY_US * (SystemCoreClock / 1000000));
+    counter = (ADC_STAB_DELAY_US * (FCPU / 1000000));
     while(counter != 0)
     {
       counter--;
@@ -527,7 +528,7 @@ HAL_StatusTypeDef HAL_ADCEx_MultiModeStart_DMA(ADC_HandleTypeDef* hadc, uint32_t
     
     /* Delay for temperature sensor stabilization time */
     /* Compute number of CPU cycles to wait for */
-    counter = (ADC_STAB_DELAY_US * (SystemCoreClock / 1000000));
+    counter = (ADC_STAB_DELAY_US * (FCPU / 1000000));
     while(counter != 0)
     {
       counter--;

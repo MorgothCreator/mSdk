@@ -41,6 +41,7 @@
 /* lwIP includes. */
 #include "lwip/opt.h"
 #include "lwip/sys.h"
+#include "include/arch/sys_arch.h"
 
 #if SYS_LIGHTWEIGHT_PROT
 

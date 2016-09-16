@@ -69,7 +69,7 @@
 #include "lwip/memp.h"
 #include "lwip/pbuf.h"
 #include "lwip/sys.h"
-#include "perf.h"
+#include "interface/lwip/ports/cpsw/include/arch/perf.h"
 #if TCP_QUEUE_OOSEQ
 #include "lwip/tcp_impl.h"
 #endif

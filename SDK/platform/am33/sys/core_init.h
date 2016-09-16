@@ -12,6 +12,7 @@
 #include "../include/interrupt.h"
 #include "../interface/mmu_interface.h"
 #include "../include/gpio_v2.h"
+extern unsigned long FCPU;
 //*****************************************************************************
 //
 // The ASSERT macro, which does the actual assertion checking.  Typically, this

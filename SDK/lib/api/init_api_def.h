@@ -31,9 +31,14 @@
 #include "device/mpl3115a2.h"
 #include "device/mpr121.h"
 #include "device/lepton_flir.h"
+#include "device/nrf24l01.h"
+#include "device/sst25vf.h"
+#include "device/mmcsd_spi.h"
 
 
 #include "interface/hs_mmcsd_interface_def.h"
+#include "interface/usb_dev_msc_interface.h"
+extern USBD_DRV_RW_FUNC usbd_drv_func[];
 /*#####################################################*/
 /*#####################################################*/
 /*#####################################################*/
@@ -188,6 +193,36 @@
 	SLAVE_DEV_CONTROLS_NAME->drv_w_func = mmcsd_write;\
 	usb_msc_dev_init(USB_DEVICE_NR, (void *)SLAVE_DEV_CONTROLS_NAME);\
 	UARTPuts(DebugCom, "OK.\n\r", -1);
+/*#####################################################*/
+/*
+ * This macro initialize the desired USB HOST MSC interface and MMCSD interface and bridge them together.
+ *
+ *
+ * USB_DEVICE_NR = USB interface number.
+ *
+ * MMCSD_NR = MMCSD interface number.
+ *
+ * SLAVE_DEV_CONTROLS_NAME = Is a neme provided by the programmer to be attached to the master with slave controll functions and structure,
+ * 								this is automatically allocated by this macro and attached to the master controll interface, in this case USB device MSC.
+ *
+ * GPIO_RESET_STRUCT = a Gpio_t or new_gpio provided to controll reset pin of a eMMC memory, if you don't use eMMC memory provide a NULL pointer.
+ *
+ * GPIO_SD_DETECT_STRUCT = a Gpio_t or new_gpio provided to detect a card when is inserted or removed,
+ * 								if you don't use the card detect pin or you use a eMMC memory you need to provide a NULL pointer.
+ *
+ * ACTIVITY_LED_STRUCT = a Gpio_t or new_gpio provided to controll an activity led, if you do not use an activity led you need to provide a NULL pointer.
+ *
+ * USB_DEVICE_NR, MMCSD_NR, SLAVE_DEV_CONTROLS_NAME, GPIO_RESET_STRUCT, GPIO_SD_DETECT_STRUCT, ACTIVITY_LED_STRUCT
+ */
+#define INIT_USB_DEV_MSC_TO_MMCSD_SPI_BRIDGE(USB_DEVICE_NR, MMCSD_INSTANCE_NR) \
+	UARTPuts(DebugCom, "Bridge USBMSC0 Dev for MMCSD0 Interface.......", -1);\
+	USBD_DRV_RW_FUNC *SLAVE_DEV_CONTROLS_NAME = calloc(1, sizeof(USBD_DRV_RW_FUNC));\
+	usbd_drv_func[USB_DEVICE_NR].DriveStruct = MMCSD_SPI[MMCSD_INSTANCE_NR];\
+	usbd_drv_func[USB_DEVICE_NR].drv_ioctl_func = mmcsd_spi_ioctl;\
+	usbd_drv_func[USB_DEVICE_NR].drv_r_func = MMCSD_SPI_ReadCmdSend;\
+	usbd_drv_func[USB_DEVICE_NR].drv_w_func = MMCSD_SPI_WriteCmdSend;\
+	usb_msc_dev_init(USB_DEVICE_NR, (void *)SLAVE_DEV_CONTROLS_NAME);\
+	UARTPuts(DebugCom, "OK.\n\r", -1)
 /*#####################################################*/
 //#include "interface/usblib/include/usbhmsc.h"
 /*
@@ -350,10 +385,11 @@ extern tUSBHMSCInstance g_USBHMSCDevice[]; \
 #define NEW_LEPTON_FLIR(name) \
 	new_lepton_flir *name
 /*-----------------------------------------------------*/
-#define INIT_LEPTON_FLIR(name, SPI_INTERFACE, TWI_INTERFACE) \
+#define INIT_LEPTON_FLIR(name, SPI_INTERFACE, _spi_instance, TWI_INTERFACE) \
 		name = new_(new_lepton_flir);\
 		name->SPI = SPI[SPI_INTERFACE]; \
-		name->TWI = TWI[TWI_INTERFACE]
+		name->TWI = TWI[TWI_INTERFACE];\
+		name->spi_instance = _spi_instance
 /*#####################################################*/
 #define NEW_ADXL345(name) \
 	new_adxl345 *name
@@ -368,6 +404,27 @@ extern tUSBHMSCInstance g_USBHMSCDevice[]; \
 		name->FilterBuffSize = 4;\
 		adxl345_init(name)
 /*#####################################################*/
+#define NEW_NRF24L01(name) \
+	new_nrf24l01 *name
+/*-----------------------------------------------------*/
+#define INIT_NRF24L01(name, SPI_INTERFACE, _spi_instance, _ce_port, _irq_port) \
+		name = new_(new_nrf24l01);\
+		name->spi_instance = _spi_instance;\
+		name->irq = _irq_port;\
+		name->ce = _ce_port;\
+		name->spi = SPI_INTERFACE;\
+		nrf24l01_init(name);
+/*#####################################################*/
+#define NEW_SST25VF(name) \
+	new_sst25vf *name
+/*-----------------------------------------------------*/
+#define INIT_SST25VF(name, SPI_INTERFACE, _spi_instance, _wp_port, _hold_port) \
+		name = new_(new_sst25vf);\
+		name->spi_instance = _spi_instance;\
+		name->wp = _wp_port;\
+		name->hold = _hold_port;\
+		sst25vf_init(name)
+
 
 
 

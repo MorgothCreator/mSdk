@@ -15,6 +15,17 @@
 #include "include/gpio_v2.h"
 /*#####################################################*/
 
+#define _GPIO_FAST_SET_PIN(base_addr, pin)\
+		HWREG(base_addr + GPIO_SETDATAOUT) = 1 << (pin)
+
+#define _GPIO_FAST_CLEAR_PIN(base_addr, pin)\
+		HWREG(base_addr + GPIO_CLEARDATAOUT) = 1 << (pin)
+
+#define _GPIO_FAST_WRITE_MULTI_PIN(base_addr, mask, pin_mask)\
+		HWREG(base_addr + GPIO_DATAOUT) = (HWREG(base_addr + GPIO_DATAOUT) & ~mask) | ((pin_mask) & mask)
+
+
+
 #define dir_in	GPIO_DIR_INPUT
 #define dir_out	GPIO_DIR_OUTPUT
 

@@ -292,15 +292,15 @@
   */
 
 #if defined (STM32F410Tx) || defined (STM32F410Cx) || defined (STM32F410Rx)  || defined (STM32F411xE)  || defined (STM32F405xx)  || defined (STM32F415xx)  || defined (STM32F407xx)  || defined (STM32F417xx)
-  unsigned long SystemCoreClock = 168000000;
+  unsigned long FCPU = 168000000;
 #endif /* STM32F40_41xxx */
 
 #if defined (STM32F427xx) || defined (STM32F437xx) || defined (STM32F429xx) || defined (STM32F439xx)
-  unsigned long SystemCoreClock = 180000000;
+  unsigned long FCPU = 180000000;
 #endif /* STM32F427_437x || STM32F429_439xx */
 
 #if defined (STM32F401xC) || defined (STM32F401xE)
-  unsigned long SystemCoreClock = 84000000;
+  unsigned long FCPU = 84000000;
 #endif /* STM32F401xx */
 
   __I uint8_t AHBPrescTable[16] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 6, 7, 8, 9};
@@ -424,10 +424,10 @@ void SystemCoreClockUpdate(void)
   switch (tmp)
   {
     case 0x00:  /* HSI used as system clock source */
-      SystemCoreClock = HSI_VALUE;
+    	FCPU = HSI_VALUE;
       break;
     case 0x04:  /* HSE used as system clock source */
-      SystemCoreClock = HSE_VALUE;
+    	FCPU = HSE_VALUE;
       break;
     case 0x08:  /* PLL used as system clock source */
 
@@ -449,17 +449,17 @@ void SystemCoreClockUpdate(void)
       }
 
       pllp = (((RCC->PLLCFGR & RCC_PLLCFGR_PLLP) >>16) + 1 ) *2;
-      SystemCoreClock = pllvco/pllp;
+      FCPU = pllvco/pllp;
       break;
     default:
-      SystemCoreClock = HSI_VALUE;
+    	FCPU = HSI_VALUE;
       break;
   }
   /* Compute HCLK frequency --------------------------------------------------*/
   /* Get HCLK prescaler */
   tmp = AHBPrescTable[((RCC->CFGR & RCC_CFGR_HPRE) >> 4)];
   /* HCLK frequency */
-  SystemCoreClock >>= tmp;
+  FCPU >>= tmp;
 }
 
 /**

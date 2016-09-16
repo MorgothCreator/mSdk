@@ -23,12 +23,12 @@ int _cd(int argc, char *argv[])
     //FILINFO g_sFileInfo;
 	char *tmp_path;
 	tmp_path = (char *)argv[0];
-	char *tmp = calloc(1, strlen(tmp_path) + 1);
-	strcpy(tmp, tmp_path);
+	string(tmp, tmp_path);
+	string(tmp2, argv[1]);
 	//tmp = str_copy(tmp_path[0]);
-	tmp = path_append_parse(tmp, (char *)argv[1]);
+	path_append_parse(&tmp, &tmp2);
 
-	fresult = f_opendir(&g_sDirObject, tmp);
+	fresult = f_opendir(&g_sDirObject, tmp.text);
 	/*
 	** Check for error and return if there is a problem.
 	*/
@@ -51,5 +51,5 @@ int _cd(int argc, char *argv[])
 				return (int)"ERROR :Unknown ERR.\n\r";
 		}
 	}
-	return (int)tmp;
+	return (int)&tmp;
 }
