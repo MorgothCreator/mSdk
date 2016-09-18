@@ -6,6 +6,7 @@
  */
 
 #include "../inc/ff_util.h"
+//#include "../inc/ff.h"			/* FatFs configurations and declarations */
 #include "lib/util/hex_string.h"
 
 unsigned long checksum_send;
@@ -44,8 +45,8 @@ int ff_util_appendc (
 )
 {
 	checksum_send -= c;
-	if(fp->fsize != 0)
-		ff_util_seek_eof(fp);
+	if(f_size(fp) != 0)
+		f_eof(fp);
 	return f_putc(c, fp);
 }
 /*-----------------------------------------------------------------------*/
@@ -67,7 +68,8 @@ int ff_util_appends (
 	FIL* fp				/* Pointer to the file object */
 )
 {
-	ff_util_seek_eof(fp);
+	if(f_size(fp) != 0)
+		f_eof(fp);
 	return ff_util_puts(str, fp);
 }
 /*-----------------------------------------------------------------------*/
@@ -924,7 +926,7 @@ FRESULT ff_util_seek_eof (
 	FIL* fp				/* Pointer to the file object */
 )
 {
-	return f_lseek(fp, fp->fsize);
+	return f_lseek(fp, fp->obj.objsize);
 }
 /*-----------------------------------------------------------------------*/
 /* Check if file exist                                                   */
@@ -937,7 +939,7 @@ FRESULT ff_util_file_exist (
 	FRESULT res = f_open(&fp, str, FA_READ);
 	if(res == FR_OK)
 	{
-		f_close(&fp);
+	    f_close(&fp);
 	}
 	return res;
 }

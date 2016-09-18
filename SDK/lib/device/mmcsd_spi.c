@@ -869,9 +869,20 @@ void mmcsd_spi_idle(unsigned int unit_nr)
         		SD_StructDisk->g_s_mmcFatFs.drv_rw_func.DriveStruct = SD_StructDisk;
         		SD_StructDisk->g_s_mmcFatFs.drv_rw_func.drv_r_func = MMCSD_SPI_ReadCmdSend;
         		SD_StructDisk->g_s_mmcFatFs.drv_rw_func.drv_w_func = MMCSD_SPI_WriteCmdSend;
-                if(!f_mount(unit_nr, &SD_StructDisk->g_s_mmcFatFs))
+                char drv_name_buff[9];
+                drv_name_buff[0] = 'S';
+                drv_name_buff[1] = 'P';
+                drv_name_buff[2] = 'I';
+                drv_name_buff[3] = 'S';
+                drv_name_buff[4] = 'D';
+                drv_name_buff[5] = '1' + unit_nr;
+                drv_name_buff[6] = ':';
+                drv_name_buff[7] = '\0';
+                if(!f_mount(&SD_StructDisk->g_s_mmcFatFs, drv_name_buff, 1))
                 {
-                    if(f_opendir(&g_sDirObject, "0:/") == FR_OK)
+                    drv_name_buff[7] = '/';
+                    drv_name_buff[8] = '\0';
+                    if(f_opendir(&g_sDirObject, drv_name_buff) == FR_OK)
                     {
 #ifdef MMCSD_DEBUG_EN
 						if(DebugCom)
@@ -882,6 +893,7 @@ void mmcsd_spi_idle(unsigned int unit_nr)
 							if(SD_StructDisk->g_s_mmcFatFs.fs_type == FS_FAT12)	{ 				UARTprintf(DebugCom, "Fat12");}
 							else if(SD_StructDisk->g_s_mmcFatFs.fs_type == FS_FAT16){ 				UARTprintf(DebugCom, "Fat16");}
 							else if(SD_StructDisk->g_s_mmcFatFs.fs_type == FS_FAT32){ 				UARTprintf(DebugCom, "Fat32");}
+							else if(SD_StructDisk->g_s_mmcFatFs.fs_type == FS_EXFAT){ 				UARTprintf(DebugCom, "exFat");}
 							else								{ 				UARTprintf(DebugCom, "None");}
 																				UARTprintf(DebugCom, "\n\r");
 																				//UARTprintf(DebugCom, "MMCSD0 BootSectorAddress:       %u \n\r",(unsigned int)g_sFatFs.);

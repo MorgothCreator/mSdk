@@ -32,13 +32,29 @@ bool mcspi_open(Mcspi_t *McspiStruct)
 	McspiStruct->Gpio_Mosi = gpio_assign(McspiStruct->MosiPort, McspiStruct->MosiPin, GPIO_OUT_PUSH_PULL, false);
 	McspiStruct->Gpio_Sck = gpio_assign(McspiStruct->SckPort, McspiStruct->SckPin, GPIO_OUT_PUSH_PULL, false);
 	if(McspiStruct->CsPort[0] != 0 && McspiStruct->CsPin[0] != 0)
+	{
+	    _gpio_init(McspiStruct->CsPort[0]);
 		McspiStruct->Gpio_Cs[0] = gpio_assign(McspiStruct->CsPort[0], McspiStruct->CsPin[0], GPIO_OUT_PUSH_PULL, false);
+		gpio_out(McspiStruct->Gpio_Cs[0], 1);
+	}
 	if(McspiStruct->CsPort[1] != 0 && McspiStruct->CsPin[1] != 0)
+	{
+	    _gpio_init(McspiStruct->CsPort[1]);
 		McspiStruct->Gpio_Cs[1] = gpio_assign(McspiStruct->CsPort[1], McspiStruct->CsPin[1], GPIO_OUT_PUSH_PULL, false);
+		gpio_out(McspiStruct->Gpio_Cs[1], 1);
+	}
 	if(McspiStruct->CsPort[2] != 0 && McspiStruct->CsPin[2] != 0)
+	{
+	    _gpio_init(McspiStruct->CsPort[2]);
 		McspiStruct->Gpio_Cs[2] = gpio_assign(McspiStruct->CsPort[2], McspiStruct->CsPin[2], GPIO_OUT_PUSH_PULL, false);
+		gpio_out(McspiStruct->Gpio_Cs[2], 1);
+	}
 	if(McspiStruct->CsPort[3] != 0 && McspiStruct->CsPin[3] != 0)
+	{
+	    _gpio_init(McspiStruct->CsPort[3]);
 		McspiStruct->Gpio_Cs[3] = gpio_assign(McspiStruct->CsPort[3], McspiStruct->CsPin[3], GPIO_OUT_PUSH_PULL, false);
+		gpio_out(McspiStruct->Gpio_Cs[3], 1);
+	}
 	return _mcspi_open(McspiStruct);
 }
 
@@ -52,13 +68,25 @@ void mcspi_close(Mcspi_t *McspiStruct)
 	if(McspiStruct->Gpio_Sck)
 		free(McspiStruct->Gpio_Sck);
 	if(McspiStruct->Gpio_Cs[0])
+	{
+		gpio_out(McspiStruct->Gpio_Cs[0], 1);
 		free(McspiStruct->Gpio_Cs[0]);
+	}
 	if(McspiStruct->Gpio_Cs[1])
+	{
+		gpio_out(McspiStruct->Gpio_Cs[1], 1);
 		free(McspiStruct->Gpio_Cs[1]);
+	}
 	if(McspiStruct->Gpio_Cs[2])
+	{
+		gpio_out(McspiStruct->Gpio_Cs[2], 1);
 		free(McspiStruct->Gpio_Cs[2]);
+	}
 	if(McspiStruct->Gpio_Cs[3])
+	{
+		gpio_out(McspiStruct->Gpio_Cs[3], 1);
 		free(McspiStruct->Gpio_Cs[3]);
+	}
 }
 
 void mcspi_assert(Mcspi_t *McspiStruct)

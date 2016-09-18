@@ -7,6 +7,7 @@
 #define _READONLY	0	/* 1: Read-only mode */
 #define _USE_IOCTL	1
 
+#include <stdbool.h>
 #include "integer.h"
 //#include "usbh_msc_core.h"
 
@@ -30,7 +31,7 @@ typedef struct {
 /*---------------------------------------*/
 /* Prototypes for disk control functions */
 
-BOOL assign_drives (int argc, char *argv[]);
+bool assign_drives (int argc, char *argv[]);
 DSTATUS disk_initialize (BYTE);
 DSTATUS disk_status (BYTE);
 DRESULT disk_read (BYTE, BYTE*, DWORD, BYTE);

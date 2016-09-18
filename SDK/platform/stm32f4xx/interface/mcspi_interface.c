@@ -10,6 +10,8 @@
 #include "include/stm32f4xx.h"
 #include "mcspi_interface.h"
 #include "api/mcspi_def.h"
+#include "api/gpio_def.h"
+#include "api/gpio_api.h"
 #include "driver/stm32f4xx_hal_conf.h"
 #include "driver/stm32f4xx_hal_rcc_ex.h"
 #include "driver/stm32f4xx_hal_rcc.h"
@@ -179,27 +181,23 @@ bool _mcspi_open(new_mcspi *McspiStruct)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
 	if(McspiStruct->CsPort[0] || McspiStruct->CsPin[0])
 	{
-		  _gpio_init(McspiStruct->CsPort[0]);
-		GPIO_InitStruct.Pin = 1 << McspiStruct->CsPin[0];
-		HAL_GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[0]], &GPIO_InitStruct);
+	    GPIO_InitStruct.Pin = 1 << McspiStruct->CsPin[0];
+	    HAL_GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[0]], &GPIO_InitStruct);
 	}
 	if(McspiStruct->CsPort[1] || McspiStruct->CsPin[1])
 	{
-		  _gpio_init(McspiStruct->CsPort[1]);
-		GPIO_InitStruct.Pin = 1 << McspiStruct->CsPin[1];
-		HAL_GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[1]], &GPIO_InitStruct);
+	    GPIO_InitStruct.Pin = 1 << McspiStruct->CsPin[1];
+	    HAL_GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[1]], &GPIO_InitStruct);
 	}
 	if(McspiStruct->CsPort[2] || McspiStruct->CsPin[2])
 	{
-		  _gpio_init(McspiStruct->CsPort[2]);
-		GPIO_InitStruct.Pin = 1 << McspiStruct->CsPin[2];
-		HAL_GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[2]], &GPIO_InitStruct);
+	    GPIO_InitStruct.Pin = 1 << McspiStruct->CsPin[2];
+	    HAL_GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[2]], &GPIO_InitStruct);
 	}
 	if(McspiStruct->CsPort[3] || McspiStruct->CsPin[3])
 	{
-		  _gpio_init(McspiStruct->CsPort[3]);
-		GPIO_InitStruct.Pin = 1 << McspiStruct->CsPin[3];
-		HAL_GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[3]], &GPIO_InitStruct);
+	    GPIO_InitStruct.Pin = 1 << McspiStruct->CsPin[3];
+	    HAL_GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[3]], &GPIO_InitStruct);
 	}
 	  return true;
 }

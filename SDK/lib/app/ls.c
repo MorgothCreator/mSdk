@@ -39,12 +39,11 @@ int _ls(int argc, char *argv[])
     	argv[0] = calloc(1, sizeof(LS_STRUCT));
     	if(!argv[0]) return (int)&"ERROR\n\r";
         settings = (LS_STRUCT *)argv[0];
-        if(!strcmp(argv[2], "-help"));
-        else
+        if(strcmp(argv[2], "-help"))
         {
 #if _USE_LFN
-        	settings->g_sFileInfo.lfname = settings->lfn_tmp;
-			settings->g_sFileInfo.lfsize = 255;
+        	//settings->g_sFileInfo.fname = settings->lfn_tmp;
+			//settings->g_sFileInfo.fsize = 255;
 #endif
 			string(tmp_arg1, argv[1]);
 			string(tmp_arg2, argv[2]);
@@ -147,10 +146,10 @@ int _ls(int argc, char *argv[])
 	}
 	//int fname_len = 0;
 #if _USE_LFN
-	if(strlen(settings->g_sFileInfo.lfname))
+	if(strlen(settings->g_sFileInfo.fname))
 	{
-		strcat(settings->g_sFileInfo.lfname, "\n\r");
-		response = settings->g_sFileInfo.lfname;
+		strcat(settings->g_sFileInfo.fname, "\n\r");
+		response = settings->g_sFileInfo.fname;
 	}
 	else
 #endif

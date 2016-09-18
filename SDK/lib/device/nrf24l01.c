@@ -222,28 +222,46 @@ void nrf24l01_get_status(void *param, bool continuous_carryer_transmit, unsigned
 	nrf24l01_cs_deassert(param);
 }
 
+unsigned long _address = 0;
+
 bool nrf24l01_enable_rx(void *param, unsigned long address)
 {
 	nrf24l01_t *_param = (nrf24l01_t *)param;
-	if(_param->RX_STATE == NRF24L01_RX_DISABLED)
-	{
-		nrf24l01_send_command_without_ADDR(param, FLUSH_RX, NOP);
+	//if(_param->RX_STATE == NRF24L01_RX_DISABLED)
+	//{
 		_param->rx_addr0[0] = address;
 		_param->rx_addr0[1] = address >> 8;
 		_param->rx_addr0[2] = address >> 16;
 		_param->rx_addr0[3] = address >> 24;
-		_param->status = nrf24l01_send_command_with_ADDR(param, W_REGISTER, RX_ADDR_P0, NOP);
-		_param->RX_STATE = NRF24L01_RX_ACTIVE;
-		nrf24l01_set_rx(param);
-		//;nrf24l01_Delay(FCPU / (1.0 / 0.000013));
-		nrf24l01_ce_assert(param);
-		return true;
-	}
-	return false;
+		//_param->status = nrf24l01_send_command_with_ADDR(param, W_REGISTER, RX_ADDR_P0, NOP);
+		//_param->RX_STATE = NRF24L01_RX_ACTIVE;
+		//nrf24l01_set_rx(param);
+		////nrf24l01_Delay(FCPU / (1.0 / 0.000013));
+		//nrf24l01_send_command_without_ADDR(param, FLUSH_RX, NOP);
+		//nrf24l01_send_command_without_ADDR(param, FLUSH_TX, NOP);
+		//nrf24l01_ce_assert(param);
+		//return true;
+	//}
+	return true;
 }
 signed short nrf24l01_packet_receive(void *param, unsigned char *packet, unsigned short max_len, unsigned long timeout)
 {
 	nrf24l01_t *_param = (nrf24l01_t *)param;
+	if(_param->RX_STATE == NRF24L01_RX_DISABLED)
+	{
+		//_param->rx_addr0[0] = address;
+		//_param->rx_addr0[1] = address >> 8;
+		//_param->rx_addr0[2] = address >> 16;
+		//_param->rx_addr0[3] = address >> 24;
+		_param->status = nrf24l01_send_command_with_ADDR(param, W_REGISTER, RX_ADDR_P0, NOP);
+		_param->RX_STATE = NRF24L01_RX_ACTIVE;
+		nrf24l01_set_rx(param);
+		//nrf24l01_Delay(FCPU / (1.0 / 0.000013));
+		nrf24l01_send_command_without_ADDR(param, FLUSH_RX, NOP);
+		nrf24l01_send_command_without_ADDR(param, FLUSH_TX, NOP);
+		nrf24l01_ce_assert(param);
+		//return true;
+	}
 	volatile unsigned char data_len = -1;
 	if(_param->RX_STATE == NRF24L01_RX_ACTIVE)
 	{
@@ -273,8 +291,14 @@ signed short nrf24l01_packet_receive(void *param, unsigned char *packet, unsigne
 				nrf24l01_send_command_with_ADDR(param, W_REGISTER, STATUS_ADDR, (RX_DR));
 				_param->RX_STATE = NRF24L01_RX_DISABLED;
 				nrf24l01_send_command_without_ADDR(param, FLUSH_RX, NOP);
+				nrf24l01_send_command_without_ADDR(param, FLUSH_RX, NOP);
 				//nrf24l01_ce_assert(param);
 				return data_len;
+			}
+			else
+			{
+				//nrf24l01_send_command_without_ADDR(param, FLUSH_RX, NOP);
+				//nrf24l01_send_command_without_ADDR(param, FLUSH_RX, NOP);
 			}
 		}
 	}
@@ -297,7 +321,7 @@ signed int nrf24l01_packet_send(void *param, unsigned char *packet, unsigned cha
 	_param->tx_addr[3] = address >> 24;
 	nrf24l01_send_command_with_ADDR(param, W_REGISTER, TX_ADDR, NOP);
 	nrf24l01_set_tx(param);
-	nrf24l01_Delay(FCPU / (1.0 / 0.000013));
+	nrf24l01_Delay(FCPU / (1.0 / 0.000002));
 	//Send payload
 	unsigned char cnt = 0;
 	nrf24l01_cs_assert(param);
@@ -315,7 +339,7 @@ signed int nrf24l01_packet_send(void *param, unsigned char *packet, unsigned cha
 	nrf24l01_cs_deassert(param);
 	// Pulse for CE -> starts the transmission.
 	nrf24l01_ce_assert(param);
-	nrf24l01_Delay(FCPU / (1.0 / 0.00002));
+	nrf24l01_Delay(FCPU / (1.0 / 0.000002));
 	nrf24l01_ce_deassert(param);
     // Read STATUS register
     //status = nrf24l01_send_command_with_ADDR(param, R_REGISTER, OBSERVE_TX, NOP);
@@ -396,7 +420,9 @@ bool nrf24l01_init(void *param)
 	_param->status = nrf24l01_send_command_with_ADDR(param, W_REGISTER, RX_PW_P1, 32);
 	  // read
 	  // dummy = SPI_Send_command_with_ADDR(R_REGISTER, RX_PW_P1, NOP);
-	_param->status = nrf24l01_send_command_with_ADDR(param, W_REGISTER, RF_CH, 0x02);
+	_param->status = nrf24l01_send_command_with_ADDR(param, W_REGISTER, SETUP_AW, 2);
+	_param->status = nrf24l01_send_command_with_ADDR(param, W_REGISTER, EN_RXADDR, 1);
+	_param->status = nrf24l01_send_command_with_ADDR(param, W_REGISTER, RF_CH, 64);
 	_param->status = nrf24l01_send_command_with_ADDR(param, W_REGISTER, EN_AA, 0x00);
 	_param->status = nrf24l01_send_command_with_ADDR(param, W_REGISTER, SETUP_RETR, 0x00);
 	_param->status = nrf24l01_send_command_with_ADDR(param, W_REGISTER, RF_SETUP, 0x07);

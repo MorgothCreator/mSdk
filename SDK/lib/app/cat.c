@@ -38,7 +38,7 @@ int _cat(int argc, char *argv[])
     	argv[0] = calloc(1, sizeof(CAT_STRUCT));
     	if(!argv[0]) return (int)&"ERROR\n\r";
         settings = (CAT_STRUCT *)argv[0];
-        if(strcmp(argv[2], "-help"));
+        if(strcmp(argv[2], "-help"))
         {
 			char open_mode = FA_OPEN_EXISTING || FA_READ;
 			if(argv[3])
@@ -86,7 +86,7 @@ int _cat(int argc, char *argv[])
 			}
 			else
 			{
-				settings->file = malloc(settings->g_sFilObject.fsize);
+				settings->file = malloc(settings->g_sFilObject.obj.objsize);
 				if(!settings->file)
 				{
 					settings->fresult = FR_INT_ERR;
@@ -120,7 +120,7 @@ int _cat(int argc, char *argv[])
 	** Read an entry from the directory.
 	*/
     unsigned long bytes_read = 0;
-	fresult = f_read(&settings->g_sFilObject, settings->file, settings->g_sFilObject.fsize, &bytes_read);
+	fresult = f_read(&settings->g_sFilObject, settings->file, settings->g_sFilObject.obj.objsize, &bytes_read);
 	/*
 	** Check for error and return if there is a problem.
 	*/
@@ -131,7 +131,7 @@ int _cat(int argc, char *argv[])
 		settings->fresult = fresult;
 		return (int)response;
 	}
-	else if(bytes_read != settings->g_sFilObject.fsize)
+	else if(bytes_read != settings->g_sFilObject.obj.objsize)
 	{
 		if(settings->file) free(settings->file);
 		response = "ERROR :Disk ERR.\n\r";
@@ -141,6 +141,6 @@ int _cat(int argc, char *argv[])
 	settings->cnt ++;
 	//int fname_len = 0;
 	//argv[1] = (char *)strreturn;
-	argv[4] = (char *)settings->g_sFilObject.fsize;
+	argv[4] = (char *)settings->g_sFilObject.obj.objsize;
     return (int)settings->file;
 }

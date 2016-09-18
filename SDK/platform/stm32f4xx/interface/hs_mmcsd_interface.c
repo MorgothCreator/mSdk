@@ -386,8 +386,8 @@ SDIO_DataInitTypeDef SDIO_DataInitStructure;
   */
 FATFS MmcSdFatFs;
 
-#define PATH_BUF_SIZE   4
-static char g_cCwdBuf0[PATH_BUF_SIZE] = "0:/";
+#define PATH_BUF_SIZE   6
+static char g_cCwdBuf0[PATH_BUF_SIZE] = "SD1:/";
 
 DIR g_sDirObject;
 
@@ -893,7 +893,7 @@ void _mmcsd_idle(unsigned int unit_nr)
         MmcSdFatFs.drv_rw_func.DriveStruct = (void *)&uSdCardInfo;//SdStruct;
         MmcSdFatFs.drv_rw_func.drv_r_func = MMCSDReadCmdSend;
         MmcSdFatFs.drv_rw_func.drv_w_func = MMCSDWriteCmdSend;
-        if(!f_mount(0, &MmcSdFatFs))
+        if(!f_mount(&MmcSdFatFs,"SD1:", 1))
         {
                     if(f_opendir(&g_sDirObject, g_cCwdBuf0) == FR_OK)
                     {

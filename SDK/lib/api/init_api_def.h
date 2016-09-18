@@ -54,7 +54,6 @@ extern USBD_DRV_RW_FUNC usbd_drv_func[];
 /*#####################################################*/
 /* UART_INTERFACE, TransferRate, _TxPort, _TxPin, _RxPort, _RxPin */
 #define INIT_UART(UART_INTERFACE, TransferRate, _TxPort, _TxPin, _RxPort, _RxPin) \
-		Uart[UART_INTERFACE] = new_(new_uart);\
 		if(Uart[UART_INTERFACE]) {\
 			Uart[UART_INTERFACE]->BaudRate = TransferRate;\
 			Uart[UART_INTERFACE]->Priority = 0;\
@@ -65,12 +64,11 @@ extern USBD_DRV_RW_FUNC usbd_drv_func[];
 			Uart[UART_INTERFACE]->RxPin = _RxPin;\
 			Uart[UART_INTERFACE]->rxFifoTrigLevel = 1;\
 			Uart[UART_INTERFACE]->txFifoTrigLevel = 1;\
-			uart_open(Uart[UART_INTERFACE]);\
+			uart_open(Uart[UART_INTERFACE]); \
 		}
 /*#####################################################*/
 /* TWI_INTERFACE, _TransferRate, _SclPort, _SclPin, _SdaPort, _SdaPin, _RxBuffSize, _TxBuffSize */
 #define INIT_TWI(TWI_INTERFACE, _TransferRate, _SclPort, _SclPin, _SdaPort, _SdaPin, _RxBuffSize, _TxBuffSize) \
-		TWI[TWI_INTERFACE] = new_(new_twi);\
 		if(TWI[TWI_INTERFACE]) {\
 			TWI[TWI_INTERFACE]->BaudRate = _TransferRate;\
 			TWI[TWI_INTERFACE]->TwiNr = TWI_INTERFACE;\
@@ -83,12 +81,11 @@ extern USBD_DRV_RW_FUNC usbd_drv_func[];
 			TWI[TWI_INTERFACE]->SdaPort = _SdaPort;\
 			TWI[TWI_INTERFACE]->SclPin = _SclPin;\
 			TWI[TWI_INTERFACE]->SdaPin = _SdaPin;\
-			twi_open(TWI[TWI_INTERFACE]);\
+			twi_open(TWI[TWI_INTERFACE]); \
 		}
 /*#####################################################*/
 /* SPI_INTERFACE, _TransferRate, _WordSize, _SckPort, _SckPin, _MosiPort, _MosiPin, _MisoPort, _MisoPin, _CsPort, _CsPin */
 #define INIT_SPI(SPI_INTERFACE, _TransferRate, _WordSize, _SckPort, _SckPin, _MosiPort, _MosiPin, _MisoPort, _MisoPin, _CsPort, _CsPin) \
-		SPI[SPI_INTERFACE] = new_(new_mcspi); \
 		if(SPI[SPI_INTERFACE]) {\
 			SPI[SPI_INTERFACE]->CsPort[0] = _CsPort; \
 			SPI[SPI_INTERFACE]->CsPin[0] = _CsPin; \
@@ -105,7 +102,7 @@ extern USBD_DRV_RW_FUNC usbd_drv_func[];
 			SPI[SPI_INTERFACE]->WordSize = _WordSize; \
 			SPI[SPI_INTERFACE]->Slave = false; \
 			SPI[SPI_INTERFACE]->BaudRate = _TransferRate; \
-			mcspi_open(SPI[SPI_INTERFACE]);\
+			mcspi_open(SPI[SPI_INTERFACE]); \
 		}
 /*#####################################################*/
 /*#define INIT_MMCSD(UNIT_NR, GpioMmcSdDetect, GpioLed) \

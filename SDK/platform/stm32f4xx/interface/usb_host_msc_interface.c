@@ -41,8 +41,8 @@ static DWORD scratch[_MAX_SS / 4];
 // it is root ("/").
 //
 //*****************************************************************************
-#define PATH_BUF_SIZE   4
-char g_cCwdBuf1[PATH_BUF_SIZE] = "1:/";
+#define PATH_BUF_SIZE   7
+char g_cCwdBuf1[PATH_BUF_SIZE] = "USB1:/";
 //char g_cCwdBuf2[PATH_BUF_SIZE] = "4:/";
 
 FATFS g_sFatFs1;
@@ -343,7 +343,14 @@ void _usb_msc_host_idle(unsigned int instance)
         g_sFatFs1.drv_rw_func.DriveStruct = (void*)&hUSB_Host[instance];
         g_sFatFs1.drv_rw_func.drv_r_func = USBMSCReadBlock;
         g_sFatFs1.drv_rw_func.drv_w_func = USBMSCWriteBlock;
-        if(!f_mount(1, &g_sFatFs1))
+        char drv_name_buff[6];
+        drv_name_buff[1] = 'U';
+        drv_name_buff[1] = 'S';
+        drv_name_buff[1] = 'B';
+        drv_name_buff[0] = '1' + instance;
+        drv_name_buff[1] = ':';
+        drv_name_buff[2] = '\0';
+        if(!f_mount(&g_sFatFs1, drv_name_buff, 1))
         {
         	if(f_opendir(&g_sDirObject, g_cCwdBuf1) == FR_OK)
             {
