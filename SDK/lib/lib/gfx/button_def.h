@@ -8,6 +8,8 @@
 #ifndef LIB_LIB_GFX_BUTTON_DEF_H_
 #define LIB_LIB_GFX_BUTTON_DEF_H_
 
+#include <stdbool.h>
+#include "controls_definition.h"
 
 //#######################################################################################
 typedef struct

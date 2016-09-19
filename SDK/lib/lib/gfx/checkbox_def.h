@@ -8,6 +8,9 @@
 #ifndef LIB_LIB_GFX_CHECKBOX_DEF_H_
 #define LIB_LIB_GFX_CHECKBOX_DEF_H_
 
+#include <stdbool.h>
+#include "controls_definition.h"
+
 typedef enum
 {
 	checkbox_style_normal = 0,
