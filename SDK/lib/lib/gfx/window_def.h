@@ -251,6 +251,8 @@ typedef struct Window_s
 
 }tWindow;
 //#######################################################################################
+extern void* window_add_children(struct Window_s *settings, unsigned int children_type, char *children_name);
+//#######################################################################################
 /* Definitions to add new private items to a parent window */
 /*
  * This macro will allocate and add a Button to desired Window.
