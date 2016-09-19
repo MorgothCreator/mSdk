@@ -46,7 +46,7 @@ int ff_util_appendc (
 {
 	checksum_send -= c;
 	if(f_size(fp) != 0)
-		f_eof(fp);
+		ff_util_seek_eof(fp);
 	return f_putc(c, fp);
 }
 /*-----------------------------------------------------------------------*/
@@ -69,7 +69,7 @@ int ff_util_appends (
 )
 {
 	if(f_size(fp) != 0)
-		f_eof(fp);
+		f_size(fp);
 	return ff_util_puts(str, fp);
 }
 /*-----------------------------------------------------------------------*/
@@ -920,13 +920,23 @@ int ff_util_printf(
 #endif /* !HAVE_SNPRINTF */
 
 /*-----------------------------------------------------------------------*/
-/* Put a next line                                                       */
+/* Seek                                                       */
+/*-----------------------------------------------------------------------*/
+FRESULT ff_util_seek (
+	FIL* fp,				/* Pointer to the file object */
+	unsigned int location
+)
+{
+	return f_lseek(fp, location);
+}
+/*-----------------------------------------------------------------------*/
+/* Seek to end of file                                                       */
 /*-----------------------------------------------------------------------*/
 FRESULT ff_util_seek_eof (
 	FIL* fp				/* Pointer to the file object */
 )
 {
-	return f_lseek(fp, fp->obj.objsize);
+	return f_lseek(fp, f_size(fp));
 }
 /*-----------------------------------------------------------------------*/
 /* Check if file exist                                                   */

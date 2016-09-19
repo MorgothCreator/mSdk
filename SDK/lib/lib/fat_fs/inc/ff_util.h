@@ -45,6 +45,11 @@ int ff_util_printf(
 		...					/* Optional arguments... */
 );
 
+FRESULT ff_util_seek (
+	FIL* fp,				/* Pointer to the file object */
+	unsigned int location
+);
+
 FRESULT ff_util_seek_eof (
 	FIL* fp				/* Pointer to the file object */
 );
