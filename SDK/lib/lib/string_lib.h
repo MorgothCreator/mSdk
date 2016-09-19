@@ -48,6 +48,8 @@ typedef struct {
 	void (*ToUperCase)(String_t* string);
 	void (*ToLowerCase)(String_t* string);
 	String_t *(*Append)(String_t* Dest, String_t* Src);
+	String_t *(*AppendChar)(String_t* dest, char Char);
+	String_t *(*AppendF)(String_t* dest, char* str, ...);
 	String_t *(*Insert)(String_t* Dest, String_t* Src, unsigned int Location);
 	String_t *(*Clear)(String_t* dest);
 	char* (*Cut)(String_t* Str);
@@ -65,8 +67,7 @@ typedef struct {
 	struct String_s **(*ArrayAddItem)(String_t **array, String_t *item);
 	STR_RESULT (*ArrayGetItem)(String_t **item, String_t **array, unsigned int item_nr);
 
-	String_t *(*StrSetF)(String_t* dest, char* str, ...);
-	String_t *(*StrApendF)(String_t* dest, char* str, ...);
+	String_t *(*SetF)(String_t* dest, char* str, ...);
 }StringFunc_t;
 
 extern StringFunc_t String;
@@ -92,6 +93,7 @@ void str_remove_new_line(String_t *string);
 void str_to_upercase(String_t* string);
 void str_to_lowercase(String_t* string);
 String_t *str_append(String_t* Dest, String_t* Src);
+String_t *str_append_char(String_t* dest, char Char);
 String_t *str_insert(String_t* Dest, String_t* Src, unsigned int Location);
 String_t *str_clear(String_t* dest);
 char* str_cut(String_t* Str);
@@ -110,7 +112,7 @@ String_t **str_array_item_add(String_t **array, String_t *item);
 STR_RESULT str_array_item_get(String_t **item, String_t **array, unsigned int item_nr);
 
 String_t *str_setf(String_t* dest, char* str, ...);
-String_t *str_apendf(String_t* dest, char* str, ...);
+String_t *str_appendf(String_t* dest, char* str, ...);
 
 //#######################################################
 #define new_string String_t

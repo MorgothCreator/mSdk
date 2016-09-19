@@ -34,6 +34,8 @@ static int string_printf(
 
 StringFunc_t String = {
 	.Append = str_append,
+	.AppendChar = str_append_char,
+	.AppendF = str_appendf,
 	.ArrayAddItem = str_array_item_add,
 	.ArrayFree = str_array_free,
 	.ArrayGetItem = str_array_item_get,
@@ -52,8 +54,7 @@ StringFunc_t String = {
 	.Substring = str_substring,
 	.ToLowerCase = str_to_lowercase,
 	.ToUperCase = str_to_upercase,
-	.StrSetF = str_setf,
-	.StrApendF = str_apendf,
+	.SetF = str_setf,
 };
 
 void str_remove_new_line(String_t *string)
@@ -125,6 +126,40 @@ String_t *str_append(String_t* dest, String_t* src)
 	if(!Return)
 		return NULL;
 	strcat(Return, src->text);
+	dest->text = Return;
+	dest->len = LenDest + LenSrc;
+	dest->modifyed = true;
+	dest->error = STR_OK;
+	return dest;
+}
+
+String_t *str_append_char(String_t* dest, char Char)
+{
+	if(!dest)
+	{
+		dest = calloc(1, sizeof(String_t));
+		if(!dest)
+			return NULL;
+		//StringInit(dest);
+	}
+	unsigned int LenSrc = 1;
+	unsigned int LenDest = strlen(dest->text);
+	char *Return;
+	if(dest->initialized)
+		Return = (char *)realloc(dest->text, LenDest + LenSrc + 1);
+	else
+	{
+		Return = (char *)malloc(LenDest + LenSrc + 1);
+		*Return = 0;
+		dest->initialized = true;
+	}
+	//char *Return = (char *)realloc(dest, LenDest + LenSrc + 1);
+	if(!Return)
+		return NULL;
+	char buff_char[2];
+	buff_char[0] = Char;
+	buff_char[1] = '\0';
+	strcat(Return, buff_char);
 	dest->text = Return;
 	dest->len = LenDest + LenSrc;
 	dest->modifyed = true;
@@ -316,23 +351,12 @@ char *str_substring(String_t* src, unsigned int position, unsigned int len)
 {
 	if(!src || !src->text)
 		return NULL;
-	if(position + len >= src->len - 1)
+	if(position + len >= src->len)
 		return NULL;
-	char *Return;
-	if(src->initialized)
-	{
-		Return = (char *)realloc(src->text, len + 1);
-		*Return = 0;
-	}
-	else
-	{
-		Return = (char *)malloc(len + 1);
-		*Return = 0;
-		src->initialized = true;
-	}
-	//char *Return = (char *)calloc(1, len + 1);
+	char *Return = (char *)calloc(1, len + 1);
 	if(!Return)
 		return NULL;
+	*Return = 0;
 	strncpy(Return, src->text + position, len);
 	return Return;
 }
@@ -1257,7 +1281,7 @@ String_t *str_setf(String_t* dest, char* str, ...)
 	return dest;
 }
 
-String_t *str_apendf(String_t* dest, char* str, ...)
+String_t *str_appendf(String_t* dest, char* str, ...)
 {
 	VA_LOCAL_DECL;
 
