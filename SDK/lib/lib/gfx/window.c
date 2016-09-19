@@ -88,9 +88,9 @@ void window_set_children_settings(tWindow *settings, bool call_childrens, bool t
 		{
 			unsigned int children_type = settings->Internals.Childrens[Tmp_Children_Cnt]->Type;
 			void *children = settings->Internals.Childrens[Tmp_Children_Cnt]->Children;
-			if(WindowWindowChildren == children_type || WindowTabGroupChildren == children_type)
+			tWindow *Window_settings = (tWindow *)children;
+			if((WindowWindowChildren == children_type || WindowTabGroupChildren == children_type) && Window_settings->Visible == true)
 			{
-				tWindow *Window_settings = (tWindow *)children;
 				/*if(control_comand->Cursor == Cursor_Down &&
 						check_if_inside_box(Window_settings->Internals.Position.X,
 							Window_settings->Internals.Position.Y,
@@ -638,15 +638,21 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 		}
 	}
 
+	/*if(settings->Internals.OldStateEnabled == false || settings->Internals.OldStateVisible == false)
+	{
+		control_comand->CursorCoordonateUsed = false;
+		return;
+	}*/
 	//if(settings->Internals.Caption.Text != NULL && settings->Caption.Text != NULL && strcmp(settings->Internals.Caption.Text, settings->Caption.Text) == NULL)
 		//settings->Internals.NeedEntireRefresh = true;
 
 	/*Clear background of box with actual painted dimensions and positions if they been changed*/
+	if(!settings->Visible)
+		settings->Internals.NeedEntireRefresh = false;
 	if(settings->Internals.NeedEntireRefresh == true || settings->Internals.OldStateVisible != settings->Visible)
 	{
 		if(!settings->Internals.NoPaintBackGround || !settings->Visible)
 		{
-			settings->Internals.OldStateVisible = settings->Visible;
 			tRectangle back_up_clip = LcdStruct->sClipRegion;
 			LcdStruct->sClipRegion.sXMin = X_StartBox;
 			LcdStruct->sClipRegion.sYMin = Y_StartBox;
@@ -657,10 +663,27 @@ void window(struct Window_s *settings, tControlCommandData* control_comand)
 			LcdStruct->lcd_func.put_rectangle(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox, true, settings->Color.Scren);
 			LcdStruct->lcd_func.box_cache_clean(pDisplay, X_StartBox, Y_StartBox, X_LenBox, Y_LenBox);
 			LcdStruct->sClipRegion = back_up_clip;
+		}
+		if(settings->Internals.OldStateVisible != settings->Visible)
+		{
+			settings->Internals.OldStateVisible = settings->Visible;
 			if(!settings->Visible)
+			{
+				control_comand->CursorCoordonateUsed = true;
+				if(ParentWindow != NULL && settings != ParentWindow)
+				{
+					ParentWindow->Internals.NeedEntireRefresh = true;
+					settings->Internals.NeedEntireRefresh = false;
+				}
 				return;
+			}
 		}
 		settings->Internals.NeedEntireRefresh = true;
+	}
+	if(!settings->Visible)
+	{
+		settings->Internals.NeedEntireRefresh = false;
+		return;
 	}
 	/* Verify if is Entire refresh, entire repaint, or state changed */
 	if(settings->Visible == true && (
