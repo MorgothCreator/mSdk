@@ -267,7 +267,7 @@ signed short nrf24l01_packet_receive(void *param, unsigned char *packet, unsigne
 	{
 		if(nrf24l01_irq_state(param))
 		{
-			volatile unsigned char status = nrf24l01_send_command_with_ADDR(param, R_REGISTER, STATUS_ADDR, NOP);
+			unsigned char status = nrf24l01_send_command_without_ADDR(param, R_REGISTER, NOP);
 		    // Set high when new data arrives RX FIFO
 			if ((status & RX_DR) != 0)
 			{
@@ -297,8 +297,8 @@ signed short nrf24l01_packet_receive(void *param, unsigned char *packet, unsigne
 			}
 			else
 			{
-				//nrf24l01_send_command_without_ADDR(param, FLUSH_RX, NOP);
-				//nrf24l01_send_command_without_ADDR(param, FLUSH_RX, NOP);
+				nrf24l01_send_command_without_ADDR(param, FLUSH_RX, NOP);
+				nrf24l01_send_command_without_ADDR(param, FLUSH_RX, NOP);
 			}
 		}
 	}
@@ -343,9 +343,10 @@ signed int nrf24l01_packet_send(void *param, unsigned char *packet, unsigned cha
 	nrf24l01_ce_deassert(param);
     // Read STATUS register
     //status = nrf24l01_send_command_with_ADDR(param, R_REGISTER, OBSERVE_TX, NOP);
+	volatile int timeout = 100;
     do {
-        status = nrf24l01_send_command_with_ADDR(param, R_REGISTER, STATUS_ADDR, NOP);
-    }while(((~status) & MAX_RT) && ((~status) & TX_DS));
+        status = nrf24l01_send_command_without_ADDR(param, R_REGISTER, NOP);
+    }while(((~status) & MAX_RT) && ((~status) & TX_DS) && --timeout);
     signed int ret = -3;
     // if exceed number of transmission packets
     if ((status & MAX_RT) != 0) {
@@ -379,7 +380,8 @@ signed int nrf24l01_packet_send(void *param, unsigned char *packet, unsigned cha
       // ...
       ret = -2;
     }
-
+    if(!timeout)
+    	ret = -4;
     // Setting for RX device
     //Write CONFIG register -> 00001010 - CRC enable, power-up, RX
     nrf24l01_set_rx(param);
