@@ -76,7 +76,7 @@ static void vs10xx_reg_write(void *param, unsigned char Reg, unsigned short Valu
 	buffer[1] = Reg;
 	buffer[2] = Value >> 8;
 	buffer[3] = Value;
-	_param->spi->Buff = (volatile unsigned char *)&buffer;
+	_param->spi->Buff = (volatile unsigned char *)buffer;
 	_param->spi->CsSelect = _param->spi_cmd_instance;
 	mcspi_transfer(_param->spi, 4, 0);
 	vs10xx_deassert_cs(param);
@@ -94,7 +94,7 @@ static unsigned short vs10xx_reg_read(void *param, unsigned char Reg)
 	buffer[1] = Reg;
 	buffer[2] = 0xFF;
 	buffer[3] = 0xFF;
-	_param->spi->Buff = (volatile unsigned char *)&buffer;
+	_param->spi->Buff = (volatile unsigned char *)buffer;
 	_param->spi->CsSelect = _param->spi_cmd_instance;
 	mcspi_transfer(_param->spi, 2, 2);
 	Value = buffer[2] << 8;
@@ -109,7 +109,7 @@ void vs10xx_soft_reset(void *param)
 	vs10xx_reg_write(param, VS_SCI_MODE, 4);
 	vs10xx_reg_write(param, VS_SCI_MODE, 0x0800);
 	vs10xx_reg_write(param, VS_SCI_BASS, 0x7A00);
-	vs10xx_reg_write(param, VS_SCI_CLOCKF, 0x2000);
+	//vs10xx_reg_write(param, VS_SCI_CLOCKF, 0x2000);
 	vs10xx_check_busy(param);
 }
 
@@ -120,7 +120,7 @@ void vs10xx_hard_reset(void *param)
 	vs10xx_deassert_rst(param);
 	vs10xx_reg_write(param, VS_SCI_MODE, 0x0800);
 	vs10xx_reg_write(param, VS_SCI_BASS, 0x7A00);
-	vs10xx_reg_write(param, VS_SCI_CLOCKF, 0x2000);
+	//vs10xx_reg_write(param, VS_SCI_CLOCKF, 0x2000);
 	vs10xx_check_busy(param);
 }
 
@@ -156,8 +156,9 @@ bool vs10xx_send_32B_data(void *param, unsigned char* buffer)
 		return false;
 	vs10xx_t *_param = (vs10xx_t *)param;
 	vs10xx_assert_dcs(param);
-	_param->spi->Buff = (volatile unsigned char *)&buffer;
-	_param->spi->CsSelect = _param->spi_cmd_instance;
+	_param->spi->Buff = (volatile unsigned char *)buffer;
+	_param->spi->CsSelect = _param->spi_data_instance;
+	_param->spi->DisableCsHandle = true;
 	mcspi_transfer(_param->spi, 32, 0);
 	vs10xx_deassert_dcs(param);
 	return true;
@@ -180,7 +181,11 @@ void vs10xx_init(void *param, new_mcspi *spi, unsigned char spi_cmd_instance, un
 	_param->spi = spi;
 	_param->spi_cmd_instance = spi_cmd_instance;
 	_param->spi_data_instance = spi_data_instance;
+	spi->ClkDiv[spi_cmd_instance] = 4;
+	spi->ClkDiv[spi_data_instance] = 4;
 	_param->rst = rst;
 	_param->dreq = dreq;
 	vs10xx_hard_reset(param);
+	vs10xx_soft_reset(param);
+	vs10xx_set_pll(param, 12288000);
 }
