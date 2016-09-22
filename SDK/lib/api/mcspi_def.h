@@ -27,11 +27,13 @@
 /*#####################################################*/
 typedef struct
 {
+	unsigned char OldCsSelect;
 	unsigned char CsSelect;
 	unsigned char MosiPin;
 	unsigned char MisoPin;
 	unsigned char SckPin;
 	unsigned char CsPin[4];
+	unsigned int ClkDiv[4];
 	gpio_port_enum MosiPort;
 	gpio_port_enum MisoPort;
 	gpio_port_enum SckPort;
@@ -43,7 +45,7 @@ typedef struct
 	volatile bool interrupted;
 	//volatile unsigned char Channel;
 	volatile unsigned int BaseAddr;
-	volatile unsigned long BaudRate;
+	//volatile unsigned long BaudRate;
 	volatile unsigned int BuffSize;
 	volatile unsigned int numOfBytes;
 	volatile unsigned char McspiNr;

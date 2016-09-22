@@ -145,11 +145,22 @@ bool _mcspi_open(new_mcspi *McspiStruct)
 	  return false;
   }
 
+  GPIO_InitStruct.Pin       = 1 << McspiStruct->SckPin;
+  HAL_GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->SckPort], &GPIO_InitStruct);
+
+  /* SPI MISO GPIO pin configuration  */
+  GPIO_InitStruct.Pin = 1 << McspiStruct->MisoPin;
+  HAL_GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->MisoPort], &GPIO_InitStruct);
+
+  /* SPI MOSI GPIO pin configuration  */
+  GPIO_InitStruct.Pin = 1 << McspiStruct->MosiPin;
+  HAL_GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->MosiPort], &GPIO_InitStruct);
+
   SpiHandle->Instance               = _SPI_[McspiStruct->McspiNr];
-  SpiHandle->Init.BaudRatePrescaler = (McspiStruct->BaudRate << 3) & SPI_BAUDRATEPRESCALER_256;
+  SpiHandle->Init.BaudRatePrescaler = (McspiStruct->ClkDiv[McspiStruct->CsSelect] << 3) & SPI_BAUDRATEPRESCALER_256;
   SpiHandle->Init.Direction         = SPI_DIRECTION_2LINES;
-  SpiHandle->Init.CLKPhase          = SPI_PHASE_1EDGE;
-  SpiHandle->Init.CLKPolarity       = SPI_POLARITY_LOW;
+  SpiHandle->Init.CLKPhase          = McspiStruct->Cpha & 0x01;
+  SpiHandle->Init.CLKPolarity       = (McspiStruct->Cpol & 0x01) << 1;
   SpiHandle->Init.CRCCalculation    = SPI_CRCCALCULATION_DISABLE;
   SpiHandle->Init.CRCPolynomial     = 7;
   SpiHandle->Init.DataSize          = SPI_DATASIZE_8BIT;
@@ -162,17 +173,6 @@ bool _mcspi_open(new_mcspi *McspiStruct)
   //__HAL_SPI_ENABLE(SpiHandle);
   /*##-2- Configure peripheral GPIO ##########################################*/
   /* SPI SCK GPIO pin configuration  */
-
-  GPIO_InitStruct.Pin       = 1 << McspiStruct->SckPin;
-  HAL_GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->SckPort], &GPIO_InitStruct);
-
-  /* SPI MISO GPIO pin configuration  */
-  GPIO_InitStruct.Pin = 1 << McspiStruct->MisoPin;
-  HAL_GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->MisoPort], &GPIO_InitStruct);
-
-  /* SPI MOSI GPIO pin configuration  */
-  GPIO_InitStruct.Pin = 1 << McspiStruct->MosiPin;
-  HAL_GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->MosiPort], &GPIO_InitStruct);
 
 
   //GPIO_InitStructure.Alternate = GPIO_Mode_OUT;
@@ -286,10 +286,20 @@ void _mcspi_close(new_mcspi *McspiStruct)
 /*#####################################################*/
 void _mcspi_assert(Mcspi_t *McspiStruct)
 {
+	//if(McspiStruct->OldCsSelect != McspiStruct->CsSelect)
+	//{
+	//	McspiStruct->OldCsSelect = McspiStruct->CsSelect;
+		_mcspi_set_baud(McspiStruct, McspiStruct->ClkDiv[McspiStruct->CsSelect]);
+	//}
 	HAL_GPIO_WritePin(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[McspiStruct->CsSelect]], 1 << McspiStruct->CsPin[McspiStruct->CsSelect], GPIO_PIN_RESET);
 }
 void _mcspi_deassert(Mcspi_t *McspiStruct)
 {
+	//if(McspiStruct->OldCsSelect != McspiStruct->CsSelect)
+	//{
+		//McspiStruct->OldCsSelect = McspiStruct->CsSelect;
+		_mcspi_set_baud(McspiStruct, McspiStruct->ClkDiv[McspiStruct->CsSelect]);
+	//}
 	HAL_GPIO_WritePin(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[McspiStruct->CsSelect]], 1 << McspiStruct->CsPin[McspiStruct->CsSelect], GPIO_PIN_SET);
 }
 /*#####################################################*/
@@ -306,12 +316,14 @@ bool _mcspi_transfer(Mcspi_t *McspiStruct)
 	//for(; transfer_cnt < McspiStruct->numOfBytes; transfer_cnt++) {
 	//	McspiStruct->Buff[transfer_cnt] = _mcspi_SendByte(McspiStruct, McspiStruct->Buff[transfer_cnt]);
 	//}
+	bool status = true;
 	SPI_HandleTypeDef *hspi = (SPI_HandleTypeDef *)McspiStruct->UserData;
-	HAL_SPI_TransmitReceive(hspi, (unsigned char *)McspiStruct->Buff, (unsigned char *)McspiStruct->Buff, McspiStruct->numOfBytes, 10);
+	if(HAL_SPI_TransmitReceive(hspi, (unsigned char *)McspiStruct->Buff, (unsigned char *)McspiStruct->Buff, McspiStruct->numOfBytes, 10) != HAL_OK)
+		status = false;
 
 	if(!McspiStruct->DisableCsHandle)
 		HAL_GPIO_WritePin(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[McspiStruct->CsSelect]], 1 << McspiStruct->CsPin[McspiStruct->CsSelect], GPIO_PIN_SET);
-	return true;
+	return status;
 }
 /*#####################################################*/
 bool _mcspi_set_baud(Mcspi_t *McspiStruct, unsigned long baud)

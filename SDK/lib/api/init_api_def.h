@@ -96,12 +96,12 @@ extern USBD_DRV_RW_FUNC usbd_drv_func[];
 			SPI[SPI_INTERFACE]->SckPort = _SckPort; \
 			SPI[SPI_INTERFACE]->SckPin = _SckPin; \
 			SPI[SPI_INTERFACE]->McspiNr = SPI_INTERFACE; \
-			SPI[SPI_INTERFACE]->Cpol = true; \
-			SPI[SPI_INTERFACE]->Cpha = true; \
+			SPI[SPI_INTERFACE]->Cpol = false; \
+			SPI[SPI_INTERFACE]->Cpha = false; \
 			SPI[SPI_INTERFACE]->LsbFirst = false; \
 			SPI[SPI_INTERFACE]->WordSize = _WordSize; \
 			SPI[SPI_INTERFACE]->Slave = false; \
-			SPI[SPI_INTERFACE]->BaudRate = _TransferRate; \
+			SPI[SPI_INTERFACE]->ClkDiv[0] = _TransferRate; \
 			mcspi_open(SPI[SPI_INTERFACE]); \
 		}
 /*#####################################################*/
