@@ -946,6 +946,7 @@ FRESULT ff_util_file_exist (
 )
 {
 	FIL fp;				/* Pointer to the file object */
+	memset(&fp, 0, sizeof(FIL));
 	FRESULT res = f_open(&fp, str, FA_READ);
 	if(res == FR_OK)
 	{
