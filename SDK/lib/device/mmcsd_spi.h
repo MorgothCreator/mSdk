@@ -266,6 +266,7 @@ typedef struct SD_Struct
 	unsigned char SpiInstance;
 	FATFS g_s_mmcFatFs;
 	Mcspi_t *HardUnitStruct;
+	bool fs_mounted;
 	bool (*HardUnitOpenFunc)(Mcspi_t *HardUnitStruct);
 	void (*HardUnitCloseFunc)(Mcspi_t *HardUnitStruct);
 	bool (*HardUnitSetBaudFunc)(Mcspi_t *HardUnitStruct, unsigned long baud);

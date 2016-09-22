@@ -526,7 +526,7 @@ int _select (SD_Struct_t *SD_Struct)	/* 1:OK, 0:Timeout */
 	sd_cs_assert(SD_Struct);
 	sd_io_data(SD_Struct, 0xFF);	/* Dummy clock (force DO enabled) */
 
-	if (wait_ready(SD_Struct, 5000000))
+	if (wait_ready(SD_Struct, 5000))
 		return 1;	/* OK */
 	deselect(SD_Struct);
 	return 0;	/* Timeout */
@@ -548,13 +548,17 @@ BYTE send_cmd (		/* Return value: R1 resp (bit7==1:Failed to send) */
 	{	/* Send a CMD55 prior to ACMD<n> */
 		cmd &= 0x7F;
 		res = send_cmd(SD_Struct, CMD55, 0);
-		if (res > 1) return res;
+		if (res > 1)
+			return res;
 	}
 
 	/* Select card */
-	deselect(SD_Struct);
-	if (!_select(SD_Struct))
-		return 0xFF;
+	if (cmd != CMD12)
+	{
+		deselect(SD_Struct);
+		if (!_select(SD_Struct))
+			return 0xFF;
+	}
 
 	/* Send command packet */
 	sd_io_data(SD_Struct, 0x40 | cmd);				/* Start + command index */
@@ -572,7 +576,7 @@ BYTE send_cmd (		/* Return value: R1 resp (bit7==1:Failed to send) */
 	/* Receive command resp */
 	if (cmd == CMD12)
 		sd_io_data(SD_Struct, 0xFF);	/* Diacard following one byte when CMD12 */
-	n = 100;								/* Wait for response (10 bytes max) */
+	n = 255;								/* Wait for response (10 bytes max) */
 	do
 		res = sd_io_data(SD_Struct, 0xFF);
 	while ((res & 0x80) && --n);
@@ -583,7 +587,9 @@ BYTE send_cmd (		/* Return value: R1 resp (bit7==1:Failed to send) */
 bool _mmcsd_spi_init(unsigned int unit_nr)
 {
 	SD_Struct_t *SD_Struct = MMCSD_SPI[unit_nr];
-	SD_Struct->HardUnitSetBaudFunc((void *)SD_Struct->HardUnitStruct, 7);			/* Set fast clock */
+	SD_Struct->HardUnitStruct->CsSelect = SD_Struct->SpiInstance;
+	SD_Struct->HardUnitStruct->ClkDiv[SD_Struct->SpiInstance] = 7;
+	//SD_Struct->HardUnitSetBaudFunc((void *)SD_Struct->HardUnitStruct, 7);			/* Set fast clock */
 	sd_cs_deassert(SD_Struct);
 	BYTE cmd, ty, ocr[4], csd[16];
 	unsigned short  n;
@@ -631,7 +637,9 @@ bool _mmcsd_spi_init(unsigned int unit_nr)
 	}*/
 	if (ty)
 	{			/* OK */
-		SD_Struct->HardUnitSetBaudFunc((void *)SD_Struct->HardUnitStruct, 1);			/* Set fast clock */
+		SD_Struct->HardUnitStruct->CsSelect = SD_Struct->SpiInstance;
+		SD_Struct->HardUnitStruct->ClkDiv[SD_Struct->SpiInstance] = 1;
+		//SD_Struct->HardUnitSetBaudFunc((void *)SD_Struct->HardUnitStruct, 1);			/* Set fast clock */
 		//send_cmd(SD_Struct, MMC_CMD_CRC_ON_OFF,0x00000001); // CMD59
 		if (send_cmd(SD_Struct, CMD9, 0) == 0)
 		{
@@ -684,7 +692,7 @@ static inline bool rcvr_datablock(void *_SD_Struct, unsigned char *buff, unsigne
 {
 	SD_Struct_t *SD_Struct = (SD_Struct_t *)_SD_Struct;
 	unsigned char token;
-	unsigned long Timer1 = 5000000;
+	unsigned long Timer1 = 5000;
 	do
 	{							/* Wait for data packet in timeout of 100ms */
 		token = sd_io_data(SD_Struct,255);
@@ -701,7 +709,8 @@ static inline bool rcvr_datablock(void *_SD_Struct, unsigned char *buff, unsigne
 	SD_Struct->HardUnitStruct->DisableCsHandle = true;
 	memset(buff, 0xFF, bytes_to_read);
 	SD_Struct->HardUnitStruct->Buff = buff;
-	SD_Struct->HardUnitReadWriteBuffFunc(SD_Struct->HardUnitStruct, 0, bytes_to_read);
+	if(!SD_Struct->HardUnitReadWriteBuffFunc(SD_Struct->HardUnitStruct, 0, bytes_to_read))
+		return false;
 
 
 	sd_io_data(SD_Struct,255);						/* Discard CRC */
@@ -713,8 +722,10 @@ static inline bool rcvr_datablock(void *_SD_Struct, unsigned char *buff, unsigne
 unsigned int _sd_read_page(void *_SD_Struct, void* _Buffer, unsigned long block, unsigned int nblks)
 {
 	SD_Struct_t *SD_Struct = (SD_Struct_t *)_SD_Struct;
-	if (/*drv || */!nblks) return false;		/* Check parameter */
-	if (SD_Struct->SD_Init_OK == false) return false;	/* Check if drive is ready */
+	if (/*drv || */!nblks)
+		return false;		/* Check parameter */
+	if (SD_Struct->SD_Init_OK == false)
+		return false;	/* Check if drive is ready */
 
 	if (SD_Struct->SD_Hc == IsSd)
 		block *= 512;	/* LBA ot BA conversion (byte addressing cards) */
@@ -732,7 +743,8 @@ unsigned int _sd_read_page(void *_SD_Struct, void* _Buffer, unsigned long block,
 		{	/* READ_MULTIPLE_BLOCK */
 			do
 			{
-				if (!rcvr_datablock(SD_Struct, Buffer, 512)) break;
+				if (!rcvr_datablock(SD_Struct, Buffer, 512))
+					break;
 				Buffer += 512;
 			} while (--nblks);
 			send_cmd(SD_Struct, CMD12, 0);				/* STOP_TRANSMISSION */
@@ -746,11 +758,21 @@ unsigned int MMCSD_SPI_ReadCmdSend(void *_SD_Struct, void* _Buffer, unsigned lon
 {
 	unsigned long block = _block;
 	unsigned char* Buffer = (unsigned char*)_Buffer;
-	//do
-	//{
-		if(!_sd_read_page(_SD_Struct, Buffer, block, nblks)) return false;
-	//	Buffer += 512;
-	//} while (--nblks);
+	SD_Struct_t *SD_Struct = (SD_Struct_t *)_SD_Struct;
+	if(SD_Struct->SD_Hc == IsSdhc)
+	{
+		if(!_sd_read_page(_SD_Struct, Buffer, block, nblks))
+			return false;
+	}
+	else
+	{
+		do
+		{
+			if(!_sd_read_page(_SD_Struct, Buffer, block++, 1))
+				return false;
+			Buffer += 512;
+		} while (--nblks);
+	}
 	return true;
 }
 //#######################################################################################
@@ -785,7 +807,8 @@ int xmit_datablock (	/* 1:OK, 0:Failed */
 	BYTE resp;
 
 
-	if (!wait_ready(SD_Struct, 5000000)) return 0;		/* Wait for card ready */
+	if (!wait_ready(SD_Struct, 5000))
+		return 0;		/* Wait for card ready */
 
 	sd_io_data(SD_Struct, token);					/* Send token */
 	if (token != 0xFD) {				/* Send data if token is other than StopTran */
@@ -804,8 +827,10 @@ int xmit_datablock (	/* 1:OK, 0:Failed */
 unsigned int  _sd_write_page(void *_SD_Struct, void* _Buffer, unsigned long block, unsigned int nblks)
 {
 	SD_Struct_t *SD_Struct = (SD_Struct_t *)_SD_Struct;
-	if (/*drv || */!nblks) return false;		/* Check parameter */
-	if (SD_Struct->SD_Init_OK == false) return false;	/* Check if drive is ready */
+	if (/*drv || */!nblks)
+		return false;		/* Check parameter */
+	if (SD_Struct->SD_Init_OK == false)
+		return false;	/* Check if drive is ready */
 
 	if (SD_Struct->SD_Hc == IsSd)
 		block *= 512;	/* LBA ot BA conversion (byte addressing cards) */
@@ -824,7 +849,8 @@ unsigned int  _sd_write_page(void *_SD_Struct, void* _Buffer, unsigned long bloc
 			unsigned char* Buffer = (unsigned char*)_Buffer;
 			do
 			{
-				if (!xmit_datablock(SD_Struct, Buffer, 0xFC)) break;
+				if (!xmit_datablock(SD_Struct, Buffer, 0xFC))
+					break;
 				Buffer += 512;
 			} while (--nblks);
 			if (!xmit_datablock(SD_Struct, 0, 0xFD))	/* STOP_TRAN token */
@@ -839,11 +865,21 @@ unsigned int MMCSD_SPI_WriteCmdSend(void *_SD_Struct, void* _Buffer, unsigned lo
 {
 	unsigned long block = _block;
 	unsigned char* Buffer = (unsigned char*)_Buffer;
-	//do
-	//{
-		if(!_sd_write_page(_SD_Struct, Buffer, block, nblks)) return false;
-		//Buffer += 512;
-	//} while (--nblks);
+	SD_Struct_t *SD_Struct = (SD_Struct_t *)_SD_Struct;
+	if(SD_Struct->SD_Hc == IsSdhc)
+	{
+		if(!_sd_write_page(_SD_Struct, Buffer, block, nblks))
+			return false;
+	}
+	else
+	{
+		do
+		{
+			if(!_sd_write_page(_SD_Struct, Buffer, block++, 1))
+				return false;
+			Buffer += 512;
+		} while (--nblks);
+	}
 	return true;
 }
 //#######################################################################################
@@ -863,6 +899,7 @@ void mmcsd_spi_idle(unsigned int unit_nr)
         if(SD_StructDisk->initFlg)
         {
         	SD_StructDisk->initFlg = 0;
+        	sys_delay(400);
         	if(_mmcsd_spi_init(unit_nr))
         	{
         		SD_StructDisk->connected = true;
@@ -884,6 +921,7 @@ void mmcsd_spi_idle(unsigned int unit_nr)
                     drv_name_buff[8] = '\0';
                     if(f_opendir(&g_sDirObject, drv_name_buff) == FR_OK)
                     {
+                    	SD_StructDisk->fs_mounted = true;
 #ifdef MMCSD_DEBUG_EN
 						if(DebugCom)
 						{
@@ -920,6 +958,7 @@ void mmcsd_spi_idle(unsigned int unit_nr)
         Sysdelay(1);
         if(SD_StructDisk->initFlg != 1)
         {
+        	SD_StructDisk->fs_mounted = false;
         	SD_StructDisk->connected = false;
         	SD_StructDisk->initFlg = 1;
 #ifdef MMCSD_DEBUG_EN
