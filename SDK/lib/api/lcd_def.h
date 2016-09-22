@@ -191,6 +191,7 @@ typedef struct
 typedef struct
 {
 	bool (*init)(void* pDisplay);
+	void (*reset)(void* LcdStruct);
 	void (*enable)(void* pDisplay);
 	void (*disable)(void* pDisplay);
 	void (*backlight_on)(void *pDisplay);

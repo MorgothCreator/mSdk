@@ -23,7 +23,7 @@
 extern unsigned long FCPU;
 //#######################################################################################
 //#######################################################################################
-inline void wr_cmd(tDisplay* LcdStruct, unsigned char cmd)
+static void wr_cmd(tDisplay* LcdStruct, unsigned char cmd)
 {
 	volatile unsigned long cnt = FCPU / 5000000;
 	while(cnt--);
@@ -42,7 +42,7 @@ inline void wr_cmd(tDisplay* LcdStruct, unsigned char cmd)
 	while(cnt--);
 }
 
-inline void write(tDisplay* LcdStruct, unsigned char data)
+static void write(tDisplay* LcdStruct, unsigned char data)
 {
 	MI0283_t *Struct = (MI0283_t *)LcdStruct->UserData;
 	unsigned int GPIORW = Struct->LCD_DISPLAY_PMWR->BaseAddr;
@@ -55,9 +55,10 @@ inline void write(tDisplay* LcdStruct, unsigned char data)
 }
 
 
-void tft_reset(tDisplay* LcdStruct)
+void mi0283_reset(void* LcdStruct)
 {
-	MI0283_t *Struct = (MI0283_t *)LcdStruct->UserData;
+	tDisplay* _LcdStruct = (tDisplay *) LcdStruct;
+	MI0283_t *Struct = (MI0283_t *)_LcdStruct->UserData;
 	gpio_out(Struct->LCD_DISPLAY_CS, 1);
 	gpio_out(Struct->LCD_DISPLAY_RS, 1);
 	gpio_out(Struct->LCD_DISPLAY_RST, 0);
@@ -65,7 +66,7 @@ void tft_reset(tDisplay* LcdStruct)
 	volatile unsigned long cnt = FCPU / 100000;
 	while(cnt--);
 	gpio_out(Struct->LCD_DISPLAY_RST, 1);
-	cnt = FCPU / 100000;
+	cnt = FCPU / 1000000;
 	while(cnt--);
 
     wr_cmd(LcdStruct, 0x01);                     // SW reset
@@ -74,11 +75,15 @@ void tft_reset(tDisplay* LcdStruct)
 	while(cnt--);
     wr_cmd(LcdStruct, 0x28);                     // display off
  	gpio_out(Struct->LCD_DISPLAY_CS, 1);
+
     wr_cmd(LcdStruct, 0x11);
  	gpio_out(Struct->LCD_DISPLAY_CS, 1);
 
 
     /* Start Initial Sequence ----------------------------------------------------*/
+ 	cnt = FCPU / 100;
+ 	while(cnt--);
+
     wr_cmd(LcdStruct, 0xCF);
     write(LcdStruct, 0x00);
     write(LcdStruct, 0x83);
@@ -194,7 +199,7 @@ void tft_reset(tDisplay* LcdStruct)
     write(LcdStruct, 0x1F);
  	gpio_out(Struct->LCD_DISPLAY_CS, 1);
 
-	screen_set_area(LcdStruct, 0, 0, LcdStruct->raster_timings->X,LcdStruct->raster_timings->Y);
+ 	mi0283_screen_set_area(LcdStruct, 0, 0, _LcdStruct->raster_timings->X, _LcdStruct->raster_timings->Y);
 
      //WindowMax ();
 
@@ -209,8 +214,6 @@ void tft_reset(tDisplay* LcdStruct)
     write(LcdStruct, 0x07);
  	gpio_out(Struct->LCD_DISPLAY_CS, 1);
 
- 	cnt = FCPU / 1000;
- 	while(cnt--);
     wr_cmd(LcdStruct, 0xB6);                       // display function control
     write(LcdStruct, 0x0A);
     write(LcdStruct, 0x82);
@@ -239,7 +242,7 @@ void tft_reset(tDisplay* LcdStruct)
 //#######################################################################################
 //#######################################################################################
 #define ScreenArea_Integrated	1
-void screen_set_area(tDisplay* LcdStruct, signed int x0, signed int y0, signed int x1, signed int y1)
+void mi0283_screen_set_area(tDisplay* LcdStruct, signed int x0, signed int y0, signed int x1, signed int y1)
 {
 	MI0283_t *Struct = (MI0283_t *)LcdStruct->UserData;
     wr_cmd(LcdStruct, 0x2A);                       // entry mode
@@ -256,19 +259,16 @@ void screen_set_area(tDisplay* LcdStruct, signed int x0, signed int y0, signed i
  	gpio_out(Struct->LCD_DISPLAY_CS, 1);
 }
 //#######################################################################################
-void lcd_cursor(tDisplay* LcdStruct, signed int x, signed int y)
+void mi0283_lcd_cursor(tDisplay* LcdStruct, signed int x, signed int y)
 {
-  screen_set_area(LcdStruct, x, y, x, y);
+	mi0283_screen_set_area(LcdStruct, x, y, x, y);
 }
 //#######################################################################################
-void lcd_drawstop(tDisplay* LcdStruct)
-{
-}
-//#######################################################################################
-void mi0283_set_params(void *pDisplay)
+void mi0283_driver_register(void *pDisplay)
 {
 	tDisplay* LcdStruct = (tDisplay *) pDisplay;
 	LcdStruct->lcd_func.init = mi0283_open;
+	LcdStruct->lcd_func.reset = mi0283_reset;
 	//LcdStruct->lcd_func.enable = lcd_enable;
 	//LcdStruct->lcd_func.disable = lcd_disable;
 	//LcdStruct->lcd_func.backlight_on = backlight_on;
@@ -297,7 +297,7 @@ bool mi0283_open(void *pDisplay)
 	gpio_out(Struct->LCD_DISPLAY_PMWR, 1);
 	gpio_out(Struct->LCD_TOUCH_DRIVE_A, 0);
 	gpio_out(Struct->LCD_TOUCH_DRIVE_B, 0);
-	tft_reset(LcdStruct);
+	mi0283_reset(LcdStruct);
 	LcdStruct->Orientation = 0;
 	mi0283_set_orientation(LcdStruct);
 	return true;
@@ -364,7 +364,7 @@ bool mi0283_set_orientation(tDisplay* LcdStruct)
  	gpio_out(Struct->LCD_DISPLAY_CS, 1);
 	LcdStruct->sClipRegion.sXMax = LcdStruct->raster_timings->X;
 	LcdStruct->sClipRegion.sYMax = LcdStruct->raster_timings->Y;
-	screen_set_area(LcdStruct, 0, 0, LcdStruct->raster_timings->X,LcdStruct->raster_timings->Y);
+	mi0283_screen_set_area(LcdStruct, 0, 0, LcdStruct->raster_timings->X,LcdStruct->raster_timings->Y);
 	return Tmp;
 }
 //#######################################################################################
@@ -398,7 +398,7 @@ void mi0283_put_pixel16(void *pDisplay, signed int X_Coordonate, signed int Y_Co
 	if(X_Coordonate < LcdStruct->sClipRegion.sXMin || X_Coordonate >= LcdStruct->sClipRegion.sXMax || Y_Coordonate < LcdStruct->sClipRegion.sYMin || Y_Coordonate >= LcdStruct->sClipRegion.sYMax) return;
 	if(X_Coordonate >= LcdStruct->raster_timings->X || X_Coordonate < 0 || Y_Coordonate >= LcdStruct->raster_timings->Y || Y_Coordonate < 0) return;
 	
-	screen_set_area(LcdStruct, X_Coordonate, Y_Coordonate, X_Coordonate, Y_Coordonate);
+	mi0283_screen_set_area(LcdStruct, X_Coordonate, Y_Coordonate, X_Coordonate, Y_Coordonate);
 	wr_cmd(LcdStruct, 0x2C);
 	mi0283_send_pixels(LcdStruct, 1, Color16);
 }
@@ -416,7 +416,7 @@ void mi0283_put_pixel24(void *pDisplay, signed int X_Coordonate, signed int Y_Co
 	//MI0283_t *Struct = (MI0283_t *)LcdStruct->UserData;
 	if(X_Coordonate < LcdStruct->sClipRegion.sXMin || X_Coordonate >= LcdStruct->sClipRegion.sXMax || Y_Coordonate < LcdStruct->sClipRegion.sYMin || Y_Coordonate >= LcdStruct->sClipRegion.sYMax) return;
 	if(X_Coordonate >= LcdStruct->raster_timings->X || X_Coordonate < 0 || Y_Coordonate >= LcdStruct->raster_timings->Y || Y_Coordonate < 0) return;
-	lcd_cursor(LcdStruct, X_Coordonate,Y_Coordonate);
+	mi0283_lcd_cursor(LcdStruct, X_Coordonate,Y_Coordonate);
 	unsigned short TempColor = ((Red>>3)&0b11111) | ((Green<<3)&0b11111100000) | ((Blue<<8)&0b1111100000000000);
 	wr_cmd(LcdStruct, 0x2C);
 	mi0283_send_pixels(LcdStruct, 1, TempColor);
@@ -440,7 +440,7 @@ void mi0283_draw_rectangle(void *pDisplay, signed int x_start, signed int y_star
 			_x_end = LcdStruct->sClipRegion.sXMax;
 		if(y_end > LcdStruct->sClipRegion.sYMax)
 			y_end = LcdStruct->sClipRegion.sYMax;
-		screen_set_area(LcdStruct, _x_start, LineCnt, _x_end - 1, y_end - 1);
+		mi0283_screen_set_area(LcdStruct, _x_start, LineCnt, _x_end - 1, y_end - 1);
 		wr_cmd(LcdStruct, 0x2C);
 		mi0283_send_pixels(LcdStruct, ((_x_end - 1 - _x_start) * (y_end - LineCnt)) + (y_end - LineCnt), color);
 	}
@@ -452,14 +452,14 @@ void mi0283_draw_rectangle(void *pDisplay, signed int x_start, signed int y_star
 		if(_x_start < LcdStruct->sClipRegion.sXMin) _x_start = LcdStruct->sClipRegion.sXMin;
 		if(y_start >= LcdStruct->sClipRegion.sYMin)
 		{
-			screen_set_area(LcdStruct, _x_start, y_start, _x_end, y_start);
+			mi0283_screen_set_area(LcdStruct, _x_start, y_start, _x_end, y_start);
 			wr_cmd(LcdStruct, 0x2C);
 			mi0283_send_pixels(LcdStruct, (_x_end - _x_start) + 1, color);
 		}
 
 		if(y_end <= LcdStruct->sClipRegion.sYMax)
 		{
-			screen_set_area(LcdStruct, _x_start, y_end - 1, _x_end, y_end - 1);
+			mi0283_screen_set_area(LcdStruct, _x_start, y_end - 1, _x_end, y_end - 1);
 			wr_cmd(LcdStruct, 0x2C);
 			mi0283_send_pixels(LcdStruct, (_x_end - _x_start) + 1, color);
 		}
@@ -470,14 +470,14 @@ void mi0283_draw_rectangle(void *pDisplay, signed int x_start, signed int y_star
 		if(_y_start < LcdStruct->sClipRegion.sYMin) _y_start = LcdStruct->sClipRegion.sYMin;
 		if(x_start >= LcdStruct->sClipRegion.sXMin)
 		{
-			screen_set_area(LcdStruct, x_start,_y_start, x_start, y_end);
+			mi0283_screen_set_area(LcdStruct, x_start,_y_start, x_start, y_end);
 			wr_cmd(LcdStruct, 0x2C);
 			mi0283_send_pixels(LcdStruct, (y_end - _y_start) + 1, color);
 		}
 
 		if(x_end <= LcdStruct->sClipRegion.sXMax)
 		{
-			screen_set_area(LcdStruct, x_end - 1,_y_start, x_end - 1, y_end);
+			mi0283_screen_set_area(LcdStruct, x_end - 1,_y_start, x_end - 1, y_end);
 			wr_cmd(LcdStruct, 0x2C);
 			mi0283_send_pixels(LcdStruct, (y_end - _y_start) + 1, color);
 		}
@@ -502,7 +502,7 @@ void mi0283_put_horizontal_line(void *pDisplay, signed int X1, signed int X2, si
 	if(X2_Tmp - X1_Tmp > 0)
 	{
 		//register int _Y_ = Y - Half_width1;
-		screen_set_area(LcdStruct, X1_Tmp, Y - Half_width1, X2_Tmp, (Y + Half_width2) - 1);
+		mi0283_screen_set_area(LcdStruct, X1_Tmp, Y - Half_width1, X2_Tmp, (Y + Half_width2) - 1);
 		wr_cmd(LcdStruct, 0x2C);
 		mi0283_send_pixels(LcdStruct, (X2_Tmp - X1_Tmp) * width , color);
 	}	
@@ -525,7 +525,7 @@ void mi0283_put_vertical_line(void *pDisplay, signed int Y1, signed int Y2, sign
 	if(Y2_Tmp - Y1_Tmp > 0)
 	{
 		//register int _Y_ = Y - Half_width1;
-		screen_set_area(LcdStruct, X - Half_width1, Y1_Tmp, (X + Half_width2) - 1, Y2_Tmp);
+		mi0283_screen_set_area(LcdStruct, X - Half_width1, Y1_Tmp, (X + Half_width2) - 1, Y2_Tmp);
 		wr_cmd(LcdStruct, 0x2C);
 		mi0283_send_pixels(LcdStruct, (Y2_Tmp - Y1_Tmp) * width , color);
 	}	

@@ -85,9 +85,9 @@ typedef struct{
 	new_gpio* LCD_DISPLAY_PMRD;
 }MI0283_t;
 /*#####################################################*/
-void screen_set_area(tDisplay* LcdStruct, signed int x0, signed int y0, signed int x1, signed int y1);
-void lcd_cursor(tDisplay* LcdStruct, signed int x, signed int y);
-void mi0283_set_params(void *pDisplay);
+void mi0283_screen_set_area(tDisplay* LcdStruct, signed int x0, signed int y0, signed int x1, signed int y1);
+void mi0283_lcd_cursor(tDisplay* LcdStruct, signed int x, signed int y);
+void mi0283_driver_register(void *pDisplay);
 bool mi0283_open(void *pDisplay);
 void mi0283_close(void *pDisplay);
 bool mi0283_set_orientation(tDisplay* LcdStruct);
