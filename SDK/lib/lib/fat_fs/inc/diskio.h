@@ -27,6 +27,7 @@ typedef struct {
 	void*				DriveStruct;
 	unsigned int		(*drv_r_func)(void*, void*, unsigned long, unsigned int);
 	unsigned int		(*drv_w_func)(void*, void*, unsigned long, unsigned int);
+	void 				(*drv_ioctl_func)(void *, unsigned int,  unsigned int *);
 }DRV_RW_FUNC;
 /*---------------------------------------*/
 /* Prototypes for disk control functions */
