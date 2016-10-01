@@ -86,7 +86,11 @@ int _cat(int argc, char *argv[])
 			}
 			else
 			{
+#if (_FFCONF == 82786)
+				settings->file = malloc(settings->g_sFilObject.fsize);
+#else
 				settings->file = malloc(settings->g_sFilObject.obj.objsize);
+#endif
 				if(!settings->file)
 				{
 					settings->fresult = FR_INT_ERR;
@@ -119,8 +123,12 @@ int _cat(int argc, char *argv[])
 	/*
 	** Read an entry from the directory.
 	*/
-    unsigned long bytes_read = 0;
+    unsigned int bytes_read = 0;
+#if (_FFCONF == 82786)
+	fresult = f_read(&settings->g_sFilObject, settings->file, settings->g_sFilObject.fsize, &bytes_read);
+#else
 	fresult = f_read(&settings->g_sFilObject, settings->file, settings->g_sFilObject.obj.objsize, &bytes_read);
+#endif
 	/*
 	** Check for error and return if there is a problem.
 	*/
@@ -131,7 +139,11 @@ int _cat(int argc, char *argv[])
 		settings->fresult = fresult;
 		return (int)response;
 	}
+#if (_FFCONF == 82786)
+	else if(bytes_read != settings->g_sFilObject.fsize)
+#else
 	else if(bytes_read != settings->g_sFilObject.obj.objsize)
+#endif
 	{
 		if(settings->file) free(settings->file);
 		response = "ERROR :Disk ERR.\n\r";
@@ -141,6 +153,10 @@ int _cat(int argc, char *argv[])
 	settings->cnt ++;
 	//int fname_len = 0;
 	//argv[1] = (char *)strreturn;
+#if (_FFCONF == 82786)
+	argv[4] = (char *)settings->g_sFilObject.fsize;
+#else
 	argv[4] = (char *)settings->g_sFilObject.obj.objsize;
-    return (int)settings->file;
+#endif
+   return (int)settings->file;
 }
