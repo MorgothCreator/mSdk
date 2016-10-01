@@ -52,6 +52,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_hal.h"
+#include "sys/Include/core_cm4.h"
 #include "stm32f4xx_hal_conf.h"
 
 /** @addtogroup STM32F4xx_HAL_Driver
@@ -80,7 +81,7 @@
                                         |(__STM32F4xx_HAL_VERSION_SUB2 << 8 )\
                                         |(__STM32F4xx_HAL_VERSION_RC))
                                         
-#define IDCODE_DEVID_MASK    ((uint32_t)0x00000FFF)
+#define IDCODE_DEVID_MASK    ((unsigned long)0x00000FFF)
 
 /* ------------ RCC registers bit address in the alias region ----------- */
 #define SYSCFG_OFFSET             (SYSCFG_BASE - PERIPH_BASE)
@@ -88,13 +89,13 @@
 /* Alias word address of UFB_MODE bit */ 
 #define MEMRMP_OFFSET             SYSCFG_OFFSET 
 #define UFB_MODE_BIT_NUMBER       POSITION_VAL(SYSCFG_MEMRMP_UFB_MODE)
-#define UFB_MODE_BB               (uint32_t)(PERIPH_BB_BASE + (MEMRMP_OFFSET * 32) + (UFB_MODE_BIT_NUMBER * 4)) 
+#define UFB_MODE_BB               (unsigned long)(PERIPH_BB_BASE + (MEMRMP_OFFSET * 32) + (UFB_MODE_BIT_NUMBER * 4))
 
 /* ---  CMPCR Register ---*/ 
 /* Alias word address of CMP_PD bit */ 
 #define CMPCR_OFFSET              (SYSCFG_OFFSET + 0x20) 
 #define CMP_PD_BIT_NUMBER         POSITION_VAL(SYSCFG_CMPCR_CMP_PD)
-#define CMPCR_CMP_PD_BB           (uint32_t)(PERIPH_BB_BASE + (CMPCR_OFFSET * 32) + (CMP_PD_BIT_NUMBER * 4))
+#define CMPCR_CMP_PD_BB           (unsigned long)(PERIPH_BB_BASE + (CMPCR_OFFSET * 32) + (CMP_PD_BIT_NUMBER * 4))
 /**
   * @}
   */
@@ -104,7 +105,7 @@
 /** @addtogroup HAL_Private_Variables
   * @{
   */
-static __IO uint32_t uwTick;
+static volatile unsigned long uwTick;
 /**
   * @}
   */
@@ -261,7 +262,7 @@ __weak void HAL_MspDeInit(void)
   * @param TickPriority: Tick interrupt priority.
   * @retval HAL status
   */
-__weak HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
+__weak HAL_StatusTypeDef HAL_InitTick(unsigned long TickPriority)
 {
   /*Configure the SysTick to have interrupt in 1ms time basis*/
   HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000);
@@ -320,7 +321,7 @@ __weak void HAL_IncTick(void)
   *       implementations in user file.
   * @retval tick value
   */
-__weak uint32_t HAL_GetTick(void)
+__weak unsigned long HAL_GetTick(void)
 {
   return uwTick;
 }
@@ -336,9 +337,9 @@ __weak uint32_t HAL_GetTick(void)
   * @param Delay: specifies the delay time length, in milliseconds.
   * @retval None
   */
-__weak void HAL_Delay(__IO uint32_t Delay)
+__weak void HAL_Delay(volatile unsigned long Delay)
 {
-  uint32_t tickstart = 0;
+  unsigned long tickstart = 0;
   tickstart = HAL_GetTick();
   while((HAL_GetTick() - tickstart) < Delay)
   {
@@ -381,7 +382,7 @@ __weak void HAL_ResumeTick(void)
   * @brief  Returns the HAL revision
   * @retval version : 0xXYZR (8bits for each decimal, R for RC)
   */
-uint32_t HAL_GetHalVersion(void)
+unsigned long HAL_GetHalVersion(void)
 {
  return __STM32F4xx_HAL_VERSION;
 }
@@ -390,7 +391,7 @@ uint32_t HAL_GetHalVersion(void)
   * @brief  Returns the device revision identifier.
   * @retval Device revision identifier
   */
-uint32_t HAL_GetREVID(void)
+unsigned long HAL_GetREVID(void)
 {
    return((DBGMCU->IDCODE) >> 16);
 }
@@ -399,7 +400,7 @@ uint32_t HAL_GetREVID(void)
   * @brief  Returns the device identifier.
   * @retval Device identifier
   */
-uint32_t HAL_GetDEVID(void)
+unsigned long HAL_GetDEVID(void)
 {
    return((DBGMCU->IDCODE) & IDCODE_DEVID_MASK);
 }
@@ -466,7 +467,7 @@ void HAL_DBGMCU_DisableDBGStandbyMode(void)
   */
 void HAL_EnableCompensationCell(void)
 {
-  *(__IO uint32_t *)CMPCR_CMP_PD_BB = (uint32_t)ENABLE;
+  *(volatile unsigned long *)CMPCR_CMP_PD_BB = (unsigned long)ENABLE;
 }
 
 /**
@@ -477,7 +478,7 @@ void HAL_EnableCompensationCell(void)
   */
 void HAL_DisableCompensationCell(void)
 {
-  *(__IO uint32_t *)CMPCR_CMP_PD_BB = (uint32_t)DISABLE;
+  *(volatile unsigned long *)CMPCR_CMP_PD_BB = (unsigned long)DISABLE;
 }
 
 #if defined(STM32F427xx) || defined(STM32F437xx) || defined(STM32F429xx)|| defined(STM32F439xx) ||\
@@ -494,7 +495,7 @@ void HAL_DisableCompensationCell(void)
   */
 void HAL_EnableMemorySwappingBank(void)
 {
-  *(__IO uint32_t *)UFB_MODE_BB = (uint32_t)ENABLE;
+  *(volatile unsigned long *)UFB_MODE_BB = (unsigned long)ENABLE;
 }
 
 /**
@@ -510,7 +511,7 @@ void HAL_EnableMemorySwappingBank(void)
 void HAL_DisableMemorySwappingBank(void)
 {
 
-  *(__IO uint32_t *)UFB_MODE_BB = (uint32_t)DISABLE;
+  *(volatile unsigned long *)UFB_MODE_BB = (unsigned long)DISABLE;
 }
 #endif /* STM32F427xx || STM32F437xx || STM32F429xx || STM32F439xx || STM32F469xx || STM32F479xx */
 

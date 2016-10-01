@@ -45,6 +45,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_hal_def.h"
+#include "include/stm32f4xx.h"
 
 /** @addtogroup STM32F4xx_HAL_Driver
   * @{
@@ -64,20 +65,20 @@
   */
 typedef struct
 {
-  uint32_t Prescaler;         /*!< Specifies the prescaler value used to divide the TIM clock.
+  unsigned long Prescaler;         /*!< Specifies the prescaler value used to divide the TIM clock.
                                    This parameter can be a number between Min_Data = 0x0000 and Max_Data = 0xFFFF */
 
-  uint32_t CounterMode;       /*!< Specifies the counter mode.
+  unsigned long CounterMode;       /*!< Specifies the counter mode.
                                    This parameter can be a value of @ref TIM_Counter_Mode */
 
-  uint32_t Period;            /*!< Specifies the period value to be loaded into the active
+  unsigned long Period;            /*!< Specifies the period value to be loaded into the active
                                    Auto-Reload Register at the next update event.
                                    This parameter can be a number between Min_Data = 0x0000 and Max_Data = 0xFFFF.  */
 
-  uint32_t ClockDivision;     /*!< Specifies the clock division.
+  unsigned long ClockDivision;     /*!< Specifies the clock division.
                                    This parameter can be a value of @ref TIM_ClockDivision */
 
-  uint32_t RepetitionCounter;  /*!< Specifies the repetition counter value. Each time the RCR downcounter
+  unsigned long RepetitionCounter;  /*!< Specifies the repetition counter value. Each time the RCR downcounter
                                     reaches zero, an update event is generated and counting restarts
                                     from the RCR value (N).
                                     This means in PWM mode that (N+1) corresponds to:
@@ -93,29 +94,29 @@ typedef struct
 
 typedef struct
 {
-  uint32_t OCMode;        /*!< Specifies the TIM mode.
+  unsigned long OCMode;        /*!< Specifies the TIM mode.
                                This parameter can be a value of @ref TIM_Output_Compare_and_PWM_modes */
 
-  uint32_t Pulse;         /*!< Specifies the pulse value to be loaded into the Capture Compare Register. 
+  unsigned long Pulse;         /*!< Specifies the pulse value to be loaded into the Capture Compare Register.
                                This parameter can be a number between Min_Data = 0x0000 and Max_Data = 0xFFFF */
 
-  uint32_t OCPolarity;    /*!< Specifies the output polarity.
+  unsigned long OCPolarity;    /*!< Specifies the output polarity.
                                This parameter can be a value of @ref TIM_Output_Compare_Polarity */
 
-  uint32_t OCNPolarity;   /*!< Specifies the complementary output polarity.
+  unsigned long OCNPolarity;   /*!< Specifies the complementary output polarity.
                                This parameter can be a value of @ref TIM_Output_Compare_N_Polarity
                                @note This parameter is valid only for TIM1 and TIM8. */
   
-  uint32_t OCFastMode;   /*!< Specifies the Fast mode state.
+  unsigned long OCFastMode;   /*!< Specifies the Fast mode state.
                                This parameter can be a value of @ref TIM_Output_Fast_State
                                @note This parameter is valid only in PWM1 and PWM2 mode. */
 
 
-  uint32_t OCIdleState;   /*!< Specifies the TIM Output Compare pin state during Idle state.
+  unsigned long OCIdleState;   /*!< Specifies the TIM Output Compare pin state during Idle state.
                                This parameter can be a value of @ref TIM_Output_Compare_Idle_State
                                @note This parameter is valid only for TIM1 and TIM8. */
 
-  uint32_t OCNIdleState;  /*!< Specifies the TIM Output Compare pin state during Idle state.
+  unsigned long OCNIdleState;  /*!< Specifies the TIM Output Compare pin state during Idle state.
                                This parameter can be a value of @ref TIM_Output_Compare_N_Idle_State
                                @note This parameter is valid only for TIM1 and TIM8. */
 } TIM_OC_InitTypeDef;  
@@ -125,34 +126,34 @@ typedef struct
   */
 typedef struct
 {
-  uint32_t OCMode;        /*!< Specifies the TIM mode.
+  unsigned long OCMode;        /*!< Specifies the TIM mode.
                                This parameter can be a value of @ref TIM_Output_Compare_and_PWM_modes */
 
-  uint32_t Pulse;         /*!< Specifies the pulse value to be loaded into the Capture Compare Register. 
+  unsigned long Pulse;         /*!< Specifies the pulse value to be loaded into the Capture Compare Register.
                                This parameter can be a number between Min_Data = 0x0000 and Max_Data = 0xFFFF */
 
-  uint32_t OCPolarity;    /*!< Specifies the output polarity.
+  unsigned long OCPolarity;    /*!< Specifies the output polarity.
                                This parameter can be a value of @ref TIM_Output_Compare_Polarity */
 
-  uint32_t OCNPolarity;   /*!< Specifies the complementary output polarity.
+  unsigned long OCNPolarity;   /*!< Specifies the complementary output polarity.
                                This parameter can be a value of @ref TIM_Output_Compare_N_Polarity
                                @note This parameter is valid only for TIM1 and TIM8. */
 
-  uint32_t OCIdleState;   /*!< Specifies the TIM Output Compare pin state during Idle state.
+  unsigned long OCIdleState;   /*!< Specifies the TIM Output Compare pin state during Idle state.
                                This parameter can be a value of @ref TIM_Output_Compare_Idle_State
                                @note This parameter is valid only for TIM1 and TIM8. */
 
-  uint32_t OCNIdleState;  /*!< Specifies the TIM Output Compare pin state during Idle state.
+  unsigned long OCNIdleState;  /*!< Specifies the TIM Output Compare pin state during Idle state.
                                This parameter can be a value of @ref TIM_Output_Compare_N_Idle_State
                                @note This parameter is valid only for TIM1 and TIM8. */
 
-  uint32_t ICPolarity;    /*!< Specifies the active edge of the input signal.
+  unsigned long ICPolarity;    /*!< Specifies the active edge of the input signal.
                                This parameter can be a value of @ref TIM_Input_Capture_Polarity */
 
-  uint32_t ICSelection;   /*!< Specifies the input.
+  unsigned long ICSelection;   /*!< Specifies the input.
                               This parameter can be a value of @ref TIM_Input_Capture_Selection */
 
-  uint32_t ICFilter;      /*!< Specifies the input capture filter.
+  unsigned long ICFilter;      /*!< Specifies the input capture filter.
                               This parameter can be a number between Min_Data = 0x0 and Max_Data = 0xF */  
 } TIM_OnePulse_InitTypeDef;  
 
@@ -163,16 +164,16 @@ typedef struct
 
 typedef struct
 {
-  uint32_t  ICPolarity;   /*!< Specifies the active edge of the input signal.
+  unsigned long  ICPolarity;   /*!< Specifies the active edge of the input signal.
                                This parameter can be a value of @ref TIM_Input_Capture_Polarity */
 
-  uint32_t ICSelection;  /*!< Specifies the input.
+  unsigned long ICSelection;  /*!< Specifies the input.
                               This parameter can be a value of @ref TIM_Input_Capture_Selection */
 
-  uint32_t ICPrescaler;  /*!< Specifies the Input Capture Prescaler.
+  unsigned long ICPrescaler;  /*!< Specifies the Input Capture Prescaler.
                               This parameter can be a value of @ref TIM_Input_Capture_Prescaler */
 
-  uint32_t ICFilter;     /*!< Specifies the input capture filter.
+  unsigned long ICFilter;     /*!< Specifies the input capture filter.
                               This parameter can be a number between Min_Data = 0x0 and Max_Data = 0xF */
 } TIM_IC_InitTypeDef;
 
@@ -182,31 +183,31 @@ typedef struct
 
 typedef struct
 {
-  uint32_t EncoderMode;   /*!< Specifies the active edge of the input signal.
+  unsigned long EncoderMode;   /*!< Specifies the active edge of the input signal.
                                This parameter can be a value of @ref TIM_Encoder_Mode */
                                   
-  uint32_t IC1Polarity;   /*!< Specifies the active edge of the input signal.
+  unsigned long IC1Polarity;   /*!< Specifies the active edge of the input signal.
                                This parameter can be a value of @ref TIM_Input_Capture_Polarity */
 
-  uint32_t IC1Selection;  /*!< Specifies the input.
+  unsigned long IC1Selection;  /*!< Specifies the input.
                                This parameter can be a value of @ref TIM_Input_Capture_Selection */
 
-  uint32_t IC1Prescaler;  /*!< Specifies the Input Capture Prescaler.
+  unsigned long IC1Prescaler;  /*!< Specifies the Input Capture Prescaler.
                                This parameter can be a value of @ref TIM_Input_Capture_Prescaler */
 
-  uint32_t IC1Filter;     /*!< Specifies the input capture filter.
+  unsigned long IC1Filter;     /*!< Specifies the input capture filter.
                                This parameter can be a number between Min_Data = 0x0 and Max_Data = 0xF */
                                   
-  uint32_t IC2Polarity;   /*!< Specifies the active edge of the input signal.
+  unsigned long IC2Polarity;   /*!< Specifies the active edge of the input signal.
                                This parameter can be a value of @ref TIM_Input_Capture_Polarity */
 
-  uint32_t IC2Selection;  /*!< Specifies the input.
+  unsigned long IC2Selection;  /*!< Specifies the input.
                               This parameter can be a value of @ref TIM_Input_Capture_Selection */
 
-  uint32_t IC2Prescaler;  /*!< Specifies the Input Capture Prescaler.
+  unsigned long IC2Prescaler;  /*!< Specifies the Input Capture Prescaler.
                                This parameter can be a value of @ref TIM_Input_Capture_Prescaler */
 
-  uint32_t IC2Filter;     /*!< Specifies the input capture filter.
+  unsigned long IC2Filter;     /*!< Specifies the input capture filter.
                                This parameter can be a number between Min_Data = 0x0 and Max_Data = 0xF */
 } TIM_Encoder_InitTypeDef;
 
@@ -215,13 +216,13 @@ typedef struct
   */ 
 typedef struct
 {
-  uint32_t ClockSource;     /*!< TIM clock sources. 
+  unsigned long ClockSource;     /*!< TIM clock sources.
                                  This parameter can be a value of @ref TIM_Clock_Source */ 
-  uint32_t ClockPolarity;   /*!< TIM clock polarity. 
+  unsigned long ClockPolarity;   /*!< TIM clock polarity.
                                  This parameter can be a value of @ref TIM_Clock_Polarity */
-  uint32_t ClockPrescaler;  /*!< TIM clock prescaler. 
+  unsigned long ClockPrescaler;  /*!< TIM clock prescaler.
                                  This parameter can be a value of @ref TIM_Clock_Prescaler */
-  uint32_t ClockFilter;    /*!< TIM clock filter. 
+  unsigned long ClockFilter;    /*!< TIM clock filter.
                                 This parameter can be a number between Min_Data = 0x0 and Max_Data = 0xF */
 }TIM_ClockConfigTypeDef;
 
@@ -230,15 +231,15 @@ typedef struct
   */ 
 typedef struct
 { 
-  uint32_t ClearInputState;      /*!< TIM clear Input state. 
+  unsigned long ClearInputState;      /*!< TIM clear Input state.
                                       This parameter can be ENABLE or DISABLE */  
-  uint32_t ClearInputSource;     /*!< TIM clear Input sources. 
+  unsigned long ClearInputSource;     /*!< TIM clear Input sources.
                                       This parameter can be a value of @ref TIM_ClearInput_Source */ 
-  uint32_t ClearInputPolarity;   /*!< TIM Clear Input polarity. 
+  unsigned long ClearInputPolarity;   /*!< TIM Clear Input polarity.
                                       This parameter can be a value of @ref TIM_ClearInput_Polarity */
-  uint32_t ClearInputPrescaler;  /*!< TIM Clear Input prescaler. 
+  unsigned long ClearInputPrescaler;  /*!< TIM Clear Input prescaler.
                                       This parameter can be a value of @ref TIM_ClearInput_Prescaler */
-  uint32_t ClearInputFilter;    /*!< TIM Clear Input filter. 
+  unsigned long ClearInputFilter;    /*!< TIM Clear Input filter.
                                      This parameter can be a number between Min_Data = 0x0 and Max_Data = 0xF */
 }TIM_ClearInputConfigTypeDef;
 
@@ -246,15 +247,15 @@ typedef struct
   * @brief  TIM Slave configuration Structure definition  
   */ 
 typedef struct {
-  uint32_t  SlaveMode;         /*!< Slave mode selection 
+  unsigned long  SlaveMode;         /*!< Slave mode selection
                                   This parameter can be a value of @ref TIM_Slave_Mode */ 
-  uint32_t  InputTrigger;      /*!< Input Trigger source 
+  unsigned long  InputTrigger;      /*!< Input Trigger source
                                   This parameter can be a value of @ref TIM_Trigger_Selection */
-  uint32_t  TriggerPolarity;   /*!< Input Trigger polarity 
+  unsigned long  TriggerPolarity;   /*!< Input Trigger polarity
                                   This parameter can be a value of @ref TIM_Trigger_Polarity */
-  uint32_t  TriggerPrescaler;  /*!< Input trigger prescaler 
+  unsigned long  TriggerPrescaler;  /*!< Input trigger prescaler
                                   This parameter can be a value of @ref TIM_Trigger_Prescaler */
-  uint32_t  TriggerFilter;     /*!< Input trigger filter 
+  unsigned long  TriggerFilter;     /*!< Input trigger filter
                                   This parameter can be a number between Min_Data = 0x0 and Max_Data = 0xF */  
 
 }TIM_SlaveConfigTypeDef;
@@ -308,7 +309,7 @@ typedef struct
 /** @defgroup TIM_Input_Channel_Polarity TIM Input Channel Polarity
   * @{
   */
-#define  TIM_INPUTCHANNELPOLARITY_RISING      ((uint32_t)0x00000000)            /*!< Polarity for TIx source */
+#define  TIM_INPUTCHANNELPOLARITY_RISING      ((unsigned long)0x00000000)            /*!< Polarity for TIx source */
 #define  TIM_INPUTCHANNELPOLARITY_FALLING     (TIM_CCER_CC1P)                   /*!< Polarity for TIx source */
 #define  TIM_INPUTCHANNELPOLARITY_BOTHEDGE    (TIM_CCER_CC1P | TIM_CCER_CC1NP)  /*!< Polarity for TIx source */
 /**
@@ -319,7 +320,7 @@ typedef struct
   * @{
   */
 #define TIM_ETRPOLARITY_INVERTED              (TIM_SMCR_ETP)                    /*!< Polarity for ETR source */
-#define TIM_ETRPOLARITY_NONINVERTED           ((uint32_t)0x0000)                /*!< Polarity for ETR source */
+#define TIM_ETRPOLARITY_NONINVERTED           ((unsigned long)0x0000)                /*!< Polarity for ETR source */
 /**
   * @}
   */
@@ -327,7 +328,7 @@ typedef struct
 /** @defgroup TIM_ETR_Prescaler  TIM ETR Prescaler
   * @{
   */
-#define TIM_ETRPRESCALER_DIV1                 ((uint32_t)0x0000)                /*!< No prescaler is used */
+#define TIM_ETRPRESCALER_DIV1                 ((unsigned long)0x0000)                /*!< No prescaler is used */
 #define TIM_ETRPRESCALER_DIV2                 (TIM_SMCR_ETPS_0)                 /*!< ETR input source is divided by 2 */
 #define TIM_ETRPRESCALER_DIV4                 (TIM_SMCR_ETPS_1)                 /*!< ETR input source is divided by 4 */
 #define TIM_ETRPRESCALER_DIV8                 (TIM_SMCR_ETPS)                   /*!< ETR input source is divided by 8 */
@@ -338,7 +339,7 @@ typedef struct
 /** @defgroup TIM_Counter_Mode  TIM Counter Mode
   * @{
   */
-#define TIM_COUNTERMODE_UP                 ((uint32_t)0x0000)
+#define TIM_COUNTERMODE_UP                 ((unsigned long)0x0000)
 #define TIM_COUNTERMODE_DOWN               TIM_CR1_DIR
 #define TIM_COUNTERMODE_CENTERALIGNED1     TIM_CR1_CMS_0
 #define TIM_COUNTERMODE_CENTERALIGNED2     TIM_CR1_CMS_1
@@ -350,7 +351,7 @@ typedef struct
 /** @defgroup TIM_ClockDivision TIM Clock Division
   * @{
   */
-#define TIM_CLOCKDIVISION_DIV1                       ((uint32_t)0x0000)
+#define TIM_CLOCKDIVISION_DIV1                       ((unsigned long)0x0000)
 #define TIM_CLOCKDIVISION_DIV2                       (TIM_CR1_CKD_0)
 #define TIM_CLOCKDIVISION_DIV4                       (TIM_CR1_CKD_1)
 /**
@@ -360,7 +361,7 @@ typedef struct
 /** @defgroup TIM_Output_Compare_and_PWM_modes  TIM Output Compare and PWM modes
   * @{
   */
-#define TIM_OCMODE_TIMING                   ((uint32_t)0x0000)
+#define TIM_OCMODE_TIMING                   ((unsigned long)0x0000)
 #define TIM_OCMODE_ACTIVE                   (TIM_CCMR1_OC1M_0)
 #define TIM_OCMODE_INACTIVE                 (TIM_CCMR1_OC1M_1)
 #define TIM_OCMODE_TOGGLE                   (TIM_CCMR1_OC1M_0 | TIM_CCMR1_OC1M_1)
@@ -376,7 +377,7 @@ typedef struct
 /** @defgroup TIM_Output_Fast_State  TIM Output Fast State 
   * @{
   */
-#define TIM_OCFAST_DISABLE                ((uint32_t)0x0000)
+#define TIM_OCFAST_DISABLE                ((unsigned long)0x0000)
 #define TIM_OCFAST_ENABLE                 (TIM_CCMR1_OC1FE)
 /**
   * @}
@@ -385,7 +386,7 @@ typedef struct
 /** @defgroup TIM_Output_Compare_Polarity  TIM Output Compare Polarity
   * @{
   */
-#define TIM_OCPOLARITY_HIGH                ((uint32_t)0x0000)
+#define TIM_OCPOLARITY_HIGH                ((unsigned long)0x0000)
 #define TIM_OCPOLARITY_LOW                 (TIM_CCER_CC1P)
 /**
   * @}
@@ -394,7 +395,7 @@ typedef struct
 /** @defgroup TIM_Output_Compare_N_Polarity  TIM Output CompareN Polarity 
   * @{
   */
-#define TIM_OCNPOLARITY_HIGH               ((uint32_t)0x0000)
+#define TIM_OCNPOLARITY_HIGH               ((unsigned long)0x0000)
 #define TIM_OCNPOLARITY_LOW                (TIM_CCER_CC1NP)
 /**
   * @}
@@ -404,7 +405,7 @@ typedef struct
   * @{
   */
 #define TIM_OCIDLESTATE_SET                (TIM_CR2_OIS1)
-#define TIM_OCIDLESTATE_RESET              ((uint32_t)0x0000)
+#define TIM_OCIDLESTATE_RESET              ((unsigned long)0x0000)
 /**
   * @}
   */ 
@@ -413,7 +414,7 @@ typedef struct
   * @{
   */
 #define TIM_OCNIDLESTATE_SET               (TIM_CR2_OIS1N)
-#define TIM_OCNIDLESTATE_RESET             ((uint32_t)0x0000)
+#define TIM_OCNIDLESTATE_RESET             ((unsigned long)0x0000)
 /**
   * @}
   */ 
@@ -421,11 +422,11 @@ typedef struct
 /** @defgroup TIM_Channel  TIM Channel
   * @{
   */
-#define TIM_CHANNEL_1                      ((uint32_t)0x0000)
-#define TIM_CHANNEL_2                      ((uint32_t)0x0004)
-#define TIM_CHANNEL_3                      ((uint32_t)0x0008)
-#define TIM_CHANNEL_4                      ((uint32_t)0x000C)
-#define TIM_CHANNEL_ALL                    ((uint32_t)0x0018)
+#define TIM_CHANNEL_1                      ((unsigned long)0x0000)
+#define TIM_CHANNEL_2                      ((unsigned long)0x0004)
+#define TIM_CHANNEL_3                      ((unsigned long)0x0008)
+#define TIM_CHANNEL_4                      ((unsigned long)0x000C)
+#define TIM_CHANNEL_ALL                    ((unsigned long)0x0018)
                                  
 /**
   * @}
@@ -457,7 +458,7 @@ typedef struct
 /** @defgroup TIM_Input_Capture_Prescaler  TIM Input Capture Prescaler
   * @{
   */
-#define TIM_ICPSC_DIV1                     ((uint32_t)0x0000)       /*!< Capture performed each time an edge is detected on the capture input */
+#define TIM_ICPSC_DIV1                     ((unsigned long)0x0000)       /*!< Capture performed each time an edge is detected on the capture input */
 #define TIM_ICPSC_DIV2                     (TIM_CCMR1_IC1PSC_0)     /*!< Capture performed once every 2 events */
 #define TIM_ICPSC_DIV4                     (TIM_CCMR1_IC1PSC_1)     /*!< Capture performed once every 4 events */
 #define TIM_ICPSC_DIV8                     (TIM_CCMR1_IC1PSC)       /*!< Capture performed once every 8 events */
@@ -469,7 +470,7 @@ typedef struct
   * @{
   */
 #define TIM_OPMODE_SINGLE                  (TIM_CR1_OPM)
-#define TIM_OPMODE_REPETITIVE              ((uint32_t)0x0000)
+#define TIM_OPMODE_REPETITIVE              ((unsigned long)0x0000)
 /**
   * @}
   */
@@ -504,7 +505,7 @@ typedef struct
   * @{
   */  
 #define TIM_COMMUTATION_TRGI              (TIM_CR2_CCUS)
-#define TIM_COMMUTATION_SOFTWARE          ((uint32_t)0x0000)
+#define TIM_COMMUTATION_SOFTWARE          ((unsigned long)0x0000)
 /**
   * @}
   */
@@ -563,7 +564,7 @@ typedef struct
   */
 #define	TIM_CLOCKSOURCE_ETRMODE2    (TIM_SMCR_ETPS_1) 
 #define	TIM_CLOCKSOURCE_INTERNAL    (TIM_SMCR_ETPS_0) 
-#define	TIM_CLOCKSOURCE_ITR0        ((uint32_t)0x0000)
+#define	TIM_CLOCKSOURCE_ITR0        ((unsigned long)0x0000)
 #define	TIM_CLOCKSOURCE_ITR1        (TIM_SMCR_TS_0)
 #define	TIM_CLOCKSOURCE_ITR2        (TIM_SMCR_TS_1)
 #define	TIM_CLOCKSOURCE_ITR3        (TIM_SMCR_TS_0 | TIM_SMCR_TS_1)
@@ -601,8 +602,8 @@ typedef struct
 /** @defgroup TIM_ClearInput_Source TIM Clear Input Source
   * @{
   */
-#define TIM_CLEARINPUTSOURCE_ETR           ((uint32_t)0x0001) 
-#define TIM_CLEARINPUTSOURCE_NONE          ((uint32_t)0x0000)
+#define TIM_CLEARINPUTSOURCE_ETR           ((unsigned long)0x0001)
+#define TIM_CLEARINPUTSOURCE_NONE          ((unsigned long)0x0000)
 /**
   * @}
   */
@@ -631,7 +632,7 @@ typedef struct
   * @{
   */  
 #define TIM_OSSR_ENABLE 	      (TIM_BDTR_OSSR)
-#define TIM_OSSR_DISABLE        ((uint32_t)0x0000)
+#define TIM_OSSR_DISABLE        ((unsigned long)0x0000)
 /**
   * @}
   */
@@ -640,7 +641,7 @@ typedef struct
   * @{
   */
 #define TIM_OSSI_ENABLE	 	    (TIM_BDTR_OSSI)
-#define TIM_OSSI_DISABLE            ((uint32_t)0x0000)
+#define TIM_OSSI_DISABLE            ((unsigned long)0x0000)
 /**
   * @}
   */
@@ -648,7 +649,7 @@ typedef struct
 /** @defgroup TIM_Lock_level  TIM Lock level
   * @{
   */
-#define TIM_LOCKLEVEL_OFF	   ((uint32_t)0x0000)
+#define TIM_LOCKLEVEL_OFF	   ((unsigned long)0x0000)
 #define TIM_LOCKLEVEL_1            (TIM_BDTR_LOCK_0)
 #define TIM_LOCKLEVEL_2            (TIM_BDTR_LOCK_1)
 #define TIM_LOCKLEVEL_3            (TIM_BDTR_LOCK)
@@ -659,7 +660,7 @@ typedef struct
   * @{
   */                         
 #define TIM_BREAK_ENABLE          (TIM_BDTR_BKE)
-#define TIM_BREAK_DISABLE         ((uint32_t)0x0000)
+#define TIM_BREAK_DISABLE         ((unsigned long)0x0000)
 /**
   * @}
   */
@@ -667,7 +668,7 @@ typedef struct
 /** @defgroup TIM_Break_Polarity  TIM Break Polarity 
   * @{
   */
-#define TIM_BREAKPOLARITY_LOW        ((uint32_t)0x0000)
+#define TIM_BREAKPOLARITY_LOW        ((unsigned long)0x0000)
 #define TIM_BREAKPOLARITY_HIGH       (TIM_BDTR_BKP)
 /**
   * @}
@@ -677,7 +678,7 @@ typedef struct
   * @{
   */
 #define TIM_AUTOMATICOUTPUT_ENABLE           (TIM_BDTR_AOE)
-#define	TIM_AUTOMATICOUTPUT_DISABLE          ((uint32_t)0x0000)
+#define	TIM_AUTOMATICOUTPUT_DISABLE          ((unsigned long)0x0000)
 /**
   * @}
   */  
@@ -685,7 +686,7 @@ typedef struct
 /** @defgroup TIM_Master_Mode_Selection TIM Master Mode Selection
   * @{
   */  
-#define	TIM_TRGO_RESET            ((uint32_t)0x0000)             
+#define	TIM_TRGO_RESET            ((unsigned long)0x0000)
 #define	TIM_TRGO_ENABLE           (TIM_CR2_MMS_0)           
 #define	TIM_TRGO_UPDATE           (TIM_CR2_MMS_1)             
 #define	TIM_TRGO_OC1              ((TIM_CR2_MMS_1 | TIM_CR2_MMS_0))    
@@ -700,11 +701,11 @@ typedef struct
 /** @defgroup TIM_Slave_Mode TIM Slave Mode
   * @{
   */
-#define TIM_SLAVEMODE_DISABLE              ((uint32_t)0x0000)
-#define TIM_SLAVEMODE_RESET                ((uint32_t)0x0004)
-#define TIM_SLAVEMODE_GATED                ((uint32_t)0x0005)
-#define TIM_SLAVEMODE_TRIGGER              ((uint32_t)0x0006)
-#define TIM_SLAVEMODE_EXTERNAL1            ((uint32_t)0x0007)
+#define TIM_SLAVEMODE_DISABLE              ((unsigned long)0x0000)
+#define TIM_SLAVEMODE_RESET                ((unsigned long)0x0004)
+#define TIM_SLAVEMODE_GATED                ((unsigned long)0x0005)
+#define TIM_SLAVEMODE_TRIGGER              ((unsigned long)0x0006)
+#define TIM_SLAVEMODE_EXTERNAL1            ((unsigned long)0x0007)
 /**
   * @}
   */
@@ -712,8 +713,8 @@ typedef struct
 /** @defgroup TIM_Master_Slave_Mode  TIM Master Slave Mode
   * @{
   */
-#define TIM_MASTERSLAVEMODE_ENABLE          ((uint32_t)0x0080)
-#define TIM_MASTERSLAVEMODE_DISABLE         ((uint32_t)0x0000)
+#define TIM_MASTERSLAVEMODE_ENABLE          ((unsigned long)0x0080)
+#define TIM_MASTERSLAVEMODE_DISABLE         ((unsigned long)0x0000)
 /**
   * @}
   */ 
@@ -721,15 +722,15 @@ typedef struct
 /** @defgroup TIM_Trigger_Selection  TIM Trigger Selection
   * @{
   */
-#define TIM_TS_ITR0                        ((uint32_t)0x0000)
-#define TIM_TS_ITR1                        ((uint32_t)0x0010)
-#define TIM_TS_ITR2                        ((uint32_t)0x0020)
-#define TIM_TS_ITR3                        ((uint32_t)0x0030)
-#define TIM_TS_TI1F_ED                     ((uint32_t)0x0040)
-#define TIM_TS_TI1FP1                      ((uint32_t)0x0050)
-#define TIM_TS_TI2FP2                      ((uint32_t)0x0060)
-#define TIM_TS_ETRF                        ((uint32_t)0x0070)
-#define TIM_TS_NONE                        ((uint32_t)0xFFFF)
+#define TIM_TS_ITR0                        ((unsigned long)0x0000)
+#define TIM_TS_ITR1                        ((unsigned long)0x0010)
+#define TIM_TS_ITR2                        ((unsigned long)0x0020)
+#define TIM_TS_ITR3                        ((unsigned long)0x0030)
+#define TIM_TS_TI1F_ED                     ((unsigned long)0x0040)
+#define TIM_TS_TI1FP1                      ((unsigned long)0x0050)
+#define TIM_TS_TI2FP2                      ((unsigned long)0x0060)
+#define TIM_TS_ETRF                        ((unsigned long)0x0070)
+#define TIM_TS_NONE                        ((unsigned long)0xFFFF)
 /**
   * @}
   */  
@@ -761,7 +762,7 @@ typedef struct
 /** @defgroup TIM_TI1_Selection TIM TI1 Selection
   * @{
   */
-#define TIM_TI1SELECTION_CH1                ((uint32_t)0x0000)
+#define TIM_TI1SELECTION_CH1                ((unsigned long)0x0000)
 #define TIM_TI1SELECTION_XORCOMBINATION     (TIM_CR2_TI1S)
 /**
   * @}
@@ -836,10 +837,10 @@ typedef struct
 /** @defgroup Channel_CC_State  Channel CC State
   * @{
   */
-#define TIM_CCx_ENABLE                   ((uint32_t)0x0001)
-#define TIM_CCx_DISABLE                  ((uint32_t)0x0000)
-#define TIM_CCxN_ENABLE                  ((uint32_t)0x0004)
-#define TIM_CCxN_DISABLE                 ((uint32_t)0x0000)
+#define TIM_CCx_ENABLE                   ((unsigned long)0x0001)
+#define TIM_CCx_DISABLE                  ((unsigned long)0x0000)
+#define TIM_CCxN_ENABLE                  ((unsigned long)0x0004)
+#define TIM_CCxN_DISABLE                 ((unsigned long)0x0000)
 /**
   * @}
   */ 
@@ -958,7 +959,7 @@ typedef struct
   * @retval None
   */
 #define __HAL_TIM_SET_COMPARE(__HANDLE__, __CHANNEL__, __COMPARE__) \
-(*(__IO uint32_t *)(&((__HANDLE__)->Instance->CCR1) + ((__CHANNEL__) >> 2)) = (__COMPARE__))
+(*(__IO unsigned long *)(&((__HANDLE__)->Instance->CCR1) + ((__CHANNEL__) >> 2)) = (__COMPARE__))
 
 /**
   * @brief  Gets the TIM Capture Compare Register value on runtime
@@ -972,7 +973,7 @@ typedef struct
   * @retval None
   */
 #define __HAL_TIM_GET_COMPARE(__HANDLE__, __CHANNEL__) \
-  (*(__IO uint32_t *)(&((__HANDLE__)->Instance->CCR1) + ((__CHANNEL__) >> 2)))
+  (*(__IO unsigned long *)(&((__HANDLE__)->Instance->CCR1) + ((__CHANNEL__) >> 2)))
 
 /**
   * @brief  Sets the TIM Counter Register value on runtime.
@@ -1147,7 +1148,7 @@ HAL_StatusTypeDef HAL_TIM_Base_Stop(TIM_HandleTypeDef *htim);
 HAL_StatusTypeDef HAL_TIM_Base_Start_IT(TIM_HandleTypeDef *htim);
 HAL_StatusTypeDef HAL_TIM_Base_Stop_IT(TIM_HandleTypeDef *htim);
 /* Non-Blocking mode: DMA */
-HAL_StatusTypeDef HAL_TIM_Base_Start_DMA(TIM_HandleTypeDef *htim, uint32_t *pData, uint16_t Length);
+HAL_StatusTypeDef HAL_TIM_Base_Start_DMA(TIM_HandleTypeDef *htim, unsigned long *pData, uint16_t Length);
 HAL_StatusTypeDef HAL_TIM_Base_Stop_DMA(TIM_HandleTypeDef *htim);
 /**
   * @}
@@ -1162,14 +1163,14 @@ HAL_StatusTypeDef HAL_TIM_OC_DeInit(TIM_HandleTypeDef *htim);
 void HAL_TIM_OC_MspInit(TIM_HandleTypeDef *htim);
 void HAL_TIM_OC_MspDeInit(TIM_HandleTypeDef *htim);
 /* Blocking mode: Polling */
-HAL_StatusTypeDef HAL_TIM_OC_Start(TIM_HandleTypeDef *htim, uint32_t Channel);
-HAL_StatusTypeDef HAL_TIM_OC_Stop(TIM_HandleTypeDef *htim, uint32_t Channel);
+HAL_StatusTypeDef HAL_TIM_OC_Start(TIM_HandleTypeDef *htim, unsigned long Channel);
+HAL_StatusTypeDef HAL_TIM_OC_Stop(TIM_HandleTypeDef *htim, unsigned long Channel);
 /* Non-Blocking mode: Interrupt */
-HAL_StatusTypeDef HAL_TIM_OC_Start_IT(TIM_HandleTypeDef *htim, uint32_t Channel);
-HAL_StatusTypeDef HAL_TIM_OC_Stop_IT(TIM_HandleTypeDef *htim, uint32_t Channel);
+HAL_StatusTypeDef HAL_TIM_OC_Start_IT(TIM_HandleTypeDef *htim, unsigned long Channel);
+HAL_StatusTypeDef HAL_TIM_OC_Stop_IT(TIM_HandleTypeDef *htim, unsigned long Channel);
 /* Non-Blocking mode: DMA */
-HAL_StatusTypeDef HAL_TIM_OC_Start_DMA(TIM_HandleTypeDef *htim, uint32_t Channel, uint32_t *pData, uint16_t Length);
-HAL_StatusTypeDef HAL_TIM_OC_Stop_DMA(TIM_HandleTypeDef *htim, uint32_t Channel);
+HAL_StatusTypeDef HAL_TIM_OC_Start_DMA(TIM_HandleTypeDef *htim, unsigned long Channel, unsigned long *pData, uint16_t Length);
+HAL_StatusTypeDef HAL_TIM_OC_Stop_DMA(TIM_HandleTypeDef *htim, unsigned long Channel);
 
 /**
   * @}
@@ -1184,14 +1185,14 @@ HAL_StatusTypeDef HAL_TIM_PWM_DeInit(TIM_HandleTypeDef *htim);
 void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef *htim);
 void HAL_TIM_PWM_MspDeInit(TIM_HandleTypeDef *htim);
 /* Blocking mode: Polling */
-HAL_StatusTypeDef HAL_TIM_PWM_Start(TIM_HandleTypeDef *htim, uint32_t Channel);
-HAL_StatusTypeDef HAL_TIM_PWM_Stop(TIM_HandleTypeDef *htim, uint32_t Channel);
+HAL_StatusTypeDef HAL_TIM_PWM_Start(TIM_HandleTypeDef *htim, unsigned long Channel);
+HAL_StatusTypeDef HAL_TIM_PWM_Stop(TIM_HandleTypeDef *htim, unsigned long Channel);
 /* Non-Blocking mode: Interrupt */
-HAL_StatusTypeDef HAL_TIM_PWM_Start_IT(TIM_HandleTypeDef *htim, uint32_t Channel);
-HAL_StatusTypeDef HAL_TIM_PWM_Stop_IT(TIM_HandleTypeDef *htim, uint32_t Channel);
+HAL_StatusTypeDef HAL_TIM_PWM_Start_IT(TIM_HandleTypeDef *htim, unsigned long Channel);
+HAL_StatusTypeDef HAL_TIM_PWM_Stop_IT(TIM_HandleTypeDef *htim, unsigned long Channel);
 /* Non-Blocking mode: DMA */
-HAL_StatusTypeDef HAL_TIM_PWM_Start_DMA(TIM_HandleTypeDef *htim, uint32_t Channel, uint32_t *pData, uint16_t Length);
-HAL_StatusTypeDef HAL_TIM_PWM_Stop_DMA(TIM_HandleTypeDef *htim, uint32_t Channel);
+HAL_StatusTypeDef HAL_TIM_PWM_Start_DMA(TIM_HandleTypeDef *htim, unsigned long Channel, unsigned long *pData, uint16_t Length);
+HAL_StatusTypeDef HAL_TIM_PWM_Stop_DMA(TIM_HandleTypeDef *htim, unsigned long Channel);
 
 /**
   * @}
@@ -1206,14 +1207,14 @@ HAL_StatusTypeDef HAL_TIM_IC_DeInit(TIM_HandleTypeDef *htim);
 void HAL_TIM_IC_MspInit(TIM_HandleTypeDef *htim);
 void HAL_TIM_IC_MspDeInit(TIM_HandleTypeDef *htim);
 /* Blocking mode: Polling */
-HAL_StatusTypeDef HAL_TIM_IC_Start(TIM_HandleTypeDef *htim, uint32_t Channel);
-HAL_StatusTypeDef HAL_TIM_IC_Stop(TIM_HandleTypeDef *htim, uint32_t Channel);
+HAL_StatusTypeDef HAL_TIM_IC_Start(TIM_HandleTypeDef *htim, unsigned long Channel);
+HAL_StatusTypeDef HAL_TIM_IC_Stop(TIM_HandleTypeDef *htim, unsigned long Channel);
 /* Non-Blocking mode: Interrupt */
-HAL_StatusTypeDef HAL_TIM_IC_Start_IT(TIM_HandleTypeDef *htim, uint32_t Channel);
-HAL_StatusTypeDef HAL_TIM_IC_Stop_IT(TIM_HandleTypeDef *htim, uint32_t Channel);
+HAL_StatusTypeDef HAL_TIM_IC_Start_IT(TIM_HandleTypeDef *htim, unsigned long Channel);
+HAL_StatusTypeDef HAL_TIM_IC_Stop_IT(TIM_HandleTypeDef *htim, unsigned long Channel);
 /* Non-Blocking mode: DMA */
-HAL_StatusTypeDef HAL_TIM_IC_Start_DMA(TIM_HandleTypeDef *htim, uint32_t Channel, uint32_t *pData, uint16_t Length);
-HAL_StatusTypeDef HAL_TIM_IC_Stop_DMA(TIM_HandleTypeDef *htim, uint32_t Channel);
+HAL_StatusTypeDef HAL_TIM_IC_Start_DMA(TIM_HandleTypeDef *htim, unsigned long Channel, unsigned long *pData, uint16_t Length);
+HAL_StatusTypeDef HAL_TIM_IC_Stop_DMA(TIM_HandleTypeDef *htim, unsigned long Channel);
 
 /**
   * @}
@@ -1223,17 +1224,17 @@ HAL_StatusTypeDef HAL_TIM_IC_Stop_DMA(TIM_HandleTypeDef *htim, uint32_t Channel)
   * @{
   */
 /* Timer One Pulse functions ***************************************************/
-HAL_StatusTypeDef HAL_TIM_OnePulse_Init(TIM_HandleTypeDef *htim, uint32_t OnePulseMode);
+HAL_StatusTypeDef HAL_TIM_OnePulse_Init(TIM_HandleTypeDef *htim, unsigned long OnePulseMode);
 HAL_StatusTypeDef HAL_TIM_OnePulse_DeInit(TIM_HandleTypeDef *htim);
 void HAL_TIM_OnePulse_MspInit(TIM_HandleTypeDef *htim);
 void HAL_TIM_OnePulse_MspDeInit(TIM_HandleTypeDef *htim);
 /* Blocking mode: Polling */
-HAL_StatusTypeDef HAL_TIM_OnePulse_Start(TIM_HandleTypeDef *htim, uint32_t OutputChannel);
-HAL_StatusTypeDef HAL_TIM_OnePulse_Stop(TIM_HandleTypeDef *htim, uint32_t OutputChannel);
+HAL_StatusTypeDef HAL_TIM_OnePulse_Start(TIM_HandleTypeDef *htim, unsigned long OutputChannel);
+HAL_StatusTypeDef HAL_TIM_OnePulse_Stop(TIM_HandleTypeDef *htim, unsigned long OutputChannel);
 
 /* Non-Blocking mode: Interrupt */
-HAL_StatusTypeDef HAL_TIM_OnePulse_Start_IT(TIM_HandleTypeDef *htim, uint32_t OutputChannel);
-HAL_StatusTypeDef HAL_TIM_OnePulse_Stop_IT(TIM_HandleTypeDef *htim, uint32_t OutputChannel);
+HAL_StatusTypeDef HAL_TIM_OnePulse_Start_IT(TIM_HandleTypeDef *htim, unsigned long OutputChannel);
+HAL_StatusTypeDef HAL_TIM_OnePulse_Stop_IT(TIM_HandleTypeDef *htim, unsigned long OutputChannel);
 
 /**
   * @}
@@ -1248,14 +1249,14 @@ HAL_StatusTypeDef HAL_TIM_Encoder_DeInit(TIM_HandleTypeDef *htim);
 void HAL_TIM_Encoder_MspInit(TIM_HandleTypeDef *htim);
 void HAL_TIM_Encoder_MspDeInit(TIM_HandleTypeDef *htim);
  /* Blocking mode: Polling */
-HAL_StatusTypeDef HAL_TIM_Encoder_Start(TIM_HandleTypeDef *htim, uint32_t Channel);
-HAL_StatusTypeDef HAL_TIM_Encoder_Stop(TIM_HandleTypeDef *htim, uint32_t Channel);
+HAL_StatusTypeDef HAL_TIM_Encoder_Start(TIM_HandleTypeDef *htim, unsigned long Channel);
+HAL_StatusTypeDef HAL_TIM_Encoder_Stop(TIM_HandleTypeDef *htim, unsigned long Channel);
 /* Non-Blocking mode: Interrupt */
-HAL_StatusTypeDef HAL_TIM_Encoder_Start_IT(TIM_HandleTypeDef *htim, uint32_t Channel);
-HAL_StatusTypeDef HAL_TIM_Encoder_Stop_IT(TIM_HandleTypeDef *htim, uint32_t Channel);
+HAL_StatusTypeDef HAL_TIM_Encoder_Start_IT(TIM_HandleTypeDef *htim, unsigned long Channel);
+HAL_StatusTypeDef HAL_TIM_Encoder_Stop_IT(TIM_HandleTypeDef *htim, unsigned long Channel);
 /* Non-Blocking mode: DMA */
-HAL_StatusTypeDef HAL_TIM_Encoder_Start_DMA(TIM_HandleTypeDef *htim, uint32_t Channel, uint32_t *pData1, uint32_t *pData2, uint16_t Length);
-HAL_StatusTypeDef HAL_TIM_Encoder_Stop_DMA(TIM_HandleTypeDef *htim, uint32_t Channel);
+HAL_StatusTypeDef HAL_TIM_Encoder_Start_DMA(TIM_HandleTypeDef *htim, unsigned long Channel, unsigned long *pData1, unsigned long *pData2, uint16_t Length);
+HAL_StatusTypeDef HAL_TIM_Encoder_Stop_DMA(TIM_HandleTypeDef *htim, unsigned long Channel);
 
 /**
   * @}
@@ -1275,23 +1276,23 @@ void HAL_TIM_IRQHandler(TIM_HandleTypeDef *htim);
   * @{
   */
 /* Control functions  *********************************************************/
-HAL_StatusTypeDef HAL_TIM_OC_ConfigChannel(TIM_HandleTypeDef *htim, TIM_OC_InitTypeDef* sConfig, uint32_t Channel);
-HAL_StatusTypeDef HAL_TIM_PWM_ConfigChannel(TIM_HandleTypeDef *htim, TIM_OC_InitTypeDef* sConfig, uint32_t Channel);
-HAL_StatusTypeDef HAL_TIM_IC_ConfigChannel(TIM_HandleTypeDef *htim, TIM_IC_InitTypeDef* sConfig, uint32_t Channel);
-HAL_StatusTypeDef HAL_TIM_OnePulse_ConfigChannel(TIM_HandleTypeDef *htim, TIM_OnePulse_InitTypeDef* sConfig, uint32_t OutputChannel,  uint32_t InputChannel);
-HAL_StatusTypeDef HAL_TIM_ConfigOCrefClear(TIM_HandleTypeDef *htim, TIM_ClearInputConfigTypeDef * sClearInputConfig, uint32_t Channel);
+HAL_StatusTypeDef HAL_TIM_OC_ConfigChannel(TIM_HandleTypeDef *htim, TIM_OC_InitTypeDef* sConfig, unsigned long Channel);
+HAL_StatusTypeDef HAL_TIM_PWM_ConfigChannel(TIM_HandleTypeDef *htim, TIM_OC_InitTypeDef* sConfig, unsigned long Channel);
+HAL_StatusTypeDef HAL_TIM_IC_ConfigChannel(TIM_HandleTypeDef *htim, TIM_IC_InitTypeDef* sConfig, unsigned long Channel);
+HAL_StatusTypeDef HAL_TIM_OnePulse_ConfigChannel(TIM_HandleTypeDef *htim, TIM_OnePulse_InitTypeDef* sConfig, unsigned long OutputChannel,  unsigned long InputChannel);
+HAL_StatusTypeDef HAL_TIM_ConfigOCrefClear(TIM_HandleTypeDef *htim, TIM_ClearInputConfigTypeDef * sClearInputConfig, unsigned long Channel);
 HAL_StatusTypeDef HAL_TIM_ConfigClockSource(TIM_HandleTypeDef *htim, TIM_ClockConfigTypeDef * sClockSourceConfig);    
-HAL_StatusTypeDef HAL_TIM_ConfigTI1Input(TIM_HandleTypeDef *htim, uint32_t TI1_Selection);
+HAL_StatusTypeDef HAL_TIM_ConfigTI1Input(TIM_HandleTypeDef *htim, unsigned long TI1_Selection);
 HAL_StatusTypeDef HAL_TIM_SlaveConfigSynchronization(TIM_HandleTypeDef *htim, TIM_SlaveConfigTypeDef * sSlaveConfig);
 HAL_StatusTypeDef HAL_TIM_SlaveConfigSynchronization_IT(TIM_HandleTypeDef *htim, TIM_SlaveConfigTypeDef * sSlaveConfig);
-HAL_StatusTypeDef HAL_TIM_DMABurst_WriteStart(TIM_HandleTypeDef *htim, uint32_t BurstBaseAddress, uint32_t BurstRequestSrc, \
-                                              uint32_t  *BurstBuffer, uint32_t  BurstLength);
-HAL_StatusTypeDef HAL_TIM_DMABurst_WriteStop(TIM_HandleTypeDef *htim, uint32_t BurstRequestSrc);
-HAL_StatusTypeDef HAL_TIM_DMABurst_ReadStart(TIM_HandleTypeDef *htim, uint32_t BurstBaseAddress, uint32_t BurstRequestSrc, \
-                                              uint32_t  *BurstBuffer, uint32_t  BurstLength);
-HAL_StatusTypeDef HAL_TIM_DMABurst_ReadStop(TIM_HandleTypeDef *htim, uint32_t BurstRequestSrc);
-HAL_StatusTypeDef HAL_TIM_GenerateEvent(TIM_HandleTypeDef *htim, uint32_t EventSource);
-uint32_t HAL_TIM_ReadCapturedValue(TIM_HandleTypeDef *htim, uint32_t Channel);
+HAL_StatusTypeDef HAL_TIM_DMABurst_WriteStart(TIM_HandleTypeDef *htim, unsigned long BurstBaseAddress, unsigned long BurstRequestSrc, \
+                                              unsigned long  *BurstBuffer, unsigned long  BurstLength);
+HAL_StatusTypeDef HAL_TIM_DMABurst_WriteStop(TIM_HandleTypeDef *htim, unsigned long BurstRequestSrc);
+HAL_StatusTypeDef HAL_TIM_DMABurst_ReadStart(TIM_HandleTypeDef *htim, unsigned long BurstBaseAddress, unsigned long BurstRequestSrc, \
+                                              unsigned long  *BurstBuffer, unsigned long  BurstLength);
+HAL_StatusTypeDef HAL_TIM_DMABurst_ReadStop(TIM_HandleTypeDef *htim, unsigned long BurstRequestSrc);
+HAL_StatusTypeDef HAL_TIM_GenerateEvent(TIM_HandleTypeDef *htim, unsigned long EventSource);
+unsigned long HAL_TIM_ReadCapturedValue(TIM_HandleTypeDef *htim, unsigned long Channel);
 
 /**
   * @}
@@ -1566,8 +1567,8 @@ HAL_TIM_StateTypeDef HAL_TIM_Encoder_GetState(TIM_HandleTypeDef *htim);
   */  
 /* The counter of a timer instance is disabled only if all the CCx and CCxN
    channels have been disabled */
-#define TIM_CCER_CCxE_MASK  ((uint32_t)(TIM_CCER_CC1E | TIM_CCER_CC2E | TIM_CCER_CC3E | TIM_CCER_CC4E))
-#define TIM_CCER_CCxNE_MASK ((uint32_t)(TIM_CCER_CC1NE | TIM_CCER_CC2NE | TIM_CCER_CC3NE))
+#define TIM_CCER_CCxE_MASK  ((unsigned long)(TIM_CCER_CC1E | TIM_CCER_CC2E | TIM_CCER_CC3E | TIM_CCER_CC4E))
+#define TIM_CCER_CCxNE_MASK ((unsigned long)(TIM_CCER_CC1NE | TIM_CCER_CC2NE | TIM_CCER_CC3NE))
 /**
   * @}
   */
@@ -1581,12 +1582,12 @@ HAL_TIM_StateTypeDef HAL_TIM_Encoder_GetState(TIM_HandleTypeDef *htim);
   * @{
   */
 void TIM_Base_SetConfig(TIM_TypeDef *TIMx, TIM_Base_InitTypeDef *Structure);
-void TIM_TI1_SetConfig(TIM_TypeDef *TIMx, uint32_t TIM_ICPolarity, uint32_t TIM_ICSelection, uint32_t TIM_ICFilter);
+void TIM_TI1_SetConfig(TIM_TypeDef *TIMx, unsigned long TIM_ICPolarity, unsigned long TIM_ICSelection, unsigned long TIM_ICFilter);
 void TIM_OC2_SetConfig(TIM_TypeDef *TIMx, TIM_OC_InitTypeDef *OC_Config);
 void TIM_DMADelayPulseCplt(DMA_HandleTypeDef *hdma);
 void TIM_DMAError(DMA_HandleTypeDef *hdma);
 void TIM_DMACaptureCplt(DMA_HandleTypeDef *hdma);
-void TIM_CCxChannelCmd(TIM_TypeDef* TIMx, uint32_t Channel, uint32_t ChannelState);  
+void TIM_CCxChannelCmd(TIM_TypeDef* TIMx, unsigned long Channel, unsigned long ChannelState);
 /**
   * @}
   */ 

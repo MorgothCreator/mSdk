@@ -150,9 +150,9 @@ typedef struct __SPI_HandleTypeDef
 
   HAL_LockTypeDef            Lock;         /* SPI locking object */
 
-  __IO HAL_SPI_StateTypeDef  State;        /* SPI communication state */
+  volatile HAL_SPI_StateTypeDef  State;        /* SPI communication state */
 
-  __IO uint32_t              ErrorCode;    /* SPI Error code */
+  volatile uint32_t              ErrorCode;    /* SPI Error code */
 
 }SPI_HandleTypeDef;
 /**
@@ -371,7 +371,7 @@ typedef struct __SPI_HandleTypeDef
   */
 #define __HAL_SPI_CLEAR_MODFFLAG(__HANDLE__)            \
   do{                                                   \
-    __IO uint32_t tmpreg;                               \
+    volatile uint32_t tmpreg;                               \
     tmpreg = (__HANDLE__)->Instance->SR;                \
     (__HANDLE__)->Instance->CR1 &= (~SPI_CR1_SPE);      \
     UNUSED(tmpreg);                                     \
@@ -384,7 +384,7 @@ typedef struct __SPI_HandleTypeDef
   */
 #define __HAL_SPI_CLEAR_OVRFLAG(__HANDLE__)     \
   do{                                           \
-    __IO uint32_t tmpreg;                       \
+    volatile uint32_t tmpreg;                       \
     tmpreg = (__HANDLE__)->Instance->DR;        \
     tmpreg = (__HANDLE__)->Instance->SR;        \
     UNUSED(tmpreg);                             \
@@ -397,7 +397,7 @@ typedef struct __SPI_HandleTypeDef
   */                                           
 #define __HAL_SPI_CLEAR_FREFLAG(__HANDLE__)     \
   do{                                             \
-  __IO uint32_t tmpreg;                         \
+  volatile uint32_t tmpreg;                         \
   tmpreg = (__HANDLE__)->Instance->SR;          \
   UNUSED(tmpreg);                               \
   }while(0) 
