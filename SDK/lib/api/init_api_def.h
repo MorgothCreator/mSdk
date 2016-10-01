@@ -38,7 +38,9 @@
 
 #include "interface/hs_mmcsd_interface_def.h"
 #include "interface/usb_dev_msc_interface.h"
-extern USBD_DRV_RW_FUNC usbd_drv_func[];
+
+#include "lib/fat_fs/inc/diskio.h"
+extern DRV_RW_FUNC usbd_drv_func[];
 /*#####################################################*/
 /*#####################################################*/
 /*#####################################################*/
@@ -85,7 +87,7 @@ extern USBD_DRV_RW_FUNC usbd_drv_func[];
 		}
 /*#####################################################*/
 /* SPI_INTERFACE, _TransferRate, _WordSize, _SckPort, _SckPin, _MosiPort, _MosiPin, _MisoPort, _MisoPin, _CsPort, _CsPin */
-#define INIT_SPI(SPI_INTERFACE, _TransferRate, _WordSize, _SckPort, _SckPin, _MosiPort, _MosiPin, _MisoPort, _MisoPin, _CsPort, _CsPin) \
+#define INIT_SPI(SPI_INTERFACE, _TransferRate, _WordSize, _SckPort, _SckPin, _MosiPort, _MosiPin, _MisoPort, _MisoPin, _CsPort, _CsPin, _Mode) \
 		if(SPI[SPI_INTERFACE]) {\
 			SPI[SPI_INTERFACE]->CsPort[0] = _CsPort; \
 			SPI[SPI_INTERFACE]->CsPin[0] = _CsPin; \
@@ -96,8 +98,26 @@ extern USBD_DRV_RW_FUNC usbd_drv_func[];
 			SPI[SPI_INTERFACE]->SckPort = _SckPort; \
 			SPI[SPI_INTERFACE]->SckPin = _SckPin; \
 			SPI[SPI_INTERFACE]->McspiNr = SPI_INTERFACE; \
-			SPI[SPI_INTERFACE]->Cpol = false; \
-			SPI[SPI_INTERFACE]->Cpha = false; \
+			if(_Mode == 0)\
+			{\
+				SPI[SPI_INTERFACE]->Cpol = false; \
+				SPI[SPI_INTERFACE]->Cpha = false; \
+			}\
+			if(_Mode == 1)\
+			{\
+				SPI[SPI_INTERFACE]->Cpol = false; \
+				SPI[SPI_INTERFACE]->Cpha = true; \
+			}\
+			if(_Mode == 2)\
+			{\
+				SPI[SPI_INTERFACE]->Cpol = true; \
+				SPI[SPI_INTERFACE]->Cpha = false; \
+			}\
+			if(_Mode == 3)\
+			{\
+				SPI[SPI_INTERFACE]->Cpol = true; \
+				SPI[SPI_INTERFACE]->Cpha = true; \
+			}\
 			SPI[SPI_INTERFACE]->LsbFirst = false; \
 			SPI[SPI_INTERFACE]->WordSize = _WordSize; \
 			SPI[SPI_INTERFACE]->Slave = false; \

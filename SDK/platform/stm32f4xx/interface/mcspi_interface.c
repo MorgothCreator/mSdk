@@ -199,6 +199,7 @@ bool _mcspi_open(new_mcspi *McspiStruct)
 	    GPIO_InitStruct.Pin = 1 << McspiStruct->CsPin[3];
 	    HAL_GPIO_Init(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[3]], &GPIO_InitStruct);
 	}
+	McspiStruct->OldCsSelect = -1;
 	  return true;
 }
 
@@ -297,7 +298,7 @@ void _mcspi_deassert(Mcspi_t *McspiStruct)
 {
 	//if(McspiStruct->OldCsSelect != McspiStruct->CsSelect)
 	//{
-		//McspiStruct->OldCsSelect = McspiStruct->CsSelect;
+	//	McspiStruct->OldCsSelect = McspiStruct->CsSelect;
 		_mcspi_set_baud(McspiStruct, McspiStruct->ClkDiv[McspiStruct->CsSelect]);
 	//}
 	HAL_GPIO_WritePin(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[McspiStruct->CsSelect]], 1 << McspiStruct->CsPin[McspiStruct->CsSelect], GPIO_PIN_SET);
@@ -329,8 +330,12 @@ bool _mcspi_transfer(Mcspi_t *McspiStruct)
 bool _mcspi_set_baud(Mcspi_t *McspiStruct, unsigned long baud)
 {
 	SPI_HandleTypeDef *hspi = (SPI_HandleTypeDef *)McspiStruct->UserData;
-	hspi->Instance->CR1 &= ~SPI_BAUDRATEPRESCALER_256;
-	hspi->Instance->CR1 |= SPI_BAUDRATEPRESCALER_256 & (baud << 3);
+	//__HAL_SPI_DISABLE(hspi);
+	if((hspi->Instance->CR1 & SPI_BAUDRATEPRESCALER_256) != (SPI_BAUDRATEPRESCALER_256 & (baud << 3)))
+	{
+		hspi->Instance->CR1 &= ~SPI_BAUDRATEPRESCALER_256;
+		hspi->Instance->CR1 |= SPI_BAUDRATEPRESCALER_256 & (baud << 3);
+	}
 	return false;
 }
 /*#####################################################*/
@@ -338,7 +343,7 @@ unsigned char _mcspi_SendByte(Mcspi_t *McspiStruct, unsigned char byte)
 {
 	SPI_HandleTypeDef *hspi = (SPI_HandleTypeDef *)McspiStruct->UserData;
 	unsigned char tmp = byte;
-	HAL_SPI_TransmitReceive(hspi, &tmp, &tmp, 1, 10);
+	HAL_SPI_TransmitReceive(hspi, &byte, &tmp, 1, 10);
 	return tmp;
 }
 /*#####################################################*/
