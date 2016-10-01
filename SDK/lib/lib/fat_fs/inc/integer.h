@@ -28,6 +28,7 @@ typedef unsigned short	WCHAR;
 
 /* These types MUST be 32-bit */
 typedef long			LONG;
+typedef unsigned long	ULONG;
 typedef unsigned long	DWORD;
 
 /* This type MUST be 64-bit (Remove this for C89 compatibility) */
