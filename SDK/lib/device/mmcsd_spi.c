@@ -45,6 +45,7 @@ DIR g_sDirObject;
 #define CMD38	(38)		/* ERASE */
 #define CMD55	(55)		/* APP_CMD */
 #define CMD58	(58)		/* READ_OCR */
+#define CMD59	(59)		/* CRC_ON_OFF */
 
 /* Card type flags (CardType) */
 #define CT_MMC		0x01		/* MMC ver 3 */
@@ -448,6 +449,7 @@ uint8_t sd_io_data(SD_Struct_t *SD_Struct, uint8_t Value)
 //#######################################################################################
 void sd_cs_assert(SD_Struct_t *SD_Struct)
 {
+	SD_Struct->HardUnitStruct->DisableCsHandle = true;
 	SD_Struct->HardUnitStruct->CsSelect = SD_Struct->SpiInstance;
 	mcspi_assert(SD_Struct->HardUnitStruct);
 	//gpio_out(SD_Struct->CS_Port, 0);
@@ -526,11 +528,64 @@ int _select (SD_Struct_t *SD_Struct)	/* 1:OK, 0:Timeout */
 	sd_cs_assert(SD_Struct);
 	sd_io_data(SD_Struct, 0xFF);	/* Dummy clock (force DO enabled) */
 
-	if (wait_ready(SD_Struct, 5000))
+	if (wait_ready(SD_Struct, 50000))
 		return 1;	/* OK */
 	deselect(SD_Struct);
 	return 0;	/* Timeout */
 }
+
+unsigned char mmcsd_crc7(char *data,uint8_t length)
+{
+   uint8_t i, ibit, c, crc;
+
+   crc = 0x00;                                                                // Set initial value
+
+   for (i = 0; i < length; i++, data++)
+   {
+      c = *data;
+
+      for (ibit = 0; ibit < 8; ibit++)
+      {
+         crc = crc << 1;
+         if ((c ^ crc) & 0x80) crc = crc ^ 0x09;                              // ^ is XOR
+         c = c << 1;
+      }
+
+       crc = crc & 0x7F;
+   }
+
+   //shift_left(&crc, 1, 1);                                                    // MMC card stores the result in the top 7 bits so shift them left 1
+                                                                              // Should shift in a 1 not a 0 as one of the cards I have won't work otherwise
+   return (crc << 1) | 1;
+}
+
+uint16_t mmcsd_crc16(char *data, uint8_t length)
+{
+   uint8_t i, ibit, c;
+
+   uint16_t crc;
+
+   crc = 0x0000;                                                                // Set initial value
+
+   for (i = 0; i < length; i++, data++)
+   {
+      c = *data;
+
+      for (ibit = 0; ibit < 8; ibit++)
+      {
+         crc = crc << 1;
+         if ((c ^ crc) & 0x8000) crc = crc ^ 0x1021;                              // ^ is XOR
+         c = c << 1;
+      }
+
+       crc = crc & 0x7FFF;
+   }
+
+   //shift_left(&crc, 2, 1);                                                    // MMC card stores the result in the top 7 bits so shift them left 1
+                                                                              // Should shift in a 1 not a 0 as one of the cards I have won't work otherwise
+   return (crc << 1) | 1;
+}
+
 /*-----------------------------------------------------------------------*/
 /* Send a command packet to the MMC                                      */
 /*-----------------------------------------------------------------------*/
@@ -560,6 +615,8 @@ BYTE send_cmd (		/* Return value: R1 resp (bit7==1:Failed to send) */
 			return 0xFF;
 	}
 
+	//if (cmd == CMD17)
+		//send_cmd(SD_Struct, CMD59, 0);
 	/* Send command packet */
 	sd_io_data(SD_Struct, 0x40 | cmd);				/* Start + command index */
 	sd_io_data(SD_Struct, (BYTE)(arg >> 24));		/* Argument[31..24] */
@@ -581,7 +638,8 @@ BYTE send_cmd (		/* Return value: R1 resp (bit7==1:Failed to send) */
 		res = sd_io_data(SD_Struct, 0xFF);
 	while ((res & 0x80) && --n);
 
-	return res;							/* Return received response */
+	return res;
+	/* Return received response */
 }
 
 bool _mmcsd_spi_init(unsigned int unit_nr)
@@ -629,6 +687,10 @@ bool _mmcsd_spi_init(unsigned int unit_nr)
 				ty = 0;
 		}
 	}
+	if (send_cmd(SD_Struct, CMD59, 0) == 0)
+	{
+
+	}
 
 	/*if (send_cmd(SD_Struct, CMD10, 0) == 0)
 	{
@@ -638,7 +700,7 @@ bool _mmcsd_spi_init(unsigned int unit_nr)
 	if (ty)
 	{			/* OK */
 		SD_Struct->HardUnitStruct->CsSelect = SD_Struct->SpiInstance;
-		SD_Struct->HardUnitStruct->ClkDiv[SD_Struct->SpiInstance] = 1;
+		SD_Struct->HardUnitStruct->ClkDiv[SD_Struct->SpiInstance] = 2;
 		//SD_Struct->HardUnitSetBaudFunc((void *)SD_Struct->HardUnitStruct, 1);			/* Set fast clock */
 		//send_cmd(SD_Struct, MMC_CMD_CRC_ON_OFF,0x00000001); // CMD59
 		if (send_cmd(SD_Struct, CMD9, 0) == 0)
@@ -692,7 +754,7 @@ static inline bool rcvr_datablock(void *_SD_Struct, unsigned char *buff, unsigne
 {
 	SD_Struct_t *SD_Struct = (SD_Struct_t *)_SD_Struct;
 	unsigned char token;
-	unsigned long Timer1 = 5000;
+	unsigned long Timer1 = 50000;
 	do
 	{							/* Wait for data packet in timeout of 100ms */
 		token = sd_io_data(SD_Struct,255);
@@ -701,16 +763,15 @@ static inline bool rcvr_datablock(void *_SD_Struct, unsigned char *buff, unsigne
 	if(token != MMC_DATA_TOKEN)
 		return false;	/* If not valid data token, return with error */
 
-	/*do
+	do
 	{							// Receive the data block into buffer
 		*buff++ = sd_io_data(SD_Struct,255);
-	} while (--bytes_to_read);*/
-	SD_Struct->HardUnitStruct->CsSelect = SD_Struct->SpiInstance;
-	SD_Struct->HardUnitStruct->DisableCsHandle = true;
+	} while (--bytes_to_read);
+	/*SD_Struct->HardUnitStruct->CsSelect = SD_Struct->SpiInstance;
 	memset(buff, 0xFF, bytes_to_read);
 	SD_Struct->HardUnitStruct->Buff = buff;
 	if(!SD_Struct->HardUnitReadWriteBuffFunc(SD_Struct->HardUnitStruct, 0, bytes_to_read))
-		return false;
+		return false;*/
 
 
 	sd_io_data(SD_Struct,255);						/* Discard CRC */
@@ -758,13 +819,13 @@ unsigned int MMCSD_SPI_ReadCmdSend(void *_SD_Struct, void* _Buffer, unsigned lon
 {
 	unsigned long block = _block;
 	unsigned char* Buffer = (unsigned char*)_Buffer;
-	SD_Struct_t *SD_Struct = (SD_Struct_t *)_SD_Struct;
-	if(SD_Struct->SD_Hc == IsSdhc)
-	{
-		if(!_sd_read_page(_SD_Struct, Buffer, block, nblks))
-			return false;
-	}
-	else
+	//SD_Struct_t *SD_Struct = (SD_Struct_t *)_SD_Struct;
+	//if(SD_Struct->SD_Hc == IsSdhc)
+	//{
+	//	if(!_sd_read_page(_SD_Struct, Buffer, block, nblks))
+	//		return false;
+	//}
+	//else
 	{
 		do
 		{
@@ -784,13 +845,13 @@ void xmit_spi_multi (
 	UINT btx			/* Number of bytes to send (512) */
 )
 {
-	/*do {						// Transmit data block
+	do {						// Transmit data block
 		sd_io_data(SD_Struct, *buff++);
-	} while (btx -= 1);*/
-	SD_Struct->HardUnitStruct->CsSelect = SD_Struct->SpiInstance;
+	} while (btx -= 1);
+	/*SD_Struct->HardUnitStruct->CsSelect = SD_Struct->SpiInstance;
 	SD_Struct->HardUnitStruct->DisableCsHandle = true;
 	SD_Struct->HardUnitStruct->Buff = (unsigned char *)buff;
-	SD_Struct->HardUnitReadWriteBuffFunc(SD_Struct->HardUnitStruct, btx, 0);
+	SD_Struct->HardUnitReadWriteBuffFunc(SD_Struct->HardUnitStruct, btx, 0);*/
 
 }
 /*-----------------------------------------------------------------------*/
@@ -807,12 +868,13 @@ int xmit_datablock (	/* 1:OK, 0:Failed */
 	BYTE resp;
 
 
-	if (!wait_ready(SD_Struct, 5000))
+	if (!wait_ready(SD_Struct, 50000))
 		return 0;		/* Wait for card ready */
 
 	sd_io_data(SD_Struct, token);					/* Send token */
 	if (token != 0xFD) {				/* Send data if token is other than StopTran */
 		xmit_spi_multi(SD_Struct, buff, 512);		/* Data */
+		//unsigned short crc = mmcsd_crc16(buff, 512);
 		sd_io_data(SD_Struct, 0xFF);
 		sd_io_data(SD_Struct, 0xFF);	/* Dummy CRC */
 
@@ -865,13 +927,13 @@ unsigned int MMCSD_SPI_WriteCmdSend(void *_SD_Struct, void* _Buffer, unsigned lo
 {
 	unsigned long block = _block;
 	unsigned char* Buffer = (unsigned char*)_Buffer;
-	SD_Struct_t *SD_Struct = (SD_Struct_t *)_SD_Struct;
-	if(SD_Struct->SD_Hc == IsSdhc)
-	{
-		if(!_sd_write_page(_SD_Struct, Buffer, block, nblks))
-			return false;
-	}
-	else
+	//SD_Struct_t *SD_Struct = (SD_Struct_t *)_SD_Struct;
+	//if(SD_Struct->SD_Hc == IsSdhc)
+	//{
+	//	if(!_sd_write_page(_SD_Struct, Buffer, block, nblks))
+	//		return false;
+	//}
+	//else
 	{
 		do
 		{
@@ -906,6 +968,11 @@ void mmcsd_spi_idle(unsigned int unit_nr)
         		SD_StructDisk->g_s_mmcFatFs.drv_rw_func.DriveStruct = SD_StructDisk;
         		SD_StructDisk->g_s_mmcFatFs.drv_rw_func.drv_r_func = MMCSD_SPI_ReadCmdSend;
         		SD_StructDisk->g_s_mmcFatFs.drv_rw_func.drv_w_func = MMCSD_SPI_WriteCmdSend;
+        		SD_StructDisk->g_s_mmcFatFs.drv_rw_func.drv_ioctl_func = mmcsd_spi_ioctl;
+#if (_FFCONF == 82786)
+        		char drv_name_buff[4];
+        		if(!f_mount(3 + unit_nr, &SD_StructDisk->g_s_mmcFatFs))
+#else
                 char drv_name_buff[9];
                 drv_name_buff[0] = 'S';
                 drv_name_buff[1] = 'P';
@@ -916,41 +983,49 @@ void mmcsd_spi_idle(unsigned int unit_nr)
                 drv_name_buff[6] = ':';
                 drv_name_buff[7] = '\0';
                 if(!f_mount(&SD_StructDisk->g_s_mmcFatFs, drv_name_buff, 1))
+#endif
                 {
+#if (_FFCONF == 82786)
+                    drv_name_buff[0] = '0' + 3 + unit_nr;
+                    drv_name_buff[1] = ':';
+                    drv_name_buff[2] = '/';
+                    drv_name_buff[3] = '\0';
+#else
                     drv_name_buff[7] = '/';
                     drv_name_buff[8] = '\0';
-                    if(f_opendir(&g_sDirObject, drv_name_buff) == FR_OK)
+#endif
+                   if(f_opendir(&g_sDirObject, drv_name_buff) == FR_OK)
                     {
                     	SD_StructDisk->fs_mounted = true;
 #ifdef MMCSD_DEBUG_EN
 						if(DebugCom)
 						{
-																				UARTprintf(DebugCom,   "MMCSD%d drive %d mounted\n\r" , unit_nr , unit_nr);
-																				UARTprintf(DebugCom,   "MMCSD%d Fat fs detected\n\r" , unit_nr);
-																				UARTprintf(DebugCom, "MMCSD%d Fs type:                 " , unit_nr);
+																				UARTprintf(DebugCom,   "MMCSD%d drive %d mounted\n\r" , unit_nr + 3 , unit_nr + 3);
+																				UARTprintf(DebugCom,   "MMCSD%d Fat fs detected\n\r" , unit_nr + 3);
+																				UARTprintf(DebugCom, "MMCSD%d Fs type:                 " , unit_nr + 3);
 							if(SD_StructDisk->g_s_mmcFatFs.fs_type == FS_FAT12)	{ 				UARTprintf(DebugCom, "Fat12");}
 							else if(SD_StructDisk->g_s_mmcFatFs.fs_type == FS_FAT16){ 				UARTprintf(DebugCom, "Fat16");}
 							else if(SD_StructDisk->g_s_mmcFatFs.fs_type == FS_FAT32){ 				UARTprintf(DebugCom, "Fat32");}
-							else if(SD_StructDisk->g_s_mmcFatFs.fs_type == FS_EXFAT){ 				UARTprintf(DebugCom, "exFat");}
+							//else if(SD_StructDisk->g_s_mmcFatFs.fs_type == FS_EXFAT){ 				UARTprintf(DebugCom, "exFat");}
 							else								{ 				UARTprintf(DebugCom, "None");}
 																				UARTprintf(DebugCom, "\n\r");
 																				//UARTprintf(DebugCom, "MMCSD0 BootSectorAddress:       %u \n\r",(unsigned int)g_sFatFs.);
-																				UARTprintf(DebugCom, "MMCSD%d BytesPerSector:          %d \n\r",unit_nr, /*(int)g_sFatFs.s_size*/512);
-																				UARTprintf(DebugCom, "MMCSD%d SectorsPerCluster:       %d \n\r",unit_nr, (int)SD_StructDisk->g_s_mmcFatFs.csize);
+																				UARTprintf(DebugCom, "MMCSD%d BytesPerSector:          %d \n\r",unit_nr + 3, /*(int)g_sFatFs.s_size*/512);
+																				UARTprintf(DebugCom, "MMCSD%d SectorsPerCluster:       %d \n\r",unit_nr + 3, (int)SD_StructDisk->g_s_mmcFatFs.csize);
 																				//UARTprintf(DebugCom, "MMCSD0 AllocTable1Begin:        %u \n\r",(unsigned int)g_sFatFs.fatbase);
-																				UARTprintf(DebugCom, "MMCSD%d NumberOfFats:            %d \n\r",unit_nr, (int)SD_StructDisk->g_s_mmcFatFs.n_fats);
+																				UARTprintf(DebugCom, "MMCSD%d NumberOfFats:            %d \n\r",unit_nr + 3, (int)SD_StructDisk->g_s_mmcFatFs.n_fats);
 																				//UARTprintf(DebugCom, "MMCSD0 MediaType:               %d \n\r",Drives_Table[0]->DiskInfo_MediaType);
 																				//UARTprintf(DebugCom, "MMCSD0 AllocTableSize:          %u \n\r",Drives_Table[0]->DiskInfo_AllocTableSize);
-																				UARTprintf(DebugCom, "MMCSD%d DataSectionBegin:        %d \n\r",unit_nr, (int)SD_StructDisk->g_s_mmcFatFs.fatbase);
+																				UARTprintf(DebugCom, "MMCSD%d DataSectionBegin:        %d \n\r",unit_nr + 3, (int)SD_StructDisk->g_s_mmcFatFs.fatbase);
 																				unsigned long tmp = (unsigned long long)((unsigned long long)SD_StructDisk->g_s_mmcFatFs.n_fatent * (unsigned long long)/*g_sFatFs.s_size*/512 *(unsigned long long)SD_StructDisk->g_s_mmcFatFs.csize) >> 20/* / 1000000*/;
-																				UARTprintf(DebugCom, "MMCSD%d uSD DiskCapacity:        %uMB\n\r",unit_nr, tmp);
+																				UARTprintf(DebugCom, "MMCSD%d uSD DiskCapacity:        %uMB\n\r",unit_nr + 3, tmp);
 						}
 #endif
-                    } else  if(DebugCom)										UARTprintf(DebugCom,   "MMCSD%d ERROR oppening path\n\r" , unit_nr);
+                    } else  if(DebugCom)										UARTprintf(DebugCom,   "MMCSD%d ERROR oppening path\n\r" , unit_nr + 3);
                 }
-                else if(DebugCom)												UARTprintf(DebugCom,   "MMCSD%d ERROR mounting disk\n\r" , unit_nr);
+                else if(DebugCom)												UARTprintf(DebugCom,   "MMCSD%d ERROR mounting disk\n\r" , unit_nr + 3);
         	}
-        	else if(DebugCom)												UARTprintf(DebugCom,   "MMCSD%d not detected\n\r" , unit_nr);
+        	else if(DebugCom)												UARTprintf(DebugCom,   "MMCSD%d not detected\n\r" , unit_nr + 3);
         }
     }
     else
@@ -962,7 +1037,7 @@ void mmcsd_spi_idle(unsigned int unit_nr)
         	SD_StructDisk->connected = false;
         	SD_StructDisk->initFlg = 1;
 #ifdef MMCSD_DEBUG_EN
-        	UARTprintf(DebugCom,   "MMCSD%d Disconnected\n\r" , unit_nr);
+        	UARTprintf(DebugCom,   "MMCSD%d Disconnected\n\r" , unit_nr + 3);
 #endif
         }
     }
@@ -990,7 +1065,12 @@ void mmcsd_spi_ioctl(void *_SD_Struct, unsigned int  command,  unsigned int *buf
 
             break;
         }
-        default:
+		case CTRL_SYNC :		/* Make sure that no pending write process */
+			_select(SD_Struct);
+			if (wait_ready(SD_Struct, 5000) == 0xFF)
+				*buffer = RES_OK;
+			break;
+       default:
         {
             *buffer = 0;
             break;
