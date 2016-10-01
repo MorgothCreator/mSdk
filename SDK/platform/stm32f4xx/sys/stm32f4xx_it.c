@@ -40,6 +40,11 @@
 extern ADC_HandleTypeDef    AdcHandle;
 extern PCD_HandleTypeDef hpcd;
 
+/* TIM handler declared in "usbd_cdc_interface.c" file */
+extern TIM_HandleTypeDef TimHandle;
+
+extern void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim);
+
 /** @addtogroup FLASH_Program
   * @{
   */
@@ -272,6 +277,16 @@ void ADC_IRQHandler(void)
   * @param  None
   * @retval None
   */
+/**
+  * @brief  This function handles TIM interrupt request.
+  * @param  None
+  * @retval None
+  */
+void TIMx_IRQHandler(void)
+{
+	HAL_TIM_PeriodElapsedCallback(&TimHandle);
+}
+
 /*void PPP_IRQHandler(void)
 {
 }*/
