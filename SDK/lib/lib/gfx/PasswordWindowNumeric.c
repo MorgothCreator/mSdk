@@ -28,7 +28,8 @@ bool password_window_numeric_idle(password_window_numeric_t *PassWindow)
 {
 	if(PassWindow->Window->Visible == false)
 		return false;
-	if(PassWindow->after_wrong_password == true && PassWindow->Text->modifyed)
+	//if(PassWindow->after_wrong_password == true && PassWindow->Text->modifyed)
+	if(strcmp(PassWindow->TextBox->Caption.Text->text, PassWindow->Text->text) && PassWindow->after_wrong_password == true)
 		String.Set(PassWindow->TextBox->Caption.Text, PassWindow->Text->text);
 	char character = 0;
 	if(PassWindow->Btn1->Events.CursorUp)
@@ -112,8 +113,13 @@ bool password_window_numeric_idle(password_window_numeric_t *PassWindow)
 		PassWindow->BtnOk->Events.CursorUp = false;
 		return true;
 	}
+
 	if(character != 0)
 	{
+		if(PassWindow->after_wrong_password == true)
+		{
+			String.Clear(PassWindow->Text);
+		}
 		PassWindow->after_wrong_password = false;
 		String.AppendChar(PassWindow->Text, character);
 		int cnt = 0;

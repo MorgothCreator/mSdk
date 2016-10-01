@@ -32,6 +32,7 @@ typedef struct password_window_numeric_s
 	int max_chars;
 	String_t* Text;
 	bool after_wrong_password;
+	bool text_refrashed;
 }password_window_numeric_t;
 
 #define new_password_window_numeric(window_addr, window_name, btn_space_x, btn_space_y)\
