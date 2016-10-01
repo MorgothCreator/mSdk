@@ -13,6 +13,13 @@
 void ff_util_reset_chk();
 unsigned long ff_util_get_chk();
 
+FRESULT ff_util_write (
+	FIL* fp,			/* Pointer to the file object */
+	const void* buff,	/* Pointer to the data to be written */
+	UINT btw,			/* Number of bytes to write */
+	UINT* bw			/* Pointer to number of bytes written */
+);
+
 int ff_util_gets (
 	TCHAR* buff,	/* Pointer to the string buffer to read */
 	int len,		/* Size of string buffer (characters) */

@@ -22,6 +22,22 @@ unsigned long ff_util_get_chk()
 }
 
 /*-----------------------------------------------------------------------*/
+/* Write stream to the file the file                                            */
+/*-----------------------------------------------------------------------*/
+FRESULT ff_util_write (
+	FIL* fp,			/* Pointer to the file object */
+	const void* buff,	/* Pointer to the data to be written */
+	UINT btw,			/* Number of bytes to write */
+	UINT* bw			/* Pointer to number of bytes written */
+)
+{
+	unsigned int cnt = 0;
+	unsigned char *_buff = (unsigned char *)buff;
+	for(; cnt < btw; cnt++)
+		checksum_send -= _buff[cnt];
+	return f_write(fp, buff, btw, bw);
+}
+/*-----------------------------------------------------------------------*/
 /* Get a string from the file                                            */
 /*-----------------------------------------------------------------------*/
 int ff_util_gets (
@@ -87,6 +103,8 @@ int ff_util_puts (
 		if (ff_util_putc(*str, fp) == EOF)
 			return EOF;
 	}
+	if(f_sync(fp) != FR_OK)
+		return 0;
 	return n;
 }
 
@@ -101,15 +119,17 @@ int ff_util_appendhexs (
 {
 	unsigned int cnt = 0;
 	char tmp_str_buff[65];
-	for(; cnt < buff_len; cnt += 32)
+	for(; cnt + 32 <= buff_len; cnt += 32)
 	{
 		GetHexBuff(tmp_str_buff, (unsigned char *)buff + cnt, 32);
-		ff_util_puts(tmp_str_buff, fp);
+		if(ff_util_puts(tmp_str_buff, fp) != 64)
+			return cnt;
 	}
 	if((signed int)cnt < (signed int)buff_len)
 	{
 		GetHexBuff(tmp_str_buff, (unsigned char *)buff + cnt, buff_len - cnt);
-		ff_util_puts(tmp_str_buff, fp);
+		if(ff_util_puts(tmp_str_buff, fp) != (buff_len - cnt) * 2)
+			return cnt;
 	}
 	return cnt;//f_puts(str, fp);
 }
@@ -913,6 +933,8 @@ int ff_util_printf(
 	char buff[1];
 	long string_len = ff_vsnprintf_(fp, buff, 65535, str, ap);
 	VA_END;
+	if(f_sync(fp) != FR_OK)
+		return 0;
 	return string_len;//(strlen(str));
 }
 #endif /* !HAVE_SNPRINTF */

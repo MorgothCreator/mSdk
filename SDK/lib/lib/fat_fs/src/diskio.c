@@ -39,7 +39,8 @@ DSTATUS disk_status (
 	BYTE drv		/* Physical drive nmuber (0..) */
 )
 {
-	if(!FatFs[drv]->drv_rw_func.DriveStruct) return RES_PARERR;
+	if(!FatFs[drv]->drv_rw_func.DriveStruct)
+		return RES_PARERR;
 	return RES_OK;
 }
 
@@ -55,9 +56,12 @@ DRESULT disk_read (
 		BYTE count		/* Number of sectors to read (1..255) */
 )
 {
-	if(!FatFs[drv]->drv_rw_func.DriveStruct || !FatFs[drv]->drv_rw_func.drv_r_func) return RES_PARERR;
-	if(FatFs[drv]->drv_rw_func.drv_r_func((void*)FatFs[drv]->drv_rw_func.DriveStruct, (void*)buff, sector, count)) return RES_OK;
-	else return RES_ERROR;
+	if(!FatFs[drv]->drv_rw_func.DriveStruct || !FatFs[drv]->drv_rw_func.drv_r_func)
+		return RES_PARERR;
+	if(FatFs[drv]->drv_rw_func.drv_r_func((void*)FatFs[drv]->drv_rw_func.DriveStruct, (void*)buff, sector, count))
+		return RES_OK;
+	else
+		return RES_ERROR;
 }
 
 
@@ -73,9 +77,12 @@ DRESULT disk_write (
 		BYTE count			/* Number of sectors to write (1..255) */
 )
 {
-	if(!FatFs[drv]->drv_rw_func.DriveStruct || !FatFs[drv]->drv_rw_func.drv_w_func) return RES_PARERR;
-	if(FatFs[drv]->drv_rw_func.drv_w_func((void*)FatFs[drv]->drv_rw_func.DriveStruct, (void*)buff, sector, count)) return RES_OK;
-	else return RES_ERROR;
+	if(!FatFs[drv]->drv_rw_func.DriveStruct || !FatFs[drv]->drv_rw_func.drv_w_func)
+		return RES_PARERR;
+	if(FatFs[drv]->drv_rw_func.drv_w_func((void*)FatFs[drv]->drv_rw_func.DriveStruct, (void*)buff, sector, count))
+		return RES_OK;
+	else
+		return RES_ERROR;
 }
 #endif /* _READONLY */
 
@@ -90,7 +97,10 @@ DRESULT disk_ioctl (
 	void *buff		/* Buffer to send/receive control data */
 )
 {
-	if(!FatFs[drv]->drv_rw_func.DriveStruct) return RES_PARERR;
-	return RES_OK;
+	unsigned int response = FR_OK;
+	if(!FatFs[drv]->drv_rw_func.DriveStruct || !FatFs[drv]->drv_rw_func.drv_ioctl_func)
+		return RES_PARERR;
+	FatFs[drv]->drv_rw_func.drv_ioctl_func(FatFs[drv]->drv_rw_func.DriveStruct, ctrl, &response);
+	return response;
 }
 

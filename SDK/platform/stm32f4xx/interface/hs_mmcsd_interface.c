@@ -893,7 +893,11 @@ void _mmcsd_idle(unsigned int unit_nr)
         MmcSdFatFs.drv_rw_func.DriveStruct = (void *)&uSdCardInfo;//SdStruct;
         MmcSdFatFs.drv_rw_func.drv_r_func = MMCSDReadCmdSend;
         MmcSdFatFs.drv_rw_func.drv_w_func = MMCSDWriteCmdSend;
+#if (_FFCONF == 82786)
+        if(!f_mount(2, &MmcSdFatFs))
+#else
         if(!f_mount(&MmcSdFatFs,"SD1:", 1))
+#endif
         {
                     if(f_opendir(&g_sDirObject, g_cCwdBuf0) == FR_OK)
                     {
