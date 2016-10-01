@@ -38,8 +38,9 @@ typedef enum
 	UsartCom_Rx_Pocket
 }UsartCom_Status_enum;
 /*#####################################################*/
-typedef struct
+typedef struct Uart_s
 {
+	bool is_virtual;
 	unsigned char TxPin;
 	unsigned char RxPin;
 	gpio_port_enum TxPort;
@@ -67,8 +68,27 @@ typedef struct
 	unsigned char* RxBuff;
 	unsigned char* TxBuff;
 	void *udata;
+
 	void(*OnTxComplete)(void *);
 	void(*OnRxPocketReceived)(void *);// Function to call when pointed item was changed.
+
+	void (*putc)(struct Uart_s* UartSettings, unsigned char byteTx);
+	unsigned char (*getc)(struct Uart_s* UartSettings);
+	bool (*putc_no_blocking)(struct Uart_s* UartSettings, unsigned char byteTx);
+	signed short (*getc_no_blocking)(struct Uart_s* UartSettings);
+	/*unsigned int (*UARTRxGetError)(Uart_t* UartSettings);
+	void (*UARTBaudRateSet)(Uart_t* UartSettings, unsigned long BaudRate);
+	unsigned int (*UARTPuts)(Uart_t* UartSettings, char *pTxBuffer, int numBytesToWrite);
+	unsigned int (*UARTGets)(Uart_t* UartSettings, char *pRxBuffer, int numBytesToRead);
+	void (*UARTPutNum)(Uart_t* UartSettings, int value);
+	void (*UARTPutHexNum)(Uart_t* UartSettings, unsigned long hexValue);
+	long (*UARTGetNum)(Uart_t* UartSettings);
+	unsigned long (*UARTGetHexNum)(Uart_t* UartSettings);
+	unsigned int (*UARTwrite)(Uart_t* UartSettings, const char *pcBuf, unsigned int len);
+	int (*UARTscanf)(Uart_t* UartSettings, const char *format, ...);
+	Uart_t* (*UARTprintf)(Uart_t* UartSettings,const char *pcString, ...);*/
+	bool (*open)(struct Uart_s *UartSettings);
+	bool (*close)(struct Uart_s *UartSettings);
 }Uart_t;
 /*#####################################################*/
 #define new_uart Uart_t

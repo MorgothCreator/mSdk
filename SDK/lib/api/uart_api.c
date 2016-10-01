@@ -27,6 +27,7 @@
 #include "sys/plat_properties.h"
 #include "interface/uart_interface.h"
 #include "lib/util/ascii.h"
+#include "api/usb_api.h"
 /*#####################################################*/
 /* A mapping from an integer between 0 and 15 to its ASCII character
  * equivalent. */
@@ -34,37 +35,69 @@ static const char * const g_pcHex = "0123456789abcdef";
 /*#####################################################*/
 void UARTPutc(Uart_t* UartSettings, unsigned char byteTx)
 {
-	if(!UartSettings) return;
-	_UARTCharPut(UartSettings->BaseAddr, byteTx);
+	if(!UartSettings)
+		return;
+	if(UartSettings->is_virtual)
+	{
+		usb_com_dev_send(&byteTx, 1);
+	}
+	else
+		_UARTCharPut(UartSettings->BaseAddr, byteTx);
 }
 /*#####################################################*/
 unsigned char UARTGetc(Uart_t* UartSettings)
 {
-	if(!UartSettings) return 0;
-	return (signed char)_UARTCharGet(UartSettings->BaseAddr);
+	if(!UartSettings)
+		return 0;
+	if(UartSettings->is_virtual)
+	{
+		unsigned char tmp = 0;
+		while((tmp = usb_com_dev_receive(&tmp)) == 0);
+		return tmp;
+	}
+	else
+		return (signed char)_UARTCharGet(UartSettings->BaseAddr);
 }
 /*#####################################################*/
 bool UARTPutcNoBlocking(Uart_t* UartSettings, unsigned char byteTx)
 {
 	if(!UartSettings) return false;
-	return _UARTCharPutNonBlocking(UartSettings->BaseAddr, byteTx);
+	if(UartSettings->is_virtual)
+	{
+		usb_com_dev_send(&byteTx, 1);
+		return true;
+	}
+	else
+		return _UARTCharPutNonBlocking(UartSettings->BaseAddr, byteTx);
 }
 /*#####################################################*/
 signed short UARTGetcNoBlocking(Uart_t* UartSettings)
 {
-	if(!UartSettings) return -1;
-	return _UARTCharGetNonBlocking(UartSettings->BaseAddr);
+	if(!UartSettings)
+		return -1;
+	if(UartSettings->is_virtual)
+	{
+		unsigned char tmp = 0;
+		if(usb_com_dev_receive(&tmp) == 0)
+			return -1;
+		else
+			return tmp;
+	}
+	else
+		return _UARTCharGetNonBlocking(UartSettings->BaseAddr);
 }
 /*#####################################################*/
 unsigned int UARTRxGetError(Uart_t* UartSettings)
 {
-	if(!UartSettings) return 0;
+	if(!UartSettings)
+		return 0;
 	return _UARTRxErrorGet(UartSettings->BaseAddr);
 }
 /*#####################################################*/
 void UARTBaudRateSet(Uart_t* UartSettings, unsigned long BaudRate)
 {
-	if(!UartSettings) return;
+	if(!UartSettings)
+return;
 	_UARTBaudSetRate(UartSettings->BaseAddr, BaudRate);
 	UartSettings->BaudRate = BaudRate;
 }
@@ -1356,15 +1389,31 @@ convert:
     return UartSettings;
 }
 #endif
+
 bool uart_open(Uart_t* UartSettings)
 {
-	return _uart_open(UartSettings);
+	UartSettings->putc = UARTPutc;
+	UartSettings->getc = UARTGetc;
+	UartSettings->putc_no_blocking = UARTPutcNoBlocking;
+	UartSettings->getc_no_blocking = UARTGetcNoBlocking;
+	if(!UartSettings->is_virtual)
+	{
+		UartSettings->open = _uart_open;
+		UartSettings->close = _uart_close;
+		return _uart_open(UartSettings);
+	}
+	else
+	{
+		UartSettings->open = NULL;
+		UartSettings->close = NULL;
+		usb_com_dev_init(UartSettings->UartNr);
+		return true;
+	}
 }
 bool uart_close(Uart_t *UartSettings)
 {
-	return _uart_close(UartSettings);
+	return UartSettings->close(UartSettings);
 }
-
 
 
 

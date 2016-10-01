@@ -9,7 +9,7 @@
 #define USB_DEV_COM_INTERFACE_H_
 
 
-void _usb_com_dev_init(unsigned int instance);
+bool _usb_com_dev_init(unsigned int instance);
 unsigned int _usb_com_dev_receive(unsigned char* buff);
 unsigned int _usb_com_dev_send(unsigned char* buff, unsigned int nbytes);
 

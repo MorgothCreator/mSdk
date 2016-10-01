@@ -34,7 +34,7 @@
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "driver/USBD/Class/Msc/usbd_conf.h"
+#include "../../Class/usbd_conf.h"
 
 /** @addtogroup STM32_USBD_DEVICE_LIBRARY
   * @{

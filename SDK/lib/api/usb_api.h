@@ -25,8 +25,9 @@
 #include "gpio_api.h"
 #include "interface/usb_dev_msc_interface.h"
 #include "lib/gfx/controls_definition.h"
+#include "lib/fat_fs/inc/diskio.h"
 
-extern USBD_DRV_RW_FUNC drv_rw_func[];
+extern DRV_RW_FUNC drv_rw_func[];
 
 /*-----------------------------------------------------------*/
 void usb_msc_host_init(unsigned int instance, new_gpio* StatusLed);

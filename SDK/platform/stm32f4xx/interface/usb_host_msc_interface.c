@@ -343,6 +343,9 @@ void _usb_msc_host_idle(unsigned int instance)
         g_sFatFs1.drv_rw_func.DriveStruct = (void*)&hUSB_Host[instance];
         g_sFatFs1.drv_rw_func.drv_r_func = USBMSCReadBlock;
         g_sFatFs1.drv_rw_func.drv_w_func = USBMSCWriteBlock;
+#if (_FFCONF == 82786)
+        if(!f_mount(instance, &g_sFatFs1))
+#else
         char drv_name_buff[6];
         drv_name_buff[1] = 'U';
         drv_name_buff[1] = 'S';
@@ -351,6 +354,7 @@ void _usb_msc_host_idle(unsigned int instance)
         drv_name_buff[1] = ':';
         drv_name_buff[2] = '\0';
         if(!f_mount(&g_sFatFs1, drv_name_buff, 1))
+#endif
         {
         	if(f_opendir(&g_sDirObject, g_cCwdBuf1) == FR_OK)
             {

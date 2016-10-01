@@ -17,8 +17,9 @@
 //#include "usb_dev_msc/usb_msc_structs.h"
 #include "../driver/USBD/Class/MSC/usbd_storage.h"
 #include "../driver/USBD/Class/MSC/usbd_desc.h"
+#include "lib/fat_fs/inc/diskio.h"
 
-USBD_DRV_RW_FUNC usbd_drv_func[2];
+DRV_RW_FUNC usbd_drv_func[2];
 USBD_HandleTypeDef USBD_Device[2];
 
 bool _usb_msc_dev_media_connected(unsigned int instance)
