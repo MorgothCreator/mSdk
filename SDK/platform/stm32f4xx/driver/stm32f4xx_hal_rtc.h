@@ -186,7 +186,7 @@ typedef struct
   
   HAL_LockTypeDef             Lock;       /*!< RTC locking object       */
   
-  __IO HAL_RTCStateTypeDef    State;      /*!< Time communication state */
+  volatile HAL_RTCStateTypeDef    State;      /*!< Time communication state */
     
 }RTC_HandleTypeDef;
 

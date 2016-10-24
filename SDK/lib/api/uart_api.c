@@ -31,7 +31,9 @@
 /*#####################################################*/
 /* A mapping from an integer between 0 and 15 to its ASCII character
  * equivalent. */
+#ifdef _TINY_PRINT_
 static const char * const g_pcHex = "0123456789abcdef";
+#endif
 /*#####################################################*/
 void UARTPutc(Uart_t* UartSettings, unsigned char byteTx)
 {
@@ -52,7 +54,7 @@ unsigned char UARTGetc(Uart_t* UartSettings)
 	if(UartSettings->is_virtual)
 	{
 		unsigned char tmp = 0;
-		while((tmp = usb_com_dev_receive(&tmp)) == 0);
+		while((usb_com_dev_receive(&tmp)) == 0);
 		return tmp;
 	}
 	else

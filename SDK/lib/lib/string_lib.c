@@ -1138,7 +1138,7 @@ int str_vsnprintf_ (String_t* fp, char *str, size_t count, const char *fmt, va_l
 
 
 
-
+#if 0
 #ifndef HAVE_SNPRINTF
 /* VARARGS3 */
 #ifdef HAVE_STDARGS
@@ -1265,6 +1265,7 @@ static int string_printf(
 #endif /* !HAVE_SNPRINTF */
 
 #endif /* !HAVE_SNPRINTF */
+#endif
 
 String_t *str_setf(String_t* dest, char* str, ...)
 {

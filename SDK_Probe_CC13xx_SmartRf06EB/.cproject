@@ -44,7 +44,6 @@
 								<option id="com.ti.ccstudio.buildDefinitions.TMS470_GNU_4.0.compilerID.DEFINE.785937980" name="Define symbols (-D)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_GNU_4.0.compilerID.DEFINE" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="MMCSD_DEBUG_EN"/>
 									<listOptionValue builtIn="false" value="DOXYGEN"/>
-									<listOptionValue builtIn="false" value="_DOXYGEN"/>
 									<listOptionValue builtIn="false" value="_TINY_PRINT_"/>
 									<listOptionValue builtIn="false" value="gcc"/>
 									<listOptionValue builtIn="false" value="_DRIVERLIB_NOROM"/>

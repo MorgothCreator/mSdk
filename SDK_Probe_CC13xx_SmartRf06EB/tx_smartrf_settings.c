@@ -43,7 +43,7 @@
 
 
 // Overrides for CMD_PROP_RADIO_DIV_SETUP
-unsigned long pOverrides[] =
+static unsigned long pOverrides[] =
 {
 	    // override_synth_prop_863_970_div5.xml
 	    ADI_HALFREG_OVERRIDE(0,61,0xF,0xD),
@@ -181,7 +181,7 @@ const rfc_CMD_PROP_TX_t RF_cmdPropTx =
 	    .startTrigger.pastTrig = 0x0,
 	    .condition.rule = 0x1,
 	    .condition.nSkip = 0x0,
-	    .pktConf.bFsOff = 0x1,
+	    .pktConf.bFsOff = 0x0,
 	    .pktConf.bUseCrc = 0x1,
 	    .pktConf.bVarLen = 0x1,
 	    .pktLen = 0x1e, // SET APPLICATION PAYLOAD LENGTH

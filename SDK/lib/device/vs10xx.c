@@ -145,7 +145,7 @@ void vs10xx_send_null(void *param, unsigned short len)
 	vs10xx_check_busy(param);
 	vs10xx_assert_dcs(param);
 	_param->spi->CsSelect = _param->spi_data_instance;
-	for(uint16_t NullCount = 0; NullCount < len; NullCount++)
+	for(unsigned short NullCount = 0; NullCount < len; NullCount++)
 		mcspi_send_byte(_param->spi, 255);
 	vs10xx_deassert_dcs(param);
 }

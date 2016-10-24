@@ -30,7 +30,7 @@ bool _mcspi_open(new_mcspi *McspiStruct)
 		HWREG(GPIO_BASE + GPIO_O_DOE31_0) |= (1 << McspiStruct->MosiPin);
 		IOCPortConfigureSet(McspiStruct->CsPin[0], IOC_PORT_MCU_SSI0_FSS, IOC_CURRENT_8MA | IOC_STRENGTH_MAX | IOC_NO_IOPULL | IOC_SLEW_DISABLE | IOC_HYST_DISABLE | IOC_NO_EDGE | IOC_INT_DISABLE | IOC_IOMODE_NORMAL | IOC_NO_WAKE_UP | IOC_INPUT_DISABLE);
 		HWREG(GPIO_BASE + GPIO_O_DOE31_0) |= (1 << McspiStruct->CsPin[0]);
-		SSIConfigSetExpClk(SSI0_BASE, CoreFreq, SSI_FRF_MOTO_MODE_3, McspiStruct->Mode, McspiStruct->BaudRate, McspiStruct->WordSize);
+		SSIConfigSetExpClk(SSI0_BASE, CoreFreq, SSI_FRF_MOTO_MODE_3, McspiStruct->Mode, McspiStruct->ClkDiv[McspiStruct->McspiNr], McspiStruct->WordSize);
 		McspiStruct->BaseAddr = SSI0_BASE;
 		break;
 	case 1:
@@ -43,7 +43,7 @@ bool _mcspi_open(new_mcspi *McspiStruct)
 		HWREG(GPIO_BASE + GPIO_O_DOE31_0) |= (1 << McspiStruct->MosiPin);
 		IOCPortConfigureSet(McspiStruct->CsPin[0], IOC_PORT_MCU_SSI1_FSS, IOC_CURRENT_8MA | IOC_STRENGTH_MAX | IOC_NO_IOPULL | IOC_SLEW_DISABLE | IOC_HYST_DISABLE | IOC_NO_EDGE | IOC_INT_DISABLE | IOC_IOMODE_NORMAL | IOC_NO_WAKE_UP | IOC_INPUT_DISABLE);
 		HWREG(GPIO_BASE + GPIO_O_DOE31_0) |= (1 << McspiStruct->CsPin[0]);
-		SSIConfigSetExpClk(SSI1_BASE, CoreFreq, SSI_FRF_MOTO_MODE_3, McspiStruct->Mode, McspiStruct->BaudRate, McspiStruct->WordSize);
+		SSIConfigSetExpClk(SSI1_BASE, CoreFreq, SSI_FRF_MOTO_MODE_3, McspiStruct->Mode, McspiStruct->ClkDiv[McspiStruct->McspiNr], McspiStruct->WordSize);
 		McspiStruct->BaseAddr = SSI1_BASE;
 		break;
 	default:
@@ -67,7 +67,7 @@ void _mcspi_close(new_mcspi *McspiStruct)
 		HWREG(GPIO_BASE + GPIO_O_DOE31_0) &= ~(1 << McspiStruct->MosiPin);
 		IOCPortConfigureSet(McspiStruct->CsPin[0], IOC_PORT_GPIO, IOC_CURRENT_2MA | IOC_STRENGTH_AUTO | IOC_NO_IOPULL | IOC_SLEW_DISABLE | IOC_HYST_DISABLE | IOC_NO_EDGE | IOC_INT_DISABLE | IOC_IOMODE_NORMAL | IOC_NO_WAKE_UP | IOC_INPUT_DISABLE);
 		HWREG(GPIO_BASE + GPIO_O_DOE31_0) &= ~(1 << McspiStruct->CsPin[0]);
-		SSIConfigSetExpClk(SSI0_BASE, CoreFreq, SSI_FRF_MOTO_MODE_0, McspiStruct->Mode, McspiStruct->BaudRate, McspiStruct->WordSize);
+		SSIConfigSetExpClk(SSI0_BASE, CoreFreq, SSI_FRF_MOTO_MODE_0, McspiStruct->Mode, McspiStruct->ClkDiv[McspiStruct->McspiNr], McspiStruct->WordSize);
 		McspiStruct->BaseAddr = 0;
 		break;
 	case 1:
@@ -79,7 +79,7 @@ void _mcspi_close(new_mcspi *McspiStruct)
 		HWREG(GPIO_BASE + GPIO_O_DOE31_0) &= ~(1 << McspiStruct->MosiPin);
 		IOCPortConfigureSet(McspiStruct->CsPin[0], IOC_PORT_GPIO, IOC_CURRENT_2MA | IOC_STRENGTH_AUTO | IOC_NO_IOPULL | IOC_SLEW_DISABLE | IOC_HYST_DISABLE | IOC_NO_EDGE | IOC_INT_DISABLE | IOC_IOMODE_NORMAL | IOC_NO_WAKE_UP | IOC_INPUT_DISABLE);
 		HWREG(GPIO_BASE + GPIO_O_DOE31_0) &= ~(1 << McspiStruct->CsPin[0]);
-		SSIConfigSetExpClk(SSI1_BASE, CoreFreq, SSI_FRF_MOTO_MODE_0, McspiStruct->Mode, McspiStruct->BaudRate, McspiStruct->WordSize);
+		SSIConfigSetExpClk(SSI1_BASE, CoreFreq, SSI_FRF_MOTO_MODE_0, McspiStruct->Mode, McspiStruct->ClkDiv[McspiStruct->McspiNr], McspiStruct->WordSize);
 		McspiStruct->BaseAddr = 0;
 		break;
 	}
@@ -112,6 +112,18 @@ bool _mcspi_set_baud(Mcspi_t *McspiStruct, unsigned long baud)
 	SSIDisable(McspiStruct->BaseAddr);
 	SSIConfigSetExpClk(McspiStruct->BaseAddr, CoreFreq, SSI_FRF_MOTO_MODE_0, McspiStruct->Mode, baud, McspiStruct->WordSize);
 	SSIEnable(McspiStruct->BaseAddr);
-	McspiStruct->BaudRate = baud;
+	McspiStruct->ClkDiv[McspiStruct->McspiNr] = baud;
 	return true;
 }
+/*#####################################################*/
+void _mcspi_assert(Mcspi_t *McspiStruct)
+{
+	HWREG(GPIO_BASE + GPIO_O_DOUTCLR31_0) = 1 << McspiStruct->CsPin[McspiStruct->McspiNr];
+}
+/*#####################################################*/
+void _mcspi_deassert(Mcspi_t *McspiStruct)
+{
+	HWREG(GPIO_BASE + GPIO_O_DOUTSET31_0) = 1 << McspiStruct->CsPin[McspiStruct->McspiNr];
+}
+/*#####################################################*/
+

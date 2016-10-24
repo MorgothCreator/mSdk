@@ -36,7 +36,7 @@
 //***********************************************************
 DiskInfo_t *Drives_Table[32];
 //***********************************************************
-extern new_uart* DebugCom;
+//extern new_uart* DebugCom;
 //***********************************************************
 /*unsigned long _Fat_IndexReadBeginAddressOfDataTable(FILE *stream)
 {

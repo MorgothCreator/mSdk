@@ -8,7 +8,12 @@
 
 #include "string_cpp.h"
 
-String::String(char *text)
+String::String(char *text):
+text(NULL),
+len(0),
+modifyed(false),
+initialized(false),
+error(STR_OK)
 {
 
 }

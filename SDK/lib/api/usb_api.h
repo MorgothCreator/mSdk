@@ -27,7 +27,7 @@
 #include "lib/gfx/controls_definition.h"
 #include "lib/fat_fs/inc/diskio.h"
 
-extern DRV_RW_FUNC drv_rw_func[];
+//extern DRV_RW_FUNC drv_rw_func[];
 
 /*-----------------------------------------------------------*/
 void usb_msc_host_init(unsigned int instance, new_gpio* StatusLed);

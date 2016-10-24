@@ -34,6 +34,7 @@ bool board_init()
 {
 	core_init();
 /*-----------------------------------------------------*/
+	Uart[0] = new_(new_uart);
 	INIT_UART(0, 115200, IOA, 3, IOA, 2);
 	DebugCom = Uart[0];
 	UARTprintf(DebugCom, "LCD display initialize successful for %dx%d resolution, %d Bit bus.\n\r" , 100, 100, 16);
@@ -42,15 +43,16 @@ bool board_init()
 	gpio_out(LV_3_3V_EN, 1);
 /*-----------------------------------------------------*/
 	/* Initialize SPI unit for MmcSd interface*/
-	INIT_SPI(0, 400000, 8, IOA, 10, IOA, 9, IOA, 8, IOA, 30);
+	SPI[0] = new_(new_mcspi);
+	INIT_SPI(0, 1, 8, IOA, 10, IOA, 9, IOA, 8, IOA, 30, 0);
 	MMCSD_SPI[0] = new_(new_mmcsd_spi);
 	MMCSD_SPI[0]->HardUnitStruct = SPI[0];
 	MMCSD_SPI[0]->HardUnitOpenFunc = mcspi_open;
 	MMCSD_SPI[0]->HardUnitCloseFunc = mcspi_close;
 	MMCSD_SPI[0]->HardUnitReadWriteCharFunc = mcspi_send_byte;
 	MMCSD_SPI[0]->HardUnitSetBaudFunc = mcspi_set_baud;
-	mmcsd_spi_init(0, gpio_assign(0, 30, GPIO_OUT_PUSH_PULL, false), NULL);
-	mmcsd_spi_idle(0);
+	//mmcsd_spi_init(0, NULL/*gpio_assign(0, 30, GPIO_OUT_PUSH_PULL, false)*/);
+	//mmcsd_spi_idle(0);
 /*-----------------------------------------------------*/
 	//SysCtrlPowerEverything();
 	gpio_init(0);

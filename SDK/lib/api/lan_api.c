@@ -10,13 +10,13 @@
 
 
 #ifdef USE_LWIP
-extern new_uart* DebugCom;
+//extern new_uart* DebugCom;
 
 
 
 void lan_init(unsigned char instance, unsigned long ip)
 {
-	_lan_interface_init(instance, ip);
+	//_lan_interface_init(instance, ip);
 }
 
 #endif

@@ -15,6 +15,8 @@
 static bool rtc_init_status = true;
 static RTC_HandleTypeDef RtcHandle;
 
+extern unsigned char rtc_weekday_convert(int year, int month, int day);
+
 /**
   * @brief RTC MSP Initialization
   *        This function configures the hardware resources used in this example
@@ -44,16 +46,16 @@ void HAL_RTC_MspInit(RTC_HandleTypeDef *hrtc)
   HAL_PWR_EnableBkUpAccess();
 
   /*##-2- Configure LSE as RTC clock source ###################################*/
-  RCC_OscInitStruct.OscillatorType =  RCC_OSCILLATORTYPE_LSI;
+  RCC_OscInitStruct.OscillatorType =  RCC_OSCILLATORTYPE_LSE;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
-  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
+  RCC_OscInitStruct.LSEState = RCC_LSE_ON;
   if(HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
 	  rtc_init_status = false;
   }
 
   PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_RTC;
-  PeriphClkInitStruct.RTCClockSelection = RCC_RTCCLKSOURCE_LSI;
+  PeriphClkInitStruct.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
   if(HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
   {
 	  rtc_init_status = false;
@@ -82,6 +84,7 @@ bool _rtc_int_rtc_init()
 	return rtc_init_status;
 }
 
+
 bool _rtc_set_calendar(rtc_t *calendar, unsigned char HourFormat)
 {
 	if(!rtc_init_status)
@@ -94,9 +97,9 @@ bool _rtc_set_calendar(rtc_t *calendar, unsigned char HourFormat)
 	sdatestructure.Year = calendar->Year;
 	sdatestructure.Month = calendar->Month;
 	sdatestructure.Date = calendar->Date;
-	sdatestructure.WeekDay = calendar->WeekDay;
+	sdatestructure.WeekDay = rtc_weekday_convert(calendar->Year, calendar->Month, calendar->Date);
 
-	if(HAL_RTC_SetDate(&RtcHandle,&sdatestructure,RTC_FORMAT_BCD) != HAL_OK)
+	if(HAL_RTC_SetDate(&RtcHandle,&sdatestructure,RTC_FORMAT_BIN) != HAL_OK)
 	{
 	    /* Initialization Error */
 		return false;
@@ -111,7 +114,7 @@ bool _rtc_set_calendar(rtc_t *calendar, unsigned char HourFormat)
 	stimestructure.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
 	stimestructure.StoreOperation = RTC_STOREOPERATION_RESET;
 
-	if(HAL_RTC_SetTime(&RtcHandle,&stimestructure,RTC_FORMAT_BCD) != HAL_OK)
+	if(HAL_RTC_SetTime(&RtcHandle,&stimestructure,RTC_FORMAT_BIN) != HAL_OK)
 	{
 	    /* Initialization Error */
 		return false;

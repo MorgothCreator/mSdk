@@ -303,7 +303,7 @@
   unsigned long FCPU = 84000000;
 #endif /* STM32F401xx */
 
-  __I uint8_t AHBPrescTable[16] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 6, 7, 8, 9};
+  volatile uint8_t AHBPrescTable[16] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 6, 7, 8, 9};
 
 /**
   * @}
@@ -475,7 +475,7 @@ static void SetSysClock(void)
 /******************************************************************************/
 /*            PLL (clocked by HSE) used as System clock source                */
 /******************************************************************************/
-  __IO unsigned int StartUpCounter = 0, HSEStatus = 0, HSIStatus = 0;
+  volatile unsigned int StartUpCounter = 0, HSEStatus = 0, HSIStatus = 0;
   
   /* Enable HSE */
   RCC->CR |= ((unsigned int)RCC_CR_HSEON);

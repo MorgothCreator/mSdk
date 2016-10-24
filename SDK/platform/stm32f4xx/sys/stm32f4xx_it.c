@@ -26,6 +26,7 @@
 #include "sys/sysdelay.h"
 #include "interface/hs_mmcsd_interface.h"
 #include "interface/usb_host_msc_interface.h"
+#include "driver/USBD/Class/CDC/usbd_cdc_interface.h"
 #include "driver/stm32f4xx_hal_dma.h"
 #include "driver/stm32f4xx_hal.h"
 #include "driver/stm32f4xx_hal_hcd.h"
@@ -41,9 +42,9 @@ extern ADC_HandleTypeDef    AdcHandle;
 extern PCD_HandleTypeDef hpcd;
 
 /* TIM handler declared in "usbd_cdc_interface.c" file */
-extern TIM_HandleTypeDef TimHandle;
+extern TIM_HandleTypeDef USBCDCTimHandle;
 
-extern void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim);
+//extern void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim);
 
 /** @addtogroup FLASH_Program
   * @{
@@ -282,9 +283,9 @@ void ADC_IRQHandler(void)
   * @param  None
   * @retval None
   */
-void TIMx_IRQHandler(void)
+void USBCDCTIMx_IRQHandler(void)
 {
-	HAL_TIM_PeriodElapsedCallback(&TimHandle);
+	HAL_TIM_IRQHandler(&USBCDCTimHandle);
 }
 
 /*void PPP_IRQHandler(void)
