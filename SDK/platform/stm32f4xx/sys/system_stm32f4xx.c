@@ -261,7 +261,7 @@
 #define PLL_P      2
 #endif /* STM32F40_41xxx */
 
-#if defined (STM32F427xx) || defined (STM32F437xx) || defined (STM32F429xx) || defined (STM32F439xx)
+#if defined (STM32F427xx) || defined (STM32F437xx) || defined (STM32F429xx) || defined (STM32F439xx) || defined (STM32F469xx)
 #define PLL_N      (CoreFreq_Mhz * 2)//360
 /* SYSCLK = PLL_VCO / PLL_P */
 #define PLL_P      2
@@ -295,7 +295,7 @@
   unsigned long FCPU = 168000000;
 #endif /* STM32F40_41xxx */
 
-#if defined (STM32F427xx) || defined (STM32F437xx) || defined (STM32F429xx) || defined (STM32F439xx)
+#if defined (STM32F427xx) || defined (STM32F437xx) || defined (STM32F429xx) || defined (STM32F439xx) || defined (STM32F469xx)
   unsigned long FCPU = 180000000;
 #endif /* STM32F427_437x || STM32F429_439xx */
 

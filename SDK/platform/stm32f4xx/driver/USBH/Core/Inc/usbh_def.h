@@ -34,7 +34,7 @@
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "driver/USBH/Class/MSC/usbh_conf.h"
+#include "driver/USBH/usbh_conf.h"
 
 /** @addtogroup USBH_LIB
   * @{

@@ -2647,17 +2647,17 @@
 #define __HAL_TIM_SetCompare            __HAL_TIM_SET_COMPARE
 #define __HAL_TIM_GetCompare            __HAL_TIM_GET_COMPARE
 
-#define TIM_TS_ITR0                        ((uint32_t)0x0000)
-#define TIM_TS_ITR1                        ((uint32_t)0x0010)
-#define TIM_TS_ITR2                        ((uint32_t)0x0020)
-#define TIM_TS_ITR3                        ((uint32_t)0x0030)
+//#define TIM_TS_ITR0                        ((uint32_t)0x0000)
+//#define TIM_TS_ITR1                        ((uint32_t)0x0010)
+//#define TIM_TS_ITR2                        ((uint32_t)0x0020)
+//#define TIM_TS_ITR3                        ((uint32_t)0x0030)
 #define IS_TIM_INTERNAL_TRIGGER_SELECTION(SELECTION) (((SELECTION) == TIM_TS_ITR0) || \
                                                       ((SELECTION) == TIM_TS_ITR1) || \
                                                       ((SELECTION) == TIM_TS_ITR2) || \
                                                       ((SELECTION) == TIM_TS_ITR3))
 
-#define TIM_CHANNEL_1                      ((uint32_t)0x0000)
-#define TIM_CHANNEL_2                      ((uint32_t)0x0004)
+//#define TIM_CHANNEL_1                      ((uint32_t)0x0000)
+//#define TIM_CHANNEL_2                      ((uint32_t)0x0004)
 #define IS_TIM_PWMI_CHANNELS(CHANNEL) (((CHANNEL) == TIM_CHANNEL_1) || \
                                        ((CHANNEL) == TIM_CHANNEL_2))
 

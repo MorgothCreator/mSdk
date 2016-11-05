@@ -1706,7 +1706,7 @@ signed int put_string_tiny_chr(print_string_properties *properties)
 //#######################################################################################
 signed int string_width_get_tiny_chr(void *pDisplay, tFont *pFont, char *pcString, signed int lLength)
 {
-	tDisplay* LcdStruct = (tDisplay *) pDisplay;
+	//tDisplay* LcdStruct = (tDisplay *) pDisplay;
 	signed char chWidth = 0;
 	//signed char chWidth_Tmp = 0;
 	signed int CharPtr;

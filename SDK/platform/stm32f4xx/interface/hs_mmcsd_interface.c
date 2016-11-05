@@ -326,7 +326,7 @@
 #define SD_VOLTAGE_WINDOW_SD            ((unsigned long)0x80100000)
 #define SD_HIGH_CAPACITY                ((unsigned long)0x40000000)
 #define SD_STD_CAPACITY                 ((unsigned long)0x00000000)
-#define SD_CHECK_PATTERN                ((unsigned long)0x000001AA)
+//#define SD_CHECK_PATTERN                ((unsigned long)0x000001AA)
 
 #define SD_MAX_VOLT_TRIAL               ((unsigned long)0x0000FFFF)
 #define SD_ALLZERO                      ((unsigned long)0x00000000)

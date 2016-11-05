@@ -26,7 +26,7 @@
   */ 
 
 /* Includes ------------------------------------------------------------------*/
-#include "../usbh_conf.h"
+#include "../../../usbh_conf.h"
 #include "driver/USBH/Core/Inc/usbh_def.h"
 #include "driver/USBH/Class/MSC/inc/usbh_msc_bot.h"
 #include "driver/USBH/Class/MSC/inc/usbh_msc.h"

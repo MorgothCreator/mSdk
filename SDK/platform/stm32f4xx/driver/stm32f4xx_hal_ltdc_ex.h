@@ -47,6 +47,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_hal_def.h"
 #include "stm32f4xx_hal_dsi.h"
+#include "stm32f4xx_hal_ltdc.h"
 
 /** @addtogroup STM32F4xx_HAL_Driver
   * @{
