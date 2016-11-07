@@ -11,6 +11,26 @@
 #include <stdbool.h>
 #include "api/lcd_def.h"
 /*#####################################################*/
+
+#define LCD_OTM8009A_ID  ((uint32_t) 0)
+
+/**************************** LINK OTM8009A (Display driver) ******************/
+
+/**
+ *  @brief  Possible values of
+ *  pixel data format (ie color coding) transmitted on DSI Data lane in DSI packets
+ */
+typedef enum
+{
+  LCD_DSI_PIXEL_DATA_FMT_RBG888  = 0x00, /*!< DSI packet pixel format chosen is RGB888 : 24 bpp */
+  LCD_DSI_PIXEL_DATA_FMT_RBG565  = 0x02, /*!< DSI packet pixel format chosen is RGB565 : 16 bpp */
+  LCD_DSI_PIXEL_DATA_FMT_INVALID = 0x03  /*!< Invalid DSI packet pixel format                   */
+
+} LCD_DsiPixelDataFmtTypeDef;
+
+
+
+
 #ifdef SSD2119
 
 /** @defgroup STM32F4_DISCOVERY_LCD_Exported_Types

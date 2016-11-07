@@ -33,6 +33,8 @@
 #include "driver/stm32f4xx_hal_pcd.h"
 #include "driver/stm32f4xx_hal_gpio.h"
 #include "driver/stm32f4xx_hal_adc.h"
+#include "driver/stm32f4xx_hal_tim.h"
+#include "driver/stm32f4xx_hal_ltdc.h"
 #include "lwipopts.h"
 /** @addtogroup STM32F4_Discovery_Peripheral_Examples
   * @{
@@ -45,7 +47,11 @@ extern PCD_HandleTypeDef hpcd;
 extern TIM_HandleTypeDef USBCDCTimHandle;
 
 //extern void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim);
-
+#ifdef LCD_TYPE_DSI
+extern DMA2D_HandleTypeDef Dma2dHandle;
+extern LTDC_HandleTypeDef  hltdc_eval;
+extern DSI_HandleTypeDef hdsi_eval;
+#endif
 /** @addtogroup FLASH_Program
   * @{
   */
@@ -288,6 +294,43 @@ void USBCDCTIMx_IRQHandler(void)
 	HAL_TIM_IRQHandler(&USBCDCTimHandle);
 }
 
+#ifdef LCD_TYPE_DSI
+/**
+  * @brief  This function handles DMA2D Handler.
+  * @param  None
+  * @retval None
+  */
+void DMA2D_IRQHandler(void)
+{
+  HAL_DMA2D_IRQHandler(&Dma2dHandle);
+}
+/**
+  * @brief  This function handles LTDC interrupt request.
+  * @param  None
+  * @retval None
+  */
+void LTDC_IRQHandler(void)
+{
+  HAL_LTDC_IRQHandler(&hltdc_eval);
+}
+
+void LTDC_ER_IRQHandler(void)
+{
+  /* Check the interrupt and clear flag */
+  HAL_LTDC_IRQHandler(&hltdc_eval);
+
+//  Interrupt_Error_Detected = 1;
+}
+/**
+  * @brief  This function handles DSI Handler.
+  * @param  None
+  * @retval None
+  */
+void DSI_IRQHandler(void)
+{
+  HAL_DSI_IRQHandler(&hdsi_eval);
+}
+#endif
 /*void PPP_IRQHandler(void)
 {
 }*/
