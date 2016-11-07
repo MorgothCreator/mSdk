@@ -54,7 +54,7 @@ controlscolor controls_color =
 	.Control_Color_Disabled_WindowHeader = 0x989CB6,//((0x37<<16)  )|((0x37<<8)  )|((0x37)  ),
 	.Scren = 0x989CB6,
 #ifdef DEFAULT_FONT
-	.DefaultFont = (tFont*)&DEFAULT_FONT
+	.DefaultFont = (tFont*)&g_sFontCmss14b
 #else
 	.DefaultFont = (tFont*)NULL
 #endif
