@@ -562,7 +562,11 @@ void _mmcsd_idle(unsigned int unit_nr)
                 g_s_mmcFatFs[unit_nr].drv_rw_func.DriveStruct = &ctrlInfo[unit_nr];
                 g_s_mmcFatFs[unit_nr].drv_rw_func.drv_r_func = MMCSDReadCmdSend;
                 g_s_mmcFatFs[unit_nr].drv_rw_func.drv_w_func = MMCSDWriteCmdSend;
-                if(!f_mount(unit_nr, &g_s_mmcFatFs[unit_nr]))
+#if (_FFCONF == 82786)
+        if(!f_mount(2, &g_s_mmcFatFs[unit_nr]))
+#else
+        if(!f_mount(&g_s_mmcFatFs[unit_nr],"SD1:", 1))
+#endif
                 {
 #ifdef MMCSD_DEBUG_EN
                     if(f_opendir(&g_sDirObject, g_cCwdBuf[unit_nr]) == FR_OK)

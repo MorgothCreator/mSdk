@@ -107,7 +107,7 @@ static void McSPISetUp(Mcspi_t *McspiStruct)
     McSPIMasterModeConfig(McspiStruct->BaseAddr, MCSPI_SINGLE_CH, MCSPI_TX_RX_MODE, MCSPI_DATA_LINE_COMM_MODE_1, McspiStruct->CsSelect);
 
     /* Configure the McSPI bus clock depending on clock mode. */
-    McSPIClkConfig(McspiStruct->BaseAddr, MCSPI_IN_CLK, McspiStruct->BaudRate, McspiStruct->CsSelect, MCSPI_CLK_MODE_0);
+    McSPIClkConfig(McspiStruct->BaseAddr, MCSPI_IN_CLK, McspiStruct->ClkDiv[McspiStruct->CsSelect], McspiStruct->CsSelect, MCSPI_CLK_MODE_0);
 
     /* Configure the word length.*/
     McSPIWordLengthSet(McspiStruct->BaseAddr, MCSPI_WORD_LENGTH(8), McspiStruct->CsSelect);
@@ -168,6 +168,6 @@ void _mcspi_close(Mcspi_t *McspiStruct)
 bool _mcspi_set_baud(Mcspi_t *McspiStruct, unsigned long baud)
 {
 	/* Configure the McSPI bus clock depending on clock mode. */
-	McSPIClkConfig(McspiStruct->BaseAddr, MCSPI_IN_CLK, McspiStruct->BaudRate, McspiStruct->CsSelect, MCSPI_CLK_MODE_0);
+	McSPIClkConfig(McspiStruct->BaseAddr, MCSPI_IN_CLK, McspiStruct->ClkDiv[McspiStruct->CsSelect], McspiStruct->CsSelect, MCSPI_CLK_MODE_0);
 	return true;
 }
