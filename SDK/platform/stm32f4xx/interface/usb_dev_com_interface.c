@@ -6,8 +6,8 @@
  */
 
 #include "stdbool.h"
-#include "driver/USBD/Class/CDC/usbd_cdc_interface.h"
 #include "driver/USBD/Class/CDC/Inc/usbd_cdc.h"
+#include "driver/USBD/Class/CDC/usbd_cdc_interface.h"
 #include "driver/USBD/Class/CDC/usbd_cdc_desc.h"
 #include "driver/USBD/Core/Inc/usbd_core.h"
 #include "lib/buffers/ring_buff.h"
