@@ -7,6 +7,25 @@
 
 #include "lcd_def.h"
 
+RASTER_TIMINGS lcd_OTM8009A =
+{
+/*X size*/		480,
+/*Y size*/		800,
+/*ref clk*/		0,
+/*pll M*/		0,
+/*pll N*/		125,
+/*pll M2*/		0,
+/*raster clk*/	27429000,
+/*palete len*/	0,
+/*bus size*/	0,
+/*hsw*/			120,
+/*hfp*/			120,
+/*hbp*/			120,
+/*vsw*/			12,
+/*vfp*/			12,
+/*vbp*/			12
+};
+
 RASTER_TIMINGS lcd_MI0283 =
 {
 /*X size*/		240,

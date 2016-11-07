@@ -68,6 +68,7 @@ typedef struct
 	unsigned int vbp;
 }RASTER_TIMINGS;
 //*****************************************************************************
+extern RASTER_TIMINGS lcd_OTM8009A;
 extern RASTER_TIMINGS lcd_MI0283;
 extern RASTER_TIMINGS lcd_S035Q01_beaglebone_exp;
 extern RASTER_TIMINGS lcd_TFT43AB_OMAP35x_devkit8600_exp;
