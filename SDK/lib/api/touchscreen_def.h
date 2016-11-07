@@ -100,6 +100,9 @@ typedef struct LcdTouch_Struct
 		signed int touch_event5;
 		unsigned char  touch_point;
 	}TouchResponse;
+	bool flip_x;
+	bool flip_y;
+	unsigned char twi_addr;
 	tDisplay *pDisplay;
 	new_twi* TwiStruct;
 	new_gpio* IrqStruct;
