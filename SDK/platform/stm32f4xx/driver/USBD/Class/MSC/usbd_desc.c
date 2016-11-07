@@ -71,7 +71,7 @@ USBD_DescriptorsTypeDef MSC_Desc = {
 #if defined ( __ICCARM__ ) /*!< IAR Compiler */
   #pragma data_alignment=4   
 #endif
-__ALIGN_BEGIN uint8_t USBD_DeviceDesc[USB_LEN_DEV_DESC] __ALIGN_END = {
+__ALIGN_BEGIN uint8_t USBD_MSC_DeviceDesc[USB_LEN_DEV_DESC] __ALIGN_END = {
   0x12,                       /* bLength */
   USB_DESC_TYPE_DEVICE,       /* bDescriptorType */
   0x00,                       /* bcdUSB */
@@ -96,14 +96,14 @@ __ALIGN_BEGIN uint8_t USBD_DeviceDesc[USB_LEN_DEV_DESC] __ALIGN_END = {
 #if defined ( __ICCARM__ ) /*!< IAR Compiler */
   #pragma data_alignment=4   
 #endif
-__ALIGN_BEGIN uint8_t USBD_LangIDDesc[USB_LEN_LANGID_STR_DESC] __ALIGN_END = {
+__ALIGN_BEGIN uint8_t USBD_MSC_LangIDDesc[USB_LEN_LANGID_STR_DESC] __ALIGN_END = {
   USB_LEN_LANGID_STR_DESC,         
   USB_DESC_TYPE_STRING,       
   LOBYTE(USBD_LANGID_STRING),
   HIBYTE(USBD_LANGID_STRING), 
 };
 
-uint8_t USBD_StringSerial[USB_SIZ_STRING_SERIAL] =
+uint8_t USBD_MSC_StringSerial[USB_SIZ_STRING_SERIAL] =
 {
   USB_SIZ_STRING_SERIAL,      
   USB_DESC_TYPE_STRING,    
@@ -127,8 +127,8 @@ static void Get_SerialNum(void);
   */
 uint8_t *USBD_MSC_DeviceDescriptor(USBD_SpeedTypeDef speed, uint16_t *length)
 {
-  *length = sizeof(USBD_DeviceDesc);
-  return (uint8_t*)USBD_DeviceDesc;
+  *length = sizeof(USBD_MSC_DeviceDesc);
+  return (uint8_t*)USBD_MSC_DeviceDesc;
 }
 
 /**
@@ -139,8 +139,8 @@ uint8_t *USBD_MSC_DeviceDescriptor(USBD_SpeedTypeDef speed, uint16_t *length)
   */
 uint8_t *USBD_MSC_LangIDStrDescriptor(USBD_SpeedTypeDef speed, uint16_t *length)
 {
-  *length = sizeof(USBD_LangIDDesc);  
-  return (uint8_t*)USBD_LangIDDesc;
+  *length = sizeof(USBD_MSC_LangIDDesc);
+  return (uint8_t*)USBD_MSC_LangIDDesc;
 }
 
 /**
@@ -187,7 +187,7 @@ uint8_t *USBD_MSC_SerialStrDescriptor(USBD_SpeedTypeDef speed, uint16_t *length)
   /* Update the serial number string descriptor with the data from the unique ID*/
   Get_SerialNum();
   
-  return (uint8_t*)USBD_StringSerial;
+  return (uint8_t*)USBD_MSC_StringSerial;
 }
 
 /**
@@ -244,8 +244,8 @@ static void Get_SerialNum(void)
   
   if (deviceserial0 != 0)
   {
-    IntToUnicode (deviceserial0, (uint8_t*)&USBD_StringSerial[2] ,8);
-    IntToUnicode (deviceserial1, (uint8_t*)&USBD_StringSerial[18] ,4);
+    IntToUnicode (deviceserial0, (uint8_t*)&USBD_MSC_StringSerial[2] ,8);
+    IntToUnicode (deviceserial1, (uint8_t*)&USBD_MSC_StringSerial[18] ,4);
   }
 }
 

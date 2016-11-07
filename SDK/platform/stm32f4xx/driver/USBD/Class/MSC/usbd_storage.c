@@ -27,9 +27,10 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "usbd_storage.h"
+#include "lib/fat_fs/inc/diskio.h"
 #include "interface/usb_dev_msc_interface.h"
 
-extern USBD_DRV_RW_FUNC usbd_drv_func[];
+extern DRV_RW_FUNC usbd_drv_func[];
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
