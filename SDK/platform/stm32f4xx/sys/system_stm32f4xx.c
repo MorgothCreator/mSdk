@@ -231,22 +231,29 @@
   */
 
 /************************* Miscellaneous Configuration ************************/
-/*!< Uncomment the following line if you need to use external SRAM or SDRAM mounted
-     on STM324xG_EVAL/STM324x7I_EVAL/STM324x9I_EVAL boards as data memory  */
-     
-#if defined (STM32F40_41xxx) || defined (STM32F427_437xx) || defined (STM32F429_439xx)
+#if 0
+/*!< Uncomment the following line if you need to use external SRAM or SDRAM as data memory  */
+#if defined(STM32F405xx) || defined(STM32F415xx) || defined(STM32F407xx) || defined(STM32F417xx)\
+ || defined(STM32F427xx) || defined(STM32F437xx) || defined(STM32F429xx) || defined(STM32F439xx)\
+ || defined(STM32F469xx) || defined(STM32F479xx)
 /* #define DATA_IN_ExtSRAM */
-#endif /* STM32F40_41xxx || STM32F427_437x || STM32F429_439xx */
+#endif /* STM32F40xxx || STM32F41xxx || STM32F42xxx || STM32F43xxx || STM32F469xx || STM32F479xx */
 
-#if defined (STM32F427_437xx) || defined (STM32F429_439xx)
-/* #define DATA_IN_ExtSDRAM */
-#endif /* STM32F427_437x || STM32F429_439xx */ 
+#if defined(STM32F427xx) || defined(STM32F437xx) || defined(STM32F429xx) || defined(STM32F439xx)\
+ || defined(STM32F446xx) || defined(STM32F469xx) || defined(STM32F479xx)
+//#define DATA_IN_ExtSDRAM
+#endif /* STM32F427xx || STM32F437xx || STM32F429xx || STM32F439xx || STM32F446xx || STM32F469xx ||\
+          STM32F479xx */
 
+#if defined(DATA_IN_ExtSRAM) && defined(DATA_IN_ExtSDRAM)
+ #error "Please select DATA_IN_ExtSRAM or DATA_IN_ExtSDRAM "
+#endif /* DATA_IN_ExtSRAM && DATA_IN_ExtSDRAM */
 /*!< Uncomment the following line if you need to relocate your vector Table in
      Internal SRAM. */
 /* #define VECT_TAB_SRAM */
 #define VECT_TAB_OFFSET  0x00 /*!< Vector Table base offset field. 
                                    This value must be a multiple of 0x200. */
+#endif
 /******************************************************************************/
 
 /************************* PLL Parameters *************************************/
@@ -261,7 +268,7 @@
 #define PLL_P      2
 #endif /* STM32F40_41xxx */
 
-#if defined (STM32F427xx) || defined (STM32F437xx) || defined (STM32F429xx) || defined (STM32F439xx) || defined (STM32F469xx)
+#if defined (STM32F427xx) || defined (STM32F437xx) || defined (STM32F429xx) || defined (STM32F439xx) || defined (STM32F469xx) || defined(STM32F479xx)
 #define PLL_N      (CoreFreq_Mhz * 2)//360
 /* SYSCLK = PLL_VCO / PLL_P */
 #define PLL_P      2
@@ -295,7 +302,7 @@
   unsigned long FCPU = 168000000;
 #endif /* STM32F40_41xxx */
 
-#if defined (STM32F427xx) || defined (STM32F437xx) || defined (STM32F429xx) || defined (STM32F439xx) || defined (STM32F469xx)
+#if defined (STM32F427xx) || defined (STM32F437xx) || defined (STM32F429xx) || defined (STM32F439xx) || defined (STM32F469xx) || defined(STM32F479xx)
   unsigned long FCPU = 180000000;
 #endif /* STM32F427_437x || STM32F429_439xx */
 
@@ -313,7 +320,9 @@
   * @{
   */
 
+#if !defined(STM32F469xx) && !defined(STM32F479xx)
 static void SetSysClock(void);
+#endif
 
 #if defined (DATA_IN_ExtSRAM) || defined (DATA_IN_ExtSDRAM)
 static void SystemInit_ExtMemCtl(void); 
@@ -365,7 +374,9 @@ void SystemInit(void)
          
   /* Configure the System clock source, PLL Multiplier and Divider factors, 
      AHB/APBx prescalers and Flash settings ----------------------------------*/
+#if !defined(STM32F469xx) && !defined(STM32F479xx)
   SetSysClock();
+#endif
 
   /* Configure the Vector Table location add offset address ------------------*/
 #ifdef VECT_TAB_SRAM
@@ -462,6 +473,7 @@ void SystemCoreClockUpdate(void)
   FCPU >>= tmp;
 }
 
+#if !defined(STM32F469xx) && !defined(STM32F479xx)
 /**
   * @brief  Configures the System clock source, PLL Multiplier and Divider factors, 
   *         AHB/APBx prescalers and Flash settings
@@ -650,200 +662,69 @@ static void SetSysClock(void)
   }
 
 }
-
+#endif
 /**
   * @brief  Setup the external memory controller. Called in startup_stm32f4xx.s 
   *          before jump to __main
   * @param  None
   * @retval None
   */ 
-#ifdef DATA_IN_ExtSRAM
+#if defined (DATA_IN_ExtSRAM) || defined (DATA_IN_ExtSDRAM)
 /**
   * @brief  Setup the external memory controller.
   *         Called in startup_stm32f4xx.s before jump to main.
-  *         This function configures the external SRAM mounted on STM324xG_EVAL/STM324x7I boards
-  *         This SRAM will be used as program data memory (including heap and stack).
+  *         This function configures the external memories (SRAM/SDRAM)
+  *         This SRAM/SDRAM will be used as program data memory (including heap and stack).
   * @param  None
   * @retval None
   */
 void SystemInit_ExtMemCtl(void)
 {
-/*-- GPIOs Configuration -----------------------------------------------------*/
-/*
- +-------------------+--------------------+------------------+--------------+
- +                       SRAM pins assignment                               +
- +-------------------+--------------------+------------------+--------------+
- | PD0  <-> FMC_D2  | PE0  <-> FMC_NBL0 | PF0  <-> FMC_A0 | PG0 <-> FMC_A10 | 
- | PD1  <-> FMC_D3  | PE1  <-> FMC_NBL1 | PF1  <-> FMC_A1 | PG1 <-> FMC_A11 | 
- | PD4  <-> FMC_NOE | PE3  <-> FMC_A19  | PF2  <-> FMC_A2 | PG2 <-> FMC_A12 | 
- | PD5  <-> FMC_NWE | PE4  <-> FMC_A20  | PF3  <-> FMC_A3 | PG3 <-> FMC_A13 | 
- | PD8  <-> FMC_D13 | PE7  <-> FMC_D4   | PF4  <-> FMC_A4 | PG4 <-> FMC_A14 | 
- | PD9  <-> FMC_D14 | PE8  <-> FMC_D5   | PF5  <-> FMC_A5 | PG5 <-> FMC_A15 | 
- | PD10 <-> FMC_D15 | PE9  <-> FMC_D6   | PF12 <-> FMC_A6 | PG9 <-> FMC_NE2 | 
- | PD11 <-> FMC_A16 | PE10 <-> FMC_D7   | PF13 <-> FMC_A7 |-----------------+
- | PD12 <-> FMC_A17 | PE11 <-> FMC_D8   | PF14 <-> FMC_A8 | 
- | PD13 <-> FMC_A18 | PE12 <-> FMC_D9   | PF15 <-> FMC_A9 | 
- | PD14 <-> FMC_D0  | PE13 <-> FMC_D10  |-----------------+
- | PD15 <-> FMC_D1  | PE14 <-> FMC_D11  |
- |                  | PE15 <-> FMC_D12  |
- +------------------+------------------+
-*/
-   /* Enable GPIOD, GPIOE, GPIOF and GPIOG interface clock */
-  RCC->AHB1ENR   |= 0x00000078;
-  
-  /* Connect PDx pins to FMC Alternate function */
-  GPIOD->AFR[0]  = 0x00cc00cc;
-  GPIOD->AFR[1]  = 0xcccccccc;
-  /* Configure PDx pins in Alternate function mode */  
-  GPIOD->MODER   = 0xaaaa0a0a;
-  /* Configure PDx pins speed to 100 MHz */  
-  GPIOD->OSPEEDR = 0xffff0f0f;
-  /* Configure PDx pins Output type to push-pull */  
-  GPIOD->OTYPER  = 0x00000000;
-  /* No pull-up, pull-down for PDx pins */ 
-  GPIOD->PUPDR   = 0x00000000;
+  volatile uint32_t tmp = 0x00;
+#if defined(STM32F427xx) || defined(STM32F437xx) || defined(STM32F429xx) || defined(STM32F439xx)\
+ || defined(STM32F446xx) || defined(STM32F469xx) || defined(STM32F479xx)
+#if defined (DATA_IN_ExtSDRAM)
+  register uint32_t tmpreg = 0, timeout = 0xFFFF;
+  register uint32_t index;
 
-  /* Connect PEx pins to FMC Alternate function */
-  GPIOE->AFR[0]  = 0xcccccccc;
-  GPIOE->AFR[1]  = 0xcccccccc;
-  /* Configure PEx pins in Alternate function mode */ 
-  GPIOE->MODER   = 0xaaaaaaaa;
-  /* Configure PEx pins speed to 100 MHz */ 
-  GPIOE->OSPEEDR = 0xffffffff;
-  /* Configure PEx pins Output type to push-pull */  
-  GPIOE->OTYPER  = 0x00000000;
-  /* No pull-up, pull-down for PEx pins */ 
-  GPIOE->PUPDR   = 0x00000000;
-
-  /* Connect PFx pins to FMC Alternate function */
-  GPIOF->AFR[0]  = 0x00cccccc;
-  GPIOF->AFR[1]  = 0xcccc0000;
-  /* Configure PFx pins in Alternate function mode */   
-  GPIOF->MODER   = 0xaa000aaa;
-  /* Configure PFx pins speed to 100 MHz */ 
-  GPIOF->OSPEEDR = 0xff000fff;
-  /* Configure PFx pins Output type to push-pull */  
-  GPIOF->OTYPER  = 0x00000000;
-  /* No pull-up, pull-down for PFx pins */ 
-  GPIOF->PUPDR   = 0x00000000;
-
-  /* Connect PGx pins to FMC Alternate function */
-  GPIOG->AFR[0]  = 0x00cccccc;
-  GPIOG->AFR[1]  = 0x000000c0;
-  /* Configure PGx pins in Alternate function mode */ 
-  GPIOG->MODER   = 0x00080aaa;
-  /* Configure PGx pins speed to 100 MHz */ 
-  GPIOG->OSPEEDR = 0x000c0fff;
-  /* Configure PGx pins Output type to push-pull */  
-  GPIOG->OTYPER  = 0x00000000;
-  /* No pull-up, pull-down for PGx pins */ 
-  GPIOG->PUPDR   = 0x00000000;
-  
-/*-- FMC Configuration ------------------------------------------------------*/
-  /* Enable the FMC/FSMC interface clock */
-  RCC->AHB3ENR         |= 0x00000001;
-  
-#if defined (STM32F427xx) || defined (STM32F437xx) || defined (STM32F429xx) || defined (STM32F439xx)
-  /* Configure and enable Bank1_SRAM2 */
-  FMC_Bank1->BTCR[2]  = 0x00001011;
-  FMC_Bank1->BTCR[3]  = 0x00000201;
-  FMC_Bank1E->BWTR[2] = 0x0fffffff;
-#endif /* STM32F427_437xx || STM32F429_439xx */ 
-
-#if defined (STM32F410Tx) || defined (STM32F410Cx) || defined (STM32F410Rx)  || defined (STM32F411xE)  || defined (STM32F405xx)  || defined (STM32F415xx)  || defined (STM32F407xx)  || defined (STM32F417xx)
-  /* Configure and enable Bank1_SRAM2 */
-  FSMC_Bank1->BTCR[2]  = 0x00001011;
-  FSMC_Bank1->BTCR[3]  = 0x00000201;
-  FSMC_Bank1E->BWTR[2] = 0x0fffffff;
-#endif  /* STM32F40_41xxx */
-
-/*
-  Bank1_SRAM2 is configured as follow:
-  In case of FSMC configuration 
-  NORSRAMTimingStructure.FSMC_AddressSetupTime = 1;
-  NORSRAMTimingStructure.FSMC_AddressHoldTime = 0;
-  NORSRAMTimingStructure.FSMC_DataSetupTime = 2;
-  NORSRAMTimingStructure.FSMC_BusTurnAroundDuration = 0;
-  NORSRAMTimingStructure.FSMC_CLKDivision = 0;
-  NORSRAMTimingStructure.FSMC_DataLatency = 0;
-  NORSRAMTimingStructure.FSMC_AccessMode = FMC_AccessMode_A;
-
-  FSMC_NORSRAMInitStructure.FSMC_Bank = FSMC_Bank1_NORSRAM2;
-  FSMC_NORSRAMInitStructure.FSMC_DataAddressMux = FSMC_DataAddressMux_Disable;
-  FSMC_NORSRAMInitStructure.FSMC_MemoryType = FSMC_MemoryType_SRAM;
-  FSMC_NORSRAMInitStructure.FSMC_MemoryDataWidth = FSMC_MemoryDataWidth_16b;
-  FSMC_NORSRAMInitStructure.FSMC_BurstAccessMode = FSMC_BurstAccessMode_Disable;
-  FSMC_NORSRAMInitStructure.FSMC_AsynchronousWait = FSMC_AsynchronousWait_Disable;  
-  FSMC_NORSRAMInitStructure.FSMC_WaitSignalPolarity = FSMC_WaitSignalPolarity_Low;
-  FSMC_NORSRAMInitStructure.FSMC_WrapMode = FSMC_WrapMode_Disable;
-  FSMC_NORSRAMInitStructure.FSMC_WaitSignalActive = FSMC_WaitSignalActive_BeforeWaitState;
-  FSMC_NORSRAMInitStructure.FSMC_WriteOperation = FSMC_WriteOperation_Enable;
-  FSMC_NORSRAMInitStructure.FSMC_WaitSignal = FSMC_WaitSignal_Disable;
-  FSMC_NORSRAMInitStructure.FSMC_ExtendedMode = FSMC_ExtendedMode_Disable;
-  FSMC_NORSRAMInitStructure.FSMC_WriteBurst = FSMC_WriteBurst_Disable;
-  FSMC_NORSRAMInitStructure.FSMC_ReadWriteTimingStruct = &NORSRAMTimingStructure;
-  FSMC_NORSRAMInitStructure.FSMC_WriteTimingStruct = &NORSRAMTimingStructure;
-
-  In case of FMC configuration   
-  NORSRAMTimingStructure.FMC_AddressSetupTime = 1;
-  NORSRAMTimingStructure.FMC_AddressHoldTime = 0;
-  NORSRAMTimingStructure.FMC_DataSetupTime = 2;
-  NORSRAMTimingStructure.FMC_BusTurnAroundDuration = 0;
-  NORSRAMTimingStructure.FMC_CLKDivision = 0;
-  NORSRAMTimingStructure.FMC_DataLatency = 0;
-  NORSRAMTimingStructure.FMC_AccessMode = FMC_AccessMode_A;
-
-  FMC_NORSRAMInitStructure.FMC_Bank = FMC_Bank1_NORSRAM2;
-  FMC_NORSRAMInitStructure.FMC_DataAddressMux = FMC_DataAddressMux_Disable;
-  FMC_NORSRAMInitStructure.FMC_MemoryType = FMC_MemoryType_SRAM;
-  FMC_NORSRAMInitStructure.FMC_MemoryDataWidth = FMC_MemoryDataWidth_16b;
-  FMC_NORSRAMInitStructure.FMC_BurstAccessMode = FMC_BurstAccessMode_Disable;
-  FMC_NORSRAMInitStructure.FMC_AsynchronousWait = FMC_AsynchronousWait_Disable;  
-  FMC_NORSRAMInitStructure.FMC_WaitSignalPolarity = FMC_WaitSignalPolarity_Low;
-  FMC_NORSRAMInitStructure.FMC_WrapMode = FMC_WrapMode_Disable;
-  FMC_NORSRAMInitStructure.FMC_WaitSignalActive = FMC_WaitSignalActive_BeforeWaitState;
-  FMC_NORSRAMInitStructure.FMC_WriteOperation = FMC_WriteOperation_Enable;
-  FMC_NORSRAMInitStructure.FMC_WaitSignal = FMC_WaitSignal_Disable;
-  FMC_NORSRAMInitStructure.FMC_ExtendedMode = FMC_ExtendedMode_Disable;
-  FMC_NORSRAMInitStructure.FMC_WriteBurst = FMC_WriteBurst_Disable;
-  FMC_NORSRAMInitStructure.FMC_ContinousClock = FMC_CClock_SyncOnly;
-  FMC_NORSRAMInitStructure.FMC_ReadWriteTimingStruct = &NORSRAMTimingStructure;
-  FMC_NORSRAMInitStructure.FMC_WriteTimingStruct = &NORSRAMTimingStructure;
-*/
-  
-}
-#endif /* DATA_IN_ExtSRAM */
-  
-#ifdef DATA_IN_ExtSDRAM
-/**
-  * @brief  Setup the external memory controller.
-  *         Called in startup_stm32f4xx.s before jump to main.
-  *         This function configures the external SDRAM mounted on STM324x9I_EVAL board
-  *         This SDRAM will be used as program data memory (including heap and stack).
-  * @param  None
-  * @retval None
-  */
-void SystemInit_ExtMemCtl(void)
-{
-  register unsigned int tmpreg = 0, timeout = 0xFFFF;
-  register unsigned int index;
-
+#if defined(STM32F446xx)
+  /* Enable GPIOA, GPIOC, GPIOD, GPIOE, GPIOF, GPIOG interface
+      clock */
+  RCC->AHB1ENR |= 0x0000007D;
+#else
   /* Enable GPIOC, GPIOD, GPIOE, GPIOF, GPIOG, GPIOH and GPIOI interface 
       clock */
-  RCC->AHB1ENR |= 0x000001FC;
+  RCC->AHB1ENR |= 0x000001F8;
+#endif /* STM32F446xx */
+  /* Delay after an RCC peripheral clock enabling */
+  tmp = READ_BIT(RCC->AHB1ENR, RCC_AHB1ENR_GPIOCEN);
   
+#if defined(STM32F446xx)
+  /* Connect PAx pins to FMC Alternate function */
+  GPIOA->AFR[0]  |= 0xC0000000;
+  GPIOA->AFR[1]  |= 0x00000000;
+  /* Configure PDx pins in Alternate function mode */
+  GPIOA->MODER   |= 0x00008000;
+  /* Configure PDx pins speed to 50 MHz */
+  GPIOA->OSPEEDR |= 0x00008000;
+  /* Configure PDx pins Output type to push-pull */
+  GPIOA->OTYPER  |= 0x00000000;
+  /* No pull-up, pull-down for PDx pins */
+  GPIOA->PUPDR   |= 0x00000000;
+
   /* Connect PCx pins to FMC Alternate function */
-  GPIOC->AFR[0]  = 0x0000000c;
-  GPIOC->AFR[1]  = 0x00007700;
-  /* Configure PCx pins in Alternate function mode */  
-  GPIOC->MODER   = 0x00a00002;
-  /* Configure PCx pins speed to 50 MHz */  
-  GPIOC->OSPEEDR = 0x00a00002;
-  /* Configure PCx pins Output type to push-pull */  
-  GPIOC->OTYPER  = 0x00000000;
-  /* No pull-up, pull-down for PCx pins */ 
-  GPIOC->PUPDR   = 0x00500000;
-  
+  GPIOC->AFR[0]  |= 0x00CC0000;
+  GPIOC->AFR[1]  |= 0x00000000;
+  /* Configure PDx pins in Alternate function mode */
+  GPIOC->MODER   |= 0x00000A00;
+  /* Configure PDx pins speed to 50 MHz */
+  GPIOC->OSPEEDR |= 0x00000A00;
+  /* Configure PDx pins Output type to push-pull */
+  GPIOC->OTYPER  |= 0x00000000;
+  /* No pull-up, pull-down for PDx pins */
+  GPIOC->PUPDR   |= 0x00000000;
+#endif /* STM32F446xx */
+
   /* Connect PDx pins to FMC Alternate function */
   GPIOD->AFR[0]  = 0x000000CC;
   GPIOD->AFR[1]  = 0xCC000CCC;
@@ -869,8 +750,8 @@ void SystemInit_ExtMemCtl(void)
   GPIOE->PUPDR   = 0x00000000;
 
   /* Connect PFx pins to FMC Alternate function */
-  GPIOF->AFR[0]  = 0xcccccccc;
-  GPIOF->AFR[1]  = 0xcccccccc;
+  GPIOF->AFR[0]  = 0xCCCCCCCC;
+  GPIOF->AFR[1]  = 0xCCCCCCCC;
   /* Configure PFx pins in Alternate function mode */   
   GPIOF->MODER   = 0xAA800AAA;
   /* Configure PFx pins speed to 50 MHz */ 
@@ -881,17 +762,19 @@ void SystemInit_ExtMemCtl(void)
   GPIOF->PUPDR   = 0x00000000;
 
   /* Connect PGx pins to FMC Alternate function */
-  GPIOG->AFR[0]  = 0xcccccccc;
-  GPIOG->AFR[1]  = 0xcccccccc;
+  GPIOG->AFR[0]  = 0xCCCCCCCC;
+  GPIOG->AFR[1]  = 0xCCCCCCCC;
   /* Configure PGx pins in Alternate function mode */ 
-  GPIOG->MODER   = 0xaaaaaaaa;
+  GPIOG->MODER   = 0xAAAAAAAA;
   /* Configure PGx pins speed to 50 MHz */ 
-  GPIOG->OSPEEDR = 0xaaaaaaaa;
+  GPIOG->OSPEEDR = 0xAAAAAAAA;
   /* Configure PGx pins Output type to push-pull */  
   GPIOG->OTYPER  = 0x00000000;
   /* No pull-up, pull-down for PGx pins */ 
   GPIOG->PUPDR   = 0x00000000;
-  
+
+#if defined(STM32F427xx) || defined(STM32F437xx) || defined(STM32F429xx) || defined(STM32F439xx)\
+ || defined(STM32F469xx) || defined(STM32F479xx)
   /* Connect PHx pins to FMC Alternate function */
   GPIOH->AFR[0]  = 0x00C0CC00;
   GPIOH->AFR[1]  = 0xCCCCCCCC;
@@ -915,85 +798,174 @@ void SystemInit_ExtMemCtl(void)
   GPIOI->OTYPER  = 0x00000000;
   /* No pull-up, pull-down for PIx pins */ 
   GPIOI->PUPDR   = 0x00000000;
+#endif /* STM32F427xx || STM32F437xx || STM32F429xx || STM32F439xx || STM32F469xx || STM32F479xx */
   
-/*-- FMC Configuration ------------------------------------------------------*/
+/*-- FMC Configuration -------------------------------------------------------*/
   /* Enable the FMC interface clock */
   RCC->AHB3ENR |= 0x00000001;
-  
+  /* Delay after an RCC peripheral clock enabling */
+  tmp = READ_BIT(RCC->AHB3ENR, RCC_AHB3ENR_FMCEN);
+
   /* Configure and enable SDRAM bank1 */
-  FMC_Bank5_6->SDCR[0] = 0x000039D0;
+#if defined(STM32F446xx)
+  FMC_Bank5_6->SDCR[0] = 0x00001954;
+#else
+  FMC_Bank5_6->SDCR[0] = 0x000019E4;
+#endif /* STM32F446xx */
   FMC_Bank5_6->SDTR[0] = 0x01115351;      
   
   /* SDRAM initialization sequence */
   /* Clock enable command */
   FMC_Bank5_6->SDCMR = 0x00000011; 
   tmpreg = FMC_Bank5_6->SDSR & 0x00000020; 
-  while((tmpreg != 0) & (timeout-- > 0))
+  while((tmpreg != 0) && (timeout-- > 0))
   {
     tmpreg = FMC_Bank5_6->SDSR & 0x00000020; 
   }
-  
+
   /* Delay */
   for (index = 0; index<1000; index++);
   
   /* PALL command */
   FMC_Bank5_6->SDCMR = 0x00000012;           
   timeout = 0xFFFF;
-  while((tmpreg != 0) & (timeout-- > 0))
+  while((tmpreg != 0) && (timeout-- > 0))
   {
-  tmpreg = FMC_Bank5_6->SDSR & 0x00000020; 
+    tmpreg = FMC_Bank5_6->SDSR & 0x00000020;
   }
   
   /* Auto refresh command */
+#if defined(STM32F446xx)
+  FMC_Bank5_6->SDCMR = 0x000000F3;
+#else
   FMC_Bank5_6->SDCMR = 0x00000073;
+#endif /* STM32F446xx */
   timeout = 0xFFFF;
-  while((tmpreg != 0) & (timeout-- > 0))
+  while((tmpreg != 0) && (timeout-- > 0))
   {
-  tmpreg = FMC_Bank5_6->SDSR & 0x00000020; 
+    tmpreg = FMC_Bank5_6->SDSR & 0x00000020;
   }
  
   /* MRD register program */
+#if defined(STM32F446xx)
+  FMC_Bank5_6->SDCMR = 0x00044014;
+#else
   FMC_Bank5_6->SDCMR = 0x00046014;
+#endif /* STM32F446xx */
   timeout = 0xFFFF;
-  while((tmpreg != 0) & (timeout-- > 0))
+  while((tmpreg != 0) && (timeout-- > 0))
   {
-  tmpreg = FMC_Bank5_6->SDSR & 0x00000020; 
+    tmpreg = FMC_Bank5_6->SDSR & 0x00000020;
   } 
   
   /* Set refresh count */
   tmpreg = FMC_Bank5_6->SDRTR;
+#if defined(STM32F446xx)
+  FMC_Bank5_6->SDRTR = (tmpreg | (0x0000050C<<1));
+#else
   FMC_Bank5_6->SDRTR = (tmpreg | (0x0000027C<<1));
+#endif /* STM32F446xx */
   
   /* Disable write protection */
   tmpreg = FMC_Bank5_6->SDCR[0]; 
   FMC_Bank5_6->SDCR[0] = (tmpreg & 0xFFFFFDFF);
-  
-/*
-  Bank1_SDRAM is configured as follow:
-
-  FMC_SDRAMTimingInitStructure.FMC_LoadToActiveDelay = 2;      
-  FMC_SDRAMTimingInitStructure.FMC_ExitSelfRefreshDelay = 6;  
-  FMC_SDRAMTimingInitStructure.FMC_SelfRefreshTime = 4;        
-  FMC_SDRAMTimingInitStructure.FMC_RowCycleDelay = 6;         
-  FMC_SDRAMTimingInitStructure.FMC_WriteRecoveryTime = 2;      
-  FMC_SDRAMTimingInitStructure.FMC_RPDelay = 2;                
-  FMC_SDRAMTimingInitStructure.FMC_RCDDelay = 2;               
-
-  FMC_SDRAMInitStructure.FMC_Bank = SDRAM_BANK;
-  FMC_SDRAMInitStructure.FMC_ColumnBitsNumber = FMC_ColumnBits_Number_8b;
-  FMC_SDRAMInitStructure.FMC_RowBitsNumber = FMC_RowBits_Number_11b;
-  FMC_SDRAMInitStructure.FMC_SDMemoryDataWidth = FMC_SDMemory_Width_16b;
-  FMC_SDRAMInitStructure.FMC_InternalBankNumber = FMC_InternalBank_Number_4;
-  FMC_SDRAMInitStructure.FMC_CASLatency = FMC_CAS_Latency_3; 
-  FMC_SDRAMInitStructure.FMC_WriteProtection = FMC_Write_Protection_Disable;
-  FMC_SDRAMInitStructure.FMC_SDClockPeriod = FMC_SDClock_Period_2;
-  FMC_SDRAMInitStructure.FMC_ReadBurst = FMC_Read_Burst_disable;
-  FMC_SDRAMInitStructure.FMC_ReadPipeDelay = FMC_ReadPipe_Delay_1;
-  FMC_SDRAMInitStructure.FMC_SDRAMTimingStruct = &FMC_SDRAMTimingInitStructure;
-*/
-  
-}
 #endif /* DATA_IN_ExtSDRAM */
+#endif /* STM32F427xx || STM32F437xx || STM32F429xx || STM32F439xx || STM32F446xx || STM32F469xx || STM32F479xx */
+
+#if defined(STM32F405xx) || defined(STM32F415xx) || defined(STM32F407xx) || defined(STM32F417xx)\
+ || defined(STM32F427xx) || defined(STM32F437xx) || defined(STM32F429xx) || defined(STM32F439xx)\
+ || defined(STM32F469xx) || defined(STM32F479xx)
+
+#if defined(DATA_IN_ExtSRAM)
+/*-- GPIOs Configuration -----------------------------------------------------*/
+   /* Enable GPIOD, GPIOE, GPIOF and GPIOG interface clock */
+  RCC->AHB1ENR   |= 0x00000078;
+  /* Delay after an RCC peripheral clock enabling */
+  tmp = READ_BIT(RCC->AHB1ENR, RCC_AHB1ENR_GPIODEN);
+  
+  /* Connect PDx pins to FMC Alternate function */
+  GPIOD->AFR[0]  = 0x00CCC0CC;
+  GPIOD->AFR[1]  = 0xCCCCCCCC;
+  /* Configure PDx pins in Alternate function mode */
+  GPIOD->MODER   = 0xAAAA0A8A;
+  /* Configure PDx pins speed to 100 MHz */
+  GPIOD->OSPEEDR = 0xFFFF0FCF;
+  /* Configure PDx pins Output type to push-pull */
+  GPIOD->OTYPER  = 0x00000000;
+  /* No pull-up, pull-down for PDx pins */
+  GPIOD->PUPDR   = 0x00000000;
+
+  /* Connect PEx pins to FMC Alternate function */
+  GPIOE->AFR[0]  = 0xC00CC0CC;
+  GPIOE->AFR[1]  = 0xCCCCCCCC;
+  /* Configure PEx pins in Alternate function mode */
+  GPIOE->MODER   = 0xAAAA828A;
+  /* Configure PEx pins speed to 100 MHz */
+  GPIOE->OSPEEDR = 0xFFFFC3CF;
+  /* Configure PEx pins Output type to push-pull */
+  GPIOE->OTYPER  = 0x00000000;
+  /* No pull-up, pull-down for PEx pins */
+  GPIOE->PUPDR   = 0x00000000;
+
+  /* Connect PFx pins to FMC Alternate function */
+  GPIOF->AFR[0]  = 0x00CCCCCC;
+  GPIOF->AFR[1]  = 0xCCCC0000;
+  /* Configure PFx pins in Alternate function mode */
+  GPIOF->MODER   = 0xAA000AAA;
+  /* Configure PFx pins speed to 100 MHz */
+  GPIOF->OSPEEDR = 0xFF000FFF;
+  /* Configure PFx pins Output type to push-pull */
+  GPIOF->OTYPER  = 0x00000000;
+  /* No pull-up, pull-down for PFx pins */
+  GPIOF->PUPDR   = 0x00000000;
+
+  /* Connect PGx pins to FMC Alternate function */
+  GPIOG->AFR[0]  = 0x00CCCCCC;
+  GPIOG->AFR[1]  = 0x000000C0;
+  /* Configure PGx pins in Alternate function mode */
+  GPIOG->MODER   = 0x00085AAA;
+  /* Configure PGx pins speed to 100 MHz */
+  GPIOG->OSPEEDR = 0x000CAFFF;
+  /* Configure PGx pins Output type to push-pull */
+  GPIOG->OTYPER  = 0x00000000;
+  /* No pull-up, pull-down for PGx pins */
+  GPIOG->PUPDR   = 0x00000000;
+  
+/*-- FMC/FSMC Configuration --------------------------------------------------*/
+  /* Enable the FMC/FSMC interface clock */
+  RCC->AHB3ENR         |= 0x00000001;
+
+#if defined(STM32F427xx) || defined(STM32F437xx) || defined(STM32F429xx) || defined(STM32F439xx)
+  /* Delay after an RCC peripheral clock enabling */
+  tmp = READ_BIT(RCC->AHB3ENR, RCC_AHB3ENR_FMCEN);
+  /* Configure and enable Bank1_SRAM2 */
+  FMC_Bank1->BTCR[2]  = 0x00001011;
+  FMC_Bank1->BTCR[3]  = 0x00000201;
+  FMC_Bank1E->BWTR[2] = 0x0fffffff;
+#endif /* STM32F427xx || STM32F437xx || STM32F429xx || STM32F439xx */
+#if defined(STM32F469xx) || defined(STM32F479xx)
+  /* Delay after an RCC peripheral clock enabling */
+  tmp = READ_BIT(RCC->AHB3ENR, RCC_AHB3ENR_FMCEN);
+  /* Configure and enable Bank1_SRAM2 */
+  FMC_Bank1->BTCR[2]  = 0x00001091;
+  FMC_Bank1->BTCR[3]  = 0x00110212;
+  FMC_Bank1E->BWTR[2] = 0x0fffffff;
+#endif /* STM32F469xx || STM32F479xx */
+#if defined(STM32F405xx) || defined(STM32F415xx) || defined(STM32F407xx)|| defined(STM32F417xx)
+  /* Delay after an RCC peripheral clock enabling */
+  tmp = READ_BIT(RCC->AHB3ENR, RCC_AHB3ENR_FSMCEN);
+  /* Configure and enable Bank1_SRAM2 */
+  FSMC_Bank1->BTCR[2]  = 0x00001011;
+  FSMC_Bank1->BTCR[3]  = 0x00000201;
+  FSMC_Bank1E->BWTR[2] = 0x0FFFFFFF;
+#endif /* STM32F405xx || STM32F415xx || STM32F407xx || STM32F417xx */
+
+#endif /* DATA_IN_ExtSRAM */
+#endif /* STM32F405xx || STM32F415xx || STM32F407xx || STM32F417xx || STM32F427xx || STM32F437xx ||\
+          STM32F429xx || STM32F439xx || STM32F469xx || STM32F479xx */
+  (void)(tmp);
+}
+#endif /* DATA_IN_ExtSRAM || DATA_IN_ExtSDRAM */
 
 
 /**
