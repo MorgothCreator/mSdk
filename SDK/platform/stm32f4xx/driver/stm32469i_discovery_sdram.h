@@ -1,11 +1,11 @@
 /**
   ******************************************************************************
-  * @file    stm32469i_eval_sdram.h
+  * @file    stm32469i_discovery_sdram.h
   * @author  MCD Application Team
   * @version V1.0.1
   * @date    29-September-2015
   * @brief   This file contains the common defines and functions prototypes for
-  *          the stm32469i_eval_sdram.c driver.
+  *          the stm32469i_discovery_sdram.c driver.
   ******************************************************************************
   * @attention
   *
@@ -37,32 +37,29 @@
   */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __STM32469I_EVAL_SDRAM_H
-#define __STM32469I_EVAL_SDRAM_H
+#ifndef __STM32469I_DISCOVERY_SDRAM_H
+#define __STM32469I_DISCOVERY_SDRAM_H
 
-#if defined(STM32F427xx) || defined(STM32F437xx) || defined(STM32F429xx) || defined(STM32F439xx) || defined(STM32F446xx) || defined(STM32F469xx) || defined(STM32F479xx)
 #ifdef __cplusplus
  extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_hal.h"
-#include "stm32f4xx_ll_fmc.h"
-#include "stm32f4xx_hal_sdram.h"
 
 /** @addtogroup BSP
   * @{
   */
 
-/** @addtogroup STM32469I-EVAL
+/** @addtogroup STM32469I-Discovery
   * @{
   */
 
-/** @addtogroup STM32469I-EVAL_SDRAM
+/** @addtogroup STM32469I-Discovery_SDRAM
   * @{
   */
 
-/** @defgroup STM32469I-EVAL_SDRAM_Exported_Types STM32469I EVAL SDRAM Exported Types
+/** @defgroup STM32469I-Discovery_SDRAM_Exported_Types STM32469I Discovery SDRAM Exported Types
   * @{
   */
 
@@ -72,7 +69,7 @@
 #define   SDRAM_OK         ((uint8_t)0x00)
 #define   SDRAM_ERROR      ((uint8_t)0x01)
 
-/** @defgroup STM32469I-EVAL_SDRAM_Exported_Constants STM32469I EVAL SDRAM Exported Constants
+/** @defgroup STM32469I-Discovery_SDRAM_Exported_Constants STM32469I Discovery SDRAM Exported Constants
   * @{
   */
 #define SDRAM_DEVICE_ADDR  ((uint32_t)0xC0000000)
@@ -116,31 +113,31 @@
   * @}
   */
 
-/** @defgroup STM32469I-EVAL_SDRAM_Exported_Macro STM32469I EVAL SDRAM Exported Macro
+/** @defgroup STM32469I-Discovery_SDRAM_Exported_Macro STM32469I Discovery SDRAM Exported Macro
   * @{
   */
 /**
   * @}
   */
 
-/** @defgroup STM32469I-EVAL_SDRAM_Exported_Functions STM32469I EVAL SDRAM Exported Functions
+/** @defgroup STM32469I-Discovery_SDRAM_Exported_Functions STM32469I Discovery SDRAM Exported Functions
   * @{
   */
-uint8_t BSP_STM32469I_EVAL_SDRAM_Init(void);
-uint8_t BSP_STM32469I_EVAL_SDRAM_DeInit(void);
-void    BSP_STM32469I_EVAL_SDRAM_Initialization_sequence(uint32_t RefreshCount);
-uint8_t BSP_STM32469I_EVAL_SDRAM_ReadData(uint32_t uwStartAddress, uint32_t *pData, uint32_t uwDataSize);
-uint8_t BSP_STM32469I_EVAL_SDRAM_ReadData_DMA(uint32_t uwStartAddress, uint32_t *pData, uint32_t uwDataSize);
-uint8_t BSP_STM32469I_EVAL_SDRAM_WriteData(uint32_t uwStartAddress, uint32_t *pData, uint32_t uwDataSize);
-uint8_t BSP_STM32469I_EVAL_SDRAM_WriteData_DMA(uint32_t uwStartAddress, uint32_t *pData, uint32_t uwDataSize);
-uint8_t BSP_STM32469I_EVAL_SDRAM_Sendcmd(FMC_SDRAM_CommandTypeDef *SdramCmd);
-void    BSP_STM32469I_EVAL_SDRAM_DMA_IRQHandler(void);
+uint8_t BSP_STM32469I_DISCOVERY_SDRAM_Init(void);
+uint8_t BSP_STM32469I_DISCOVERY_SDRAM_DeInit(void);
+void    BSP_STM32469I_DISCOVERY_SDRAM_Initialization_sequence(uint32_t RefreshCount);
+uint8_t BSP_STM32469I_DISCOVERY_SDRAM_ReadData(uint32_t uwStartAddress, uint32_t *pData, uint32_t uwDataSize);
+uint8_t BSP_STM32469I_DISCOVERY_SDRAM_ReadData_DMA(uint32_t uwStartAddress, uint32_t *pData, uint32_t uwDataSize);
+uint8_t BSP_STM32469I_DISCOVERY_SDRAM_WriteData(uint32_t uwStartAddress, uint32_t *pData, uint32_t uwDataSize);
+uint8_t BSP_STM32469I_DISCOVERY_SDRAM_WriteData_DMA(uint32_t uwStartAddress, uint32_t *pData, uint32_t uwDataSize);
+uint8_t BSP_STM32469I_DISCOVERY_SDRAM_Sendcmd(FMC_SDRAM_CommandTypeDef *SdramCmd);
+void    BSP_STM32469I_DISCOVERY_SDRAM_DMA_IRQHandler(void);
 
 /* These function can be modified in case the current settings (e.g. DMA stream)
    need to be changed for specific application needs */
-void    BSP_STM32469I_EVAL_SDRAM_MspInit(SDRAM_HandleTypeDef  *hsdram, void *Params);
-void    BSP_STM32469I_EVAL_SDRAM_MspDeInit(SDRAM_HandleTypeDef  *hsdram, void *Params);
-#endif
+void    BSP_STM32469I_DISCOVERY_SDRAM_MspInit(SDRAM_HandleTypeDef  *hsdram, void *Params);
+void    BSP_STM32469I_DISCOVERY_SDRAM_MspDeInit(SDRAM_HandleTypeDef  *hsdram, void *Params);
+
 /**
   * @}
   */
@@ -161,6 +158,6 @@ void    BSP_STM32469I_EVAL_SDRAM_MspDeInit(SDRAM_HandleTypeDef  *hsdram, void *P
 }
 #endif
 
-#endif /* __STM32469I_EVAL_SDRAM_H */
+#endif /* __STM32469I_DISCOVERY_SDRAM_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

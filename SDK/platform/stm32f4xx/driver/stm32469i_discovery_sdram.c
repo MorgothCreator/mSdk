@@ -1,11 +1,11 @@
 /**
   ******************************************************************************
-  * @file    stm32469i_eval_sdram.c
+  * @file    stm32469i_discovery_sdram.c
   * @author  MCD Application Team
   * @version V1.0.1
   * @date    29-September-2015
   * @brief   This file includes the SDRAM driver for the MT48LC4M32B2B5-7 memory
-  *          device mounted on STM32469I-EVAL evaluation board.
+  *          device mounted on STM32469I-Discovery board.
   ******************************************************************************
   * @attention
   *
@@ -41,7 +41,7 @@
 1. How To use this driver:
 --------------------------
    - This driver is used to drive the MT48LC4M32B2B5-7 SDRAM external memory mounted
-     on STM32469I-EVAL evaluation board.
+     on STM32469I-Discovery board.
    - This driver does not need a specific component driver for the SDRAM device
      to be included with.
 
@@ -77,44 +77,43 @@
 
 ------------------------------------------------------------------------------*/
 
-#if defined(STM32F427xx) || defined(STM32F437xx) || defined(STM32F429xx) || defined(STM32F439xx) || defined(STM32F446xx) || defined(STM32F469xx) || defined(STM32F479xx)
 /* Includes ------------------------------------------------------------------*/
-#include "stm32469i_eval_sdram.h"
-#include "stm32f4xx_hal_sdram.h"
+#include "stm32469i_discovery_sdram.h"
+
 /** @addtogroup BSP
   * @{
   */
 
-/** @addtogroup STM32469I-EVAL
+/** @addtogroup STM32469I-Discovery
   * @{
   */
 
-/** @defgroup STM32469I-EVAL_SDRAM SDRAM
+/** @defgroup STM32469I-Discovery_SDRAM SDRAM
   * @{
   */
 
-/** @defgroup STM32469I-EVAL_SDRAM_Private_Types_Definitions STM32469I Eval SDRAM Private TypesDef
-  * @{
-  */
-/**
-  * @}
-  */
-
-/** @defgroup STM32469I-EVAL_SDRAM_Private_Defines STM32469I Eval SDRAM Private Defines
+/** @defgroup STM32469I-Discovery_SDRAM_Private_Types_Definitions STM32469I Discovery SDRAM Private TypesDef
   * @{
   */
 /**
   * @}
   */
 
-/** @defgroup STM32469I-EVAL_SDRAM_Private_Macros STM32469I Eval SDRAM Private Macros
+/** @defgroup STM32469I-Discovery_SDRAM_Private_Defines STM32469I Discovery SDRAM Private Defines
   * @{
   */
 /**
   * @}
   */
 
-/** @defgroup STM32469I-EVAL_SDRAM_Private_Variables STM32469I Eval SDRAM Private Variables
+/** @defgroup STM32469I-Discovery_SDRAM_Private_Macros STM32469I Discovery SDRAM Private Macros
+  * @{
+  */
+/**
+  * @}
+  */
+
+/** @defgroup STM32469I-Discovery_SDRAM_Private_Variables STM32469I Discovery SDRAM Private Variables
   * @{
   */
 static SDRAM_HandleTypeDef sdramHandle;
@@ -124,7 +123,7 @@ static FMC_SDRAM_CommandTypeDef Command;
   * @}
   */
 
-/** @defgroup STM32469I-EVAL_SDRAM_Private_Function_Prototypes STM32469I Eval SDRAM Private Prototypes
+/** @defgroup STM32469I-Discovery_SDRAM_Private_Function_Prototypes STM32469I Discovery SDRAM Private Prototypes
   * @{
   */
 
@@ -132,7 +131,7 @@ static FMC_SDRAM_CommandTypeDef Command;
   * @}
   */
 
-/** @defgroup STM32469I-EVAL_SDRAM_Private_Functions STM32469I Eval SDRAM Private Functions
+/** @defgroup STM32469I-Discovery_SDRAM_Private_Functions STM32469I Discovery SDRAM Private Functions
   * @{
   */
 
@@ -140,7 +139,7 @@ static FMC_SDRAM_CommandTypeDef Command;
   * @}
   */
 
-/** @defgroup STM32469I_EVAL_SDRAM_Exported_Functions STM32469I EVAL SDRAM Exported Functions
+/** @defgroup STM32469I_Discovery_SDRAM_Exported_Functions STM32469I Discovery SDRAM Exported Functions
   * @{
   */
 
@@ -148,7 +147,7 @@ static FMC_SDRAM_CommandTypeDef Command;
   * @brief  Initializes the SDRAM device.
   * @retval SDRAM status
   */
-uint8_t BSP_STM32469I_EVAL_SDRAM_Init(void)
+uint8_t BSP_STM32469I_DISCOVERY_SDRAM_Init(void)
 {
   static uint8_t sdramstatus = SDRAM_ERROR;
 
@@ -156,13 +155,13 @@ uint8_t BSP_STM32469I_EVAL_SDRAM_Init(void)
   sdramHandle.Instance = FMC_SDRAM_DEVICE;
 
   /* Timing configuration for 90 MHz as SD clock frequency (System clock is up to 180 MHz) */
-  Timing.LoadToActiveDelay    = 2;   /* TMRD: 2 Clock cycles */
-  Timing.ExitSelfRefreshDelay = 7;   /* TXSR: min=70ns (7x11.11ns) */
-  Timing.SelfRefreshTime      = 4;   /* TRAS: min=42ns (4x11.11ns) max=120k (ns) */
-  Timing.RowCycleDelay        = 7;   /* TRC:  min=70 (7x11.11ns) */ 
-  Timing.WriteRecoveryTime    = 2;   /* TWR:  min=1+ 7ns (1+1x11.11ns) */
-  Timing.RPDelay              = 2;   /* TRP:  20ns => 2x11.11ns */
-  Timing.RCDDelay             = 2;   /* TRCD: 20ns => 2x11.11ns */
+  Timing.LoadToActiveDelay    = 2;
+  Timing.ExitSelfRefreshDelay = 7;
+  Timing.SelfRefreshTime      = 4;
+  Timing.RowCycleDelay        = 7;
+  Timing.WriteRecoveryTime    = 2;
+  Timing.RPDelay              = 2;
+  Timing.RCDDelay             = 2;
 
   sdramHandle.Init.SDBank             = FMC_SDRAM_BANK1;
   sdramHandle.Init.ColumnBitsNumber   = FMC_SDRAM_COLUMN_BITS_NUM_8;
@@ -177,7 +176,7 @@ uint8_t BSP_STM32469I_EVAL_SDRAM_Init(void)
 
   /* SDRAM controller initialization */
   /* __weak function can be surcharged by the application code */
-  BSP_STM32469I_EVAL_SDRAM_MspInit(&sdramHandle, (void *)NULL);
+  BSP_STM32469I_DISCOVERY_SDRAM_MspInit(&sdramHandle, (void *)NULL);
   if(HAL_SDRAM_Init(&sdramHandle, &Timing) != HAL_OK)
   {
     sdramstatus = SDRAM_ERROR;
@@ -188,7 +187,7 @@ uint8_t BSP_STM32469I_EVAL_SDRAM_Init(void)
   }
 
   /* SDRAM initialization sequence */
-  BSP_STM32469I_EVAL_SDRAM_Initialization_sequence(REFRESH_COUNT);
+  BSP_STM32469I_DISCOVERY_SDRAM_Initialization_sequence(REFRESH_COUNT);
 
   return sdramstatus;
 }
@@ -197,7 +196,7 @@ uint8_t BSP_STM32469I_EVAL_SDRAM_Init(void)
   * @brief  DeInitializes the SDRAM device.
   * @retval SDRAM status : SDRAM_OK or SDRAM_ERROR.
   */
-uint8_t BSP_STM32469I_EVAL_SDRAM_DeInit(void)
+uint8_t BSP_STM32469I_DISCOVERY_SDRAM_DeInit(void)
 {
   static uint8_t sdramstatus = SDRAM_ERROR;
 
@@ -209,7 +208,7 @@ uint8_t BSP_STM32469I_EVAL_SDRAM_DeInit(void)
     sdramstatus = SDRAM_OK;
 
   /* SDRAM controller De-initialization */
-   BSP_STM32469I_EVAL_SDRAM_MspDeInit(&sdramHandle, (void *)NULL);
+   BSP_STM32469I_DISCOVERY_SDRAM_MspDeInit(&sdramHandle, (void *)NULL);
   }
 
   return sdramstatus;
@@ -220,9 +219,9 @@ uint8_t BSP_STM32469I_EVAL_SDRAM_DeInit(void)
   * @brief  Programs the SDRAM device.
   * @param  RefreshCount: SDRAM refresh counter value
   */
-void BSP_STM32469I_EVAL_SDRAM_Initialization_sequence(uint32_t RefreshCount)
+void BSP_STM32469I_DISCOVERY_SDRAM_Initialization_sequence(uint32_t RefreshCount)
 {
-  volatile uint32_t tmpmrd = 0;
+  __IO uint32_t tmpmrd = 0;
 
   /* Step 1: Configure a clock configuration enable command */
   Command.CommandMode            = FMC_SDRAM_CMD_CLK_ENABLE;
@@ -282,7 +281,7 @@ void BSP_STM32469I_EVAL_SDRAM_Initialization_sequence(uint32_t RefreshCount)
   * @param  uwDataSize: Size of read data from the memory
   * @retval SDRAM status : SDRAM_OK or SDRAM_ERROR.
   */
-uint8_t BSP_STM32469I_EVAL_SDRAM_ReadData(uint32_t uwStartAddress, uint32_t *pData, uint32_t uwDataSize)
+uint8_t BSP_STM32469I_DISCOVERY_SDRAM_ReadData(uint32_t uwStartAddress, uint32_t *pData, uint32_t uwDataSize)
 {
   if(HAL_SDRAM_Read_32b(&sdramHandle, (uint32_t *)uwStartAddress, pData, uwDataSize) != HAL_OK)
   {
@@ -301,7 +300,7 @@ uint8_t BSP_STM32469I_EVAL_SDRAM_ReadData(uint32_t uwStartAddress, uint32_t *pDa
   * @param  uwDataSize: Size of read data from the memory
   * @retval SDRAM status : SDRAM_OK or SDRAM_ERROR.
   */
-uint8_t BSP_STM32469I_EVAL_SDRAM_ReadData_DMA(uint32_t uwStartAddress, uint32_t *pData, uint32_t uwDataSize)
+uint8_t BSP_STM32469I_DISCOVERY_SDRAM_ReadData_DMA(uint32_t uwStartAddress, uint32_t *pData, uint32_t uwDataSize)
 {
   if(HAL_SDRAM_Read_DMA(&sdramHandle, (uint32_t *)uwStartAddress, pData, uwDataSize) != HAL_OK)
   {
@@ -320,7 +319,7 @@ uint8_t BSP_STM32469I_EVAL_SDRAM_ReadData_DMA(uint32_t uwStartAddress, uint32_t 
   * @param  uwDataSize: Size of written data from the memory
   * @retval SDRAM status : SDRAM_OK or SDRAM_ERROR.
   */
-uint8_t BSP_STM32469I_EVAL_SDRAM_WriteData(uint32_t uwStartAddress, uint32_t *pData, uint32_t uwDataSize)
+uint8_t BSP_STM32469I_DISCOVERY_SDRAM_WriteData(uint32_t uwStartAddress, uint32_t *pData, uint32_t uwDataSize)
 {
   if(HAL_SDRAM_Write_32b(&sdramHandle, (uint32_t *)uwStartAddress, pData, uwDataSize) != HAL_OK)
   {
@@ -339,7 +338,7 @@ uint8_t BSP_STM32469I_EVAL_SDRAM_WriteData(uint32_t uwStartAddress, uint32_t *pD
   * @param  uwDataSize: Size of written data from the memory
   * @retval SDRAM status : SDRAM_OK or SDRAM_ERROR.
   */
-uint8_t BSP_STM32469I_EVAL_SDRAM_WriteData_DMA(uint32_t uwStartAddress, uint32_t *pData, uint32_t uwDataSize)
+uint8_t BSP_STM32469I_DISCOVERY_SDRAM_WriteData_DMA(uint32_t uwStartAddress, uint32_t *pData, uint32_t uwDataSize)
 {
   if(HAL_SDRAM_Write_DMA(&sdramHandle, (uint32_t *)uwStartAddress, pData, uwDataSize) != HAL_OK)
   {
@@ -356,7 +355,7 @@ uint8_t BSP_STM32469I_EVAL_SDRAM_WriteData_DMA(uint32_t uwStartAddress, uint32_t
   * @param  SdramCmd: Pointer to SDRAM command structure
   * @retval HAL status : SDRAM_OK or SDRAM_ERROR.
   */
-uint8_t BSP_STM32469I_EVAL_SDRAM_Sendcmd(FMC_SDRAM_CommandTypeDef *SdramCmd)
+uint8_t BSP_STM32469I_DISCOVERY_SDRAM_Sendcmd(FMC_SDRAM_CommandTypeDef *SdramCmd)
 {
   if(HAL_SDRAM_SendCommand(&sdramHandle, SdramCmd, SDRAM_TIMEOUT) != HAL_OK)
   {
@@ -371,7 +370,7 @@ uint8_t BSP_STM32469I_EVAL_SDRAM_Sendcmd(FMC_SDRAM_CommandTypeDef *SdramCmd)
 /**
   * @brief  Handles SDRAM DMA transfer interrupt request.
   */
-void BSP_STM32469I_EVAL_SDRAM_DMA_IRQHandler(void)
+void BSP_STM32469I_DISCOVERY_SDRAM_DMA_IRQHandler(void)
 {
   HAL_DMA_IRQHandler(sdramHandle.hdma);
 }
@@ -382,7 +381,7 @@ void BSP_STM32469I_EVAL_SDRAM_DMA_IRQHandler(void)
   * @param  hsdram: pointer on SDRAM handle
   * @param  Params: pointer on additional configuration parameters, can be NULL.
   */
-__weak void BSP_STM32469I_EVAL_SDRAM_MspInit(SDRAM_HandleTypeDef  *hsdram, void *Params)
+__weak void BSP_STM32469I_DISCOVERY_SDRAM_MspInit(SDRAM_HandleTypeDef  *hsdram, void *Params)
 {
   static DMA_HandleTypeDef dma_handle;
   GPIO_InitTypeDef gpio_init_structure;
@@ -396,6 +395,7 @@ __weak void BSP_STM32469I_EVAL_SDRAM_MspInit(SDRAM_HandleTypeDef  *hsdram, void 
     __DMAx_CLK_ENABLE();
 
     /* Enable GPIOs clock */
+    __HAL_RCC_GPIOC_CLK_ENABLE();
     __HAL_RCC_GPIOD_CLK_ENABLE();
     __HAL_RCC_GPIOE_CLK_ENABLE();
     __HAL_RCC_GPIOF_CLK_ENABLE();
@@ -408,6 +408,10 @@ __weak void BSP_STM32469I_EVAL_SDRAM_MspInit(SDRAM_HandleTypeDef  *hsdram, void 
     gpio_init_structure.Pull      = GPIO_PULLUP;
     gpio_init_structure.Speed     = GPIO_SPEED_FAST;
     gpio_init_structure.Alternate = GPIO_AF12_FMC;
+
+    /* GPIOC configuration : PC0 is SDNWE */
+    gpio_init_structure.Pin   = GPIO_PIN_0;
+    HAL_GPIO_Init(GPIOC, &gpio_init_structure);
 
     /* GPIOD configuration */
     gpio_init_structure.Pin   = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_8| GPIO_PIN_9 | GPIO_PIN_10 |\
@@ -436,7 +440,7 @@ __weak void BSP_STM32469I_EVAL_SDRAM_MspInit(SDRAM_HandleTypeDef  *hsdram, void 
     HAL_GPIO_Init(GPIOG, &gpio_init_structure);
 
     /* GPIOH configuration */
-    gpio_init_structure.Pin   = GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_5 | GPIO_PIN_8 | GPIO_PIN_9 |\
+    gpio_init_structure.Pin   = GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_8 | GPIO_PIN_9 |\
                                 GPIO_PIN_10 | GPIO_PIN_11 | GPIO_PIN_12 | GPIO_PIN_13 | GPIO_PIN_14 |\
                                 GPIO_PIN_15;
     HAL_GPIO_Init(GPIOH, &gpio_init_structure);
@@ -484,7 +488,7 @@ __weak void BSP_STM32469I_EVAL_SDRAM_MspInit(SDRAM_HandleTypeDef  *hsdram, void 
   * @param  hsdram: pointer on SDRAM handle
   * @param  Params: pointer on additional configuration parameters, can be NULL.
   */
-__weak void BSP_STM32469I_EVAL_SDRAM_MspDeInit(SDRAM_HandleTypeDef  *hsdram, void *Params)
+__weak void BSP_STM32469I_DISCOVERY_SDRAM_MspDeInit(SDRAM_HandleTypeDef  *hsdram, void *Params)
 {
     static DMA_HandleTypeDef dma_handle;
 
@@ -505,7 +509,7 @@ __weak void BSP_STM32469I_EVAL_SDRAM_MspDeInit(SDRAM_HandleTypeDef  *hsdram, voi
 
     } /* of if(hsdram != (SDRAM_HandleTypeDef  *)NULL) */
 }
-#endif
+
 /**
   * @}
   */
