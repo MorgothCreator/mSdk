@@ -29,6 +29,9 @@
 #include "../api/gpio_api.h"
 #include "../lib/generic.h"
 
+#define FT5X0X_TWI_ADDR1	0x2A
+#define FT5X0X_TWI_ADDR2	0x38
+
 typedef enum ft5x0x_regs_enum {
 	FT5X0X_REG_THGROUP						= 0x80,
 	FT5X0X_REG_THPEAK						= 0x81,

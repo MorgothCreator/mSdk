@@ -49,19 +49,37 @@ bool ft5x06_init(new_touchscreen* structure, unsigned char Port, unsigned char P
 	if(!structure)
 		return false;
 	structure->TouchScreen_Type = TouchScreen_Type_FT5x06;
-	structure->touch_max_x = 1024;
-	structure->touch_max_y = 600;
-    gpio_init(0);
+    gpio_init(Port);
     structure->IrqStruct = gpio_assign(Port, Pin, GPIO_IN_FLOATING, false);
     if(ft5x06_data_ready(structure))
     {
 		new_twi* twistruct = structure->TwiStruct;
-		twistruct->MasterSlaveAddr = 0x38;
+		twistruct->MasterSlaveAddr = FT5X0X_TWI_ADDR2;
 		twistruct->rCount = 0;
 		twistruct->tCount = 0;
 		twistruct->TxBuff[0] = 0xF9;
 		if(SetupI2CReception(twistruct, 1, 38))
+		{
+			structure->twi_addr = FT5X0X_TWI_ADDR2;
+			structure->touch_max_x = 1024;
+			structure->touch_max_y = 600;
+			structure->screen_max_x = (double)structure->pDisplay->raster_timings->X;
+			structure->screen_max_y = (double)structure->pDisplay->raster_timings->Y;
 			return true;
+		}
+		twistruct->MasterSlaveAddr = FT5X0X_TWI_ADDR1;
+		twistruct->rCount = 0;
+		twistruct->tCount = 0;
+		twistruct->TxBuff[0] = 0xF9;
+		if(SetupI2CReception(twistruct, 1, 38))
+		{
+			structure->twi_addr = FT5X0X_TWI_ADDR1;
+			structure->touch_max_x = 480;
+			structure->touch_max_y = 800;
+			structure->screen_max_x = (double)structure->pDisplay->raster_timings->X;
+			structure->screen_max_y = (double)structure->pDisplay->raster_timings->Y;
+			return true;
+		}
     }
     //ft5x06_free(structure);
     return false;
@@ -76,7 +94,7 @@ bool ft5x06_TouchIdle(new_touchscreen* structure)
 	if(!gpio_in(structure->IrqStruct))
 		return false;
 	new_twi* twistruct = structure->TwiStruct;
-	twistruct->MasterSlaveAddr = 0x38;
+	twistruct->MasterSlaveAddr = structure->twi_addr;
 	twistruct->rCount = 0;
 	twistruct->tCount = 0;
 	twistruct->TxBuff[0] = 0xF9;
@@ -98,30 +116,50 @@ bool ft5x06_TouchIdle(new_touchscreen* structure)
 		structure->TouchResponse.y5 = to_percentage(0,structure->touch_max_y,structure->screen_max_y,((Response[ft5x06_TouchIdle_offset + 28]<<8) | Response[ft5x06_TouchIdle_offset + 29]) & 0x0FFF);
 		structure->TouchResponse.touch_ID5=(unsigned short)(Response[ft5x06_TouchIdle_offset + 29] & 0xF0)>>4;
 		//structure->TouchResponse->touch_event5 = (unsigned short)((Response[ft5x06_TouchIdle_offset + 27] & 0xc0) >> 6);
+		if(structure->flip_x)
+			structure->TouchResponse.x5 = structure->screen_max_x - structure->TouchResponse.x5;
+		if(structure->flip_y)
+			structure->TouchResponse.y5 = structure->screen_max_y - structure->TouchResponse.y5;
 		State5 = Gfx_IntTouch_MouseMove;
 	case 4:
 		structure->TouchResponse.x4 = (structure->screen_max_x - 1) - to_percentage(0,structure->touch_max_x,structure->screen_max_x,((Response[ft5x06_TouchIdle_offset + 20]<<8) | Response[ft5x06_TouchIdle_offset + 21]) & 0x0FFF);
 		structure->TouchResponse.y4 = to_percentage(0,structure->touch_max_y,structure->screen_max_y,((Response[ft5x06_TouchIdle_offset + 22]<<8) | Response[ft5x06_TouchIdle_offset + 23]) & 0x0FFF);
 		structure->TouchResponse.touch_ID4=(unsigned short)(Response[ft5x06_TouchIdle_offset + 23] & 0xF0)>>4;
 		//structure->TouchResponse->touch_event4 = (unsigned short)((Response[ft5x06_TouchIdle_offset + 21] & 0xc0) >> 6);
+		if(structure->flip_x)
+			structure->TouchResponse.x4 = structure->screen_max_x - structure->TouchResponse.x4;
+		if(structure->flip_y)
+			structure->TouchResponse.y4 = structure->screen_max_y - structure->TouchResponse.y4;
 		State4 = Gfx_IntTouch_MouseMove;
 	case 3:
 		structure->TouchResponse.x3 = (structure->screen_max_x - 1) - to_percentage(0,structure->touch_max_x,structure->screen_max_x,((Response[ft5x06_TouchIdle_offset + 14]<<8) | Response[ft5x06_TouchIdle_offset + 15]) & 0x0FFF);
 		structure->TouchResponse.y3 = to_percentage(0,structure->touch_max_y,structure->screen_max_y,((Response[ft5x06_TouchIdle_offset + 16]<<8) | Response[ft5x06_TouchIdle_offset + 17]) & 0x0FFF);
 		structure->TouchResponse.touch_ID3=(unsigned short)(Response[ft5x06_TouchIdle_offset + 17] & 0xF0)>>4;
 		//structure->TouchResponse->touch_event3 = (unsigned short)((Response[ft5x06_TouchIdle_offset + 15] & 0xc0) >> 6);
+		if(structure->flip_x)
+			structure->TouchResponse.x3 = structure->screen_max_x - structure->TouchResponse.x3;
+		if(structure->flip_y)
+			structure->TouchResponse.y3 = structure->screen_max_y - structure->TouchResponse.y3;
 		State3 = Gfx_IntTouch_MouseMove;
 	case 2:
 		structure->TouchResponse.x2 = (structure->screen_max_x - 1) - to_percentage(0,structure->touch_max_x,structure->screen_max_x,((Response[ft5x06_TouchIdle_offset + 8]<<8) | Response[ft5x06_TouchIdle_offset + 9]) & 0x0FFF);
 		structure->TouchResponse.y2 = to_percentage(0,structure->touch_max_y,structure->screen_max_y,((Response[ft5x06_TouchIdle_offset + 10]<<8) | Response[ft5x06_TouchIdle_offset + 11]) & 0x0FFF);
 		structure->TouchResponse.touch_ID2=(unsigned short)(Response[ft5x06_TouchIdle_offset + 11] & 0xF0)>>4;
 		//structure->TouchResponse->touch_event2 = (unsigned short)((Response[ft5x06_TouchIdle_offset + 9] & 0xc0) >> 6);
+		if(structure->flip_x)
+			structure->TouchResponse.x2 = structure->screen_max_x - structure->TouchResponse.x2;
+		if(structure->flip_y)
+			structure->TouchResponse.y2 = structure->screen_max_y - structure->TouchResponse.y2;
 		State2 = Gfx_IntTouch_MouseMove;
 	case 1:
 		structure->TouchResponse.x1 = (structure->screen_max_x - 1) - to_percentage(0,structure->touch_max_x,structure->screen_max_x,((Response[ft5x06_TouchIdle_offset + 2]<<8) | Response[ft5x06_TouchIdle_offset + 3]) & 0x0FFF);
 		structure->TouchResponse.y1 = to_percentage(0,structure->touch_max_y,structure->screen_max_y,((Response[ft5x06_TouchIdle_offset + 4]<<8) | Response[ft5x06_TouchIdle_offset + 5]) & 0x0FFF);
 		structure->TouchResponse.touch_ID1=(unsigned short)(Response[ft5x06_TouchIdle_offset + 5] & 0xF0)>>4;
 		//structure->TouchResponse->touch_event1 = (unsigned short)((Response[ft5x06_TouchIdle_offset + 3] & 0xc0) >> 6);
+		if(structure->flip_x)
+			structure->TouchResponse.x1 = structure->screen_max_x - structure->TouchResponse.x1;
+		if(structure->flip_y)
+			structure->TouchResponse.y1 = structure->screen_max_y - structure->TouchResponse.y1;
 		State1 = Gfx_IntTouch_MouseMove;
 	}
 
