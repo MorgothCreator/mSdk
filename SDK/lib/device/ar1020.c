@@ -136,7 +136,8 @@ unsigned char ar1020_touch(new_touchscreen* structure)
 	sys_delay(50);
 	new_twi* twistruct = structure->TwiStruct;
 	if(SetupI2CReception(twistruct, 0, 4) == false) return false;
-	if(twistruct->RxBuff[0] != 0x55 || twistruct->RxBuff[1] != 0x02 || twistruct->RxBuff[2] != AR1020_Response_Success || twistruct->RxBuff[3] != 0x14) return false;
+	if(twistruct->RxBuff[0] != 0x55 || twistruct->RxBuff[1] != 0x02 || twistruct->RxBuff[2] != AR1020_Response_Success || twistruct->RxBuff[3] != 0x14)
+		return false;
 	return true;
 }
 //#####################################################
@@ -153,17 +154,17 @@ void ar1020_read_coordonate(new_touchscreen* structure)
 		{
 			unsigned char* ReadBuffer = twistruct->RxBuff;
 			unsigned char Tmp = ReadBuffer[0] & 0x01;
-			signed int X = to_percentage(0, 4095, (signed int)structure->screen_max_x, ((unsigned short)ReadBuffer[2]<<7) | (unsigned short)ReadBuffer[1]);
-			signed int Y = to_percentage(0, 4095, (signed int)structure->screen_max_y, ((unsigned short)ReadBuffer[4]<<7) | (unsigned short)ReadBuffer[3]);
-			switch (structure->pDisplay->Orientation)
+			signed int X = to_percentage(0, 4095, (signed int)(double)structure->pDisplay->LcdTimings->X, ((unsigned short)ReadBuffer[2]<<7) | (unsigned short)ReadBuffer[1]);
+			signed int Y = to_percentage(0, 4095, (signed int)(double)structure->pDisplay->LcdTimings->Y, ((unsigned short)ReadBuffer[4]<<7) | (unsigned short)ReadBuffer[3]);
+			switch (structure->pDisplay->LcdTimings->orientation)
 			{
-			case 0:
-			case 180:
+			case LCD_ORIENTATION_LANDSCAPE:
+			case LCD_ORIENTATION_LANDSCAPE_FLIP:
 				structure->TouchResponse.x1 = Y;
 				structure->TouchResponse.y1 = X;
 				break;
-			case 90:
-			case 270:
+			case LCD_ORIENTATION_PORTRAIT:
+			case LCD_ORIENTATION_PORTRAIT_FLIP:
 				structure->TouchResponse.x1 = X;
 				structure->TouchResponse.y1 = Y;
 				break;
@@ -203,23 +204,24 @@ static bool ar1020_calibrate(new_touchscreen* structure, tDisplay *pDisplay)
 	twistruct->MasterSlaveAddr = AR1020_TWI_DeviceAddr;
 	if(!SetupI2CReception(twistruct, 5, 4))
 		return false;
-	if(twistruct->TxBuff[0] != 0x55 && twistruct->TxBuff[0] != 0x02 && twistruct->TxBuff[0] != AR1020_Response_Success && twistruct->TxBuff[0] != 0x14) return false;
+	if(twistruct->TxBuff[0] != 0x55 && twistruct->TxBuff[0] != 0x02 && twistruct->TxBuff[0] != AR1020_Response_Success && twistruct->TxBuff[0] != 0x14)
+		return false;
 	
-	TouchPaintPoint(pDisplay, (((double)pDisplay->raster_timings->X * (double)12.5) / (double)100), (((double)pDisplay->raster_timings->Y * (double)12.5) / (double)100), 0x0000);
+	TouchPaintPoint(pDisplay, (((double)pDisplay->LcdTimings->X * (double)12.5) / (double)100), (((double)pDisplay->LcdTimings->Y * (double)12.5) / (double)100), 0x0000);
 	while(ar1020_touch(structure) == false);
-	TouchPaintPoint(pDisplay, (((double)pDisplay->raster_timings->X * (double)12.5) / (double)100), (((double)pDisplay->raster_timings->Y * (double)12.5) / (double)100), controls_color.Scren);
+	TouchPaintPoint(pDisplay, (((double)pDisplay->LcdTimings->X * (double)12.5) / (double)100), (((double)pDisplay->LcdTimings->Y * (double)12.5) / (double)100), controls_color.Scren);
 
-	TouchPaintPoint(pDisplay, (double)pDisplay->raster_timings->X - (((double)pDisplay->raster_timings->X * (double)12.5) / (double)100), (((double)pDisplay->raster_timings->Y * (double)12.5) / (double)100), 0x0000);
+	TouchPaintPoint(pDisplay, (double)pDisplay->LcdTimings->X - (((double)pDisplay->LcdTimings->X * (double)12.5) / (double)100), (((double)pDisplay->LcdTimings->Y * (double)12.5) / (double)100), 0x0000);
 	while(ar1020_touch(structure) == false);
-	TouchPaintPoint(pDisplay, (double)pDisplay->raster_timings->X - (((double)pDisplay->raster_timings->X * (double)12.5) / (double)100), (((double)pDisplay->raster_timings->Y * (double)12.5) / (double)100), controls_color.Scren);
+	TouchPaintPoint(pDisplay, (double)pDisplay->LcdTimings->X - (((double)pDisplay->LcdTimings->X * (double)12.5) / (double)100), (((double)pDisplay->LcdTimings->Y * (double)12.5) / (double)100), controls_color.Scren);
 
-	TouchPaintPoint(pDisplay, (double)pDisplay->raster_timings->X - (((double)pDisplay->raster_timings->X * (double)12.5) / (double)100), (double)pDisplay->raster_timings->Y - (((double)pDisplay->raster_timings->Y * (double)12.5) / (double)100), 0x0000);
+	TouchPaintPoint(pDisplay, (double)pDisplay->LcdTimings->X - (((double)pDisplay->LcdTimings->X * (double)12.5) / (double)100), (double)pDisplay->LcdTimings->Y - (((double)pDisplay->LcdTimings->Y * (double)12.5) / (double)100), 0x0000);
 	while(ar1020_touch(structure) == false);
-	TouchPaintPoint(pDisplay, (double)pDisplay->raster_timings->X - (((double)pDisplay->raster_timings->X * (double)12.5) / (double)100), (double)pDisplay->raster_timings->Y - (((double)pDisplay->raster_timings->Y * (double)12.5) / (double)100), controls_color.Scren);
+	TouchPaintPoint(pDisplay, (double)pDisplay->LcdTimings->X - (((double)pDisplay->LcdTimings->X * (double)12.5) / (double)100), (double)pDisplay->LcdTimings->Y - (((double)pDisplay->LcdTimings->Y * (double)12.5) / (double)100), controls_color.Scren);
 
-	TouchPaintPoint(pDisplay,  (((double)pDisplay->raster_timings->X * (double)12.5) / (double)100), (double)pDisplay->raster_timings->Y - (((double)pDisplay->raster_timings->Y * (double)12.5) / (double)100), 0x0000);
+	TouchPaintPoint(pDisplay,  (((double)pDisplay->LcdTimings->X * (double)12.5) / (double)100), (double)pDisplay->LcdTimings->Y - (((double)pDisplay->LcdTimings->Y * (double)12.5) / (double)100), 0x0000);
 	while(ar1020_touch(structure) == false);
-	TouchPaintPoint(pDisplay,  (((double)pDisplay->raster_timings->X * (double)12.5) / (double)100), (double)pDisplay->raster_timings->Y - (((double)pDisplay->raster_timings->Y * (double)12.5) / (double)100), controls_color.Scren);
+	TouchPaintPoint(pDisplay,  (((double)pDisplay->LcdTimings->X * (double)12.5) / (double)100), (double)pDisplay->LcdTimings->Y - (((double)pDisplay->LcdTimings->Y * (double)12.5) / (double)100), controls_color.Scren);
 	return true;
 }
 //#####################################################

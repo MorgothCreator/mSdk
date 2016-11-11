@@ -29,7 +29,7 @@ volatile unsigned int ignored_touch = analog_touch_filter_level;
 /*#####################################################*/
 static void TouchScreenIsr(void);
 
-extern new_screen* ScreenRander;
+extern LcdTouch_t* AnalogTouchScreen;;
 /*#####################################################*/
 /*
 ** Enables Touch Screen Interrupt
@@ -116,7 +116,7 @@ static void TouchScreenIsr(void)
               prevVal_y = ready1;
               wordsLeft = TSCADCFIFOWordCountRead(SOC_ADC_TSC_0_REGS, TSCADC_FIFO_1);
          }
-         if(ScreenRander->touch_invert_x)
+         if(AnalogTouchScreen->flip_x)
          {
 			 x_data[dbidx] = 4095 - xdata;
          }
@@ -124,7 +124,7 @@ static void TouchScreenIsr(void)
          {
 			 x_data[dbidx] = xdata;
          }
-         if(ScreenRander->touch_invert_y)
+         if(AnalogTouchScreen->flip_y)
          {
 			 y_data[dbidx] = 4095 - ydata;
          }

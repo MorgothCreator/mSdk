@@ -199,7 +199,7 @@ void mi0283_reset(void* LcdStruct)
     write(LcdStruct, 0x1F);
  	gpio_out(Struct->LCD_DISPLAY_CS, 1);
 
- 	mi0283_screen_set_area(LcdStruct, 0, 0, _LcdStruct->raster_timings->X, _LcdStruct->raster_timings->Y);
+ 	mi0283_screen_set_area(LcdStruct, 0, 0, _LcdStruct->LcdTimings->X, _LcdStruct->LcdTimings->Y);
 
      //WindowMax ();
 
@@ -298,8 +298,9 @@ bool mi0283_open(void *pDisplay)
 	gpio_out(Struct->LCD_TOUCH_DRIVE_A, 0);
 	gpio_out(Struct->LCD_TOUCH_DRIVE_B, 0);
 	mi0283_reset(LcdStruct);
-	LcdStruct->Orientation = 0;
 	mi0283_set_orientation(LcdStruct);
+	LcdStruct->sClipRegion.sXMax = LcdStruct->LcdTimings->X;
+	LcdStruct->sClipRegion.sYMax = LcdStruct->LcdTimings->Y;
 	return true;
 }
 //#######################################################################################
@@ -319,52 +320,36 @@ bool mi0283_set_orientation(tDisplay* LcdStruct)
 	MI0283_t *Struct = (MI0283_t *)LcdStruct->UserData;
 	bool Tmp = false;
     wr_cmd(LcdStruct, 0x36);                     // MEMORY_ACCESS_CONTROL
-	switch(LcdStruct->Orientation)
+	switch(LcdStruct->LcdTimings->orientation)
 	{
-		case 0:
-			LcdStruct->raster_timings->X  = 240;
-			LcdStruct->raster_timings->Y = 320;
+		case LCD_ORIENTATION_PORTRAIT:
 		    write(LcdStruct, 0x48);
 			//lcd_rw_cmd(LcdStruct, 0x36, 0x48); //MY=1 MX=0 MV=1 ML=0 BGR=1
 			Tmp = true;
 			break;
 
-		case 90:
-			LcdStruct->raster_timings->X  = 320;
-			LcdStruct->raster_timings->Y = 240;
+		case LCD_ORIENTATION_LANDSCAPE:
 		    write(LcdStruct, 0x28);
 			//lcd_rw_cmd(LcdStruct, 0x36, 0x28); //MY=0 MX=0 MV=0 ML=0 BGR=1
 			Tmp = true;
 			break;
 
-		case 180:
-			LcdStruct->raster_timings->X  = 240;
-			LcdStruct->raster_timings->Y = 320;
+		case LCD_ORIENTATION_PORTRAIT_FLIP:
 		    write(LcdStruct, 0x88);
 			//lcd_rw_cmd(LcdStruct, 0x36, 0x88); //MY=0 MX=1 MV=1 ML=0 BGR=1
 			Tmp = true;
 			break;
 
-		case 270:
-			LcdStruct->raster_timings->X  = 320;
-			LcdStruct->raster_timings->Y = 240;
+		case LCD_ORIENTATION_LANDSCAPE_FLIP:
 		    write(LcdStruct, 0xE8);
 			//lcd_rw_cmd(LcdStruct, 0x36, 0xE8); //MY=1 MX=0 MV=1 ML=0 BGR=1
 			Tmp = true;
 			break;
-		default:
-			LcdStruct->Orientation = 90;
-			LcdStruct->raster_timings->X  = 320;
-			LcdStruct->raster_timings->Y = 240;
-		    write(LcdStruct, 0x48);
-			//lcd_rw_cmd(LcdStruct, 0x36, 0x48); //MY=0 MX=0 MV=0 ML=0 BGR=1
-			Tmp = true;
-			break;
 	}
  	gpio_out(Struct->LCD_DISPLAY_CS, 1);
-	LcdStruct->sClipRegion.sXMax = LcdStruct->raster_timings->X;
-	LcdStruct->sClipRegion.sYMax = LcdStruct->raster_timings->Y;
-	mi0283_screen_set_area(LcdStruct, 0, 0, LcdStruct->raster_timings->X,LcdStruct->raster_timings->Y);
+	LcdStruct->sClipRegion.sXMax = LcdStruct->LcdTimings->X;
+	LcdStruct->sClipRegion.sYMax = LcdStruct->LcdTimings->Y;
+	mi0283_screen_set_area(LcdStruct, 0, 0, LcdStruct->LcdTimings->X,LcdStruct->LcdTimings->Y);
 	return Tmp;
 }
 //#######################################################################################
@@ -372,7 +357,7 @@ void mi0283_send_pixels(tDisplay* LcdStruct, unsigned long PixelsNumber, unsigne
 {
 	MI0283_t *Struct = (MI0283_t *)LcdStruct->UserData;
 	//if(PixelsNumber < 0) return;
-	if(PixelsNumber > (unsigned long)(((unsigned long)LcdStruct->raster_timings->Y * (unsigned long)LcdStruct->raster_timings->X) << 1)) return;
+	if(PixelsNumber > (unsigned long)(((unsigned long)LcdStruct->LcdTimings->Y * (unsigned long)LcdStruct->LcdTimings->X) << 1)) return;
 	//unsigned long cnt = 0;
 	unsigned int GPIORW = Struct->LCD_DISPLAY_PMWR->BaseAddr;
 	unsigned int GPIODAT = Struct->LCD_DATA->BaseAddr;
@@ -396,7 +381,7 @@ void mi0283_put_pixel16(void *pDisplay, signed int X_Coordonate, signed int Y_Co
 	//MI0283_t *Struct = (MI0283_t *)LcdStruct->UserData;
 	//lcd_cursor(X_Coordonate,Y_Coordonate);
 	if(X_Coordonate < LcdStruct->sClipRegion.sXMin || X_Coordonate >= LcdStruct->sClipRegion.sXMax || Y_Coordonate < LcdStruct->sClipRegion.sYMin || Y_Coordonate >= LcdStruct->sClipRegion.sYMax) return;
-	if(X_Coordonate >= LcdStruct->raster_timings->X || X_Coordonate < 0 || Y_Coordonate >= LcdStruct->raster_timings->Y || Y_Coordonate < 0) return;
+	if(X_Coordonate >= LcdStruct->LcdTimings->X || X_Coordonate < 0 || Y_Coordonate >= LcdStruct->LcdTimings->Y || Y_Coordonate < 0) return;
 	
 	mi0283_screen_set_area(LcdStruct, X_Coordonate, Y_Coordonate, X_Coordonate, Y_Coordonate);
 	wr_cmd(LcdStruct, 0x2C);
@@ -415,7 +400,7 @@ void mi0283_put_pixel24(void *pDisplay, signed int X_Coordonate, signed int Y_Co
 	tDisplay* LcdStruct = (tDisplay *) pDisplay;
 	//MI0283_t *Struct = (MI0283_t *)LcdStruct->UserData;
 	if(X_Coordonate < LcdStruct->sClipRegion.sXMin || X_Coordonate >= LcdStruct->sClipRegion.sXMax || Y_Coordonate < LcdStruct->sClipRegion.sYMin || Y_Coordonate >= LcdStruct->sClipRegion.sYMax) return;
-	if(X_Coordonate >= LcdStruct->raster_timings->X || X_Coordonate < 0 || Y_Coordonate >= LcdStruct->raster_timings->Y || Y_Coordonate < 0) return;
+	if(X_Coordonate >= LcdStruct->LcdTimings->X || X_Coordonate < 0 || Y_Coordonate >= LcdStruct->LcdTimings->Y || Y_Coordonate < 0) return;
 	mi0283_lcd_cursor(LcdStruct, X_Coordonate,Y_Coordonate);
 	unsigned short TempColor = ((Red>>3)&0b11111) | ((Green<<3)&0b11111100000) | ((Blue<<8)&0b1111100000000000);
 	wr_cmd(LcdStruct, 0x2C);
@@ -534,5 +519,5 @@ void mi0283_put_vertical_line(void *pDisplay, signed int Y1, signed int Y2, sign
 void  mi0283_clear(void *pDisplay, unsigned int color)
 {
 	tDisplay* LcdStruct = (tDisplay *) pDisplay;
-	LcdStruct->lcd_func.put_rectangle(pDisplay, 0, 0, LcdStruct->raster_timings->X, LcdStruct->raster_timings->Y, true, color);
+	LcdStruct->lcd_func.put_rectangle(pDisplay, 0, 0, LcdStruct->LcdTimings->X, LcdStruct->LcdTimings->Y, true, color);
 }

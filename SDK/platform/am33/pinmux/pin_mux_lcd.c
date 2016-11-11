@@ -366,8 +366,8 @@ unsigned int pin_mux_lcd_24bit(void)
 
 unsigned int LCDPinMuxSetup(void)
 {
-	if(ScreenRander->raster_timings->bus_size == 24) return pin_mux_lcd_24bit();
-	else if(ScreenRander->raster_timings->bus_size == 16) return pin_mux_lcd_16bit();
+	if(ScreenRander->LcdTimings->bus_size == 24) return pin_mux_lcd_24bit();
+	else if(ScreenRander->LcdTimings->bus_size == 16) return pin_mux_lcd_16bit();
 	else return 0;
 }
 /**********************************************/

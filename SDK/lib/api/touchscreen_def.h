@@ -64,8 +64,8 @@ typedef struct LcdTouch_Struct
 	double LcdTouch_D_Calibration_Value;
 	double LcdTouch_L_Calibration_Value;
 	double LcdTouch_MID_Calibration_Value;
-	double screen_max_x;
-	double screen_max_y;
+	//double screen_max_x;
+	//double screen_max_y;
 	unsigned int touch_max_x;
 	unsigned int touch_max_y;
 	unsigned int press_max;

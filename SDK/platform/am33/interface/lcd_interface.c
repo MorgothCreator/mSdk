@@ -118,16 +118,16 @@ bool SetUpLCD(tDisplay* LcdStruct)
 {
 	ScreenRander = LcdStruct;
 
-	LcdStruct->sClipRegion.sXMax = LcdStruct->raster_timings->X;
-	LcdStruct->sClipRegion.sYMax = LcdStruct->raster_timings->Y;
+	LcdStruct->sClipRegion.sXMax = LcdStruct->LcdTimings->X;
+	LcdStruct->sClipRegion.sYMax = LcdStruct->LcdTimings->Y;
 #ifdef gcc
-	LcdStruct->DisplayData = (volatile unsigned int *)malloc((LcdStruct->raster_timings->X * LcdStruct->raster_timings->Y * sizeof(LcdStruct->DisplayData[0])) + (LcdStruct->raster_timings->palete_len * sizeof(LcdStruct->DisplayData[0])));
+	LcdStruct->DisplayData = (volatile unsigned int *)malloc((LcdStruct->LcdTimings->X * LcdStruct->LcdTimings->Y * sizeof(LcdStruct->DisplayData[0])) + (LcdStruct->LcdTimings->palete_len * sizeof(LcdStruct->DisplayData[0])));
 #else
 	LcdStruct->DisplayData = (volatile unsigned int *)memalign(sizeof(LcdStruct->DisplayData[0]) << 3, (LcdStruct->Width * LcdStruct->Height * sizeof(LcdStruct->DisplayData[0])) +  + (palete_raster_len * sizeof(LcdStruct->DisplayData[0])));
 #endif
     LCDAINTCConfigure();
 
-    DisplayPLLInit(LcdStruct->raster_timings->ref_clk, LcdStruct->raster_timings->pll_m, LcdStruct->raster_timings->pll_n, LcdStruct->raster_timings->pll_m2);
+    DisplayPLLInit(LcdStruct->LcdTimings->ref_clk, LcdStruct->LcdTimings->pll_m, LcdStruct->LcdTimings->pll_n, LcdStruct->LcdTimings->pll_m2);
     /* Enable clock for LCD Module */
     LCDModuleClkConfig();
 
@@ -144,7 +144,7 @@ bool SetUpLCD(tDisplay* LcdStruct)
     RasterDisable(SOC_LCDC_0_REGS);
 
     /* Configure the pclk */
-    RasterClkConfig(SOC_LCDC_0_REGS, LcdStruct->raster_timings->raster_clk, ((LcdStruct->raster_timings->ref_clk / LcdStruct->raster_timings->pll_n) * LcdStruct->raster_timings->pll_m) * LcdStruct->raster_timings->pll_m2);
+    RasterClkConfig(SOC_LCDC_0_REGS, LcdStruct->LcdTimings->raster_clk, ((LcdStruct->LcdTimings->ref_clk / LcdStruct->LcdTimings->pll_n) * LcdStruct->LcdTimings->pll_m) * LcdStruct->LcdTimings->pll_m2);
 
     /* Configuring DMA of LCD controller */
     _RasterDMAConfig(SOC_LCDC_0_REGS, RASTER_DOUBLE_FRAME_BUFFER,
@@ -167,22 +167,22 @@ bool SetUpLCD(tDisplay* LcdStruct)
                                             RASTER_AC_BIAS_HIGH     , 0, 255);
 
 	/* Configuring horizontal timing parameter */
-			RasterHparamConfig(SOC_LCDC_0_REGS, LcdStruct->raster_timings->X, LcdStruct->raster_timings->hsw, LcdStruct->raster_timings->hfp, LcdStruct->raster_timings->hbp);
+			RasterHparamConfig(SOC_LCDC_0_REGS, LcdStruct->LcdTimings->X, LcdStruct->LcdTimings->hsw, LcdStruct->LcdTimings->hfp, LcdStruct->LcdTimings->hbp);
 
 	/* Configuring vertical timing parameters */
-			RasterVparamConfig(SOC_LCDC_0_REGS, LcdStruct->raster_timings->Y, LcdStruct->raster_timings->vsw, LcdStruct->raster_timings->vfp, LcdStruct->raster_timings->vbp);
+			RasterVparamConfig(SOC_LCDC_0_REGS, LcdStruct->LcdTimings->Y, LcdStruct->LcdTimings->vsw, LcdStruct->LcdTimings->vfp, LcdStruct->LcdTimings->vbp);
 
     RasterFIFODMADelayConfig(SOC_LCDC_0_REGS, 128);
 
     /* Configuring the base ceiling */
     RasterDMAFBConfig(SOC_LCDC_0_REGS,
                       (unsigned int)LcdStruct->DisplayData,
-                      (unsigned int)LcdStruct->DisplayData + (LcdStruct->raster_timings->X * LcdStruct->raster_timings->Y * sizeof(LcdStruct->DisplayData[0])) + (LcdStruct->raster_timings->palete_len * sizeof(LcdStruct->DisplayData[0])) - 2,
+                      (unsigned int)LcdStruct->DisplayData + (LcdStruct->LcdTimings->X * LcdStruct->LcdTimings->Y * sizeof(LcdStruct->DisplayData[0])) + (LcdStruct->LcdTimings->palete_len * sizeof(LcdStruct->DisplayData[0])) - 2,
                       0);
 
     RasterDMAFBConfig(SOC_LCDC_0_REGS,
                       (unsigned int)LcdStruct->DisplayData,
-                      (unsigned int)LcdStruct->DisplayData + (LcdStruct->raster_timings->X * LcdStruct->raster_timings->Y * sizeof(LcdStruct->DisplayData[0])) + (LcdStruct->raster_timings->palete_len * sizeof(LcdStruct->DisplayData[0])) - 2,
+                      (unsigned int)LcdStruct->DisplayData + (LcdStruct->LcdTimings->X * LcdStruct->LcdTimings->Y * sizeof(LcdStruct->DisplayData[0])) + (LcdStruct->LcdTimings->palete_len * sizeof(LcdStruct->DisplayData[0])) - 2,
                       1);
 
     /* Enable End of frame0/frame1 interrupt */
@@ -226,8 +226,7 @@ void _screen_backlight_on(tDisplay *pDisplay)
 	}
 	else
 	{
-		if(pDisplay->invert_backlight) gpio_out(pDisplay->BackLight, 0);
-		else gpio_out(pDisplay->BackLight, 1);
+		gpio_out(pDisplay->BackLight, 1);
 	}
 }
 //#######################################################################################
@@ -240,40 +239,39 @@ void _screen_backlight_off(tDisplay *pDisplay)
 	}
 	else
 	{
-		if(pDisplay->invert_backlight) gpio_out(pDisplay->BackLight, 1);
-		else gpio_out(pDisplay->BackLight, 0);
+		gpio_out(pDisplay->BackLight, 0);
 	}
 }
 //#######################################################################################
 bool _screen_copy(tDisplay *pDisplayTo, tDisplay *pDisplayFrom, bool put_cursor, signed int X, signed int Y, unsigned int color)
 {
-	if(pDisplayTo->raster_timings->X != pDisplayFrom->raster_timings->X || pDisplayTo->raster_timings->Y != pDisplayFrom->raster_timings->Y) return false;
-	CacheDataCleanBuff((unsigned int)pDisplayFrom->DisplayData, (pDisplayFrom->raster_timings->X * pDisplayFrom->raster_timings->Y * sizeof(pDisplayFrom->DisplayData[0])) + (pDisplayFrom->raster_timings->palete_len * sizeof(pDisplayFrom->DisplayData[0])));
+	if(pDisplayTo->LcdTimings->X != pDisplayFrom->LcdTimings->X || pDisplayTo->LcdTimings->Y != pDisplayFrom->LcdTimings->Y) return false;
+	CacheDataCleanBuff((unsigned int)pDisplayFrom->DisplayData, (pDisplayFrom->LcdTimings->X * pDisplayFrom->LcdTimings->Y * sizeof(pDisplayFrom->DisplayData[0])) + (pDisplayFrom->LcdTimings->palete_len * sizeof(pDisplayFrom->DisplayData[0])));
 	signed int LineCnt = 0;
-	volatile unsigned int* ScreenBuff = pDisplayTo->DisplayData + pDisplayTo->raster_timings->palete_len;
-	volatile unsigned int* _ScreenBuff = pDisplayFrom->DisplayData + pDisplayTo->raster_timings->palete_len;
+	volatile unsigned int* ScreenBuff = pDisplayTo->DisplayData + pDisplayTo->LcdTimings->palete_len;
+	volatile unsigned int* _ScreenBuff = pDisplayFrom->DisplayData + pDisplayTo->LcdTimings->palete_len;
 
 #if 1
-	for(; LineCnt < pDisplayTo->raster_timings->Y; LineCnt ++)
+	for(; LineCnt < pDisplayTo->LcdTimings->Y; LineCnt ++)
 	{
-		memcpy((void *)(ScreenBuff + (pDisplayFrom->raster_timings->X * LineCnt)), (void *)(_ScreenBuff + (pDisplayFrom->raster_timings->X * LineCnt)), (sizeof(ScreenBuff[0]) * pDisplayTo->raster_timings->X));
+		memcpy((void *)(ScreenBuff + (pDisplayFrom->LcdTimings->X * LineCnt)), (void *)(_ScreenBuff + (pDisplayFrom->LcdTimings->X * LineCnt)), (sizeof(ScreenBuff[0]) * pDisplayTo->LcdTimings->X));
 		if(put_cursor == true && LineCnt >= Y && LineCnt <= Y + 2)
 		{
 			unsigned int cnt_x = X;
 			for(;cnt_x < X + 2; cnt_x++) _put_pixel(pDisplayTo, cnt_x, LineCnt, color);
 		}
-		CacheDataCleanInvalidateBuff((unsigned int)((unsigned int*)(ScreenBuff + (pDisplayFrom->raster_timings->X * LineCnt))), (sizeof(ScreenBuff[0]) * pDisplayTo->raster_timings->X) + 64);
+		CacheDataCleanInvalidateBuff((unsigned int)((unsigned int*)(ScreenBuff + (pDisplayFrom->LcdTimings->X * LineCnt))), (sizeof(ScreenBuff[0]) * pDisplayTo->LcdTimings->X) + 64);
 	}
 #else
 
 #if 1
 	EDMA3CCPaRAMEntry paramSet;
 
-    paramSet.srcBIdx    = (pDisplayFrom->raster_timings->X * sizeof(pDisplayFrom->DisplayData[0]));
+    paramSet.srcBIdx    = (pDisplayFrom->LcdTimings->X * sizeof(pDisplayFrom->DisplayData[0]));
     paramSet.srcCIdx    = 1;
-    paramSet.destBIdx   = (pDisplayFrom->raster_timings->X * sizeof(pDisplayFrom->DisplayData[0]));
+    paramSet.destBIdx   = (pDisplayFrom->LcdTimings->X * sizeof(pDisplayFrom->DisplayData[0]));
     paramSet.destCIdx   = 1;
-    paramSet.aCnt       = (pDisplayFrom->raster_timings->X * sizeof(pDisplayFrom->DisplayData[0]));
+    paramSet.aCnt       = (pDisplayFrom->LcdTimings->X * sizeof(pDisplayFrom->DisplayData[0]));
     paramSet.bCnt       = 1;
     paramSet.cCnt       = 1;
     paramSet.bCntReload = 0x0;
@@ -283,11 +281,11 @@ bool _screen_copy(tDisplay *pDisplayTo, tDisplay *pDisplayFrom, bool put_cursor,
     int dma_channel = LCD_DMA_TRANSFER_CHANNEL;
 
     paramSet.opt |= (1 << 2) | (1 << 3) | (1 << EDMA3CC_OPT_TCINTEN_SHIFT) | ((dma_channel << EDMA3CC_OPT_TCC_SHIFT) & EDMA3CC_OPT_TCC);
-	for(; LineCnt < pDisplayTo->raster_timings->Y; LineCnt ++)
+	for(; LineCnt < pDisplayTo->LcdTimings->Y; LineCnt ++)
 	{
-		//memcpy((void *)(ScreenBuff + (pDisplayFrom->raster_timings->X * LineCnt)), (void *)(_ScreenBuff + (pDisplayFrom->raster_timings->X * LineCnt)), (sizeof(ScreenBuff[0]) * pDisplayTo->raster_timings->X));
-	    paramSet.srcAddr    = (unsigned int)(_ScreenBuff + (pDisplayFrom->raster_timings->X * LineCnt));
-	    paramSet.destAddr   = (unsigned int)(ScreenBuff + (pDisplayFrom->raster_timings->X * LineCnt));
+		//memcpy((void *)(ScreenBuff + (pDisplayFrom->LcdTimings->X * LineCnt)), (void *)(_ScreenBuff + (pDisplayFrom->LcdTimings->X * LineCnt)), (sizeof(ScreenBuff[0]) * pDisplayTo->LcdTimings->X));
+	    paramSet.srcAddr    = (unsigned int)(_ScreenBuff + (pDisplayFrom->LcdTimings->X * LineCnt));
+	    paramSet.destAddr   = (unsigned int)(ScreenBuff + (pDisplayFrom->LcdTimings->X * LineCnt));
 	    /* configure PaRAM Set */
 	    EDMA3SetPaRAM(EDMA_INST_BASE, dma_channel, &paramSet);
 	    /* Enable the transfer */
@@ -301,7 +299,7 @@ bool _screen_copy(tDisplay *pDisplayTo, tDisplay *pDisplayFrom, bool put_cursor,
 		{
 			unsigned int cnt_x = X;
 			for(;cnt_x < X + 2; cnt_x++) _put_pixel(pDisplayTo, cnt_x, LineCnt, color);
-			CacheDataCleanInvalidateBuff((unsigned int)((unsigned int*)(ScreenBuff + (pDisplayFrom->raster_timings->X * LineCnt))), (sizeof(ScreenBuff[0]) * pDisplayTo->raster_timings->X) + 64);
+			CacheDataCleanInvalidateBuff((unsigned int)((unsigned int*)(ScreenBuff + (pDisplayFrom->LcdTimings->X * LineCnt))), (sizeof(ScreenBuff[0]) * pDisplayTo->LcdTimings->X) + 64);
 		}
 	}
 #else
@@ -310,12 +308,12 @@ bool _screen_copy(tDisplay *pDisplayTo, tDisplay *pDisplayFrom, bool put_cursor,
 
     paramSet.srcAddr    = (unsigned int)_ScreenBuff;
     paramSet.destAddr   = (unsigned int)ScreenBuff;
-    paramSet.srcBIdx    = (pDisplayFrom->raster_timings->X * sizeof(pDisplayFrom->DisplayData[0]));
-    paramSet.srcCIdx    = pDisplayFrom->raster_timings->Y;
-    paramSet.destBIdx   = (pDisplayFrom->raster_timings->X * sizeof(pDisplayFrom->DisplayData[0]));
-    paramSet.destCIdx   = pDisplayFrom->raster_timings->Y;
-    paramSet.aCnt       = (pDisplayFrom->raster_timings->X * sizeof(pDisplayFrom->DisplayData[0]));
-    paramSet.bCnt       = pDisplayFrom->raster_timings->Y;
+    paramSet.srcBIdx    = (pDisplayFrom->LcdTimings->X * sizeof(pDisplayFrom->DisplayData[0]));
+    paramSet.srcCIdx    = pDisplayFrom->LcdTimings->Y;
+    paramSet.destBIdx   = (pDisplayFrom->LcdTimings->X * sizeof(pDisplayFrom->DisplayData[0]));
+    paramSet.destCIdx   = pDisplayFrom->LcdTimings->Y;
+    paramSet.aCnt       = (pDisplayFrom->LcdTimings->X * sizeof(pDisplayFrom->DisplayData[0]));
+    paramSet.bCnt       = pDisplayFrom->LcdTimings->Y;
     paramSet.cCnt       = 1;
     paramSet.bCntReload = 0x0;
     paramSet.linkAddr   = 0xffff;
@@ -339,7 +337,7 @@ bool _screen_copy(tDisplay *pDisplayTo, tDisplay *pDisplayFrom, bool put_cursor,
 	{
 		unsigned int cnt_x = X;
 		for(;cnt_x < X + 2; cnt_x++) _put_pixel(pDisplayTo, cnt_x, LineCnt, color);
-		CacheDataCleanInvalidateBuff((unsigned int)((unsigned int*)(ScreenBuff + (pDisplayFrom->raster_timings->X * LineCnt))), (sizeof(ScreenBuff[0]) * pDisplayTo->raster_timings->X) + 64);
+		CacheDataCleanInvalidateBuff((unsigned int)((unsigned int*)(ScreenBuff + (pDisplayFrom->LcdTimings->X * LineCnt))), (sizeof(ScreenBuff[0]) * pDisplayTo->LcdTimings->X) + 64);
 	}
 #endif
 #endif
@@ -363,7 +361,7 @@ void _box_cache_clean(tDisplay *pDisplay, signed int x_start, signed int y_start
 	for(; LineCnt < y_end; LineCnt++)
 	{
 		if(LineCnt >= pDisplay->sClipRegion.sYMax) return;
-		CacheDataCleanInvalidateBuff((unsigned int)((unsigned int*)(ScreenBuff + (pDisplay->raster_timings->X * LineCnt))), width_to_refresh);
+		CacheDataCleanInvalidateBuff((unsigned int)((unsigned int*)(ScreenBuff + (pDisplay->LcdTimings->X * LineCnt))), width_to_refresh);
 	}
 }
 //#######################################################################################
@@ -372,7 +370,7 @@ void _put_rectangle(tDisplay *pDisplay, signed int x_start, signed int y_start, 
 	signed int x_end = x_start + x_len ,y_end = y_start + y_len;
 	if(x_start >= pDisplay->sClipRegion.sXMax || y_start >= pDisplay->sClipRegion.sYMax || x_end < pDisplay->sClipRegion.sXMin || y_end < pDisplay->sClipRegion.sYMin) return;
 	register signed int LineCnt = y_start;
-	volatile unsigned int* ScreenBuff = pDisplay->DisplayData + pDisplay->raster_timings->palete_len;
+	volatile unsigned int* ScreenBuff = pDisplay->DisplayData + pDisplay->LcdTimings->palete_len;
 	unsigned int _color = color<<8;
 	if(fill)
 	{
@@ -390,7 +388,7 @@ void _put_rectangle(tDisplay *pDisplay, signed int x_start, signed int y_start, 
 			register int x = _x_start;
 			for( ; x < _x_end ; x++)
 			{
-				ScreenBuff[x + (pDisplay->raster_timings->X * LineCnt)] = _color;
+				ScreenBuff[x + (pDisplay->LcdTimings->X * LineCnt)] = _color;
 			}
 		}
 #else
@@ -400,10 +398,10 @@ void _put_rectangle(tDisplay *pDisplay, signed int x_start, signed int y_start, 
 	    CacheDataCleanBuff((unsigned int)&_color, sizeof(_color));
 
 	    paramSet.srcAddr    = (unsigned int)&_color;
-	    paramSet.destAddr   = (unsigned int)ScreenBuff + (_x_start * sizeof(pDisplay->DisplayData[0])) + (pDisplay->raster_timings->X * LineCnt * sizeof(pDisplay->DisplayData[0]));
+	    paramSet.destAddr   = (unsigned int)ScreenBuff + (_x_start * sizeof(pDisplay->DisplayData[0])) + (pDisplay->LcdTimings->X * LineCnt * sizeof(pDisplay->DisplayData[0]));
 	    paramSet.srcBIdx    = 0;
 	    paramSet.srcCIdx    = 0;
-	    paramSet.destBIdx   = pDisplay->raster_timings->X * sizeof(pDisplay->DisplayData[0]);
+	    paramSet.destBIdx   = pDisplay->LcdTimings->X * sizeof(pDisplay->DisplayData[0]);
 	    paramSet.destCIdx   = 0;
 	    paramSet.aCnt       = sizeof(pDisplay->DisplayData[0]) * (_x_end - _x_start);
 	    paramSet.bCnt       = y_end - LineCnt;
@@ -436,7 +434,7 @@ void _put_rectangle(tDisplay *pDisplay, signed int x_start, signed int y_start, 
 	    paramSet.srcBIdx    = 0;
 	    paramSet.srcCIdx    = 0;
 	    paramSet.destBIdx   = sizeof(pDisplay->DisplayData[0]);
-	    paramSet.destCIdx   = pDisplay->raster_timings->X * sizeof(pDisplay->DisplayData[0]);
+	    paramSet.destCIdx   = pDisplay->LcdTimings->X * sizeof(pDisplay->DisplayData[0]);
 	    paramSet.aCnt       = sizeof(pDisplay->DisplayData[0]);
 	    paramSet.bCnt       = _x_end - _x_start;
 	    paramSet.cCnt       = 1;//y_end - LineCnt;
@@ -450,7 +448,7 @@ void _put_rectangle(tDisplay *pDisplay, signed int x_start, signed int y_start, 
 	    for( ; LineCnt < y_end; LineCnt++)
 		{
 			if(LineCnt >= pDisplay->sClipRegion.sYMax) return;
-		    paramSet.destAddr   = (unsigned int)ScreenBuff + ((_x_start - 1) * sizeof(pDisplay->DisplayData[0])) + (pDisplay->raster_timings->X * LineCnt * sizeof(pDisplay->DisplayData[0]));
+		    paramSet.destAddr   = (unsigned int)ScreenBuff + ((_x_start - 1) * sizeof(pDisplay->DisplayData[0])) + (pDisplay->LcdTimings->X * LineCnt * sizeof(pDisplay->DisplayData[0]));
 		    /* configure PaRAM Set */
 		    EDMA3SetPaRAM(EDMA_INST_BASE, dma_channel, &paramSet);
 		    /* Enable the transfer */
@@ -472,7 +470,7 @@ void _put_rectangle(tDisplay *pDisplay, signed int x_start, signed int y_start, 
 	{
 		for(LineCnt = _x_start ; LineCnt < _x_end ; LineCnt++)
 		{
-			ScreenBuff[LineCnt + (pDisplay->raster_timings->X * y_start)] = _color;
+			ScreenBuff[LineCnt + (pDisplay->LcdTimings->X * y_start)] = _color;
 		}
 	}
 
@@ -480,7 +478,7 @@ void _put_rectangle(tDisplay *pDisplay, signed int x_start, signed int y_start, 
 	{
 		for(LineCnt = _x_start ; LineCnt < _x_end ; LineCnt++)
 		{
-			ScreenBuff[LineCnt + (pDisplay->raster_timings->X * (y_end - 1))] = _color;
+			ScreenBuff[LineCnt + (pDisplay->LcdTimings->X * (y_end - 1))] = _color;
 		}
 	}
 
@@ -492,7 +490,7 @@ void _put_rectangle(tDisplay *pDisplay, signed int x_start, signed int y_start, 
 	{
 		for(LineCnt = _y_start ; LineCnt < _y_end ; LineCnt++)
 		{
-			ScreenBuff[x_start + (pDisplay->raster_timings->X * LineCnt)] = _color;
+			ScreenBuff[x_start + (pDisplay->LcdTimings->X * LineCnt)] = _color;
 		}
 	}
 
@@ -500,7 +498,7 @@ void _put_rectangle(tDisplay *pDisplay, signed int x_start, signed int y_start, 
 	{
 		for(LineCnt = _y_start ; LineCnt < _y_end ; LineCnt++)
 		{
-			ScreenBuff[(x_end - 1) + (pDisplay->raster_timings->X * LineCnt)] = _color;
+			ScreenBuff[(x_end - 1) + (pDisplay->LcdTimings->X * LineCnt)] = _color;
 		}
 	}
 
@@ -511,7 +509,7 @@ void _put_pixel(tDisplay *pDisplay, signed int X, signed int Y, unsigned int col
 {
 	if(X >= pDisplay->sClipRegion.sXMin && Y >= pDisplay->sClipRegion.sYMin && X < pDisplay->sClipRegion.sXMax && Y < pDisplay->sClipRegion.sYMax)
 	{
-		pDisplay->DisplayData[X + pDisplay->raster_timings->palete_len + (pDisplay->raster_timings->X * Y)] = color;
+		pDisplay->DisplayData[X + pDisplay->LcdTimings->palete_len + (pDisplay->LcdTimings->X * Y)] = color;
 	}
 }
 //#######################################################################################
@@ -538,7 +536,7 @@ void _screen_put_rgb_array_16(void *_pDisplay, unsigned short *rgb_buffer, unsig
 			color = RGB_TO_UINT((Tmp2<<3) & 0xF8, ((Tmp1<<5) | (Tmp2>>3)) & 0xFC, Tmp1 & 0xF8);
 			_put_pixel(pDisplay, x, y, color);
 		}
-		CacheDataCleanBuff((unsigned int)&pDisplay->DisplayData + pDisplay->raster_timings->palete_len + x1 + (pDisplay->raster_timings->X * y), width * 4);
+		CacheDataCleanBuff((unsigned int)&pDisplay->DisplayData + pDisplay->LcdTimings->palete_len + x1 + (pDisplay->LcdTimings->X * y), width * 4);
 	}
 	//lcd.dblbuf = dblbuf;
 }
@@ -553,14 +551,14 @@ void _screen_put_rgb_array_24(void *_pDisplay, unsigned char *rgb_buffer, unsign
 		if(y < pDisplay->sClipRegion.sYMin || y > pDisplay->sClipRegion.sYMax);
 		else
 		{
-			register unsigned int *DisplayStartLine = (unsigned int *)pDisplay->DisplayData + pDisplay->raster_timings->palete_len + x1 + (pDisplay->raster_timings->X * y);
+			register unsigned int *DisplayStartLine = (unsigned int *)pDisplay->DisplayData + pDisplay->LcdTimings->palete_len + x1 + (pDisplay->LcdTimings->X * y);
 			register unsigned int *DisplayEndLine = DisplayStartLine + width;
 			while(DisplayStartLine < DisplayEndLine)
 			{
 				*DisplayStartLine++= ((*Buff)<<24) | ((*(Buff+1))<<16) | ((*(Buff+2))<<8);
 				Buff+=3;
 			}
-			CacheDataCleanBuff((unsigned int)&pDisplay->DisplayData + pDisplay->raster_timings->palete_len + x1 + (pDisplay->raster_timings->X * y * 4), width * 4);
+			CacheDataCleanBuff((unsigned int)&pDisplay->DisplayData + pDisplay->LcdTimings->palete_len + x1 + (pDisplay->LcdTimings->X * y * 4), width * 4);
 		}
 	}
 }
@@ -578,11 +576,11 @@ void _screen_put_rgb_array_32(void *_pDisplay, unsigned char *rgb_buffer, unsign
 		if(y < pDisplay->sClipRegion.sYMin || y > pDisplay->sClipRegion.sYMax);
 		else
 		{
-			unsigned int *DisplayStartLine = (unsigned int *)pDisplay->DisplayData + pDisplay->raster_timings->palete_len + x1 + (pDisplay->raster_timings->X * y);
+			unsigned int *DisplayStartLine = (unsigned int *)pDisplay->DisplayData + pDisplay->LcdTimings->palete_len + x1 + (pDisplay->LcdTimings->X * y);
 			unsigned char *Buff = rgb_buffer + (width * _y * 4) - 1;
 			_y++;
 			memcpy((void*)(DisplayStartLine), (void*)(Buff), width * 4);
-			CacheDataCleanBuff((unsigned int)((unsigned int*)(pDisplay->DisplayData + pDisplay->raster_timings->palete_len + x1 + (pDisplay->raster_timings->X * y))), _width);
+			CacheDataCleanBuff((unsigned int)((unsigned int*)(pDisplay->DisplayData + pDisplay->LcdTimings->palete_len + x1 + (pDisplay->LcdTimings->X * y))), _width);
 		}
 	}
 }
@@ -639,6 +637,6 @@ void _screen_put_vertical_line(tDisplay *pDisplay, signed int Y1, signed int Y2,
 //#######################################################################################
 void _screen_clear(tDisplay *pDisplay, unsigned int color)
 {
-	_put_rectangle(pDisplay, 0, 0, pDisplay->raster_timings->X, pDisplay->raster_timings->Y, true, color);
-	_box_cache_clean(pDisplay, 0, 0, pDisplay->raster_timings->X, pDisplay->raster_timings->Y);
+	_put_rectangle(pDisplay, 0, 0, pDisplay->LcdTimings->X, pDisplay->LcdTimings->Y, true, color);
+	_box_cache_clean(pDisplay, 0, 0, pDisplay->LcdTimings->X, pDisplay->LcdTimings->Y);
 }

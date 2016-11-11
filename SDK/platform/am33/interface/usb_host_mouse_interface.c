@@ -180,10 +180,10 @@ UpdateCursor(int iXDelta, int iYDelta, int iWheel)
 {
 	MouseXPosition += iXDelta;
 	if(MouseXPosition < 0) MouseXPosition = 0;
-	if(MouseXPosition >= ScreenRander->raster_timings->X) MouseXPosition = ScreenRander->raster_timings->X - 1;
+	if(MouseXPosition >= ScreenRander->LcdTimings->X) MouseXPosition = ScreenRander->LcdTimings->X - 1;
 	MouseYPosition += iYDelta;
 	if(MouseYPosition < 0) MouseYPosition = 0;
-	if(MouseYPosition >= ScreenRander->raster_timings->Y) MouseYPosition = ScreenRander->raster_timings->Y - 1;
+	if(MouseYPosition >= ScreenRander->LcdTimings->Y) MouseYPosition = ScreenRander->LcdTimings->Y - 1;
 	MouseWheel += iWheel;
 }
 //*****************************************************************************
