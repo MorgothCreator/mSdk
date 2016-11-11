@@ -23,7 +23,11 @@
 #define MMCSD_API_H_
 /*#####################################################*/
 #include "gpio_def.h"
+#include "interface/hs_mmcsd_interface.h"
 /*#####################################################*/
+
+#define ctrlInfo uSdCardInfo
+
 typedef enum
 {
 	IsNoCard = 0,
@@ -32,7 +36,7 @@ typedef enum
 }mmcsd_type_e;
 /*#####################################################*/
 void mmcsd_init(unsigned int unit_nr, new_gpio* Cs, new_gpio* StatusLed);
-void mmcsd_idle(unsigned int unit_nr);
+bool mmcsd_idle(unsigned int unit_nr);
 void mmcsd_ioctl(unsigned int unit_nr, unsigned int  command,  unsigned int *buffer);
 unsigned int mmcsd_write(void *_ctrl, void *ptr, unsigned long block, unsigned int nblks);
 unsigned int mmcsd_read(void *_ctrl, void *ptr, unsigned long block, unsigned int nblks);

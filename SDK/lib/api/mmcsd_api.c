@@ -28,9 +28,9 @@ void mmcsd_init(unsigned int unit_nr, new_gpio* Cs, new_gpio* StatusLed)
 	_mmcsd_init(unit_nr, Cs, StatusLed);
 }
 /*#####################################################*/
-void mmcsd_idle(unsigned int unit_nr)
+bool mmcsd_idle(unsigned int unit_nr)
 {
-	_mmcsd_idle(unit_nr);
+	return _mmcsd_idle(unit_nr);
 }
 /*#####################################################*/
 void mmcsd_ioctl(unsigned int unit_nr, unsigned int  command,  unsigned int *buffer)
