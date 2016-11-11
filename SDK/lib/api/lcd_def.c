@@ -6,46 +6,196 @@
  */
 
 #include "lcd_def.h"
-
-RASTER_TIMINGS lcd_OTM8009A =
+/*
+ * OTM8009A LCD timings
+ */
+LCD_TIMINGS lcd_ILI9341_PORTRAIT =
 {
-/*X size*/		480,
-/*Y size*/		800,
-/*ref clk*/		0,
-/*pll M*/		0,
-/*pll N*/		125,
-/*pll M2*/		0,
-/*raster clk*/	27429000,
-/*palete len*/	0,
-/*bus size*/	0,
-/*hsw*/			120,
-/*hfp*/			120,
-/*hbp*/			120,
-/*vsw*/			12,
-/*vfp*/			12,
-/*vbp*/			12
+/*X size*/			240,
+/*Y size*/			320,
+/*ref clk*/			0,
+/*pll M*/			0,
+/*pll N*/			0,
+/*pll M2*/			0,
+/*raster clk*/		27429000,
+/*palete len*/		0,
+/*bus size*/		0,
+/*hsw*/				9,
+/*hfp*/				2,
+/*hbp*/				29,
+/*vsw*/				1,
+/*vfp*/				2,
+/*vbp*/				3,
+/*LCD_ORIENTATION*/	LCD_ORIENTATION_PORTRAIT,
 };
 
-RASTER_TIMINGS lcd_MI0283 =
+/*
+ * OTM8009A LCD timings
+ */
+LCD_TIMINGS lcd_OTM8009A_PORTRAIT =
 {
-/*X size*/		240,
-/*Y size*/		320,
-/*ref clk*/		0,
-/*pll M*/		0,
-/*pll N*/		0,
-/*pll M2*/		0,
-/*raster clk*/	0,
-/*palete len*/	0,
-/*bus size*/	8,
-/*hsw*/			0,
-/*hfp*/			0,
-/*hbp*/			0,
-/*vsw*/			0,
-/*vfp*/			0,
-/*vbp*/			0
+/*X size*/			480,
+/*Y size*/			800,
+/*ref clk*/			0,
+/*pll M*/			0,
+/*pll N*/			125,
+/*pll M2*/			0,
+/*raster clk*/		27429000,
+/*palete len*/		0,
+/*bus size*/		0,
+/*hsw*/				120,
+/*hfp*/				120,
+/*hbp*/				120,
+/*vsw*/				12,
+/*vfp*/				12,
+/*vbp*/				12,
+/*LCD_ORIENTATION*/	LCD_ORIENTATION_PORTRAIT,
 };
 
-RASTER_TIMINGS lcd_S035Q01_beaglebone_exp =
+LCD_TIMINGS lcd_OTM8009A_LANDSCAPE =
+{
+/*X size*/			800,
+/*Y size*/			480,
+/*ref clk*/			0,
+/*pll M*/			0,
+/*pll N*/			125,
+/*pll M2*/			0,
+/*raster clk*/		27429000,
+/*palete len*/		0,
+/*bus size*/		0,
+/*hsw*/				120,
+/*hfp*/				120,
+/*hbp*/				120,
+/*vsw*/				12,
+/*vfp*/				12,
+/*vbp*/				12,
+/*LCD_ORIENTATION*/	LCD_ORIENTATION_LANDSCAPE,
+};
+
+LCD_TIMINGS lcd_OTM8009A_PORTRAIT_FLIP =
+{
+/*X size*/			480,
+/*Y size*/			800,
+/*ref clk*/			0,
+/*pll M*/			0,
+/*pll N*/			125,
+/*pll M2*/			0,
+/*raster clk*/		27429000,
+/*palete len*/		0,
+/*bus size*/		0,
+/*hsw*/				120,
+/*hfp*/				120,
+/*hbp*/				120,
+/*vsw*/				12,
+/*vfp*/				12,
+/*vbp*/				12,
+/*LCD_ORIENTATION*/	LCD_ORIENTATION_PORTRAIT_FLIP,
+};
+
+LCD_TIMINGS lcd_OTM8009A_LANDSCAPE_FLIP =
+{
+/*X size*/			800,
+/*Y size*/			480,
+/*ref clk*/			0,
+/*pll M*/			0,
+/*pll N*/			125,
+/*pll M2*/			0,
+/*raster clk*/		27429000,
+/*palete len*/		0,
+/*bus size*/		0,
+/*hsw*/				120,
+/*hfp*/				120,
+/*hbp*/				120,
+/*vsw*/				12,
+/*vfp*/				12,
+/*vbp*/				12,
+/*LCD_ORIENTATION*/	LCD_ORIENTATION_LANDSCAPE_FLIP,
+};
+
+/*
+ * MI0283 LCD timings
+ */
+LCD_TIMINGS lcd_MI0283_PORTRAIT =
+{
+/*X size*/			240,
+/*Y size*/			320,
+/*ref clk*/			0,
+/*pll M*/			0,
+/*pll N*/			0,
+/*pll M2*/			0,
+/*raster clk*/		0,
+/*palete len*/		0,
+/*bus size*/		8,
+/*hsw*/				0,
+/*hfp*/				0,
+/*hbp*/				0,
+/*vsw*/				0,
+/*vfp*/				0,
+/*vbp*/				0,
+/*LCD_ORIENTATION*/	LCD_ORIENTATION_PORTRAIT,
+};
+
+LCD_TIMINGS lcd_MI0283_LANDSCAPE =
+{
+/*X size*/			320,
+/*Y size*/			240,
+/*ref clk*/			0,
+/*pll M*/			0,
+/*pll N*/			0,
+/*pll M2*/			0,
+/*raster clk*/		0,
+/*palete len*/		0,
+/*bus size*/		8,
+/*hsw*/				0,
+/*hfp*/				0,
+/*hbp*/				0,
+/*vsw*/				0,
+/*vfp*/				0,
+/*vbp*/				0,
+/*LCD_ORIENTATION*/	LCD_ORIENTATION_LANDSCAPE,
+};
+
+LCD_TIMINGS lcd_MI0283_PORTRAIT_FLIP =
+{
+/*X size*/			240,
+/*Y size*/			320,
+/*ref clk*/			0,
+/*pll M*/			0,
+/*pll N*/			0,
+/*pll M2*/			0,
+/*raster clk*/		0,
+/*palete len*/		0,
+/*bus size*/		8,
+/*hsw*/				0,
+/*hfp*/				0,
+/*hbp*/				0,
+/*vsw*/				0,
+/*vfp*/				0,
+/*vbp*/				0,
+/*LCD_ORIENTATION*/	LCD_ORIENTATION_PORTRAIT_FLIP,
+};
+
+LCD_TIMINGS lcd_MI0283_LANDSCAPE_FLIP =
+{
+/*X size*/			320,
+/*Y size*/			240,
+/*ref clk*/			0,
+/*pll M*/			0,
+/*pll N*/			0,
+/*pll M2*/			0,
+/*raster clk*/		0,
+/*palete len*/		0,
+/*bus size*/		8,
+/*hsw*/				0,
+/*hfp*/				0,
+/*hbp*/				0,
+/*vsw*/				0,
+/*vfp*/				0,
+/*vbp*/				0,
+/*LCD_ORIENTATION*/	LCD_ORIENTATION_LANDSCAPE_FLIP,
+};
+
+LCD_TIMINGS lcd_S035Q01_beaglebone_exp =
 {
 /*X size*/		320,
 /*Y size*/		240,
@@ -64,7 +214,7 @@ RASTER_TIMINGS lcd_S035Q01_beaglebone_exp =
 /*vbp*/			11
 };
 
-RASTER_TIMINGS lcd_TFT43AB_OMAP35x_devkit8600_exp =
+LCD_TIMINGS lcd_TFT43AB_OMAP35x_devkit8600_exp =
 {
 /*X size*/		480,
 /*Y size*/		272,
@@ -83,7 +233,7 @@ RASTER_TIMINGS lcd_TFT43AB_OMAP35x_devkit8600_exp =
 /*vbp*/			15
 };
 
-RASTER_TIMINGS lcd_TFT43_TMDSSK3358 =
+LCD_TIMINGS lcd_TFT43_TMDSSK3358 =
 {
 /*X size*/		480,
 /*Y size*/		272,
@@ -102,7 +252,7 @@ RASTER_TIMINGS lcd_TFT43_TMDSSK3358 =
 /*vbp*/			15
 };
 
-RASTER_TIMINGS lcd_AT070TN92_beaglebone_exp =
+LCD_TIMINGS lcd_AT070TN92_beaglebone_exp =
 {
 /*X size*/		800,
 /*Y size*/		480,
@@ -121,7 +271,7 @@ RASTER_TIMINGS lcd_AT070TN92_beaglebone_exp =
 /*vbp*/			21
 };
 
-RASTER_TIMINGS lcd_720p_480_60hz_beaglebone_exp =
+LCD_TIMINGS lcd_720p_480_60hz_beaglebone_exp =
 {
 /*X size*/		720,
 /*Y size*/		480,
@@ -140,7 +290,7 @@ RASTER_TIMINGS lcd_720p_480_60hz_beaglebone_exp =
 /*vbp*/			9
 };
 
-RASTER_TIMINGS lcd_720p_50hz_beaglebone_exp =
+LCD_TIMINGS lcd_720p_50hz_beaglebone_exp =
 {
 /*X size*/		1280,
 /*Y size*/		720,
@@ -159,7 +309,7 @@ RASTER_TIMINGS lcd_720p_50hz_beaglebone_exp =
 /*vbp*/			20
 };
 
-RASTER_TIMINGS lcd_1080p_24hz_beaglebone_exp =
+LCD_TIMINGS lcd_1080p_24hz_beaglebone_exp =
 {
 /*X size*/		1920,
 /*Y size*/		1080,

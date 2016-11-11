@@ -47,7 +47,37 @@
 #define HD 6
 #define FHD 7
 //*****************************************************************************
+/** @defgroup LCD_Driver_structure  LCD Driver structure
+  * @{
+  */
+typedef struct
+{
+  void     (*Init)(void);
+  unsigned short (*ReadID)(void);
+  void     (*DisplayOn)(void);
+  void     (*DisplayOff)(void);
+  void     (*SetCursor)(unsigned short, unsigned short);
+  void     (*WritePixel)(unsigned short, unsigned short, unsigned short);
+  unsigned short (*ReadPixel)(unsigned short, unsigned short);
 
+   /* Optimized operation */
+  void     (*SetDisplayWindow)(unsigned short, unsigned short, unsigned short, unsigned short);
+  void     (*DrawHLine)(unsigned short, unsigned short, unsigned short, unsigned short);
+  void     (*DrawVLine)(unsigned short, unsigned short, unsigned short, unsigned short);
+
+  unsigned short (*GetLcdPixelWidth)(void);
+  unsigned short (*GetLcdPixelHeight)(void);
+  void     (*DrawBitmap)(unsigned short, unsigned short, unsigned char*);
+  void     (*DrawRGBImage)(unsigned short, unsigned short, unsigned short, unsigned short, unsigned char*);
+}LCD_DrvTypeDef;
+//*****************************************************************************
+typedef enum
+{
+	LCD_ORIENTATION_PORTRAIT = 0,
+	LCD_ORIENTATION_LANDSCAPE = 1,
+	LCD_ORIENTATION_PORTRAIT_FLIP = 2,
+	LCD_ORIENTATION_LANDSCAPE_FLIP = 3,
+}LCD_ORIENTATION;
 //*****************************************************************************
 typedef struct
 {
@@ -66,17 +96,26 @@ typedef struct
 	unsigned int vsw;
 	unsigned int vfp;
 	unsigned int vbp;
-}RASTER_TIMINGS;
+	LCD_ORIENTATION orientation;
+}LCD_TIMINGS;
 //*****************************************************************************
-extern RASTER_TIMINGS lcd_OTM8009A;
-extern RASTER_TIMINGS lcd_MI0283;
-extern RASTER_TIMINGS lcd_S035Q01_beaglebone_exp;
-extern RASTER_TIMINGS lcd_TFT43AB_OMAP35x_devkit8600_exp;
-extern RASTER_TIMINGS lcd_TFT43_TMDSSK3358;
-extern RASTER_TIMINGS lcd_AT070TN92_beaglebone_exp;
-extern RASTER_TIMINGS lcd_720p_480_60hz_beaglebone_exp;
-extern RASTER_TIMINGS lcd_720p_50hz_beaglebone_exp;
-extern RASTER_TIMINGS lcd_1080p_24hz_beaglebone_exp;
+extern LCD_TIMINGS lcd_OTM8009A_PORTRAIT;
+extern LCD_TIMINGS lcd_OTM8009A_LANDSCAPE;
+extern LCD_TIMINGS lcd_OTM8009A_PORTRAIT_FLIP;
+extern LCD_TIMINGS lcd_OTM8009A_LANDSCAPE_FLIP;
+
+extern LCD_TIMINGS lcd_MI0283_PORTRAIT;
+extern LCD_TIMINGS lcd_MI0283_LANDSCAPE;
+extern LCD_TIMINGS lcd_MI0283_PORTRAIT_FLIP;
+extern LCD_TIMINGS lcd_MI0283_LANDSCAPE_FLIP;
+
+extern LCD_TIMINGS lcd_S035Q01_beaglebone_exp;
+extern LCD_TIMINGS lcd_TFT43AB_OMAP35x_devkit8600_exp;
+extern LCD_TIMINGS lcd_TFT43_TMDSSK3358;
+extern LCD_TIMINGS lcd_AT070TN92_beaglebone_exp;
+extern LCD_TIMINGS lcd_720p_480_60hz_beaglebone_exp;
+extern LCD_TIMINGS lcd_720p_50hz_beaglebone_exp;
+extern LCD_TIMINGS lcd_1080p_24hz_beaglebone_exp;
 //*****************************************************************************
 //
 //! This structure defines the extents of a rectangle.  All points greater than
@@ -216,14 +255,8 @@ typedef struct
 /**********************************************/
 typedef struct sDisplay
 {
-	unsigned short Orientation;
-	bool touch_invert_x;
-	bool touch_invert_y;
 	bool pmic_back_light;
-	bool invert_backlight;
 	volatile unsigned int* DisplayData;
-	unsigned int BackLightPort;
-	unsigned int BackLightPin;
 	unsigned int BackLightLevel;
 	unsigned int BackColor;
 	unsigned int InkColor;
@@ -231,8 +264,8 @@ typedef struct sDisplay
     tRectangle sClipRegion;
 	Gpio_t* BackLight;
 	Twi_t* PmicTwiModuleStruct;
-	RASTER_TIMINGS *raster_timings;
-	RASTER_TIMINGS *old_raster_timings;
+	LCD_TIMINGS *LcdTimings;
+	LCD_TIMINGS *Old_LcdTimings;
 	LCD_FUNC lcd_func;
 	void *UserData;
 }tDisplay;
