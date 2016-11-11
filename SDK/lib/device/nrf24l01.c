@@ -6,7 +6,7 @@
  */
 
 #include "nrf24l01.h"
-
+#include "api/timer_api.h"
 extern unsigned long FCPU;
 
 void nrf24l01_Delay (unsigned long a)
@@ -255,12 +255,13 @@ signed short nrf24l01_packet_receive(void *param, unsigned char *packet, unsigne
 		//_param->rx_addr0[3] = address >> 24;
 		_param->status = nrf24l01_send_command_with_ADDR(param, W_REGISTER, RX_ADDR_P0, NOP);
 		_param->RX_STATE = NRF24L01_RX_ACTIVE;
-		//nrf24l01_Delay(FCPU / (1.0 / 0.000013));
 		nrf24l01_send_command_without_ADDR(param, FLUSH_RX, NOP);
+		nrf24l01_send_command_with_ADDR(param, W_REGISTER, STATUS_ADDR, (RX_DR));
 		//nrf24l01_send_command_without_ADDR(param, FLUSH_TX, NOP);
 		nrf24l01_set_rx(param);
+		//nrf24l01_Delay(FCPU / (1.0 / 0.000013));
 		nrf24l01_ce_assert(param);
-		//return true;
+		//return -1;
 	}
 	volatile unsigned char data_len = -1;
 	if(_param->RX_STATE == NRF24L01_RX_ACTIVE)
@@ -271,15 +272,16 @@ signed short nrf24l01_packet_receive(void *param, unsigned char *packet, unsigne
 		    // Set high when new data arrives RX FIFO
 			if ((status & RX_DR) != 0)
 			{
-				//nrf24l01_ce_deassert(param);
+				nrf24l01_ce_deassert(param);
 				data_len = nrf24l01_send_command_without_ADDR(param, R_RX_PL_WID, NOP);
-				if(data_len > 32)
+				if(data_len != 32)
 				{
 					nrf24l01_send_command_without_ADDR(param, FLUSH_RX, NOP);
 					data_len = 0;
 					return -1;
 				}
 				unsigned int cnt = 0;
+				nrf24l01_Delay(FCPU / (1.0 / 0.0003));
 				nrf24l01_cs_assert(param);
 				nrf24l01_SPI_SendByte(param, R_RX_PAYLOAD);
 				for(; cnt < data_len; cnt++)
@@ -288,16 +290,17 @@ signed short nrf24l01_packet_receive(void *param, unsigned char *packet, unsigne
 				}
 				nrf24l01_cs_deassert(param);
 				// Clear RX_DR bit in status register
-				nrf24l01_send_command_with_ADDR(param, W_REGISTER, STATUS_ADDR, (RX_DR));
 				_param->RX_STATE = NRF24L01_RX_DISABLED;
-				//nrf24l01_send_command_without_ADDR(param, FLUSH_RX, NOP);
+				nrf24l01_send_command_without_ADDR(param, FLUSH_RX, NOP);
+				nrf24l01_send_command_with_ADDR(param, W_REGISTER, STATUS_ADDR, (RX_DR));
 				//nrf24l01_send_command_without_ADDR(param, FLUSH_TX, NOP);
-				//nrf24l01_ce_assert(param);
+				nrf24l01_ce_assert(param);
 				return data_len;
 			}
 			else
 			{
-				nrf24l01_send_command_without_ADDR(param, FLUSH_RX, NOP);
+				//nrf24l01_send_command_without_ADDR(param, FLUSH_RX, NOP);
+				//nrf24l01_send_command_with_ADDR(param, W_REGISTER, STATUS_ADDR, (RX_DR));
 				//nrf24l01_send_command_without_ADDR(param, FLUSH_TX, NOP);
 			}
 		}

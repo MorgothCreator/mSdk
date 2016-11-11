@@ -39,6 +39,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "otm8009a.h"
 #include "api/timer_api.h"
+#include "api/lcd_def.h"
 
 /** @addtogroup BSP
   * @{
@@ -192,8 +193,9 @@ __weak void DSI_IO_WriteCmd(uint32_t NbrParams, uint8_t *pParams)
   * @param  hdsivideo_handle : pointer on DSI video mode configuration structure
   * @retval Status
   */
-uint8_t OTM8009A_Init(uint32_t ColorCoding, uint32_t orientation)
+uint8_t OTM8009A_Init(void *_pDisplay, uint32_t ColorCoding)
 {
+	tDisplay *pDisplay = (tDisplay *)_pDisplay;
   /* Enable CMD2 to access vendor specific commands                               */
   /* Enter in command 2 mode and set EXTC to enable address shift function (0x00) */
   DSI_IO_WriteCmd(0, (uint8_t *)ShortRegData1);
@@ -396,7 +398,7 @@ uint8_t OTM8009A_Init(uint32_t ColorCoding, uint32_t orientation)
 
   /* Send command to configure display in landscape orientation mode. By default
       the orientation mode is portrait  */
-  if(orientation == 0 || orientation == 180)
+  if(pDisplay->LcdTimings->orientation == LCD_ORIENTATION_LANDSCAPE || pDisplay->LcdTimings->orientation == LCD_ORIENTATION_LANDSCAPE_FLIP)
   {
     DSI_IO_WriteCmd(0, (uint8_t *)ShortRegData39);
     DSI_IO_WriteCmd( 4, (uint8_t *)lcdRegData27);

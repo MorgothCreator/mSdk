@@ -171,9 +171,9 @@ int main(void)
     BackScreen = new_(new_screen);
     memcpy((void *)BackScreen, (void *)ScreenBuff, sizeof(new_screen));
 #ifdef gcc
-    BackScreen->DisplayData = malloc((BackScreen->raster_timings->X * BackScreen->raster_timings->Y * sizeof(BackScreen->DisplayData[0])) + (BackScreen->raster_timings->palete_len * sizeof(BackScreen->DisplayData[0])));
+    BackScreen->DisplayData = malloc((BackScreen->LcdTimings->X * BackScreen->LcdTimings->Y * sizeof(BackScreen->DisplayData[0])) + (BackScreen->LcdTimings->palete_len * sizeof(BackScreen->DisplayData[0])));
 #else
-    BackScreen->DisplayData = memalign(sizeof(BackScreen->DisplayData[0]) << 3, (BackScreen->raster_timings->X * BackScreen->raster_timings->Y * sizeof(BackScreen->DisplayData[0])) + (BackScreen->raster_timings->palete_len * sizeof(BackScreen->DisplayData[0])));
+    BackScreen->DisplayData = memalign(sizeof(BackScreen->DisplayData[0]) << 3, (BackScreen->LcdTimings->X * BackScreen->LcdTimings->Y * sizeof(BackScreen->DisplayData[0])) + (BackScreen->LcdTimings->palete_len * sizeof(BackScreen->DisplayData[0])));
 #endif
     MainWindow = new_window(NULL, BackScreen);
 #else
@@ -189,9 +189,9 @@ int main(void)
     window_new_window(MainWindow, Window1);
 
     MainWindow->WindowMoveLimits.sXMin = 0;
-    MainWindow->WindowMoveLimits.sXMax = ScreenBuff->raster_timings->X;
+    MainWindow->WindowMoveLimits.sXMax = ScreenBuff->LcdTimings->X;
     MainWindow->WindowMoveLimits.sYMin = 20;
-    MainWindow->WindowMoveLimits.sYMax = ScreenBuff->raster_timings->Y - 100;
+    MainWindow->WindowMoveLimits.sYMax = ScreenBuff->LcdTimings->Y - 100;
 
 #ifdef USE_BACK_SCREEN
     KbdWindow = new_window(NULL, BackScreen);
@@ -203,7 +203,7 @@ int main(void)
     HeaderWindow = new_window(NULL, ScreenBuff);
 #endif
     HeaderWindow->WindowMoveLimits.sXMin = 0;
-    HeaderWindow->WindowMoveLimits.sXMax = ScreenBuff->raster_timings->X;
+    HeaderWindow->WindowMoveLimits.sXMax = ScreenBuff->LcdTimings->X;
     HeaderWindow->WindowMoveLimits.sYMin = 0;
     HeaderWindow->WindowMoveLimits.sYMax = 20;
     HeaderWindow->HideHeader = true;
@@ -211,9 +211,9 @@ int main(void)
     HeaderWindow->HideVScroll = true;
 
     KbdWindow->WindowMoveLimits.sXMin = 0;
-    KbdWindow->WindowMoveLimits.sXMax = ScreenBuff->raster_timings->X;
-    KbdWindow->WindowMoveLimits.sYMin = ScreenBuff->raster_timings->Y - 100;
-    KbdWindow->WindowMoveLimits.sYMax = ScreenBuff->raster_timings->Y;
+    KbdWindow->WindowMoveLimits.sXMax = ScreenBuff->LcdTimings->X;
+    KbdWindow->WindowMoveLimits.sYMin = ScreenBuff->LcdTimings->Y - 100;
+    KbdWindow->WindowMoveLimits.sYMax = ScreenBuff->LcdTimings->Y;
     KbdWindow->HideHeader = true;
     KbdWindow->HideHScroll = true;
     KbdWindow->HideVScroll = true;
@@ -221,7 +221,7 @@ int main(void)
 /* Set location and size of virtual keyboard */
     Kbd->Position.X = 0;
     Kbd->Position.Y = 0;
-    Kbd->Size.X = ScreenBuff->raster_timings->X - 6;
+    Kbd->Size.X = ScreenBuff->LcdTimings->X - 6;
     Kbd->Size.Y = 98;
 
     Window1->Internals.FullScreen = false;

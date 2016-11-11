@@ -247,7 +247,7 @@ typedef enum
 /** @defgroup STM32F429I_DISCOVERY_LCD_Exported_Functions
   * @{
   */
-unsigned char  BSP_LCD_Init(void);
+unsigned char  BSP_LCD_Init(void *_pDisplay);
 
 
 

@@ -493,14 +493,14 @@ bool lepton_flir_get_image(LEPTON_FLIR_t *structure, unsigned short *image) {
 	if(structure == NULL || structure->SPI == NULL || image == NULL)
 		return false;
 	Sysdelay(200);
-	unsigned char line_buff[LEPTON_FLIR_LINE_SIZE];
+	unsigned char line_buff[(LEPTON_FLIR_LINE_SIZE * 2) + 4];
 	unsigned char checkByte = 0x0F;
 	unsigned int packet_nr = 0;
 	structure->SPI->Buff = line_buff;
 	// loop while discard packets
 	while((checkByte & 0x0F) == 0x0f) {
 		structure->SPI->CsSelect = structure->spi_instance;
-		mcspi_transfer(structure->SPI, 0, LEPTON_FLIR_LINE_SIZE);
+		mcspi_transfer(structure->SPI, 0, (LEPTON_FLIR_LINE_SIZE * 2) + 4);
 		checkByte = structure->SPI->Buff[0];
 		packet_nr = structure->SPI->Buff[1];
 	}
@@ -508,14 +508,16 @@ bool lepton_flir_get_image(LEPTON_FLIR_t *structure, unsigned short *image) {
 	// sync done, first packet is ready, store packets
 	while(packet_nr < 60)
 	{
+		if((checkByte & 0x0F) != 0x0f)
 		// ignore discard packets
 		if((structure->SPI->Buff[0] & 0x0f) != 0x0f){
 			memcpy(&image[packet_nr * 80], (void *)&structure->SPI->Buff[4], 160);
 		}
 		// read next packet
 		structure->SPI->CsSelect = structure->spi_instance;
-		mcspi_transfer(structure->SPI, 0, LEPTON_FLIR_LINE_SIZE);
+		mcspi_transfer(structure->SPI, 0, (LEPTON_FLIR_LINE_SIZE * 2) + 4);
 		packet_nr = structure->SPI->Buff[1];
+		checkByte = structure->SPI->Buff[0];
 	}
 
 	return true;

@@ -98,9 +98,12 @@ int8_t STORAGE_Init(uint8_t lun)
   */
 int8_t STORAGE_GetCapacity(uint8_t lun, uint32_t *block_num, uint16_t *block_size)
 {
-	usbd_drv_func[(unsigned int)lun].drv_ioctl_func(usbd_drv_func[lun].DriveStruct, GET_SECTOR_COUNT, (unsigned int *)block_num);
-	usbd_drv_func[(unsigned int)lun].drv_ioctl_func(usbd_drv_func[lun].DriveStruct, GET_SECTOR_SIZE, (unsigned int *)block_size);
-  return 0;
+	if(usbd_drv_func[(unsigned int)lun].drv_ioctl_func)
+	{
+		usbd_drv_func[(unsigned int)lun].drv_ioctl_func(usbd_drv_func[lun].controlled_unit_nr, GET_SECTOR_COUNT, (unsigned int *)block_num);
+		usbd_drv_func[(unsigned int)lun].drv_ioctl_func(usbd_drv_func[lun].controlled_unit_nr, GET_SECTOR_SIZE, (unsigned int *)block_size);
+	}
+	return 0;
 }
 
 /**
@@ -140,7 +143,7 @@ int8_t STORAGE_IsReady(uint8_t lun)
   */
 int8_t STORAGE_IsWriteProtected(uint8_t lun)
 {
-  return 0;
+	return 0;
 }
 
 /**
@@ -152,10 +155,12 @@ int8_t STORAGE_IsWriteProtected(uint8_t lun)
   */
 int8_t STORAGE_Read(uint8_t lun, uint8_t *buf, uint32_t blk_addr, uint16_t blk_len)
 {
-	if(usbd_drv_func[lun].drv_r_func(usbd_drv_func[lun].DriveStruct, buf, blk_addr, blk_len))
-		return 0;
-	else
-		return -1;
+	if(usbd_drv_func[lun].drv_r_func && usbd_drv_func[lun].DriveStruct)
+	{
+		if(usbd_drv_func[lun].drv_r_func(usbd_drv_func[lun].DriveStruct, buf, blk_addr, blk_len))
+			return 0;
+	}
+	return -1;
 }
 
 /**
@@ -167,9 +172,11 @@ int8_t STORAGE_Read(uint8_t lun, uint8_t *buf, uint32_t blk_addr, uint16_t blk_l
   */
 int8_t STORAGE_Write(uint8_t lun, uint8_t *buf, uint32_t blk_addr, uint16_t blk_len)
 {
-	if(usbd_drv_func[lun].drv_w_func(usbd_drv_func[lun].DriveStruct, buf, blk_addr, blk_len))
-		return 0;
-	else
+	if(usbd_drv_func[lun].drv_w_func && usbd_drv_func[lun].DriveStruct)
+	{
+		if(usbd_drv_func[lun].drv_w_func(usbd_drv_func[lun].DriveStruct, buf, blk_addr, blk_len))
+			return 0;
+	}
 		return -1;
 }
 
@@ -180,7 +187,7 @@ int8_t STORAGE_Write(uint8_t lun, uint8_t *buf, uint32_t blk_addr, uint16_t blk_
   */
 int8_t STORAGE_GetMaxLun(void)
 {
-  return(STORAGE_LUN_NBR - 1);
+	return(STORAGE_LUN_NBR - 1);
 }
  
 

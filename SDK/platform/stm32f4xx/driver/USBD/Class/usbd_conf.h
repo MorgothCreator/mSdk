@@ -47,7 +47,7 @@
 
 /* MSC Class Config */
 #define MSC_MEDIA_PACKET                      8192
-
+//#define USBD_LPM_ENABLED	1
 /* Exported macro ------------------------------------------------------------*/
 /* Memory management macros */
 #define USBD_malloc               malloc

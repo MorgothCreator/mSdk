@@ -36,11 +36,10 @@
 #include "device/mmcsd_spi.h"
 
 
+#include "lib/fat_fs/inc/diskio.h"
 #include "interface/hs_mmcsd_interface_def.h"
 #include "interface/usb_dev_msc_interface.h"
 
-#include "lib/fat_fs/inc/diskio.h"
-extern DRV_RW_FUNC usbd_drv_func[];
 /*#####################################################*/
 /*#####################################################*/
 /*#####################################################*/
@@ -160,7 +159,7 @@ extern DRV_RW_FUNC usbd_drv_func[];
  * This macro initialize selected MMC interface and mount a eMMC, MMC or SD-SDHC memory if detected.
  *
  * Case1: For the eMMC memory is mandatory to provide GPIO_RESET_STRUCT with a Gpio_t or new_gpio structure,
- *       but you not need to provide GPIO_SD_DETECT_STRUCT you need provide a NULL pointer.
+ *       but you not need to provide GPIO_SD_DETECT_STRUCT you need to provide a NULL pointer.
  * Case2: For MMC and SD-SDHC you can provide GPIO_SD_DETECT_STRUCT if you used,
  *       you don't need to provide GPIO_RESET_STRUCT you need to provide a NULL pointer.
  *
@@ -202,13 +201,13 @@ extern DRV_RW_FUNC usbd_drv_func[];
 	mmcsd_init(MMCSD_NR, GPIO_SD_DETECT_STRUCT, ACTIVITY_LED_STRUCT); \
 	mmcsd_idle(MMCSD_NR);\
 	UARTPuts(DebugCom, "Bridge USBMSC0 Dev for MMCSD0 Interface.......", -1);\
-	USBD_DRV_RW_FUNC *SLAVE_DEV_CONTROLS_NAME = calloc(1, sizeof(USBD_DRV_RW_FUNC));\
-	SLAVE_DEV_CONTROLS_NAME->controlled_unit_nr = MMCSD_NR;\
-	SLAVE_DEV_CONTROLS_NAME->DriveStruct = &ctrlInfo[MMCSD_NR];\
-	SLAVE_DEV_CONTROLS_NAME->drv_ioctl_func = mmcsd_ioctl;\
-	SLAVE_DEV_CONTROLS_NAME->drv_r_func = mmcsd_read;\
-	SLAVE_DEV_CONTROLS_NAME->drv_w_func = mmcsd_write;\
-	usb_msc_dev_init(USB_DEVICE_NR, (void *)SLAVE_DEV_CONTROLS_NAME);\
+	/*DRV_RW_FUNC *SLAVE_DEV_CONTROLS_NAME = calloc(1, sizeof(DRV_RW_FUNC))*/;\
+	usbd_drv_func[USB_DEVICE_NR].controlled_unit_nr = MMCSD_NR;\
+	usbd_drv_func[USB_DEVICE_NR].DriveStruct = &ctrlInfo[MMCSD_NR];\
+	usbd_drv_func[USB_DEVICE_NR].drv_ioctl_func = mmcsd_ioctl;\
+	usbd_drv_func[USB_DEVICE_NR].drv_r_func = mmcsd_read;\
+	usbd_drv_func[USB_DEVICE_NR].drv_w_func = mmcsd_write;\
+	usb_msc_dev_init(USB_DEVICE_NR, (void *)&usbd_drv_func[USB_DEVICE_NR]);\
 	UARTPuts(DebugCom, "OK.\n\r", -1);
 /*#####################################################*/
 /*
@@ -233,12 +232,12 @@ extern DRV_RW_FUNC usbd_drv_func[];
  */
 #define INIT_USB_DEV_MSC_TO_MMCSD_SPI_BRIDGE(USB_DEVICE_NR, MMCSD_INSTANCE_NR) \
 	UARTPuts(DebugCom, "Bridge USBMSC0 Dev for MMCSD0 Interface.......", -1);\
-	USBD_DRV_RW_FUNC *SLAVE_DEV_CONTROLS_NAME = calloc(1, sizeof(USBD_DRV_RW_FUNC));\
+	/*USBD_DRV_RW_FUNC *SLAVE_DEV_CONTROLS_NAME = calloc(1, sizeof(USBD_DRV_RW_FUNC))*/;\
 	usbd_drv_func[USB_DEVICE_NR].DriveStruct = MMCSD_SPI[MMCSD_INSTANCE_NR];\
 	usbd_drv_func[USB_DEVICE_NR].drv_ioctl_func = mmcsd_spi_ioctl;\
 	usbd_drv_func[USB_DEVICE_NR].drv_r_func = MMCSD_SPI_ReadCmdSend;\
 	usbd_drv_func[USB_DEVICE_NR].drv_w_func = MMCSD_SPI_WriteCmdSend;\
-	usb_msc_dev_init(USB_DEVICE_NR, (void *)SLAVE_DEV_CONTROLS_NAME);\
+	usb_msc_dev_init(USB_DEVICE_NR, (void *)&usbd_drv_func[USB_DEVICE_NR]);\
 	UARTPuts(DebugCom, "OK.\n\r", -1)
 /*#####################################################*/
 //#include "interface/usblib/include/usbhmsc.h"

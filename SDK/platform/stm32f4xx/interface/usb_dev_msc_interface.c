@@ -39,6 +39,7 @@ void _usb_msc_dev_media_change_state(unsigned int instance, bool media_is_presen
 }
 void _usb_msc_dev_init(unsigned int instance, void *slave_controls)
 {
+	//memcpy(&usbd_drv_func[instance], slave_controls, sizeof(DRV_RW_FUNC));
 	//usbd_drv_func[instance] = (USBD_DRV_RW_FUNC *)slave_controls;
 	  /* Init MSC Application */
 	  USBD_Init(&USBD_Device[instance], &MSC_Desc, 0);

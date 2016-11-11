@@ -380,6 +380,24 @@ tPictureBox *new_picturebox(void *ParentWindow)
 	tWindow *_ParentWindow = (tWindow *)ParentWindow;
 	settings->Internals.pDisplay = _ParentWindow->Internals.pDisplay;
 
+	settings->clear = picturebox_clear;
+	//void picturebox_copy_rectangle)(tPictureBox* settings, unsigned int *src_buff, signed int src_x_buff_size, signed int src_y_buff_size, signed int src_x_offset, signed int src_y_offset);
+	settings->copy_rectangle = picturebox_copy_rectangle;
+	settings->put_pixel = picturebox_put_pixel;
+	settings->put_horizontal_line = picturebox_put_horizontal_line;
+	settings->put_vertical_line = picturebox_put_vertical_line;
+	settings->put_circle = picturebox_put_circle;
+	settings->put_line = picturebox_put_line;
+	settings->put_elipse = picturebox_put_elipse;
+	settings->put_triangle = picturebox_put_triangle;
+	settings->put_string = picturebox_put_string;
+	settings->put_3d_triangle = picturebox_put_3d_triangle;
+	settings->put_3d_rectangle = picturebox_put_3d_rectangle;
+#if _USE_BITMAP_LIBRARY == 1
+	settings->put_bitmap = picturebox_put_bitmap;
+	settings->put_fbitmap = picturebox_put_fbitmap;
+#endif
+
 	settings->Color.Scren = controls_color.Scren;
 	settings->Color.Enabled.BackGround = controls_color.Control_Color_Enabled_BackGround;
 	settings->Color.Enabled.Border.Pull = controls_color.Control_Color_Enabled_Border_Pull;
@@ -475,39 +493,46 @@ void picturebox_copy_rectangle(tPictureBox* settings, unsigned int *src_buff, un
 	//signed int dest_Y_EndBox = settings->Internals.Position.Y + settings->Internals.Size.Y;
 
 	//Calculate the destination locations on the screen.
-	dest_rectangle->sXMin += dest_X_StartBox;
-	dest_rectangle->sXMax += dest_X_StartBox;
-	dest_rectangle->sYMin += dest_Y_StartBox;
-	dest_rectangle->sYMax += dest_Y_StartBox;
+	dest_rectangle->sXMin += dest_X_StartBox + 2;
+	dest_rectangle->sXMax += dest_X_StartBox + 2;
+	dest_rectangle->sYMin += dest_Y_StartBox + 2;
+	dest_rectangle->sYMax += dest_Y_StartBox + 2;
 	if(dest_rectangle->sXMax < settings->Internals.Position.X + 2 ||
 			dest_rectangle->sYMax < settings->Internals.Position.Y + 2 ||
 				dest_rectangle->sXMin >= settings->Internals.Position.X + (settings->Internals.Size.X - 4) ||
-					dest_rectangle->sYMin >= settings->Internals.Position.Y + (settings->Internals.Size.Y - 4)) return;
-
+					dest_rectangle->sYMin >= settings->Internals.Position.Y + (settings->Internals.Size.Y - 4))
+		return;
+	pDisplay->lcd_func.put_rgb_array_32(pDisplay, (unsigned char *)src_buff, dest_rectangle->sXMin, dest_rectangle->sYMin, dest_rectangle->sXMax - dest_rectangle->sXMin, dest_rectangle->sYMax - dest_rectangle->sYMin);
 	//Limit the destination area to the picture box size.
-	clip_limit(dest_rectangle, &settings->Internals.PictureWindowLimits);
+	/*clip_limit(dest_rectangle, &settings->Internals.PictureWindowLimits);
 
 	signed int x_line_len = dest_rectangle->sXMax - dest_rectangle->sXMin;
 
 	if(x_line_len <= 0) return;
-	if(dest_X_StartBox <= dest_rectangle->sXMin) dest_X_StartBox = dest_rectangle->sXMin;
+	if(dest_X_StartBox <= dest_rectangle->sXMin)
+		dest_X_StartBox = dest_rectangle->sXMin;
 
 	signed int Y_cnt = dest_Y_StartBox;
-	if(Y_cnt <= dest_rectangle->sYMin) Y_cnt = dest_rectangle->sYMin;
+	if(Y_cnt <= dest_rectangle->sYMin)
+		Y_cnt = dest_rectangle->sYMin;
 
 	signed int X_Start_Src_Buff = (settings->Internals.Position.X + 2) - settings->Internals.PictureWindowLimits.sXMin;
-	if(X_Start_Src_Buff > 0) X_Start_Src_Buff = 0;
-	else X_Start_Src_Buff = (~X_Start_Src_Buff) + 1;
+	if(X_Start_Src_Buff > 0)
+		X_Start_Src_Buff = 0;
+	else
+		X_Start_Src_Buff = (~X_Start_Src_Buff) + 1;
 	signed int Y_Start_Src_Buff = (settings->Internals.Position.Y + 2) - settings->Internals.PictureWindowLimits.sYMin;
-	if(Y_Start_Src_Buff > 0) Y_Start_Src_Buff = 0;
-	else Y_Start_Src_Buff = (~Y_Start_Src_Buff) + 1;
+	if(Y_Start_Src_Buff > 0)
+		Y_Start_Src_Buff = 0;
+	else
+		Y_Start_Src_Buff = (~Y_Start_Src_Buff) + 1;
 
 	for(; Y_cnt < dest_rectangle->sYMax; Y_cnt++)
 	{
 		//if(Y_cnt >= pDisplay->sClipRegion.sYMax) break;
-		memcpy((void *)(pDisplay->DisplayData + pDisplay->raster_timings->palete_len + (Y_cnt * pDisplay->raster_timings->X) + dest_X_StartBox), (void *)((char *)(src_buff + src_buff_data_offset + (((Y_cnt - settings->Internals.PictureWindowLimits.sYMin + Y_Start_Src_Buff) + src_rectangle->sYMin) * src_width) + src_rectangle->sXMin + X_Start_Src_Buff) - 1), x_line_len * sizeof(pDisplay->DisplayData[0]));
+		memcpy((void *)(pDisplay->DisplayData + pDisplay->LcdTimings->palete_len + (Y_cnt * pDisplay->LcdTimings->X) + dest_X_StartBox), (void *)((char *)(src_buff + src_buff_data_offset + (((Y_cnt - settings->Internals.PictureWindowLimits.sYMin + Y_Start_Src_Buff) + src_rectangle->sYMin) * src_width) + src_rectangle->sXMin + X_Start_Src_Buff) - 1), x_line_len * sizeof(pDisplay->DisplayData[0]));
 		//CacheDataCleanInvalidateBuff((unsigned int)(void *)(pDisplay->DisplayData + 8 + ((Y_cnt + settings->Position.Y + 2) * pDisplay->Width) + settings->Position.X + 2), X_len * sizeof(pDisplay->DisplayData[0]) + 64);
-	}
+	}*/
 	//pDisplay->sClipRegion = back_up_clip;
 }
 //#######################################################################################

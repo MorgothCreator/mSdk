@@ -1403,8 +1403,8 @@ tWindow *new_window_tab_group(void *ParentWindow, tDisplay *ScreenDisplay)
 
 	//settings->Position.X = settings->PositionFullScreen.X;
 	//settings->Position.Y = settings->PositionFullScreen.Y;
-	settings->Size.X = _ScreenDisplay->raster_timings->X;
-	settings->Size.Y = _ScreenDisplay->raster_timings->Y;
+	settings->Size.X = _ScreenDisplay->LcdTimings->X;
+	settings->Size.Y = _ScreenDisplay->LcdTimings->Y;
 	settings->Size.ScrollBarSize = 20;
 	//settings->SizeFullScreen.X = ScreenDisplay->Width;
 	//settings->SizeFullScreen.Y = ScreenDisplay->Height;
@@ -1426,9 +1426,9 @@ tWindow *new_window_tab_group(void *ParentWindow, tDisplay *ScreenDisplay)
 	else
 	{
 		settings->WindowMoveLimits.sXMin = 0;
-		settings->WindowMoveLimits.sXMax = _ScreenDisplay->raster_timings->X;
+		settings->WindowMoveLimits.sXMax = _ScreenDisplay->LcdTimings->X;
 		settings->WindowMoveLimits.sYMin = 0;
-		settings->WindowMoveLimits.sYMax = _ScreenDisplay->raster_timings->Y;
+		settings->WindowMoveLimits.sYMax = _ScreenDisplay->LcdTimings->Y;
 	}
 	settings->Internals.Header.Size.Y = 20;
 	settings->Internals.FullScreen = true;

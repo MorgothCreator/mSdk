@@ -113,6 +113,7 @@
 #define SD_DATATIMEOUT           ((unsigned long)100000000)
 
 
+extern HAL_SD_CardInfoTypedef uSdCardInfo[];
 /**
   * @}
   */
@@ -156,7 +157,7 @@ unsigned int MMCSDReadCmdSend(void *SdStruct, void *ptr, unsigned long block, un
 unsigned int MMCSDWriteCmdSend(void *SdStruct, void *ptr, unsigned long block, unsigned int nblks);
 
 void _mmcsd_ioctl(unsigned int unit_nr, unsigned int  command,  unsigned int *buffer);
-void _mmcsd_idle(unsigned int unit_nr);
+bool _mmcsd_idle(unsigned int unit_nr);
 void _mmcsd_init(unsigned int unit_nr, new_gpio* CardDetect, new_gpio* StatusLed);
 #ifdef __cplusplus
 }

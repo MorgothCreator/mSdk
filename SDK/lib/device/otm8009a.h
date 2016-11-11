@@ -200,8 +200,7 @@
   * @{
   */
 void DSI_IO_WriteCmd(uint32_t NbrParams, uint8_t *pParams);
-uint8_t OTM8009A_Init(uint32_t ColorCoding, uint32_t orientation);
-extern void OTM8009A_IO_Delay(unsigned long Delay);
+uint8_t OTM8009A_Init(void *_pDisplay, uint32_t ColorCoding);
 /**
   * @}
   */

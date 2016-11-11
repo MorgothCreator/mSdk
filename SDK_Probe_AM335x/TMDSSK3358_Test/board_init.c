@@ -177,23 +177,23 @@ inline bool board_init()
 #endif
 /*-----------------------------------------------------*/
 	ScreenBuff = new_(new_screen);
-	ScreenBuff->raster_timings = &lcd_TFT43_TMDSSK3358;
+	ScreenBuff->LcdTimings = &lcd_TFT43_TMDSSK3358;
 	//ScreenBuff->BackLightLevel = 60;
 	//ScreenBuff->PmicTwiModuleStruct = TWI[0];
 	ScreenBuff->BackLight = gpio_assign(IOD, 17, GPIO_OUT_PUSH_PULL, false);
 	lcd_init(ScreenBuff);
-	UARTprintf(DebugCom, "LCD display initialize successful for %dx%d resolution, %d Bit bus.\n\r" , ScreenBuff->raster_timings->X, ScreenBuff->raster_timings->Y, ScreenBuff->raster_timings->bus_size);
+	UARTprintf(DebugCom, "LCD display initialize successful for %dx%d resolution, %d Bit bus.\n\r" , ScreenBuff->LcdTimings->X, ScreenBuff->LcdTimings->Y, ScreenBuff->LcdTimings->bus_size);
 
 	TouchScreen = new_(new_touchscreen);
 	//TouchScreen->TwiStruct = TWI[1];
-	TouchScreen->screen_max_x = (double)ScreenBuff->raster_timings->X;
-	TouchScreen->screen_max_y = (double)ScreenBuff->raster_timings->Y;
+	//TouchScreen->screen_max_x = (double)ScreenBuff->LcdTimings->X;
+	//TouchScreen->screen_max_y = (double)ScreenBuff->LcdTimings->Y;
 	TouchScreen->pDisplay = ScreenBuff;
 	InitTouchScreen(TouchScreen);
 	UARTPuts(DebugCom, "Init calibration of LCD resistive touch screen....." , -1);
 	TouchCalibrate(TouchScreen, ScreenBuff);
 	UARTPuts(DebugCom, "OK.\n\r" , -1);
-	ScreenBuff->lcd_func.put_rectangle(ScreenBuff, 0, 0, ScreenBuff->raster_timings->X, ScreenBuff->raster_timings->Y, true, controls_color.Scren);
-	ScreenBuff->lcd_func.box_cache_clean(ScreenBuff, 0, 0, ScreenBuff->raster_timings->X, ScreenBuff->raster_timings->Y);
+	ScreenBuff->lcd_func.put_rectangle(ScreenBuff, 0, 0, ScreenBuff->LcdTimings->X, ScreenBuff->LcdTimings->Y, true, controls_color.Scren);
+	ScreenBuff->lcd_func.box_cache_clean(ScreenBuff, 0, 0, ScreenBuff->LcdTimings->X, ScreenBuff->LcdTimings->Y);
 	return true;
 }

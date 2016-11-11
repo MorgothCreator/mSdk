@@ -1006,7 +1006,7 @@ void mmcsd_spi_idle(unsigned int unit_nr)
 							if(SD_StructDisk->g_s_mmcFatFs.fs_type == FS_FAT12)	{ 				UARTprintf(DebugCom, "Fat12");}
 							else if(SD_StructDisk->g_s_mmcFatFs.fs_type == FS_FAT16){ 				UARTprintf(DebugCom, "Fat16");}
 							else if(SD_StructDisk->g_s_mmcFatFs.fs_type == FS_FAT32){ 				UARTprintf(DebugCom, "Fat32");}
-							//else if(SD_StructDisk->g_s_mmcFatFs.fs_type == FS_EXFAT){ 				UARTprintf(DebugCom, "exFat");}
+							else if(SD_StructDisk->g_s_mmcFatFs.fs_type == FS_EXFAT){ 				UARTprintf(DebugCom, "exFat");}
 							else								{ 				UARTprintf(DebugCom, "None");}
 																				UARTprintf(DebugCom, "\n\r");
 																				//UARTprintf(DebugCom, "MMCSD0 BootSectorAddress:       %u \n\r",(unsigned int)g_sFatFs.);

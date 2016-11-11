@@ -376,7 +376,7 @@
 volatile unsigned long StopCondition = 0;
 volatile HAL_SD_ErrorTypedef TransferError = SD_OK;
 volatile unsigned long TransferEnd = 0, DMAEndOfTransfer = 0;
-HAL_SD_CardInfoTypedef SDCardInfo;
+//HAL_SD_CardInfoTypedef SDCardInfo[1];
 
 SDIO_InitTypeDef SDIO_InitStructure;
 SDIO_CmdInitTypeDef SDIO_CmdInitStructure;
@@ -392,10 +392,12 @@ static char g_cCwdBuf0[PATH_BUF_SIZE] = "SD1:/";
 DIR g_sDirObject;
 
 static SD_HandleTypeDef uSdHandle;
-static HAL_SD_CardInfoTypedef uSdCardInfo;
+HAL_SD_CardInfoTypedef uSdCardInfo[1];
 
 Gpio_t *card_detect = NULL;
 Gpio_t *status_led = NULL;
+
+static bool card_detected = false;
 //Gpio_t *Cs;
 
 /**
@@ -429,7 +431,7 @@ unsigned char BSP_SD_Init(void)
   BSP_SD_MspInit(&uSdHandle, NULL);
 
   /* HAL SD initialization */
-  if(HAL_SD_Init(&uSdHandle, &uSdCardInfo) != SD_OK)
+  if(HAL_SD_Init(&uSdHandle, &uSdCardInfo[0]) != SD_OK)
   {
     sd_state = MSD_ERROR;
   }
@@ -803,7 +805,7 @@ void BSP_SD_GetCardInfo(HAL_SD_CardInfoTypedef *CardInfo)
 
 void _mmcsd_ioctl(unsigned int unit_nr, unsigned int  command,  unsigned int *buffer)
 {
-	HAL_SD_CardInfoTypedef* _SdCtrlStruct = &uSdCardInfo;
+	HAL_SD_CardInfoTypedef* _SdCtrlStruct = &uSdCardInfo[0];
     switch(command)
     {
 
@@ -812,7 +814,7 @@ void _mmcsd_ioctl(unsigned int unit_nr, unsigned int  command,  unsigned int *bu
            //if(_SdCtrlStruct->CardType == MMCSD_CARD_SD) *buffer = _SdCtrlStruct->card->nBlks;
            //else if(_SdCtrlStruct->card->cardType == MMCSD_CARD_MMC) *buffer = extCsd.sec_count;
            //else *buffer = 0;
-           *buffer = _SdCtrlStruct->CardCapacity;
+           *buffer = _SdCtrlStruct->CardCapacity / _SdCtrlStruct->CardBlockSize;
 
             break;
         }
@@ -874,19 +876,29 @@ unsigned int MMCSDWriteCmdSend(void *SdStruct, void *ptr, unsigned long block, u
 
 
 
-void _mmcsd_idle(unsigned int unit_nr)
+bool _mmcsd_idle(unsigned int unit_nr)
 {
 	if(card_detect != NULL)
+	{
 		gpio_idle(card_detect);
+		if(card_detect->event.state_up)
+		{
+			card_detect->event.state_up = false;
+			card_detected = false;
+		}
+	}
 	if(card_detect == NULL || card_detect->event.state_dn)
 	{
 		HAL_SD_ErrorTypedef res = SD_OK;
 		res =  BSP_SD_Init();
 		if(res != SD_OK)
 		{
+			if(card_detect != NULL)
+				card_detect->event.state_dn = false;
 			//if(DebugCom)
 				//UARTprintf(DebugCom,   "MMCSD%d ERROR initializing card.\n\r" , 0);
-			return;
+			card_detected = false;
+			return false;
 		}
 		if(card_detect != NULL)
 			card_detect->event.state_dn = false;
@@ -913,6 +925,8 @@ void _mmcsd_idle(unsigned int unit_nr)
 																				UARTprintf(DebugCom, "Fat16");}
 							else if(MmcSdFatFs.fs_type == FS_FAT32){
 																				UARTprintf(DebugCom, "Fat32");}
+							else if(MmcSdFatFs.fs_type == FS_EXFAT){
+																				UARTprintf(DebugCom, "exFat");}
 							else								{ 				UARTprintf(DebugCom, "None");}
 																				UARTprintf(DebugCom, "\n\r");
 																				//UARTprintf(DebugCom, "MMCSD0 BootSectorAddress:       %u \n\r",(unsigned int)g_sFatFs.);
@@ -926,10 +940,20 @@ void _mmcsd_idle(unsigned int unit_nr)
 																				UARTprintf(DebugCom, "MMCSD%d uSD DiskCapacity:        %uMB\n\r",0, (unsigned long)((unsigned long long)((unsigned long long)MmcSdFatFs.n_fatent * (unsigned long long)/*g_sFatFs.s_size*/512 *(unsigned long long)MmcSdFatFs.csize) / 1000000));
 						}
 #endif
-                    } else  if(DebugCom)										UARTprintf(DebugCom,   "MMCSD%d ERROR oppening path\n\r" , 0);
+			        	card_detected = true;
+                    } else
+                    {
+                    	if(DebugCom)										UARTprintf(DebugCom,   "MMCSD%d ERROR oppening path\n\r" , 0);
+                    	card_detected = false;
+                    }
         }
-        else  if(DebugCom)												UARTprintf(DebugCom,   "MMCSD%d ERROR mounting disk\n\r" , 0);
+        else
+        {
+        	if(DebugCom)												UARTprintf(DebugCom,   "MMCSD%d ERROR mounting disk\n\r" , 0);
+        	card_detected = false;
+        }
 	}
+	return card_detected;
 }
 /*#####################################################*/
 

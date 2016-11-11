@@ -299,7 +299,7 @@ void _mcspi_deassert(Mcspi_t *McspiStruct)
 	//if(McspiStruct->OldCsSelect != McspiStruct->CsSelect)
 	//{
 	//	McspiStruct->OldCsSelect = McspiStruct->CsSelect;
-		_mcspi_set_baud(McspiStruct, McspiStruct->ClkDiv[McspiStruct->CsSelect]);
+		//_mcspi_set_baud(McspiStruct, McspiStruct->ClkDiv[McspiStruct->CsSelect]);
 	//}
 	HAL_GPIO_WritePin(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[McspiStruct->CsSelect]], 1 << McspiStruct->CsPin[McspiStruct->CsSelect], GPIO_PIN_SET);
 }
@@ -311,7 +311,7 @@ bool _mcspi_transfer(Mcspi_t *McspiStruct)
 	//memcpy(McspiStruct->Buff, McspiStruct->Buff + NumOfBytesSend, NumOfBytesReceive);
 	if(response) return false;*/
 	if(!McspiStruct->DisableCsHandle)
-		HAL_GPIO_WritePin(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[McspiStruct->CsSelect]], 1 << McspiStruct->CsPin[McspiStruct->CsSelect], GPIO_PIN_RESET);
+		_mcspi_assert(McspiStruct);
 
 	//unsigned int transfer_cnt = 0;
 	//for(; transfer_cnt < McspiStruct->numOfBytes; transfer_cnt++) {
@@ -323,7 +323,7 @@ bool _mcspi_transfer(Mcspi_t *McspiStruct)
 		status = false;
 
 	if(!McspiStruct->DisableCsHandle)
-		HAL_GPIO_WritePin(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[McspiStruct->CsSelect]], 1 << McspiStruct->CsPin[McspiStruct->CsSelect], GPIO_PIN_SET);
+		_mcspi_deassert(McspiStruct);
 	return status;
 }
 /*#####################################################*/
