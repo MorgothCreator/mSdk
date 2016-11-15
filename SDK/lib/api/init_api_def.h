@@ -33,6 +33,7 @@
 #include "device/lepton_flir.h"
 #include "device/nrf24l01.h"
 #include "device/sst25vf.h"
+#include "device/sx150x.h"
 #include "device/mmcsd_spi.h"
 
 
@@ -440,9 +441,16 @@ extern tUSBHMSCInstance g_USBHMSCDevice[]; \
 		name->wp = _wp_port;\
 		name->hold = _hold_port;\
 		sst25vf_init(name)
-
-
-
+/*#####################################################*/
+#define NEW_SX150x(name) \
+		new_sx150x *name
+/*-----------------------------------------------------*/
+#define INIT_SX150x(name, TWI_INTERFACE, TWI_ADDR) \
+		name = new_(new_sx150x);\
+		name->Twi_Addr = TWI_ADDR;\
+		name->TWI = TWI[TWI_INTERFACE];\
+		sx150x_open(name);
+/*#####################################################*/
 
 
 
