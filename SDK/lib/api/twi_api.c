@@ -29,6 +29,28 @@ bool SetupI2CTransmit(new_twi* TwiStruct, unsigned int TransmitBytes)
 	return _SetupI2CTransmit(TwiStruct, TransmitBytes);
 }
 /*#####################################################*/
+static bool send_receive(struct Twi_s* param, unsigned char addr, unsigned char *buff_send, unsigned int bytes_send, unsigned char *buff_receive, unsigned int bytes_receive)
+{
+	if(!param)
+		return false;
+	unsigned char tmp3 = param->MasterSlaveAddr;
+	param->MasterSlaveAddr = addr;
+	unsigned char *tmp1 = param->TxBuff;
+	param->TxBuff = buff_send;
+	bool response = false;
+	if(bytes_receive)
+	{
+		unsigned char *tmp2 = param->RxBuff;
+		param->RxBuff = buff_receive;
+		response = _SetupI2CReception(param, bytes_send, bytes_receive);
+		param->RxBuff = tmp2;
+	}
+	else
+		response = _SetupI2CTransmit(param, bytes_send);
+	param->TxBuff = tmp1;
+	param->MasterSlaveAddr = tmp3;
+	return response;
+}
 bool SetupI2CReception(new_twi* TwiStruct, unsigned int TransmitBytes, unsigned int ReceiveBytes)
 {
 	return _SetupI2CReception(TwiStruct, TransmitBytes, ReceiveBytes);
@@ -36,11 +58,17 @@ bool SetupI2CReception(new_twi* TwiStruct, unsigned int TransmitBytes, unsigned 
 /*#####################################################*/
 bool twi_open(new_twi* TwiStruct)
 {
+	if(!TwiStruct)
+		return false;
+	TwiStruct->close = twi_close;
+	TwiStruct->send_receive = send_receive;
 	return _twi_open(TwiStruct);
 }
 /*#####################################################*/
 void twi_close(new_twi* TwiStruct)
 {
+	if(!TwiStruct)
+		return;
 	_twi_close(TwiStruct);
 }
 /*#####################################################*/

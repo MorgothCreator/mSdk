@@ -26,8 +26,10 @@
 /*#####################################################*/
 #define twi_timeout	500000
 /*#####################################################*/
-typedef struct
+typedef struct Twi_s
 {
+	void (*close)(struct Twi_s* param);
+	bool (*send_receive)(struct Twi_s* param, unsigned char addr, unsigned char *buff_send, unsigned int bytes_send, unsigned char *buff_receive, unsigned int bytes_receive);
 	unsigned char MasterSlaveAddr;
 	unsigned char TwiNr;
 	volatile unsigned char flag;
