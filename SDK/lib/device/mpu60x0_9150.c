@@ -166,9 +166,9 @@ bool mpu60x0_9150_accel_data_get(MPU60x0_9150_t *structure, signed short *X_Axis
 	TwiStruct->TxBuff[0] = MPU60X0_9150_ACCEL_XOUT_H;
 	if(!SetupI2CReception(TwiStruct, 1, 6))
 		return false;
-	*X_Axis = (TwiStruct->RxBuff[0] << 8) + TwiStruct->RxBuff[1];
-	*Y_Axis = (TwiStruct->RxBuff[2] << 8) + TwiStruct->RxBuff[3];
-	*Z_Axis = (TwiStruct->RxBuff[4] << 8) + TwiStruct->RxBuff[5];
+	*X_Axis = ((TwiStruct->RxBuff[0] << 8) + TwiStruct->RxBuff[1]) + structure->XA_Cal;
+	*Y_Axis = ((TwiStruct->RxBuff[2] << 8) + TwiStruct->RxBuff[3]) + structure->YA_Cal;
+	*Z_Axis = ((TwiStruct->RxBuff[4] << 8) + TwiStruct->RxBuff[5]) + structure->ZA_Cal;
 	return true;
 }
 
@@ -179,9 +179,9 @@ bool mpu60x0_9150_gyro_data_get(MPU60x0_9150_t *structure, signed short *X_Axis,
 	TwiStruct->TxBuff[0] = MPU60X0_9150_GYRO_XOUT_H;
 	if(!SetupI2CReception(TwiStruct, 1, 6))
 		return false;
-	*X_Axis = (TwiStruct->RxBuff[0] << 8) + TwiStruct->RxBuff[1];
-	*Y_Axis = (TwiStruct->RxBuff[2] << 8) + TwiStruct->RxBuff[3];
-	*Z_Axis = (TwiStruct->RxBuff[4] << 8) + TwiStruct->RxBuff[5];
+	*X_Axis = ((TwiStruct->RxBuff[0] << 8) + TwiStruct->RxBuff[1]) + structure->XG_Cal;
+	*Y_Axis = ((TwiStruct->RxBuff[2] << 8) + TwiStruct->RxBuff[3]) + structure->YG_Cal;
+	*Z_Axis = ((TwiStruct->RxBuff[4] << 8) + TwiStruct->RxBuff[5]) + structure->ZG_Cal;
 	return true;
 }
 

@@ -207,6 +207,12 @@ typedef struct MPU60x0_s{
 	bool busy;
 	unsigned char IcNr;
 	Twi_t* TWI;
+	signed short XA_Cal;
+	signed short YA_Cal;
+	signed short ZA_Cal;
+	signed short XG_Cal;
+	signed short YG_Cal;
+	signed short ZG_Cal;
 }MPU60x0_9150_t;
 /*#####################################################*/
 bool mpu60x0_9150_sample_rate_divider_set(MPU60x0_9150_t *structure, unsigned char Value);
