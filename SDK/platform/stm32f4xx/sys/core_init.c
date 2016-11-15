@@ -39,15 +39,15 @@ unsigned long PLL_REF_CLK =	HSE_VALUE;
   /**
   * @brief  System Clock Configuration
   *         The system Clock is configured as follow :
-  *            System Clock source            = PLL (HSE)
-  *            SYSCLK(Hz)                     = 180000000
-  *            HCLK(Hz)                       = 180000000
+  *            System Clock source            = PLL (HSE or HSI)
+  *            SYSCLK(Hz)                     = XPLL
+  *            HCLK(Hz)                       = XPLL
   *            AHB Prescaler                  = 1
   *            APB1 Prescaler                 = 4
   *            APB2 Prescaler                 = 2
-  *            HSE Frequency(Hz)              = 8000000
+  *            HSE Frequency(Hz)              = XHSI
   *            PLL_M                          = 8
-  *            PLL_N                          = 360
+  *            PLL_N                          = XPLL * 2
   *            PLL_P                          = 2
   *            PLL_Q                          = 7
   *            PLL_R                          = 6
