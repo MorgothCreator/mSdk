@@ -120,6 +120,8 @@ bool ms5611_read_prom_cmd_send(MS5611_t *structure)
 
 bool ms5611_read(MS5611_t *structure, unsigned char osr, signed int *Pressure, signed int *Temperature)
 {
+	if(!structure)
+		return false;
 	unsigned long D1 = 0, D2 = 0;
 	signed long dT = 0, T2 = 0, TEMP = 0;
 	signed long long OFF = 0, OFF2 = 0, SENS = 0, SENS2 = 0;
