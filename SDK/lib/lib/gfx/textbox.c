@@ -106,7 +106,7 @@ static void paint_textbox(tTextBox* settings, void *pDisplay, signed int x_start
 		if(settings->Internals.CursorDownInsideTextBox || settings->Internals.NeedEntireRefresh)
 		{
 			if(settings->Internals.CursorDownInsideTextBox && settings->Internals.NeedEntireRefresh == false)
-				string_select_get(pDisplay, settings->Internals.Caption.Font, settings->Text->text, settings->Internals.Caption.WordWrap, -1, &settings->Internals.Start, &Start, &Len, settings->Internals.PenPushX, settings->Internals.PenPushY, control_comand->X, control_comand->Y, x_str_location - settings->Internals.Hscrollbar->Value, y_str_location - settings->Internals.Vscrollbar->Value, &command_return);
+				string_select_get(pDisplay, settings->Font, settings->Text->text, settings->WordWrap, -1, &settings->Internals.Start, &Start, &Len, settings->Internals.PenPushX, settings->Internals.PenPushY, control_comand->X, control_comand->Y, x_str_location - settings->Internals.Hscrollbar->Value, y_str_location - settings->Internals.Vscrollbar->Value, &command_return);
 
 			if((command_return & ReturnCommand_gm) == ReturnCommand_GoLeft && (((command_return & (~ReturnCommand_gm)) >> 1) != 0))
 			{
@@ -226,6 +226,7 @@ static void paint_textbox(tTextBox* settings, void *pDisplay, signed int x_start
 				properties.background_color = controlls_change_color(color, -2);
 			}
 			put_string(&properties);
+			settings->Text->modifyed = false;
 			str_free(properties.pcString);
 			control_comand->WindowRefresh |= true;
 			LcdStruct->sClipRegion.sXMin = x_start;
@@ -308,9 +309,9 @@ void textbox(void *_settings, tControlCommandData* control_comand)
 					settings->Size.X != settings->Internals.Size.X ||
 						settings->Size.Y != settings->Internals.Size.Y ||
 							settings->Internals.Size.ScrollSize != settings->Size.ScrollSize ||
-								settings->Internals.Caption.Font != settings->Font ||
-									//settings->Internals.Caption.Text != settings->Text ||
-										settings->Internals.Caption.WordWrap != settings->WordWrap ||
+								//settings->Internals.Caption.Font != settings->Font ||
+									settings->Text->modifyed ||
+										//settings->Internals.Caption.WordWrap != settings->WordWrap ||
 											settings->Internals.OldStateEnabled != settings->Enabled ||
 												ParentWindow->Internals.OldStateEnabled != settings->Internals.ParentWindowStateEnabled)
 													settings->Internals.NeedEntireRefresh = true;
@@ -322,9 +323,9 @@ void textbox(void *_settings, tControlCommandData* control_comand)
 					settings->Size.X != settings->Internals.Size.X ||
 						settings->Size.Y != settings->Internals.Size.Y ||
 							settings->Internals.Size.ScrollSize != settings->Size.ScrollSize ||
-								settings->Internals.Caption.Font != settings->Font ||
-									//settings->Internals.Caption.Text != settings->Text ||
-										settings->Internals.Caption.WordWrap != settings->WordWrap ||
+								//settings->Internals.Caption.Font != settings->Font ||
+									settings->Text->modifyed ||
+										//settings->Internals.Caption.WordWrap != settings->WordWrap ||
 											settings->Internals.OldStateEnabled != settings->Enabled)
 												settings->Internals.NeedEntireRefresh = true;
 	}
@@ -379,9 +380,9 @@ void textbox(void *_settings, tControlCommandData* control_comand)
 		settings->Internals.Size.X = settings->Size.X;
 		settings->Internals.Size.Y = settings->Size.Y;
 		settings->Internals.Size.ScrollSize = settings->Size.ScrollSize;
-		settings->Internals.Caption.Font = settings->Font;
+		//settings->Internals.Caption.Font = settings->Font;
 		//settings->Internals.Caption.Text = settings->Text;
-		settings->Internals.Caption.WordWrap = settings->WordWrap;
+		//settings->Internals.Caption.WordWrap = settings->WordWrap;
 		if(settings->Size.X == 0 || settings->Size.Y == 0) return;
 
 		X_StartBox = settings->Internals.Position.X;
@@ -396,7 +397,7 @@ void textbox(void *_settings, tControlCommandData* control_comand)
 		LcdStruct->sClipRegion.sXMax = ((settings->Internals.Position.X + settings->Internals.Size.X) - 4 - settings->Internals.Size.ScrollSize);
 		LcdStruct->sClipRegion.sYMax = ((settings->Internals.Position.Y + settings->Internals.Size.Y) - 4 - settings->Internals.Size.ScrollSize);
 		clip_limit(&LcdStruct->sClipRegion, &back_up_clip);
-		StringProperties_t StrProperties = string_properties_get(settings->Internals.pDisplay, settings->Internals.Caption.Font, settings->Text->text, settings->Internals.Caption.WordWrap, -1);
+		StringProperties_t StrProperties = string_properties_get(settings->Internals.pDisplay, settings->Font, settings->Text->text, settings->WordWrap, -1);
 		LcdStruct->sClipRegion = back_up_clip;
 
 		settings->Internals.Vscrollbar->Maximum = StrProperties.StringColsHeight_Pixels - (settings->Internals.Size.Y - 6 - settings->Size.ScrollSize);
@@ -625,21 +626,21 @@ void textbox_text_to_lower(void* _settings)
 void textbox_font(void* _settings, tFont* font)
 {
 	tTextBox* settings = _settings;
-	settings->Internals.Caption.Font = font;
+	settings->Font = font;
 	settings->Internals.NeedEntireRefresh = true;
 }
 //#######################################################################################
 void textbox_wordwrap(void* _settings, bool word_wrap)
 {
 	tTextBox* settings = _settings;
-	settings->Internals.Caption.WordWrap = word_wrap;
+	settings->WordWrap = word_wrap;
 	settings->Internals.NeedEntireRefresh = true;
 }
 //#######################################################################################
 void textbox_align(void* _settings, bool align)
 {
 	tTextBox* settings = _settings;
-	settings->Internals.Caption.TextAlign = align;
+	settings->TextAlign = align;
 	settings->Internals.NeedEntireRefresh = true;
 }
 //#######################################################################################

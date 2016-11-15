@@ -74,7 +74,7 @@ typedef struct
 			signed int Y;
 			signed int ScrollSize;
 		}Size;
-		controls_caption_t Caption;
+		//controls_caption_t Caption;
 		bool OldStateVisible;
 		bool OldStateEnabled;
 		bool NeedEntireRefresh;
