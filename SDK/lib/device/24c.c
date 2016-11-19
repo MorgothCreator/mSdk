@@ -25,19 +25,11 @@
 bool E2promRead(new_twi* TwiStruct, unsigned char MasterSlaveAddr, unsigned long Addr, unsigned char *Buff, unsigned int DataLen)
 {
 	TwiStruct->MasterSlaveAddr = MasterSlaveAddr | ((Addr >> 16) & 0x01);
-    unsigned int i;
-
-    TwiStruct->TxBuff[0] = Addr>>8;
-    TwiStruct->TxBuff[1] = Addr;
-
-    TwiStruct->tCount = 0;
-    TwiStruct->rCount = 0;
-    if(SetupI2CReception(TwiStruct, 2, DataLen) == false) return false;
-
-    for (i = 0; i < DataLen; i++ )
-    {
-    	Buff[i] = TwiStruct->RxBuff[i];
-    }
+    unsigned char addr[2];
+    addr[0] = Addr>>8;
+    addr[1] = Addr;
+    if(twi.trx(TwiStruct, MasterSlaveAddr | ((Addr >> 16) & 0x01), addr, 2, Buff, DataLen) == false)
+    	return false;
     return true;
 }
 /*#####################################################*/
@@ -46,16 +38,15 @@ bool E2promWrite(new_twi* TwiStruct, unsigned char MasterSlaveAddr, unsigned lon
 	TwiStruct->MasterSlaveAddr = MasterSlaveAddr | ((Addr >> 16) & 0x01);
     unsigned int i;
 
-    TwiStruct->TxBuff[0] = Addr>>8;
-    TwiStruct->TxBuff[1] = Addr;
+    unsigned char *buff = malloc(DataLen + 2);
+    buff[0] = Addr>>8;
+    buff[1] = Addr;
 
-    TwiStruct->tCount = 0;
-    TwiStruct->rCount = 0;
     for (i = 0; i < DataLen; i++ )
     {
-    	TwiStruct->TxBuff[i + 2] = Buff[i];
+    	buff[i + 2] = Buff[i];
     }
-    return SetupI2CTransmit(TwiStruct, DataLen + 2);
+    return twi.tx(TwiStruct, MasterSlaveAddr | ((Addr >> 16) & 0x01), buff, DataLen + 2);
 }
 /*#####################################################*/
 bool E2promRead_max16kb(new_twi* TwiStruct, unsigned char MasterSlaveAddr, unsigned int Addr, unsigned char *Buff, unsigned int DataLen)
@@ -63,11 +54,10 @@ bool E2promRead_max16kb(new_twi* TwiStruct, unsigned char MasterSlaveAddr, unsig
 	TwiStruct->MasterSlaveAddr = MasterSlaveAddr | ((Addr >> 8) & 0x07);
     unsigned int i;
 
-    TwiStruct->TxBuff[0] = Addr;
+    unsigned char addr = Addr;
 
-    TwiStruct->tCount = 0;
-    TwiStruct->rCount = 0;
-    if(SetupI2CReception(TwiStruct, 1, DataLen) == false) return false;
+    if(twi.trx(TwiStruct, MasterSlaveAddr | ((Addr >> 8) & 0x07), &addr, 1, Buff, DataLen) == false)
+    	return false;
 
     for (i = 0; i < DataLen; i++ )
     {
@@ -80,16 +70,13 @@ bool E2promWrite_max16kb(new_twi* TwiStruct, unsigned char MasterSlaveAddr, unsi
 {
 	TwiStruct->MasterSlaveAddr = MasterSlaveAddr | ((Addr >> 8) & 0x07);
     unsigned int i;
-
-    TwiStruct->TxBuff[0] = Addr;
-
-    TwiStruct->tCount = 0;
-    TwiStruct->rCount = 0;
+    unsigned char *buff = malloc(DataLen + 1);
+    buff[0] = Addr;
     for (i = 0; i < DataLen; i++ )
     {
-    	TwiStruct->TxBuff[i + 1] = Buff[i];
+    	buff[i + 1] = Buff[i];
     }
-    return SetupI2CTransmit(TwiStruct, DataLen + 1);
+    return twi.tx(TwiStruct, MasterSlaveAddr | ((Addr >> 8) & 0x07), buff, DataLen + 1);
 }
 /*#####################################################*/
 

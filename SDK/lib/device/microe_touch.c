@@ -92,16 +92,16 @@ bool microe_touch_service(LcdTouch_t* Touch)
 		switch(MikroeTouch->xy_state)
 		{
 		case 0:
-			gpio_out(MikroeTouch->DriveB, 1);
-			gpio_out(MikroeTouch->DriveA, 0);
+			gpio.out(MikroeTouch->DriveB, 1);
+			gpio.out(MikroeTouch->DriveA, 0);
 			break;
 		case 1:
-			gpio_out(MikroeTouch->DriveA, 1);
-			gpio_out(MikroeTouch->DriveB, 0);
+			gpio.out(MikroeTouch->DriveA, 1);
+			gpio.out(MikroeTouch->DriveB, 0);
 			break;
 		case 2:
-			gpio_out(MikroeTouch->DriveA, 0);
-			gpio_out(MikroeTouch->DriveB, 0);
+			gpio.out(MikroeTouch->DriveA, 0);
+			gpio.out(MikroeTouch->DriveB, 0);
 			break;
 		default:
 			MikroeTouch->xy_state = 0;

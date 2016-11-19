@@ -26,11 +26,11 @@
 #include "string_lib.h"
 
 
-static int string_printf(
-		String_t* fp,			/* Pointer to the file object */
-		const char* str,	/* Pointer to the format string */
-		...					/* Optional arguments... */
-);
+//static int string_printf(
+//		String_t* fp,			/* Pointer to the file object */
+//		const char* str,	/* Pointer to the format string */
+//		...					/* Optional arguments... */
+//);
 
 StringFunc_t String = {
 	.Append = str_append,

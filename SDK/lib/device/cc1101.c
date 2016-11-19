@@ -5,11 +5,11 @@
  *      Author: John Smith
  */
 
+#include <api/spi_api.h>
+#include <api/spi_def.h>
 #include <string.h>
 #include <stdbool.h>
 #include "cc1101.h"
-#include "api/mcspi_api.h"
-#include "api/mcspi_def.h"
 #include "api/gpio_def.h"
 #include "api/gpio_api.h"
 #include "api/timer_api.h"
@@ -25,12 +25,12 @@ bool CC1101_read(sCC1101Phy* phy, unsigned char address, unsigned char *Buff, un
 		return false;
 	SpiStruct->CsSelect = phy->spi_instance;
 	SpiStruct->DisableCsHandle = true;
-	mcspi_assert(SpiStruct);
+	spi.assert(SpiStruct);
 	timer_interval(&phy->timer, CC1101_MAX_TIMEOUT);
-	while(!timer_tick(&phy->timer) && gpio_in(SpiStruct->Gpio_Miso));
-	if(gpio_in(SpiStruct->Gpio_Miso))
+	while(!timer_tick(&phy->timer) && gpio.in(SpiStruct->Gpio_Miso));
+	if(gpio.in(SpiStruct->Gpio_Miso))
 	{
-		mcspi_deassert(SpiStruct);
+		spi.deassert(SpiStruct);
 		SpiStruct->DisableCsHandle = false;
 		return false;
 	}
@@ -48,15 +48,15 @@ bool CC1101_read(sCC1101Phy* phy, unsigned char address, unsigned char *Buff, un
     		address = address | CC1101_READ_BURST;
     	}
     }
-    SpiStruct->Buff[0] = address;
-	if(!mcspi_transfer(SpiStruct, 1, DataLen))
+    spi.trx_byte(SpiStruct, address);
+	if(!spi.receive(SpiStruct, Buff, DataLen))
 	{
-		mcspi_deassert(SpiStruct);
+		spi.deassert(SpiStruct);
 		return false;
 	}
-	mcspi_deassert(SpiStruct);
+	spi.deassert(SpiStruct);
 	SpiStruct->DisableCsHandle = false;
-	memcpy(Buff, (void *)SpiStruct->Buff, DataLen);
+	//memcpy(Buff, (void *)SpiStruct->Buff, DataLen);
     return true;
 }
 /*#####################################################*/
@@ -69,12 +69,12 @@ bool CC1101_write(sCC1101Phy* phy, unsigned char address, unsigned char *Buff, u
 		return false;
 	SpiStruct->CsSelect = phy->spi_instance;
 	SpiStruct->DisableCsHandle = true;
-	mcspi_assert(SpiStruct);
+	spi.assert(SpiStruct);
 	timer_interval(&phy->timer, CC1101_MAX_TIMEOUT);
-	while(!timer_tick(&phy->timer) && gpio_in(SpiStruct->Gpio_Miso));
-	if(gpio_in(SpiStruct->Gpio_Miso))
+	while(!timer_tick(&phy->timer) && gpio.in(SpiStruct->Gpio_Miso));
+	if(gpio.in(SpiStruct->Gpio_Miso))
 	{
-		gpio_out(SpiStruct->Gpio_Cs[phy->spi_instance], true);
+		gpio.out(SpiStruct->Gpio_Cs[phy->spi_instance], true);
 		SpiStruct->DisableCsHandle = false;
 		return false;
 	}
@@ -83,10 +83,10 @@ bool CC1101_write(sCC1101Phy* phy, unsigned char address, unsigned char *Buff, u
     {
       address = address | CC1101_WRITE_BURST;
     }
-    SpiStruct->Buff[0] = address;
-    memcpy((void *)SpiStruct->Buff + 1, Buff, DataLen);
-    bool state = mcspi_transfer(SpiStruct, 1, DataLen);
-	mcspi_deassert(SpiStruct);
+    spi.trx_byte(SpiStruct, address);
+    //memcpy((void *)SpiStruct->Buff + 1, Buff, DataLen);
+    bool state = spi.transmit(SpiStruct, Buff, DataLen);
+	spi.deassert(SpiStruct);
 	SpiStruct->DisableCsHandle = false;
 	return state;
 }

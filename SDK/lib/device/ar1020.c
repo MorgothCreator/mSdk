@@ -36,7 +36,7 @@ bool ar1020_data_ready(new_touchscreen* structure)
 {
 	if(!structure)
 		return false;
-	if(!gpio_in(structure->IrqStruct))
+	if(!gpio.in(structure->IrqStruct))
 		return false;
 	else
 		return true;
@@ -54,7 +54,7 @@ bool ar1020_init(new_touchscreen* structure, unsigned char Port, unsigned char P
 	if(!structure)
 		return false;
 	structure->TouchScreen_Type = TouchScreen_Type_AR1020;
-	structure->IrqStruct = gpio_assign(Port, Pin, GPIO_IN_FLOATING, false);
+	structure->IrqStruct = gpio.assign(Port, Pin, GPIO_IN_FLOATING, false);
 	if(!structure->IrqStruct)
 		return false;
 	if(ar1020_enable_touch(structure)) 
@@ -73,23 +73,23 @@ bool ar1020_init(new_touchscreen* structure, unsigned char Port, unsigned char P
 //#####################################################
 bool ar1020_comand_send(new_touchscreen* structure, unsigned char command)
 {
-	new_twi* twistruct = structure->TwiStruct;
-	twistruct->TxBuff[0] = 0x0;
-	twistruct->TxBuff[1] = 0x55;
-	twistruct->TxBuff[2] = 0x01;
-	twistruct->TxBuff[3] = command;
-	twistruct->MasterSlaveAddr = AR1020_TWI_DeviceAddr;
+	unsigned char tmp[4];
+	unsigned char result[4];
+	tmp[0] = 0x0;
+	tmp[1] = 0x55;
+	tmp[2] = 0x01;
+	tmp[3] = command;
 	unsigned int TimeoutCnt = 10;
 	bool ResponseOK = false;
 	do
 	{
 		sys_delay(50);
-		if(SetupI2CReception(structure->TwiStruct, 4, 4))
+		if(twi.trx(structure->TwiStruct, AR1020_TWI_DeviceAddr, tmp, 4, result, 4))
 		{
-			unsigned char Buff0 = twistruct->RxBuff[0];
-			unsigned char Buff1 = twistruct->RxBuff[1];
-			unsigned char Buff2 = twistruct->RxBuff[2];
-			unsigned char Buff3 = twistruct->RxBuff[3];
+			unsigned char Buff0 = result[0];
+			unsigned char Buff1 = result[1];
+			unsigned char Buff2 = result[2];
+			unsigned char Buff3 = result[3];
 			if(Buff0 == 0x55 && Buff1 == 0x02 && Buff2 == AR1020_Response_Success && (Buff3 == command)) ResponseOK = true;
 		}
 	} while (TimeoutCnt-- != 0 && ResponseOK == false);
@@ -111,32 +111,35 @@ bool ar1020_disable_touch(new_touchscreen* structure)
 unsigned char ar1020_register_offset_read(new_touchscreen* structure)
 {
 	new_twi* twistruct = structure->TwiStruct;
-	twistruct->TxBuff[0] = 0x0;
-	twistruct->TxBuff[1] = 0x55;
-	twistruct->TxBuff[2] = 0x01;
-	twistruct->TxBuff[3] = 0x22;
-	SetupI2CReception(twistruct, 4, 5);
-	return twistruct->RxBuff[4];
+	unsigned char tmp[4];
+	unsigned char result[5];
+	tmp[0] = 0x0;
+	tmp[1] = 0x55;
+	tmp[2] = 0x01;
+	tmp[3] = 0x22;
+	twi.trx(twistruct, AR1020_TWI_DeviceAddr, tmp, 4, result, 5);
+	return result[4];
 }
 //#####################################################
 bool ar1020_pen_up_delay_set(new_touchscreen* structure)
 {
 	new_twi* twistruct = structure->TwiStruct;
-	twistruct->TxBuff[0] = 0x0;
-	twistruct->TxBuff[1] = 0x55;
-	twistruct->TxBuff[2] = 0x02;
-	twistruct->TxBuff[3] = 0x0B + ar1020_register_offset_read(structure);
-	twistruct->TxBuff[4] = 0x20;
-	twistruct->MasterSlaveAddr = AR1020_TWI_DeviceAddr;
-	return SetupI2CTransmit(twistruct, 5);
+	unsigned char tmp[5];
+	tmp[0] = 0x0;
+	tmp[1] = 0x55;
+	tmp[2] = 0x02;
+	tmp[3] = 0x0B + ar1020_register_offset_read(structure);
+	tmp[4] = 0x20;
+	return twi.tx(twistruct, AR1020_TWI_DeviceAddr, tmp, 5);
 }
 //#####################################################
 unsigned char ar1020_touch(new_touchscreen* structure)
 {
 	sys_delay(50);
 	new_twi* twistruct = structure->TwiStruct;
-	if(SetupI2CReception(twistruct, 0, 4) == false) return false;
-	if(twistruct->RxBuff[0] != 0x55 || twistruct->RxBuff[1] != 0x02 || twistruct->RxBuff[2] != AR1020_Response_Success || twistruct->RxBuff[3] != 0x14)
+	unsigned char result[4];
+	if(twi.trx(twistruct, AR1020_TWI_DeviceAddr, NULL, 0, result, 4) == false) return false;
+	if(result[0] != 0x55 || result[1] != 0x02 || result[2] != AR1020_Response_Success || result[3] != 0x14)
 		return false;
 	return true;
 }
@@ -148,14 +151,13 @@ void ar1020_read_coordonate(new_touchscreen* structure)
 	structure->TouchResponse.y1 = -1;
 	if(ar1020_data_ready(structure))
 	{
-		new_twi* twistruct = structure->TwiStruct;
-		twistruct->MasterSlaveAddr = AR1020_TWI_DeviceAddr;
-		if(SetupI2CReception(structure->TwiStruct, 0, 5))
+		unsigned char result[5];
+		if(twi.trx(structure->TwiStruct, AR1020_TWI_DeviceAddr, NULL, 0, result, 5))
 		{
-			unsigned char* ReadBuffer = twistruct->RxBuff;
-			unsigned char Tmp = ReadBuffer[0] & 0x01;
-			signed int X = to_percentage(0, 4095, (signed int)(double)structure->pDisplay->LcdTimings->X, ((unsigned short)ReadBuffer[2]<<7) | (unsigned short)ReadBuffer[1]);
-			signed int Y = to_percentage(0, 4095, (signed int)(double)structure->pDisplay->LcdTimings->Y, ((unsigned short)ReadBuffer[4]<<7) | (unsigned short)ReadBuffer[3]);
+			//unsigned char* ReadBuffer = twistruct->RxBuff;
+			unsigned char Tmp = result[0] & 0x01;
+			signed int X = to_percentage(0, 4095, (signed int)(double)structure->pDisplay->LcdTimings->X, ((unsigned short)result[2]<<7) | (unsigned short)result[1]);
+			signed int Y = to_percentage(0, 4095, (signed int)(double)structure->pDisplay->LcdTimings->Y, ((unsigned short)result[4]<<7) | (unsigned short)result[3]);
 			switch (structure->pDisplay->LcdTimings->orientation)
 			{
 			case LCD_ORIENTATION_LANDSCAPE:
@@ -196,15 +198,16 @@ void ar1020_read_coordonate(new_touchscreen* structure)
 static bool ar1020_calibrate(new_touchscreen* structure, tDisplay *pDisplay)
 {
 	new_twi* twistruct = structure->TwiStruct;
-	twistruct->TxBuff[0] = 0x0;
-	twistruct->TxBuff[1] = 0x55;
-	twistruct->TxBuff[2] = 0x02;
-	twistruct->TxBuff[3] = 0x14;
-	twistruct->TxBuff[4] = 0x04;
-	twistruct->MasterSlaveAddr = AR1020_TWI_DeviceAddr;
-	if(!SetupI2CReception(twistruct, 5, 4))
+	unsigned char tmp[5];
+	unsigned char result[4];
+	tmp[0] = 0x0;
+	tmp[1] = 0x55;
+	tmp[2] = 0x02;
+	tmp[3] = 0x14;
+	tmp[4] = 0x04;
+	if(!twi.trx(twistruct, AR1020_TWI_DeviceAddr, tmp, 5, result, 4))
 		return false;
-	if(twistruct->TxBuff[0] != 0x55 && twistruct->TxBuff[0] != 0x02 && twistruct->TxBuff[0] != AR1020_Response_Success && twistruct->TxBuff[0] != 0x14)
+	if(result[0] != 0x55 && result[0] != 0x02 && result[0] != AR1020_Response_Success && result[0] != 0x14)
 		return false;
 	
 	TouchPaintPoint(pDisplay, (((double)pDisplay->LcdTimings->X * (double)12.5) / (double)100), (((double)pDisplay->LcdTimings->Y * (double)12.5) / (double)100), 0x0000);

@@ -149,7 +149,7 @@
   * @retval None
   */
 #define __HAL_PWR_VOLTAGESCALING_CONFIG(__REGULATOR__) do {                                                     \
-                                                            __IO uint32_t tmpreg;                               \
+                                                            volatile uint32_t tmpreg;                               \
                                                             MODIFY_REG(PWR->CR, PWR_CR_VOS, (__REGULATOR__));   \
                                                             /* Delay after an RCC peripheral clock enabling */  \
                                                             tmpreg = READ_BIT(PWR->CR, PWR_CR_VOS);             \

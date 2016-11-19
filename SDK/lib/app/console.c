@@ -107,14 +107,14 @@ int console(int argc, char *argv[])
 	    				    cd_arg[0] = settings->path;
 	    				    cd_arg[1] = argument;
 	    				    char *cd_result = (char *)_cd(2, cd_arg);
-	    				    if(!memcmp(cd_result, "ERROR", 5)) UARTprintf(DebugCom, "%s" , cd_result);
+	    				    if(!memcmp(cd_result, "ERROR", 5)) uart.printf(DebugCom, "%s" , cd_result);
 	    				    else
 	    				    {
 	    				    	if(settings->path) free(settings->path);
 	    				    	settings->path = cd_result;
 	    				    }
-	    				    UARTPuts(DebugCom, settings->path, -1);
-	    				    UARTPuts(DebugCom, "\n\r", -1);
+	    				    uart.puts(DebugCom, settings->path, -1);
+	    				    uart.puts(DebugCom, "\n\r", -1);
 	    				}
 	    				else
 	    				{
@@ -158,20 +158,20 @@ int console(int argc, char *argv[])
 										settings->app_order = console_app_list[app_list_cnt].order;
 				    				    if(console_app_list[app_list_cnt].order == CONSOLE_CAT)
 				    				    {
-											UARTPuts(DebugCom, settings->path, -1);
-											UARTPuts(DebugCom, "\n\r", -1);
+											uart.puts(DebugCom, settings->path, -1);
+											uart.puts(DebugCom, "\n\r", -1);
 				    				    }
 									/*} else
 									{
 										if(console_app_list[app_list_cnt].arg_nr - console_app_list[app_list_cnt].res_args > console_app_list[app_list_cnt].arg_nr - arg_nr_cnt)
 										{
-											UARTPuts(DebugCom, console_app_list[app_list_cnt].help_many_args, -1);
-											UARTPuts(DebugCom, "\n\r", -1);
+											uart.puts(DebugCom, console_app_list[app_list_cnt].help_many_args, -1);
+											uart.puts(DebugCom, "\n\r", -1);
 										}
 										else
 										{
-											UARTPuts(DebugCom, console_app_list[app_list_cnt].help_few_args, -1);
-											UARTPuts(DebugCom, "\n\r", -1);
+											uart.puts(DebugCom, console_app_list[app_list_cnt].help_few_args, -1);
+											uart.puts(DebugCom, "\n\r", -1);
 										}
 										console_clear_child_data(settings);
 									}*/
@@ -192,11 +192,11 @@ int console(int argc, char *argv[])
 				{
 					case(CONSOLE_LS):
 					case(CONSOLE_CD):
-						UARTprintf(DebugCom, "%s" , result);
+						uart.printf(DebugCom, "%s" , result);
 						break;
 					case(CONSOLE_CAT):
-						if(!memcmp(result, "ERROR", 5)) UARTPuts(DebugCom, result, -1);
-						else	UARTPuts(DebugCom, result, (int)settings->child_arg[4]);
+						if(!memcmp(result, "ERROR", 5)) uart.puts(DebugCom, result, -1);
+						else	uart.puts(DebugCom, result, (int)settings->child_arg[4]);
 						break;
 				}
 			}
@@ -204,8 +204,8 @@ int console(int argc, char *argv[])
 			{
 			    if(settings->app == _ls)
 			    {
-					UARTPuts(DebugCom, settings->path, -1);
-					UARTPuts(DebugCom, "\n\r", -1);
+			    	uart.puts(DebugCom, settings->path, -1);
+			    	uart.puts(DebugCom, "\n\r", -1);
 			    }
 				console_clear_child_data(settings);
 			}

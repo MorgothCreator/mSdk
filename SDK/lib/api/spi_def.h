@@ -46,16 +46,16 @@ typedef struct
 	//volatile unsigned char Channel;
 	volatile unsigned int BaseAddr;
 	//volatile unsigned long BaudRate;
-	volatile unsigned int BuffSize;
-	volatile unsigned int numOfBytes;
+	//volatile unsigned int BuffSize;
+	//volatile unsigned int numOfBytes;
 	volatile unsigned char McspiNr;
 	volatile unsigned char flag;
 	volatile unsigned char Priority;
 	volatile unsigned char Mode;//_SpiModeRisingSample, _SpiModeRisingSetup, _SpiModeFallingSample, _SpiModeFallingSetup
 	volatile unsigned int BytesCnt;
 	void *UserData;
-	volatile unsigned char* Buff;
-	volatile unsigned char* BuffTmp;
+	//volatile unsigned char* Buff;
+	//volatile unsigned char* BuffTmp;
 	bool DisableCsHandle;
 	bool Cpol;
 	bool Cpha;
@@ -63,6 +63,19 @@ typedef struct
 	unsigned char WordSize;
 	bool Slave;
 }Mcspi_t;
+/*#####################################################*/
+typedef struct spi_s
+{
+	bool (*open)(Mcspi_t *McspiStruct);
+	void (*close)(Mcspi_t *McspiStruct);
+	void (*assert)(Mcspi_t *McspiStruct);
+	void (*deassert)(Mcspi_t *McspiStruct);
+	bool (*set_baud)(Mcspi_t *McspiStruct, unsigned long baud);
+	unsigned char (*trx_byte)(Mcspi_t *McspiStruct, unsigned char byte);
+	bool (*transfer)(Mcspi_t *McspiStruct, unsigned char *buff_send, unsigned char *buff_receive, unsigned int size);
+	bool (*receive)(Mcspi_t *McspiStruct, unsigned char *buff_receive, unsigned int bytes_receive);
+	bool (*transmit)(Mcspi_t *McspiStruct, unsigned char *buff_send, unsigned int bytes_send);
+}spi_t;
 /*#####################################################*/
 #define new_mcspi Mcspi_t
 #ifndef new_

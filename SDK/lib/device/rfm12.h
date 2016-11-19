@@ -15,8 +15,8 @@
 #include "stdlib.h"
 #include "api/gpio_api.h"
 #include "api/gpio_def.h"
-#include "api/mcspi_api.h"
-#include "api/mcspi_def.h"
+#include <api/spi_api.h>
+#include <api/spi_def.h>
 
 /** \name States for rx and tx buffers
 * \anchor rxtx_states

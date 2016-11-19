@@ -26,10 +26,12 @@
 #include "twi_def.h"
 #include "interface/twi_interface.h"
 /*#####################################################*/
-bool SetupI2CTransmit(new_twi* TwiStruct, unsigned int TransmitBytes);
-bool SetupI2CReception(new_twi* TwiStruct, unsigned int TransmitBytes, unsigned int ReceiveBytes);
-bool twi_open(new_twi* TwiStruct);
-void twi_close(new_twi* TwiStruct);
+//bool SetupI2CTransmit(new_twi* TwiStruct, unsigned int TransmitBytes);
+//bool SetupI2CReception(new_twi* TwiStruct, unsigned int TransmitBytes, unsigned int ReceiveBytes);
+//bool twi_open(new_twi* TwiStruct);
+//void twi_close(new_twi* TwiStruct);
+
+extern const twi_t twi;
 /*#####################################################*/
 #ifdef HEADER_INCLUDE_C_FILES
 #include "twi_api.c"

@@ -19,13 +19,27 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <api/spi_api.h>
 #include <stdbool.h>
-#include "mcspi_api.h"
 #include "api/gpio_api.h"
 //#include "aintc/aintc_mcspi.h"
 //#include "clk/clk_mcspi.h"
 #include "interface/mcspi_interface.h"
 
+
+const spi_t spi = {
+		_mcspi_open,
+		_mcspi_close,
+		_mcspi_assert,
+		_mcspi_deassert,
+		_mcspi_set_baud,
+		_mcspi_SendByte,
+		_mcspi_transfer,
+		_mcspi_receive,
+		_mcspi_transmit
+
+};
+#if 0
 bool mcspi_open(Mcspi_t *McspiStruct)
 {
 	McspiStruct->Gpio_Miso = gpio_assign(McspiStruct->MisoPort, McspiStruct->MisoPin, GPIO_IN_PULL_UP, false);
@@ -99,12 +113,12 @@ void mcspi_deassert(Mcspi_t *McspiStruct)
 	_mcspi_deassert(McspiStruct);
 }
 
-bool mcspi_transfer(Mcspi_t *McspiStruct, unsigned int NumOfBytesSend, unsigned int NumOfBytesReceive)
+/*bool mcspi_transfer(Mcspi_t *McspiStruct, unsigned int NumOfBytesSend, unsigned int NumOfBytesReceive)
 {
 	McspiStruct->numOfBytes = NumOfBytesSend + NumOfBytesReceive;
 	_mcspi_transfer(McspiStruct);
 	return true;
-}
+}*/
 
 unsigned char mcspi_send_byte(Mcspi_t *McspiStruct, unsigned char byte)
 {
@@ -116,3 +130,18 @@ bool mcspi_set_baud(Mcspi_t *McspiStruct, unsigned long baud)
 	return _mcspi_set_baud(McspiStruct, baud);
 }
 
+bool mcspi_transfer(Mcspi_t *McspiStruct, unsigned char *buff_send, unsigned char *buff_receive, unsigned int size)
+{
+	return _mcspi_transfer(McspiStruct, buff_send, buff_receive, size);
+}
+
+bool mcspi_receive(Mcspi_t *McspiStruct, unsigned char *buff_receive, unsigned int bytes_receive)
+{
+	return _mcspi_receive(McspiStruct, buff_receive, bytes_receive);
+}
+
+bool mcspi_transmit(Mcspi_t *McspiStruct, unsigned char *buff_send, unsigned int bytes_send)
+{
+	return _mcspi_transmit(McspiStruct, buff_send, bytes_send);
+}
+#endif

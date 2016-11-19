@@ -19,32 +19,14 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <interface/mmcsd_interface.h>
 #include "mmcsd_api.h"
-#include "interface/hs_mmcsd_interface.h"
 #include "api/gpio_def.h"
-/*#####################################################*/
-void mmcsd_init(unsigned int unit_nr, new_gpio* Cs, new_gpio* StatusLed)
-{
-	_mmcsd_init(unit_nr, Cs, StatusLed);
-}
-/*#####################################################*/
-bool mmcsd_idle(unsigned int unit_nr)
-{
-	return _mmcsd_idle(unit_nr);
-}
-/*#####################################################*/
-void mmcsd_ioctl(unsigned int unit_nr, unsigned int  command,  unsigned int *buffer)
-{
-	_mmcsd_ioctl(unit_nr, command,  buffer);
-}
-/*#####################################################*/
-unsigned int mmcsd_write(void *_ctrl, void *ptr, unsigned long block, unsigned int nblks)
-{
-	return MMCSDWriteCmdSend(_ctrl, ptr, block, nblks);
-}
-/*#####################################################*/
-unsigned int mmcsd_read(void *_ctrl, void *ptr, unsigned long block, unsigned int nblks)
-{
-	return MMCSDReadCmdSend(_ctrl, ptr, block, nblks);
-}
-/*#####################################################*/
+
+const mmcsd_t mmcsd = {
+		_mmcsd_init,
+		_mmcsd_idle,
+		_mmcsd_ioctl,
+		_mmcsd_write,
+		_mmcsd_read
+};

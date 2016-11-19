@@ -239,11 +239,11 @@
   */
 /* Includes ------------------------------------------------------------------*/
 
+#include <interface/mmcsd_interface.h>
 #include <stdio.h>
 #include "main.h"
 #include "board_init.h"
 #include "include/stm32f4xx.h"
-#include "hs_mmcsd_interface.h"
 #include "driver/stm32f4xx_hal_conf.h"
 #include "driver/stm32f4xx_hal_sd.h"
 #include "driver/stm32f4xx_hal_dma.h"
@@ -485,7 +485,7 @@ unsigned char BSP_SD_IsDetected(void)
 	volatile unsigned char status = SD_PRESENT;
 
 	  /*!< Check GPIO to detect SD */
-	  if (card_detect != NULL && gpio_in(card_detect) != 0)
+	  if (card_detect != NULL && gpio.in(card_detect) != 0)
 	  {
 	    status = SD_NOT_PRESENT;
 	  }
@@ -838,38 +838,38 @@ void _mmcsd_ioctl(unsigned int unit_nr, unsigned int  command,  unsigned int *bu
 //HAL_SD_ErrorTypedef SD_ReadMultiBlocks(unsigned char *readbuff, unsigned long ReadAddr, uint16_t BlockSize, unsigned long NumberOfBlocks)
 //HAL_SD_ErrorTypedef SD_ReadBlock(unsigned char *readbuff, unsigned long ReadAddr, uint16_t BlockSize)
 
-unsigned int MMCSDReadCmdSend(void *SdStruct, void *ptr, unsigned long block, unsigned int nblks)
+unsigned int _mmcsd_read(void *SdStruct, void *ptr, unsigned long block, unsigned int nblks)
 {
 	//HAL_SD_CardInfoTypedef *_SDCardInfo = (HAL_SD_CardInfoTypedef *)SdStruct;
 	if(status_led)
-		gpio_out(status_led, 1);
+		gpio.out(status_led, 1);
 	HAL_SD_ErrorTypedef status = MSD_OK;
 	status =  BSP_SD_ReadBlocks_DMA((unsigned long *)ptr, block << 9, 512, nblks);
 	if (status == MSD_OK) {
 		if(status_led)
-			gpio_out(status_led, 0);
+			gpio.out(status_led, 0);
 		return 1;
 	} else {
 		if(status_led)
-			gpio_out(status_led, 0);
+			gpio.out(status_led, 0);
 		return 0;
 	}
 }
 
-unsigned int MMCSDWriteCmdSend(void *SdStruct, void *ptr, unsigned long block, unsigned int nblks)
+unsigned int _mmcsd_write(void *SdStruct, void *ptr, unsigned long block, unsigned int nblks)
 {
 	//HAL_SD_CardInfoTypedef *_SDCardInfo = (HAL_SD_CardInfoTypedef *)SdStruct;
 	if(status_led)
-		gpio_out(status_led, 1);
+		gpio.out(status_led, 1);
 	HAL_SD_ErrorTypedef status = MSD_OK;
 	status =  BSP_SD_WriteBlocks_DMA((unsigned long *)ptr, block << 9, 512, nblks);
 	if (status == MSD_OK) {
 		if(status_led)
-			gpio_out(status_led, 0);
+			gpio.out(status_led, 0);
 		return 1;
 	} else {
 		if(status_led)
-			gpio_out(status_led, 0);
+			gpio.out(status_led, 0);
 		return 0;
 	}
 }
@@ -903,8 +903,8 @@ bool _mmcsd_idle(unsigned int unit_nr)
 		if(card_detect != NULL)
 			card_detect->event.state_dn = false;
         MmcSdFatFs.drv_rw_func.DriveStruct = (void *)&uSdCardInfo;//SdStruct;
-        MmcSdFatFs.drv_rw_func.drv_r_func = MMCSDReadCmdSend;
-        MmcSdFatFs.drv_rw_func.drv_w_func = MMCSDWriteCmdSend;
+        MmcSdFatFs.drv_rw_func.drv_r_func = _mmcsd_read;
+        MmcSdFatFs.drv_rw_func.drv_w_func = _mmcsd_write;
 #if (_FFCONF == 82786)
         if(!f_mount(2, &MmcSdFatFs))
 #else
@@ -916,40 +916,40 @@ bool _mmcsd_idle(unsigned int unit_nr)
 #ifdef MMCSD_DEBUG_EN
 						if(DebugCom)
 						{
-																				UARTprintf(DebugCom,   "MMCSD%d drive %d mounted\n\r" , 0 , 0);
-																				UARTprintf(DebugCom,   "MMCSD%d Fat fs detected\n\r" , 0);
-																				UARTprintf(DebugCom, "MMCSD%d Fs type:                 " , 0);
+							uart.printf(DebugCom,   "MMCSD%d drive %d mounted\n\r" , 0 , 0);
+							uart.printf(DebugCom,   "MMCSD%d Fat fs detected\n\r" , 0);
+							uart.printf(DebugCom, "MMCSD%d Fs type:                 " , 0);
 							if(MmcSdFatFs.fs_type == FS_FAT12)	{
-																				UARTprintf(DebugCom, "Fat12");}
+								uart.printf(DebugCom, "Fat12");}
 							else if(MmcSdFatFs.fs_type == FS_FAT16){
-																				UARTprintf(DebugCom, "Fat16");}
+								uart.printf(DebugCom, "Fat16");}
 							else if(MmcSdFatFs.fs_type == FS_FAT32){
-																				UARTprintf(DebugCom, "Fat32");}
+								uart.printf(DebugCom, "Fat32");}
 							else if(MmcSdFatFs.fs_type == FS_EXFAT){
-																				UARTprintf(DebugCom, "exFat");}
-							else								{ 				UARTprintf(DebugCom, "None");}
-																				UARTprintf(DebugCom, "\n\r");
+								uart.printf(DebugCom, "exFat");}
+							else								{ 				uart.printf(DebugCom, "None");}
+							uart.printf(DebugCom, "\n\r");
 																				//UARTprintf(DebugCom, "MMCSD0 BootSectorAddress:       %u \n\r",(unsigned int)g_sFatFs.);
-																				UARTprintf(DebugCom, "MMCSD%d BytesPerSector:          %d \n\r",0, /*(int)g_sFatFs.s_size*/512);
-																				UARTprintf(DebugCom, "MMCSD%d SectorsPerCluster:       %d \n\r",0, (int)MmcSdFatFs.csize);
+							uart.printf(DebugCom, "MMCSD%d BytesPerSector:          %d \n\r",0, /*(int)g_sFatFs.s_size*/512);
+							uart.printf(DebugCom, "MMCSD%d SectorsPerCluster:       %d \n\r",0, (int)MmcSdFatFs.csize);
 																				//UARTprintf(DebugCom, "MMCSD0 AllocTable1Begin:        %u \n\r",(unsigned int)g_sFatFs.fatbase);
 																				//UARTprintf(DebugCom, "MMCSD%d NumberOfFats:            %d \n\r",0, (int)MmcSdFatFs.n_fats);
 																				//UARTprintf(DebugCom, "MMCSD0 MediaType:               %d \n\r",Drives_Table[0]->DiskInfo_MediaType);
 																				//UARTprintf(DebugCom, "MMCSD0 AllocTableSize:          %u \n\r",Drives_Table[0]->DiskInfo_AllocTableSize);
 																				//UARTprintf(DebugCom, "MMCSD%d DataSectionBegin:        %d \n\r",0, (int)MmcSdFatFs.fatbase);
-																				UARTprintf(DebugCom, "MMCSD%d uSD DiskCapacity:        %uMB\n\r",0, (unsigned long)((unsigned long long)((unsigned long long)MmcSdFatFs.n_fatent * (unsigned long long)/*g_sFatFs.s_size*/512 *(unsigned long long)MmcSdFatFs.csize) / 1000000));
+							uart.printf(DebugCom, "MMCSD%d uSD DiskCapacity:        %uMB\n\r",0, (unsigned long)((unsigned long long)((unsigned long long)MmcSdFatFs.n_fatent * (unsigned long long)/*g_sFatFs.s_size*/512 *(unsigned long long)MmcSdFatFs.csize) / 1000000));
 						}
 #endif
 			        	card_detected = true;
                     } else
                     {
-                    	if(DebugCom)										UARTprintf(DebugCom,   "MMCSD%d ERROR oppening path\n\r" , 0);
+                    	if(DebugCom)										uart.printf(DebugCom,   "MMCSD%d ERROR oppening path\n\r" , 0);
                     	card_detected = false;
                     }
         }
         else
         {
-        	if(DebugCom)												UARTprintf(DebugCom,   "MMCSD%d ERROR mounting disk\n\r" , 0);
+        	if(DebugCom)												uart.printf(DebugCom,   "MMCSD%d ERROR mounting disk\n\r" , 0);
         	card_detected = false;
         }
 	}

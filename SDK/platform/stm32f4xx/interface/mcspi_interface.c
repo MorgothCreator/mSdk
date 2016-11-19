@@ -5,11 +5,11 @@
  *  Author: XxXx
  */
 
+#include <api/spi_def.h>
 #include <stdlib.h>
 #include "stm32f4xx_conf.h"
 #include "include/stm32f4xx.h"
 #include "mcspi_interface.h"
-#include "api/mcspi_def.h"
 #include "api/gpio_def.h"
 #include "api/gpio_api.h"
 #include "driver/stm32f4xx_hal_conf.h"
@@ -304,7 +304,7 @@ void _mcspi_deassert(Mcspi_t *McspiStruct)
 	HAL_GPIO_WritePin(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[McspiStruct->CsSelect]], 1 << McspiStruct->CsPin[McspiStruct->CsSelect], GPIO_PIN_SET);
 }
 /*#####################################################*/
-bool _mcspi_transfer(Mcspi_t *McspiStruct)
+bool _mcspi_transfer(Mcspi_t *McspiStruct, unsigned char *buff_send, unsigned char *buff_receive, unsigned int size)
 {
 	/*McspiStruct->numOfBytes = NumOfBytesSend + NumOfBytesReceive;
 	unsigned char response = SPI_MasterInterruptTransceivePacket(McspiStruct);
@@ -319,7 +319,53 @@ bool _mcspi_transfer(Mcspi_t *McspiStruct)
 	//}
 	bool status = true;
 	SPI_HandleTypeDef *hspi = (SPI_HandleTypeDef *)McspiStruct->UserData;
-	if(HAL_SPI_TransmitReceive(hspi, (unsigned char *)McspiStruct->Buff, (unsigned char *)McspiStruct->Buff, McspiStruct->numOfBytes, 10) != HAL_OK)
+	if(HAL_SPI_TransmitReceive(hspi, buff_send, buff_receive, size, 10) != HAL_OK)
+		status = false;
+
+	if(!McspiStruct->DisableCsHandle)
+		_mcspi_deassert(McspiStruct);
+	return status;
+}
+/*#####################################################*/
+bool _mcspi_receive(Mcspi_t *McspiStruct, unsigned char *buff_receive, unsigned int bytes_receive)
+{
+	/*McspiStruct->numOfBytes = NumOfBytesSend + NumOfBytesReceive;
+	unsigned char response = SPI_MasterInterruptTransceivePacket(McspiStruct);
+	//memcpy(McspiStruct->Buff, McspiStruct->Buff + NumOfBytesSend, NumOfBytesReceive);
+	if(response) return false;*/
+	if(!McspiStruct->DisableCsHandle)
+		_mcspi_assert(McspiStruct);
+
+	//unsigned int transfer_cnt = 0;
+	//for(; transfer_cnt < McspiStruct->numOfBytes; transfer_cnt++) {
+	//	McspiStruct->Buff[transfer_cnt] = _mcspi_SendByte(McspiStruct, McspiStruct->Buff[transfer_cnt]);
+	//}
+	bool status = true;
+	SPI_HandleTypeDef *hspi = (SPI_HandleTypeDef *)McspiStruct->UserData;
+	if(HAL_SPI_Receive(hspi, buff_receive, bytes_receive, 10) != HAL_OK)
+		status = false;
+
+	if(!McspiStruct->DisableCsHandle)
+		_mcspi_deassert(McspiStruct);
+	return status;
+}
+/*#####################################################*/
+bool _mcspi_transmit(Mcspi_t *McspiStruct, unsigned char *buff_send, unsigned int bytes_send)
+{
+	/*McspiStruct->numOfBytes = NumOfBytesSend + NumOfBytesReceive;
+	unsigned char response = SPI_MasterInterruptTransceivePacket(McspiStruct);
+	//memcpy(McspiStruct->Buff, McspiStruct->Buff + NumOfBytesSend, NumOfBytesReceive);
+	if(response) return false;*/
+	if(!McspiStruct->DisableCsHandle)
+		_mcspi_assert(McspiStruct);
+
+	//unsigned int transfer_cnt = 0;
+	//for(; transfer_cnt < McspiStruct->numOfBytes; transfer_cnt++) {
+	//	McspiStruct->Buff[transfer_cnt] = _mcspi_SendByte(McspiStruct, McspiStruct->Buff[transfer_cnt]);
+	//}
+	bool status = true;
+	SPI_HandleTypeDef *hspi = (SPI_HandleTypeDef *)McspiStruct->UserData;
+	if(HAL_SPI_Transmit(hspi, buff_send, bytes_send, 10) != HAL_OK)
 		status = false;
 
 	if(!McspiStruct->DisableCsHandle)

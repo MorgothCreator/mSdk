@@ -29,25 +29,26 @@ bool hih613x_get_hum_temp(HIH613x_t *structure, unsigned char *status, float *hu
 	if(!structure->TWI)
 		return false;
 	Twi_t *TwiStruct = structure->TWI;
-	TwiStruct->MasterSlaveAddr = HIH613x_ADDR;
-	if(!SetupI2CTransmit(TwiStruct, 0))
+	//TwiStruct->MasterSlaveAddr = HIH613x_ADDR;
+	if(!twi.tx(TwiStruct, HIH613x_ADDR, NULL, 0))
 		return false;
 	//Sysdelay(100);
 	unsigned int timeout = 100;
 	structure->TWI->NoSendWriteOnRead = true;
+	unsigned char result[4];
 	do {
 		sys_delay(2);
-		if(!SetupI2CReception(TwiStruct, 0, 4)) {
+		if(!twi.trx(TwiStruct, HIH613x_ADDR, NULL, 0, result, 4)) {
 			structure->TWI->NoSendWriteOnRead = false;
 			return false;
 		}
 		if(!timeout--)
 			return false;
-	}while(((TwiStruct->RxBuff[0] >> 6) & 0x03) == 0x01);
+	}while(((result[0] >> 6) & 0x03) == 0x01);
 	structure->TWI->NoSendWriteOnRead = false;
-	*status = (TwiStruct->RxBuff[0] >> 6) & 0x03;
-	TwiStruct->RxBuff[0] = TwiStruct->RxBuff[0] & 0x3F;
-	*hum = (float)((((unsigned short)TwiStruct->RxBuff[0]) << 8) | TwiStruct->RxBuff[1]) * 6.10e-3;
-	*temp = (float)(((((unsigned short)TwiStruct->RxBuff[2]) << 8) | TwiStruct->RxBuff[3]) >> 2) * 1.007e-2 - 40.0;
+	*status = (result[0] >> 6) & 0x03;
+	result[0] = result[0] & 0x3F;
+	*hum = (float)((((unsigned short)result[0]) << 8) | result[1]) * 6.10e-3;
+	*temp = (float)(((((unsigned short)result[2]) << 8) | result[3]) >> 2) * 1.007e-2 - 40.0;
 	return true;
 }

@@ -6,6 +6,7 @@
  */
 
 
+#include <api/spi_api.h>
 #include <stdbool.h>
 //#include "board_properties.h"
 #include "mmcsd_spi.h"
@@ -14,8 +15,6 @@
 #include "api/uart_def.h"
 #include "api/uart_api.h"
 #include "lib/fs/fat.h"
-#include "api/mcspi_api.h"
-//#include "general/unions.h"
 #include "sys/sysdelay.h"
 //#######################################################################################
 //new_dma_ch* DMA_MMCSD_TRANSMIT = NULL;
@@ -451,20 +450,20 @@ void sd_cs_assert(SD_Struct_t *SD_Struct)
 {
 	SD_Struct->HardUnitStruct->DisableCsHandle = true;
 	SD_Struct->HardUnitStruct->CsSelect = SD_Struct->SpiInstance;
-	mcspi_assert(SD_Struct->HardUnitStruct);
+	spi.assert(SD_Struct->HardUnitStruct);
 	//gpio_out(SD_Struct->CS_Port, 0);
 }
 //#######################################################################################
 void sd_cs_deassert(SD_Struct_t *SD_Struct)
 {
 	SD_Struct->HardUnitStruct->CsSelect = SD_Struct->SpiInstance;
-	mcspi_deassert(SD_Struct->HardUnitStruct);
+	spi.deassert(SD_Struct->HardUnitStruct);
 	//gpio_out(SD_Struct->CS_Port, 1);
 }
 //#######################################################################################
 /*uint8_t sd_cs_readstate(SD_Struct_t *SD_Struct)
 {
-	return gpio_in(SD_Struct->CS_Port);;
+	return gpio.in(SD_Struct->CS_Port);;
 }*/
 //#######################################################################################
 /*static uint8_t sd_read_idle_bytes(SD_Struct_t *SD_Struct, uint16_t BytesNr)
@@ -815,7 +814,7 @@ unsigned int _sd_read_page(void *_SD_Struct, void* _Buffer, unsigned long block,
 	return nblks ? false : true;	/* Return result */
 }
 //#######################################################################################
-unsigned int MMCSD_SPI_ReadCmdSend(void *_SD_Struct, void* _Buffer, unsigned long _block, unsigned int nblks)
+unsigned int mmcsd_spi_read(void *_SD_Struct, void* _Buffer, unsigned long _block, unsigned int nblks)
 {
 	unsigned long block = _block;
 	unsigned char* Buffer = (unsigned char*)_Buffer;
@@ -923,7 +922,7 @@ unsigned int  _sd_write_page(void *_SD_Struct, void* _Buffer, unsigned long bloc
 	return nblks ? false : true;	/* Return result */
 }
 //#######################################################################################
-unsigned int MMCSD_SPI_WriteCmdSend(void *_SD_Struct, void* _Buffer, unsigned long _block, unsigned int nblks)
+unsigned int mmcsd_spi_write(void *_SD_Struct, void* _Buffer, unsigned long _block, unsigned int nblks)
 {
 	unsigned long block = _block;
 	unsigned char* Buffer = (unsigned char*)_Buffer;
@@ -956,7 +955,7 @@ void mmcsd_spi_init(unsigned int unit_nr, new_gpio* StatusLed)
 void mmcsd_spi_idle(unsigned int unit_nr)
 {
 	SD_Struct_t *SD_StructDisk = MMCSD_SPI[unit_nr];
-    if(gpio_in(SD_StructDisk->SD_Present) == 0 || (int)(SD_StructDisk->SD_Present) == 0 || (int)(SD_StructDisk->SD_Present) == -1)
+    if(gpio.in(SD_StructDisk->SD_Present) == 0 || (int)(SD_StructDisk->SD_Present) == 0 || (int)(SD_StructDisk->SD_Present) == -1)
     {
         if(SD_StructDisk->initFlg)
         {
@@ -966,8 +965,8 @@ void mmcsd_spi_idle(unsigned int unit_nr)
         	{
         		SD_StructDisk->connected = true;
         		SD_StructDisk->g_s_mmcFatFs.drv_rw_func.DriveStruct = SD_StructDisk;
-        		SD_StructDisk->g_s_mmcFatFs.drv_rw_func.drv_r_func = MMCSD_SPI_ReadCmdSend;
-        		SD_StructDisk->g_s_mmcFatFs.drv_rw_func.drv_w_func = MMCSD_SPI_WriteCmdSend;
+        		SD_StructDisk->g_s_mmcFatFs.drv_rw_func.drv_r_func = mmcsd_spi_read;
+        		SD_StructDisk->g_s_mmcFatFs.drv_rw_func.drv_w_func = mmcsd_spi_write;
         		SD_StructDisk->g_s_mmcFatFs.drv_rw_func.drv_ioctl_func = mmcsd_spi_ioctl;
 #if (_FFCONF == 82786)
         		char drv_name_buff[4];
@@ -1000,32 +999,32 @@ void mmcsd_spi_idle(unsigned int unit_nr)
 #ifdef MMCSD_DEBUG_EN
 						if(DebugCom)
 						{
-																				UARTprintf(DebugCom,   "MMCSD%d drive %d mounted\n\r" , unit_nr + 3 , unit_nr + 3);
-																				UARTprintf(DebugCom,   "MMCSD%d Fat fs detected\n\r" , unit_nr + 3);
-																				UARTprintf(DebugCom, "MMCSD%d Fs type:                 " , unit_nr + 3);
-							if(SD_StructDisk->g_s_mmcFatFs.fs_type == FS_FAT12)	{ 				UARTprintf(DebugCom, "Fat12");}
-							else if(SD_StructDisk->g_s_mmcFatFs.fs_type == FS_FAT16){ 				UARTprintf(DebugCom, "Fat16");}
-							else if(SD_StructDisk->g_s_mmcFatFs.fs_type == FS_FAT32){ 				UARTprintf(DebugCom, "Fat32");}
-							else if(SD_StructDisk->g_s_mmcFatFs.fs_type == FS_EXFAT){ 				UARTprintf(DebugCom, "exFat");}
-							else								{ 				UARTprintf(DebugCom, "None");}
-																				UARTprintf(DebugCom, "\n\r");
+							uart.printf(DebugCom,   "MMCSD%d drive %d mounted\n\r" , unit_nr + 3 , unit_nr + 3);
+							uart.printf(DebugCom,   "MMCSD%d Fat fs detected\n\r" , unit_nr + 3);
+							uart.printf(DebugCom, "MMCSD%d Fs type:                 " , unit_nr + 3);
+							if(SD_StructDisk->g_s_mmcFatFs.fs_type == FS_FAT12)	{ 				uart.printf(DebugCom, "Fat12");}
+							else if(SD_StructDisk->g_s_mmcFatFs.fs_type == FS_FAT16){ 				uart.printf(DebugCom, "Fat16");}
+							else if(SD_StructDisk->g_s_mmcFatFs.fs_type == FS_FAT32){ 				uart.printf(DebugCom, "Fat32");}
+							else if(SD_StructDisk->g_s_mmcFatFs.fs_type == FS_EXFAT){ 				uart.printf(DebugCom, "exFat");}
+							else								{ 				uart.printf(DebugCom, "None");}
+							uart.printf(DebugCom, "\n\r");
 																				//UARTprintf(DebugCom, "MMCSD0 BootSectorAddress:       %u \n\r",(unsigned int)g_sFatFs.);
-																				UARTprintf(DebugCom, "MMCSD%d BytesPerSector:          %d \n\r",unit_nr + 3, /*(int)g_sFatFs.s_size*/512);
-																				UARTprintf(DebugCom, "MMCSD%d SectorsPerCluster:       %d \n\r",unit_nr + 3, (int)SD_StructDisk->g_s_mmcFatFs.csize);
+							uart.printf(DebugCom, "MMCSD%d BytesPerSector:          %d \n\r",unit_nr + 3, /*(int)g_sFatFs.s_size*/512);
+							uart.printf(DebugCom, "MMCSD%d SectorsPerCluster:       %d \n\r",unit_nr + 3, (int)SD_StructDisk->g_s_mmcFatFs.csize);
 																				//UARTprintf(DebugCom, "MMCSD0 AllocTable1Begin:        %u \n\r",(unsigned int)g_sFatFs.fatbase);
-																				UARTprintf(DebugCom, "MMCSD%d NumberOfFats:            %d \n\r",unit_nr + 3, (int)SD_StructDisk->g_s_mmcFatFs.n_fats);
+							uart.printf(DebugCom, "MMCSD%d NumberOfFats:            %d \n\r",unit_nr + 3, (int)SD_StructDisk->g_s_mmcFatFs.n_fats);
 																				//UARTprintf(DebugCom, "MMCSD0 MediaType:               %d \n\r",Drives_Table[0]->DiskInfo_MediaType);
 																				//UARTprintf(DebugCom, "MMCSD0 AllocTableSize:          %u \n\r",Drives_Table[0]->DiskInfo_AllocTableSize);
-																				UARTprintf(DebugCom, "MMCSD%d DataSectionBegin:        %d \n\r",unit_nr + 3, (int)SD_StructDisk->g_s_mmcFatFs.fatbase);
+							uart.printf(DebugCom, "MMCSD%d DataSectionBegin:        %d \n\r",unit_nr + 3, (int)SD_StructDisk->g_s_mmcFatFs.fatbase);
 																				unsigned long tmp = (unsigned long long)((unsigned long long)SD_StructDisk->g_s_mmcFatFs.n_fatent * (unsigned long long)/*g_sFatFs.s_size*/512 *(unsigned long long)SD_StructDisk->g_s_mmcFatFs.csize) >> 20/* / 1000000*/;
-																				UARTprintf(DebugCom, "MMCSD%d uSD DiskCapacity:        %uMB\n\r",unit_nr + 3, tmp);
+																				uart.printf(DebugCom, "MMCSD%d uSD DiskCapacity:        %uMB\n\r",unit_nr + 3, tmp);
 						}
 #endif
-                    } else  if(DebugCom)										UARTprintf(DebugCom,   "MMCSD%d ERROR oppening path\n\r" , unit_nr + 3);
+                    } else  if(DebugCom)										uart.printf(DebugCom,   "MMCSD%d ERROR oppening path\n\r" , unit_nr + 3);
                 }
-                else if(DebugCom)												UARTprintf(DebugCom,   "MMCSD%d ERROR mounting disk\n\r" , unit_nr + 3);
+                else if(DebugCom)												uart.printf(DebugCom,   "MMCSD%d ERROR mounting disk\n\r" , unit_nr + 3);
         	}
-        	else if(DebugCom)												UARTprintf(DebugCom,   "MMCSD%d not detected\n\r" , unit_nr + 3);
+        	else if(DebugCom)												uart.printf(DebugCom,   "MMCSD%d not detected\n\r" , unit_nr + 3);
         }
     }
     else
@@ -1037,7 +1036,7 @@ void mmcsd_spi_idle(unsigned int unit_nr)
         	SD_StructDisk->connected = false;
         	SD_StructDisk->initFlg = 1;
 #ifdef MMCSD_DEBUG_EN
-        	UARTprintf(DebugCom,   "MMCSD%d Disconnected\n\r" , unit_nr + 3);
+        	uart.printf(DebugCom,   "MMCSD%d Disconnected\n\r" , unit_nr + 3);
 #endif
         }
     }

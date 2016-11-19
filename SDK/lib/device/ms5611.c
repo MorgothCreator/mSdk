@@ -34,24 +34,23 @@ bool ms5611_adc_get_cmd_send(MS5611_t *structure, unsigned long *data, unsigned 
 {
 	timer_interval(&structure->Timeout_Timer, 15);
 	Twi_t *TwiStruct = structure->TWI;
-	TwiStruct->MasterSlaveAddr = MS5611_ADDR;
-	TwiStruct->TxBuff[0] = MS5611_ADC_READ_CMD;
-	while(!SetupI2CReception(TwiStruct, 1, 3)) {
+	unsigned char reg = MS5611_ADC_READ_CMD;
+	unsigned char result[3];
+	while(!twi.trx(TwiStruct, MS5611_ADDR, &reg, 1, result, 3)) {
 		if(timer_tick(&structure->Timeout_Timer))
 			return false;
 	}
-	if(TwiStruct->RxBuff[0] == 0 && TwiStruct->RxBuff[1] == 0 && TwiStruct->RxBuff[2] == 0)
+	if(result[0] == 0 && result[1] == 0 && result[2] == 0)
 		return false;
-	*data = (TwiStruct->RxBuff[0] << 16) + (TwiStruct->RxBuff[1] << 8) + TwiStruct->RxBuff[2];
+	*data = (result[0] << 16) + (result[1] << 8) + result[2];
 	return true;
 }
 
 bool ms5611_reset_cmd_send(MS5611_t *structure)
 {
 	Twi_t *TwiStruct = structure->TWI;
-	TwiStruct->MasterSlaveAddr = MS5611_ADDR;
-	TwiStruct->TxBuff[0] = MS5611_RESET_CMD;
-	if(!SetupI2CTransmit(TwiStruct, 1))
+	unsigned char reg = MS5611_RESET_CMD;
+	if(!twi.tx(TwiStruct, MS5611_ADDR, &reg, 1))
 		return false;
 	return true;
 }
@@ -59,9 +58,8 @@ bool ms5611_reset_cmd_send(MS5611_t *structure)
 bool ms5611_d1_cmd_send(MS5611_t *structure, unsigned char osr, unsigned long *d1)
 {
 	Twi_t *TwiStruct = structure->TWI;
-	TwiStruct->MasterSlaveAddr = MS5611_ADDR;
-	TwiStruct->TxBuff[0] = MS5611_CONVERT_D1_OSR_256_CMD | ((osr & 0x07) << 1);
-	if(!SetupI2CTransmit(TwiStruct, 1))
+	unsigned char reg = MS5611_CONVERT_D1_OSR_256_CMD | ((osr & 0x07) << 1);
+	if(!twi.tx(TwiStruct, MS5611_ADDR, &reg, 1))
 		return false;
 	if(!ms5611_adc_get_cmd_send(structure, d1, osr))
 		return false;
@@ -70,9 +68,8 @@ bool ms5611_d1_cmd_send(MS5611_t *structure, unsigned char osr, unsigned long *d
 bool ms5611_d2_cmd_send(MS5611_t *structure, unsigned char osr, unsigned long *d2)
 {
 	Twi_t *TwiStruct = structure->TWI;
-	TwiStruct->MasterSlaveAddr = MS5611_ADDR;
-	TwiStruct->TxBuff[0] = MS5611_CONVERT_D2_OSR_256_CMD | ((osr & 0x07) << 1);
-	if(!SetupI2CTransmit(TwiStruct, 1))
+	unsigned char reg = MS5611_CONVERT_D2_OSR_256_CMD | ((osr & 0x07) << 1);
+	if(!twi.tx(TwiStruct, MS5611_ADDR, &reg, 1))
 		return false;
 	if(!ms5611_adc_get_cmd_send(structure, d2, osr))
 		return false;
@@ -82,39 +79,39 @@ bool ms5611_d2_cmd_send(MS5611_t *structure, unsigned char osr, unsigned long *d
 bool ms5611_read_prom_cmd_send(MS5611_t *structure)
 {
 	Twi_t *TwiStruct = structure->TWI;
-	TwiStruct->MasterSlaveAddr = MS5611_ADDR;
-	TwiStruct->TxBuff[0] = MS5611_CONVERT_PROM_READ_C1_CMD;
-	if(!SetupI2CReception(TwiStruct, 1, 2))
+	unsigned char reg = MS5611_CONVERT_PROM_READ_C1_CMD;
+	unsigned char result[2];
+	if(!twi.trx(TwiStruct, MS5611_ADDR, &reg, 1, result, 2))
 		return false;
-	structure->prom_data.C0 = (TwiStruct->RxBuff[0] << 8) + TwiStruct->RxBuff[1];
-	TwiStruct->TxBuff[0] = MS5611_CONVERT_PROM_READ_C2_CMD;
-	if(!SetupI2CReception(TwiStruct, 1, 2))
+	structure->prom_data.C0 = (result[0] << 8) + result[1];
+	reg = MS5611_CONVERT_PROM_READ_C2_CMD;
+	if(!twi.trx(TwiStruct, MS5611_ADDR, &reg, 1, result, 2))
 		return false;
-	structure->prom_data.C1 = (TwiStruct->RxBuff[0] << 8) + TwiStruct->RxBuff[1];
-	TwiStruct->TxBuff[0] = MS5611_CONVERT_PROM_READ_C3_CMD;
-	if(!SetupI2CReception(TwiStruct, 1, 2))
+	structure->prom_data.C1 = (result[0] << 8) + result[1];
+	reg = MS5611_CONVERT_PROM_READ_C3_CMD;
+	if(!twi.trx(TwiStruct, MS5611_ADDR, &reg, 1, result, 2))
 		return false;
-	structure->prom_data.C2 = (TwiStruct->RxBuff[0] << 8) + TwiStruct->RxBuff[1];
-	TwiStruct->TxBuff[0] = MS5611_CONVERT_PROM_READ_C4_CMD;
-	if(!SetupI2CReception(TwiStruct, 1, 2))
+	structure->prom_data.C2 = (result[0] << 8) + result[1];
+	reg = MS5611_CONVERT_PROM_READ_C4_CMD;
+	if(!twi.trx(TwiStruct, MS5611_ADDR, &reg, 1, result, 2))
 		return false;
-	structure->prom_data.C3 = (TwiStruct->RxBuff[0] << 8) + TwiStruct->RxBuff[1];
-	TwiStruct->TxBuff[0] = MS5611_CONVERT_PROM_READ_C5_CMD;
-	if(!SetupI2CReception(TwiStruct, 1, 2))
+	structure->prom_data.C3 = (result[0] << 8) + result[1];
+	reg = MS5611_CONVERT_PROM_READ_C5_CMD;
+	if(!twi.trx(TwiStruct, MS5611_ADDR, &reg, 1, result, 2))
 		return false;
-	structure->prom_data.C4 = (TwiStruct->RxBuff[0] << 8) + TwiStruct->RxBuff[1];
-	TwiStruct->TxBuff[0] = MS5611_CONVERT_PROM_READ_C6_CMD;
-	if(!SetupI2CReception(TwiStruct, 1, 2))
+	structure->prom_data.C4 = (result[0] << 8) + result[1];
+	reg = MS5611_CONVERT_PROM_READ_C6_CMD;
+	if(!twi.trx(TwiStruct, MS5611_ADDR, &reg, 1, result, 2))
 		return false;
-	structure->prom_data.C5 = (TwiStruct->RxBuff[0] << 8) + TwiStruct->RxBuff[1];
-	TwiStruct->TxBuff[0] = MS5611_CONVERT_PROM_READ_C7_CMD;
-	if(!SetupI2CReception(TwiStruct, 1, 2))
+	structure->prom_data.C5 = (result[0] << 8) + result[1];
+	reg = MS5611_CONVERT_PROM_READ_C7_CMD;
+	if(!twi.trx(TwiStruct, MS5611_ADDR, &reg, 1, result, 2))
 		return false;
-	structure->prom_data.C6 = (TwiStruct->RxBuff[0] << 8) + TwiStruct->RxBuff[1];
-	TwiStruct->TxBuff[0] = MS5611_CONVERT_PROM_READ_C8_CMD;
-	if(!SetupI2CReception(TwiStruct, 1, 2))
+	structure->prom_data.C6 = (result[0] << 8) + result[1];
+	reg = MS5611_CONVERT_PROM_READ_C8_CMD;
+	if(!twi.trx(TwiStruct, MS5611_ADDR, &reg, 1, result, 2))
 		return false;
-	structure->prom_data.C7 = (TwiStruct->RxBuff[0] << 8) + TwiStruct->RxBuff[1];
+	structure->prom_data.C7 = (result[0] << 8) + result[1];
 	return true;
 }
 
@@ -175,13 +172,13 @@ bool ms5611_display_pressure_result(MS5611_t *structure, unsigned char osr)
 	if(!ms5611_read(structure, osr, &Pressure, &Temperature))
 		return false;
 #ifndef _TINY_PRINT_
-	UARTprintf(DebugCom, "MS5611: P = %4.2f milibar, T = %2.2f gr celsius\n\r", ((float)Pressure) / 100.0, ((float)Temperature) / 100.0);
+	uart.printf(DebugCom, "MS5611: P = %4.2f milibar, T = %2.2f gr celsius\n\r", ((float)Pressure) / 100.0, ((float)Temperature) / 100.0);
 #else
 	float PressureInt = 0;
 	float PressureDec = modff(((float)Pressure)/100.0, &PressureInt);
 	float TemperatureInt = (float)Temperature;
 	float TemperatureDec = modff(((float)Pressure)/100.0, &TemperatureInt);
-	UARTprintf(DebugCom, "MS5611: P = %d.%u milibar, T = %d.%u gr celsius\n\r", (signed int)PressureInt, (unsigned int)(PressureDec * 100.0), (signed int)TemperatureInt, (unsigned int)(TemperatureDec * 100.0));
+	uart.printf(DebugCom, "MS5611: P = %d.%u milibar, T = %d.%u gr celsius\n\r", (signed int)PressureInt, (unsigned int)(PressureDec * 100.0), (signed int)TemperatureInt, (unsigned int)(TemperatureDec * 100.0));
 #endif
 	return true;
 }

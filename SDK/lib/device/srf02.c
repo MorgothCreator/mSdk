@@ -18,18 +18,18 @@ bool srf02_start(SRF02_t *structure, SRF02_COMMANDS command) {
 	timer_interval(&structure->Timeout_Timer, 80);
 	structure->busy = true;
 	Twi_t* TwiStruct = structure->TWI;
+	unsigned char dev_addr = 0x70;
 	if(structure->addr)
-		TwiStruct->MasterSlaveAddr = structure->addr;
-	else
-		TwiStruct->MasterSlaveAddr = 0x70;
+		dev_addr = structure->addr;
 
+    unsigned char tmp[2];
     switch(command)
     {
     case SRF02_START_RANGING:
     case SRF02_FAKE_RANGING:
-        TwiStruct->TxBuff[0] = 0;
-        TwiStruct->TxBuff[1] = command + structure->measure_unit;
-    	if(SetupI2CTransmit(TwiStruct, 2))
+        tmp[0] = 0;
+        tmp[1] = command + structure->measure_unit;
+    	if(twi.tx(TwiStruct, dev_addr, tmp, 2))
     		structure->reg_inst = command;
     	break;
     default:
@@ -47,20 +47,21 @@ bool srf02_read(SRF02_t *structure) {
 		return false;
 
 	Twi_t* TwiStruct = structure->TWI;
+	unsigned char dev_addr = 0x70;
 	if(structure->addr)
-		TwiStruct->MasterSlaveAddr = structure->addr;
-	else
-		TwiStruct->MasterSlaveAddr = 0x70;
-    switch(structure->reg_inst)
+		dev_addr = structure->addr;
+
+    unsigned char reg = 2;
+    unsigned char result[2];
+	switch(structure->reg_inst)
     {
     case SRF02_START_RANGING:
     case SRF02_FAKE_RANGING:
-        TwiStruct->TxBuff[0] = 2;
-        if(!SetupI2CReception(TwiStruct, 1, 2))
+        if(!twi.trx(TwiStruct, dev_addr, &reg, 1, result, 2))
         	return false;
         else {
-        	structure->range_value = TwiStruct->RxBuff[0] << 8;
-        	structure->range_value |= TwiStruct->RxBuff[1];
+        	structure->range_value = result[0] << 8;
+        	structure->range_value |= result[1];
         	return true;
         }
     	break;
@@ -74,13 +75,13 @@ void srf02_display_data(SRF02_t *structure) {
 	switch(structure->measure_unit)
 	{
 	case SRF02_INCH:
-		UARTprintf(DebugCom, "SRF02: Range = %u inch\n\r", (unsigned long)structure->range_value);
+		uart.printf(DebugCom, "SRF02: Range = %u inch\n\r", (unsigned long)structure->range_value);
 		break;
 	case SRF02_CENTIMETER:
-		UARTprintf(DebugCom, "SRF02: Range = %u centimeters\n\r", (unsigned long)structure->range_value);
+		uart.printf(DebugCom, "SRF02: Range = %u centimeters\n\r", (unsigned long)structure->range_value);
 		break;
 	case SRF02_MICROSECONDS:
-		UARTprintf(DebugCom, "SRF02: Range = %u microseconds\n\r", (unsigned long)structure->range_value);
+		uart.printf(DebugCom, "SRF02: Range = %u microseconds\n\r", (unsigned long)structure->range_value);
 		break;
 	}
 }

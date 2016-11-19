@@ -22,8 +22,8 @@
 #ifndef MMCSD_API_H_
 #define MMCSD_API_H_
 /*#####################################################*/
+#include <interface/mmcsd_interface.h>
 #include "gpio_def.h"
-#include "interface/hs_mmcsd_interface.h"
 /*#####################################################*/
 
 #define ctrlInfo uSdCardInfo
@@ -34,12 +34,17 @@ typedef enum
 	IsSd,
 	IsSdhc,
 }mmcsd_type_e;
+
+typedef struct mmcsd_s
+{
+	void (*init)(unsigned int unit_nr, new_gpio* Cs, new_gpio* StatusLed);
+	bool (*idle)(unsigned int unit_nr);
+	void (*ioctl)(void *_ctrl, unsigned int  command,  unsigned int *buffer);
+	unsigned int (*write)(void *_ctrl, void *ptr, unsigned long block, unsigned int nblks);
+	unsigned int (*read)(void *_ctrl, void *ptr, unsigned long block, unsigned int nblks);
+}mmcsd_t;
 /*#####################################################*/
-void mmcsd_init(unsigned int unit_nr, new_gpio* Cs, new_gpio* StatusLed);
-bool mmcsd_idle(unsigned int unit_nr);
-void mmcsd_ioctl(unsigned int unit_nr, unsigned int  command,  unsigned int *buffer);
-unsigned int mmcsd_write(void *_ctrl, void *ptr, unsigned long block, unsigned int nblks);
-unsigned int mmcsd_read(void *_ctrl, void *ptr, unsigned long block, unsigned int nblks);
+extern const const mmcsd_t mmcsd;
 /*#####################################################*/
 #ifdef HEADER_INCLUDE_C_FILES
 #include "mmcsd_api.c"

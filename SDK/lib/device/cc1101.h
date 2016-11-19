@@ -8,8 +8,8 @@
 #ifndef LIB_DEVICE_CC1101_H_
 #define LIB_DEVICE_CC1101_H_
 
+#include <api/spi_def.h>
 #include <stdbool.h>
-#include "api/mcspi_def.h"
 #include "api/timer_api.h"
 
 #ifndef ST

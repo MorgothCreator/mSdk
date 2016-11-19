@@ -9,14 +9,14 @@
 #define LIB_DEVICE_MMCSD_SPI_H_
 /*#####################################################*/
 //#include <avr/io.h>
+#include <api/spi_def.h>
+#include <interface/mmcsd_interface.h>
 #include <stdbool.h>
 #include "api/timer_api.h"
 #include "api/gpio_def.h"
-#include "api/mcspi_def.h"
 #include "api/mmcsd_api.h"
 #include "lib/fs/fat.h"
 #include "lib/fat_fs/inc/ff.h"
-#include "interface/hs_mmcsd_interface.h"
 
 
 /*
@@ -271,7 +271,7 @@ typedef struct SD_Struct
 	void (*HardUnitCloseFunc)(Mcspi_t *HardUnitStruct);
 	bool (*HardUnitSetBaudFunc)(Mcspi_t *HardUnitStruct, unsigned long baud);
 	unsigned char (*HardUnitReadWriteCharFunc)(Mcspi_t *HardUnitStruct, unsigned char data);
-	bool (*HardUnitReadWriteBuffFunc)(Mcspi_t *McspiStruct, unsigned int NumOfBytesSend, unsigned int NumOfBytesReceive);
+	bool (*HardUnitReadWriteBuffFunc)(Mcspi_t *McspiStruct, unsigned char *buff_send, unsigned char *buff_receive, unsigned int size);
 
 }SD_Struct_t;
 /*#####################################################*/
@@ -381,8 +381,8 @@ typedef struct SD_Struct
 #define SD_CMD6_GRP1_SEL      0xFFFFFFF0
 #define SD_CMD6_GRP1_HS       0x1
 /*#####################################################*/
-unsigned int MMCSD_SPI_ReadCmdSend(void *_SD_Struct, void* _Buffer, unsigned long _block, unsigned int nblks);
-unsigned int MMCSD_SPI_WriteCmdSend(void *_SD_Struct, void* _Buffer, unsigned long _block, unsigned int nblks);
+unsigned int mmcsd_spi_read(void *_SD_Struct, void* _Buffer, unsigned long _block, unsigned int nblks);
+unsigned int mmcsd_spi_write(void *_SD_Struct, void* _Buffer, unsigned long _block, unsigned int nblks);
 void mmcsd_spi_init(unsigned int unit_nr, new_gpio* StatusLed);
 void mmcsd_spi_idle(unsigned int unit_nr);
 void mmcsd_spi_ioctl(void *_SD_Struct, unsigned int  command,  unsigned int *buffer);

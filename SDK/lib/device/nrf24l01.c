@@ -23,37 +23,37 @@ unsigned char  nrf24l01_SPI_SendByte(void *param, unsigned char data)
 {
 	nrf24l01_t *_param = (nrf24l01_t *)param;
 	_param->spi->CsSelect = _param->spi_instance;
-	return mcspi_send_byte(_param->spi, data);
+	return spi.trx_byte(_param->spi, data);
 }
 
 void nrf24l01_cs_assert(void *param)
 {
 	nrf24l01_t *_param = (nrf24l01_t *)param;
 	_param->spi->CsSelect = _param->spi_instance;
-	mcspi_assert(_param->spi);
+	spi.assert(_param->spi);
 }
 void nrf24l01_cs_deassert(void *param)
 {
 	nrf24l01_t *_param = (nrf24l01_t *)param;
 	_param->spi->CsSelect = _param->spi_instance;
-	mcspi_deassert(_param->spi);
+	spi.deassert(_param->spi);
 }
 
 void nrf24l01_ce_assert(void *param)
 {
 	nrf24l01_t *_param = (nrf24l01_t *)param;
-	gpio_out(_param->ce, 1);
+	gpio.out(_param->ce, 1);
 }
 void nrf24l01_ce_deassert(void *param)
 {
 	nrf24l01_t *_param = (nrf24l01_t *)param;
-	gpio_out(_param->ce, 0);
+	gpio.out(_param->ce, 0);
 }
 
 bool nrf24l01_irq_state(void *param)
 {
 	nrf24l01_t *_param = (nrf24l01_t *)param;
-	if(gpio_in(_param->irq))
+	if(gpio.in(_param->irq))
 		return false;
 	else
 		return true;
@@ -339,9 +339,9 @@ signed int nrf24l01_packet_send(void *param, unsigned char *packet, unsigned cha
 	{
 		nrf24l01_SPI_SendByte(param, 0);
 	}*/
-	_param->spi->Buff = packet;
-	_param->spi->numOfBytes = 32;
-	_mcspi_transfer(_param->spi);
+	//_param->spi->Buff = packet;
+	//_param->spi->numOfBytes = 32;
+	spi.transmit(_param->spi, packet, 32);
 	nrf24l01_cs_deassert(param);
 	// Pulse for CE -> starts the transmission.
 	nrf24l01_ce_assert(param);

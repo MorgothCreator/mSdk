@@ -36,10 +36,10 @@
   */ 
 
 /* Includes ------------------------------------------------------------------*/
+#include <api/spi_api.h>
 #include "ili9341.h"
 #include "api/lcd_def.h"
 #include "api/timer_api.h"
-#include "api/mcspi_api.h"
 #include "api/gpio_api.h"
 
 /** @addtogroup BSP
@@ -108,9 +108,9 @@ static unsigned long ILI9341_SPIx_Read(tDisplay* pDisplay, unsigned char ReadSiz
 		readvalue = 0x00FFFFFF;
 	if(ReadSize == 4)
 		readvalue = 0xFFFFFFFF;
-	structure->SPI->Buff = (unsigned char *)&readvalue;
+	//structure->SPI->Buff = (unsigned char *)&readvalue;
 	structure->SPI->CsSelect = structure->spi_cs_instance;
-	mcspi_transfer(structure->SPI, 0, ReadSize);
+	spi.receive(structure->SPI, (unsigned char *)&readvalue, ReadSize);
 	return readvalue;
 }
 
@@ -122,9 +122,9 @@ static unsigned long ILI9341_SPIx_Read(tDisplay* pDisplay, unsigned char ReadSiz
 static void ILI9341_SPIx_Write(tDisplay* pDisplay, unsigned short Value)
 {
 	ILI9341_t *structure = (ILI9341_t *)pDisplay->UserData;
-	structure->SPI->Buff = (unsigned char *)&Value;
+	//structure->SPI->Buff = (unsigned char *)&Value;
 	structure->SPI->CsSelect = structure->spi_cs_instance;
-	mcspi_transfer(structure->SPI, 1, 0);
+	spi.transmit(structure->SPI, (unsigned char *)&Value, 1);
 }
 
 /**
@@ -135,13 +135,14 @@ static void ILI9341_SPIx_Write(tDisplay* pDisplay, unsigned short Value)
   */
 static unsigned char ILI9341_SPIx_WriteRead(tDisplay* pDisplay, unsigned char Byte)
 {
-	unsigned short receivedbyte = Byte;
+	unsigned char receivedbyte = Byte;
 
 	ILI9341_t *structure = (ILI9341_t *)pDisplay->UserData;
-	structure->SPI->Buff = (unsigned char *)&receivedbyte;
+	//structure->SPI->Buff = (unsigned char *)&receivedbyte;
 	structure->SPI->CsSelect = structure->spi_cs_instance;
-	mcspi_transfer(structure->SPI, 1, 1);
-	return receivedbyte >> 8;
+	spi.trx_byte(structure->SPI, Byte);
+	receivedbyte = spi.trx_byte(structure->SPI, 0xFF);
+	return receivedbyte;
 }
 
 /**
@@ -153,14 +154,14 @@ void ili9341_WriteData(tDisplay* pDisplay, unsigned short RegValue)
 {
 	ILI9341_t *structure = (ILI9341_t *)pDisplay->UserData;
   /* Set WRX to send data */
-	gpio_out(structure->RW, 1);
+	gpio.out(structure->RW, 1);
 
   /* Reset LCD control line(/CS) and Send data */
-	gpio_out(structure->CS, 0);
+	gpio.out(structure->CS, 0);
 	ILI9341_SPIx_Write(pDisplay, RegValue);
 
   /* Deselect: Chip Select high */
-	gpio_out(structure->CS, 1);
+	gpio.out(structure->CS, 1);
 }
 
 /**
@@ -172,14 +173,14 @@ void ili9341_WriteReg(tDisplay* pDisplay, unsigned char Reg)
 {
 	ILI9341_t *structure = (ILI9341_t *)pDisplay->UserData;
   /* Reset WRX to send command */
-	gpio_out(structure->RW, 0);
+	gpio.out(structure->RW, 0);
 
   /* Reset LCD control line(/CS) and Send command */
-	gpio_out(structure->CS, 0);
+	gpio.out(structure->CS, 0);
 	ILI9341_SPIx_Write(pDisplay, Reg);
 
   /* Deselect: Chip Select high */
-	gpio_out(structure->CS, 1);
+	gpio.out(structure->CS, 1);
 }
 
 /**
@@ -194,20 +195,20 @@ unsigned long ili9341_ReadData(tDisplay* pDisplay, unsigned short RegValue, unsi
 	unsigned long readvalue = 0;
 
   /* Select: Chip Select low */
-	gpio_out(structure->CS, 0);
+	gpio.out(structure->CS, 0);
 
   /* Reset WRX to send command */
-	gpio_out(structure->RW, 0);
+	gpio.out(structure->RW, 0);
 
 	ILI9341_SPIx_Write(pDisplay, RegValue);
 
 	readvalue = ILI9341_SPIx_Read(pDisplay, ReadSize);
 
   /* Set WRX to send data */
-	gpio_out(structure->RW, 1);
+	gpio.out(structure->RW, 1);
 
   /* Deselect: Chip Select high */
-	gpio_out(structure->CS, 1);
+	gpio.out(structure->CS, 1);
 
 	return readvalue;
 }
@@ -221,10 +222,10 @@ bool ili9341_Init(void* pDisplay)
 {
 	tDisplay* _pDisplay = (tDisplay *) pDisplay;
 	ILI9341_t *structure = (ILI9341_t *)_pDisplay->UserData;
-	gpio_out(structure->CS, 0);
-	gpio_out(structure->CS, 1);
-	gpio_out(structure->RW, 1);
-	gpio_out(structure->RD, 1);
+	gpio.out(structure->CS, 0);
+	gpio.out(structure->CS, 1);
+	gpio.out(structure->RW, 1);
+	gpio.out(structure->RD, 1);
 	ili9341_WriteReg(_pDisplay, 0xCA);
 	ili9341_WriteData(_pDisplay, 0xC3);
 	ili9341_WriteData(_pDisplay, 0x08);

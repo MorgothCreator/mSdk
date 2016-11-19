@@ -190,16 +190,16 @@ unsigned int USBMSCReadBlock(void *_ctrl, void *ptr, unsigned long block,
 {
 	//unsigned int status = CPUIntStatus();
 	//CPUirqe();
-	if(LedStatusUsb0) gpio_out(LedStatusUsb0, 1);
+	if(LedStatusUsb0) gpio.out(LedStatusUsb0, 1);
 	if(USBH_read(0, ptr, block, nblks) == 0)
 	{
-		if(LedStatusUsb0) gpio_out(LedStatusUsb0, 0);
+		if(LedStatusUsb0) gpio.out(LedStatusUsb0, 0);
 		//if(status & 0x80) CPUirqd();
 		return 1;
 	}
 	else
 	{
-		if(LedStatusUsb0) gpio_out(LedStatusUsb0, 0);
+		if(LedStatusUsb0) gpio.out(LedStatusUsb0, 0);
 		//if(status & 0x80) CPUirqd();
 		return 0;
 	}
@@ -210,16 +210,16 @@ unsigned int USBMSCWriteBlock(void *_ctrl, void *ptr, unsigned long block,
 {
 	//unsigned int status = CPUIntStatus();
 	//CPUirqe();
-	if(LedStatusUsb0) gpio_out(LedStatusUsb0, 1);
+	if(LedStatusUsb0) gpio.out(LedStatusUsb0, 1);
 	if(USBH_write(0, ptr, block, nblks) == 0)
 	{
-		if(LedStatusUsb0) gpio_out(LedStatusUsb0, 0);
+		if(LedStatusUsb0) gpio.out(LedStatusUsb0, 0);
 		//if(status & 0x80) CPUirqd();
 		return 1;
 	}
 	else
 	{
-		if(LedStatusUsb0) gpio_out(LedStatusUsb0, 0);
+		if(LedStatusUsb0) gpio.out(LedStatusUsb0, 0);
 		//if(status & 0x80) CPUirqd();
 		return 0;
 	}
@@ -361,32 +361,34 @@ void _usb_msc_host_idle(unsigned int instance)
 #ifdef USBH_MSC_DEBUG_EN
 						if(DebugCom)
 						{
-																				UARTprintf(DebugCom,   "USBH MSC%d drive %d mounted\n\r" , 0 , 1);
-																				UARTprintf(DebugCom,   "USBH MSC%d Fat fs detected\n\r" , 0);
-																				UARTprintf(DebugCom, "USBH MSC%d Fs type:                 " , 0);
+							uart.printf(DebugCom,   "USBH MSC%d drive %d mounted\n\r" , 0 , 1);
+							uart.printf(DebugCom,   "USBH MSC%d Fat fs detected\n\r" , 0);
+							uart.printf(DebugCom, "USBH MSC%d Fs type:                 " , 0);
 							if(g_sFatFs1.fs_type == FS_FAT12)	{
-																				UARTprintf(DebugCom, "Fat12");}
+								uart.printf(DebugCom, "Fat12");}
 							else if(g_sFatFs1.fs_type == FS_FAT16){
-																				UARTprintf(DebugCom, "Fat16");}
+								uart.printf(DebugCom, "Fat16");}
 							else if(g_sFatFs1.fs_type == FS_FAT32){
-																				UARTprintf(DebugCom, "Fat32");}
-							else								{ 				UARTprintf(DebugCom, "None");}
-																				UARTprintf(DebugCom, "\n\r");
+								uart.printf(DebugCom, "Fat32");}
+							else if(g_sFatFs1.fs_type == FS_EXFAT){
+								uart.printf(DebugCom, "eXFAT");}
+							else								{ 				uart.printf(DebugCom, "None");}
+							uart.printf(DebugCom, "\n\r");
 																				//UARTprintf(DebugCom, "MMCSD0 BootSectorAddress:       %u \n\r",(unsigned int)g_sFatFs.);
-																				UARTprintf(DebugCom, "USBH MSC%d BytesPerSector:          %d \n\r",0, /*(int)g_sFatFs.s_size*/512);
-																				UARTprintf(DebugCom, "USBH MSC%d SectorsPerCluster:       %d \n\r",0, (int)g_sFatFs1.csize);
+							uart.printf(DebugCom, "USBH MSC%d BytesPerSector:          %d \n\r",0, /*(int)g_sFatFs.s_size*/512);
+							uart.printf(DebugCom, "USBH MSC%d SectorsPerCluster:       %d \n\r",0, (int)g_sFatFs1.csize);
 																				//UARTprintf(DebugCom, "MMCSD0 AllocTable1Begin:        %u \n\r",(unsigned int)g_sFatFs.fatbase);
 																				//UARTprintf(DebugCom, "USBH MSC%d NumberOfFats:            %d \n\r",0, (int)g_sFatFs1.n_fats);
 																				//UARTprintf(DebugCom, "MMCSD0 MediaType:               %d \n\r",Drives_Table[0]->DiskInfo_MediaType);
 																				//UARTprintf(DebugCom, "MMCSD0 AllocTableSize:          %u \n\r",Drives_Table[0]->DiskInfo_AllocTableSize);
 																				//UARTprintf(DebugCom, "USBH MSC%d DataSectionBegin:        %d \n\r",0, (int)g_sFatFs1.fatbase);
-																				UARTprintf(DebugCom, "USBH MSC%d uSD DiskCapacity:        %uMB\n\r",0, (unsigned long)((unsigned long long)((unsigned long long)g_sFatFs1.n_fatent * (unsigned long long)/*g_sFatFs.s_size*/512 * (unsigned long long)g_sFatFs1.csize) / 1000000));
+							uart.printf(DebugCom, "USBH MSC%d uSD DiskCapacity:        %uMB\n\r",0, (unsigned long)((unsigned long long)((unsigned long long)g_sFatFs1.n_fatent * (unsigned long long)/*g_sFatFs.s_size*/512 * (unsigned long long)g_sFatFs1.csize) / 1000000));
 						}
 #endif
             }
-        	else  if(DebugCom)										UARTprintf(DebugCom,   "USBH %d ERROR oppening path\n\r" , 0);
+        	else  if(DebugCom)										uart.printf(DebugCom,   "USBH %d ERROR oppening path\n\r" , 0);
         }
-        else  if(DebugCom)												UARTprintf(DebugCom,   "USBH %d ERROR mounting disk\n\r" , 0);
+        else  if(DebugCom)												uart.printf(DebugCom,   "USBH %d ERROR mounting disk\n\r" , 0);
         Appli_state = APPLICATION_IDLE;
         break;
 

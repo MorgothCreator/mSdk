@@ -9,7 +9,7 @@
 #ifndef DEV45DB_H_
 #define DEV45DB_H_
 
-#include "api/mcspi_def.h"
+#include <api/spi_def.h>
 #include "api/gpio_def.h"
 
 #define DEVICE_45DB_PAGE_SIZE			528

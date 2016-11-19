@@ -165,8 +165,8 @@ void BSP_LCD_DrawBitmap(void *_pDisplay, uint32_t Xpos, uint32_t Ypos, uint8_t *
   uint32_t InputColorMode = 0;
 
   /* Get bitmap data address offset */
-  index = *(__IO uint16_t *) (pbmp + 10);
-  index |= (*(__IO uint16_t *) (pbmp + 12)) << 16;
+  index = *(volatile uint16_t *) (pbmp + 10);
+  index |= (*(volatile uint16_t *) (pbmp + 12)) << 16;
 
   /* Read bitmap width */
   width = *(uint16_t *) (pbmp + 18);
@@ -838,13 +838,13 @@ void _lcd_disable()
 void _screen_backlight_on(void *_pDisplay)
 {
 	tDisplay *pDisplay = (tDisplay *)_pDisplay;
-	gpio_out(pDisplay->BackLight, 1);
+	gpio.out(pDisplay->BackLight, 1);
 }
 //#######################################################################################
 void _screen_backlight_off(void *_pDisplay)
 {
 	tDisplay *pDisplay = (tDisplay *)_pDisplay;
-	gpio_out(pDisplay->BackLight, 0);
+	gpio.out(pDisplay->BackLight, 0);
 }
 //#######################################################################################
 bool _screen_copy(void *_pDisplayTo, void *_pDisplayFrom, bool put_cursor, signed int X, signed int Y, unsigned int color)

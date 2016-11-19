@@ -28,6 +28,34 @@
 #include "interface/uart_interface.h"
 #include "lib/util/ascii.h"
 #include "api/usb_api.h"
+
+void uart_putc(Uart_t* UartSettings, unsigned char byteTx);
+unsigned char uart_getc(Uart_t* UartSettings);
+bool uart_putc_no_blocking(Uart_t* UartSettings, unsigned char byteTx);
+signed short uart_getc_no_blocking(Uart_t* UartSettings);
+void uart_set_baud(Uart_t* UartSettings, unsigned long BaudRate);
+unsigned int uart_puts(Uart_t* UartSettings, char *pTxBuffer, int numBytesToWrite);
+unsigned int uart_gets(Uart_t* UartSettings, char *pRxBuffer, int numBytesToRead);
+unsigned int uart_write(Uart_t* UartSettings, const char *pcBuf, unsigned int len);
+int uart_scanf(Uart_t* UartSettings, const char *format, ...);
+Uart_t* uart_printf(Uart_t* UartSettings,const char *pcString, ...);
+bool uart_open(Uart_t *UartSettings);
+bool uart_close(Uart_t *UartSettings);
+
+const uart_t uart = {
+		uart_open,
+		uart_close,
+		uart_putc,
+		uart_getc,
+		uart_putc_no_blocking,
+		uart_getc_no_blocking,
+		uart_set_baud,
+		uart_puts,
+		uart_gets,
+		uart_write,
+		uart_scanf,
+		uart_printf,
+};
 /*#####################################################*/
 /* A mapping from an integer between 0 and 15 to its ASCII character
  * equivalent. */
@@ -35,7 +63,7 @@
 static const char * const g_pcHex = "0123456789abcdef";
 #endif
 /*#####################################################*/
-void UARTPutc(Uart_t* UartSettings, unsigned char byteTx)
+void uart_putc(Uart_t* UartSettings, unsigned char byteTx)
 {
 	if(!UartSettings)
 		return;
@@ -47,7 +75,7 @@ void UARTPutc(Uart_t* UartSettings, unsigned char byteTx)
 		_UARTCharPut(UartSettings->BaseAddr, byteTx);
 }
 /*#####################################################*/
-unsigned char UARTGetc(Uart_t* UartSettings)
+unsigned char uart_getc(Uart_t* UartSettings)
 {
 	if(!UartSettings)
 		return 0;
@@ -61,7 +89,7 @@ unsigned char UARTGetc(Uart_t* UartSettings)
 		return (signed char)_UARTCharGet(UartSettings->BaseAddr);
 }
 /*#####################################################*/
-bool UARTPutcNoBlocking(Uart_t* UartSettings, unsigned char byteTx)
+bool uart_putc_no_blocking(Uart_t* UartSettings, unsigned char byteTx)
 {
 	if(!UartSettings) return false;
 	if(UartSettings->is_virtual)
@@ -73,7 +101,7 @@ bool UARTPutcNoBlocking(Uart_t* UartSettings, unsigned char byteTx)
 		return _UARTCharPutNonBlocking(UartSettings->BaseAddr, byteTx);
 }
 /*#####################################################*/
-signed short UARTGetcNoBlocking(Uart_t* UartSettings)
+signed short uart_getc_no_blocking(Uart_t* UartSettings)
 {
 	if(!UartSettings)
 		return -1;
@@ -96,7 +124,7 @@ unsigned int UARTRxGetError(Uart_t* UartSettings)
 	return _UARTRxErrorGet(UartSettings->BaseAddr);
 }
 /*#####################################################*/
-void UARTBaudRateSet(Uart_t* UartSettings, unsigned long BaudRate)
+void uart_set_baud(Uart_t* UartSettings, unsigned long BaudRate)
 {
 	if(!UartSettings)
 return;
@@ -128,18 +156,18 @@ return;
  *
  *         Some example function calls of this function are: \n
  *
- *         UARTPuts(txArray, -2): This shall print the contents of txArray[]
+ *         uart_puts(txArray, -2): This shall print the contents of txArray[]
  *         until the occurence of a NULL character. \n
  *
- *         UARTPuts("Hello World", 8): This shall print the first 8 characters
+ *         uart_puts("Hello World", 8): This shall print the first 8 characters
  *         of the string shown. \n
  *
- *         UARTPuts("Hello World", 20): This shall print the string shown until
+ *         uart_puts("Hello World", 20): This shall print the string shown until
  *         the occurence of the NULL character. Here, the NULL character is
  *         encountered earlier than the length of 20 bytes.\n
  *
  */
-unsigned int UARTPuts(Uart_t* UartSettings,
+unsigned int uart_puts(Uart_t* UartSettings,
 		char *pTxBuffer, int numBytesToWrite)
 {
 	if(!UartSettings) return numBytesToWrite;
@@ -162,12 +190,12 @@ unsigned int UARTPuts(Uart_t* UartSettings,
 			  if('\n' == *pTxBuffer)
 			  {
 				   /* Ensuring applicability to serial console.*/
-				   //UARTPutc(UartSettings,'\r');
-				   UARTPutc(UartSettings,'\n');
+				   //uart_putc(UartSettings,'\r');
+				   uart_putc(UartSettings,'\n');
 			  }
 			  else
 			  {
-				   UARTPutc(UartSettings,(unsigned char)*pTxBuffer);
+				   uart_putc(UartSettings,(unsigned char)*pTxBuffer);
 			  }
 			  pTxBuffer++;
 			  count++;
@@ -203,16 +231,16 @@ unsigned int UARTPuts(Uart_t* UartSettings,
  *
  *         Some example function calls of this function are:
  *
- *         UARTGets(rxBuffer, -2): This reads characters from
+ *         uart_gets(rxBuffer, -2): This reads characters from
  *         the receiver FIFO of UART until the occurence of a carriage return
  *         ('Enter' key on the keyboard pressed) or an ESC character.
  *
- *         UARTGets(rxBuffer, 12): This reads characters until
+ *         uart_gets(rxBuffer, 12): This reads characters until
  *         12 characters have been read or until an occurence of a carriage
  *         return or an ESC character, whichever occurs first.
  */
 
-unsigned int UARTGets(Uart_t* UartSettings,
+unsigned int uart_gets(Uart_t* UartSettings,
 		char *pRxBuffer, int numBytesToRead)
 {
 	if(!UartSettings) return numBytesToRead;
@@ -231,7 +259,7 @@ unsigned int UARTGets(Uart_t* UartSettings,
      {
 		 do
 		 {
-			  *pRxBuffer = (signed char)UARTGetc(UartSettings);
+			  *pRxBuffer = (signed char)uart_getc(UartSettings);
 
 			  /*
 			  ** 0xD - ASCII value of Carriage Return.
@@ -247,7 +275,7 @@ unsigned int UARTGets(Uart_t* UartSettings,
 			  }
 
 			  /* Echoing the typed character back to the serial console. */
-			  //UARTPutc(UartSettings,(unsigned char)*pRxBuffer);
+			  //uart_putc(UartSettings,(unsigned char)*pRxBuffer);
 			  pRxBuffer++;
 			  count++;
 
@@ -262,378 +290,6 @@ unsigned int UARTGets(Uart_t* UartSettings,
      return count;
 }
 
-
-/**
- *  \brief   This function prints the specified numbers(positive or negative)
- *           on the serial console.
- *
- *  \param   value     The number to be printed on the serial console.
- *
- *  \return  None.
- *
- *  \note    The numbers that this function can print should lie in the
- *           following range:
- *           [-2^(31)] to [2^(31) - 1] i.e.
- *           0x80000000 to 0x7FFFFFFF
- *
- */
-
-void UARTPutNum(Uart_t* UartSettings,
-		int value)
-{
-	if(!UartSettings) return;
-     unsigned char num[10] = {0};
-     unsigned long quotient = 0;
-     unsigned long dividend = 0;
-     int count = 0;
-
-     if(UartSettings->UseDma)
-     {
-
-     }
-     else
-     {
-		 if(value < 0)
-		 {
-			  UARTPutc(UartSettings,'-');
-			  /*
-			  ** Making the negative number as positive.
-			  ** This is done to simplify further processing and printing.
-			  */
-			  value = -value;
-		 }
-
-		 dividend = value;
-		 do
-		 {
-			  quotient = dividend/10;
-			  num[count] = (unsigned char)(dividend % 10);
-			  if(0 == quotient)
-			  {
-				   break;
-			  }
-			  count++;
-			  dividend = quotient;
-
-		 }while(count < 10);
-
-		 if(10 == count)
-		 {
-			  count--;
-		 }
-
-		 /* Printing the digits. */
-		 do
-		 {
-			  /* We add 0x30 to a digit to obtain its respective ASCII value.*/
-			  UARTPutc(UartSettings,num[count--] + 0x30);
-		 }while(count >= 0);
-     }
-}
-
-/**
- * \brief  This function is used to print hexadecimal numbers on the serial
- *         console.
- *
- * \param  hexValue   The Hexadecimal number to be printed.
- *
- * \return None
- */
-
-void UARTPutHexNum(Uart_t* UartSettings,
-		unsigned long hexValue)
-{
-	if(!UartSettings) return;
-    unsigned char num[8] = {0};
-    unsigned long quotient = 0;
-    unsigned long dividend = 0;
-    int count = 0;
-
-    dividend = hexValue;
-
-    if(UartSettings->UseDma)
-    {
-
-    }
-    else
-    {
-		do
-		{
-			quotient = (dividend >> 4);
-			num[count] = (unsigned char)(dividend % 16);
-			if(0 == quotient)
-			{
-				break;
-			}
-			count++;
-			dividend = quotient;
-
-		}while(count < 8);
-
-		if(8 == count)
-		{
-			count--;
-		}
-
-		UARTPutc(UartSettings,'0');
-		UARTPutc(UartSettings,'x');
-
-		while(count >= 0)
-		{
-			/* Checking for alphanumeric numbers. */
-			if((16 - num[count]) <= 6)
-			{
-				/* Printing alphanumeric numbers. */
-				UARTPutc(UartSettings,num[count--] + 0x37);
-			}
-			else
-			{
-				/* Printing numbers in the range 0 to 9. */
-				UARTPutc(UartSettings,num[count--] + 0x30);
-			}
-		}
-    }
-}
-
-/**
- * \brief   This function reads the numbers typed on the serial console.
- *
- * \return  The value entered on the serial console.
- *
- * \note    The numbers that this function can recieve should lie in the
- *          following range:
- *          [-2^(31)] to [2^(31) - 1] i.e.
- *          0x80000000 to  0x7FFFFFFF
- *
- */
-
-long UARTGetNum(Uart_t* UartSettings)
-{
-	if(!UartSettings) return 0;
-     signed char rxByte;
-     signed char sign = 1;
-     long value = 0;
-
-     if(UartSettings->UseDma)
-     {
-
-     }
-     else
-     {
-		 rxByte = (signed char)UARTGetc(UartSettings);
-
-		 /* Accounting for negative numbers.*/
-		 if('-' == rxByte)
-		 {
-			  UARTPutc(UartSettings,'-');
-			  sign = -1;
-		 }
-		 else
-		 {
-			  UARTPutc(UartSettings,(unsigned char)rxByte);
-			  value = value*10 + (rxByte - 0x30);
-		 }
-
-		 do
-		 {
-			  rxByte = (signed char)UARTGetc(UartSettings);
-
-			  /* Echoing the typed characters to the serial console.*/
-			  UARTPutc(UartSettings,(unsigned char)rxByte);
-			  /*
-			  ** Checking if the entered character is a carriage return.
-			  ** Pressing the 'Enter' key on the keyboard executes a
-			  ** carriage return on the serial console.
-			  */
-#ifdef USE_WDR
-			  WDR();
-#endif
-			  if('\r' == rxByte)
-			  {
-				   break;
-			  }
-			  /*
-			  ** Subtracting 0x30 to convert the representation of the digit
-			  ** from ASCII to hexadecimal.
-			  */
-			  value = value*10 + (rxByte - 0x30);
-
-		  }while(1);
-
-		  /* Accounting for the sign of the number.*/
-		  value = value * sign;
-		 }
-     return value;
-}
-
-/**
- * \brief   This function receives hexadecimal numbers entered on the serial
- *          console of the host machine.
- *
- * \param   None
- *
- * \return  The hexadecimal number entered on the serial console of the host
- *          machine.
- *
- * \note    1> The points below explain the ways of entering hexadecimal
- *             numbers:\n
- *             - 0xABCDEF12 - Hexadecimal number preceded by a '0x'.\n
- *             - 0XABCDEF12 - Hexadecimal number preceded by a '0X'.\n
- *             - 0xabcdef12 - Lower-case alphanumeric numbers are allowed.\n
- *             - 0xaBcDeF12 - Intermixing of lower-case and upper-case
- *                            alphanumeric numbers is allowed.\n
- *             - abcdef12   - A preceding '0x' or '0X' is not requried.
- *                            The entered number shall be treated as a
- *                            hexadecimal number.\n
- *             - 12345678   - Interpreted as 0x12345678 and not decimal
- *                            12345678.\n
- *             - xABCDEF12  - A preceding '0' is not required.\n
- *          2> This function does not take into consideration any character
- *             other than a hexadecimal character after reception.\n
- *             Example: Characters in the range G,H,I,...Z or g,h,...,z
- *             are not taken into consideration.\n
- *          3> The maximum value that can be returned by this function
- *             is 0xFFFFFFFF. The reception exits after eight characters have
- *             been received.\n
- *          4> To input a  number lesser that eight characters (Ex: 0x1AB),
- *             press the 'Enter' key after entering the number.\n
- */
-
-unsigned long UARTGetHexNum(Uart_t* UartSettings)
-{
-	if(!UartSettings) return 0;
-    unsigned char rxByte;
-    unsigned long value = 0;
-    unsigned long loopIndex;
-    unsigned long byteCount = 0;
-
-    for(loopIndex = 0; loopIndex < 2; loopIndex++)
-    {
-#ifdef USE_WDR
-    	WDR();
-#endif
-        /* Receiving bytes from the host machine through serial console. */
-        rxByte = UARTGetc(UartSettings);
-
-        /*
-        ** Checking if the entered character is a carriage return.
-        ** Pressing the 'Enter' key on the keyboard executes a
-        ** carriage return on the serial console.
-        */
-        if('\r' == rxByte)
-        {
-            break;
-        }
-
-        /*
-        ** Checking if the character entered is one among the alphanumeric
-        ** character set A,B,C...F
-        */
-        if(('A' <= rxByte) && (rxByte <= 'F'))
-        {
-            /* Echoing the typed characters to the serial console.*/
-            UARTPutc(UartSettings,rxByte);
-            value = (value << 4) + (rxByte - 0x37);
-            byteCount++;
-        }
-
-        /*
-        ** Checking if the character entered is one among the alphanumeric
-        ** character set a,b,c...f
-        */
-        else if(('a' <= rxByte) && (rxByte <= 'f'))
-        {
-            UARTPutc(UartSettings,rxByte);
-            value = (value << 4) + (rxByte - 0x57);
-            byteCount++;
-        }
-
-        /*
-        ** Checking if the character entered is one among the decimal
-        ** number set 0,1,2,3,....9
-        */
-        else if(('0' <= rxByte) && (rxByte <= '9'))
-        {
-            UARTPutc(UartSettings,rxByte);
-            value = (value << 4) + (rxByte - 0x30);
-            byteCount++;
-        }
-
-        /*
-        ** Checking if the character is either a 'x'(lower-case) or an 'X'
-        ** (upper-case).
-        */
-        else if(('x' == rxByte) || ('X' == rxByte))
-        {
-            UARTPutc(UartSettings,rxByte);
-            value = 0;
-            break;
-        }
-    }
-
-    if(0 == value)
-    {
-        byteCount = 0;
-    }
-
-    do
-    {
-        rxByte = UARTGetc(UartSettings);
-
-#ifdef USE_WDR
-        WDR();
-#endif
-        if('\r' == rxByte)
-        {
-            break;
-        }
-
-        /*
-        ** Checking if the character entered is one among the alphanumeric
-        ** character set A,B,C...F
-        */
-        if(('A' <= rxByte) && (rxByte <= 'F'))
-        {
-            UARTPutc(UartSettings,rxByte);
-            value = (value << 4) + (rxByte - 0x37);
-            byteCount++;
-        }
-
-        /*
-        ** Checking if the character entered is one among the alphanumeric
-        ** character set a,b,c...f
-        */
-        else if(('a' <= rxByte) && (rxByte <= 'f'))
-        {
-            UARTPutc(UartSettings,rxByte);
-            value = (value << 4) + (rxByte - 0x57);
-            byteCount++;
-        }
-
-        /*
-        ** Checking if the character entered is one among the decimal
-        ** number set 0,1,2,3,....9
-        */
-        else if(('0' <= rxByte) && (rxByte <= '9'))
-        {
-            UARTPutc(UartSettings,rxByte);
-            value = (value << 4) + (rxByte - 0x30);
-            byteCount++;
-        }
-
-        /*
-        ** Not receiving any other character other than the one belonging
-        ** to the above three categories.
-        */
-        else
-        {
-            /* Intentionally left empty. */
-        }
-
-    }while(byteCount < 8);
-
-    return value;
-}
 
 /**
  * \brief   This function reads the input value from UART continuously
@@ -658,7 +314,7 @@ static inline void UARTStdioRead(Uart_t* UartSettings, unsigned char *rxBuff, un
     */
     while((rxByte != '\r') && (rxByte != ' '))
     {
-        UARTPutc(UartSettings, rxByte);
+        uart_putc(UartSettings, rxByte);
 
         /* Account for the backspace to allow user to edit the input */
         if(('\b' == rxByte) && (inputCount > 0))
@@ -671,7 +327,7 @@ static inline void UARTStdioRead(Uart_t* UartSettings, unsigned char *rxBuff, un
             *rxBuff++ = rxByte;
             inputCount++;
         }
-        rxByte = UARTGetc(UartSettings);
+        rxByte = uart_getc(UartSettings);
     }
     /* Add the delimiting character at the end of the buffer */
     *rxBuff = rxByte;
@@ -730,8 +386,8 @@ int UARTScanf_low(Uart_t* UartSettings, const char *format, va_list vaArg)
                     /* Get the address of variable from varargs */
                     dst = va_arg(vaArg, char *);
 
-                    rxByte = UARTGetc(UartSettings);
-                    UARTPutc(UartSettings, rxByte);
+                    rxByte = uart_getc(UartSettings);
+                    uart_putc(UartSettings, rxByte);
                     *dst = rxByte;
                     /*
                     ** Increment the count for input values successfully
@@ -745,7 +401,7 @@ int UARTScanf_low(Uart_t* UartSettings, const char *format, va_list vaArg)
                     */
                     while((rxByte != '\n') && (rxByte != '\r') && (rxByte != ' '))
                     {
-                       rxByte = UARTGetc(UartSettings);
+                       rxByte = uart_getc(UartSettings);
                     }
                     UART_SCANF_ECHO_INPUT(UartSettings, rxByte);
                  break;
@@ -901,7 +557,7 @@ int UARTScanf_low(Uart_t* UartSettings, const char *format, va_list vaArg)
                      /* Read the characters one at a time from UART console */
                     while((rxByte != '\n') && (rxByte != '\r') && (rxByte != ' ') && (width--))
                     {
-                        UARTPutc(UartSettings, rxByte);
+                        uart_putc(UartSettings, rxByte);
 
                         /*Account for backspace and decrement the pointer */
                         if('\b' == rxByte)
@@ -913,7 +569,7 @@ int UARTScanf_low(Uart_t* UartSettings, const char *format, va_list vaArg)
                         {
                             *dst++ = (char) rxByte;
                         }
-                        rxByte = UARTGetc(UartSettings);
+                        rxByte = uart_getc(UartSettings);
                     }
                     *dst = '\0';
                     UART_SCANF_ECHO_INPUT(UartSettings, rxByte);
@@ -965,7 +621,7 @@ int UARTScanf_low(Uart_t* UartSettings, const char *format, va_list vaArg)
                 break;
 
                 default:
-                    UARTPuts(UartSettings, "Format specifier is not supported\r\n", -1);
+                    uart_puts(UartSettings, "Format specifier is not supported\r\n", -1);
                     inputMatch = -1;
                 break;
             }
@@ -974,7 +630,7 @@ int UARTScanf_low(Uart_t* UartSettings, const char *format, va_list vaArg)
     /* Check for invalid format specifiers */
     if(0 == inputMatch)
     {
-        UARTPuts(UartSettings, "Invalid format specifiers\r\n", -1);
+        uart_puts(UartSettings, "Invalid format specifiers\r\n", -1);
         inputMatch = -1;
     }
 
@@ -992,7 +648,7 @@ int UARTScanf_low(Uart_t* UartSettings, const char *format, va_list vaArg)
  * \return  None.
  *
  */
-int UARTscanf(Uart_t* UartSettings, const char *format, ...)
+int uart_scanf(Uart_t* UartSettings, const char *format, ...)
 {
     va_list arg;
     int inputStatus = -1;
@@ -1014,7 +670,7 @@ int UARTscanf(Uart_t* UartSettings, const char *format, ...)
         */
         fflush(stdin);
 //        #else
-//        UARTPuts("Error! SemiHosting Support is not enabled\r\n", -1);
+//        uart_puts("Error! SemiHosting Support is not enabled\r\n", -1);
         #endif
 //    }
 //    else
@@ -1050,7 +706,7 @@ int UARTscanf(Uart_t* UartSettings, const char *format, ...)
  *
  * \return Returns the count of characters written.
  */
-unsigned int UARTwrite(Uart_t* UartSettings,
+unsigned int uart_write(Uart_t* UartSettings,
 		const char *pcBuf, unsigned int len)
 {
 	if(!UartSettings) return 0;
@@ -1069,11 +725,11 @@ unsigned int UARTwrite(Uart_t* UartSettings,
 			 * \n is translated to \n\r in the output. */
 			if(pcBuf[uIdx] == '\n')
 			{
-				//UARTPutc(UartSettings,'\r');
+				//uart_putc(UartSettings,'\r');
 			}
 
 			/* Send the character to the UART output. */
-		   UARTPutc(UartSettings,pcBuf[uIdx]);
+		   uart_putc(UartSettings,pcBuf[uIdx]);
 		}
     }
 
@@ -1118,7 +774,7 @@ unsigned int UARTwrite(Uart_t* UartSettings,
  * \return None.
  */
 #ifdef _TINY_PRINT_
-Uart_t*  UARTprintf(Uart_t* UartSettings,const char *pcString, ...)
+Uart_t*  uart_printf(Uart_t* UartSettings,const char *pcString, ...)
 {
 	if(!UartSettings) return UartSettings;
     unsigned long idx, pos, count, base, neg;
@@ -1138,7 +794,7 @@ Uart_t*  UARTprintf(Uart_t* UartSettings,const char *pcString, ...)
         }
 
         /* Write this portion of the string. */
-        UARTwrite(UartSettings, pcString, idx);
+        uart_write(UartSettings, pcString, idx);
 
         /* Skip the portion of the string that was written. */
         pcString += idx;
@@ -1196,7 +852,7 @@ again:
                     value = va_arg(vaArgP, unsigned int);
 
                     /* Print out the character. */
-                    UARTwrite(UartSettings, (char *)&value, 1);
+                    uart_write(UartSettings, (char *)&value, 1);
 
                     /* This command has been handled. */
                     break;
@@ -1247,7 +903,7 @@ again:
                     }
 
                     /* Write the string. */
-                    UARTwrite(UartSettings, pcStr, idx);
+                    uart_write(UartSettings, pcStr, idx);
 
                     /* Write any required padding spaces */
                     if(count > idx)
@@ -1255,7 +911,7 @@ again:
                         count -= idx;
                         while(count--)
                         {
-                            UARTwrite(UartSettings, (const char *)" ", 1);
+                            uart_write(UartSettings, (const char *)" ", 1);
                         }
                     }
                     /* This command has been handled. */
@@ -1357,7 +1013,7 @@ convert:
                     }
 
                     /* Write the string. */
-                    UARTwrite(UartSettings, pcBuf, pos);
+                    uart_write(UartSettings, pcBuf, pos);
 
                     /* This command has been handled. */
                     break;
@@ -1367,7 +1023,7 @@ convert:
                 case '%':
                 {
                     /* Simply write a single %. */
-                    UARTwrite(UartSettings, pcString - 1, 1);
+                    uart_write(UartSettings, pcString - 1, 1);
 
                     /* This command has been handled. */
                     break;
@@ -1377,7 +1033,7 @@ convert:
                 default:
                 {
                     /* Indicate an error. */
-                    UARTwrite(UartSettings, (const char *)"ERROR", 5);
+                    uart_write(UartSettings, (const char *)"ERROR", 5);
 
                     /* This command has been handled. */
                     break;
@@ -1394,10 +1050,10 @@ convert:
 
 bool uart_open(Uart_t* UartSettings)
 {
-	UartSettings->putc = UARTPutc;
-	UartSettings->getc = UARTGetc;
-	UartSettings->putc_no_blocking = UARTPutcNoBlocking;
-	UartSettings->getc_no_blocking = UARTGetcNoBlocking;
+	UartSettings->putc = uart_putc;
+	UartSettings->getc = uart_getc;
+	UartSettings->putc_no_blocking = uart_putc_no_blocking;
+	UartSettings->getc_no_blocking = uart_getc_no_blocking;
 	if(!UartSettings->is_virtual)
 	{
 		UartSettings->open = _uart_open;
@@ -2131,7 +1787,7 @@ static void dopr_outch (Uart_t* UartSettings, char *buffer, size_t *currlen, siz
 {
   /*if (*currlen < maxlen)
     buffer[(*currlen)++] = c;*/
-	UARTPutc(UartSettings, (unsigned char)c);
+	uart_putc(UartSettings, (unsigned char)c);
 }
 
 #ifndef HAVE_VSNPRINTF
@@ -2217,15 +1873,15 @@ int _vsnprintf_ (Uart_t* UartSettings, char *str, size_t count, const char *fmt,
  *
  * Example
  *
- *  UARTprintf example
- *    UARTprintf ("Characters: %c %c \n", 'a', 65);
- *    UARTprintf ("Decimals: %d %ld\n", 1977, 650000L);
- *    UARTprintf ("Preceding with blanks: %10d \n", 1977);
- *    UARTprintf ("Preceding with zeros: %010d \n", 1977);
- *    UARTprintf ("Some different radices: %d %x %o %#x %#o \n", 100, 100, 100, 100, 100);
- *    UARTprintf ("floats: %4.2f %+.0e %E \n", 3.1416, 3.1416, 3.1416);
- *    UARTprintf ("Width trick: %*d \n", 5, 10);
- *    UARTprintf ("%s \n", "A string");
+ *  uart_printf example
+ *    uart_printf ("Characters: %c %c \n", 'a', 65);
+ *    uart_printf ("Decimals: %d %ld\n", 1977, 650000L);
+ *    uart_printf ("Preceding with blanks: %10d \n", 1977);
+ *    uart_printf ("Preceding with zeros: %010d \n", 1977);
+ *    uart_printf ("Some different radices: %d %x %o %#x %#o \n", 100, 100, 100, 100, 100);
+ *    uart_printf ("floats: %4.2f %+.0e %E \n", 3.1416, 3.1416, 3.1416);
+ *    uart_printf ("Width trick: %*d \n", 5, 10);
+ *    uart_printf ("%s \n", "A string");
  *
  * Output:
  *
@@ -2240,7 +1896,7 @@ int _vsnprintf_ (Uart_t* UartSettings, char *str, size_t count, const char *fmt,
  * A string
  *
  */
-Uart_t*  UARTprintf(Uart_t* UartSettings,const char *pcString, ...)
+Uart_t*  uart_printf(Uart_t* UartSettings,const char *pcString, ...)
 //int snprintf (Uart_t* UartSettings, char *str,size_t count,const char *fmt,...)
 #else
 int snprintf (va_alist) //va_dcl

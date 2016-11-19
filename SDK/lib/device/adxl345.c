@@ -25,19 +25,13 @@
 bool adxl345_bit_set(new_adxl345* adxl345_struct, unsigned char regOffset, unsigned char mask)
 {
     new_twi* TwiStruct = adxl345_struct->TwiStruct;
-    unsigned char* RxBuff = (unsigned char*)TwiStruct->RxBuff;
-    unsigned char* TxBuff = (unsigned char*)TwiStruct->TxBuff;
-	TwiStruct->MasterSlaveAddr = adxl345_struct->MasterSlaveAddr;
-	TwiStruct->tCount = 0;
-	TwiStruct->rCount = 0;
-	TxBuff[0] = regOffset;
-    if(!SetupI2CReception(TwiStruct, 1, 1))
+    unsigned char tmp = 0;
+    if(!twi.trx(TwiStruct, adxl345_struct->MasterSlaveAddr, &regOffset, 1, &tmp, 1))
     	return false;
-	TwiStruct->tCount = 0;
-	TwiStruct->rCount = 0;
-	TxBuff[0] = regOffset;
-	TxBuff[1] = RxBuff[0] | mask;
-	if(!SetupI2CTransmit(TwiStruct, 2))
+	unsigned char buff[2];
+	buff[0] = regOffset;
+	buff[1] = tmp | mask;
+	if(!twi.tx(TwiStruct, adxl345_struct->MasterSlaveAddr, buff, 2))
 		return false;
     return true;
 }
@@ -45,19 +39,13 @@ bool adxl345_bit_set(new_adxl345* adxl345_struct, unsigned char regOffset, unsig
 bool adxl345_bit_clr(new_adxl345* adxl345_struct, unsigned char regOffset, unsigned char mask)
 {
     new_twi* TwiStruct = adxl345_struct->TwiStruct;
-    unsigned char* RxBuff = (unsigned char*)TwiStruct->RxBuff;
-    unsigned char* TxBuff = (unsigned char*)TwiStruct->TxBuff;
-	TwiStruct->MasterSlaveAddr = adxl345_struct->MasterSlaveAddr;
-	TwiStruct->tCount = 0;
-	TwiStruct->rCount = 0;
-	TxBuff[0] = regOffset;
-	if(!SetupI2CReception(TwiStruct, 1, 1))
+	unsigned char rx_buff;
+	if(!twi.trx(TwiStruct, adxl345_struct->MasterSlaveAddr, &regOffset, 1, &rx_buff, 1))
 		return false;
-	TwiStruct->tCount = 0;
-	TwiStruct->rCount = 0;
-	TxBuff[0] = regOffset;
-	TxBuff[1] = RxBuff[0] & ~mask;
-	if(!SetupI2CTransmit(TwiStruct, 2))
+	unsigned char buff[2];
+	buff[0] = regOffset;
+	buff[1] = rx_buff & ~mask;
+	if(!twi.tx(TwiStruct, adxl345_struct->MasterSlaveAddr, buff, 2))
 		return false;
     return true;
 }
@@ -65,62 +53,49 @@ bool adxl345_bit_clr(new_adxl345* adxl345_struct, unsigned char regOffset, unsig
 bool adxl345_write(new_adxl345* adxl345_struct, unsigned char regOffset, unsigned char data)
 {
     new_twi* TwiStruct = adxl345_struct->TwiStruct;
-    unsigned char* TxBuff = (unsigned char*)TwiStruct->TxBuff;
 	TwiStruct->MasterSlaveAddr = adxl345_struct->MasterSlaveAddr;
-	TxBuff[0] = regOffset;
-	TxBuff[1] = data;
+	unsigned char buff[2];
+	buff[0] = regOffset;
+	buff[1] = data;
 	TwiStruct->tCount = 0;
-	if(!SetupI2CTransmit(TwiStruct, 2))
+	if(!twi.tx(TwiStruct, adxl345_struct->MasterSlaveAddr, buff, 2))
 		return false;
     return true;
 }
 /*#####################################################*/
-bool adxl345_write_multiple(new_adxl345* adxl345_struct, unsigned int regOffset, unsigned char *Buff, unsigned int DataLen)
+bool adxl345_write_multiple(new_adxl345* adxl345_struct, unsigned char regOffset, unsigned char *Buff, unsigned int DataLen)
 {
     unsigned int i;
     new_twi* TwiStruct = adxl345_struct->TwiStruct;
-    unsigned char* TxBuff = (unsigned char*)TwiStruct->TxBuff;
+    unsigned char* TxBuff = malloc(DataLen + 1);
 	TwiStruct->MasterSlaveAddr = adxl345_struct->MasterSlaveAddr;
 	TxBuff[0] = regOffset;
 	TwiStruct->tCount = 0;
     for (i = 0; i < DataLen; i++ ) {
     	TxBuff[i + 1] = Buff[i];
     }
-    if(!SetupI2CTransmit(TwiStruct, DataLen + 1))
+    if(!twi.tx(TwiStruct, adxl345_struct->MasterSlaveAddr, TxBuff, DataLen + 1))
+    {
+    	free(TxBuff);
     	return false;
+    }
+    free(TxBuff);
     return true;
 }
 /*#####################################################*/
 bool adxl345_read(new_adxl345* adxl345_struct, unsigned char regOffset, unsigned char* data)
 {
     new_twi* TwiStruct = adxl345_struct->TwiStruct;
-    unsigned char* RxBuff = (unsigned char*)TwiStruct->RxBuff;
-    unsigned char* TxBuff = (unsigned char*)TwiStruct->TxBuff;
-	TwiStruct->MasterSlaveAddr = adxl345_struct->MasterSlaveAddr;
-	TwiStruct->tCount = 0;
-	TwiStruct->rCount = 0;
-	TxBuff[0] = regOffset;
-	if(!SetupI2CReception(TwiStruct, 1, 1))
+	if(!twi.trx(TwiStruct, adxl345_struct->MasterSlaveAddr, &regOffset, 1, data, 1))
 		return false;
-    *data = RxBuff[0];
     return true;
 }
 /*#####################################################*/
-bool adxl345_read_multiple(new_adxl345* adxl345_struct, unsigned int regOffset, unsigned char *Buff, unsigned int DataLen)
+bool adxl345_read_multiple(new_adxl345* adxl345_struct, unsigned char regOffset, unsigned char *Buff, unsigned int DataLen)
 {
-    unsigned int i;
     new_twi* TwiStruct = adxl345_struct->TwiStruct;
-    unsigned char* RxBuff = (unsigned char*)TwiStruct->RxBuff;
-    unsigned char* TxBuff = (unsigned char*)TwiStruct->TxBuff;
-	TwiStruct->MasterSlaveAddr = adxl345_struct->MasterSlaveAddr;
-	TwiStruct->tCount = 0;
-	TwiStruct->rCount = 0;
-	TxBuff[0] = regOffset;
-	if(!SetupI2CReception(TwiStruct, 1, DataLen))
+	if(!twi.trx(TwiStruct, adxl345_struct->MasterSlaveAddr, &regOffset, 1, Buff, DataLen))
 		return false;
-    for (i = 0; i < DataLen; i++ ) {
-    	Buff[i] = RxBuff[i];
-    }
     return true;
 }
 /*#####################################################*/

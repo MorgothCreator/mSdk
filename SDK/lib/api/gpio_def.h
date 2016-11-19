@@ -110,6 +110,21 @@ typedef struct
 		bool state_dn;
 	}event;
 }Gpio_t;
+
+typedef struct gpio_s
+{
+	void (*init)(gpio_port_enum GpioModuleNr);
+	Gpio_t *(*assign)(gpio_port_enum PortNr, unsigned char PinNr, gpio_type_enum function, bool Multipin);
+	void (*free)(Gpio_t *gpio_struct);
+	bool (*out)(Gpio_t *gpio_struct, unsigned char State);
+	bool (*direction)(Gpio_t *gpio_struct, unsigned char Direction);
+	signed int (*in)(Gpio_t *gpio_struct);
+	bool (*up_dn_enable)(Gpio_t *gpio_struct, bool enable);
+	bool (*up_dn)(Gpio_t *gpio_struct, unsigned char value);
+	bool (*get_state)(Gpio_t *gpio_struct);
+	bool (*function_set)(Gpio_t *gpio_struct, gpio_type_enum function);
+	void (*idle)(Gpio_t *gpio_struct);
+}gpio_t;
 /*#####################################################*/
 #define new_gpio Gpio_t
 #ifndef new_

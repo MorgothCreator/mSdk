@@ -21,13 +21,13 @@
 void rfm12_cs_assert(void *param)
 {
 	rfm12_t *_param = (rfm12_t *)param;
-	gpio_out(_param->CS_PORT, 0);
+	gpio.out(_param->CS_PORT, 0);
 }
 
 void rfm12_cs_deassert(void *param)
 {
 	rfm12_t *_param = (rfm12_t *)param;
-	gpio_out(_param->CS_PORT, 1);
+	gpio.out(_param->CS_PORT, 1);
 }
 
 unsigned short rfm12_cmd(void *param, unsigned short command)
@@ -38,8 +38,8 @@ unsigned short rfm12_cmd(void *param, unsigned short command)
 	unsigned char tmp_buff[2];
 	tmp_buff[0] = command >> 8;
 	tmp_buff[1] = command;
-	_param->spi_unit->Buff = tmp_buff;
-	mcspi_transfer(_param->spi_unit, 2, 0);
+	//_param->spi_unit->Buff = tmp_buff;
+	spi.transmit(_param->spi_unit, tmp_buff, 2);
 	rfm12_cs_deassert(param);
 	return (tmp_buff[0] << 8) + tmp_buff[1];
 }
@@ -127,14 +127,14 @@ void rfm12_deinit(void *param)
 void rfm12_byte_send(void *param, unsigned char data)
 {
 	rfm12_t *_param = (rfm12_t *)param;
-	while(gpio_in(_param->IRQ_PORT));
+	while(gpio.in(_param->IRQ_PORT));
 	rfm12_cmd(param, 0xB800 + data);
 }
 
 bool rfm12_byte_receive(void *param, unsigned char *data, unsigned long timeout)
 {
 	rfm12_t *_param = (rfm12_t *)param;
-	while(gpio_in(_param->IRQ_PORT))
+	while(gpio.in(_param->IRQ_PORT))
 	{
 		if(!timeout--)
 			return false;

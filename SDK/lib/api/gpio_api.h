@@ -37,17 +37,10 @@
 #define GPIO_FAST_WRITE_MULTI_PIN(base_addr, mask, pin_mask)\
 		_GPIO_FAST_WRITE_MULTI_PIN(base_addr, mask, pin_mask)
 /*#####################################################*/
-void gpio_init(gpio_port_enum GpioModuleNr);
-new_gpio *gpio_assign(gpio_port_enum PortNr, unsigned char PinNr, gpio_type_enum function, bool Multipin);
-void gpio_free(new_gpio *gpio_struct);
-bool gpio_out(new_gpio *gpio_struct, unsigned char State);
-bool gpio_direction(new_gpio *gpio_struct, unsigned char Direction);
-signed int gpio_in(new_gpio *gpio_struct);
-bool gpio_up_dn_enable(new_gpio *gpio_struct, bool enable);
-bool gpio_up_dn(new_gpio *gpio_struct, unsigned char value);
 bool gpio_get_state(new_gpio *gpio_struct);
-bool gpio_function_set(new_gpio *gpio_struct, gpio_type_enum function);
 void gpio_idle(new_gpio *gpio_struct);
+/*#####################################################*/
+const gpio_t gpio;
 /*#####################################################*/
 #ifdef HEADER_INCLUDE_C_FILES
 #include "gpio_api.c"

@@ -22,11 +22,8 @@ bool mpr121_read_short(mpr121_t *structure, unsigned char reg, unsigned short *r
 	if(!structure->TWI)
 		return false;
 	Twi_t *TwiStruct = structure->TWI;
-	TwiStruct->MasterSlaveAddr = MPR121_ADDR;
-	TwiStruct->TxBuff[0] = reg;
-	if(!SetupI2CReception(TwiStruct, 1, 2))
+	if(!twi.trx(TwiStruct, MPR121_ADDR, &reg, 1, (unsigned char *)return_data, 2))
 		return false;
-	memcpy(return_data, TwiStruct->RxBuff, 2);
 	return true;
 }
 
@@ -35,11 +32,8 @@ bool mpr121_read(mpr121_t *structure, unsigned char reg, unsigned char *return_d
 	if(!structure->TWI)
 		return false;
 	Twi_t *TwiStruct = structure->TWI;
-	TwiStruct->MasterSlaveAddr = MPR121_ADDR;
-	TwiStruct->TxBuff[0] = reg;
-	if(!SetupI2CReception(TwiStruct, 1, 1))
+	if(!twi.trx(TwiStruct, MPR121_ADDR, &reg, 1, return_data, 1))
 		return false;
-	*return_data = TwiStruct->RxBuff[0];
 	return true;
 }
 
@@ -48,10 +42,10 @@ bool mpr121_write(mpr121_t *structure, unsigned char reg, unsigned char data)
 	if(!structure->TWI)
 		return false;
 	Twi_t *TwiStruct = structure->TWI;
-	TwiStruct->MasterSlaveAddr = MPR121_ADDR;
-	TwiStruct->TxBuff[0] = reg;
-	TwiStruct->TxBuff[1] = data;
-	if(!SetupI2CTransmit(TwiStruct, 2))
+	unsigned char tmp[2];
+	tmp[0] = reg;
+	tmp[1] = data;
+	if(!twi.tx(TwiStruct, MPR121_ADDR, tmp, 2))
 		return false;
 	return true;
 }
@@ -117,7 +111,7 @@ bool mpr121_idle(mpr121_t *structure, mpr121_ret_t *return_keys)
 	/* Check if interrupt pin is provided, if not skip irq check. */
 	if(structure->IrqPin)
 	{
-		if(gpio_in(structure->IrqPin))
+		if(gpio.in(structure->IrqPin))
 			return false;
 	}
 	unsigned short keys;

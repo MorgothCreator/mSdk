@@ -485,7 +485,7 @@ void picturebox_copy_rectangle(tPictureBox* settings, unsigned int *src_buff, un
 	////put_pixel(pDisplay, X + settings->Position.X + 2, Y + settings->Position.Y + 2, color);
 
 	tRectangle *dest_rectangle = _dest_rectangle;
-	tRectangle *src_rectangle = _src_rectangle;
+	//tRectangle *src_rectangle = _src_rectangle;
 
 	signed int dest_X_StartBox = settings->Internals.Position.X;
 	signed int dest_Y_StartBox = settings->Internals.Position.Y;

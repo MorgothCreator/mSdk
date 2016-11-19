@@ -23,6 +23,14 @@
 #include "twi_api.h"
 #include "twi_def.h"
 #include "interface/twi_interface.h"
+
+const twi_t twi = {
+		_twi_open,
+		_twi_close,
+		_I2C_trx,
+		_I2C_tx,
+};
+#if 0
 /*#####################################################*/
 bool SetupI2CTransmit(new_twi* TwiStruct, unsigned int TransmitBytes)
 {
@@ -72,3 +80,4 @@ void twi_close(new_twi* TwiStruct)
 	_twi_close(TwiStruct);
 }
 /*#####################################################*/
+#endif

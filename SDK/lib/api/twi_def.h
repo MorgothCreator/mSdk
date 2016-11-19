@@ -28,8 +28,6 @@
 /*#####################################################*/
 typedef struct Twi_s
 {
-	void (*close)(struct Twi_s* param);
-	bool (*send_receive)(struct Twi_s* param, unsigned char addr, unsigned char *buff_send, unsigned int bytes_send, unsigned char *buff_receive, unsigned int bytes_receive);
 	unsigned char MasterSlaveAddr;
 	unsigned char TwiNr;
 	volatile unsigned char flag;
@@ -58,6 +56,14 @@ typedef struct Twi_s
 	bool NoSendWriteOnRead;
 	void *udata;
 }Twi_t;
+/*#####################################################*/
+typedef struct twi_s
+{
+	bool (*open)(Twi_t* TwiStruct);
+	void (*close)(Twi_t* param);
+	bool (*trx)(Twi_t* param, unsigned char addr, unsigned char *buff_send, unsigned int bytes_send, unsigned char *buff_receive, unsigned int bytes_receive);
+	bool (*tx)(Twi_t* param, unsigned char addr, unsigned char *buff_send, unsigned int bytes_send);
+}twi_t;
 /*#####################################################*/
 #define new_twi Twi_t
 #ifndef new_

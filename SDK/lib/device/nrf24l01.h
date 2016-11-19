@@ -7,9 +7,9 @@
 
 #ifndef LIB_DEVICE_NRF24L01_H_
 #define LIB_DEVICE_NRF24L01_H_
+#include <api/spi_api.h>
+#include <api/spi_def.h>
 #include "stdbool.h"
-#include "api/mcspi_def.h"
-#include "api/mcspi_api.h"
 #include "api/gpio_def.h"
 #include "api/gpio_api.h"
 

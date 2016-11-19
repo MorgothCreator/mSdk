@@ -46,9 +46,9 @@ DXL_COMM_ERR dxl_ping(DXL_ACTUATOR_t *settings, unsigned char id, unsigned char*
 	tx_buff[4] = DXL_PING;
 	tx_buff[5] = 0x0;
 	dxl_insert_checksum(tx_buff);
-	gpio_out(settings->TxEnGpio, 1);
-	UARTPuts(settings->Uart, tx_buff, tx_buff[3] + 4);
-	gpio_out(settings->TxEnGpio, 0);
+	gpio.out(settings->TxEnGpio, 1);
+	uart.puts(settings->Uart, tx_buff, tx_buff[3] + 4);
+	gpio.out(settings->TxEnGpio, 0);
 	unsigned char rx_cnt = 0;
 	signed short rx_char;
 	char rx_buff[150];
@@ -60,7 +60,7 @@ DXL_COMM_ERR dxl_ping(DXL_ACTUATOR_t *settings, unsigned char id, unsigned char*
 	while(1) {
 		timer_enable(&timeout_timer);
 		while(1) {
-			rx_char = UARTGetcNoBlocking(settings->Uart);
+			rx_char = uart.getc_no_blocking(settings->Uart);
 			if(rx_char != (signed short)-1) {
 				if(rx_char == 0xFF && preamble_ok == false && rx_cnt < 2) {
 					rx_buff[rx_cnt] = rx_char;
@@ -117,9 +117,9 @@ DXL_COMM_ERR dxl_read(DXL_ACTUATOR_t *settings, unsigned char* buff, unsigned ch
 	tx_buff[6] = read_nr;
 	tx_buff[7] = 0x0;
 	dxl_insert_checksum(tx_buff);
-	gpio_out(settings->TxEnGpio, 1);
-	UARTPuts(settings->Uart, tx_buff, tx_buff[3] + 4);
-	gpio_out(settings->TxEnGpio, 0);
+	gpio.out(settings->TxEnGpio, 1);
+	uart.puts(settings->Uart, tx_buff, tx_buff[3] + 4);
+	gpio.out(settings->TxEnGpio, 0);
 	unsigned char rx_cnt = 0;
 	signed short rx_char = 0;
 	char rx_buff[56];
@@ -131,7 +131,7 @@ DXL_COMM_ERR dxl_read(DXL_ACTUATOR_t *settings, unsigned char* buff, unsigned ch
 	while(1) {
 		timer_enable(&timeout_timer);
 		while(1) {
-			rx_char = UARTGetcNoBlocking(settings->Uart);
+			rx_char = uart.getc_no_blocking(settings->Uart);
 			if(rx_char != (signed short)-1) {
 				if(rx_char == 0xFF && preamble_ok == false && rx_cnt < 2) {
 					rx_buff[rx_cnt] = rx_char;
@@ -184,16 +184,16 @@ static DXL_COMM_ERR dxl_write(DXL_ACTUATOR_t *settings, unsigned char comand_typ
 		tx_buff[5] = reg;
 		memcpy(tx_buff + 6, send_data, write_nr);
 		dxl_insert_checksum(tx_buff);
-		gpio_out(settings->TxEnGpio, 1);
-		UARTPuts(settings->Uart, tx_buff, tx_buff[3] + 7);
-		gpio_out(settings->TxEnGpio, 0);
+		gpio.out(settings->TxEnGpio, 1);
+		uart.puts(settings->Uart, tx_buff, tx_buff[3] + 7);
+		gpio.out(settings->TxEnGpio, 0);
 	} else {
 		tx_buff[3] = 2;
 		tx_buff[4] = comand_type;
 		dxl_insert_checksum(tx_buff);
-		gpio_out(settings->TxEnGpio, 1);
-		UARTPuts(settings->Uart, tx_buff, 6);
-		gpio_out(settings->TxEnGpio, 0);
+		gpio.out(settings->TxEnGpio, 1);
+		uart.puts(settings->Uart, tx_buff, 6);
+		gpio.out(settings->TxEnGpio, 0);
 	}
 	free(tx_buff);
 	unsigned char rx_cnt = 0;
@@ -207,7 +207,7 @@ static DXL_COMM_ERR dxl_write(DXL_ACTUATOR_t *settings, unsigned char comand_typ
 	while(1) {
 		timer_enable(&timeout_timer);
 		while(1) {
-			rx_char = UARTGetcNoBlocking(settings->Uart);
+			rx_char = uart.getc_no_blocking(settings->Uart);
 			if(rx_char != (signed short)-1) {
 				if(rx_char == 0xFF && preamble_ok == false && rx_cnt < 2) {
 					rx_buff[rx_cnt] = rx_char;
@@ -293,9 +293,9 @@ DXL_COMM_ERR dxl_action(DXL_ACTUATOR_t *settings) {
 	tx_buff[3] = 2;
 	tx_buff[4] = DXL_ACTION;
 	dxl_insert_checksum(tx_buff);
-	gpio_out(settings->TxEnGpio, 1);
-	UARTPuts(settings->Uart, tx_buff, 6);
-	gpio_out(settings->TxEnGpio, 0);
+	gpio.out(settings->TxEnGpio, 1);
+	uart.puts(settings->Uart, tx_buff, 6);
+	gpio.out(settings->TxEnGpio, 0);
 	return DXL_COMM_SUCCESS;
 }
 
@@ -332,9 +332,9 @@ DXL_COMM_ERR dxl_synk_write(DXL_ACTUATOR_t *settings, unsigned char reg, DXL_SYN
 	}
 	tx_buff_cnt++;
 	dxl_insert_checksum(tx_buff);
-	gpio_out(settings->TxEnGpio, 1);
-	UARTPuts(settings->Uart, tx_buff, tx_buff_cnt);
-	gpio_out(settings->TxEnGpio, 0);
+	gpio.out(settings->TxEnGpio, 1);
+	uart.puts(settings->Uart, tx_buff, tx_buff_cnt);
+	gpio.out(settings->TxEnGpio, 0);
 	free(tx_buff);
 	return DXL_COMM_SUCCESS;
 }

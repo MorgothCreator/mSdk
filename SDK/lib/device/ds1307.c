@@ -28,19 +28,18 @@
 //#####################################################
 bool DS1307_Setup(new_twi* TwiStruct)
 {
-	TwiStruct->MasterSlaveAddr = DS1307_Rtc_DeviceAddr;
-	TwiStruct->TxBuff[0] = DS1307_RTC_SecReg;
-	if(!SetupI2CReception(TwiStruct, DS1307_Address_Length, 1))
+	unsigned char tmp[5];
+	unsigned char result[5];
+	tmp[0] = DS1307_RTC_SecReg;
+	if(!twi.trx(TwiStruct, DS1307_Rtc_DeviceAddr, tmp, 1, result, 4))
 		return false;
 	else {
 		if((TwiStruct->RxBuff[0] & DS1307_Ch_bm) != 0) {
-			unsigned char *RxBuff = TwiStruct->RxBuff;
-			unsigned char *TxBuff = TwiStruct->TxBuff;
-			*TxBuff++ = DS1307_RTC_SecReg;
-			*TxBuff++ = *RxBuff++ & !DS1307_Ch_bm;
-			*TxBuff++ = *RxBuff++;
-			*TxBuff++ = *RxBuff | DS1307_12_24_bm;
-			if(!SetupI2CTransmit(TwiStruct, DS1307_Address_Length + 4))
+			tmp[0] = DS1307_RTC_SecReg;
+			tmp[1] = result[0] & !DS1307_Ch_bm;
+			tmp[2] = result[1];
+			tmp[3] = result[2] | DS1307_12_24_bm;
+			if(!twi.tx(TwiStruct, DS1307_Rtc_DeviceAddr, tmp, 1 + 4))
 				return false;
 		}
 	}
@@ -49,44 +48,47 @@ bool DS1307_Setup(new_twi* TwiStruct)
 //#####################################################
 int DS1307_Read_Reg(new_twi* TwiStruct, unsigned char Address)
 {
-	TwiStruct->MasterSlaveAddr = DS1307_Rtc_DeviceAddr;
-	*TwiStruct->TxBuff = Address;
-	if(SetupI2CReception(TwiStruct, DS1307_Address_Length, 1))
+	unsigned char tmp;
+	unsigned char result;
+	tmp = Address;
+	if(twi.trx(TwiStruct, DS1307_Rtc_DeviceAddr, &tmp, 1, &result, 1))
 	{
-		return (int)*TwiStruct->RxBuff;
+		return (int)result;
 	}
 	return -1;
 }
 //-----------------------------------------------------
 bool DS1307_Write_Reg(new_twi* TwiStruct, unsigned char Address, unsigned char Data)
 {
-	unsigned char *TxBuff = TwiStruct->TxBuff;
-	*TxBuff++ = Address;
-	*TxBuff = Data;
+	unsigned char tmp[2];
+	tmp[0] = Address;
+	tmp[1] = Data;
 	TwiStruct->MasterSlaveAddr = DS1307_Rtc_DeviceAddr;
-	return SetupI2CTransmit(TwiStruct, DS1307_Address_Length + 1);
+	return twi.tx(TwiStruct, DS1307_Rtc_DeviceAddr, tmp, 1 + 1);
 }
 //#####################################################
 int DS1307_Read_Ram(new_twi* TwiStruct, unsigned char Address)
 {
-	if(Address >= DS1307_Sram_Size) return -1;
-	TwiStruct->MasterSlaveAddr = DS1307_Rtc_DeviceAddr;
-	*TwiStruct->TxBuff = DS1307_Sram_Start + Address;
-	if(SetupI2CReception(TwiStruct, DS1307_Address_Length, 1))
+	if(Address >= DS1307_Sram_Size)
+		return -1;
+	unsigned char tmp;
+	unsigned char result;
+	tmp = DS1307_Sram_Start + Address;
+	if(twi.trx(TwiStruct, DS1307_Rtc_DeviceAddr, &tmp, 1, &result, 1))
 	{
-		return (int)*TwiStruct->RxBuff;
+		return (int)result;
 	}
 	return -1;
 }
 //-----------------------------------------------------
 bool DS1307_Write_Ram(new_twi* TwiStruct, unsigned char Address, unsigned char Data)
 {
-	if(Address >= DS1307_Sram_Size) return false;
-	unsigned char *TxBuff = TwiStruct->TxBuff;
-	*TxBuff++ = DS1307_Sram_Start + Address;
-	*TxBuff = Data;
-	TwiStruct->MasterSlaveAddr = DS1307_Rtc_DeviceAddr;
-	return SetupI2CTransmit(TwiStruct, DS1307_Address_Length + 1);
+	if(Address >= DS1307_Sram_Size)
+		return false;
+	unsigned char tmp[2];
+	tmp[0] = DS1307_Sram_Start + Address;
+	tmp[1] = Data;
+	return twi.tx(TwiStruct, DS1307_Rtc_DeviceAddr, tmp, 1 + 1);
 }
 //#####################################################
 bool DS1307_Set12Hours(new_twi* TwiStruct)
@@ -128,50 +130,48 @@ bool DS1307_SetRs(new_twi* TwiStruct, unsigned char Rs)
 //#####################################################
 bool DS1307_ReadTime_Str(new_twi* TwiStruct, char* Buff)
 {
-	TwiStruct->MasterSlaveAddr = DS1307_Rtc_DeviceAddr;
-	*TwiStruct->TxBuff = DS1307_RTC_SecReg;
-	if(!SetupI2CReception(TwiStruct, DS1307_Address_Length, 7))
+	unsigned char reg = DS1307_RTC_SecReg;
+	unsigned char result[7];
+	if(!twi.trx(TwiStruct, DS1307_Rtc_DeviceAddr, &reg, 1, result, 7))
 		return false;
 	else {
 #if defined(_AVR_IOXXX_H_)
-		unsigned char *ReadBuffer = TwiStruct->RxBuff;
-		utoa((unsigned short)((ReadBuffer[6] & DS1307_10Year_gm) >> DS1307_10Year_gp), (char *)Buff, 10);
-		utoa((unsigned short)((ReadBuffer[6] & DS1307_Year_gm) >> DS1307_Year_gp), (char *)Buff+1, 10);
+		utoa((unsigned short)((result[6] & DS1307_10Year_gm) >> DS1307_10Year_gp), (char *)result, 10);
+		utoa((unsigned short)((result[6] & DS1307_Year_gm) >> DS1307_Year_gp), (char *)result+1, 10);
 		Buff[2] = '/';
-		utoa((unsigned short)((ReadBuffer[5] & DS1307_10Month_bm) >> DS1307_10Month_bp), (char *)Buff+ 3, 10);
-		utoa((unsigned short)((ReadBuffer[5] & DS1307_Month_gm) >> DS1307_Month_gp), (char *)Buff+ 4, 10);
+		utoa((unsigned short)((result[5] & DS1307_10Month_bm) >> DS1307_10Month_bp), (char *)result+ 3, 10);
+		utoa((unsigned short)((result[5] & DS1307_Month_gm) >> DS1307_Month_gp), (char *)result+ 4, 10);
 		Buff[5] = '/';
-		utoa((unsigned short)((ReadBuffer[4] & DS1307_10Date_gm) >> DS1307_10Date_gp), (char *)Buff+ 6, 10);
-		utoa((unsigned short)((ReadBuffer[4] & DS1307_Date_gm) >> DS1307_Date_gp), (char *)Buff+ 7, 10);
+		utoa((unsigned short)((result[4] & DS1307_10Date_gm) >> DS1307_10Date_gp), (char *)result+ 6, 10);
+		utoa((unsigned short)((result[4] & DS1307_Date_gm) >> DS1307_Date_gp), (char *)result+ 7, 10);
 		Buff[8] = '-';
-		utoa((unsigned short)((ReadBuffer[2] & DS1307_10Hours_gm) >> DS1307_10Hours_gp), (char *)Buff+ 9, 10);
-		utoa((unsigned short)((ReadBuffer[2] & DS1307_Hours_gm) >> DS1307_Hours_gp), (char *)Buff+ 10, 10);
+		utoa((unsigned short)((result[2] & DS1307_10Hours_gm) >> DS1307_10Hours_gp), (char *)result+ 9, 10);
+		utoa((unsigned short)((result[2] & DS1307_Hours_gm) >> DS1307_Hours_gp), (char *)result+ 10, 10);
 		Buff[11] = ':';
-		utoa((unsigned short)((ReadBuffer[1] & DS1307_10Minutes_gm) >> DS1307_10Minutes_gp), (char *)Buff+ 12, 10);
-		utoa((unsigned short)((ReadBuffer[1] & DS1307_Minutes_gm) >> DS1307_Minutes_gp), (char *)Buff+ 13, 10);
+		utoa((unsigned short)((result[1] & DS1307_10Minutes_gm) >> DS1307_10Minutes_gp), (char *)result+ 12, 10);
+		utoa((unsigned short)((result[1] & DS1307_Minutes_gm) >> DS1307_Minutes_gp), (char *)result+ 13, 10);
 		Buff[14] = ':';
-		utoa((unsigned short)((ReadBuffer[0] & DS1307_10Seconds_gm) >> DS1307_10Seconds_gp), (char *)Buff+ 15, 10);
-		utoa((unsigned short)((ReadBuffer[0] & DS1307_Seconds_gm) >> DS1307_Seconds_gp), (char *)Buff+ 16, 10);
+		utoa((unsigned short)((result[0] & DS1307_10Seconds_gm) >> DS1307_10Seconds_gp), (char *)result+ 15, 10);
+		utoa((unsigned short)((result[0] & DS1307_Seconds_gm) >> DS1307_Seconds_gp), (char *)result+ 16, 10);
 #else
 	#ifndef NO_I_TO_A_IN_STD_LIB
-		unsigned char *ReadBuffer = TwiStruct->RxBuff;
-		ltoa((unsigned short)((ReadBuffer[6] & DS1307_10Year_gm) >> DS1307_10Year_gp), (char *)Buff);
-		ltoa((unsigned short)((ReadBuffer[6] & DS1307_Year_gm) >> DS1307_Year_gp), (char *)Buff+1);
+		ltoa((unsigned short)((result[6] & DS1307_10Year_gm) >> DS1307_10Year_gp), (char *)Buff);
+		ltoa((unsigned short)((result[6] & DS1307_Year_gm) >> DS1307_Year_gp), (char *)Buff+1);
 		Buff[2] = '/';
-		ltoa((unsigned short)((ReadBuffer[5] & DS1307_10Month_bm) >> DS1307_10Month_bp), (char *)Buff+ 3);
-		ltoa((unsigned short)((ReadBuffer[5] & DS1307_Month_gm) >> DS1307_Month_gp), (char *)Buff+ 4);
+		ltoa((unsigned short)((result[5] & DS1307_10Month_bm) >> DS1307_10Month_bp), (char *)Buff+ 3);
+		ltoa((unsigned short)((result[5] & DS1307_Month_gm) >> DS1307_Month_gp), (char *)Buff+ 4);
 		Buff[5] = '/';
-		ltoa((unsigned short)((ReadBuffer[4] & DS1307_10Date_gm) >> DS1307_10Date_gp), (char *)Buff+ 6);
-		ltoa((unsigned short)((ReadBuffer[4] & DS1307_Date_gm) >> DS1307_Date_gp), (char *)Buff+ 7);
+		ltoa((unsigned short)((result[4] & DS1307_10Date_gm) >> DS1307_10Date_gp), (char *)Buff+ 6);
+		ltoa((unsigned short)((result[4] & DS1307_Date_gm) >> DS1307_Date_gp), (char *)Buff+ 7);
 		Buff[8] = '-';
-		ltoa((unsigned short)((ReadBuffer[2] & DS1307_10Hours_gm) >> DS1307_10Hours_gp), (char *)Buff+ 9);
-		ltoa((unsigned short)((ReadBuffer[2] & DS1307_Hours_gm) >> DS1307_Hours_gp), (char *)Buff+ 10);
+		ltoa((unsigned short)((result[2] & DS1307_10Hours_gm) >> DS1307_10Hours_gp), (char *)Buff+ 9);
+		ltoa((unsigned short)((result[2] & DS1307_Hours_gm) >> DS1307_Hours_gp), (char *)Buff+ 10);
 		Buff[11] = ':';
-		ltoa((unsigned short)((ReadBuffer[1] & DS1307_10Minutes_gm) >> DS1307_10Minutes_gp), (char *)Buff+ 12);
-		ltoa((unsigned short)((ReadBuffer[1] & DS1307_Minutes_gm) >> DS1307_Minutes_gp), (char *)Buff+ 13);
+		ltoa((unsigned short)((result[1] & DS1307_10Minutes_gm) >> DS1307_10Minutes_gp), (char *)Buff+ 12);
+		ltoa((unsigned short)((result[1] & DS1307_Minutes_gm) >> DS1307_Minutes_gp), (char *)Buff+ 13);
 		Buff[14] = ':';
-		ltoa((unsigned short)((ReadBuffer[0] & DS1307_10Seconds_gm) >> DS1307_10Seconds_gp), (char *)Buff+ 15);
-		ltoa((unsigned short)((ReadBuffer[0] & DS1307_Seconds_gm) >> DS1307_Seconds_gp), (char *)Buff+ 16);
+		ltoa((unsigned short)((result[0] & DS1307_10Seconds_gm) >> DS1307_10Seconds_gp), (char *)Buff+ 15);
+		ltoa((unsigned short)((result[0] & DS1307_Seconds_gm) >> DS1307_Seconds_gp), (char *)Buff+ 16);
 	#endif
 #endif
 		Buff[17] = 0;

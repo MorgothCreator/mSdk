@@ -34,11 +34,8 @@ bool mpl3115a2_reg_read(MPL3115A2_t *structure, unsigned char reg, unsigned char
 	if(!structure->TWI)
 		return false;
 	Twi_t *TwiStruct = structure->TWI;
-	TwiStruct->MasterSlaveAddr = MPL3115A2_ADDR;
-	TwiStruct->TxBuff[0] = reg;
-	if(!SetupI2CReception(TwiStruct, 1, len))
+	if(!twi.trx(TwiStruct, MPL3115A2_ADDR, &reg, 1, data, len))
 		return false;
-	memcpy(data, TwiStruct->RxBuff, len);
 	return true;
 }
 
@@ -48,10 +45,15 @@ bool mpl3115a2_reg_write(MPL3115A2_t *structure, unsigned char reg, unsigned cha
 		return false;
 	Twi_t *TwiStruct = structure->TWI;
 	TwiStruct->MasterSlaveAddr = MPL3115A2_ADDR;
-	TwiStruct->TxBuff[0] = reg;
-	memcpy(TwiStruct->TxBuff + 1, data, len);
-	if(!SetupI2CTransmit(TwiStruct, 1 + len))
+	unsigned char *tmp = malloc(len + 1);
+	tmp[0] = reg;
+	memcpy(tmp + 1, data, len);
+	if(!twi.tx(TwiStruct, MPL3115A2_ADDR, tmp, 1 + len))
+	{
+		free(tmp);
 		return false;
+	}
+	free(tmp);
 	return true;
 }
 

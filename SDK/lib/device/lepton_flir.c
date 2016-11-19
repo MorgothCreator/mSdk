@@ -19,6 +19,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <api/spi_api.h>
+#include <api/spi_def.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
@@ -27,8 +29,6 @@
 #include "api/gpio_api.h"
 #include "api/twi_def.h"
 #include "api/twi_api.h"
-#include "api/mcspi_def.h"
-#include "api/mcspi_api.h"
 #include "api/timer_api.h"
 #include "interface/mcspi_interface.h"
 
@@ -128,7 +128,7 @@ bool lepton_run_command(LEPTON_FLIR_t *structure, unsigned short commandID) {
     unsigned short timeoutCount = LEPTON_I2C_COMMAND_BUSY_WAIT_COUNT;
 
 	Twi_t *TwiStruct = structure->TWI;
-	TwiStruct->MasterSlaveAddr = LEPTON_FLIR_ADDR;
+	//TwiStruct->MasterSlaveAddr = LEPTON_FLIR_ADDR;
 	/*
 	 * Implement the Lepton TWI WRITE Protocol
 	 */
@@ -142,11 +142,13 @@ bool lepton_run_command(LEPTON_FLIR_t *structure, unsigned short commandID) {
 		/*
 		 * Read the Status REGISTER and peek at the BUSY Bit
 		 */
-		TwiStruct->TxBuff[0] = LEP_I2C_STATUS_REG >> 8;
-		TwiStruct->TxBuff[1] = (unsigned char)LEP_I2C_STATUS_REG;
-		if(!SetupI2CReception(TwiStruct, 2, 2))
+		unsigned char tmp[2];
+		unsigned char result[2];
+		tmp[0] = LEP_I2C_STATUS_REG >> 8;
+		tmp[1] = (unsigned char)LEP_I2C_STATUS_REG;
+		if(!twi.trx(TwiStruct, LEPTON_FLIR_ADDR, tmp, 2, result, 2))
 			return false;
-		statusReg = (TwiStruct->RxBuff[0] << 8) | TwiStruct->RxBuff[1];
+		statusReg = (result[0] << 8) | result[1];
 		done = (statusReg & LEP_I2C_STATUS_BUSY_BIT_MASK)? false : true;
 		/*
 		 * Add timout check
@@ -164,35 +166,37 @@ bool lepton_run_command(LEPTON_FLIR_t *structure, unsigned short commandID) {
 	 * Set the Lepton's DATA LENGTH REGISTER first to inform the
 	 * Lepton Camera no 16-bit DATA words being transferred.
 	 */
-	TwiStruct->TxBuff[0] = LEP_I2C_DATA_LENGTH_REG >> 8;
-	TwiStruct->TxBuff[1] = (unsigned char)LEP_I2C_DATA_LENGTH_REG;
-	if(!SetupI2CTransmit(TwiStruct, 2))
+	unsigned char tmp[4];
+	tmp[0] = LEP_I2C_DATA_LENGTH_REG >> 8;
+	tmp[1] = (unsigned char)LEP_I2C_DATA_LENGTH_REG;
+	if(!twi.tx(TwiStruct, LEPTON_FLIR_ADDR, tmp, 2))
 		return false;
 
 	/*
 	 * Now issue the Run Command
 	 */
-	TwiStruct->TxBuff[0] = LEP_I2C_COMMAND_REG >> 8;
-	TwiStruct->TxBuff[1] = (unsigned char)LEP_I2C_COMMAND_REG;
-	TwiStruct->TxBuff[2] = commandID >> 8;
-	TwiStruct->TxBuff[3] = (unsigned char)commandID;
-	if(!SetupI2CTransmit(TwiStruct, 4))
+	tmp[0] = LEP_I2C_COMMAND_REG >> 8;
+	tmp[1] = (unsigned char)LEP_I2C_COMMAND_REG;
+	tmp[2] = commandID >> 8;
+	tmp[3] = (unsigned char)commandID;
+	if(!twi.tx(TwiStruct, LEPTON_FLIR_ADDR, tmp, 4))
 		return false;
 	/*
 	 * Now wait until the Camera has completed this command by
 	 * polling the statusReg REGISTER BUSY Bit until it reports NOT
 	 * BUSY.
 	 */
+	tmp[0] = LEP_I2C_STATUS_REG >> 8;
+	tmp[1] = (unsigned char)LEP_I2C_STATUS_REG;
+	unsigned char result[2];
 	do
 	{
 		/*
 		 * Read the Status REGISTER and peek at the BUSY Bit
 		 */
-		TwiStruct->TxBuff[0] = LEP_I2C_STATUS_REG >> 8;
-		TwiStruct->TxBuff[1] = (unsigned char)LEP_I2C_STATUS_REG;
-		if(!SetupI2CReception(TwiStruct, 2, 2))
+		if(!twi.trx(TwiStruct, LEPTON_FLIR_ADDR, tmp, 2, result, 2))
 			return false;
-		statusReg = (TwiStruct->RxBuff[0] << 8) | TwiStruct->RxBuff[1];
+		statusReg = (result[0] << 8) | result[1];
 		done = (statusReg & LEP_I2C_STATUS_BUSY_BIT_MASK)? false : true;
 		/*
 		 * Add timout check
@@ -224,7 +228,8 @@ bool lepton_reg_write(LEPTON_FLIR_t *structure, unsigned short commandID, unsign
     unsigned short timeoutCount = LEPTON_I2C_COMMAND_BUSY_WAIT_COUNT;
 
 	Twi_t *TwiStruct = structure->TWI;
-	TwiStruct->MasterSlaveAddr = LEPTON_FLIR_ADDR;
+	unsigned char tmp[4];
+	unsigned char result[2];
 	/*
 	 * Implement the Lepton TWI WRITE Protocol
 	 */
@@ -233,16 +238,16 @@ bool lepton_reg_write(LEPTON_FLIR_t *structure, unsigned short commandID, unsign
 	 * command by polling the STATUS REGISTER BUSY Bit until it
 	 * reports NOT BUSY.
 	 */
+	tmp[0] = LEP_I2C_STATUS_REG >> 8;
+	tmp[1] = (unsigned char)LEP_I2C_STATUS_REG;
 	do
 	{
 		/*
 		 * Read the Status REGISTER and peek at the BUSY Bit
 		 */
-		TwiStruct->TxBuff[0] = LEP_I2C_STATUS_REG >> 8;
-		TwiStruct->TxBuff[1] = (unsigned char)LEP_I2C_STATUS_REG;
-		if(!SetupI2CReception(TwiStruct, 2, 2))
+		if(!twi.trx(TwiStruct, LEPTON_FLIR_ADDR, tmp, 2, result, 2))
 			return false;
-		statusReg = (TwiStruct->RxBuff[0] << 8) | TwiStruct->RxBuff[1];
+		statusReg = (result[0] << 8) | result[1];
 		done = (statusReg & LEP_I2C_STATUS_BUSY_BIT_MASK)? false : true;
 		/*
 		 * Add timout check
@@ -260,64 +265,73 @@ bool lepton_reg_write(LEPTON_FLIR_t *structure, unsigned short commandID, unsign
 	/*
 	 * Now WRITE the DATA to the DATA REGISTER(s)
 	 */
-	memcpy(TwiStruct->TxBuff + 2, attributePtr, attributeWordLength * 2);
+	unsigned char *buff = malloc((attributeWordLength * 2) + 2);
+	memcpy(buff + 2, attributePtr, attributeWordLength * 2);
 	if( attributeWordLength <= 16 )
 	{
 		/*
 		 * WRITE to the DATA Registers - always start from DATA 0
 		 */
-		TwiStruct->TxBuff[0] = LEP_I2C_DATA_0_REG >> 8;
-		TwiStruct->TxBuff[1] = (unsigned char)LEP_I2C_DATA_0_REG;
-		if(!SetupI2CTransmit(TwiStruct, (attributeWordLength * 2) + 2))
+		buff[0] = LEP_I2C_DATA_0_REG >> 8;
+		buff[1] = (unsigned char)LEP_I2C_DATA_0_REG;
+		if(!twi.tx(TwiStruct, LEPTON_FLIR_ADDR, buff, (attributeWordLength * 2) + 2))
+		{
+			free(buff);
 			return false;
+		}
 	}
 	else if( attributeWordLength <= 1024 )
 	{
 		/*
 		 * WRITE to the DATA Block Buffer
 		 */
-		TwiStruct->TxBuff[0] = LEP_I2C_DATA_BUFFER_0 >> 8;
-		TwiStruct->TxBuff[1] = (unsigned char)LEP_I2C_DATA_BUFFER_0;
-		if(!SetupI2CTransmit(TwiStruct, (attributeWordLength * 2) + 2))
+		tmp[0] = LEP_I2C_DATA_BUFFER_0 >> 8;
+		tmp[1] = (unsigned char)LEP_I2C_DATA_BUFFER_0;
+		if(!twi.tx(TwiStruct, LEPTON_FLIR_ADDR, buff, (attributeWordLength * 2) + 2))
+		{
+			free(buff);
 			return false;
+		}
 	}
 	else {
+		free(buff);
 		return false;
 	}
+	free(buff);
     /*
      * Set the Lepton's DATA LENGTH REGISTER first to inform the
      * Lepton Camera how many 16-bit DATA words we want to read.
      */
-	TwiStruct->TxBuff[0] = LEP_I2C_DATA_LENGTH_REG >> 8;
-	TwiStruct->TxBuff[1] = (unsigned char)LEP_I2C_DATA_LENGTH_REG;
-	TwiStruct->TxBuff[2] = attributeWordLength >> 8;
-	TwiStruct->TxBuff[3] = (unsigned char)attributeWordLength;
-	if(!SetupI2CTransmit(TwiStruct, 4))
+	buff[0] = LEP_I2C_DATA_LENGTH_REG >> 8;
+	buff[1] = (unsigned char)LEP_I2C_DATA_LENGTH_REG;
+	buff[2] = attributeWordLength >> 8;
+	buff[3] = (unsigned char)attributeWordLength;
+	if(!twi.tx(TwiStruct, LEPTON_FLIR_ADDR, buff, 4))
 		return false;
 	/*
 	 * Now issue the SET Attribute Command
 	 */
-	TwiStruct->TxBuff[0] = LEP_I2C_COMMAND_REG >> 8;
-	TwiStruct->TxBuff[1] = (unsigned char)LEP_I2C_COMMAND_REG;
-	TwiStruct->TxBuff[2] = commandID >> 8;
-	TwiStruct->TxBuff[3] = (unsigned char)commandID;
-	if(!SetupI2CTransmit(TwiStruct, 4))
+	buff[0] = LEP_I2C_COMMAND_REG >> 8;
+	buff[1] = (unsigned char)LEP_I2C_COMMAND_REG;
+	buff[2] = commandID >> 8;
+	buff[3] = (unsigned char)commandID;
+	if(!twi.tx(TwiStruct, LEPTON_FLIR_ADDR, buff, 4))
 		return false;
 	/*
 	 * Now wait until the Camera has completed this command by
 	 * polling the statusReg REGISTER BUSY Bit until it reports NOT
 	 * BUSY.
 	 */
+	buff[0] = LEP_I2C_STATUS_REG >> 8;
+	buff[1] = (unsigned char)LEP_I2C_STATUS_REG;
 	do
 	{
 		/*
 		 * Read the Status REGISTER and peek at the BUSY Bit
 		 */
-		TwiStruct->TxBuff[0] = LEP_I2C_STATUS_REG >> 8;
-		TwiStruct->TxBuff[1] = (unsigned char)LEP_I2C_STATUS_REG;
-		if(!SetupI2CReception(TwiStruct, 2, 2))
+		if(!twi.trx(TwiStruct, LEPTON_FLIR_ADDR, buff, 2, result, 2))
 			return false;
-		statusReg = (TwiStruct->RxBuff[0] << 8) | TwiStruct->RxBuff[1];
+		statusReg = (result[0] << 8) | result[1];
 		done = (statusReg & LEP_I2C_STATUS_BUSY_BIT_MASK)? false : true;
 		/*
 		 * Add timout check
@@ -352,9 +366,11 @@ bool lepton_reg_read(LEPTON_FLIR_t *structure, unsigned short commandID, unsigne
     unsigned short timeoutCount = LEPTON_I2C_COMMAND_BUSY_WAIT_COUNT;
 
 	Twi_t *TwiStruct = structure->TWI;
-	TwiStruct->MasterSlaveAddr = LEPTON_FLIR_ADDR;
+	//TwiStruct->MasterSlaveAddr = LEPTON_FLIR_ADDR;
 
 
+	unsigned char tmp[4];
+	unsigned char result[2];
 	/*
 	 * Implement the Lepton TWI WRITE Protocol
 	 */
@@ -368,11 +384,11 @@ bool lepton_reg_read(LEPTON_FLIR_t *structure, unsigned short commandID, unsigne
 		/*
 		 * Read the Status REGISTER and peek at the BUSY Bit
 		 */
-		TwiStruct->TxBuff[0] = LEP_I2C_STATUS_REG >> 8;
-		TwiStruct->TxBuff[1] = (unsigned char)LEP_I2C_STATUS_REG;
-		if(!SetupI2CReception(TwiStruct, 2, 2))
+		tmp[0] = LEP_I2C_STATUS_REG >> 8;
+		tmp[1] = (unsigned char)LEP_I2C_STATUS_REG;
+		if(!twi.trx(TwiStruct, LEPTON_FLIR_ADDR, tmp, 2, result, 2))
 			return false;
-		statusReg = (TwiStruct->RxBuff[0] << 8) | TwiStruct->RxBuff[1];
+		statusReg = (result[0] << 8) | result[1];
 		done = (statusReg & LEP_I2C_STATUS_BUSY_BIT_MASK)? false : true;
 		/*
 		 * Add timout check
@@ -390,36 +406,36 @@ bool lepton_reg_read(LEPTON_FLIR_t *structure, unsigned short commandID, unsigne
      * Set the Lepton's DATA LENGTH REGISTER first to inform the
      * Lepton Camera how many 16-bit DATA words we want to read.
      */
-	TwiStruct->TxBuff[0] = LEP_I2C_DATA_LENGTH_REG >> 8;
-	TwiStruct->TxBuff[1] = (unsigned char)LEP_I2C_DATA_LENGTH_REG;
-	TwiStruct->TxBuff[2] = attributeWordLength >> 8;
-	TwiStruct->TxBuff[3] = attributeWordLength;
-	if(!SetupI2CTransmit(TwiStruct, 3))
+	tmp[0] = LEP_I2C_DATA_LENGTH_REG >> 8;
+	tmp[1] = (unsigned char)LEP_I2C_DATA_LENGTH_REG;
+	tmp[2] = attributeWordLength >> 8;
+	tmp[3] = attributeWordLength;
+	if(!twi.tx(TwiStruct, LEPTON_FLIR_ADDR, tmp, 3))
 		return false;
     /*
      * Now issue the GET Attribute Command
      */
-	TwiStruct->TxBuff[0] = LEP_I2C_COMMAND_REG >> 8;
-	TwiStruct->TxBuff[1] = (unsigned char)LEP_I2C_COMMAND_REG;
-	TwiStruct->TxBuff[2] = commandID >> 8;
-	TwiStruct->TxBuff[3] = commandID;
-	if(!SetupI2CTransmit(TwiStruct, 4))
+	tmp[0] = LEP_I2C_COMMAND_REG >> 8;
+	tmp[1] = (unsigned char)LEP_I2C_COMMAND_REG;
+	tmp[2] = commandID >> 8;
+	tmp[3] = commandID;
+	if(!twi.tx(TwiStruct, LEPTON_FLIR_ADDR, tmp, 4))
 		return false;
 	/*
 	 * Now wait until the Camera has completed this command by
 	 * polling the statusReg REGISTER BUSY Bit until it reports NOT
 	 * BUSY.
 	 */
+	tmp[0] = LEP_I2C_STATUS_REG >> 8;
+	tmp[1] = (unsigned char)LEP_I2C_STATUS_REG;
 	do
 	{
 		/*
 		 * Read the Status REGISTER and peek at the BUSY Bit
 		 */
-		TwiStruct->TxBuff[0] = LEP_I2C_STATUS_REG >> 8;
-		TwiStruct->TxBuff[1] = (unsigned char)LEP_I2C_STATUS_REG;
-		if(!SetupI2CReception(TwiStruct, 2, 2))
+		if(!twi.trx(TwiStruct, LEPTON_FLIR_ADDR, tmp, 2, result, 2))
 			return false;
-		statusReg = (TwiStruct->RxBuff[0] << 8) | TwiStruct->RxBuff[1];
+		statusReg = (result[0] << 8) | result[1];
 		done = (statusReg & LEP_I2C_STATUS_BUSY_BIT_MASK)? false : true;
 		/*
 		 * Add timout check
@@ -450,9 +466,9 @@ bool lepton_reg_read(LEPTON_FLIR_t *structure, unsigned short commandID, unsigne
     	 * Read from the DATA Registers - always start from DATA 0
     	 * Little Endean
     	 */
-    	TwiStruct->TxBuff[0] = LEP_I2C_DATA_0_REG >> 8;
-    	TwiStruct->TxBuff[1] = (unsigned char)LEP_I2C_DATA_0_REG;
-		if(!SetupI2CReception(TwiStruct, 2, attributeWordLength * 2))
+    	tmp[0] = LEP_I2C_DATA_0_REG >> 8;
+    	tmp[1] = (unsigned char)LEP_I2C_DATA_0_REG;
+		if(!twi.trx(TwiStruct, LEPTON_FLIR_ADDR, tmp, 2, (unsigned char *)attributePtr, attributeWordLength * 2))
 			return false;
     }
     else if( attributeWordLength <= 1024 )
@@ -460,22 +476,22 @@ bool lepton_reg_read(LEPTON_FLIR_t *structure, unsigned short commandID, unsigne
     	/*
     	 * Read from the DATA Block Buffer
     	 */
-    	TwiStruct->TxBuff[0] = LEP_I2C_DATA_BUFFER_0 >> 8;
-    	TwiStruct->TxBuff[1] = (unsigned char)LEP_I2C_DATA_BUFFER_0;
-    	if(!SetupI2CReception(TwiStruct, 2, attributeWordLength * 2))
+    	tmp[0] = LEP_I2C_DATA_BUFFER_0 >> 8;
+    	tmp[1] = (unsigned char)LEP_I2C_DATA_BUFFER_0;
+    	if(!twi.trx(TwiStruct, LEPTON_FLIR_ADDR, tmp, 2, (unsigned char *)attributePtr, attributeWordLength * 2))
 			return false;
     }
-	memcpy(attributePtr, (void *)TwiStruct->RxBuff, attributeWordLength * 2);
+	//memcpy(attributePtr, (void *)TwiStruct->RxBuff, attributeWordLength * 2);
     if(attributeWordLength > 0)
     {
     	/*
     	 * Check CRC
     	 */
-		TwiStruct->TxBuff[0] = LEP_I2C_DATA_CRC_REG >> 8;
-		TwiStruct->TxBuff[1] = (unsigned char)LEP_I2C_DATA_CRC_REG;
-		if(!SetupI2CReception(TwiStruct, 1, 2))
+    	tmp[0] = LEP_I2C_DATA_CRC_REG >> 8;
+    	tmp[1] = (unsigned char)LEP_I2C_DATA_CRC_REG;
+		if(!twi.trx(TwiStruct, LEPTON_FLIR_ADDR, tmp, 2, result, 2))
 			return false;
-		crcExpected = (TwiStruct->RxBuff[0] << 8) | TwiStruct->RxBuff[1];
+		crcExpected = (result[0] << 8) | result[1];
 		crcActual = (unsigned short)CalcCRC16Words(attributeWordLength, (short*)attributePtr);
 
 		/*
@@ -496,13 +512,13 @@ bool lepton_flir_get_image(LEPTON_FLIR_t *structure, unsigned short *image) {
 	unsigned char line_buff[(LEPTON_FLIR_LINE_SIZE * 2) + 4];
 	unsigned char checkByte = 0x0F;
 	unsigned int packet_nr = 0;
-	structure->SPI->Buff = line_buff;
+	//structure->SPI->Buff = line_buff;
 	// loop while discard packets
 	while((checkByte & 0x0F) == 0x0f) {
 		structure->SPI->CsSelect = structure->spi_instance;
-		mcspi_transfer(structure->SPI, 0, (LEPTON_FLIR_LINE_SIZE * 2) + 4);
-		checkByte = structure->SPI->Buff[0];
-		packet_nr = structure->SPI->Buff[1];
+		spi.receive(structure->SPI, line_buff, (LEPTON_FLIR_LINE_SIZE * 2) + 4);
+		checkByte = line_buff[0];
+		packet_nr = line_buff[1];
 	}
 
 	// sync done, first packet is ready, store packets
@@ -510,14 +526,14 @@ bool lepton_flir_get_image(LEPTON_FLIR_t *structure, unsigned short *image) {
 	{
 		if((checkByte & 0x0F) != 0x0f)
 		// ignore discard packets
-		if((structure->SPI->Buff[0] & 0x0f) != 0x0f){
-			memcpy(&image[packet_nr * 80], (void *)&structure->SPI->Buff[4], 160);
+		if((line_buff[0] & 0x0f) != 0x0f){
+			memcpy(&image[packet_nr * 80], (void *)&line_buff[4], 160);
 		}
 		// read next packet
 		structure->SPI->CsSelect = structure->spi_instance;
-		mcspi_transfer(structure->SPI, 0, (LEPTON_FLIR_LINE_SIZE * 2) + 4);
-		packet_nr = structure->SPI->Buff[1];
-		checkByte = structure->SPI->Buff[0];
+		spi.receive(structure->SPI, line_buff, (LEPTON_FLIR_LINE_SIZE * 2) + 4);
+		packet_nr = line_buff[1];
+		checkByte = line_buff[0];
 	}
 
 	return true;
@@ -527,14 +543,14 @@ bool lepton_direct_write_buff(LEPTON_FLIR_t *structure, unsigned short *attribut
 	if(!structure || !structure->TWI)
 		return false;
 	Twi_t *TwiStruct = structure->TWI;
-	TwiStruct->MasterSlaveAddr = LEPTON_FLIR_ADDR;
 	/*
 	 * Read from the DATA Block Buffer
 	 */
-	TwiStruct->TxBuff[0] = LEP_I2C_DATA_BUFFER_0 >> 8;
-	TwiStruct->TxBuff[1] = (unsigned char)LEP_I2C_DATA_BUFFER_0;
-	memcpy(TwiStruct->TxBuff + 2, attributePtr, attributeWordLength * 2);
-	if(!SetupI2CTransmit(TwiStruct, (attributeWordLength * 2) + 2))
+	unsigned char *tmp = malloc((attributeWordLength * 2) + 2);
+	tmp[0] = LEP_I2C_DATA_BUFFER_0 >> 8;
+	tmp[1] = (unsigned char)LEP_I2C_DATA_BUFFER_0;
+	memcpy(tmp + 2, attributePtr, attributeWordLength * 2);
+	if(!twi.tx(TwiStruct, LEPTON_FLIR_ADDR, tmp, (attributeWordLength * 2) + 2))
 		return false;
 	return true;
 }
@@ -543,15 +559,15 @@ bool lepton_direct_write_reg(LEPTON_FLIR_t *structure, unsigned short regAddress
 	if(!structure || !structure->TWI)
 		return false;
 	Twi_t *TwiStruct = structure->TWI;
-	TwiStruct->MasterSlaveAddr = LEPTON_FLIR_ADDR;
 	/*
 	 * Read from the DATA Block Buffer
 	 */
-	TwiStruct->TxBuff[0] = regAddress >> 8;
-	TwiStruct->TxBuff[1] = (unsigned char)regAddress;
-	TwiStruct->TxBuff[2] = regValue >> 8;
-	TwiStruct->TxBuff[3] = (unsigned char)regValue;
-	if(!SetupI2CTransmit(TwiStruct, 4))
+	unsigned char tmp[4];
+	tmp[0] = regAddress >> 8;
+	tmp[1] = (unsigned char)regAddress;
+	tmp[2] = regValue >> 8;
+	tmp[3] = (unsigned char)regValue;
+	if(!twi.tx(TwiStruct, LEPTON_FLIR_ADDR, tmp, 4))
 		return false;
 	return true;
 }

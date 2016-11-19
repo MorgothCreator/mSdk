@@ -5,9 +5,9 @@
  *  Author: XxXx
  */
 
+#include <api/spi_api.h>
+#include <api/spi_def.h>
 #include "sst25vf.h"
-#include "api/mcspi_def.h"
-#include "api/mcspi_api.h"
 #include "api/gpio_def.h"
 #include "api/gpio_api.h"
 #include "lib/fat_fs/inc/ff.h"
@@ -15,9 +15,9 @@
 bool sst25vf_init(sst25vf_t *Settings)
 {
 	if(Settings->wp)
-		gpio_out(Settings->wp, 1);
+		gpio.out(Settings->wp, 1);
 	if(Settings->hold)
-		gpio_out(Settings->hold, 1);
+		gpio.out(Settings->hold, 1);
 	return true;
 }
 
@@ -25,9 +25,11 @@ unsigned char sst25vf_read_status(sst25vf_t *Settings, unsigned char *Data)
 {
 	if(!Settings)
 		return false;
-	Settings->F25xxx_Spi_Struct->Buff[0] = SST25VF_RDSR;
-	mcspi_transfer(Settings->F25xxx_Spi_Struct, 1, 1);
-	*Data = Settings->F25xxx_Spi_Struct->Buff[1];
+	spi.assert(Settings->F25xxx_Spi_Struct);
+	spi.trx_byte(Settings->F25xxx_Spi_Struct, SST25VF_RDSR);
+	spi.deassert(Settings->F25xxx_Spi_Struct);
+	//mcspi_transfer(Settings->F25xxx_Spi_Struct, 1, 1);
+	*Data = spi.trx_byte(Settings->F25xxx_Spi_Struct, 0xFF);
 	return true;
 }
 
@@ -35,11 +37,15 @@ unsigned char sst25vf_write_status(sst25vf_t *Settings, unsigned char Data)
 {
 	if(!Settings)
 		return false;
-	Settings->F25xxx_Spi_Struct->Buff[0] = SST25VF_EWSR;
-	mcspi_transfer(Settings->F25xxx_Spi_Struct, 1, 0);
-	Settings->F25xxx_Spi_Struct->Buff[0] = SST25VF_WRSR;
-	Settings->F25xxx_Spi_Struct->Buff[1] = Data;
-	mcspi_transfer(Settings->F25xxx_Spi_Struct, 2, 0);
+	spi.assert(Settings->F25xxx_Spi_Struct);
+	spi.trx_byte(Settings->F25xxx_Spi_Struct, SST25VF_EWSR);
+	//mcspi_transfer(Settings->F25xxx_Spi_Struct, 1, 0);
+	spi.deassert(Settings->F25xxx_Spi_Struct);
+	spi.assert(Settings->F25xxx_Spi_Struct);
+	spi.trx_byte(Settings->F25xxx_Spi_Struct, SST25VF_WRSR);
+	spi.trx_byte(Settings->F25xxx_Spi_Struct, Data);
+	spi.deassert(Settings->F25xxx_Spi_Struct);
+	//mcspi_transfer(Settings->F25xxx_Spi_Struct, 2, 0);
 	return true;
 }
 
@@ -93,8 +99,10 @@ bool sst25vf_write_enable(sst25vf_t *Settings)
 {
 	if(!Settings)
 		return false;
-	Settings->F25xxx_Spi_Struct->Buff[0] = SST25VF_WREN;
-	mcspi_transfer(Settings->F25xxx_Spi_Struct, 1, 0);
+	spi.assert(Settings->F25xxx_Spi_Struct);
+	spi.trx_byte(Settings->F25xxx_Spi_Struct, SST25VF_WREN);
+	spi.deassert(Settings->F25xxx_Spi_Struct);
+	//mcspi_transfer(Settings->F25xxx_Spi_Struct, 1, 0);
 	return true;
 }
 
@@ -102,8 +110,10 @@ bool sst25vf_write_disable(sst25vf_t *Settings)
 {
 	if(!Settings)
 		return false;
-	Settings->F25xxx_Spi_Struct->Buff[0] = SST25VF_WRDI;
-	mcspi_transfer(Settings->F25xxx_Spi_Struct, 1, 0);
+	spi.assert(Settings->F25xxx_Spi_Struct);
+	spi.trx_byte(Settings->F25xxx_Spi_Struct, SST25VF_WRDI);
+	spi.deassert(Settings->F25xxx_Spi_Struct);
+	//mcspi_transfer(Settings->F25xxx_Spi_Struct, 1, 0);
 	return true;
 }
 
@@ -115,24 +125,26 @@ bool sst25vf_sector_erase(sst25vf_t *Settings, unsigned long addr, unsigned char
 	sst25vf_disable_block_protection(Settings);
 	sst25vf_write_enable(Settings);
 	sst25vf_wait_write_enable(Settings);
+	spi.assert(Settings->F25xxx_Spi_Struct);
 	switch (sector_size)
 	{
 	case 4:
-		Settings->F25xxx_Spi_Struct->Buff[0] = SST25VF_4K_SectorErase;
+		spi.trx_byte(Settings->F25xxx_Spi_Struct, SST25VF_4K_SectorErase);
 		break;
 	case 32:
-		Settings->F25xxx_Spi_Struct->Buff[0] = SST25VF_32K_SectorErase;
+		spi.trx_byte(Settings->F25xxx_Spi_Struct, SST25VF_32K_SectorErase);
 		break;
 	case 64:
-		Settings->F25xxx_Spi_Struct->Buff[0] = SST25VF_64K_SectorErase;
+		spi.trx_byte(Settings->F25xxx_Spi_Struct, SST25VF_64K_SectorErase);
 		break;
 	default:
 		return false;
 	}
-	Settings->F25xxx_Spi_Struct->Buff[1] = addr >> 16;
-	Settings->F25xxx_Spi_Struct->Buff[2] = addr >> 8;
-	Settings->F25xxx_Spi_Struct->Buff[3] = addr;
-	mcspi_transfer(Settings->F25xxx_Spi_Struct, 4, 0);
+	spi.trx_byte(Settings->F25xxx_Spi_Struct, addr >> 16);
+	spi.trx_byte(Settings->F25xxx_Spi_Struct, addr >> 8);
+	spi.trx_byte(Settings->F25xxx_Spi_Struct, addr);
+	spi.deassert(Settings->F25xxx_Spi_Struct);
+	//mcspi_transfer(Settings->F25xxx_Spi_Struct, 4, 0);
 	if(wait_erase_complete)
 		sst25vf_wait_busy(Settings);
 	sst25vf_enable_block_protection(Settings);
@@ -147,8 +159,10 @@ bool sst25vf_chip_erase(sst25vf_t *Settings, bool wait_erase_complete)
 	sst25vf_disable_block_protection(Settings);
 	sst25vf_write_enable(Settings);
 	sst25vf_wait_write_enable(Settings);
-	Settings->F25xxx_Spi_Struct->Buff[0] = SST25VF_ChipErase;
-	mcspi_transfer(Settings->F25xxx_Spi_Struct, 1, 0);
+	spi.assert(Settings->F25xxx_Spi_Struct);
+	spi.trx_byte(Settings->F25xxx_Spi_Struct, SST25VF_ChipErase);
+	spi.deassert(Settings->F25xxx_Spi_Struct);
+	//mcspi_transfer(Settings->F25xxx_Spi_Struct, 1, 0);
 	if(wait_erase_complete)
 		sst25vf_wait_busy(Settings);
 	sst25vf_enable_block_protection(Settings);
@@ -161,13 +175,15 @@ bool sst25vf_write_word(sst25vf_t *Settings, unsigned long addr, unsigned char C
 
 	sst25vf_write_enable(Settings);
 	sst25vf_wait_write_enable(Settings);
-	Settings->F25xxx_Spi_Struct->Buff[0] = SST25VF_WordProgram;
-	Settings->F25xxx_Spi_Struct->Buff[1] = addr >> 16;
-	Settings->F25xxx_Spi_Struct->Buff[2] = addr >> 8;
-	Settings->F25xxx_Spi_Struct->Buff[3] = addr;
-	Settings->F25xxx_Spi_Struct->Buff[4] = Chr1;
-	Settings->F25xxx_Spi_Struct->Buff[5] = Chr2;
-	mcspi_transfer(Settings->F25xxx_Spi_Struct, 6, 0);
+	spi.assert(Settings->F25xxx_Spi_Struct);
+	spi.trx_byte(Settings->F25xxx_Spi_Struct, SST25VF_WordProgram);
+	spi.trx_byte(Settings->F25xxx_Spi_Struct, addr >> 16);
+	spi.trx_byte(Settings->F25xxx_Spi_Struct, addr >> 8);
+	spi.trx_byte(Settings->F25xxx_Spi_Struct, addr);
+	spi.trx_byte(Settings->F25xxx_Spi_Struct, Chr1);
+	spi.trx_byte(Settings->F25xxx_Spi_Struct, Chr2);
+	spi.deassert(Settings->F25xxx_Spi_Struct);
+	//mcspi_transfer(Settings->F25xxx_Spi_Struct, 6, 0);
 	sst25vf_wait_busy(Settings);
 	sst25vf_write_disable(Settings);
 	sst25vf_wait_busy(Settings);
@@ -198,12 +214,14 @@ bool sst25vf_write(sst25vf_t *Settings, unsigned long addr, unsigned int num_of_
 	{
 		sst25vf_write_enable(Settings);
 		sst25vf_wait_write_enable(Settings);
-		Settings->F25xxx_Spi_Struct->Buff[0] = SST25VF_ByteProgram;
-		Settings->F25xxx_Spi_Struct->Buff[1] = CntAddr >> 16;
-		Settings->F25xxx_Spi_Struct->Buff[2] = CntAddr >> 8;
-		Settings->F25xxx_Spi_Struct->Buff[3] = CntAddr;
-		Settings->F25xxx_Spi_Struct->Buff[4] = *Buff++;
-		mcspi_transfer(Settings->F25xxx_Spi_Struct, 5, 0);
+		spi.assert(Settings->F25xxx_Spi_Struct);
+		spi.trx_byte(Settings->F25xxx_Spi_Struct, SST25VF_ByteProgram);
+		spi.trx_byte(Settings->F25xxx_Spi_Struct, CntAddr >> 16);
+		spi.trx_byte(Settings->F25xxx_Spi_Struct, CntAddr >> 8);
+		spi.trx_byte(Settings->F25xxx_Spi_Struct, CntAddr);
+		spi.trx_byte(Settings->F25xxx_Spi_Struct, *Buff++);
+		spi.deassert(Settings->F25xxx_Spi_Struct);
+		//mcspi_transfer(Settings->F25xxx_Spi_Struct, 5, 0);
 		sst25vf_wait_busy(Settings);
 		sst25vf_write_disable(Settings);
 		sst25vf_wait_busy(Settings);
@@ -219,17 +237,19 @@ bool sst25vf_read(sst25vf_t *Settings, unsigned long addr, unsigned int num_of_b
 	if(!Settings)
 		return false;
 	sst25vf_wait_busy(Settings);
-	unsigned char *BackBuff = (unsigned char *)Settings->F25xxx_Spi_Struct->Buff;
-	Settings->F25xxx_Spi_Struct->Buff = buff;
-	Settings->F25xxx_Spi_Struct->Buff[0] = SST25VF_Read;
-	Settings->F25xxx_Spi_Struct->Buff[1] = addr >> 16;
-	Settings->F25xxx_Spi_Struct->Buff[2] = addr >> 8;
-	Settings->F25xxx_Spi_Struct->Buff[3] = addr;
-	mcspi_transfer(Settings->F25xxx_Spi_Struct, 4, num_of_bytes);
-	Settings->F25xxx_Spi_Struct->Buff = BackBuff;
-	unsigned int TmpCnt = 0;
-	for(; TmpCnt < num_of_bytes; TmpCnt++)
-		buff[TmpCnt] = buff[TmpCnt + 4];
+	//unsigned char *BackBuff = (unsigned char *)Settings->F25xxx_Spi_Struct->Buff;
+	//Settings->F25xxx_Spi_Struct->Buff = buff;
+	spi.assert(Settings->F25xxx_Spi_Struct);
+	spi.trx_byte(Settings->F25xxx_Spi_Struct, SST25VF_Read);
+	spi.trx_byte(Settings->F25xxx_Spi_Struct, addr >> 16);
+	spi.trx_byte(Settings->F25xxx_Spi_Struct, addr >> 8);
+	spi.trx_byte(Settings->F25xxx_Spi_Struct, addr);
+	spi.receive(Settings->F25xxx_Spi_Struct, buff, num_of_bytes);
+	spi.deassert(Settings->F25xxx_Spi_Struct);
+	//Settings->F25xxx_Spi_Struct->Buff = BackBuff;
+	//unsigned int TmpCnt = 0;
+	//for(; TmpCnt < num_of_bytes; TmpCnt++)
+		//buff[TmpCnt] = buff[TmpCnt + 4];
 	return true;
 }
 

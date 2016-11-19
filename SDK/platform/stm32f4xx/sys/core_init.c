@@ -141,15 +141,15 @@ void _core_init(void)
 	//SystemCoreClockUpdate();
 	//RCC_PCLK1Config(RCC_HCLK_Div4);
 	//RCC_PCLK2Config(RCC_HCLK_Div2);
-	gpio_init(0);
-	gpio_init(1);
-	gpio_init(2);
-	gpio_init(3);
-	gpio_init(4);
-	gpio_init(5);
-	gpio_init(6);
-	gpio_init(7);
-	gpio_init(8);
-	gpio_init(9);
-	gpio_init(10);
+	gpio.init(0);
+	gpio.init(1);
+	gpio.init(2);
+	gpio.init(3);
+	gpio.init(4);
+	gpio.init(5);
+	gpio.init(6);
+	gpio.init(7);
+	gpio.init(8);
+	gpio.init(9);
+	gpio.init(10);
 }

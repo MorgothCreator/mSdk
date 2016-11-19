@@ -17,7 +17,7 @@
 bool sx150x_read_reg(SX150x_t *param, unsigned char addr, unsigned char *data)
 {
 	Twi_t* TWI = param->TWI;
-	return TWI->send_receive(TWI, param->Twi_Addr, &addr, 1, data, 1);
+	return twi.trx(TWI, param->Twi_Addr, &addr, 1, data, 1);
 }
 
 bool sx150x_write_reg(SX150x_t *param, unsigned char addr, unsigned char data)
@@ -26,7 +26,7 @@ bool sx150x_write_reg(SX150x_t *param, unsigned char addr, unsigned char data)
 	unsigned char buff[2];
 	buff[0] = addr;
 	buff[1] = data;
-	return TWI->send_receive(TWI, param->Twi_Addr, buff, 2, NULL, 0);
+	return twi.tx(TWI, param->Twi_Addr, buff, 2);
 }
 
 bool sx150x_probe(SX150x_t *param)

@@ -8,10 +8,11 @@
 #ifndef LIB_API_INIT_API_DEF_H_
 #define LIB_API_INIT_API_DEF_H_
 
+#include <api/spi_api.h>
+#include <interface/mmcsd_interface_def.h>
 #include "api/core_init_api.h"
 #include "api/uart_api.h"
 #include "api/twi_api.h"
-#include "api/mcspi_api.h"
 #include "api/gpio_def.h"
 #include "api/lcd_def.h"
 #include "api/lcd_api.h"
@@ -38,7 +39,6 @@
 
 
 #include "lib/fat_fs/inc/diskio.h"
-#include "interface/hs_mmcsd_interface_def.h"
 #include "interface/usb_dev_msc_interface.h"
 
 /*#####################################################*/
@@ -66,7 +66,7 @@
 			Uart[UART_INTERFACE]->RxPin = _RxPin;\
 			Uart[UART_INTERFACE]->rxFifoTrigLevel = 1;\
 			Uart[UART_INTERFACE]->txFifoTrigLevel = 1;\
-			uart_open(Uart[UART_INTERFACE]); \
+			uart.open(Uart[UART_INTERFACE]); \
 		}
 /*#####################################################*/
 /* TWI_INTERFACE, _TransferRate, _SclPort, _SclPin, _SdaPort, _SdaPin, _RxBuffSize, _TxBuffSize */
@@ -83,7 +83,7 @@
 			TWI[TWI_INTERFACE]->SdaPort = _SdaPort;\
 			TWI[TWI_INTERFACE]->SclPin = _SclPin;\
 			TWI[TWI_INTERFACE]->SdaPin = _SdaPin;\
-			twi_open(TWI[TWI_INTERFACE]); \
+			twi.open(TWI[TWI_INTERFACE]); \
 		}
 /*#####################################################*/
 /* SPI_INTERFACE, _TransferRate, _WordSize, _SckPort, _SckPin, _MosiPort, _MosiPin, _MisoPort, _MisoPin, _CsPort, _CsPin */
@@ -122,7 +122,7 @@
 			SPI[SPI_INTERFACE]->WordSize = _WordSize; \
 			SPI[SPI_INTERFACE]->Slave = false; \
 			SPI[SPI_INTERFACE]->ClkDiv[0] = _TransferRate; \
-			mcspi_open(SPI[SPI_INTERFACE]); \
+			spi.open(SPI[SPI_INTERFACE]); \
 		}
 /*#####################################################*/
 /*#define INIT_MMCSD(UNIT_NR, GpioMmcSdDetect, GpioLed) \
@@ -137,12 +137,12 @@
  * UNIT_NR
  */
 #define IDLE_MMCSD(UNIT_NR) \
-		mmcsd_idle(UNIT_NR)
+		mmcsd.idle(UNIT_NR)
 /*-----------------------------------------------------*/
 /*#define INIT_EMMC(UNIT_NR, GpioReset, GpioLed) \
-		gpio_out(GpioReset, 0); \
+		gpio.out(GpioReset, 0); \
 		Sysdelay(1); \
-		gpio_out(GpioReset, 1); \
+		gpio.out(GpioReset, 1); \
 		mmcsd_init(UNIT_NR, (Gpio_t*)NULL, LED[0]); \
 		mmcsd_idle(UNIT_NR)*/
 /*-----------------------------------------------------*/
@@ -169,11 +169,11 @@
  * MMCSD_NR, GPIO_RESET_STRUCT, GPIO_SD_DETECT_STRUCT, ACTIVITY_LED_STRUCT
  */
 #define INIT_MMCSD(MMCSD_NR, GPIO_RESET_STRUCT, GPIO_SD_DETECT_STRUCT, ACTIVITY_LED_STRUCT) \
-	gpio_out(GPIO_RESET_STRUCT, 0); \
+	gpio.out(GPIO_RESET_STRUCT, 0); \
 	Sysdelay(1); \
-	gpio_out(GPIO_RESET_STRUCT, 1); \
-	mmcsd_init(MMCSD_NR, GPIO_SD_DETECT_STRUCT, ACTIVITY_LED_STRUCT); \
-	mmcsd_idle(MMCSD_NR);
+	gpio.out(GPIO_RESET_STRUCT, 1); \
+	mmcsd.init(MMCSD_NR, GPIO_SD_DETECT_STRUCT, ACTIVITY_LED_STRUCT); \
+	mmcsd.idle(MMCSD_NR);
 /*#####################################################*/
 /*
  * This macro initialize the desired USB HOST MSC interface and MMCSD interface and bridge them together.
@@ -196,9 +196,9 @@
  * USB_DEVICE_NR, MMCSD_NR, SLAVE_DEV_CONTROLS_NAME, GPIO_RESET_STRUCT, GPIO_SD_DETECT_STRUCT, ACTIVITY_LED_STRUCT
  */
 #define INIT_USB_DEV_MSC_TO_MMCSD_BRIDGE(USB_DEVICE_NR, MMCSD_NR, SLAVE_DEV_CONTROLS_NAME, GPIO_RESET_STRUCT, GPIO_SD_DETECT_STRUCT, ACTIVITY_LED_STRUCT) \
-	gpio_out(GPIO_RESET_STRUCT, 0); \
+	gpio.out(GPIO_RESET_STRUCT, 0); \
 	Sysdelay(1); \
-	gpio_out(GPIO_RESET_STRUCT, 1); \
+	gpio.out(GPIO_RESET_STRUCT, 1); \
 	mmcsd_init(MMCSD_NR, GPIO_SD_DETECT_STRUCT, ACTIVITY_LED_STRUCT); \
 	mmcsd_idle(MMCSD_NR);\
 	UARTPuts(DebugCom, "Bridge USBMSC0 Dev for MMCSD0 Interface.......", -1);\
@@ -209,7 +209,7 @@
 	usbd_drv_func[USB_DEVICE_NR].drv_r_func = mmcsd_read;\
 	usbd_drv_func[USB_DEVICE_NR].drv_w_func = mmcsd_write;\
 	usb_msc_dev_init(USB_DEVICE_NR, (void *)&usbd_drv_func[USB_DEVICE_NR]);\
-	UARTPuts(DebugCom, "OK.\n\r", -1);
+	uart.puts(DebugCom, "OK.\n\r", -1);
 /*#####################################################*/
 /*
  * This macro initialize the desired USB HOST MSC interface and MMCSD interface and bridge them together.
@@ -429,7 +429,7 @@ extern tUSBHMSCInstance g_USBHMSCDevice[]; \
 		name->spi_instance = _spi_instance;\
 		name->irq = _irq_port;\
 		name->ce = _ce_port;\
-		name->spi = SPI_INTERFACE;\
+		name->spi = SPI[SPI_INTERFACE];\
 		nrf24l01_init(name);
 /*#####################################################*/
 #define NEW_SST25VF(name) \

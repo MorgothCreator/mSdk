@@ -207,9 +207,9 @@ typedef struct
 bool adxl345_bit_set(new_adxl345* adxl345_struct, unsigned char regOffset, unsigned char mask);
 bool adxl345_bit_clr(new_adxl345* adxl345_struct, unsigned char regOffset, unsigned char mask);
 bool adxl345_write(new_adxl345* adxl345_struct, unsigned char regOffset, unsigned char data);
-bool adxl345_write_multiple(new_adxl345* adxl345_struct, unsigned int regOffset, unsigned char *Buff, unsigned int DataLen);
+bool adxl345_write_multiple(new_adxl345* adxl345_struct, unsigned char regOffset, unsigned char *Buff, unsigned int DataLen);
 bool adxl345_read(new_adxl345* adxl345_struct, unsigned char regOffset, unsigned char* data);
-bool adxl345_read_multiple(new_adxl345* adxl345_struct, unsigned int regOffset, unsigned char *Buff, unsigned int DataLen);
+bool adxl345_read_multiple(new_adxl345* adxl345_struct, unsigned char regOffset, unsigned char *Buff, unsigned int DataLen);
 /*#####################################################*/
 bool adxl345_device_id_corect(new_adxl345* adxl345_struct);
 unsigned char adxl345_tap_status_read(new_adxl345* adxl345_struct);

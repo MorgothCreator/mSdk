@@ -596,6 +596,23 @@ bool _SetupI2CReception(new_twi* TwiStruct, unsigned int TransmitBytes, unsigned
 {
 	return TWI_MasterWriteRead(TwiStruct, TransmitBytes, ReceiveBytes);
 }
+
+
+bool _I2C_trx(struct Twi_s* param, unsigned char addr, unsigned char *buff_send, unsigned int bytes_send, unsigned char *buff_receive, unsigned int bytes_receive)
+{
+	param->MasterSlaveAddr = addr;
+	param->TxBuff = buff_send;
+	param->RxBuff = buff_receive;
+	return TWI_MasterWriteRead(param, bytes_send, bytes_receive);
+}
+
+bool _I2C_tx(struct Twi_s* param, unsigned char addr, unsigned char *buff_send, unsigned int bytes_send)
+{
+	param->MasterSlaveAddr = addr;
+	param->TxBuff = buff_send;
+	return TWI_MasterWriteRead(param, bytes_send, 0);
+}
+
 /*#####################################################*/
 bool _twi_open(new_twi* TwiStruct)
 {

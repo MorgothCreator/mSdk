@@ -23,11 +23,11 @@
 #ifndef LEPTON_FLIR_H_
 #define LEPTON_FLIR_H_
 /*#####################################################*/
+#include <api/spi_api.h>
+#include <api/spi_def.h>
 #include <stdbool.h>
 #include "api/twi_def.h"
 #include "api/twi_api.h"
-#include "api/mcspi_def.h"
-#include "api/mcspi_api.h"
 #include "interface/mcspi_interface.h"
 /*#####################################################*/
 #define LEPTON_FLIR_ADDR					(0x2A)

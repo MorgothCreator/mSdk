@@ -22,19 +22,21 @@
 #ifndef MCSPI_API_H_
 #define MCSPI_API_H_
 /*#####################################################*/
+#include <api/spi_def.h>
 #include <stdbool.h>
-#include "api/mcspi_def.h"
-//#include "aintc/aintc_mcspi.h"
-//#include "clk/clk_mcspi.h"
 #include "interface/mcspi_interface.h"
 /*#####################################################*/
-void mcspi_assert(Mcspi_t *McspiStruct);
-void mcspi_deassert(Mcspi_t *McspiStruct);
-bool mcspi_transfer(Mcspi_t *McspiStruct, unsigned int NumOfBytesSend, unsigned int NumOfBytesReceive);
-bool mcspi_open(Mcspi_t *McspiStruct);
-void mcspi_close(Mcspi_t *McspiStruct);
-unsigned char mcspi_send_byte(Mcspi_t *McspiStruct, unsigned char byte);
-bool mcspi_set_baud(Mcspi_t *McspiStruct, unsigned long baud);
+extern const spi_t spi;
+
+//void mcspi_assert(Mcspi_t *McspiStruct);
+//void mcspi_deassert(Mcspi_t *McspiStruct);
+//bool mcspi_transfer(Mcspi_t *McspiStruct, unsigned char *buff_send, unsigned char *buff_receive, unsigned int size);
+//bool mcspi_receive(Mcspi_t *McspiStruct, unsigned char *buff_receive, unsigned int bytes_receive);
+//bool mcspi_transmit(Mcspi_t *McspiStruct, unsigned char *buff_send, unsigned int bytes_send);
+//bool mcspi_open(Mcspi_t *McspiStruct);
+//void mcspi_close(Mcspi_t *McspiStruct);
+//unsigned char mcspi_send_byte(Mcspi_t *McspiStruct, unsigned char byte);
+//bool mcspi_set_baud(Mcspi_t *McspiStruct, unsigned long baud);
 /*#####################################################*/
 #ifdef HEADER_INCLUDE_C_FILES
 #include "mcspi_api.c"

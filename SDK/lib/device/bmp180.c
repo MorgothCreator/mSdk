@@ -32,8 +32,9 @@ bool bmp180_read_calibration(BMP180_t *structure) {
 		return false;
 	Twi_t *TwiStruct = structure->TWI;
 	TwiStruct->MasterSlaveAddr = BMP180_ADDR | (structure->IcNr & 0x01);
-	TwiStruct->TxBuff[0] = BMP180_CALIB;
-	if(!SetupI2CReception(TwiStruct, 1, BMP180_CALIB_LEN))
+	unsigned char addr = BMP180_CALIB;
+	unsigned char result[BMP180_CALIB_LEN];
+	if(!twi.trx(TwiStruct, BMP180_ADDR | (structure->IcNr & 0x01), &addr, 1, result, BMP180_CALIB_LEN))
 		return false;
 	structure->cal_data.AC1 = (signed short)((TwiStruct->RxBuff[0] << 8) + TwiStruct->RxBuff[1]);
 	structure->cal_data.AC2 = (signed short)((TwiStruct->RxBuff[2] << 8) + TwiStruct->RxBuff[3]);
@@ -53,18 +54,19 @@ bool bmp180_read_temp(BMP180_t *structure, signed long *temp) {
 	if(!structure->TWI)
 		return false;
 	Twi_t *TwiStruct = structure->TWI;
-	TwiStruct->MasterSlaveAddr = BMP180_ADDR | (structure->IcNr & 0x03);
-	TwiStruct->TxBuff[0] = BMP180_CTRL_MEAS;
-	TwiStruct->TxBuff[1] = 0x2E;
-	if(!SetupI2CTransmit(TwiStruct, 2))
+	unsigned char tmp[2];
+	tmp[0] = BMP180_CTRL_MEAS;
+	tmp[1] = 0x2E;
+	if(!twi.tx(TwiStruct, BMP180_ADDR | (structure->IcNr & 0x03), tmp, 2))
 		return false;
 	Sysdelay(6);
 	if(!structure->TWI)
 		return false;
-	TwiStruct->TxBuff[0] = BMP180_OUT_MSB;
-	if(!SetupI2CReception(TwiStruct, 1, 2))
+	unsigned char reg = BMP180_OUT_MSB;
+	unsigned char result[2];
+	if(!twi.trx(TwiStruct, BMP180_ADDR | (structure->IcNr & 0x03), &reg, 1, result, 2))
 		return false;
-	*temp = (signed long)((TwiStruct->RxBuff[0] << 8) + TwiStruct->RxBuff[1]);
+	*temp = (signed long)((result[0] << 8) + result[1]);
 	return true;
 }
 
@@ -72,16 +74,17 @@ bool bmp180_read_pressure(BMP180_t *structure, signed long *pressure, unsigned c
 	if(!structure->TWI)
 		return false;
 	Twi_t *TwiStruct = structure->TWI;
-	TwiStruct->MasterSlaveAddr = BMP180_ADDR | (structure->IcNr & 0x03);
-	TwiStruct->TxBuff[0] = BMP180_CTRL_MEAS;
-	TwiStruct->TxBuff[1] = 0x34 + (oss << BMP180_CTRL_MEAS_OSS_gp);
-	if(!SetupI2CTransmit(TwiStruct, 2))
+	unsigned char tmp[2];
+	tmp[0] = BMP180_CTRL_MEAS;
+	tmp[1] = 0x34 + (oss << BMP180_CTRL_MEAS_OSS_gp);
+	if(!twi.tx(TwiStruct, BMP180_ADDR | (structure->IcNr & 0x03), tmp, 2))
 		return false;
 	Sysdelay(6 * (1 << oss));
-	TwiStruct->TxBuff[0] = BMP180_OUT_MSB;
-	if(!SetupI2CReception(TwiStruct, 1, 3))
+	unsigned char reg = BMP180_OUT_MSB;
+	unsigned char result[3];
+	if(!twi.trx(TwiStruct, BMP180_ADDR | (structure->IcNr & 0x03), &reg, 1, result, 3))
 		return false;
-	*pressure = (signed long)(((TwiStruct->RxBuff[0] << 16) + (TwiStruct->RxBuff[1] << 8) + TwiStruct->RxBuff[2]) >> (8 - oss));
+	*pressure = (signed long)(((result[0] << 16) + (result[1] << 8) + result[0]) >> (8 - oss));
 	return true;
 }
 
@@ -122,7 +125,7 @@ bool bmp180_display_result(BMP180_t *structure, unsigned char oss) {
 	p = p + (X1 + X2 + 3791) / 16;
 
 	float altitude = 44330.0 * ((1.0 - (((float)p / 100.0) / 1013.25)) * (1.0 / 5.255));
-	UARTprintf(DebugCom, "BMP180: T = %2.1f, P = %4.2f, Alt = %4.2f\n\r", (float)(T / 10.0), (float)p / 100.0, altitude);
+	uart.printf(DebugCom, "BMP180: T = %2.1f, P = %4.2f, Alt = %4.2f\n\r", (float)(T / 10.0), (float)p / 100.0, altitude);
 	return true;
 }
 

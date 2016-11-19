@@ -100,8 +100,8 @@ int8_t STORAGE_GetCapacity(uint8_t lun, uint32_t *block_num, uint16_t *block_siz
 {
 	if(usbd_drv_func[(unsigned int)lun].drv_ioctl_func)
 	{
-		usbd_drv_func[(unsigned int)lun].drv_ioctl_func(usbd_drv_func[lun].controlled_unit_nr, GET_SECTOR_COUNT, (unsigned int *)block_num);
-		usbd_drv_func[(unsigned int)lun].drv_ioctl_func(usbd_drv_func[lun].controlled_unit_nr, GET_SECTOR_SIZE, (unsigned int *)block_size);
+		usbd_drv_func[(unsigned int)lun].drv_ioctl_func(usbd_drv_func[lun].DriveStruct, GET_SECTOR_COUNT, (unsigned int *)block_num);
+		usbd_drv_func[(unsigned int)lun].drv_ioctl_func(usbd_drv_func[lun].DriveStruct, GET_SECTOR_SIZE, (unsigned int *)block_size);
 	}
 	return 0;
 }

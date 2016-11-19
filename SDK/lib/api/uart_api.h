@@ -36,12 +36,12 @@
 ** Loop continuously until user enters any character other
 ** than space, carriage return, tab space and backspace
 */
-#define IS_WHITESPACE(UartSettings, rxByte)    rxByte = UARTGetc(UartSettings); \
+#define IS_WHITESPACE(UartSettings, rxByte)    rxByte = uart_getc(UartSettings); \
                                  while(('\r' == rxByte) || (' ' == rxByte) || \
                                        ('\t' == rxByte) || ('\b' == rxByte)) \
                                  { \
-                                      UARTPutc(UartSettings, rxByte);   \
-                                      rxByte = UARTGetc(UartSettings);\
+                                      uart_putc(UartSettings, rxByte);   \
+                                      rxByte = uart_getc(UartSettings);\
                                  }
 
 /*
@@ -51,32 +51,16 @@
 #define UART_SCANF_ECHO_INPUT(UartSettings, rxByte)                                     \
                                  if(('\n' == rxByte) || ('\r' == rxByte)) \
                                  {                                        \
-                                     UARTPutc(UartSettings, '\r');                      \
-                                     UARTPutc(UartSettings, '\n');                      \
+                                     uart_putc(UartSettings, '\r');                      \
+                                     uart_putc(UartSettings, '\n');                      \
                                  }                                        \
                                  else                                     \
                                  {                                        \
-                                     UARTPutc(UartSettings, rxByte);                    \
+                                     uart_putc(UartSettings, rxByte);                    \
                                  }
 
 /*#####################################################*/
-void UARTPutc(Uart_t* UartSettings, unsigned char byteTx);
-unsigned char UARTGetc(Uart_t* UartSettings);
-bool UARTPutcNoBlocking(Uart_t* UartSettings, unsigned char byteTx);
-signed short UARTGetcNoBlocking(Uart_t* UartSettings);
-unsigned int UARTRxGetError(Uart_t* UartSettings);
-void UARTBaudRateSet(Uart_t* UartSettings, unsigned long BaudRate);
-unsigned int UARTPuts(Uart_t* UartSettings, char *pTxBuffer, int numBytesToWrite);
-unsigned int UARTGets(Uart_t* UartSettings, char *pRxBuffer, int numBytesToRead);
-void UARTPutNum(Uart_t* UartSettings, int value);
-void UARTPutHexNum(Uart_t* UartSettings, unsigned long hexValue);
-long UARTGetNum(Uart_t* UartSettings);
-unsigned long UARTGetHexNum(Uart_t* UartSettings);
-unsigned int UARTwrite(Uart_t* UartSettings, const char *pcBuf, unsigned int len);
-int UARTscanf(Uart_t* UartSettings, const char *format, ...);
-Uart_t* UARTprintf(Uart_t* UartSettings,const char *pcString, ...);
-bool uart_open(Uart_t *UartSettings);
-bool uart_close(Uart_t *UartSettings);
+extern const uart_t uart;
 /*#####################################################*/
 #ifdef HEADER_INCLUDE_C_FILES
 #include "uart_api.c"

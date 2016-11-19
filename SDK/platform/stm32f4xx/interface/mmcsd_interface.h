@@ -153,8 +153,8 @@ void    BSP_SD_Detect_MspInit(SD_HandleTypeDef *hsd, void *Params);
 void    BSP_SD_MspDeInit(SD_HandleTypeDef *hsd, void *Params);
 
 
-unsigned int MMCSDReadCmdSend(void *SdStruct, void *ptr, unsigned long block, unsigned int nblks);
-unsigned int MMCSDWriteCmdSend(void *SdStruct, void *ptr, unsigned long block, unsigned int nblks);
+unsigned int _mmcsd_read(void *SdStruct, void *ptr, unsigned long block, unsigned int nblks);
+unsigned int _mmcsd_write(void *SdStruct, void *ptr, unsigned long block, unsigned int nblks);
 
 void _mmcsd_ioctl(unsigned int unit_nr, unsigned int  command,  unsigned int *buffer);
 bool _mmcsd_idle(unsigned int unit_nr);

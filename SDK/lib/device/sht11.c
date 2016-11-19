@@ -54,27 +54,27 @@ bool sht11_write(SHT11_t *structure, unsigned char cmd, unsigned char *status_re
 	 */
 	timer_interval(&structure->Timeout_Timer, 500);
 	structure->busy = true;
-	gpio_function_set(structure->Scl, GPIO_OUT_OPEN_DRAIN);
-	gpio_function_set(structure->Sda, GPIO_OUT_OPEN_DRAIN);
+	gpio.function_set(structure->Scl, GPIO_OUT_OPEN_DRAIN);
+	gpio.function_set(structure->Sda, GPIO_OUT_OPEN_DRAIN);
 	/* Send transmission start.
 	 *        ___       ___
 	 * data =    \_____/
 	 *          ___   ___
 	 * clk  = _/   \_/   \__
 	 */
-	gpio_out(structure->Scl, 0);
+	gpio.out(structure->Scl, 0);
 	sht11_delay(structure);
-	gpio_out(structure->Scl, 1);
+	gpio.out(structure->Scl, 1);
 	sht11_delay(structure);
-	gpio_out(structure->Sda, 0);
+	gpio.out(structure->Sda, 0);
 	sht11_delay(structure);
-	gpio_out(structure->Scl, 0);
+	gpio.out(structure->Scl, 0);
 	sht11_delay(structure);
-	gpio_out(structure->Scl, 1);
+	gpio.out(structure->Scl, 1);
 	sht11_delay(structure);
-	gpio_out(structure->Sda, 1);
+	gpio.out(structure->Sda, 1);
 	sht11_delay(structure);
-	gpio_out(structure->Scl, 0);
+	gpio.out(structure->Scl, 0);
 	sht11_delay(structure);
 	/*
 	 * Send command.
@@ -83,24 +83,24 @@ bool sht11_write(SHT11_t *structure, unsigned char cmd, unsigned char *status_re
 	unsigned char _cmd = cmd;
 	for(; data_cnt < 8; data_cnt++) {
 		if(_cmd & 0x80)
-			gpio_out(structure->Sda, 1);
+			gpio.out(structure->Sda, 1);
 		else
-			gpio_out(structure->Sda, 0);
+			gpio.out(structure->Sda, 0);
 		sht11_delay(structure);
-		gpio_out(structure->Scl, 1);
+		gpio.out(structure->Scl, 1);
 		sht11_delay(structure);
-		gpio_out(structure->Scl, 0);
+		gpio.out(structure->Scl, 0);
 		if(data_cnt == 7) {
-			gpio_out(structure->Sda, 1);
-			gpio_function_set(structure->Sda, GPIO_IN_PULL_UP);
+			gpio.out(structure->Sda, 1);
+			gpio.function_set(structure->Sda, GPIO_IN_PULL_UP);
 		}
 		sht11_delay(structure);
 		_cmd = _cmd << 1;
 	}
-	gpio_out(structure->Scl, 1);
+	gpio.out(structure->Scl, 1);
 	sht11_delay(structure);
-	signed int ack = gpio_in(structure->Sda);
-	gpio_out(structure->Scl, 0);
+	signed int ack = gpio.in(structure->Sda);
+	gpio.out(structure->Scl, 0);
 	sht11_delay(structure);
 	if(ack) {
 		structure->busy = false;
@@ -111,28 +111,28 @@ bool sht11_write(SHT11_t *structure, unsigned char cmd, unsigned char *status_re
 		/*
 		 * Write status register
 		 */
-		gpio_function_set(structure->Sda, GPIO_OUT_OPEN_DRAIN);
+		gpio.function_set(structure->Sda, GPIO_OUT_OPEN_DRAIN);
 		unsigned char st_reg = *status_reg;
 		for(data_cnt = 0; data_cnt < 8; data_cnt++) {
 			if(st_reg & 0x80)
-				gpio_out(structure->Sda, 1);
+				gpio.out(structure->Sda, 1);
 			else
-				gpio_out(structure->Sda, 0);
+				gpio.out(structure->Sda, 0);
 			sht11_delay(structure);
-			gpio_out(structure->Scl, 1);
+			gpio.out(structure->Scl, 1);
 			sht11_delay(structure);
-			gpio_out(structure->Scl, 0);
+			gpio.out(structure->Scl, 0);
 			if(data_cnt == 7) {
-				gpio_out(structure->Sda, 1);
-				gpio_function_set(structure->Sda, GPIO_IN_PULL_UP);
+				gpio.out(structure->Sda, 1);
+				gpio.function_set(structure->Sda, GPIO_IN_PULL_UP);
 			}
 			sht11_delay(structure);
 			st_reg = st_reg << 1;
 		}
-		gpio_out(structure->Scl, 1);
+		gpio.out(structure->Scl, 1);
 		sht11_delay(structure);
-		signed int ack = gpio_in(structure->Sda);
-		gpio_out(structure->Scl, 0);
+		signed int ack = gpio.in(structure->Sda);
+		gpio.out(structure->Scl, 0);
 		sht11_delay(structure);
 		if(ack) {
 			structure->busy = false;
@@ -146,21 +146,21 @@ bool sht11_write(SHT11_t *structure, unsigned char cmd, unsigned char *status_re
 		unsigned char st_reg = 0;
 		for(data_cnt = 0; data_cnt < 8; data_cnt++) {
 			st_reg = st_reg << 1;
-			gpio_out(structure->Scl, 1);
+			gpio.out(structure->Scl, 1);
 			sht11_delay(structure);
-			if(gpio_in(structure->Sda))
+			if(gpio.in(structure->Sda))
 				st_reg |= 1;
-			gpio_out(structure->Scl, 0);
+			gpio.out(structure->Scl, 0);
 			if(data_cnt == 7) {
-				gpio_function_set(structure->Sda, GPIO_OUT_OPEN_DRAIN);
-				gpio_out(structure->Sda, 0);
+				gpio.function_set(structure->Sda, GPIO_OUT_OPEN_DRAIN);
+				gpio.out(structure->Sda, 0);
 			}
 			sht11_delay(structure);
 		}
-		gpio_out(structure->Scl, 1);
+		gpio.out(structure->Scl, 1);
 		sht11_delay(structure);
-		gpio_out(structure->Scl, 0);
-		gpio_function_set(structure->Sda, GPIO_IN_PULL_UP);
+		gpio.out(structure->Scl, 0);
+		gpio.function_set(structure->Sda, GPIO_IN_PULL_UP);
 		sht11_delay(structure);
 		*status_reg = st_reg;
 		/*
@@ -169,16 +169,16 @@ bool sht11_write(SHT11_t *structure, unsigned char cmd, unsigned char *status_re
 		unsigned char chk = 0;
 		for(data_cnt = 0; data_cnt < 8; data_cnt++) {
 			chk = chk << 1;
-			gpio_out(structure->Scl, 1);
+			gpio.out(structure->Scl, 1);
 			sht11_delay(structure);
-			if(gpio_in(structure->Sda))
+			if(gpio.in(structure->Sda))
 				chk |= 1;
-			gpio_out(structure->Scl, 0);
+			gpio.out(structure->Scl, 0);
 			sht11_delay(structure);
 		}
-		gpio_out(structure->Scl, 1);
+		gpio.out(structure->Scl, 1);
 		sht11_delay(structure);
-		gpio_out(structure->Scl, 0);
+		gpio.out(structure->Scl, 0);
 		sht11_delay(structure);
 		structure->busy = false;
 	}
@@ -205,7 +205,7 @@ bool sht11_read(SHT11_t *structure) {
 	 * Now will wait the sda pin to be '0', that signify data ready to be read.
 	 * If sda pin is '1' will return false, this signify that the sht11 is busy.
 	 */
-	if(gpio_in(structure->Sda)) return false;
+	if(gpio.in(structure->Sda)) return false;
 	/*
 	 * Now the data is available on the buss.
 	 * Will start to read data and return true, this is the single case that
@@ -219,42 +219,42 @@ bool sht11_read(SHT11_t *structure) {
 	 */
 	for(data_cnt = 0; data_cnt < 8; data_cnt++) {
 		data = data << 1;
-		gpio_out(structure->Scl, 1);
+		gpio.out(structure->Scl, 1);
 		sht11_delay(structure);
-		if(gpio_in(structure->Sda))
+		if(gpio.in(structure->Sda))
 			data |= 1;
-		gpio_out(structure->Scl, 0);
+		gpio.out(structure->Scl, 0);
 		if(data_cnt == 7) {
-			gpio_function_set(structure->Sda, GPIO_OUT_OPEN_DRAIN);
-			gpio_out(structure->Sda, 0);
+			gpio.function_set(structure->Sda, GPIO_OUT_OPEN_DRAIN);
+			gpio.out(structure->Sda, 0);
 		}
 		sht11_delay(structure);
 	}
-	gpio_out(structure->Scl, 1);
+	gpio.out(structure->Scl, 1);
 	sht11_delay(structure);
-	gpio_out(structure->Scl, 0);
-	gpio_function_set(structure->Sda, GPIO_IN_PULL_UP);
+	gpio.out(structure->Scl, 0);
+	gpio.function_set(structure->Sda, GPIO_IN_PULL_UP);
 	sht11_delay(structure);
 	/*
 	 * Read LSB data.
 	 */
 	for(data_cnt = 0; data_cnt < 8; data_cnt++) {
 		data = data << 1;
-		gpio_out(structure->Scl, 1);
+		gpio.out(structure->Scl, 1);
 		sht11_delay(structure);
-		if(gpio_in(structure->Sda))
+		if(gpio.in(structure->Sda))
 			data |= 1;
-		gpio_out(structure->Scl, 0);
+		gpio.out(structure->Scl, 0);
 		if(data_cnt == 7) {
-			gpio_function_set(structure->Sda, GPIO_OUT_OPEN_DRAIN);
-			gpio_out(structure->Sda, 0);
+			gpio.function_set(structure->Sda, GPIO_OUT_OPEN_DRAIN);
+			gpio.out(structure->Sda, 0);
 		}
 		sht11_delay(structure);
 	}
-	gpio_out(structure->Scl, 1);
+	gpio.out(structure->Scl, 1);
 	sht11_delay(structure);
-	gpio_out(structure->Scl, 0);
-	gpio_function_set(structure->Sda, GPIO_IN_PULL_UP);
+	gpio.out(structure->Scl, 0);
+	gpio.function_set(structure->Sda, GPIO_IN_PULL_UP);
 	sht11_delay(structure);
 	/*
 	 * Read checksum.
@@ -262,16 +262,16 @@ bool sht11_read(SHT11_t *structure) {
 	unsigned char chk = 0;
 	for(data_cnt = 0; data_cnt < 8; data_cnt++) {
 		chk = chk << 1;
-		gpio_out(structure->Scl, 1);
+		gpio.out(structure->Scl, 1);
 		sht11_delay(structure);
-		if(gpio_in(structure->Sda))
+		if(gpio.in(structure->Sda))
 			chk |= 1;
-		gpio_out(structure->Scl, 0);
+		gpio.out(structure->Scl, 0);
 		sht11_delay(structure);
 	}
-	gpio_out(structure->Scl, 1);
+	gpio.out(structure->Scl, 1);
 	sht11_delay(structure);
-	gpio_out(structure->Scl, 0);
+	gpio.out(structure->Scl, 0);
 	sht11_delay(structure);
 	structure->busy = false;
 	if(structure->reg_inst == SHT11_START_MEASURE_TEMPERATURE) {
@@ -284,13 +284,13 @@ bool sht11_read(SHT11_t *structure) {
 
 void sht11_display_data(SHT11_t *structure) {
 #ifndef _TINY_PRINT_
-	UARTprintf(DebugCom, "SHT11: T = %2.2f, H = %2.3f\n\r", structure->temperature, structure->humidity);
+	uart.printf(DebugCom, "SHT11: T = %2.2f, H = %2.3f\n\r", structure->temperature, structure->humidity);
 #else
 	float Temp;
 	float FractTemp = modff(structure->temperature, &Temp) * 1000;
 	float Hum;
 	float FractHum = modff(structure->humidity, &Hum) * 1000;
-	UARTprintf(DebugCom, "SHT11: T = %d.%d, H = %d.%d\n\r", (signed long)Temp, (signed long)FractTemp, (signed long)Hum, (signed long)FractHum);
+	uart.printf(DebugCom, "SHT11: T = %d.%d, H = %d.%d\n\r", (signed long)Temp, (signed long)FractTemp, (signed long)Hum, (signed long)FractHum);
 #endif
 }
 

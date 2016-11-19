@@ -85,7 +85,7 @@ int ff_util_appends (
 )
 {
 	if(f_size(fp) != 0)
-		f_size(fp);
+		ff_util_seek_eof(fp);
 	return ff_util_puts(str, fp);
 }
 /*-----------------------------------------------------------------------*/

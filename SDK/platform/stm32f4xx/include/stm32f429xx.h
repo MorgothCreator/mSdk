@@ -824,20 +824,20 @@ typedef struct
   volatile unsigned long CLKCR;          /*!< SDI clock control register,     Address offset: 0x04 */
   volatile unsigned long ARG;            /*!< SDIO argument register,         Address offset: 0x08 */
   volatile unsigned long CMD;            /*!< SDIO command register,          Address offset: 0x0C */
-  __I unsigned long  RESPCMD;        /*!< SDIO command response register, Address offset: 0x10 */
-  __I unsigned long  RESP1;          /*!< SDIO response 1 register,       Address offset: 0x14 */
-  __I unsigned long  RESP2;          /*!< SDIO response 2 register,       Address offset: 0x18 */
-  __I unsigned long  RESP3;          /*!< SDIO response 3 register,       Address offset: 0x1C */
-  __I unsigned long  RESP4;          /*!< SDIO response 4 register,       Address offset: 0x20 */
+  volatile unsigned long  RESPCMD;        /*!< SDIO command response register, Address offset: 0x10 */
+  volatile unsigned long  RESP1;          /*!< SDIO response 1 register,       Address offset: 0x14 */
+  volatile unsigned long  RESP2;          /*!< SDIO response 2 register,       Address offset: 0x18 */
+  volatile unsigned long  RESP3;          /*!< SDIO response 3 register,       Address offset: 0x1C */
+  volatile unsigned long  RESP4;          /*!< SDIO response 4 register,       Address offset: 0x20 */
   volatile unsigned long DTIMER;         /*!< SDIO data timer register,       Address offset: 0x24 */
   volatile unsigned long DLEN;           /*!< SDIO data length register,      Address offset: 0x28 */
   volatile unsigned long DCTRL;          /*!< SDIO data control register,     Address offset: 0x2C */
-  __I unsigned long  DCOUNT;         /*!< SDIO data counter register,     Address offset: 0x30 */
-  __I unsigned long  STA;            /*!< SDIO status register,           Address offset: 0x34 */
+  volatile unsigned long  DCOUNT;         /*!< SDIO data counter register,     Address offset: 0x30 */
+  volatile unsigned long  STA;            /*!< SDIO status register,           Address offset: 0x34 */
   volatile unsigned long ICR;            /*!< SDIO interrupt clear register,  Address offset: 0x38 */
   volatile unsigned long MASK;           /*!< SDIO mask register,             Address offset: 0x3C */
   unsigned long      RESERVED0[2];   /*!< Reserved, 0x40-0x44                                  */
-  __I unsigned long  FIFOCNT;        /*!< SDIO FIFO counter register,     Address offset: 0x48 */
+  volatile unsigned long  FIFOCNT;        /*!< SDIO FIFO counter register,     Address offset: 0x48 */
   unsigned long      RESERVED1[13];  /*!< Reserved, 0x4C-0x7C                                  */
   volatile unsigned long FIFO;           /*!< SDIO data FIFO register,        Address offset: 0x80 */
 } SDIO_TypeDef;

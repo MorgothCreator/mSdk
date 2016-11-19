@@ -32,12 +32,12 @@ static void wr_cmd(tDisplay* LcdStruct, unsigned char cmd)
 	unsigned int GPIODAT = Struct->LCD_DATA->BaseAddr;
 	unsigned char PINRW = Struct->LCD_DISPLAY_PMWR->Pin;
 	unsigned char PINDAT = Struct->LCD_DATA->Pin;
-	gpio_out(Struct->LCD_DISPLAY_RS, 0);
-	gpio_out(Struct->LCD_DISPLAY_CS, 0);
+	gpio.out(Struct->LCD_DISPLAY_RS, 0);
+	gpio.out(Struct->LCD_DISPLAY_CS, 0);
 	GPIO_FAST_WRITE_MULTI_PIN(GPIODAT, PINDAT, cmd);
 	GPIO_FAST_CLEAR_PIN(GPIORW, PINRW);
 	GPIO_FAST_SET_PIN(GPIORW, PINRW);
-	gpio_out(Struct->LCD_DISPLAY_RS, 1);
+	gpio.out(Struct->LCD_DISPLAY_RS, 1);
 	cnt = FCPU / 5000000;
 	while(cnt--);
 }
@@ -59,25 +59,25 @@ void mi0283_reset(void* LcdStruct)
 {
 	tDisplay* _LcdStruct = (tDisplay *) LcdStruct;
 	MI0283_t *Struct = (MI0283_t *)_LcdStruct->UserData;
-	gpio_out(Struct->LCD_DISPLAY_CS, 1);
-	gpio_out(Struct->LCD_DISPLAY_RS, 1);
-	gpio_out(Struct->LCD_DISPLAY_RST, 0);
+	gpio.out(Struct->LCD_DISPLAY_CS, 1);
+	gpio.out(Struct->LCD_DISPLAY_RS, 1);
+	gpio.out(Struct->LCD_DISPLAY_RST, 0);
 
 	volatile unsigned long cnt = FCPU / 100000;
 	while(cnt--);
-	gpio_out(Struct->LCD_DISPLAY_RST, 1);
+	gpio.out(Struct->LCD_DISPLAY_RST, 1);
 	cnt = FCPU / 1000000;
 	while(cnt--);
 
     wr_cmd(LcdStruct, 0x01);                     // SW reset
- 	gpio_out(Struct->LCD_DISPLAY_CS, 1);
+ 	gpio.out(Struct->LCD_DISPLAY_CS, 1);
 	cnt = FCPU / 100000;
 	while(cnt--);
     wr_cmd(LcdStruct, 0x28);                     // display off
- 	gpio_out(Struct->LCD_DISPLAY_CS, 1);
+ 	gpio.out(Struct->LCD_DISPLAY_CS, 1);
 
     wr_cmd(LcdStruct, 0x11);
- 	gpio_out(Struct->LCD_DISPLAY_CS, 1);
+ 	gpio.out(Struct->LCD_DISPLAY_CS, 1);
 
 
     /* Start Initial Sequence ----------------------------------------------------*/
@@ -88,20 +88,20 @@ void mi0283_reset(void* LcdStruct)
     write(LcdStruct, 0x00);
     write(LcdStruct, 0x83);
     write(LcdStruct, 0x30);
- 	gpio_out(Struct->LCD_DISPLAY_CS, 1);
+ 	gpio.out(Struct->LCD_DISPLAY_CS, 1);
 
     wr_cmd(LcdStruct, 0xED);
     write(LcdStruct, 0x64);
     write(LcdStruct, 0x03);
     write(LcdStruct, 0x12);
     write(LcdStruct, 0x81);
- 	gpio_out(Struct->LCD_DISPLAY_CS, 1);
+ 	gpio.out(Struct->LCD_DISPLAY_CS, 1);
 
     wr_cmd(LcdStruct, 0xE8);
     write(LcdStruct, 0x85);
     write(LcdStruct, 0x01);
     write(LcdStruct, 0x79);
- 	gpio_out(Struct->LCD_DISPLAY_CS, 1);
+ 	gpio.out(Struct->LCD_DISPLAY_CS, 1);
 
     wr_cmd(LcdStruct, 0xCB);
     write(LcdStruct, 0x39);
@@ -109,59 +109,59 @@ void mi0283_reset(void* LcdStruct)
     write(LcdStruct, 0x00);
     write(LcdStruct, 0x34);
     write(LcdStruct, 0x02);
- 	gpio_out(Struct->LCD_DISPLAY_CS, 1);
+ 	gpio.out(Struct->LCD_DISPLAY_CS, 1);
 
     wr_cmd(LcdStruct, 0xF7);
     write(LcdStruct, 0x20);
- 	gpio_out(Struct->LCD_DISPLAY_CS, 1);
+ 	gpio.out(Struct->LCD_DISPLAY_CS, 1);
 
     wr_cmd(LcdStruct, 0xEA);
     write(LcdStruct, 0x00);
     write(LcdStruct, 0x00);
- 	gpio_out(Struct->LCD_DISPLAY_CS, 1);
+ 	gpio.out(Struct->LCD_DISPLAY_CS, 1);
 
     wr_cmd(LcdStruct, 0xC0);                     // POWER_CONTROL_1
     write(LcdStruct, 0x26);
     write(LcdStruct, 0x06);
- 	gpio_out(Struct->LCD_DISPLAY_CS, 1);
+ 	gpio.out(Struct->LCD_DISPLAY_CS, 1);
 
     wr_cmd(LcdStruct, 0xC1);                     // POWER_CONTROL_2
     write(LcdStruct, 0x11);
- 	gpio_out(Struct->LCD_DISPLAY_CS, 1);
+ 	gpio.out(Struct->LCD_DISPLAY_CS, 1);
 
     wr_cmd(LcdStruct, 0xC5);                     // VCOM_CONTROL_1
     write(LcdStruct, 0x35);
     write(LcdStruct, 0x3E);
- 	gpio_out(Struct->LCD_DISPLAY_CS, 1);
+ 	gpio.out(Struct->LCD_DISPLAY_CS, 1);
 
     wr_cmd(LcdStruct, 0xC7);                     // VCOM_CONTROL_2
     write(LcdStruct, 0xBE);
- 	gpio_out(Struct->LCD_DISPLAY_CS, 1);
+ 	gpio.out(Struct->LCD_DISPLAY_CS, 1);
 
     //wr_cmd(LcdStruct, 0x36);                     // MEMORY_ACCESS_CONTROL
     //write(LcdStruct, 0x48);
- 	//gpio_out(Struct->LCD_DISPLAY_CS, 1);
+ 	//gpio.out(Struct->LCD_DISPLAY_CS, 1);
 
     wr_cmd(LcdStruct, 0x3A);                     // COLMOD_PIXEL_FORMAT_SET
     write(LcdStruct, 0x55);                 // 16 bit pixel
- 	gpio_out(Struct->LCD_DISPLAY_CS, 1);
+ 	gpio.out(Struct->LCD_DISPLAY_CS, 1);
 
     //wr_cmd(LcdStruct, 0x17);                     //0x0005=65k, 0x0006=262k
     //write(LcdStruct, 0x05);
- 	//gpio_out(Struct->LCD_DISPLAY_CS, 1);
+ 	//gpio.out(Struct->LCD_DISPLAY_CS, 1);
 
     wr_cmd(LcdStruct, 0xB1);                     // Frame Rate
     write(LcdStruct, 0x00);
     write(LcdStruct, 0x1B);
- 	gpio_out(Struct->LCD_DISPLAY_CS, 1);
+ 	gpio.out(Struct->LCD_DISPLAY_CS, 1);
 
     wr_cmd(LcdStruct, 0xF2);                     // Gamma Function Disable
     write(LcdStruct, 0x08);
- 	gpio_out(Struct->LCD_DISPLAY_CS, 1);
+ 	gpio.out(Struct->LCD_DISPLAY_CS, 1);
 
     wr_cmd(LcdStruct, 0x26);
     write(LcdStruct, 0x01);                 // gamma set for curve 01/2/04/08
- 	gpio_out(Struct->LCD_DISPLAY_CS, 1);
+ 	gpio.out(Struct->LCD_DISPLAY_CS, 1);
 
     wr_cmd(LcdStruct, 0xE0);                     // positive gamma correction
     write(LcdStruct, 0x1F);
@@ -179,7 +179,7 @@ void mi0283_reset(void* LcdStruct)
     write(LcdStruct, 0x07);
     write(LcdStruct, 0x05);
     write(LcdStruct, 0x00);
- 	gpio_out(Struct->LCD_DISPLAY_CS, 1);
+ 	gpio.out(Struct->LCD_DISPLAY_CS, 1);
 
     wr_cmd(LcdStruct, 0xE1);                     // negativ gamma correction
     write(LcdStruct, 0x00);
@@ -197,7 +197,7 @@ void mi0283_reset(void* LcdStruct)
     write(LcdStruct, 0x38);
     write(LcdStruct, 0x3A);
     write(LcdStruct, 0x1F);
- 	gpio_out(Struct->LCD_DISPLAY_CS, 1);
+ 	gpio.out(Struct->LCD_DISPLAY_CS, 1);
 
  	mi0283_screen_set_area(LcdStruct, 0, 0, _LcdStruct->LcdTimings->X, _LcdStruct->LcdTimings->Y);
 
@@ -207,34 +207,34 @@ void mi0283_reset(void* LcdStruct)
      //_cs = 1;
 
     //wr_cmd(LcdStruct, 0x35);                     // tearing effect on
- 	//gpio_out(Struct->LCD_DISPLAY_CS, 1);
+ 	//gpio.out(Struct->LCD_DISPLAY_CS, 1);
      //_cs = 1;
 
     wr_cmd(LcdStruct, 0xB7);                       // entry mode
     write(LcdStruct, 0x07);
- 	gpio_out(Struct->LCD_DISPLAY_CS, 1);
+ 	gpio.out(Struct->LCD_DISPLAY_CS, 1);
 
     wr_cmd(LcdStruct, 0xB6);                       // display function control
     write(LcdStruct, 0x0A);
     write(LcdStruct, 0x82);
     write(LcdStruct, 0x27);
     write(LcdStruct, 0x04);
- 	gpio_out(Struct->LCD_DISPLAY_CS, 1);
+ 	gpio.out(Struct->LCD_DISPLAY_CS, 1);
 
     wr_cmd(LcdStruct, 0x11);                     // sleep out
- 	gpio_out(Struct->LCD_DISPLAY_CS, 1);
+ 	gpio.out(Struct->LCD_DISPLAY_CS, 1);
 
  	cnt = FCPU / 1000;
  	while(cnt--);
 
     wr_cmd(LcdStruct, 0x29);                     // display on
- 	gpio_out(Struct->LCD_DISPLAY_CS, 1);
+ 	gpio.out(Struct->LCD_DISPLAY_CS, 1);
 
  	cnt = FCPU / 5000;
  	while(cnt--);
    // wr_cmd(LcdStruct, 0xB8);                     // COLMOD_PIXEL_FORMAT_SET
     //write(LcdStruct, 0x07);                 // 16 bit pixel
- 	//gpio_out(Struct->LCD_DISPLAY_CS, 1);
+ 	//gpio.out(Struct->LCD_DISPLAY_CS, 1);
 
  }
 
@@ -250,13 +250,13 @@ void mi0283_screen_set_area(tDisplay* LcdStruct, signed int x0, signed int y0, s
     write(LcdStruct, x0);
     write(LcdStruct, x1 >> 8);
     write(LcdStruct, x1);
- 	gpio_out(Struct->LCD_DISPLAY_CS, 1);
+ 	gpio.out(Struct->LCD_DISPLAY_CS, 1);
     wr_cmd(LcdStruct, 0x2B);                       // entry mode
     write(LcdStruct, y0 >> 8);
     write(LcdStruct, y0);
     write(LcdStruct, y1 >> 8);
     write(LcdStruct, y1);
- 	gpio_out(Struct->LCD_DISPLAY_CS, 1);
+ 	gpio.out(Struct->LCD_DISPLAY_CS, 1);
 }
 //#######################################################################################
 void mi0283_lcd_cursor(tDisplay* LcdStruct, signed int x, signed int y)
@@ -289,14 +289,14 @@ bool mi0283_open(void *pDisplay)
 {
 	tDisplay* LcdStruct = (tDisplay *) pDisplay;
 	MI0283_t *Struct = (MI0283_t *)LcdStruct->UserData;
-	gpio_out(Struct->LCD_DISPLAY_RST, 0);
-	gpio_out(Struct->LCD_DISPLAY_RS, 1);
-	gpio_out(Struct->LCD_BACKLIGHT, 1);
-	gpio_out(Struct->LCD_DISPLAY_CS, 1);
-	gpio_out(Struct->LCD_DISPLAY_PMRD, 1);
-	gpio_out(Struct->LCD_DISPLAY_PMWR, 1);
-	gpio_out(Struct->LCD_TOUCH_DRIVE_A, 0);
-	gpio_out(Struct->LCD_TOUCH_DRIVE_B, 0);
+	gpio.out(Struct->LCD_DISPLAY_RST, 0);
+	gpio.out(Struct->LCD_DISPLAY_RS, 1);
+	gpio.out(Struct->LCD_BACKLIGHT, 1);
+	gpio.out(Struct->LCD_DISPLAY_CS, 1);
+	gpio.out(Struct->LCD_DISPLAY_PMRD, 1);
+	gpio.out(Struct->LCD_DISPLAY_PMWR, 1);
+	gpio.out(Struct->LCD_TOUCH_DRIVE_A, 0);
+	gpio.out(Struct->LCD_TOUCH_DRIVE_B, 0);
 	mi0283_reset(LcdStruct);
 	mi0283_set_orientation(LcdStruct);
 	LcdStruct->sClipRegion.sXMax = LcdStruct->LcdTimings->X;
@@ -346,7 +346,7 @@ bool mi0283_set_orientation(tDisplay* LcdStruct)
 			Tmp = true;
 			break;
 	}
- 	gpio_out(Struct->LCD_DISPLAY_CS, 1);
+ 	gpio.out(Struct->LCD_DISPLAY_CS, 1);
 	LcdStruct->sClipRegion.sXMax = LcdStruct->LcdTimings->X;
 	LcdStruct->sClipRegion.sYMax = LcdStruct->LcdTimings->Y;
 	mi0283_screen_set_area(LcdStruct, 0, 0, LcdStruct->LcdTimings->X,LcdStruct->LcdTimings->Y);
@@ -372,7 +372,7 @@ void mi0283_send_pixels(tDisplay* LcdStruct, unsigned long PixelsNumber, unsigne
 		GPIO_FAST_CLEAR_PIN(GPIORW, PINRW);
 		GPIO_FAST_SET_PIN(GPIORW, PINRW);
 	}
- 	gpio_out(Struct->LCD_DISPLAY_CS, 1);
+ 	gpio.out(Struct->LCD_DISPLAY_CS, 1);
 }
 //#######################################################################################
 void mi0283_put_pixel16(void *pDisplay, signed int X_Coordonate, signed int Y_Coordonate, unsigned int Color16)

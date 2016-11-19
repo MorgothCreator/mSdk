@@ -90,6 +90,23 @@ typedef struct Uart_s
 	bool (*open)(struct Uart_s *UartSettings);
 	bool (*close)(struct Uart_s *UartSettings);
 }Uart_t;
+
+typedef struct uart_s
+{
+	bool (*open)(Uart_t *UartSettings);
+	bool (*close)(Uart_t *UartSettings);
+	void (*putc)(Uart_t* UartSettings, unsigned char byteTx);
+	unsigned char (*getc)(Uart_t* UartSettings);
+	bool (*putc_no_blocking)(Uart_t* UartSettings, unsigned char byteTx);
+	signed short (*getc_no_blocking)(Uart_t* UartSettings);
+	void (*set_baud)(Uart_t* UartSettings, unsigned long BaudRate);
+	unsigned int (*puts)(Uart_t* UartSettings, char *pTxBuffer, int numBytesToWrite);
+	unsigned int (*gets)(Uart_t* UartSettings, char *pRxBuffer, int numBytesToRead);
+	unsigned int (*write)(Uart_t* UartSettings, const char *pcBuf, unsigned int len);
+	int (*scanf)(Uart_t* UartSettings, const char *format, ...);
+	Uart_t* (*printf)(Uart_t* UartSettings,const char *pcString, ...);
+}uart_t;
+
 /*#####################################################*/
 #define new_uart Uart_t
 #ifndef new_

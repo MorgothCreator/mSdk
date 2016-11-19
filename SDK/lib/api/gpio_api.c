@@ -25,68 +25,33 @@
 #include "gpio_def.h"
 #include "gpio_api.h"
 #include "interface/gpio_interface.h"
-/*#####################################################*/
-void gpio_init(gpio_port_enum GpioModuleNr)
-{
-	_gpio_init(GpioModuleNr);
-}
-/*#####################################################*/
-//- GPIO_DIR_INPUT - to configure the pin as an input pin\n
-//- GPIO_DIR_OUTPUT - to configure the pin as an output pin\n
-new_gpio *gpio_assign(gpio_port_enum PortNr, unsigned char PinNr, gpio_type_enum function, bool Multipin)
-{
-	return _gpio_assign(PortNr, PinNr, function, Multipin);
-}
-/*#####################################################*/
-void gpio_free(new_gpio *gpio_struct)
-{
-	_gpio_free(gpio_struct);
-}
-/*#####################################################*/
-bool gpio_out(new_gpio *gpio_struct, unsigned char State)
-{
-	return _gpio_out(gpio_struct, State);
-}
-/*#####################################################*/
-//- GPIO_DIR_INPUT - to configure the pin as an input pin\n
-//- GPIO_DIR_OUTPUT - to configure the pin as an output pin\n
-bool gpio_direction(new_gpio *gpio_struct, unsigned char Direction)
-{
-	return _gpio_direction(gpio_struct, Direction);
-}
-/*#####################################################*/
-signed int gpio_in(new_gpio *gpio_struct)
-{
-	return _gpio_in(gpio_struct);
-}
-/*#####################################################*/
-bool gpio_up_dn_enable(new_gpio *gpio_struct, bool enable)
-{
-	return _gpio_up_dn_enable(gpio_struct, enable);
-}
-/*#####################################################*/
-bool gpio_up_dn(new_gpio *gpio_struct, unsigned char value)
-{
-	return _gpio_up_dn(gpio_struct, value);
-}
+
+const gpio_t gpio = {
+		_gpio_init,
+		_gpio_assign,
+		_gpio_free,
+		_gpio_out,
+		_gpio_direction,
+		_gpio_in,
+		_gpio_up_dn_enable,
+		_gpio_up_dn,
+		gpio_get_state,
+		_gpio_function_set,
+		gpio_idle,
+};
 /*#####################################################*/
 bool gpio_get_state(new_gpio *gpio_struct)
 {
 	return gpio_struct->LastState;
 }
 /*#####################################################*/
-bool gpio_function_set(new_gpio *gpio_struct, gpio_type_enum function)
-{
-	return _gpio_function_set(gpio_struct, function);
-}
-/*#####################################################*/
 void gpio_idle(new_gpio *gpio_struct)
 {
-	if(gpio_in(gpio_struct) == 0 && gpio_struct->LastState == true) {
+	if(_gpio_in(gpio_struct) == 0 && gpio_struct->LastState == true) {
 		gpio_struct->LastState = false;
 		gpio_struct->event.state_dn = true;
 		if(gpio_struct->event.on_state_changed) gpio_struct->event.on_state_changed(gpio_struct->event.on_state_changed_data, false);
-	} else if(gpio_in(gpio_struct) != 0 && gpio_struct->LastState == false) {
+	} else if(_gpio_in(gpio_struct) != 0 && gpio_struct->LastState == false) {
 		gpio_struct->LastState = true;
 		gpio_struct->event.state_up = true;
 		if(gpio_struct->event.on_state_changed) gpio_struct->event.on_state_changed(gpio_struct->event.on_state_changed_data, true);

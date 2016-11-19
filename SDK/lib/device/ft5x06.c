@@ -31,7 +31,7 @@ bool ft5x06_data_ready(new_touchscreen* structure)
 {
 	if(!structure)
 		return false;
-	if(!gpio_in(structure->IrqStruct))
+	if(!gpio.in(structure->IrqStruct))
 		return false;
 	else
 		return true;
@@ -49,16 +49,14 @@ bool ft5x06_init(new_touchscreen* structure, unsigned char Port, unsigned char P
 	if(!structure)
 		return false;
 	structure->TouchScreen_Type = TouchScreen_Type_FT5x06;
-    gpio_init(Port);
-    structure->IrqStruct = gpio_assign(Port, Pin, GPIO_IN_FLOATING, false);
+    gpio.init(Port);
+    structure->IrqStruct = gpio.assign(Port, Pin, GPIO_IN_FLOATING, false);
     if(ft5x06_data_ready(structure))
     {
 		new_twi* twistruct = structure->TwiStruct;
-		twistruct->MasterSlaveAddr = FT5X0X_TWI_ADDR2;
-		twistruct->rCount = 0;
-		twistruct->tCount = 0;
-		twistruct->TxBuff[0] = 0xF9;
-		if(SetupI2CReception(twistruct, 1, 38))
+		unsigned char reg = 0xF9;
+		unsigned char result[38];
+		if(twi.trx(twistruct, FT5X0X_TWI_ADDR2, &reg, 1, result, 38))
 		{
 			structure->twi_addr = FT5X0X_TWI_ADDR2;
 			structure->touch_max_x = 1024;
@@ -71,7 +69,7 @@ bool ft5x06_init(new_touchscreen* structure, unsigned char Port, unsigned char P
 		twistruct->rCount = 0;
 		twistruct->tCount = 0;
 		twistruct->TxBuff[0] = 0xF9;
-		if(SetupI2CReception(twistruct, 1, 38))
+		if(twi.trx(twistruct, FT5X0X_TWI_ADDR1, &reg, 1, result, 38))
 		{
 			structure->twi_addr = FT5X0X_TWI_ADDR1;
 			structure->touch_max_x = 480;
@@ -91,14 +89,12 @@ bool ft5x06_TouchIdle(new_touchscreen* structure)
 {
 	if(!structure)
 		return false;
-	if(!gpio_in(structure->IrqStruct))
+	if(!gpio.in(structure->IrqStruct))
 		return false;
 	new_twi* twistruct = structure->TwiStruct;
-	twistruct->MasterSlaveAddr = structure->twi_addr;
-	twistruct->rCount = 0;
-	twistruct->tCount = 0;
-	twistruct->TxBuff[0] = 0xF9;
-	if(!SetupI2CReception(twistruct, 1, 38))
+	unsigned char reg = 0xF9;
+	unsigned char result[38];
+	if(!twi.trx(twistruct, structure->twi_addr, &reg, 1, result, 38))
 		return false;
 	volatile unsigned char* Response = twistruct->RxBuff;
 	//if(Response[0] != 0xAA || Response[1] != 0xAA) return 0;

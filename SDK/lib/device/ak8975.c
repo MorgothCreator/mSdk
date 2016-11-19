@@ -32,10 +32,11 @@ bool ak8975_start_measure(AK8975_t *structure) {
 	if(!structure->TWI)
 		return false;
 	Twi_t *TwiStruct = structure->TWI;
-	TwiStruct->MasterSlaveAddr = AK8975_ADDR | (structure->IcNr & 0x03);
-	TwiStruct->TxBuff[0] = AK8975_CNTL_REG;
-	TwiStruct->TxBuff[1] = AK8975_CTRL_MODE_SINGLE;
-	if(!SetupI2CTransmit(TwiStruct, 2)) return false;
+	unsigned char buff[2];
+	buff[0] = AK8975_CNTL_REG;
+	buff[1] = AK8975_CTRL_MODE_SINGLE;
+	if(!twi.tx(TwiStruct, AK8975_ADDR | (structure->IcNr & 0x03), buff, 2))
+		return false;
 	return true;
 }
 
@@ -43,10 +44,11 @@ bool ak8975_ready(AK8975_t *structure) {
 	if(!structure->TWI)
 		return false;
 	Twi_t *TwiStruct = structure->TWI;
-	TwiStruct->MasterSlaveAddr = AK8975_ADDR | (structure->IcNr & 0x03);
-	TwiStruct->TxBuff[0] = AK8975_ST1_REG;
-	if(!SetupI2CReception(TwiStruct, 1, 1)) return false;
-	if(TwiStruct->RxBuff[0] && AK8975_ST1_DREADY_bm)
+	unsigned char addr = AK8975_ST1_REG;
+	unsigned char tmp = 0;
+	if(!twi.trx(TwiStruct, AK8975_ADDR | (structure->IcNr & 0x03), &addr, 1, &tmp, 1))
+		return false;
+	if(tmp && AK8975_ST1_DREADY_bm)
 		return true;
 	else
 		return false;
@@ -57,11 +59,13 @@ bool ak8975_read_data(AK8975_t *structure, signed short *X_Axis, signed short *Y
 		return false;
 	Twi_t *TwiStruct = structure->TWI;
 	TwiStruct->MasterSlaveAddr = AK8975_ADDR | (structure->IcNr & 0x03);
-	TwiStruct->TxBuff[0] = AK8975_HXL_REG;
-	if(!SetupI2CReception(TwiStruct, 1, 6)) return false;
-	*X_Axis = (signed short)((TwiStruct->RxBuff[1] << 8) + TwiStruct->RxBuff[0]);
-	*Y_Axis = (signed short)((TwiStruct->RxBuff[3] << 8) + TwiStruct->RxBuff[2]);
-	*Z_Axis = (signed short)((TwiStruct->RxBuff[5] << 8) + TwiStruct->RxBuff[4]);
+	unsigned char addr = AK8975_HXL_REG;
+	unsigned char result[6];
+	if(!twi.trx(TwiStruct, AK8975_ADDR | (structure->IcNr & 0x03), &addr, 1, result, 6))
+		return false;
+	*X_Axis = (signed short)((result[1] << 8) + result[0]);
+	*Y_Axis = (signed short)((result[3] << 8) + result[2]);
+	*Z_Axis = (signed short)((result[5] << 8) + result[4]);
 	return true;
 }
 
@@ -95,7 +99,7 @@ bool ak8975_display_result(AK8975_t *structure) {
 	}
 	if(!ak8975_read_data(structure, &Xg, &Yg, &Zg))
 		return false;
-	UARTprintf(DebugCom, "AK8975: Magnetometer: Xg = %d, Yg = %d, Zg = %d\n\r", Xg, Yg, Zg);
+	uart.printf(DebugCom, "AK8975: Magnetometer: Xg = %d, Yg = %d, Zg = %d\n\r", Xg, Yg, Zg);
 	return true;
 }
 

@@ -8,7 +8,7 @@
 #ifndef LIB_DEVICE_VS10XX_H_
 #define LIB_DEVICE_VS10XX_H_
 
-#include "api/mcspi_def.h"
+#include <api/spi_def.h>
 #include "api/gpio_def.h"
 
 /*#####################################################*/
