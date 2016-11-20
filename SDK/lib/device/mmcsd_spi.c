@@ -439,26 +439,17 @@ uint8_t sd_io_data(SD_Struct_t *SD_Struct, uint8_t Value)
 	return SD_Struct->HardUnitReadWriteCharFunc(SD_Struct->HardUnitStruct, Value);//usart_spi_data((Uart_t *)Struct, Value);
 }
 //#######################################################################################
-/*static void sd_delay(uint16_t DelayMs)
-{
-	unsigned int cnt = 0;
-	for(cnt = 0; cnt < 1000; cnt++);
-	//Sysdelay(DelayMs);
-}*/
-//#######################################################################################
 void sd_cs_assert(SD_Struct_t *SD_Struct)
 {
 	SD_Struct->HardUnitStruct->DisableCsHandle = true;
 	SD_Struct->HardUnitStruct->CsSelect = SD_Struct->SpiInstance;
 	spi.assert(SD_Struct->HardUnitStruct);
-	//gpio_out(SD_Struct->CS_Port, 0);
 }
 //#######################################################################################
 void sd_cs_deassert(SD_Struct_t *SD_Struct)
 {
 	SD_Struct->HardUnitStruct->CsSelect = SD_Struct->SpiInstance;
 	spi.deassert(SD_Struct->HardUnitStruct);
-	//gpio_out(SD_Struct->CS_Port, 1);
 }
 //#######################################################################################
 /*uint8_t sd_cs_readstate(SD_Struct_t *SD_Struct)
@@ -700,8 +691,6 @@ bool _mmcsd_spi_init(unsigned int unit_nr)
 	{			/* OK */
 		SD_Struct->HardUnitStruct->CsSelect = SD_Struct->SpiInstance;
 		SD_Struct->HardUnitStruct->ClkDiv[SD_Struct->SpiInstance] = 2;
-		//SD_Struct->HardUnitSetBaudFunc((void *)SD_Struct->HardUnitStruct, 1);			/* Set fast clock */
-		//send_cmd(SD_Struct, MMC_CMD_CRC_ON_OFF,0x00000001); // CMD59
 		if (send_cmd(SD_Struct, CMD9, 0) == 0)
 		{
 			unsigned int wait = 0, response = 0;

@@ -8,16 +8,22 @@
 #include "stdlib.h"
 #include "stm32f4xx_conf.h"
 #include "include/stm32f4xx.h"
+#include "main.h"
 #include "twi_interface.h"
 #include "include/stm32f4xx.h"
 #include "driver/stm32f4xx_hal_i2c.h"
 #include "driver/stm32f4xx_hal_rcc.h"
 #include "api/timer_api.h"
 #include "api/twi_def.h"
+#include "twi_interface_def.h"
 #include "gpio_interface.h"
 
 #define USE_I2C_TX_DMA
 //#####################################################
+#if (USE_DRIVER_SEMAPHORE == true)
+volatile bool twi_semaphore[TWI_INTERFACE_COUNT];
+#endif
+
 I2C_TypeDef *sEE_I2C[3] = {
 #ifdef I2C1
 		I2C1,
@@ -587,30 +593,35 @@ bool TWI_open(new_twi* TwiStruct)
   return true;
 }
 /*#####################################################*/
-bool _SetupI2CTransmit(new_twi* TwiStruct, unsigned int TransmitBytes)
-{
-	return TWI_MasterWriteRead(TwiStruct, TransmitBytes, 0);
-}
-/*#####################################################*/
-bool _SetupI2CReception(new_twi* TwiStruct, unsigned int TransmitBytes, unsigned int ReceiveBytes)
-{
-	return TWI_MasterWriteRead(TwiStruct, TransmitBytes, ReceiveBytes);
-}
-
-
 bool _I2C_trx(struct Twi_s* param, unsigned char addr, unsigned char *buff_send, unsigned int bytes_send, unsigned char *buff_receive, unsigned int bytes_receive)
 {
+#if (USE_DRIVER_SEMAPHORE == true)
+	while(twi_semaphore[param->TwiNr]);
+	twi_semaphore[param->TwiNr] = true;
+#endif
 	param->MasterSlaveAddr = addr;
 	param->TxBuff = buff_send;
 	param->RxBuff = buff_receive;
-	return TWI_MasterWriteRead(param, bytes_send, bytes_receive);
+	bool result = TWI_MasterWriteRead(param, bytes_send, bytes_receive);
+#if (USE_DRIVER_SEMAPHORE == true)
+	twi_semaphore[param->TwiNr] = false;
+#endif
+	return result;
 }
-
+/*#####################################################*/
 bool _I2C_tx(struct Twi_s* param, unsigned char addr, unsigned char *buff_send, unsigned int bytes_send)
 {
+#if (USE_DRIVER_SEMAPHORE == true)
+	while(twi_semaphore[param->TwiNr]);
+	twi_semaphore[param->TwiNr] = true;
+#endif
 	param->MasterSlaveAddr = addr;
 	param->TxBuff = buff_send;
-	return TWI_MasterWriteRead(param, bytes_send, 0);
+	bool result = TWI_MasterWriteRead(param, bytes_send, 0);
+#if (USE_DRIVER_SEMAPHORE == true)
+	twi_semaphore[param->TwiNr] = false;
+#endif
+	return result;
 }
 
 /*#####################################################*/

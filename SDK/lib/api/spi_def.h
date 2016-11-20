@@ -24,6 +24,7 @@
 /*#####################################################*/
 #include <stdbool.h>
 #include "gpio_def.h"
+#include "interface/mcspi_interface_def.h"
 /*#####################################################*/
 typedef struct
 {

@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include "stm32f4xx_conf.h"
 #include "include/stm32f4xx.h"
+#include "main.h"
 #include "mcspi_interface.h"
 #include "api/gpio_def.h"
 #include "api/gpio_api.h"
@@ -24,24 +25,9 @@
 //extern unsigned long CoreFreq;
 #define SPIn                             6
 
-/*const uint32_t SPI_CLK[] = {
-		RCC_APB2Periph_SPI1
-#ifdef RCC_APB1Periph_SPI2
-		, RCC_APB1Periph_SPI2
+#if (USE_DRIVER_SEMAPHORE == true)
+volatile bool spi_semaphore[SPI_INTERFACE_COUNT];
 #endif
-#ifdef RCC_APB1Periph_SPI3
-		, RCC_APB1Periph_SPI3
-#endif
-#ifdef RCC_APB1Periph_SPI4
-		, RCC_APB1Periph_SPI4
-#endif
-#ifdef RCC_APB1Periph_SPI5
-		, RCC_APB1Periph_SPI5
-#endif
-#ifdef RCC_APB1Periph_SPI6
-		, RCC_APB1Periph_SPI6
-#endif
-};*/
 
 SPI_TypeDef* _SPI_[] = {
 #ifdef SPI1
@@ -63,9 +49,6 @@ SPI_TypeDef* _SPI_[] = {
 		SPI6
 #endif
 };
-
-
-
 
 
 /**
@@ -281,102 +264,84 @@ void _mcspi_close(new_mcspi *McspiStruct)
   	}
   	HAL_SPI_DeInit(SpiHandle);
 }
-
-
-
 /*#####################################################*/
 void _mcspi_assert(Mcspi_t *McspiStruct)
 {
-	//if(McspiStruct->OldCsSelect != McspiStruct->CsSelect)
-	//{
-	//	McspiStruct->OldCsSelect = McspiStruct->CsSelect;
-		_mcspi_set_baud(McspiStruct, McspiStruct->ClkDiv[McspiStruct->CsSelect]);
-	//}
+#if (USE_DRIVER_SEMAPHORE == true)
+	while(spi_semaphore[McspiStruct->McspiNr]);
+#endif
+	_mcspi_set_baud(McspiStruct, McspiStruct->ClkDiv[McspiStruct->CsSelect]);
+#if (USE_DRIVER_SEMAPHORE == true)
+	spi_semaphore[McspiStruct->McspiNr] = true;
+#endif
 	HAL_GPIO_WritePin(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[McspiStruct->CsSelect]], 1 << McspiStruct->CsPin[McspiStruct->CsSelect], GPIO_PIN_RESET);
 }
+/*#####################################################*/
 void _mcspi_deassert(Mcspi_t *McspiStruct)
 {
-	//if(McspiStruct->OldCsSelect != McspiStruct->CsSelect)
-	//{
-	//	McspiStruct->OldCsSelect = McspiStruct->CsSelect;
-		//_mcspi_set_baud(McspiStruct, McspiStruct->ClkDiv[McspiStruct->CsSelect]);
-	//}
 	HAL_GPIO_WritePin(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[McspiStruct->CsSelect]], 1 << McspiStruct->CsPin[McspiStruct->CsSelect], GPIO_PIN_SET);
+#if (USE_DRIVER_SEMAPHORE == true)
+	spi_semaphore[McspiStruct->McspiNr] = false;
+#endif
 }
 /*#####################################################*/
 bool _mcspi_transfer(Mcspi_t *McspiStruct, unsigned char *buff_send, unsigned char *buff_receive, unsigned int size)
 {
-	/*McspiStruct->numOfBytes = NumOfBytesSend + NumOfBytesReceive;
-	unsigned char response = SPI_MasterInterruptTransceivePacket(McspiStruct);
-	//memcpy(McspiStruct->Buff, McspiStruct->Buff + NumOfBytesSend, NumOfBytesReceive);
-	if(response) return false;*/
-	if(!McspiStruct->DisableCsHandle)
-		_mcspi_assert(McspiStruct);
-
-	//unsigned int transfer_cnt = 0;
-	//for(; transfer_cnt < McspiStruct->numOfBytes; transfer_cnt++) {
-	//	McspiStruct->Buff[transfer_cnt] = _mcspi_SendByte(McspiStruct, McspiStruct->Buff[transfer_cnt]);
-	//}
+#if (USE_DRIVER_SEMAPHORE == true)
+	if(!spi_semaphore[McspiStruct->McspiNr])
+		return false;
+#endif
 	bool status = true;
 	SPI_HandleTypeDef *hspi = (SPI_HandleTypeDef *)McspiStruct->UserData;
 	if(HAL_SPI_TransmitReceive(hspi, buff_send, buff_receive, size, 10) != HAL_OK)
 		status = false;
-
-	if(!McspiStruct->DisableCsHandle)
-		_mcspi_deassert(McspiStruct);
+#if (USE_DRIVER_SEMAPHORE == true)
+	spi_semaphore[McspiStruct->McspiNr] = false;
+#endif
 	return status;
 }
 /*#####################################################*/
 bool _mcspi_receive(Mcspi_t *McspiStruct, unsigned char *buff_receive, unsigned int bytes_receive)
 {
-	/*McspiStruct->numOfBytes = NumOfBytesSend + NumOfBytesReceive;
-	unsigned char response = SPI_MasterInterruptTransceivePacket(McspiStruct);
-	//memcpy(McspiStruct->Buff, McspiStruct->Buff + NumOfBytesSend, NumOfBytesReceive);
-	if(response) return false;*/
-	if(!McspiStruct->DisableCsHandle)
-		_mcspi_assert(McspiStruct);
-
-	//unsigned int transfer_cnt = 0;
-	//for(; transfer_cnt < McspiStruct->numOfBytes; transfer_cnt++) {
-	//	McspiStruct->Buff[transfer_cnt] = _mcspi_SendByte(McspiStruct, McspiStruct->Buff[transfer_cnt]);
-	//}
+#if (USE_DRIVER_SEMAPHORE == true)
+	if(!spi_semaphore[McspiStruct->McspiNr])
+		return false;
+#endif
 	bool status = true;
 	SPI_HandleTypeDef *hspi = (SPI_HandleTypeDef *)McspiStruct->UserData;
 	if(HAL_SPI_Receive(hspi, buff_receive, bytes_receive, 10) != HAL_OK)
 		status = false;
-
-	if(!McspiStruct->DisableCsHandle)
-		_mcspi_deassert(McspiStruct);
+#if (USE_DRIVER_SEMAPHORE == true)
+	spi_semaphore[McspiStruct->McspiNr] = false;
+#endif
 	return status;
 }
 /*#####################################################*/
 bool _mcspi_transmit(Mcspi_t *McspiStruct, unsigned char *buff_send, unsigned int bytes_send)
 {
-	/*McspiStruct->numOfBytes = NumOfBytesSend + NumOfBytesReceive;
-	unsigned char response = SPI_MasterInterruptTransceivePacket(McspiStruct);
-	//memcpy(McspiStruct->Buff, McspiStruct->Buff + NumOfBytesSend, NumOfBytesReceive);
-	if(response) return false;*/
-	if(!McspiStruct->DisableCsHandle)
-		_mcspi_assert(McspiStruct);
-
-	//unsigned int transfer_cnt = 0;
-	//for(; transfer_cnt < McspiStruct->numOfBytes; transfer_cnt++) {
-	//	McspiStruct->Buff[transfer_cnt] = _mcspi_SendByte(McspiStruct, McspiStruct->Buff[transfer_cnt]);
-	//}
+#if (USE_DRIVER_SEMAPHORE == true)
+	if(!spi_semaphore[McspiStruct->McspiNr])
+		return false;
+#endif
 	bool status = true;
 	SPI_HandleTypeDef *hspi = (SPI_HandleTypeDef *)McspiStruct->UserData;
 	if(HAL_SPI_Transmit(hspi, buff_send, bytes_send, 10) != HAL_OK)
 		status = false;
 
 	if(!McspiStruct->DisableCsHandle)
-		_mcspi_deassert(McspiStruct);
+		HAL_GPIO_WritePin(GET_GPIO_PORT_ADDR[McspiStruct->CsPort[McspiStruct->CsSelect]], 1 << McspiStruct->CsPin[McspiStruct->CsSelect], GPIO_PIN_SET);
+#if (USE_DRIVER_SEMAPHORE == true)
+	spi_semaphore[McspiStruct->McspiNr] = false;
+#endif
 	return status;
 }
 /*#####################################################*/
 bool _mcspi_set_baud(Mcspi_t *McspiStruct, unsigned long baud)
 {
+#if (USE_DRIVER_SEMAPHORE == true)
+	while(spi_semaphore[McspiStruct->McspiNr]);
+#endif
 	SPI_HandleTypeDef *hspi = (SPI_HandleTypeDef *)McspiStruct->UserData;
-	//__HAL_SPI_DISABLE(hspi);
 	if((hspi->Instance->CR1 & SPI_BAUDRATEPRESCALER_256) != (SPI_BAUDRATEPRESCALER_256 & (baud << 3)))
 	{
 		hspi->Instance->CR1 &= ~SPI_BAUDRATEPRESCALER_256;

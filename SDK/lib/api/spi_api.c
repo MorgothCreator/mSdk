@@ -24,7 +24,6 @@
 #include "api/gpio_api.h"
 //#include "aintc/aintc_mcspi.h"
 //#include "clk/clk_mcspi.h"
-#include "interface/mcspi_interface.h"
 
 
 const spi_t spi = {

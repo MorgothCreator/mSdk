@@ -11,7 +11,8 @@
 
 #include <api/spi_def.h>
 #include <stdbool.h>
-
+#include "mcspi_interface.h"
+/*#####################################################*/
 void _mcspi_assert(Mcspi_t *McspiStruct);
 void _mcspi_deassert(Mcspi_t *McspiStruct);
 bool _mcspi_open(new_mcspi *McspiStruct);
