@@ -42,7 +42,6 @@
 
 LTDC_HandleTypeDef  LtdcHandler;
 DMA2D_HandleTypeDef Dma2dHandle;
-static RCC_PeriphCLKInitTypeDef  PeriphClkInitStruct;
 
 static void DMA2D_Config(void);
 
@@ -451,16 +450,6 @@ uint8_t BSP_LCD_Init(void *_pDisplay)
     LtdcHandler.Init.Backcolor.Blue= 0;
     LtdcHandler.Init.Backcolor.Green= 0;
 
-    /* LCD clock configuration */
-    /* PLLSAI_VCO Input = HSE_VALUE/PLL_M = 1 Mhz */
-    /* PLLSAI_VCO Output = PLLSAI_VCO Input * PLLSAIN = 192 Mhz */
-    /* PLLLCDCLK = PLLSAI_VCO Output/PLLSAIR = 192/4 = 48 Mhz */
-    /* LTDC clock frequency = PLLLCDCLK / LTDC_PLLSAI_DIVR_8 = 48/4 = 6Mhz */
-    PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_LTDC;
-    PeriphClkInitStruct.PLLSAI.PLLSAIN = 192;
-    PeriphClkInitStruct.PLLSAI.PLLSAIR = 4;
-    PeriphClkInitStruct.PLLSAIDivR = RCC_PLLSAIDIVR_8;
-    HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct);
 
     /* Polarity */
     LtdcHandler.Init.HSPolarity = LTDC_HSPOLARITY_AL;
@@ -724,11 +713,6 @@ uint8_t BSP_LCD_InitEx(void *_pDisplay)
   LtdcHandler.LayerCfg->ImageHeight = pDisplay->LcdTimings->Y;
 
 
-  PeriphClkInitStruct.PeriphClockSelection = PLL_REF_CLK / 1000000;
-  PeriphClkInitStruct.PLLSAI.PLLSAIN = 417;
-  PeriphClkInitStruct.PLLSAI.PLLSAIR = 7;
-  PeriphClkInitStruct.PLLSAIDivR = RCC_PLLSAIDIVR_2;
-  HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct);
 
   /* Background value */
   LtdcHandler.Init.Backcolor.Blue = 0;
