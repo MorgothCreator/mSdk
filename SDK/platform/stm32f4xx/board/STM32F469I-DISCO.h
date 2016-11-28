@@ -1,5 +1,5 @@
-#ifndef STM32F429I_DISCO
-#define STM32F429I_DISCO
+#ifndef __STM32F469I_DISCO__
+#define __STM32F469I_DISCO__
 
 
 #define LED1_PORT			IOG

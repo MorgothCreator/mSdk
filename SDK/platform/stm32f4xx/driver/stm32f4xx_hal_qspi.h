@@ -46,6 +46,7 @@
 #if defined(STM32F446xx) || defined(STM32F469xx) || defined(STM32F479xx) 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_hal_def.h"
+#include "driver/stm32f4xx_hal_dma.h"
 
 /** @addtogroup STM32F4xx_HAL_Driver
   * @{
@@ -119,15 +120,15 @@ typedef struct
   QUADSPI_TypeDef            *Instance;        /* QSPI registers base address        */
   QSPI_InitTypeDef           Init;             /* QSPI communication parameters      */
   uint8_t                    *pTxBuffPtr;      /* Pointer to QSPI Tx transfer Buffer */
-  __IO uint16_t              TxXferSize;       /* QSPI Tx Transfer size              */
-  __IO uint16_t              TxXferCount;      /* QSPI Tx Transfer Counter           */
+  volatile uint16_t              TxXferSize;       /* QSPI Tx Transfer size              */
+  volatile uint16_t              TxXferCount;      /* QSPI Tx Transfer Counter           */
   uint8_t                    *pRxBuffPtr;      /* Pointer to QSPI Rx transfer Buffer */
-  __IO uint16_t              RxXferSize;       /* QSPI Rx Transfer size              */
-  __IO uint16_t              RxXferCount;      /* QSPI Rx Transfer Counter           */
+  volatile uint16_t              RxXferSize;       /* QSPI Rx Transfer size              */
+  volatile uint16_t              RxXferCount;      /* QSPI Rx Transfer Counter           */
   DMA_HandleTypeDef          *hdma;            /* QSPI Rx/Tx DMA Handle parameters   */
-  __IO HAL_LockTypeDef       Lock;             /* Locking object                     */
-  __IO HAL_QSPI_StateTypeDef State;            /* QSPI communication state           */
-  __IO uint32_t              ErrorCode;        /* QSPI Error code                    */
+  volatile HAL_LockTypeDef       Lock;             /* Locking object                     */
+  volatile HAL_QSPI_StateTypeDef State;            /* QSPI communication state           */
+  volatile uint32_t              ErrorCode;        /* QSPI Error code                    */
   uint32_t                   Timeout;          /* Timeout for the QSPI memory access */ 
 }QSPI_HandleTypeDef;
 

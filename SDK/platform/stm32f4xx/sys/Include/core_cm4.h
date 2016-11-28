@@ -1721,13 +1721,13 @@ __STATIC_INLINE void NVIC_DecodePriority (unsigned long Priority, unsigned long 
  */
 __STATIC_INLINE void NVIC_SystemReset(void)
 {
-  /*__DSB(); */                                                         /* Ensure all outstanding memory accesses included
+	__ASM volatile ("isb 0xF":::"memory");                                                         /* Ensure all outstanding memory accesses included
                                                                        buffered write are completed before reset */
   SCB->AIRCR  = (unsigned long)((0x5FAUL << SCB_AIRCR_VECTKEY_Pos)    |
                            (SCB->AIRCR & SCB_AIRCR_PRIGROUP_Msk) |
                             SCB_AIRCR_SYSRESETREQ_Msk    );         /* Keep priority group unchanged */
-  /*__DSB(); */                                                         /* Ensure completion of memory access */
-  while(1) { /*__NOP();*/ }                                             /* wait until reset */
+  __ASM volatile ("isb 0xF":::"memory");                                                         /* Ensure completion of memory access */
+  while(1) { __ASM volatile ("nop"); }                                             /* wait until reset */
 }
 
 /*@} end of CMSIS_Core_NVICFunctions */

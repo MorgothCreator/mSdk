@@ -1272,9 +1272,6 @@ String_t *str_setf(String_t* dest, char* str, ...)
 	VA_LOCAL_DECL;
 
 	VA_START (str);
-	VA_SHIFT (str, char *);
-	VA_SHIFT (count, size_t );
-	VA_SHIFT (fmt, char *);
 	char buff[1];
 	str_clear(dest);
 	str_vsnprintf_(dest, buff, 65535, str, ap);
@@ -1287,9 +1284,6 @@ String_t *str_appendf(String_t* dest, char* str, ...)
 	VA_LOCAL_DECL;
 
 	VA_START (str);
-	VA_SHIFT (str, char *);
-	VA_SHIFT (count, size_t );
-	VA_SHIFT (fmt, char *);
 	char buff[1];
 	//str_clear(dest);
 	str_vsnprintf_(dest, buff, 65535, str, ap);
