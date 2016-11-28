@@ -45,7 +45,9 @@ USBD_CDC_LineCodingTypeDef LineCoding = {
 
 uint8_t UserRxBuffer[APP_RX_DATA_SIZE];/* Received Data over USB are stored in this buffer */
 uint8_t UserTxBuffer[APP_TX_DATA_SIZE];/* Received Data over UART (CDC interface) are stored in this buffer */
-uint8_t UserTxBufferFiFo[APP_TX_DATA_SIZE];/* Received Data over UART (CDC interface) are stored in this buffer */
+bool volatile USBD_CDC_PACKET_SEND_OK = true;
+volatile unsigned int USBD_CDC_PACKET_BYTES_COUNT = 0;
+//uint8_t UserTxBufferFiFo[APP_TX_DATA_SIZE];/* Received Data over UART (CDC interface) are stored in this buffer */
 
 
 uint32_t UserTxBufPtrIn = 0;/* Increment this pointer or roll it back to
@@ -58,12 +60,10 @@ unsigned int UserRxBuffCnt = 0;
 extern fifo_settings_t *usb_cdc_dev_rx_fifo;
 extern fifo_settings_t *usb_cdc_dev_tx_fifo;
 
-/* UART handler declaration */
-UART_HandleTypeDef UartHandle;
 /* TIM handler declaration */
 TIM_HandleTypeDef  USBCDCTimHandle;
 /* USB handler declaration */
-extern USBD_HandleTypeDef  USBD_Device;
+extern USBD_HandleTypeDef  usb_cdc_dev_param;
 
 /* Private function prototypes -----------------------------------------------*/
 static int8_t CDC_Itf_Init(void);
@@ -112,8 +112,8 @@ static int8_t CDC_Itf_Init(void)
   }
   
   /*##-5- Set Application Buffers ############################################*/
-  USBD_CDC_SetTxBuffer(&USBD_Device, UserTxBuffer, 0);
-  USBD_CDC_SetRxBuffer(&USBD_Device, UserRxBuffer);
+  USBD_CDC_SetTxBuffer(&usb_cdc_dev_param, UserTxBuffer, 0);
+  USBD_CDC_SetRxBuffer(&usb_cdc_dev_param, UserRxBuffer);
   
   return (USBD_OK);
 }
@@ -127,11 +127,6 @@ static int8_t CDC_Itf_Init(void)
 static int8_t CDC_Itf_DeInit(void)
 {
   /* DeInitialize the UART peripheral */
-  if(HAL_UART_DeInit(&UartHandle) != HAL_OK)
-  {
-    /* Initialization Error */
-    Error_Handler();
-  }
   return (USBD_OK);
 }
 
@@ -210,41 +205,27 @@ static int8_t CDC_Itf_Control (uint8_t cmd, uint8_t* pbuf, uint16_t length)
   */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-	//uint32_t buffptr;
-	//uint32_t buffsize = 0;
-  
-	/*if(UserTxBufPtrOut != UserTxBufPtrIn)
-  	  {
-    	if(UserTxBufPtrOut > UserTxBufPtrIn) // Rollback
-    	{
-      	  buffsize = APP_RX_DATA_SIZE - UserTxBufPtrOut;
-    	}
-    	else
-    	{
-      	  buffsize = UserTxBufPtrIn - UserTxBufPtrOut;
-    	}
-    
-    buffptr = UserTxBufPtrOut;*/
-  unsigned int cnt = 0;
-  for(; cnt < APP_RX_DATA_SIZE; cnt++)
-    {
-		fifo_pop_return_t data_return = fifo_pop(usb_cdc_dev_tx_fifo);
-		if(data_return.status == false)
-			break;
-		UserTxBuffer[cnt] = data_return.character;
-    }
-  if(cnt == 0)
+	if(USBD_CDC_PACKET_SEND_OK == true)
+	{
+	  USBD_CDC_PACKET_BYTES_COUNT = 0;
+	  for(; USBD_CDC_PACKET_BYTES_COUNT < APP_RX_DATA_SIZE; USBD_CDC_PACKET_BYTES_COUNT++)
+		{
+			fifo_pop_return_t data_return = fifo_pop(usb_cdc_dev_tx_fifo);
+			if(data_return.status == false)
+				break;
+			UserTxBuffer[USBD_CDC_PACKET_BYTES_COUNT] = data_return.character;
+		}
+	}
+  if(USBD_CDC_PACKET_BYTES_COUNT == 0)
 	  return;
-    USBD_CDC_SetTxBuffer(&USBD_Device, UserTxBuffer, cnt);
+    USBD_CDC_SetTxBuffer(&usb_cdc_dev_param, UserTxBuffer, USBD_CDC_PACKET_BYTES_COUNT);
     
-    if(USBD_CDC_TransmitPacket(&USBD_Device) == USBD_OK)
+    if(USBD_CDC_TransmitPacket(&usb_cdc_dev_param) == USBD_OK)
     {
-      /*UserTxBufPtrOut += buffsize;
-      if (UserTxBufPtrOut == APP_RX_DATA_SIZE)
-      {
-        UserTxBufPtrOut = 0;
-      }*/
+    	USBD_CDC_PACKET_SEND_OK = true;
     }
+    else
+    	USBD_CDC_PACKET_SEND_OK = false;
   //}
 }
 
@@ -274,7 +255,7 @@ static int8_t CDC_Itf_Receive(uint8_t* Buf, uint32_t *Len)
 	unsigned int cnt = 0;
 	for(; cnt < *Len; cnt++)
 		fifo_push(usb_cdc_dev_rx_fifo, Buf[cnt]);
-	USBD_CDC_ReceivePacket(&USBD_Device);
+	USBD_CDC_ReceivePacket(&usb_cdc_dev_param);
 	return (USBD_OK);
 }
 

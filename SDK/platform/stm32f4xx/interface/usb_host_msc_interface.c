@@ -18,7 +18,7 @@
 #include "ffconf.h"
 
 HCD_HandleTypeDef  hhcd;
-USBH_HandleTypeDef hUSB_Host[2]; /* USB Host handle */
+USBH_HandleTypeDef usb_msc_host_param[2]; /* USB Host handle */
 
 typedef enum {
   APPLICATION_IDLE = 0,
@@ -72,7 +72,7 @@ DRESULT USBH_read(BYTE lun, BYTE *buff, DWORD sector, UINT count)
 #if _USE_BUFF_WO_ALIGNMENT == 0
     while ((count--)&&(status == USBH_OK))
     {
-      status = USBH_MSC_Read(&hUSB_Host[lun], lun, sector + count, (unsigned char *)scratch, 1);
+      status = USBH_MSC_Read(&usb_msc_host_param[lun], lun, sector + count, (unsigned char *)scratch, 1);
       if(status == USBH_OK)
       {
         memcpy (&buff[count * _MAX_SS] ,scratch, _MAX_SS);
@@ -88,7 +88,7 @@ DRESULT USBH_read(BYTE lun, BYTE *buff, DWORD sector, UINT count)
   }
   else
   {
-    status = USBH_MSC_Read(&hUSB_Host[lun], lun, sector, buff, count);
+    status = USBH_MSC_Read(&usb_msc_host_param[lun], lun, sector, buff, count);
   }
 
   if(status == USBH_OK)
@@ -97,7 +97,7 @@ DRESULT USBH_read(BYTE lun, BYTE *buff, DWORD sector, UINT count)
   }
   else
   {
-    USBH_MSC_GetLUNInfo(&hUSB_Host[lun], lun, &info);
+    USBH_MSC_GetLUNInfo(&usb_msc_host_param[lun], lun, &info);
 
     switch (info.sense.asc)
     {
@@ -138,7 +138,7 @@ DRESULT USBH_write(BYTE lun, const BYTE *buff, DWORD sector, UINT count)
     {
       memcpy (scratch, &buff[count * _MAX_SS], _MAX_SS);
 
-      status = USBH_MSC_Write(&hUSB_Host[lun], lun, sector + count, (BYTE *)scratch, 1) ;
+      status = USBH_MSC_Write(&usb_msc_host_param[lun], lun, sector + count, (BYTE *)scratch, 1) ;
       if(status == USBH_FAIL)
       {
         break;
@@ -150,7 +150,7 @@ DRESULT USBH_write(BYTE lun, const BYTE *buff, DWORD sector, UINT count)
   }
   else
   {
-    status = USBH_MSC_Write(&hUSB_Host[lun], lun, sector, (BYTE *)buff, count);
+    status = USBH_MSC_Write(&usb_msc_host_param[lun], lun, sector, (BYTE *)buff, count);
   }
 
   if(status == USBH_OK)
@@ -159,7 +159,7 @@ DRESULT USBH_write(BYTE lun, const BYTE *buff, DWORD sector, UINT count)
   }
   else
   {
-    USBH_MSC_GetLUNInfo(&hUSB_Host[lun], lun, &info);
+    USBH_MSC_GetLUNInfo(&usb_msc_host_param[lun], lun, &info);
 
     switch (info.sense.asc)
     {
@@ -228,7 +228,7 @@ unsigned int USBMSCWriteBlock(void *_ctrl, void *ptr, unsigned long block,
 
 void _usb_msc_host_ioctl(unsigned int unit_nr, unsigned int  command,  unsigned int *buffer)
 {
-	//HCD_HandleTypeDef * _ctrl = (HCD_HandleTypeDef *)&hUSB_Host[unit_nr];//(HCD_HandleTypeDef *)ctrl;
+	//HCD_HandleTypeDef * _ctrl = (HCD_HandleTypeDef *)&usb_msc_host_param[unit_nr];//(HCD_HandleTypeDef *)ctrl;
 	  //DRESULT res = RES_ERROR;
 	  MSC_LUNTypeDef info;
 	  unsigned char lun = unit_nr;
@@ -241,7 +241,7 @@ void _usb_msc_host_ioctl(unsigned int unit_nr, unsigned int  command,  unsigned 
 
 	  /* Get number of sectors on the disk (DWORD) */
 	  case GET_SECTOR_COUNT :
-	    if(USBH_MSC_GetLUNInfo(&hUSB_Host[unit_nr], lun, &info) == USBH_OK)
+	    if(USBH_MSC_GetLUNInfo(&usb_msc_host_param[unit_nr], lun, &info) == USBH_OK)
 	    {
 	      *(DWORD*)buffer = info.capacity.block_nbr;
 	      //res = RES_OK;
@@ -254,7 +254,7 @@ void _usb_msc_host_ioctl(unsigned int unit_nr, unsigned int  command,  unsigned 
 
 	  /* Get R/W sector size (WORD) */
 	  case GET_SECTOR_SIZE :
-	    if(USBH_MSC_GetLUNInfo(&hUSB_Host[unit_nr], lun, &info) == USBH_OK)
+	    if(USBH_MSC_GetLUNInfo(&usb_msc_host_param[unit_nr], lun, &info) == USBH_OK)
 	    {
 	      *(DWORD*)buffer = info.capacity.block_size;
 	      //res = RES_OK;
@@ -268,7 +268,7 @@ void _usb_msc_host_ioctl(unsigned int unit_nr, unsigned int  command,  unsigned 
 	    /* Get erase block size in unit of sector (DWORD) */
 	  case GET_BLOCK_SIZE :
 
-	    if(USBH_MSC_GetLUNInfo(&hUSB_Host[unit_nr], lun, &info) == USBH_OK)
+	    if(USBH_MSC_GetLUNInfo(&usb_msc_host_param[unit_nr], lun, &info) == USBH_OK)
 	    {
 	      *(DWORD*)buffer = info.capacity.block_size;
 	      //res = RES_OK;
@@ -321,13 +321,13 @@ void _usb_msc_host_init(unsigned int instance, new_gpio* StatusLed)
 {
 	//if(FATFS_LinkDriver(&USBH_Driver, USBDISKPath) == 0)
 	  //{    /*##-2- Init Host Library ################################################*/
-		USBH_Init(&hUSB_Host[instance], USBH_UserProcess, 0);
+		USBH_Init(&usb_msc_host_param[instance], USBH_UserProcess, 0);
 
 		/*##-3- Add Supported Class ##############################################*/
-		USBH_RegisterClass(&hUSB_Host[instance], USBH_MSC_CLASS);
+		USBH_RegisterClass(&usb_msc_host_param[instance], USBH_MSC_CLASS);
 
 		/*##-4- Start Host Process ###############################################*/
-		USBH_Start(&hUSB_Host[instance]);
+		USBH_Start(&usb_msc_host_param[instance]);
 	  //}
 
 }
@@ -335,12 +335,12 @@ void _usb_msc_host_init(unsigned int instance, new_gpio* StatusLed)
 void _usb_msc_host_idle(unsigned int instance)
 {
     /* USB Host Background task */
-    USBH_Process(&hUSB_Host[instance]);
+    USBH_Process(&usb_msc_host_param[instance]);
     /* Mass Storage Application State Machine */
     switch(Appli_state)
     {
     case APPLICATION_START:
-        g_sFatFs1.drv_rw_func.DriveStruct = (void*)&hUSB_Host[instance];
+        g_sFatFs1.drv_rw_func.DriveStruct = (void*)&usb_msc_host_param[instance];
         g_sFatFs1.drv_rw_func.drv_r_func = USBMSCReadBlock;
         g_sFatFs1.drv_rw_func.drv_w_func = USBMSCWriteBlock;
 #if (_FFCONF == 82786)

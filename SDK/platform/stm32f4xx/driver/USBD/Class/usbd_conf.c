@@ -35,7 +35,7 @@
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-PCD_HandleTypeDef hpcd;
+PCD_HandleTypeDef _hpcd[2];
 
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
@@ -265,10 +265,11 @@ void HAL_PCD_ResetCallback(PCD_HandleTypeDef *hpcd)
     speed = USBD_SPEED_FULL;
     break;
   }
-  USBD_LL_SetSpeed(hpcd->pData, speed);
-  
   /* Reset Device */
   USBD_LL_Reset(hpcd->pData);
+
+  USBD_LL_SetSpeed(hpcd->pData, speed);
+
 }
 
 /**
@@ -346,60 +347,60 @@ USBD_StatusTypeDef USBD_LL_Init(USBD_HandleTypeDef *pdev)
 {
 #ifdef USE_USB_FS
   /* Set LL Driver parameters */
-  hpcd.Instance = USB_OTG_FS;
-  hpcd.Init.dev_endpoints = 4;
-  hpcd.Init.use_dedicated_ep1 = 0;
-  hpcd.Init.ep0_mps = 0x40;
-  hpcd.Init.dma_enable = 0;
-  hpcd.Init.low_power_enable = 0;
-  hpcd.Init.phy_itface = PCD_PHY_EMBEDDED;
-  hpcd.Init.Sof_enable = 0;
-  hpcd.Init.speed = PCD_SPEED_FULL;
-  hpcd.Init.vbus_sensing_enable = 1;
+	_hpcd[pdev->id].Instance = USB_OTG_FS;
+	_hpcd[pdev->id].Init.dev_endpoints = 4;
+	_hpcd[pdev->id].Init.use_dedicated_ep1 = 0;
+	_hpcd[pdev->id].Init.ep0_mps = 0x40;
+	_hpcd[pdev->id].Init.dma_enable = 0;
+	_hpcd[pdev->id].Init.low_power_enable = 0;
+	_hpcd[pdev->id].Init.phy_itface = PCD_PHY_EMBEDDED;
+	_hpcd[pdev->id].Init.Sof_enable = 0;
+	_hpcd[pdev->id].Init.speed = PCD_SPEED_FULL;
+	_hpcd[pdev->id].Init.vbus_sensing_enable = 1;
   /* Link The driver to the stack */
-  hpcd.pData = pdev;
-  pdev->pData = &hpcd;
+	_hpcd[pdev->id].pData = pdev;
+  pdev->pData = &_hpcd[pdev->id];
   /* Initialize LL Driver */
-  HAL_PCD_Init(&hpcd);
+  HAL_PCD_Init(&_hpcd[pdev->id]);
   
-  HAL_PCDEx_SetRxFiFo(&hpcd, 0x80);
-  HAL_PCDEx_SetTxFiFo(&hpcd, 0, 0x40);
-  HAL_PCDEx_SetTxFiFo(&hpcd, 1, 0x80);
+  HAL_PCDEx_SetRxFiFo(&_hpcd[pdev->id], 0x80);
+  HAL_PCDEx_SetTxFiFo(&_hpcd[pdev->id], 0, 0x40);
+  HAL_PCDEx_SetTxFiFo(&_hpcd[pdev->id], 1, 0x80);
 #endif
 
 #ifdef USE_USB_HS
   /* Set LL Driver parameters */
-  hpcd.Instance = USB_OTG_HS;
-  hpcd.Init.dev_endpoints = 6;
-  hpcd.Init.use_dedicated_ep1 = 0;
-  hpcd.Init.ep0_mps = 0x40;
+  _hpcd[pdev->id].Instance = USB_OTG_HS;
+  _hpcd[pdev->id].Init.dev_endpoints = 6;
+  _hpcd[pdev->id].Init.use_dedicated_ep1 = 0;
+  _hpcd[pdev->id].Init.ep0_mps = 0x40;
 
   /* Be aware that enabling DMA mode will result in data being sent only by
      multiple of 4 packet sizes. This is due to the fact that USB DMA does
      not allow sending data from non word-aligned addresses.
      For this specific application, it is advised to not enable this option
      unless required. */
-  hpcd.Init.dma_enable = 1;
+  _hpcd[pdev->id].Init.dma_enable = 1;
 
-  hpcd.Init.low_power_enable = 0;
+  _hpcd[pdev->id].Init.low_power_enable = 0;
   
 #ifdef USE_USB_HS_IN_FS
-  hpcd.Init.phy_itface = PCD_PHY_EMBEDDED;
+  _hpcd[pdev->id].Init.phy_itface = PCD_PHY_EMBEDDED;
 #else
-  hpcd.Init.phy_itface = PCD_PHY_ULPI;
+  _hpcd[pdev->id].Init.phy_itface = PCD_PHY_ULPI;
 #endif
-  hpcd.Init.Sof_enable = 0;
-  hpcd.Init.speed = PCD_SPEED_HIGH;
-  hpcd.Init.vbus_sensing_enable = 1;
+  _hpcd[pdev->id].Init.Sof_enable = 0;
+  _hpcd[pdev->id].Init.speed = PCD_SPEED_HIGH;
+  _hpcd[pdev->id].Init.vbus_sensing_enable = 1;
   /* Link The driver to the stack */
-  hpcd.pData = pdev;
-  pdev->pData = &hpcd;
+  _hpcd[pdev->id].pData = pdev;
+  pdev->pData = &_hpcd[pdev->id];
   /* Initialize LL Driver */
-  HAL_PCD_Init(&hpcd);
+  HAL_PCD_Init(&_hpcd[pdev->id]);
 
-  HAL_PCDEx_SetRxFiFo(&hpcd, 0x200);
-  HAL_PCDEx_SetTxFiFo(&hpcd, 0, 0x80);
-  HAL_PCDEx_SetTxFiFo(&hpcd, 1, 0x174);
+  HAL_PCDEx_SetRxFiFo(&_hpcd[pdev->id], 0x200);
+  HAL_PCDEx_SetTxFiFo(&_hpcd[pdev->id], 0, 0x80);
+  HAL_PCDEx_SetTxFiFo(&_hpcd[pdev->id], 1, 0x174);
 #endif
 
   return USBD_OK;

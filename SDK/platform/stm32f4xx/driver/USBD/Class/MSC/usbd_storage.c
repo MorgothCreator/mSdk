@@ -35,8 +35,8 @@ extern DRV_RW_FUNC usbd_drv_func[];
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 #define STORAGE_LUN_NBR                  1  
-#define STORAGE_BLK_NBR                  0x10000  
-#define STORAGE_BLK_SIZ                  0x200
+//#define STORAGE_BLK_NBR                  0x10000
+//#define STORAGE_BLK_SIZ                  0x200
 
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
@@ -100,10 +100,15 @@ int8_t STORAGE_GetCapacity(uint8_t lun, uint32_t *block_num, uint16_t *block_siz
 {
 	if(usbd_drv_func[(unsigned int)lun].drv_ioctl_func)
 	{
-		usbd_drv_func[(unsigned int)lun].drv_ioctl_func(usbd_drv_func[lun].DriveStruct, GET_SECTOR_COUNT, (unsigned int *)block_num);
-		usbd_drv_func[(unsigned int)lun].drv_ioctl_func(usbd_drv_func[lun].DriveStruct, GET_SECTOR_SIZE, (unsigned int *)block_size);
+		unsigned int _block_num = 0;
+		unsigned int _block_size = 0;
+		usbd_drv_func[(unsigned int)lun].drv_ioctl_func(usbd_drv_func[lun].DriveStruct, GET_SECTOR_COUNT, &_block_num);
+		usbd_drv_func[(unsigned int)lun].drv_ioctl_func(usbd_drv_func[lun].DriveStruct, GET_SECTOR_SIZE, &_block_size);
+		*block_num = _block_num;
+		*block_size = _block_size;
+		return 0;
 	}
-	return 0;
+	return -1;
 }
 
 /**

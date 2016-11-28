@@ -45,7 +45,7 @@
 
 extern ADC_HandleTypeDef    AdcHandle;
 #ifdef USE_USB_DEV
-extern PCD_HandleTypeDef hpcd;
+extern PCD_HandleTypeDef _hpcd[];
 #endif
 
 /* TIM handler declared in "usbd_cdc_interface.c" file */
@@ -230,19 +230,25 @@ void OTG_FS_IRQHandler(void)
 {
   HAL_HCD_IRQHandler(&hhcd);
 }
+
+void OTG_HS_IRQHandler(void)
+{
+  HAL_HCD_IRQHandler(&hhcd);
+}
 #else
 /**
   * @brief  This function handles USB-On-The-Go FS global interrupt request.
   * @param  None
   * @retval None
   */
-#ifdef USE_USB_FS
 void OTG_FS_IRQHandler(void)
-#else
-void OTG_HS_IRQHandler(void)
-#endif
 {
-  HAL_PCD_IRQHandler(&hpcd);
+  HAL_PCD_IRQHandler(&_hpcd[0]);
+}
+
+void OTG_HS_IRQHandler(void)
+{
+  HAL_PCD_IRQHandler(&_hpcd[0]);
 }
 #endif
 

@@ -33,8 +33,8 @@
 #include "Inc/usbd_cdc.h"
 
 //* Private define ------------------------------------------------------------*/
-#define APP_RX_DATA_SIZE  2048
-#define APP_TX_DATA_SIZE  2048
+#define APP_RX_DATA_SIZE  32
+#define APP_TX_DATA_SIZE  32
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /* Definition for TIMx clock resources */

@@ -46,7 +46,7 @@
 #define USBD_DEBUG_LEVEL                      0
 
 /* MSC Class Config */
-#define MSC_MEDIA_PACKET                      8192
+#define MSC_MEDIA_PACKET                      512
 //#define USBD_LPM_ENABLED	1
 /* Exported macro ------------------------------------------------------------*/
 /* Memory management macros */

@@ -20,11 +20,11 @@
 #include "lib/fat_fs/inc/diskio.h"
 
 DRV_RW_FUNC usbd_drv_func[2];
-USBD_HandleTypeDef USBD_Device[2];
+USBD_HandleTypeDef usb_msc_dev_param[2];
 
 bool _usb_msc_dev_media_connected(unsigned int instance)
 {
-	//if(USBD_Device[instance].dev_state == USBD_STATE_DEFAULT)
+	//if(usb_msc_dev_param[instance].dev_state == USBD_STATE_DEFAULT)
 		return true;
 	//else
 		//return false;
@@ -32,26 +32,28 @@ bool _usb_msc_dev_media_connected(unsigned int instance)
 
 void _usb_msc_dev_media_change_state(unsigned int instance, bool media_is_present)
 {
+	if(!usb_msc_dev_param[instance].dev_connection_status)
+		return;
 	if(media_is_present)
-		USBD_Start(&USBD_Device[instance]);
+		USBD_Start(&usb_msc_dev_param[instance]);
 	else
-		USBD_Stop(&USBD_Device[instance]);
+		USBD_Stop(&usb_msc_dev_param[instance]);
 }
 void _usb_msc_dev_init(unsigned int instance, void *slave_controls)
 {
 	//memcpy(&usbd_drv_func[instance], slave_controls, sizeof(DRV_RW_FUNC));
 	//usbd_drv_func[instance] = (USBD_DRV_RW_FUNC *)slave_controls;
 	  /* Init MSC Application */
-	  USBD_Init(&USBD_Device[instance], &MSC_Desc, 0);
+	  USBD_Init(&usb_msc_dev_param[instance], &MSC_Desc, 0);
 
 	  /* Add Supported Class */
-	  USBD_RegisterClass(&USBD_Device[instance], USBD_MSC_CLASS);
+	  USBD_RegisterClass(&usb_msc_dev_param[instance], USBD_MSC_CLASS);
 
 	  /* Add Storage callbacks for MSC Class */
-	  USBD_MSC_RegisterStorage(&USBD_Device[instance], &USBD_DISK_fops);
+	  USBD_MSC_RegisterStorage(&usb_msc_dev_param[instance], &USBD_DISK_fops);
 
 	  /* Start Device Process */
-	  //USBD_Start(&USBD_Device[instance]);
+	  //USBD_Start(&usb_msc_dev_param[instance]);
 
 }
 

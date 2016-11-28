@@ -72,9 +72,9 @@
 
 HCD_HandleTypeDef hhcd;
 
-#define HOST_POWERSW_CLK_ENABLE()          __HAL_RCC_GPIOC_CLK_ENABLE()
-#define HOST_POWERSW_PORT                  GPIOC
-#define HOST_POWERSW_VBUS                  GPIO_PIN_0
+#define HOST_POWERSW_CLK_ENABLE()          __HAL_RCC_GPIOB_CLK_ENABLE()
+#define HOST_POWERSW_PORT                  GPIOB
+#define HOST_POWERSW_VBUS                  GPIO_PIN_2
 
 /*******************************************************************************
                        HCD BSP Routines
@@ -421,11 +421,11 @@ USBH_StatusTypeDef USBH_LL_DriverVBUS(USBH_HandleTypeDef *phost, uint8_t state)
 {
   if(state == 0)
   {
-    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_0, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(HOST_POWERSW_PORT, HOST_POWERSW_VBUS, GPIO_PIN_RESET);
   }
   else
   {
-    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_0, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(HOST_POWERSW_PORT, HOST_POWERSW_VBUS, GPIO_PIN_SET);
   }
   
   HAL_Delay(200);
