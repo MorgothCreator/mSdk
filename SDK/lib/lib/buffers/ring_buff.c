@@ -17,12 +17,13 @@ bool fifo_push(fifo_settings_t* Settings, char Character)
 #endif
 		unsigned int BuffSize = Settings->buff_size;
 		unsigned int BytesToBuff = Settings->bytes_to_buff;
-		if(BytesToBuff != BuffSize)
+		if(BytesToBuff < BuffSize)
 		{
 			unsigned int PushPtr = Settings->push_ptr;
 			Settings->Buffer[Settings->push_ptr] = Character;
 			PushPtr++;
-			if(PushPtr == BuffSize) PushPtr = 0;
+			if(PushPtr == BuffSize)
+				PushPtr = 0;
 			BytesToBuff++;
 			Settings->push_ptr = PushPtr;
 			Settings->bytes_to_buff = BytesToBuff;
@@ -42,7 +43,8 @@ fifo_pop_return_t fifo_pop(fifo_settings_t* Settings)
 	{
 #endif
 		unsigned int BytesToBuff = Settings->bytes_to_buff;
-		if(BytesToBuff == 0) Result.status = false;
+		if(BytesToBuff == 0)
+			Result.status = false;
 		else
 		{
 			unsigned int PopPtr = Settings->pop_ptr;
@@ -63,13 +65,17 @@ fifo_pop_return_t fifo_pop(fifo_settings_t* Settings)
 fifo_settings_t* fifo_open(unsigned int Size)
 {
 	fifo_settings_t* Settings = (fifo_settings_t*)calloc(1, sizeof(fifo_settings_t));
-	if(Settings == 0) return NULL;
+	if(Settings == 0)
+		return NULL;
 	char* Buff;
 	if((Buff = (char*)calloc(1,Size)) == 0) 
 	{
 		free(Settings);
 		return NULL;
 	}
+	Settings->bytes_to_buff = 0;
+	Settings->pop_ptr = 0;
+	Settings->push_ptr = 0;
 	Settings->Buffer = Buff;
 	Settings->buff_size = Size;
 	return Settings;
