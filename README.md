@@ -51,6 +51,12 @@ At this moment is supported the next platforms:
   
   <a href="https://www.olimex.com/Products/ARM/ST/STM32-H407/open-source-hardware">STM32-E407.</a>
   
+  <a href="http://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-eval-tools/stm32-mcu-eval-tools/stm32-mcu-discovery-kits/32f469idiscovery.html">STM32F469I DISCOVERY.</a>
+  
+9) STM32F7xx (System Workbench for STM32).
+
+  <a href="http://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-eval-tools/stm32-mcu-eval-tools/stm32-mcu-discovery-kits/32f769idiscovery.html">STM32F769I DISCOVERY.</a>
+
 10)
   SmartRF06EB (Code Composer Studio).
   
@@ -111,9 +117,25 @@ Done API's for every platform:
 		In development.
 	STM32F4:
 		GPIO.
-		USART
+		USART.
 		TWI.
-		ADC (not ready).
+		SPI.
+		MMCSD.
+		USB DEV MSC.
+		USB DEV CDC.
+		USB HOST MSC.
+		QSPI Memory.
+		ADC.
+	STM32F7:
+		GPIO.
+		USART.
+		MMCSD.
+		USB DEV MSC.
+		USB DEV CDC.
+		USB HOST MSC.
+		DMA2D.
+		LCD.
+		DSI.
 	CC13xx and CC26xx:
 		GPIO.
 		SPI.
@@ -144,3 +166,14 @@ Supported devices (this drivers works on all platforms that has API's for used c
 	TPS65217 I2C PMIC device.
 	TPS65910 I2C PMIC device.
 	AK8975 I2C compass sensor device.
+	HIH6130.
+	ILI9341.
+	LEPTON FLIR.
+	MHC5883.
+	MI0283.
+	MMCSDSPI.
+	MPR121.
+	nRF24l01.
+	OTM8009a.
+	RFM12.
+	VS10xx.
