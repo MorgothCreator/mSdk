@@ -34,6 +34,8 @@ extern new_uart* DebugCom;
 
 bool mpu60x0_9150_sample_rate_divider_set(MPU60x0_9150_t *structure, unsigned char Value)
 {
+	if(!structure)
+		return false;
 	Twi_t *TwiStruct = structure->TWI;
 	unsigned char tmp[2];
 	tmp[0] = MPU60X0_9150_SMPLRT_DIV;
@@ -45,6 +47,10 @@ bool mpu60x0_9150_sample_rate_divider_set(MPU60x0_9150_t *structure, unsigned ch
 
 bool mpu60x0_9150_who_am_i_get(MPU60x0_9150_t *structure)
 {
+	if(!structure)
+		return false;
+	if(!structure)
+		return false;
 	Twi_t *TwiStruct = structure->TWI;
 	unsigned char reg = MPU60X0_9150_WHO_AM_I;
 	unsigned char result = 0;
@@ -60,6 +66,8 @@ bool mpu60x0_9150_who_am_i_get(MPU60x0_9150_t *structure)
 
 bool mpu60x0_9150_dlpf_cfg_set(MPU60x0_9150_t *structure, unsigned char value)
 {
+	if(!structure)
+		return false;
 	Twi_t *TwiStruct = structure->TWI;
 	unsigned char tmp[2];
 	tmp[0] = MPU60X0_9150_CONFIG;
@@ -74,6 +82,8 @@ bool mpu60x0_9150_dlpf_cfg_set(MPU60x0_9150_t *structure, unsigned char value)
 
 bool mpu60x0_9150_gyro_self_test_set(MPU60x0_9150_t *structure, bool X_test, bool Y_test, bool Z_test)
 {
+	if(!structure)
+		return false;
 	Twi_t *TwiStruct = structure->TWI;
 	unsigned char tmp[2];
 	tmp[0] = MPU60X0_9150_GYRO_CONFIG;
@@ -88,6 +98,8 @@ bool mpu60x0_9150_gyro_self_test_set(MPU60x0_9150_t *structure, bool X_test, boo
 
 bool mpu60x0_9150_gyro_full_scale_set(MPU60x0_9150_t *structure, unsigned int scale)
 {
+	if(!structure)
+		return false;
 	Twi_t *TwiStruct = structure->TWI;
 	unsigned char tmp[2];
 	unsigned char result = 0;
@@ -120,6 +132,8 @@ bool mpu60x0_9150_gyro_full_scale_set(MPU60x0_9150_t *structure, unsigned int sc
 
 bool mpu60x0_9150_accel_self_test_set(MPU60x0_9150_t *structure, bool X_test, bool Y_test, bool Z_test)
 {
+	if(!structure)
+		return false;
 	Twi_t *TwiStruct = structure->TWI;
 	unsigned char tmp[2];
 	unsigned char result = 0;
@@ -134,6 +148,8 @@ bool mpu60x0_9150_accel_self_test_set(MPU60x0_9150_t *structure, bool X_test, bo
 
 bool mpu60x0_9150_accel_full_scale_set(MPU60x0_9150_t *structure, unsigned int scale)
 {
+	if(!structure)
+		return false;
 	Twi_t *TwiStruct = structure->TWI;
 	unsigned char tmp[2];
 	unsigned char result = 0;
@@ -166,6 +182,8 @@ bool mpu60x0_9150_accel_full_scale_set(MPU60x0_9150_t *structure, unsigned int s
 
 bool mpu60x0_9150_accel_data_get(MPU60x0_9150_t *structure, signed short *X_Axis, signed short *Y_Axis, signed short *Z_Axis)
 {
+	if(!structure)
+		return false;
 	Twi_t *TwiStruct = structure->TWI;
 	unsigned char reg = MPU60X0_9150_ACCEL_XOUT_H;
 	unsigned char result[6];
@@ -179,6 +197,8 @@ bool mpu60x0_9150_accel_data_get(MPU60x0_9150_t *structure, signed short *X_Axis
 
 bool mpu60x0_9150_gyro_data_get(MPU60x0_9150_t *structure, signed short *X_Axis, signed short *Y_Axis, signed short *Z_Axis)
 {
+	if(!structure)
+		return false;
 	Twi_t *TwiStruct = structure->TWI;
 	unsigned char reg = MPU60X0_9150_GYRO_XOUT_H;
 	unsigned char result[6];
@@ -192,6 +212,8 @@ bool mpu60x0_9150_gyro_data_get(MPU60x0_9150_t *structure, signed short *X_Axis,
 
 bool mpu60x0_9150_temp_data_get(MPU60x0_9150_t *structure, float *Temperature)
 {
+	if(!structure)
+		return false;
 	Twi_t *TwiStruct = structure->TWI;
 	unsigned char reg = MPU60X0_9150_TEMP_OUT_H;
 	unsigned char result[2];
@@ -203,6 +225,8 @@ bool mpu60x0_9150_temp_data_get(MPU60x0_9150_t *structure, float *Temperature)
 
 bool mpu60x0_9150_clock_sel_set(MPU60x0_9150_t *structure, unsigned char Value)
 {
+	if(!structure)
+		return false;
 	Twi_t *TwiStruct = structure->TWI;
 	unsigned char tmp[2];
 	unsigned char result = 0;
@@ -217,6 +241,8 @@ bool mpu60x0_9150_clock_sel_set(MPU60x0_9150_t *structure, unsigned char Value)
 
 bool mpu60x0_9150_temp_dis_set(MPU60x0_9150_t *structure, bool Value)
 {
+	if(!structure)
+		return false;
 	Twi_t *TwiStruct = structure->TWI;
 	unsigned char tmp[2];
 	unsigned char result = 0;
@@ -231,6 +257,8 @@ bool mpu60x0_9150_temp_dis_set(MPU60x0_9150_t *structure, bool Value)
 
 bool mpu60x0_9150_cycle_set(MPU60x0_9150_t *structure, bool Value)
 {
+	if(!structure)
+		return false;
 	Twi_t *TwiStruct = structure->TWI;
 	unsigned char tmp[2];
 	unsigned char result = 0;
@@ -245,6 +273,8 @@ bool mpu60x0_9150_cycle_set(MPU60x0_9150_t *structure, bool Value)
 
 bool mpu60x0_9150_sleep_set(MPU60x0_9150_t *structure, bool Value)
 {
+	if(!structure)
+		return false;
 	Twi_t *TwiStruct = structure->TWI;
 	unsigned char tmp[2];
 	unsigned char result = 0;
@@ -259,6 +289,8 @@ bool mpu60x0_9150_sleep_set(MPU60x0_9150_t *structure, bool Value)
 
 bool mpu60x0_9150_device_reset_set(MPU60x0_9150_t *structure, bool Value)
 {
+	if(!structure)
+		return false;
 	Twi_t *TwiStruct = structure->TWI;
 	unsigned char tmp[2];
 	unsigned char result = 0;
@@ -273,6 +305,8 @@ bool mpu60x0_9150_device_reset_set(MPU60x0_9150_t *structure, bool Value)
 
 bool mpu60x0_9150_stby_zg_set(MPU60x0_9150_t *structure, bool Value)
 {
+	if(!structure)
+		return false;
 	Twi_t *TwiStruct = structure->TWI;
 	unsigned char tmp[2];
 	unsigned char result = 0;
@@ -287,6 +321,8 @@ bool mpu60x0_9150_stby_zg_set(MPU60x0_9150_t *structure, bool Value)
 
 bool mpu60x0_9150_stby_yg_set(MPU60x0_9150_t *structure, bool Value)
 {
+	if(!structure)
+		return false;
 	Twi_t *TwiStruct = structure->TWI;
 	unsigned char tmp[2];
 	unsigned char result = 0;
@@ -301,6 +337,8 @@ bool mpu60x0_9150_stby_yg_set(MPU60x0_9150_t *structure, bool Value)
 
 bool mpu60x0_9150_stby_xg_set(MPU60x0_9150_t *structure, bool Value)
 {
+	if(!structure)
+		return false;
 	Twi_t *TwiStruct = structure->TWI;
 	unsigned char tmp[2];
 	unsigned char result = 0;
@@ -315,6 +353,8 @@ bool mpu60x0_9150_stby_xg_set(MPU60x0_9150_t *structure, bool Value)
 
 bool mpu60x0_9150_stby_za_set(MPU60x0_9150_t *structure, bool Value)
 {
+	if(!structure)
+		return false;
 	Twi_t *TwiStruct = structure->TWI;
 	unsigned char tmp[2];
 	unsigned char result = 0;
@@ -329,6 +369,8 @@ bool mpu60x0_9150_stby_za_set(MPU60x0_9150_t *structure, bool Value)
 
 bool mpu60x0_9150_stby_ya_set(MPU60x0_9150_t *structure, bool Value)
 {
+	if(!structure)
+		return false;
 	Twi_t *TwiStruct = structure->TWI;
 	unsigned char tmp[2];
 	unsigned char result = 0;
@@ -343,6 +385,8 @@ bool mpu60x0_9150_stby_ya_set(MPU60x0_9150_t *structure, bool Value)
 
 bool mpu60x0_9150_stby_xa_set(MPU60x0_9150_t *structure, bool Value)
 {
+	if(!structure)
+		return false;
 	Twi_t *TwiStruct = structure->TWI;
 	unsigned char tmp[2];
 	unsigned char result = 0;
@@ -357,6 +401,8 @@ bool mpu60x0_9150_stby_xa_set(MPU60x0_9150_t *structure, bool Value)
 
 bool mpu60x0_9150_lp_wake_ctrl_set(MPU60x0_9150_t *structure, unsigned char Value)
 {
+	if(!structure)
+		return false;
 	Twi_t *TwiStruct = structure->TWI;
 	unsigned char tmp[2];
 	unsigned char result = 0;
@@ -371,6 +417,8 @@ bool mpu60x0_9150_lp_wake_ctrl_set(MPU60x0_9150_t *structure, unsigned char Valu
 
 bool mpu60x0_9150_i2c_bypass_enable_set(MPU60x0_9150_t *structure, bool Value)
 {
+	if(!structure)
+		return false;
 	Twi_t *TwiStruct = structure->TWI;
 	unsigned char tmp[2];
 	unsigned char result = 0;
@@ -385,7 +433,8 @@ bool mpu60x0_9150_i2c_bypass_enable_set(MPU60x0_9150_t *structure, bool Value)
 
 bool mpu60x0_9150_gyroscope_test(MPU60x0_9150_t *structure, double *XtestResult, double *YtestResult, double *ZtestResult)
 {
-
+	if(!structure)
+		return false;
 	Twi_t *TwiStruct = structure->TWI;
 	signed short Xdata = 0;
 	signed short Ydata = 0;
@@ -423,6 +472,8 @@ bool mpu60x0_9150_gyroscope_test(MPU60x0_9150_t *structure, double *XtestResult,
 
 bool mpu60x0_9150_accelerometer_test(MPU60x0_9150_t *structure, double *XtestResult, double *YtestResult, double *ZtestResult)
 {
+	if(!structure)
+		return false;
 	Twi_t *TwiStruct = structure->TWI;
 	signed short Xdata = 0;
 	signed short Ydata = 0;
@@ -462,6 +513,8 @@ bool mpu60x0_9150_accelerometer_test(MPU60x0_9150_t *structure, double *XtestRes
 
 bool mpu60x0_9150_gyroscope_test_display_result(MPU60x0_9150_t *structure)
 {
+	if(!structure)
+		return false;
 	double XtestResult = 0;
 	double YtestResult = 0;
 	double ZtestResult = 0;
@@ -479,6 +532,8 @@ bool mpu60x0_9150_gyroscope_test_display_result(MPU60x0_9150_t *structure)
 
 bool mpu60x0_9150_accelerometer_test_display_result(MPU60x0_9150_t *structure)
 {
+	if(!structure)
+		return false;
 	double XtestResult = 0;
 	double YtestResult = 0;
 	double ZtestResult = 0;
@@ -496,6 +551,8 @@ bool mpu60x0_9150_accelerometer_test_display_result(MPU60x0_9150_t *structure)
 
 bool mpu60x0_9150_temperature_display_result(MPU60x0_9150_t *structure)
 {
+	if(!structure)
+		return false;
 	float Temperature = 0;
 	if(!mpu60x0_9150_temp_data_get(structure , &Temperature))
 		return false;
@@ -511,6 +568,8 @@ bool mpu60x0_9150_temperature_display_result(MPU60x0_9150_t *structure)
 
 bool mpu60x0_9150_giroscope_display_result(MPU60x0_9150_t *structure)
 {
+	if(!structure)
+		return false;
 	signed short Xg = 0;
 	signed short Yg = 0;
 	signed short Zg = 0;
@@ -522,6 +581,8 @@ bool mpu60x0_9150_giroscope_display_result(MPU60x0_9150_t *structure)
 
 bool mpu60x0_9150_accelerometer_display_result(MPU60x0_9150_t *structure)
 {
+	if(!structure)
+		return false;
 	signed short Xa = 0;
 	signed short Ya = 0;
 	signed short Za = 0;
@@ -533,6 +594,8 @@ bool mpu60x0_9150_accelerometer_display_result(MPU60x0_9150_t *structure)
 
 bool mpu60x0_9150_init(MPU60x0_9150_t *structure)
 {
+	if(!structure)
+		return false;
 	if(!mpu60x0_9150_who_am_i_get(structure))
 		return false;
 	if(!mpu60x0_9150_sleep_set(structure, false))
