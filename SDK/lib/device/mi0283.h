@@ -12,7 +12,7 @@
 #include <avr/pgmspace.h>
 #endif
 #include <stdbool.h>
-#include "board_properties.h"
+//#include "board_properties.h"
 #include "api/lcd_def.h"
 #include "api/gpio_def.h"
 /*#####################################################*/

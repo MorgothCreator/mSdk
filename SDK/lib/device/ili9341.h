@@ -45,7 +45,6 @@
 #endif 
 
 #include <stdbool.h>
-#include "board_properties.h"
 #include "api/lcd_def.h"
 #include "api/gpio_def.h"
 #include <api/spi_def.h>

@@ -15,7 +15,7 @@
 #include "mi0283.h"
 #include "api/gpio_api.h"
 #include "board_init.h"
-#include "board_properties.h"
+//#include "board_properties.h"
 //#include "driver/ebi.h"
 //#include "driver/dma.h"
 #include "api/lcd_def.h"
