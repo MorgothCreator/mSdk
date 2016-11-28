@@ -44,7 +44,7 @@
 #ifdef __cplusplus
  extern "C" {
 #endif
-
+#if 0
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 
@@ -443,7 +443,7 @@
   #define assert_param(expr) ((void)0)
 #endif /* USE_FULL_ASSERT */
 
-
+#endif
 #ifdef __cplusplus
 }
 #endif

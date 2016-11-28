@@ -11,7 +11,7 @@
 
 #include <stdbool.h>
 #include "api/gpio_def.h"
-#include "driver/stm32f4xx_hal_hcd.h"
+#include "driver/stm32f7xx_hal_hcd.h"
 
 unsigned int USBMSCReadBlock(void *_ctrl, void *ptr, unsigned long block,
                               unsigned int nblks);

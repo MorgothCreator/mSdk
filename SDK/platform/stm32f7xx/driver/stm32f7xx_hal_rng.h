@@ -89,7 +89,7 @@ typedef struct
   
   HAL_LockTypeDef             Lock;         /*!< RNG locking object      */
   
-  __IO HAL_RNG_StateTypeDef   State;        /*!< RNG communication state */
+  volatile HAL_RNG_StateTypeDef   State;        /*!< RNG communication state */
   
 }RNG_HandleTypeDef;
 

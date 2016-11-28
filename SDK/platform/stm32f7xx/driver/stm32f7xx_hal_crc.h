@@ -133,7 +133,7 @@ typedef struct
   
   HAL_LockTypeDef             Lock;        /*!< CRC Locking object           */
     
-  __IO HAL_CRC_StateTypeDef   State;       /*!< CRC communication state      */
+  volatile HAL_CRC_StateTypeDef   State;       /*!< CRC communication state      */
   
   uint32_t InputDataFormat;                /*!< This parameter is a value of @ref CRC_Input_Buffer_Format and specifies input data format. 
                                             Can be either 

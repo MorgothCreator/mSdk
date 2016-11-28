@@ -83,7 +83,7 @@ typedef struct
   
   FMC_SDRAM_InitTypeDef         Init;       /*!< SDRAM device configuration parameters */
   
-  __IO HAL_SDRAM_StateTypeDef   State;      /*!< SDRAM access state                    */
+  volatile HAL_SDRAM_StateTypeDef   State;      /*!< SDRAM access state                    */
   
   HAL_LockTypeDef               Lock;       /*!< SDRAM locking object                  */ 
 

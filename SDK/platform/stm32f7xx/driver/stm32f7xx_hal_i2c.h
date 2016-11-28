@@ -45,6 +45,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f7xx_hal_def.h"  
+#include "stm32f7xx_hal_dma.h"
 
 /** @addtogroup STM32F7xx_HAL_Driver
   * @{
@@ -208,12 +209,12 @@ typedef struct __I2C_HandleTypeDef
 
   uint16_t                   XferSize;       /*!< I2C transfer size                         */
 
-  __IO uint16_t              XferCount;      /*!< I2C transfer counter                      */
+  volatile uint16_t              XferCount;      /*!< I2C transfer counter                      */
 
-  __IO uint32_t              XferOptions;    /*!< I2C sequantial transfer options, this parameter can
+  volatile uint32_t              XferOptions;    /*!< I2C sequantial transfer options, this parameter can
                                                   be a value of @ref I2C_XFEROPTIONS */
 
-  __IO uint32_t              PreviousState;  /*!< I2C communication Previous state          */
+  volatile uint32_t              PreviousState;  /*!< I2C communication Previous state          */
 
   HAL_StatusTypeDef (*XferISR)(struct __I2C_HandleTypeDef *hi2c, uint32_t ITFlags, uint32_t ITSources); /*!< I2C transfer IRQ handler function pointer */
 
@@ -223,13 +224,13 @@ typedef struct __I2C_HandleTypeDef
 
   HAL_LockTypeDef            Lock;           /*!< I2C locking object                        */
 
-  __IO HAL_I2C_StateTypeDef  State;          /*!< I2C communication state                   */
+  volatile HAL_I2C_StateTypeDef  State;          /*!< I2C communication state                   */
 
-  __IO HAL_I2C_ModeTypeDef   Mode;           /*!< I2C communication mode                    */
+  volatile HAL_I2C_ModeTypeDef   Mode;           /*!< I2C communication mode                    */
 
-  __IO uint32_t              ErrorCode;      /*!< I2C Error code                            */
+  volatile uint32_t              ErrorCode;      /*!< I2C Error code                            */
 
-  __IO uint32_t              AddrEventCount; /*!< I2C Address Event counter                 */
+  volatile uint32_t              AddrEventCount; /*!< I2C Address Event counter                 */
 }I2C_HandleTypeDef;
 /**
   * @}

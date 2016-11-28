@@ -8,7 +8,7 @@
 #include "main.h"
 #include "board_init.h"
 #include "usb_host_msc_interface.h"
-#include "driver/stm32f4xx_hal_hcd.h"
+#include "driver/stm32f7xx_hal_hcd.h"
 #include "driver/USBH/Core/Inc/usbh_core.h"
 #include "driver/USBH/Class/MSC/inc/usbh_msc.h"
 #include "api/gpio_api.h"
@@ -18,7 +18,7 @@
 #include "ffconf.h"
 
 HCD_HandleTypeDef  hhcd;
-USBH_HandleTypeDef hUSB_Host[2]; /* USB Host handle */
+USBH_HandleTypeDef usb_msc_host_param[2]; /* USB Host handle */
 
 typedef enum {
   APPLICATION_IDLE = 0,
@@ -72,7 +72,7 @@ DRESULT USBH_read(BYTE lun, BYTE *buff, DWORD sector, UINT count)
 #if _USE_BUFF_WO_ALIGNMENT == 0
     while ((count--)&&(status == USBH_OK))
     {
-      status = USBH_MSC_Read(&hUSB_Host[lun], lun, sector + count, (unsigned char *)scratch, 1);
+      status = USBH_MSC_Read(&usb_msc_host_param[lun], lun, sector + count, (unsigned char *)scratch, 1);
       if(status == USBH_OK)
       {
         memcpy (&buff[count * _MAX_SS] ,scratch, _MAX_SS);
@@ -88,7 +88,7 @@ DRESULT USBH_read(BYTE lun, BYTE *buff, DWORD sector, UINT count)
   }
   else
   {
-    status = USBH_MSC_Read(&hUSB_Host[lun], lun, sector, buff, count);
+    status = USBH_MSC_Read(&usb_msc_host_param[lun], lun, sector, buff, count);
   }
 
   if(status == USBH_OK)
@@ -97,7 +97,7 @@ DRESULT USBH_read(BYTE lun, BYTE *buff, DWORD sector, UINT count)
   }
   else
   {
-    USBH_MSC_GetLUNInfo(&hUSB_Host[lun], lun, &info);
+    USBH_MSC_GetLUNInfo(&usb_msc_host_param[lun], lun, &info);
 
     switch (info.sense.asc)
     {
@@ -138,7 +138,7 @@ DRESULT USBH_write(BYTE lun, const BYTE *buff, DWORD sector, UINT count)
     {
       memcpy (scratch, &buff[count * _MAX_SS], _MAX_SS);
 
-      status = USBH_MSC_Write(&hUSB_Host[lun], lun, sector + count, (BYTE *)scratch, 1) ;
+      status = USBH_MSC_Write(&usb_msc_host_param[lun], lun, sector + count, (BYTE *)scratch, 1) ;
       if(status == USBH_FAIL)
       {
         break;
@@ -150,7 +150,7 @@ DRESULT USBH_write(BYTE lun, const BYTE *buff, DWORD sector, UINT count)
   }
   else
   {
-    status = USBH_MSC_Write(&hUSB_Host[lun], lun, sector, (BYTE *)buff, count);
+    status = USBH_MSC_Write(&usb_msc_host_param[lun], lun, sector, (BYTE *)buff, count);
   }
 
   if(status == USBH_OK)
@@ -159,7 +159,7 @@ DRESULT USBH_write(BYTE lun, const BYTE *buff, DWORD sector, UINT count)
   }
   else
   {
-    USBH_MSC_GetLUNInfo(&hUSB_Host[lun], lun, &info);
+    USBH_MSC_GetLUNInfo(&usb_msc_host_param[lun], lun, &info);
 
     switch (info.sense.asc)
     {
@@ -190,16 +190,16 @@ unsigned int USBMSCReadBlock(void *_ctrl, void *ptr, unsigned long block,
 {
 	//unsigned int status = CPUIntStatus();
 	//CPUirqe();
-	if(LedStatusUsb0) gpio_out(LedStatusUsb0, 1);
+	if(LedStatusUsb0) gpio.out(LedStatusUsb0, 1);
 	if(USBH_read(0, ptr, block, nblks) == 0)
 	{
-		if(LedStatusUsb0) gpio_out(LedStatusUsb0, 0);
+		if(LedStatusUsb0) gpio.out(LedStatusUsb0, 0);
 		//if(status & 0x80) CPUirqd();
 		return 1;
 	}
 	else
 	{
-		if(LedStatusUsb0) gpio_out(LedStatusUsb0, 0);
+		if(LedStatusUsb0) gpio.out(LedStatusUsb0, 0);
 		//if(status & 0x80) CPUirqd();
 		return 0;
 	}
@@ -210,16 +210,16 @@ unsigned int USBMSCWriteBlock(void *_ctrl, void *ptr, unsigned long block,
 {
 	//unsigned int status = CPUIntStatus();
 	//CPUirqe();
-	if(LedStatusUsb0) gpio_out(LedStatusUsb0, 1);
+	if(LedStatusUsb0) gpio.out(LedStatusUsb0, 1);
 	if(USBH_write(0, ptr, block, nblks) == 0)
 	{
-		if(LedStatusUsb0) gpio_out(LedStatusUsb0, 0);
+		if(LedStatusUsb0) gpio.out(LedStatusUsb0, 0);
 		//if(status & 0x80) CPUirqd();
 		return 1;
 	}
 	else
 	{
-		if(LedStatusUsb0) gpio_out(LedStatusUsb0, 0);
+		if(LedStatusUsb0) gpio.out(LedStatusUsb0, 0);
 		//if(status & 0x80) CPUirqd();
 		return 0;
 	}
@@ -228,7 +228,7 @@ unsigned int USBMSCWriteBlock(void *_ctrl, void *ptr, unsigned long block,
 
 void _usb_msc_host_ioctl(unsigned int unit_nr, unsigned int  command,  unsigned int *buffer)
 {
-	//HCD_HandleTypeDef * _ctrl = (HCD_HandleTypeDef *)&hUSB_Host[unit_nr];//(HCD_HandleTypeDef *)ctrl;
+	//HCD_HandleTypeDef * _ctrl = (HCD_HandleTypeDef *)&usb_msc_host_param[unit_nr];//(HCD_HandleTypeDef *)ctrl;
 	  //DRESULT res = RES_ERROR;
 	  MSC_LUNTypeDef info;
 	  unsigned char lun = unit_nr;
@@ -241,7 +241,7 @@ void _usb_msc_host_ioctl(unsigned int unit_nr, unsigned int  command,  unsigned 
 
 	  /* Get number of sectors on the disk (DWORD) */
 	  case GET_SECTOR_COUNT :
-	    if(USBH_MSC_GetLUNInfo(&hUSB_Host[unit_nr], lun, &info) == USBH_OK)
+	    if(USBH_MSC_GetLUNInfo(&usb_msc_host_param[unit_nr], lun, &info) == USBH_OK)
 	    {
 	      *(DWORD*)buffer = info.capacity.block_nbr;
 	      //res = RES_OK;
@@ -254,7 +254,7 @@ void _usb_msc_host_ioctl(unsigned int unit_nr, unsigned int  command,  unsigned 
 
 	  /* Get R/W sector size (WORD) */
 	  case GET_SECTOR_SIZE :
-	    if(USBH_MSC_GetLUNInfo(&hUSB_Host[unit_nr], lun, &info) == USBH_OK)
+	    if(USBH_MSC_GetLUNInfo(&usb_msc_host_param[unit_nr], lun, &info) == USBH_OK)
 	    {
 	      *(DWORD*)buffer = info.capacity.block_size;
 	      //res = RES_OK;
@@ -268,7 +268,7 @@ void _usb_msc_host_ioctl(unsigned int unit_nr, unsigned int  command,  unsigned 
 	    /* Get erase block size in unit of sector (DWORD) */
 	  case GET_BLOCK_SIZE :
 
-	    if(USBH_MSC_GetLUNInfo(&hUSB_Host[unit_nr], lun, &info) == USBH_OK)
+	    if(USBH_MSC_GetLUNInfo(&usb_msc_host_param[unit_nr], lun, &info) == USBH_OK)
 	    {
 	      *(DWORD*)buffer = info.capacity.block_size;
 	      //res = RES_OK;
@@ -295,6 +295,7 @@ void _usb_msc_host_ioctl(unsigned int unit_nr, unsigned int  command,  unsigned 
   */
 static void USBH_UserProcess(USBH_HandleTypeDef *phost, unsigned char id)
 {
+    /* Wait for 100 ms after Reset */
   switch(id)
   {
   case HOST_USER_SELECT_CONFIGURATION:
@@ -309,6 +310,8 @@ static void USBH_UserProcess(USBH_HandleTypeDef *phost, unsigned char id)
 
   case HOST_USER_CLASS_ACTIVE://
     Appli_state = APPLICATION_START;
+    volatile unsigned long cnt = 100000;
+    while(--cnt);
     break;
 
   default:
@@ -319,15 +322,16 @@ static void USBH_UserProcess(USBH_HandleTypeDef *phost, unsigned char id)
 
 void _usb_msc_host_init(unsigned int instance, new_gpio* StatusLed)
 {
+	LedStatusUsb0 = StatusLed;
 	//if(FATFS_LinkDriver(&USBH_Driver, USBDISKPath) == 0)
 	  //{    /*##-2- Init Host Library ################################################*/
-		USBH_Init(&hUSB_Host[instance], USBH_UserProcess, 0);
+		USBH_Init(&usb_msc_host_param[instance], USBH_UserProcess, 0);
 
 		/*##-3- Add Supported Class ##############################################*/
-		USBH_RegisterClass(&hUSB_Host[instance], USBH_MSC_CLASS);
+		USBH_RegisterClass(&usb_msc_host_param[instance], USBH_MSC_CLASS);
 
 		/*##-4- Start Host Process ###############################################*/
-		USBH_Start(&hUSB_Host[instance]);
+		USBH_Start(&usb_msc_host_param[instance]);
 	  //}
 
 }
@@ -335,24 +339,24 @@ void _usb_msc_host_init(unsigned int instance, new_gpio* StatusLed)
 void _usb_msc_host_idle(unsigned int instance)
 {
     /* USB Host Background task */
-    USBH_Process(&hUSB_Host[instance]);
+    USBH_Process(&usb_msc_host_param[instance]);
     /* Mass Storage Application State Machine */
     switch(Appli_state)
     {
     case APPLICATION_START:
-        g_sFatFs1.drv_rw_func.DriveStruct = (void*)&hUSB_Host[instance];
+        g_sFatFs1.drv_rw_func.DriveStruct = (void*)&usb_msc_host_param[instance];
         g_sFatFs1.drv_rw_func.drv_r_func = USBMSCReadBlock;
         g_sFatFs1.drv_rw_func.drv_w_func = USBMSCWriteBlock;
 #if (_FFCONF == 82786)
         if(!f_mount(instance, &g_sFatFs1))
 #else
         char drv_name_buff[6];
-        drv_name_buff[1] = 'U';
+        drv_name_buff[0] = 'U';
         drv_name_buff[1] = 'S';
-        drv_name_buff[1] = 'B';
-        drv_name_buff[0] = '1' + instance;
-        drv_name_buff[1] = ':';
-        drv_name_buff[2] = '\0';
+        drv_name_buff[2] = 'B';
+        drv_name_buff[3] = '1' + instance;
+        drv_name_buff[4] = ':';
+        drv_name_buff[5] = '\0';
         if(!f_mount(&g_sFatFs1, drv_name_buff, 1))
 #endif
         {
@@ -361,32 +365,34 @@ void _usb_msc_host_idle(unsigned int instance)
 #ifdef USBH_MSC_DEBUG_EN
 						if(DebugCom)
 						{
-																				UARTprintf(DebugCom,   "USBH MSC%d drive %d mounted\n\r" , 0 , 1);
-																				UARTprintf(DebugCom,   "USBH MSC%d Fat fs detected\n\r" , 0);
-																				UARTprintf(DebugCom, "USBH MSC%d Fs type:                 " , 0);
+							uart.printf(DebugCom,   "USBH MSC%d drive %d mounted\n\r" , 0 , 1);
+							uart.printf(DebugCom,   "USBH MSC%d Fat fs detected\n\r" , 0);
+							uart.printf(DebugCom, "USBH MSC%d Fs type:                 " , 0);
 							if(g_sFatFs1.fs_type == FS_FAT12)	{
-																				UARTprintf(DebugCom, "Fat12");}
+								uart.printf(DebugCom, "Fat12");}
 							else if(g_sFatFs1.fs_type == FS_FAT16){
-																				UARTprintf(DebugCom, "Fat16");}
+								uart.printf(DebugCom, "Fat16");}
 							else if(g_sFatFs1.fs_type == FS_FAT32){
-																				UARTprintf(DebugCom, "Fat32");}
-							else								{ 				UARTprintf(DebugCom, "None");}
-																				UARTprintf(DebugCom, "\n\r");
+								uart.printf(DebugCom, "Fat32");}
+							else if(g_sFatFs1.fs_type == FS_EXFAT){
+								uart.printf(DebugCom, "eXFAT");}
+							else								{ 				uart.printf(DebugCom, "None");}
+							uart.printf(DebugCom, "\n\r");
 																				//UARTprintf(DebugCom, "MMCSD0 BootSectorAddress:       %u \n\r",(unsigned int)g_sFatFs.);
-																				UARTprintf(DebugCom, "USBH MSC%d BytesPerSector:          %d \n\r",0, /*(int)g_sFatFs.s_size*/512);
-																				UARTprintf(DebugCom, "USBH MSC%d SectorsPerCluster:       %d \n\r",0, (int)g_sFatFs1.csize);
+							uart.printf(DebugCom, "USBH MSC%d BytesPerSector:          %d \n\r",0, /*(int)g_sFatFs.s_size*/512);
+							uart.printf(DebugCom, "USBH MSC%d SectorsPerCluster:       %d \n\r",0, (int)g_sFatFs1.csize);
 																				//UARTprintf(DebugCom, "MMCSD0 AllocTable1Begin:        %u \n\r",(unsigned int)g_sFatFs.fatbase);
 																				//UARTprintf(DebugCom, "USBH MSC%d NumberOfFats:            %d \n\r",0, (int)g_sFatFs1.n_fats);
 																				//UARTprintf(DebugCom, "MMCSD0 MediaType:               %d \n\r",Drives_Table[0]->DiskInfo_MediaType);
 																				//UARTprintf(DebugCom, "MMCSD0 AllocTableSize:          %u \n\r",Drives_Table[0]->DiskInfo_AllocTableSize);
 																				//UARTprintf(DebugCom, "USBH MSC%d DataSectionBegin:        %d \n\r",0, (int)g_sFatFs1.fatbase);
-																				UARTprintf(DebugCom, "USBH MSC%d uSD DiskCapacity:        %uMB\n\r",0, (unsigned long)((unsigned long long)((unsigned long long)g_sFatFs1.n_fatent * (unsigned long long)/*g_sFatFs.s_size*/512 * (unsigned long long)g_sFatFs1.csize) / 1000000));
+							uart.printf(DebugCom, "USBH MSC%d uSD DiskCapacity:        %uMB\n\r",0, (unsigned long)((unsigned long long)((unsigned long long)g_sFatFs1.n_fatent * (unsigned long long)/*g_sFatFs.s_size*/512 * (unsigned long long)g_sFatFs1.csize) / 1000000));
 						}
 #endif
             }
-        	else  if(DebugCom)										UARTprintf(DebugCom,   "USBH %d ERROR oppening path\n\r" , 0);
+        	else  if(DebugCom)										uart.printf(DebugCom,   "USBH %d ERROR oppening path\n\r" , 0);
         }
-        else  if(DebugCom)												UARTprintf(DebugCom,   "USBH %d ERROR mounting disk\n\r" , 0);
+        else  if(DebugCom)												uart.printf(DebugCom,   "USBH %d ERROR mounting disk\n\r" , 0);
         Appli_state = APPLICATION_IDLE;
         break;
 

@@ -138,11 +138,11 @@ typedef struct
 
   HAL_LockTypeDef               Lock;                /*!< DCMI locking object          */
 
-  __IO HAL_DCMI_StateTypeDef    State;               /*!< DCMI state                   */
+  volatile HAL_DCMI_StateTypeDef    State;               /*!< DCMI state                   */
 
-  __IO uint32_t                 XferCount;           /*!< DMA transfer counter         */
+  volatile uint32_t                 XferCount;           /*!< DMA transfer counter         */
 
-  __IO uint32_t                 XferSize;            /*!< DMA transfer size            */
+  volatile uint32_t                 XferSize;            /*!< DMA transfer size            */
 
   uint32_t                      XferTransferNumber;  /*!< DMA transfer number          */
 
@@ -150,7 +150,7 @@ typedef struct
 
   DMA_HandleTypeDef             *DMA_Handle;         /*!< Pointer to the DMA handler   */
 
-  __IO uint32_t                 ErrorCode;           /*!< DCMI Error code              */
+  volatile uint32_t                 ErrorCode;           /*!< DCMI Error code              */
 
 }DCMI_HandleTypeDef;
 /**

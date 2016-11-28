@@ -46,6 +46,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f7xx_hal_conf.h"
+#include "sys/core_init.h"
 
 /** @addtogroup STM32F7xx_HAL_Driver
   * @{
@@ -191,7 +192,7 @@ HAL_StatusTypeDef HAL_InitTick (uint32_t TickPriority);
   */ 
 /* Peripheral Control functions  ************************************************/
 void HAL_IncTick(void);
-void HAL_Delay(__IO uint32_t Delay);
+void HAL_Delay(volatile uint32_t Delay);
 uint32_t HAL_GetTick(void);
 void HAL_SuspendTick(void);
 void HAL_ResumeTick(void);

@@ -161,7 +161,7 @@ typedef struct __DMA_HandleTypeDef
 
   HAL_LockTypeDef            Lock;                                                         /*!< DMA locking object                     */  
 
-  __IO HAL_DMA_StateTypeDef  State;                                                        /*!< DMA transfer state                     */
+  volatile HAL_DMA_StateTypeDef  State;                                                        /*!< DMA transfer state                     */
 
   void                       *Parent;                                                      /*!< Parent object state                    */ 
 
@@ -177,7 +177,7 @@ typedef struct __DMA_HandleTypeDef
   
   void                       (* XferAbortCallback)( struct __DMA_HandleTypeDef * hdma);    /*!< DMA transfer Abort callback            */  
 
- __IO uint32_t               ErrorCode;                                                    /*!< DMA Error code                          */
+ volatile uint32_t               ErrorCode;                                                    /*!< DMA Error code                          */
   
  uint32_t                    StreamBaseAddress;                                            /*!< DMA Stream Base Address                */
 

@@ -78,7 +78,7 @@ typedef struct
 {
   DAC_TypeDef                 *Instance;     /*!< Register base address             */
 
-  __IO HAL_DAC_StateTypeDef   State;         /*!< DAC communication state           */
+  volatile HAL_DAC_StateTypeDef   State;         /*!< DAC communication state           */
 
   HAL_LockTypeDef             Lock;          /*!< DAC locking object                */
 
@@ -86,7 +86,7 @@ typedef struct
 
   DMA_HandleTypeDef           *DMA_Handle2;  /*!< Pointer DMA handler for channel 2 */
 
-  __IO uint32_t               ErrorCode;     /*!< DAC Error code                    */
+  volatile uint32_t               ErrorCode;     /*!< DAC Error code                    */
 
 }DAC_HandleTypeDef;
 

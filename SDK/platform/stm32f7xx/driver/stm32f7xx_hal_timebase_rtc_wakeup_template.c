@@ -82,8 +82,8 @@
   + RTC_CLOCK_SOURCE_LSI: can be selected for applications with low constraint on timing
                           precision.
   */
-#define RTC_CLOCK_SOURCE_HSE
-/* #define RTC_CLOCK_SOURCE_LSE */
+/* #define RTC_CLOCK_SOURCE_HSE*/
+#define RTC_CLOCK_SOURCE_LSE
 /* #define RTC_CLOCK_SOURCE_LSI */
 
 #ifdef RTC_CLOCK_SOURCE_HSE

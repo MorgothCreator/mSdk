@@ -7,10 +7,10 @@
 
 #include <stdbool.h>
 #include "int_rtc_interface.h"
-#include "driver/stm32f4xx_hal_rcc.h"
-#include "driver/stm32f4xx_hal_pwr.h"
-#include "driver/stm32f4xx_hal_rtc.h"
-#include "driver/stm32f4xx_hal_rtc_ex.h"
+#include "driver/stm32f7xx_hal_rcc.h"
+#include "driver/stm32f7xx_hal_pwr.h"
+#include "driver/stm32f7xx_hal_rtc.h"
+#include "driver/stm32f7xx_hal_rtc_ex.h"
 
 static bool rtc_init_status = true;
 static RTC_HandleTypeDef RtcHandle;
@@ -208,7 +208,7 @@ bool _rtc_setup_tamper()
 
 	/* Use PC13 as Tamper 1 with interrupt mode */
 	stamperstructure.Filter = RTC_TAMPERFILTER_DISABLE;
-	stamperstructure.PinSelection = RTC_TAMPERPIN_PC13;
+	//stamperstructure.PinSelection = RTC_TAMPERPIN_PC13;
 	stamperstructure.Tamper = RTC_TAMPER_1;
 	stamperstructure.Trigger = RTC_TAMPERTRIGGER_RISINGEDGE;
 	stamperstructure.SamplingFrequency = RTC_TAMPERSAMPLINGFREQ_RTCCLK_DIV256;

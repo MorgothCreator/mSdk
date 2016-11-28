@@ -141,13 +141,13 @@ typedef struct
 
   uint16_t                      TxXferSize;       /*!< USART Tx Transfer size              */
 
-  __IO uint16_t                 TxXferCount;      /*!< USART Tx Transfer Counter           */
+  volatile uint16_t                 TxXferCount;      /*!< USART Tx Transfer Counter           */
 
   uint8_t                       *pRxBuffPtr;      /*!< Pointer to USART Rx transfer Buffer */
 
   uint16_t                      RxXferSize;       /*!< USART Rx Transfer size              */
 
-  __IO uint16_t                 RxXferCount;      /*!< USART Rx Transfer Counter           */
+  volatile uint16_t                 RxXferCount;      /*!< USART Rx Transfer Counter           */
 
   uint16_t                      Mask;             /*!< USART Rx RDR register mask          */
 
@@ -159,7 +159,7 @@ typedef struct
 
   HAL_USART_StateTypeDef        State;           /*!< USART communication state           */
 
-  __IO uint32_t                 ErrorCode;       /*!< USART Error code                    */
+  volatile uint32_t                 ErrorCode;       /*!< USART Error code                    */
 
 }USART_HandleTypeDef;
 /**

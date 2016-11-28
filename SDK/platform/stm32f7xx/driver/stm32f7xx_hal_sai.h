@@ -231,9 +231,9 @@ typedef struct __SAI_HandleTypeDef
 
   HAL_LockTypeDef           Lock;         /*!< SAI locking object */
 
-  __IO HAL_SAI_StateTypeDef State;        /*!< SAI communication state */
+  volatile HAL_SAI_StateTypeDef State;        /*!< SAI communication state */
 
-  __IO uint32_t             ErrorCode;    /*!< SAI Error code */
+  volatile uint32_t             ErrorCode;    /*!< SAI Error code */
 }SAI_HandleTypeDef;
 /**
   * @}

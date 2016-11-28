@@ -6,8 +6,8 @@
  */
 
 #include "stdbool.h"
-#include "driver/USBD/Class/CDC/usbd_cdc_interface.h"
 #include "driver/USBD/Class/CDC/Inc/usbd_cdc.h"
+#include "driver/USBD/Class/CDC/usbd_cdc_interface.h"
 #include "driver/USBD/Class/CDC/usbd_cdc_desc.h"
 #include "driver/USBD/Core/Inc/usbd_core.h"
 #include "lib/buffers/ring_buff.h"
@@ -28,23 +28,23 @@ int put_receive_char_ptr = 0;
 
 //extern unsigned int UserRxBuffCnt;
 
-USBD_HandleTypeDef  USBD_Device;
+USBD_HandleTypeDef  usb_cdc_dev_param;
 
 bool _usb_com_dev_init(unsigned int instance)
 {
 	usb_cdc_dev_rx_fifo = fifo_open(APP_RX_DATA_SIZE);
 	usb_cdc_dev_tx_fifo = fifo_open(APP_RX_DATA_SIZE);
 	/* Init Device Library */
-	USBD_Init(&USBD_Device, &VCP_Desc, 0);
+	USBD_Init(&usb_cdc_dev_param, &VCP_Desc, 0);
 
 	/* Add Supported Class */
-	USBD_RegisterClass(&USBD_Device, USBD_CDC_CLASS);
+	USBD_RegisterClass(&usb_cdc_dev_param, USBD_CDC_CLASS);
 
 	/* Add CDC Interface Class */
-	USBD_CDC_RegisterInterface(&USBD_Device, &USBD_CDC_fops);
+	USBD_CDC_RegisterInterface(&usb_cdc_dev_param, &USBD_CDC_fops);
 
 	/* Start Device Process */
-	USBD_Start(&USBD_Device);
+	USBD_Start(&usb_cdc_dev_param);
 	return true;
 }
 unsigned int _usb_com_dev_receive(unsigned char* buff)
@@ -60,8 +60,10 @@ unsigned int _usb_com_dev_send(unsigned char* buff, unsigned int nbytes)
 {
 	unsigned int cnt = 0;
 	for(; cnt < nbytes; cnt++)
-		fifo_push(usb_cdc_dev_tx_fifo, buff[cnt]);
-
-	return 0;
+	{
+		if(!fifo_push(usb_cdc_dev_tx_fifo, buff[cnt]))
+			break;
+	}
+	return cnt;
 }
 

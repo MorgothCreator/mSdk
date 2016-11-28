@@ -116,9 +116,9 @@ typedef struct
 
   uint8_t                  *pJpegOutBuffPtr; /*!< Pointer to JPEG processing (encoding, decoding,...) output buffer */
 
-  __IO uint32_t            JpegInCount;      /*!< Internal Counter of input data */
+  volatile uint32_t            JpegInCount;      /*!< Internal Counter of input data */
 
-  __IO uint32_t            JpegOutCount;     /*!< Internal Counter of output data */
+  volatile uint32_t            JpegOutCount;     /*!< Internal Counter of output data */
     
   uint32_t                 InDataLength;     /*!< Input Buffer Length in Bytes */
 
@@ -140,11 +140,11 @@ typedef struct
       
   HAL_LockTypeDef          Lock;             /*!< JPEG locking object */
       
-  __IO  HAL_JPEG_STATETypeDef State;         /*!< JPEG peripheral state */
+  volatile  HAL_JPEG_STATETypeDef State;         /*!< JPEG peripheral state */
       
-  __IO  uint32_t           ErrorCode;        /*!< JPEG Error code */
+  volatile  uint32_t           ErrorCode;        /*!< JPEG Error code */
   
-  __IO uint32_t Context;                     /*!< JPEG Internal context */
+  volatile uint32_t Context;                     /*!< JPEG Internal context */
 
 }JPEG_HandleTypeDef;
 

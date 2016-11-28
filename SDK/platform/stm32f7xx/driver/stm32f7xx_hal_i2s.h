@@ -45,6 +45,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f7xx_hal_def.h"  
+#include "stm32f7xx_hal_dma.h"
 
 /** @addtogroup STM32F7xx_HAL_Driver
   * @{
@@ -113,15 +114,15 @@ typedef struct
   
   uint16_t                   *pTxBuffPtr;  /* Pointer to I2S Tx transfer buffer */
   
-  __IO uint16_t              TxXferSize;   /* I2S Tx transfer size */
+  volatile uint16_t              TxXferSize;   /* I2S Tx transfer size */
   
-  __IO uint16_t              TxXferCount;  /* I2S Tx transfer Counter */
+  volatile uint16_t              TxXferCount;  /* I2S Tx transfer Counter */
   
   uint16_t                   *pRxBuffPtr;  /* Pointer to I2S Rx transfer buffer */
   
-  __IO uint16_t              RxXferSize;   /* I2S Rx transfer size */
+  volatile uint16_t              RxXferSize;   /* I2S Rx transfer size */
   
-  __IO uint16_t              RxXferCount;  /* I2S Rx transfer counter 
+  volatile uint16_t              RxXferCount;  /* I2S Rx transfer counter
                                               (This field is initialized at the 
                                                same value as transfer size at the 
                                                beginning of the transfer and 
@@ -132,11 +133,11 @@ typedef struct
 
   DMA_HandleTypeDef          *hdmarx;      /* I2S Rx DMA handle parameters */
   
-  __IO HAL_LockTypeDef       Lock;         /* I2S locking object */
+  volatile HAL_LockTypeDef       Lock;         /* I2S locking object */
   
-  __IO HAL_I2S_StateTypeDef  State;        /* I2S communication state */
+  volatile HAL_I2S_StateTypeDef  State;        /* I2S communication state */
 
-  __IO uint32_t  ErrorCode;                /* I2S Error code                 */
+  volatile uint32_t  ErrorCode;                /* I2S Error code                 */
 
 }I2S_HandleTypeDef;
 /**
@@ -334,7 +335,7 @@ typedef struct
   */
 #define __HAL_I2S_CLEAR_OVRFLAG(__HANDLE__)     \
   do{                                           \
-    __IO uint32_t tmpreg;                       \
+    volatile uint32_t tmpreg;                       \
     tmpreg = (__HANDLE__)->Instance->DR;        \
     tmpreg = (__HANDLE__)->Instance->SR;        \
     UNUSED(tmpreg);                             \
@@ -346,7 +347,7 @@ typedef struct
   */
 #define __HAL_I2S_CLEAR_UDRFLAG(__HANDLE__)     \
   do{                                             \
-  __IO uint32_t tmpreg;                         \
+  volatile uint32_t tmpreg;                         \
   tmpreg = (__HANDLE__)->Instance->SR;          \
   UNUSED(tmpreg);                               \
   } while(0)

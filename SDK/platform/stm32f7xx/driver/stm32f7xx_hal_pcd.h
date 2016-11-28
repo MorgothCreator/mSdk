@@ -94,7 +94,7 @@ typedef struct
   PCD_EPTypeDef           IN_ep[15];  /*!< IN endpoint parameters             */
   PCD_EPTypeDef           OUT_ep[15]; /*!< OUT endpoint parameters            */ 
   HAL_LockTypeDef         Lock;       /*!< PCD peripheral status              */
-  __IO PCD_StateTypeDef   State;      /*!< PCD communication state            */
+  volatile PCD_StateTypeDef   State;      /*!< PCD communication state            */
   uint32_t                Setup[12];  /*!< Setup packet buffer                */
   PCD_LPM_StateTypeDef    LPM_State;    /*!< LPM State                          */
   uint32_t                BESL;
@@ -165,12 +165,12 @@ typedef struct
 #define __HAL_PCD_IS_INVALID_INTERRUPT(__HANDLE__)         (USB_ReadInterrupts((__HANDLE__)->Instance) == 0)
 
 
-#define __HAL_PCD_UNGATE_PHYCLOCK(__HANDLE__)             *(__IO uint32_t *)((uint32_t)((__HANDLE__)->Instance) + USB_OTG_PCGCCTL_BASE) &= \
+#define __HAL_PCD_UNGATE_PHYCLOCK(__HANDLE__)             *(volatile uint32_t *)((uint32_t)((__HANDLE__)->Instance) + USB_OTG_PCGCCTL_BASE) &= \
                                                        ~(USB_OTG_PCGCCTL_STOPCLK)
 
-#define __HAL_PCD_GATE_PHYCLOCK(__HANDLE__)               *(__IO uint32_t *)((uint32_t)((__HANDLE__)->Instance) + USB_OTG_PCGCCTL_BASE) |= USB_OTG_PCGCCTL_STOPCLK
+#define __HAL_PCD_GATE_PHYCLOCK(__HANDLE__)               *(volatile uint32_t *)((uint32_t)((__HANDLE__)->Instance) + USB_OTG_PCGCCTL_BASE) |= USB_OTG_PCGCCTL_STOPCLK
                                                       
-#define __HAL_PCD_IS_PHY_SUSPENDED(__HANDLE__)            ((*(__IO uint32_t *)((uint32_t)((__HANDLE__)->Instance) + USB_OTG_PCGCCTL_BASE))&0x10)
+#define __HAL_PCD_IS_PHY_SUSPENDED(__HANDLE__)            ((*(volatile uint32_t *)((uint32_t)((__HANDLE__)->Instance) + USB_OTG_PCGCCTL_BASE))&0x10)
                                                          
 #define USB_OTG_FS_WAKEUP_EXTI_RISING_EDGE                ((uint32_t)0x08U) 
 #define USB_OTG_FS_WAKEUP_EXTI_FALLING_EDGE               ((uint32_t)0x0CU) 

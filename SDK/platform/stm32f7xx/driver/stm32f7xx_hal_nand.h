@@ -127,7 +127,7 @@ typedef struct
 
   HAL_LockTypeDef              Lock;       /*!< NAND locking object                          */
 
-  __IO HAL_NAND_StateTypeDef   State;      /*!< NAND device access state                     */
+  volatile HAL_NAND_StateTypeDef   State;      /*!< NAND device access state                     */
 
   NAND_InfoTypeDef             Info;       /*!< NAND characteristic information structure    */
 }NAND_HandleTypeDef;

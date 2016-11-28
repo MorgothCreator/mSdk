@@ -174,13 +174,13 @@ typedef struct
 
   uint16_t                 TxXferSize;       /* IRDA Tx Transfer size              */
 
-  __IO uint16_t            TxXferCount;      /* IRDA Tx Transfer Counter           */
+  volatile uint16_t            TxXferCount;      /* IRDA Tx Transfer Counter           */
 
   uint8_t                  *pRxBuffPtr;      /* Pointer to IRDA Rx transfer Buffer */
 
   uint16_t                 RxXferSize;       /* IRDA Rx Transfer size              */
 
-  __IO uint16_t            RxXferCount;      /* IRDA Rx Transfer Counter           */
+  volatile uint16_t            RxXferCount;      /* IRDA Rx Transfer Counter           */
 
   uint16_t                 Mask;             /* IRDA RX RDR register mask         */
 
@@ -190,14 +190,14 @@ typedef struct
 
   HAL_LockTypeDef          Lock;             /* Locking object                     */
 
-  __IO HAL_IRDA_StateTypeDef  gState;           /* IRDA state information related to global Handle management 
+  volatile HAL_IRDA_StateTypeDef  gState;           /* IRDA state information related to global Handle management
                                                    and also related to Tx operations.
                                                    This parameter can be a value of @ref HAL_IRDA_StateTypeDef */
 
-  __IO HAL_IRDA_StateTypeDef  RxState;          /* IRDA state information related to Rx operations.
+  volatile HAL_IRDA_StateTypeDef  RxState;          /* IRDA state information related to Rx operations.
                                                    This parameter can be a value of @ref HAL_IRDA_StateTypeDef */
 
-  __IO uint32_t    ErrorCode;   /* IRDA Error code                    */
+  volatile uint32_t    ErrorCode;   /* IRDA Error code                    */
 
 }IRDA_HandleTypeDef;
 

@@ -38,9 +38,25 @@
   */ 
 
 /* Includes ------------------------------------------------------------------*/
+/* Includes ------------------------------------------------------------------*/
+#include <interface/mmcsd_interface.h>
 #include "main.h"
-#include "ethernetif.h"
-#include "k_module.h"
+#include "stm32f7xx_it.h"
+#include "sys/sysdelay.h"
+#include "interface/usb_host_msc_interface.h"
+//#include "driver/USBD/Class/CDC/usbd_cdc_interface.h"
+#include "driver/stm32f7xx_hal_dma.h"
+#include "driver/stm32f7xx_hal.h"
+#include "driver/stm32f7xx_hal_hcd.h"
+#include "driver/stm32f7xx_hal_pcd.h"
+#include "driver/stm32f7xx_hal_gpio.h"
+#include "driver/stm32f7xx_hal_adc.h"
+#include "driver/stm32f7xx_hal_tim.h"
+#include "driver/stm32f7xx_hal_ltdc.h"
+#include "driver/stm32f7xx_hal_sai.h"
+#include "driver/stm32f7xx_hal_i2s.h"
+#include "lwipopts.h"
+//#include "k_module.h"
  /** @addtogroup CORE
   * @{
   */
@@ -55,18 +71,18 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 extern HCD_HandleTypeDef               hhcd;
-extern PCD_HandleTypeDef               hpcd;
+extern PCD_HandleTypeDef               _hpcd[];
 extern LTDC_HandleTypeDef              hltdc_disco;  
 extern SAI_HandleTypeDef               haudio_out_sai;
 extern JPEG_HandleTypeDef              JPEG_Handle;
-extern K_ModuleItem_Typedef            audio_recorder_board;
+//extern K_ModuleItem_Typedef            audio_recorder_board;
 
 extern DFSDM_Filter_HandleTypeDef      haudio_in_top_leftfilter;
 extern DFSDM_Filter_HandleTypeDef      haudio_in_top_rightfilter;
 
 /* Private function prototypes -----------------------------------------------*/
-extern void xPortSysTickHandler(void);
-extern void LTDC_ISR_Handler(void);
+//extern void xPortSysTickHandler(void);
+//extern void LTDC_ISR_Handler(void);
 
 /* Private functions ---------------------------------------------------------*/
 
@@ -136,11 +152,29 @@ void UsageFault_Handler(void)
 }
 
 /**
+  * @brief  This function handles SVCall exception.
+  * @param  None
+  * @retval None
+  */
+void SVC_Handler(void)
+{
+}
+
+/**
   * @brief  This function handles Debug Monitor exception.
   * @param  None
   * @retval None
   */
 void DebugMon_Handler(void)
+{
+}
+
+/**
+  * @brief  This function handles PendSVC exception.
+  * @param  None
+  * @retval None
+  */
+void PendSV_Handler(void)
 {
 }
 
@@ -151,11 +185,12 @@ void DebugMon_Handler(void)
   */
 void SysTick_Handler(void)
 {
+	TimerCnt_Isr_Increment();
   HAL_IncTick();
-  if (xTaskGetSchedulerState() != taskSCHEDULER_NOT_STARTED)
+  /*if (xTaskGetSchedulerState() != taskSCHEDULER_NOT_STARTED)
   {
     xPortSysTickHandler();
-  }
+  }*/
 }
 
 /******************************************************************************/
@@ -164,17 +199,33 @@ void SysTick_Handler(void)
 /*  available peripheral interrupt handler's name please refer to the startup */
 /*  file (startup_stm32f7xx.s).                                               */
 /******************************************************************************/
-
 /**
-  * @brief  This function handles USB-On-The-Go HS global interrupt request.
+  * @brief  This function handles SDIO interrupt request.
   * @param  None
   * @retval None
   */
-void OTG_HS_IRQHandler(void)
+/*void SDIO_IRQHandler(void)
+{
+  BSP_SD_IRQHandler();
+}*/
+
+
+/**
+  * @brief  This function handles USB-On-The-Go FS global interrupt requests.
+  * @param  None
+  * @retval None
+  */
+#ifndef USE_USB_DEV
+void OTG_FS_IRQHandler(void)
 {
   HAL_HCD_IRQHandler(&hhcd);
 }
 
+void OTG_HS_IRQHandler(void)
+{
+  HAL_HCD_IRQHandler(&hhcd);
+}
+#else
 /**
   * @brief  This function handles USB-On-The-Go FS global interrupt request.
   * @param  None
@@ -182,18 +233,24 @@ void OTG_HS_IRQHandler(void)
   */
 void OTG_FS_IRQHandler(void)
 {
-  HAL_HCD_IRQHandler(&hhcd);
+  HAL_PCD_IRQHandler(&_hpcd[0]);
 }
+
+void OTG_HS_IRQHandler(void)
+{
+  HAL_PCD_IRQHandler(&_hpcd[0]);
+}
+#endif
 
 /**
   * @brief  This function handles LTDC global interrupt request.
   * @param  None
   * @retval None
   */
-void LTDC_IRQHandler(void)
+/*void LTDC_IRQHandler(void)
 {
   HAL_LTDC_IRQHandler(&hltdc_disco);
-}
+}*/
 
 /**
   * @brief  This function handles External lines 9_5 interrupt request.
@@ -210,20 +267,20 @@ void EXTI9_5_IRQHandler(void)
   * @param  None
   * @retval None
   */
-void JPEG_IRQHandler(void)
+/*void JPEG_IRQHandler(void)
 {
   HAL_JPEG_IRQHandler(&JPEG_Handle);
-}
+}*/
 
 /**
   * @brief  This function handles JPEG/_DFSDM_DMAx_LEFT interrupt request.
   * @param  None
   * @retval None
   */
-void DMA2_Stream3_IRQHandler(void) /* AUDIO_DFSDM_DMAx_LEFT_IRQHandler */
-{
-    HAL_DMA_IRQHandler(JPEG_Handle.hdmain);      
-}
+//void DMA2_Stream3_IRQHandler(void) /* AUDIO_DFSDM_DMAx_LEFT_IRQHandler */
+//{
+//    HAL_DMA_IRQHandler(JPEG_Handle.hdmain);
+//}
 
 
 /**
@@ -241,7 +298,7 @@ void DMA2_Stream1_IRQHandler(void)
   * @param  None
   * @retval None
   */
-void AUDIO_DFSDMx_DMAx_TOP_LEFT_IRQHandler(void)
+/*void AUDIO_DFSDMx_DMAx_TOP_LEFT_IRQHandler(void)
 {
   if(module_prop[k_ModuleGetIndex(&audio_recorder_board)].in_use == 0)
   {
@@ -253,7 +310,7 @@ void AUDIO_DFSDMx_DMAx_TOP_LEFT_IRQHandler(void)
   }   
   
    
-}
+}*/
 
 /**
   * @brief  This function handles DMA2 Stream 5 interrupt request.
@@ -270,10 +327,10 @@ void AUDIO_DFSDMx_DMAx_TOP_RIGHT_IRQHandler(void)
   * @param  None
   * @retval None
   */
-void ETH_IRQHandler(void)
-{
-  ETHERNET_IRQHandler();
-}
+//void ETH_IRQHandler(void)
+//{
+//  ETHERNET_IRQHandler();
+//}
 
 
 /**

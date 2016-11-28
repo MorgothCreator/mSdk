@@ -21,15 +21,15 @@
 
 #include "stdbool.h"
 #include "stdio.h"
-#include "include/stm32f4xx.h"
+#include "include/stm32f7xx.h"
 #include "api/adc_def.h"
 #include "board_init.h"
 #include "adc_interface.h"
-#include "driver/stm32f4xx_hal_adc.h"
-#include "driver/stm32f4xx_hal_dma.h"
-#include "driver/stm32f4xx_hal_rcc.h"
-#include "driver/stm32f4xx_hal_gpio.h"
-#include "driver/stm32f4xx_hal_cortex.h"
+#include "driver/stm32f7xx_hal_adc.h"
+#include "driver/stm32f7xx_hal_dma.h"
+#include "driver/stm32f7xx_hal_rcc.h"
+#include "driver/stm32f7xx_hal_gpio.h"
+#include "driver/stm32f7xx_hal_cortex.h"
 /*#####################################################*/
 ADC_HandleTypeDef    AdcHandle[3];
 DMA_HandleTypeDef DMA_InitStructure[3];
@@ -156,7 +156,7 @@ bool _adc_init(Adc_t *Adc_s)
 	//ADC_InitTypeDef ADC_InitStructure;
 	/* ADC1 configuration ------------------------------------------------------*/
 	unsigned int ext_trig = ADC_SOFTWARE_START;
-	switch(Adc_s->ExtTrig)
+	switch((unsigned int)Adc_s->ExtTrig)
 	{
 		case 0:
 			break;
@@ -172,42 +172,60 @@ bool _adc_init(Adc_t *Adc_s)
 		case 4:
 			ext_trig = ADC_EXTERNALTRIGCONV_T2_CC2;
 			break;
+#ifdef ADC_EXTERNALTRIGCONV_T2_CC3
 		case 5:
 			ext_trig = ADC_EXTERNALTRIGCONV_T2_CC3;
 			break;
+#endif
+#ifdef ADC_EXTERNALTRIGCONV_T2_CC3
 		case 6:
 			ext_trig = ADC_EXTERNALTRIGCONV_T2_CC4;
 			break;
+#endif
 		case 7:
 			ext_trig = ADC_EXTERNALTRIGCONV_T2_TRGO;
 			break;
+#ifdef ADC_EXTERNALTRIGCONV_T2_CC3
 		case 8:
 			ext_trig = ADC_EXTERNALTRIGCONV_T3_CC1;
 			break;
+#endif
+#ifdef ADC_EXTERNALTRIGCONV_T2_CC3
 		case 9:
 			ext_trig = ADC_EXTERNALTRIGCONV_T3_TRGO;
 			break;
+#endif
 		case 10:
 			ext_trig = ADC_EXTERNALTRIGCONV_T4_CC4;
 			break;
+#ifdef ADC_EXTERNALTRIGCONV_T2_CC3
 		case 11:
 			ext_trig = ADC_EXTERNALTRIGCONV_T5_CC1;
 			break;
+#endif
+#ifdef ADC_EXTERNALTRIGCONV_T2_CC3
 		case 12:
 			ext_trig = ADC_EXTERNALTRIGCONV_T5_CC2;
 			break;
+#endif
+#ifdef ADC_EXTERNALTRIGCONV_T2_CC3
 		case 13:
 			ext_trig = ADC_EXTERNALTRIGCONV_T5_CC3;
 			break;
+#endif
+#ifdef ADC_EXTERNALTRIGCONV_T2_CC3
 		case 14:
 			ext_trig = ADC_EXTERNALTRIGCONV_T8_CC1;
 			break;
+#endif
 		case 15:
 			ext_trig = ADC_EXTERNALTRIGCONV_T8_TRGO;
 			break;
+#ifdef ADC_EXTERNALTRIGCONV_T2_CC3
 		case 16:
 			ext_trig = ADC_EXTERNALTRIGCONV_Ext_IT11;
 			break;
+#endif
 	}
 
 	/* ADC enable channels by mask */
@@ -557,4 +575,23 @@ bool _adc_init(Adc_t *Adc_s)
 	  HAL_NVIC_EnableIRQ(ADC_IRQn);
 
 	return true;
+}
+
+/**
+* @brief  This function handles DMA interrupt request.
+* @param  None
+* @retval None
+*/
+/*void DMA2_Stream0_IRQHandler(void)
+{
+  HAL_DMA_IRQHandler(AdcHandle[0].DMA_Handle);
+}*/
+/**
+  * @brief  This function handles ADC interrupt request.
+  * @param  None
+  * @retval None
+  */
+void ADC_IRQHandler(void)
+{
+  HAL_ADC_IRQHandler(&AdcHandle[0]);
 }

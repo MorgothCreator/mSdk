@@ -165,7 +165,7 @@ typedef struct
   
       HAL_LockTypeDef             Lock;             /*!< LPTIM locking object      */
   
-   __IO  HAL_LPTIM_StateTypeDef   State;            /*!< LPTIM peripheral state    */
+   volatile  HAL_LPTIM_StateTypeDef   State;            /*!< LPTIM peripheral state    */
   
 }LPTIM_HandleTypeDef;
 

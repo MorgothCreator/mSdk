@@ -10,7 +10,7 @@
 /*#####################################################*/
 #include <stdbool.h>
 #include "api/gpio_def.h"
-#include "driver/stm32f4xx_hal_gpio.h"
+#include "driver/stm32f7xx_hal_gpio.h"
 extern GPIO_TypeDef* GET_GPIO_PORT_ADDR[];
 extern const unsigned int GET_PORT_CLK_ADDR[];
 /*#####################################################*/

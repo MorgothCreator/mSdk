@@ -131,7 +131,7 @@ typedef struct
 
   HAL_LockTypeDef               Lock;         /*!< NOR locking object                           */
 
-  __IO HAL_NOR_StateTypeDef     State;        /*!< NOR device access state                      */
+  volatile HAL_NOR_StateTypeDef     State;        /*!< NOR device access state                      */
 
 }NOR_HandleTypeDef;
 /**
@@ -274,7 +274,7 @@ HAL_NOR_StatusTypeDef HAL_NOR_GetStatus(NOR_HandleTypeDef *hnor, uint32_t Addres
   * @retval None
   */
 #define NOR_WRITE(__ADDRESS__, __DATA__)   do{                                                             \
-                                                 (*(__IO uint16_t *)((uint32_t)(__ADDRESS__)) = (__DATA__)); \
+                                                 (*(volatile uint16_t *)((uint32_t)(__ADDRESS__)) = (__DATA__)); \
                                                  __DSB();                                                    \
                                                } while(0)
 

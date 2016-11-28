@@ -90,7 +90,7 @@ typedef struct
   HCD_InitTypeDef           Init;       /*!< HCD required parameters  */
   HCD_HCTypeDef             hc[15];     /*!< Host channels parameters */
   HAL_LockTypeDef           Lock;       /*!< HCD peripheral status    */
-  __IO HCD_StateTypeDef     State;      /*!< HCD communication state  */
+  volatile HCD_StateTypeDef     State;      /*!< HCD communication state  */
   void                      *pData;     /*!< Pointer Stack Handler    */
 } HCD_HandleTypeDef;
 /**

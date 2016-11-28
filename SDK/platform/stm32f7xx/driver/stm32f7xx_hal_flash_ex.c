@@ -873,7 +873,7 @@ static HAL_StatusTypeDef FLASH_OB_RDP_LevelConfig(uint8_t Level)
 
   if(status == HAL_OK)
   { 
-    *(__IO uint8_t*)OPTCR_BYTE1_ADDRESS = Level;
+    *(volatile uint8_t*)OPTCR_BYTE1_ADDRESS = Level;
   }
   
   return status;
@@ -957,11 +957,11 @@ static uint8_t FLASH_OB_GetRDP(void)
 {
   uint8_t readstatus = OB_RDP_LEVEL_0;
   
-  if ((*(__IO uint8_t*)(OPTCR_BYTE1_ADDRESS)) == OB_RDP_LEVEL_0)
+  if ((*(volatile uint8_t*)(OPTCR_BYTE1_ADDRESS)) == OB_RDP_LEVEL_0)
   {
     readstatus = OB_RDP_LEVEL_0;
   }
-  else if ((*(__IO uint8_t*)(OPTCR_BYTE1_ADDRESS)) == OB_RDP_LEVEL_2)
+  else if ((*(volatile uint8_t*)(OPTCR_BYTE1_ADDRESS)) == OB_RDP_LEVEL_2)
   {
     readstatus = OB_RDP_LEVEL_2;
   }

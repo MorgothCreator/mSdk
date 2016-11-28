@@ -322,8 +322,8 @@ typedef struct
   DSI_TypeDef               *Instance;    /*!< Register base address      */
   DSI_InitTypeDef           Init;         /*!< DSI required parameters    */
   HAL_LockTypeDef           Lock;         /*!< DSI peripheral status      */
-  __IO HAL_DSI_StateTypeDef State;        /*!< DSI communication state    */
-  __IO uint32_t             ErrorCode;    /*!< DSI Error code             */
+  volatile HAL_DSI_StateTypeDef State;        /*!< DSI communication state    */
+  volatile uint32_t             ErrorCode;    /*!< DSI Error code             */
   uint32_t                  ErrorMsk;     /*!< DSI Error monitoring mask  */
 }DSI_HandleTypeDef;
 

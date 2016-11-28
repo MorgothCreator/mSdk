@@ -246,13 +246,13 @@ typedef struct
 
   uint16_t                        TxXferSize;       /*!< SmartCard Tx Transfer size                            */
 
-  __IO uint16_t                   TxXferCount;      /*!< SmartCard Tx Transfer Counter                         */
+  volatile uint16_t                   TxXferCount;      /*!< SmartCard Tx Transfer Counter                         */
 
   uint8_t                         *pRxBuffPtr;      /*!< Pointer to SmartCard Rx transfer Buffer               */
 
   uint16_t                        RxXferSize;       /*!< SmartCard Rx Transfer size                            */
 
-  __IO uint16_t                   RxXferCount;      /*!< SmartCard Rx Transfer Counter                         */
+  volatile uint16_t                   RxXferCount;      /*!< SmartCard Rx Transfer Counter                         */
 
   DMA_HandleTypeDef               *hdmatx;          /*!< SmartCard Tx DMA Handle parameters                    */
 
@@ -260,14 +260,14 @@ typedef struct
 
   HAL_LockTypeDef                 Lock;             /*!< Locking object                                        */
 
-  __IO HAL_SMARTCARD_StateTypeDef    gState;        /*!< SmartCard state information related to global Handle management 
+  volatile HAL_SMARTCARD_StateTypeDef    gState;        /*!< SmartCard state information related to global Handle management
                                                          and also related to Tx operations.
                                                          This parameter can be a value of @ref HAL_SMARTCARD_StateTypeDef */
 
-  __IO HAL_SMARTCARD_StateTypeDef    RxState;       /*!< SmartCard state information related to Rx operations.
+  volatile HAL_SMARTCARD_StateTypeDef    RxState;       /*!< SmartCard state information related to Rx operations.
                                                          This parameter can be a value of @ref HAL_SMARTCARD_StateTypeDef */
 
-  __IO uint32_t                       ErrorCode;        /* SmartCard Error code                           */
+  volatile uint32_t                       ErrorCode;        /* SmartCard Error code                           */
 
 }SMARTCARD_HandleTypeDef;
 

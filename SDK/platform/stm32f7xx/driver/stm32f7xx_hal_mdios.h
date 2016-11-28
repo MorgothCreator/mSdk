@@ -103,7 +103,7 @@ typedef struct
   
   MDIOS_InitTypeDef            Init;          /*!< MDIOS Init Structure        */
   
-  __IO HAL_MDIOS_StateTypeDef  State;         /*!< MDIOS communication state   */
+  volatile HAL_MDIOS_StateTypeDef  State;         /*!< MDIOS communication state   */
   
   HAL_LockTypeDef              Lock;          /*!< MDIOS Lock                  */
 }MDIOS_HandleTypeDef;

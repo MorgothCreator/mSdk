@@ -5,14 +5,14 @@
  *      Author: XxXx
  */
 #include <stdlib.h>
-#include "stm32f4xx_conf.h"
+//#include "stm32f7xx_conf.h"
 #include "gpio_interface.h"
-#include "include/stm32f4xx.h"
-#include "driver/stm32f4xx_hal_gpio.h"
-#include "driver/stm32f4xx_hal_rcc.h"
-#include "sys/system_stm32f4xx.h"
+#include "include/stm32f7xx.h"
+#include "driver/stm32f7xx_hal_gpio.h"
+#include "driver/stm32f7xx_hal_rcc.h"
+#include "sys/system_stm32f7xx.h"
 #include "api/gpio_def.h"
-#include "driver/stm32f4xx_hal_gpio.h"
+#include "driver/stm32f7xx_hal_gpio.h"
 
 GPIO_TypeDef* GET_GPIO_PORT_ADDR[] = { GPIOA
 #ifdef GPIOB
@@ -78,6 +78,12 @@ const unsigned int GET_PORT_CLK_ADDR[] = {RCC_AHB1Periph_GPIOA
 #ifdef RCC_AHB1Periph_GPIOJ
 		,RCC_AHB1Periph_GPIOJ
 #endif
+#ifdef RCC_AHB1Periph_GPIOK
+		,RCC_AHB1Periph_GPIOK
+#endif
+#ifdef RCC_AHB1Periph_GPIOL
+		,RCC_AHB1Periph_GPIOL
+#endif
 };
 #endif
 void _gpio_init(unsigned int GpioModuleNr)
@@ -141,19 +147,19 @@ void _gpio_init(unsigned int GpioModuleNr)
 #endif
 #ifdef __HAL_RCC_GPIOJ_CLK_ENABLE
 		case 9:
-			//BaseAddr = RCC_AHB1Periph_GPIOI;
+			//BaseAddr = RCC_AHB1Periph_GPIOJ;
 			__HAL_RCC_GPIOJ_CLK_ENABLE();
 			break;
 #endif
 #ifdef __HAL_RCC_GPIOK_CLK_ENABLE
 		case 10:
-			//BaseAddr = RCC_AHB1Periph_GPIOI;
+			//BaseAddr = RCC_AHB1Periph_GPIOK;
 			__HAL_RCC_GPIOK_CLK_ENABLE();
 			break;
 #endif
 #ifdef __HAL_RCC_GPIOL_CLK_ENABLE
 		case 11:
-			//BaseAddr = RCC_AHB1Periph_GPIOI;
+			//BaseAddr = RCC_AHB1Periph_GPIOL;
 			__HAL_RCC_GPIOK_CLL_ENABLE();
 			break;
 #endif

@@ -149,18 +149,18 @@ typedef struct
     
     uint32_t                   *pCsBuffPtr;  /* Pointer to SPDIFRX Cx transfer buffer */
   
-  __IO uint16_t              RxXferSize;   /* SPDIFRX Rx transfer size */
+  volatile uint16_t              RxXferSize;   /* SPDIFRX Rx transfer size */
   
-  __IO uint16_t              RxXferCount;  /* SPDIFRX Rx transfer counter 
+  volatile uint16_t              RxXferCount;  /* SPDIFRX Rx transfer counter
                                               (This field is initialized at the 
                                                same value as transfer size at the 
                                                beginning of the transfer and 
                                                decremented when a sample is received. 
                                                NbSamplesReceived = RxBufferSize-RxBufferCount) */
     
-  __IO uint16_t              CsXferSize;   /* SPDIFRX Rx transfer size */
+  volatile uint16_t              CsXferSize;   /* SPDIFRX Rx transfer size */
   
-  __IO uint16_t              CsXferCount;  /* SPDIFRX Rx transfer counter 
+  volatile uint16_t              CsXferCount;  /* SPDIFRX Rx transfer counter
                                               (This field is initialized at the 
                                                same value as transfer size at the 
                                                beginning of the transfer and 
@@ -171,11 +171,11 @@ typedef struct
 
   DMA_HandleTypeDef          *hdmaDrRx;    /* SPDIFRX Rx DMA handle parameters */
   
-  __IO HAL_LockTypeDef       Lock;         /* SPDIFRX locking object */
+  volatile HAL_LockTypeDef       Lock;         /* SPDIFRX locking object */
   
-  __IO HAL_SPDIFRX_StateTypeDef  State;    /* SPDIFRX communication state */
+  volatile HAL_SPDIFRX_StateTypeDef  State;    /* SPDIFRX communication state */
 
-  __IO uint32_t  ErrorCode;                /* SPDIFRX Error code                 */
+  volatile uint32_t  ErrorCode;                /* SPDIFRX Error code                 */
 
 }SPDIFRX_HandleTypeDef;
 /**

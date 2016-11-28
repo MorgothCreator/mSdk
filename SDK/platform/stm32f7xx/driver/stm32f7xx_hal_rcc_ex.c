@@ -41,6 +41,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f7xx_hal.h"
+#include "sys/core_init.h"
 
 /** @addtogroup STM32F7xx_HAL_Driver
   * @{

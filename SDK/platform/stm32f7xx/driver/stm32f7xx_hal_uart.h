@@ -230,13 +230,13 @@ typedef struct
 
   uint16_t                 TxXferSize;       /*!< UART Tx Transfer size              */
 
-  __IO uint16_t            TxXferCount;      /*!< UART Tx Transfer Counter           */
+  volatile uint16_t            TxXferCount;      /*!< UART Tx Transfer Counter           */
 
   uint8_t                  *pRxBuffPtr;      /*!< Pointer to UART Rx transfer Buffer */
 
   uint16_t                 RxXferSize;       /*!< UART Rx Transfer size              */
 
-  __IO uint16_t            RxXferCount;      /*!< UART Rx Transfer Counter           */
+  volatile uint16_t            RxXferCount;      /*!< UART Rx Transfer Counter           */
 
   uint16_t                 Mask;             /*!< UART Rx RDR register mask          */
 
@@ -246,14 +246,14 @@ typedef struct
 
   HAL_LockTypeDef           Lock;            /*!< Locking object                     */
 
-  __IO HAL_UART_StateTypeDef    gState;      /*!< UART state information related to global Handle management 
+  volatile HAL_UART_StateTypeDef    gState;      /*!< UART state information related to global Handle management
                                                   and also related to Tx operations.
                                                   This parameter can be a value of @ref HAL_UART_StateTypeDef */
 
-  __IO HAL_UART_StateTypeDef    RxState;     /*!< UART state information related to Rx operations.
+  volatile HAL_UART_StateTypeDef    RxState;     /*!< UART state information related to Rx operations.
                                                   This parameter can be a value of @ref HAL_UART_StateTypeDef */
 
-  __IO uint32_t             ErrorCode;   /*!< UART Error code                    */
+  volatile uint32_t             ErrorCode;   /*!< UART Error code                    */
 
 }UART_HandleTypeDef;
 

@@ -33,10 +33,10 @@ typedef enum TWIM_RESULT_enum {
 	TWIM_RESULT_FAIL             = (0x06<<0),
 } TWIM_RESULT_t;
 /*#####################################################*/
-bool _SetupI2CTransmit(new_twi* TwiStruct, unsigned int TransmitBytes);
-bool _SetupI2CReception(new_twi* TwiStruct, unsigned int TransmitBytes, unsigned int ReceiveBytes);
 bool _twi_open(new_twi* TwiStruct);
 void _twi_close(new_twi* TwiStruct);
+bool _I2C_trx(struct Twi_s* param, unsigned char addr, unsigned char *buff_send, unsigned int bytes_send, unsigned char *buff_receive, unsigned int bytes_receive);
+bool _I2C_tx(struct Twi_s* param, unsigned char addr, unsigned char *buff_receive, unsigned int bytes_receive);
 /*#####################################################*/
 #ifdef HEADER_INCLUDE_C_FILES
 #include "twi_interface.c"
