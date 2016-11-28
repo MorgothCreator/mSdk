@@ -95,7 +95,7 @@ static void SystemClock_Config(unsigned long int_osc_freq, unsigned long ext_osc
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
   RCC_OscInitStruct.PLL.PLLQ = 7;
 #if defined(STM32F469xx) || defined(STM32F479xx)
-  RCC_OscInitStruct.PLL.PLLR = 6;
+  RCC_OscInitStruct.PLL.PLLR = 2;
 #endif
 
   ret = HAL_RCC_OscConfig(&RCC_OscInitStruct);
@@ -126,6 +126,30 @@ static void SystemClock_Config(unsigned long int_osc_freq, unsigned long ext_osc
     while(1) { ; }
   }
   PLL_REF_CLK =	RCC_OscInitStruct.PLL.PLLM * 1000000;
+#if (defined(STM32F469xx) || defined(STM32F479xx)) && defined(STM32F469I_DISCO)
+  RCC_PeriphCLKInitTypeDef  PeriphClkInitStruct;
+  PeriphClkInitStruct.PeriphClockSelection = PLL_REF_CLK / 1000000;
+  PeriphClkInitStruct.PLLSAI.PLLSAIN = 360;
+  PeriphClkInitStruct.PLLSAI.PLLSAIR = 7;
+  PeriphClkInitStruct.PLLSAI.PLLSAIP = RCC_PLLSAIP_DIV8;
+  PeriphClkInitStruct.PLLSAIDivR = RCC_PLLSAIDIVR_2;
+  //PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_CK48;
+  //PeriphClkInitStruct.Clk48ClockSelection = RCC_CK48CLKSOURCE_PLLSAIP;
+  HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct);
+#elif defined(STM32F429xx) || defined(STM32F439xx)|| defined(STM32F469xx) || defined(STM32F479xx)
+  /* LCD clock configuration */
+  /* PLLSAI_VCO Input = HSE_VALUE/PLL_M = 1 Mhz */
+  /* PLLSAI_VCO Output = PLLSAI_VCO Input * PLLSAIN = 192 Mhz */
+  /* PLLLCDCLK = PLLSAI_VCO Output/PLLSAIR = 192/4 = 48 Mhz */
+  /* LTDC clock frequency = PLLLCDCLK / LTDC_PLLSAI_DIVR_8 = 48/4 = 6Mhz */
+  RCC_PeriphCLKInitTypeDef  PeriphClkInitStruct;
+  PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_LTDC;
+  PeriphClkInitStruct.PLLSAI.PLLSAIN = 192;
+  PeriphClkInitStruct.PLLSAI.PLLSAIR = 4;
+  PeriphClkInitStruct.PLLSAIDivR = RCC_PLLSAIDIVR_8;
+  HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct);
+
+#endif
 }
 
 void _core_init(void)
