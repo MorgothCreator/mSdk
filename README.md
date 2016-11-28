@@ -51,7 +51,7 @@ At this moment is supported the next platforms:
   
   <a href="https://www.olimex.com/Products/ARM/ST/STM32-H407/open-source-hardware">STM32-E407.</a>
   
-  <a href="http://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-eval-tools/stm32-mcu-eval-tools/stm32-mcu-discovery-kits/32f469idiscovery.html">STM32F469I DISCOVERY.</a>
+  <a href="http://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-eval-tools/stm32-mcu-eval-tools/stm32-mcu-discovery-kits/32f469idiscovery.html">STM32F469I DISCOVERY (System Workbench for STM32).</a>
   
 9) STM32F7xx (System Workbench for STM32).
 
