@@ -61,21 +61,22 @@ bool ft5x06_init(new_touchscreen* structure, unsigned char Port, unsigned char P
 			structure->twi_addr = FT5X0X_TWI_ADDR2;
 			structure->touch_max_x = 1024;
 			structure->touch_max_y = 600;
-			//(double)structure->pDisplay->LcdTimings->X = (double)structure->pDisplay->LcdTimings->X;
-			//(double)structure->pDisplay->LcdTimings->Y = (double)structure->pDisplay->LcdTimings->Y;
 			return true;
 		}
 		twistruct->MasterSlaveAddr = FT5X0X_TWI_ADDR1;
-		twistruct->rCount = 0;
-		twistruct->tCount = 0;
-		twistruct->TxBuff[0] = 0xF9;
 		if(twi.trx(twistruct, FT5X0X_TWI_ADDR1, &reg, 1, result, 38))
 		{
 			structure->twi_addr = FT5X0X_TWI_ADDR1;
 			structure->touch_max_x = 480;
 			structure->touch_max_y = 800;
-			//(double)structure->pDisplay->LcdTimings->X = (double)structure->pDisplay->LcdTimings->X;
-			//(double)structure->pDisplay->LcdTimings->Y = (double)structure->pDisplay->LcdTimings->Y;
+			return true;
+		}
+		twistruct->MasterSlaveAddr = 0x54;
+		if(twi.trx(twistruct, 0x54, &reg, 1, result, 38))
+		{
+			structure->twi_addr = 0x54;
+			structure->touch_max_x = 480;
+			structure->touch_max_y = 800;
 			return true;
 		}
     }
