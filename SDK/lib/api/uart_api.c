@@ -69,7 +69,7 @@ void uart_putc(Uart_t* UartSettings, unsigned char byteTx)
 		return;
 	if(UartSettings->is_virtual)
 	{
-		usb_com_dev_send(&byteTx, 1);
+		while(usb_com_dev_send(&byteTx, 1) != 1);
 	}
 	else
 		_UARTCharPut(UartSettings->BaseAddr, byteTx);
@@ -94,8 +94,10 @@ bool uart_putc_no_blocking(Uart_t* UartSettings, unsigned char byteTx)
 	if(!UartSettings) return false;
 	if(UartSettings->is_virtual)
 	{
-		usb_com_dev_send(&byteTx, 1);
-		return true;
+		if(usb_com_dev_send(&byteTx, 1) == 1)
+			return true;
+		else
+			return false;
 	}
 	else
 		return _UARTCharPutNonBlocking(UartSettings->BaseAddr, byteTx);
