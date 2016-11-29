@@ -59,9 +59,10 @@ unsigned int _usb_com_dev_receive(unsigned char* buff)
 unsigned int _usb_com_dev_send(unsigned char* buff, unsigned int nbytes)
 {
 	unsigned int cnt = 0;
+	USBD_CDC_HandleTypeDef   *hcdc = (USBD_CDC_HandleTypeDef*) usb_cdc_dev_param.pClassData;
 	for(; cnt < nbytes; cnt++)
 	{
-		if(!fifo_push(usb_cdc_dev_tx_fifo, buff[cnt]))
+		if(!fifo_push(usb_cdc_dev_tx_fifo, buff[cnt]) && hcdc && hcdc->TxBuffer && hcdc->RxBuffer)
 			break;
 	}
 	return cnt;

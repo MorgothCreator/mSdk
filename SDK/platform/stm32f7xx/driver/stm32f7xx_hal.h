@@ -45,6 +45,7 @@
 #endif
 
 /* Includes ------------------------------------------------------------------*/
+#include "main.h"
 #include "stm32f7xx_hal_conf.h"
 #include "sys/core_init.h"
 

@@ -10,6 +10,7 @@
 #include "driver/USBD/Class/CDC/usbd_cdc_interface.h"
 #include "driver/USBD/Class/CDC/usbd_cdc_desc.h"
 #include "driver/USBD/Core/Inc/usbd_core.h"
+#include "driver/stm32f7xx_hal_tim.h"
 #include "lib/buffers/ring_buff.h"
 
 fifo_settings_t *usb_cdc_dev_rx_fifo;
@@ -45,6 +46,8 @@ bool _usb_com_dev_init(unsigned int instance)
 
 	/* Start Device Process */
 	USBD_Start(&usb_cdc_dev_param);
+
+
 	return true;
 }
 unsigned int _usb_com_dev_receive(unsigned char* buff)
@@ -59,9 +62,10 @@ unsigned int _usb_com_dev_receive(unsigned char* buff)
 unsigned int _usb_com_dev_send(unsigned char* buff, unsigned int nbytes)
 {
 	unsigned int cnt = 0;
+    USBD_CDC_HandleTypeDef   *hcdc = (USBD_CDC_HandleTypeDef*) usb_cdc_dev_param.pClassData;
 	for(; cnt < nbytes; cnt++)
 	{
-		if(!fifo_push(usb_cdc_dev_tx_fifo, buff[cnt]))
+		if(fifo_push(usb_cdc_dev_tx_fifo, buff[cnt]) == false && hcdc && hcdc->TxBuffer && hcdc->RxBuffer)
 			break;
 	}
 	return cnt;
