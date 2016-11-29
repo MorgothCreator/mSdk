@@ -142,7 +142,7 @@ bool mpr121_idle(mpr121_t *structure, mpr121_ret_t *return_keys)
 		structure->old_keys = structure->old_keys >> 1;
 	}
 	structure->old_keys = keys_back;
-	memcpy(&return_keys_tmp, return_keys, sizeof(mpr121_ret_t));
+	memcpy(return_keys, &return_keys_tmp, sizeof(mpr121_ret_t));
 	return return_new_event;
 }
 
