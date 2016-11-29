@@ -215,11 +215,17 @@ void sEE_LowLevel_Init(new_twi* TwiStruct)
   GPIO_InitStructure.Mode = GPIO_MODE_AF_OD;
   GPIO_InitStructure.Pull  = GPIO_PULLUP;
 
+  if(TwiStruct->TwiNr == 3 && TwiStruct->SclPort == IOB && TwiStruct->SclPin == 8)
+	  GPIO_InitStructure.Alternate = GPIO_AF1_I2C4;
+
   GPIO_InitStructure.Pin = 1 << TwiStruct->SclPin;
   HAL_GPIO_Init(GET_GPIO_PORT_ADDR[TwiStruct->SclPort], &GPIO_InitStructure);
 
-  if(TwiStruct->SdaPort == IOB && TwiStruct->SdaPin == 7)
+  GPIO_InitStructure.Alternate = GPIO_AF4_I2C1;
+  if(TwiStruct->TwiNr == 3 && TwiStruct->SdaPort == IOB && TwiStruct->SdaPin == 7)
 	  GPIO_InitStructure.Alternate = GPIO_AF11_I2C4;
+  else if(TwiStruct->TwiNr == 3 && TwiStruct->SdaPort == IOB && TwiStruct->SdaPin == 9)
+	  GPIO_InitStructure.Alternate = GPIO_AF1_I2C4;
   /*!< Configure sEE_I2C pins: SDA */
   //GPIO_InitStructure.Mode = GPIO_OType_OD;
   GPIO_InitStructure.Pin = 1 << TwiStruct->SdaPin;
@@ -234,24 +240,33 @@ void sEE_LowLevel_Init(new_twi* TwiStruct)
   *          This parameter can be: ENABLE or DISABLE.
   * @retval None
   */
-#if 0
-void I2C_SoftwareResetCmd(I2C_TypeDef* I2Cx, FunctionalState NewState)
+void I2C_SoftwareResetCmd(I2C_HandleTypeDef *hi2c)
 {
-  /* Check the parameters */
+	I2C_TypeDef* I2Cx = hi2c->Instance;
+	/* Check the parameters */
   assert_param(IS_I2C_ALL_PERIPH(I2Cx));
   assert_param(IS_FUNCTIONAL_STATE(NewState));
-  if (NewState != DISABLE)
-  {
-    /* Peripheral under reset */
-    I2Cx->CR1 |= I2C_CR1_SWRST;
-  }
-  else
-  {
-    /* Peripheral not under reset */
-    I2Cx->CR1 &= (uint16_t)~((uint16_t)I2C_CR1_SWRST);
-  }
+  I2C_TypeDef _I2Cx;
+  _I2Cx.TIMINGR = I2Cx->TIMINGR;
+  _I2Cx.OAR2 = I2Cx->OAR2;
+  _I2Cx.OAR1 = I2Cx->OAR1;
+  _I2Cx.ICR = I2Cx->ICR;
+  _I2Cx.CR2 = I2Cx->CR2;
+  _I2Cx.CR1 = I2Cx->CR1;
+
+  /* Enable the selected I2C peripheral */
+  __HAL_I2C_DISABLE(hi2c);
+  /* Enable the selected I2C peripheral */
+  __HAL_I2C_ENABLE(hi2c);
+
+  I2Cx->CR1 = _I2Cx.CR1;
+  I2Cx->CR2 = _I2Cx.CR2;
+  I2Cx->ICR = _I2Cx.ICR;
+  I2Cx->OAR1 = _I2Cx.OAR1;
+  I2Cx->OAR2 = _I2Cx.OAR2;
+  I2Cx->TIMINGR = _I2Cx.TIMINGR;
+
 }
-#endif
 void TWI_SendStop(I2C_HandleTypeDef *hi2c)
 {
 
@@ -527,7 +542,7 @@ static HAL_StatusTypeDef I2C_WaitOnTXISFlagUntilTimeout(I2C_HandleTypeDef *hi2c,
   return HAL_OK;
 }
 /*#####################################################*/
-#define Timeout 100
+#define Timeout 10
 
 unsigned long TWI_MasterWriteRead(new_twi* TwiStruct, unsigned int TransmitBytes, unsigned int ReceiveBytes)
 {
@@ -538,6 +553,7 @@ unsigned long TWI_MasterWriteRead(new_twi* TwiStruct, unsigned int TransmitBytes
 
     if(I2C_WaitOnFlagUntilTimeout(hi2c, I2C_FLAG_BUSY, SET, I2C_TIMEOUT_BUSY, tickstart) != HAL_OK)
     {
+    	I2C_SoftwareResetCmd(hi2c);
       return HAL_TIMEOUT;
     }
 
@@ -550,42 +566,29 @@ unsigned long TWI_MasterWriteRead(new_twi* TwiStruct, unsigned int TransmitBytes
     hi2c->XferCount = TransmitBytes;
     hi2c->XferISR   = NULL;
 
-    I2C_TransferConfig(hi2c, TwiStruct->MasterSlaveAddr, I2C_MEMADD_SIZE_8BIT, I2C_SOFTEND_MODE, I2C_GENERATE_START_WRITE);
-
-    /* Wait until TXIS flag is set */
-    if(I2C_WaitOnTXISFlagUntilTimeout(hi2c, Timeout, tickstart) != HAL_OK)
-    {
-      if(hi2c->ErrorCode == HAL_I2C_ERROR_AF)
-      {
-        return HAL_ERROR;
-      }
-      else
-      {
-        return HAL_TIMEOUT;
-      }
-    }
     /* Set NBYTES to write and reload if hi2c->XferCount > MAX_NBYTE_SIZE */
     if(hi2c->XferCount > MAX_NBYTE_SIZE)
     {
     	hi2c->XferSize = MAX_NBYTE_SIZE;
-    	I2C_TransferConfig(hi2c, TwiStruct->MasterSlaveAddr, hi2c->XferSize, I2C_RELOAD_MODE, I2C_NO_STARTSTOP);
+    	I2C_TransferConfig(hi2c, TwiStruct->MasterSlaveAddr, hi2c->XferSize, I2C_RELOAD_MODE, I2C_GENERATE_START_WRITE);
     }
     else
     {
 		if(ReceiveBytes != 0)
 		{
 			hi2c->XferSize = hi2c->XferCount;
-			I2C_TransferConfig(hi2c, TwiStruct->MasterSlaveAddr, hi2c->XferSize, I2C_SOFTEND_MODE, I2C_NO_STARTSTOP);
+			I2C_TransferConfig(hi2c, TwiStruct->MasterSlaveAddr, hi2c->XferSize, I2C_SOFTEND_MODE, I2C_GENERATE_START_WRITE);
 		}
 		else
 		{
 			hi2c->XferSize = hi2c->XferCount;
-			I2C_TransferConfig(hi2c, TwiStruct->MasterSlaveAddr, hi2c->XferSize, I2C_AUTOEND_MODE, I2C_NO_STARTSTOP);
+			I2C_TransferConfig(hi2c, TwiStruct->MasterSlaveAddr, hi2c->XferSize, I2C_AUTOEND_MODE, I2C_GENERATE_START_WRITE);
 		}
     }
 
 	do
 	{
+	    tickstart = HAL_GetTick();
 	      /* Wait until TXIS flag is set */
 	      if(I2C_WaitOnTXISFlagUntilTimeout(hi2c, Timeout, tickstart) != HAL_OK)
 	      {
@@ -659,6 +662,12 @@ unsigned long TWI_MasterWriteRead(new_twi* TwiStruct, unsigned int TransmitBytes
 	}
 
     tickstart = HAL_GetTick();
+
+    /* Wait until TCR flag is set */
+    if(I2C_WaitOnFlagUntilTimeout(hi2c, I2C_FLAG_TC, RESET, Timeout, tickstart) != HAL_OK)
+    {
+      return HAL_TIMEOUT;
+    }
     hi2c->State     = HAL_I2C_STATE_BUSY_RX;
     hi2c->Mode      = HAL_I2C_MODE_MASTER;
     hi2c->ErrorCode = HAL_I2C_ERROR_NONE;
@@ -668,27 +677,21 @@ unsigned long TWI_MasterWriteRead(new_twi* TwiStruct, unsigned int TransmitBytes
     hi2c->XferCount = ReceiveBytes;
     hi2c->XferISR   = NULL;
 
-    I2C_TransferConfig(hi2c, TwiStruct->MasterSlaveAddr, I2C_MEMADD_SIZE_8BIT, I2C_SOFTEND_MODE, I2C_GENERATE_START_READ);
-
-    /* Wait until RXNE flag is set */
-    //if(I2C_WaitOnFlagUntilTimeout(hi2c, I2C_FLAG_RXNE, RESET, Timeout, tickstart) != HAL_OK)
-    //{
-    //  return HAL_TIMEOUT;
-    //}
     /* Set NBYTES to write and reload if hi2c->XferCount > MAX_NBYTE_SIZE */
     if(hi2c->XferCount > MAX_NBYTE_SIZE)
     {
     	hi2c->XferSize = MAX_NBYTE_SIZE;
-    	I2C_TransferConfig(hi2c, TwiStruct->MasterSlaveAddr, hi2c->XferSize, I2C_RELOAD_MODE, I2C_NO_STARTSTOP);
+    	I2C_TransferConfig(hi2c, TwiStruct->MasterSlaveAddr | 1, hi2c->XferSize, I2C_RELOAD_MODE, I2C_GENERATE_START_READ);
     }
     else
     {
     	hi2c->XferSize = hi2c->XferCount;
-    	I2C_TransferConfig(hi2c, TwiStruct->MasterSlaveAddr, hi2c->XferSize, I2C_AUTOEND_MODE, I2C_NO_STARTSTOP);
+    	I2C_TransferConfig(hi2c, TwiStruct->MasterSlaveAddr | 1, hi2c->XferSize, I2C_AUTOEND_MODE, I2C_GENERATE_START_READ);
     }
 
 	do
 	{
+	    tickstart = HAL_GetTick();
 		/* Wait until RXNE flag is set */
 		if(I2C_WaitOnFlagUntilTimeout(hi2c, I2C_FLAG_RXNE, RESET, Timeout, tickstart) != HAL_OK)
 		{
@@ -711,12 +714,12 @@ unsigned long TWI_MasterWriteRead(new_twi* TwiStruct, unsigned int TransmitBytes
 			if(hi2c->XferCount > MAX_NBYTE_SIZE)
 			{
 				hi2c->XferSize = MAX_NBYTE_SIZE;
-				I2C_TransferConfig(hi2c, TwiStruct->MasterSlaveAddr, hi2c->XferSize, I2C_RELOAD_MODE, I2C_NO_STARTSTOP);
+				I2C_TransferConfig(hi2c, TwiStruct->MasterSlaveAddr | 1, hi2c->XferSize, I2C_RELOAD_MODE, I2C_NO_STARTSTOP);
 			}
 			else
 			{
 				hi2c->XferSize = hi2c->XferCount;
-				I2C_TransferConfig(hi2c, TwiStruct->MasterSlaveAddr, hi2c->XferSize, I2C_AUTOEND_MODE, I2C_NO_STARTSTOP);
+				I2C_TransferConfig(hi2c, TwiStruct->MasterSlaveAddr | 1, hi2c->XferSize, I2C_AUTOEND_MODE, I2C_NO_STARTSTOP);
 			}
 		}
 	}while(hi2c->XferCount > 0);
@@ -758,14 +761,7 @@ bool _I2C_trx(struct Twi_s* param, unsigned char addr, unsigned char *buff_send,
 	while(twi_semaphore[param->TwiNr]);
 	twi_semaphore[param->TwiNr] = true;
 #endif
-	/*//param->MasterSlaveAddr = addr;
-	param->TxBuff = buff_send;
-	param->RxBuff = buff_receive;
-	 I2C_HandleTypeDef *hi2c = (I2C_HandleTypeDef *)param->udata;
-	 unsigned short tmp = buff_send[0];
-	 tmp |= buff_send[1] << 8;
-	bool result = HAL_I2C_Mem_Read(hi2c, addr, tmp, bytes_send, buff_receive, bytes_receive, 10);*/
-	param->MasterSlaveAddr = addr;
+	param->MasterSlaveAddr = addr << 1;
 	param->TxBuff = buff_send;
 	param->RxBuff = buff_receive;
 	bool result = TWI_MasterWriteRead(param, bytes_send, bytes_receive);
@@ -787,11 +783,7 @@ bool _I2C_tx(struct Twi_s* param, unsigned char addr, unsigned char *buff_send, 
 	while(twi_semaphore[param->TwiNr]);
 	twi_semaphore[param->TwiNr] = true;
 #endif
-	/*//param->MasterSlaveAddr = addr;
-	param->TxBuff = buff_send;
-	 I2C_HandleTypeDef *hi2c = (I2C_HandleTypeDef *)param->udata;
-	bool result = HAL_I2C_Mem_Write(hi2c, addr, *buff_send, 1, buff_send + 1, bytes_send - 1, 10);*/
-	param->MasterSlaveAddr = addr;
+	param->MasterSlaveAddr = addr << 1;
 	param->TxBuff = buff_send;
 	bool result = TWI_MasterWriteRead(param, bytes_send, 0);
 #if (USE_DRIVER_SEMAPHORE == true)
