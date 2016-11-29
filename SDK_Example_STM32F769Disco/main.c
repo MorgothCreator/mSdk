@@ -196,7 +196,8 @@ void read_and_display_all_sensors()
 			}
 #endif
 #if _USE_MPL3115A2 == 1
-			float mpl3115a2_altitude = 0.0, mpl3115a2_temp = 0.0;
+			float mpl3115a2_altitude = 0.0;
+			float mpl3115a2_temp = 0.0;
 			bool mpl3115a2_status = mpl3115a2_get_alt_temp(MPL3115A2, 2, &mpl3115a2_altitude, &mpl3115a2_temp);
 #endif
 /*
@@ -292,9 +293,9 @@ void read_and_display_all_sensors()
 			if(mpr121_idle(MPR121, &mpr121_return))
 			{
 				if(mpr121_return.pushed)
-					String.AppendF(SensorResultTextboxGlobal->Text, "MPR121: Pushed   > K0=%c, K1=%c, K2=%c, K3=%c, K4=%c, K5=%c, K6=%c, K7=%c, K8=%c, K9=%c, K10=%c, K11=%c\n\r",     (unsigned char)mpr121_return.pushed & 0x01,   (unsigned char)(mpr121_return.pushed >> 1) & 0x01,   (unsigned char)(mpr121_return.pushed >> 2) & 0x01,   (unsigned char)(mpr121_return.pushed >> 3) & 0x01,   (unsigned char)(mpr121_return.pushed >> 4) & 0x01,   (unsigned char)(mpr121_return.pushed >> 5) & 0x01,   (unsigned char)(mpr121_return.pushed >> 6) & 0x01,   (unsigned char)(mpr121_return.pushed >> 7) & 0x01,   (unsigned char)(mpr121_return.pushed >> 8) & 0x01,   (unsigned char)(mpr121_return.pushed >> 9) & 0x01,   (unsigned char)(mpr121_return.pushed >> 10) & 0x01,   (unsigned char)(mpr121_return.pushed >> 11) & 0x01);
+					String.AppendF(SensorResultTextboxGlobal->Text, "MPR121: Pushed   - K0=%u, K1=%u, K2=%u, K3=%u, K4=%u, K5=%u, K6=%u, K7=%u, K8=%u, K9=%u, K10=%u, K11=%u\n\r",     (unsigned int)mpr121_return.pushed & 0x01,   (unsigned int)(mpr121_return.pushed >> 1) & 0x01,   (unsigned int)(mpr121_return.pushed >> 2) & 0x01,   (unsigned int)(mpr121_return.pushed >> 3) & 0x01,   (unsigned int)(mpr121_return.pushed >> 4) & 0x01,   (unsigned int)(mpr121_return.pushed >> 5) & 0x01,   (unsigned int)(mpr121_return.pushed >> 6) & 0x01,   (unsigned int)(mpr121_return.pushed >> 7) & 0x01,   (unsigned int)(mpr121_return.pushed >> 8) & 0x01,   (unsigned int)(mpr121_return.pushed >> 9) & 0x01,   (unsigned int)(mpr121_return.pushed >> 10) & 0x01,   (unsigned int)(mpr121_return.pushed >> 11) & 0x01);
 				if(mpr121_return.released)
-					String.AppendF(SensorResultTextboxGlobal->Text, "MPR121: Released > K0=%c, K1=%c, K2=%c, K3=%c, K4=%c, K5=%c, K6=%c, K7=%c, K8=%c, K9=%c, K10=%c, K11=%c\n\r\n\r", (unsigned char)mpr121_return.released & 0x01, (unsigned char)(mpr121_return.released >> 1) & 0x01, (unsigned char)(mpr121_return.released >> 2) & 0x01, (unsigned char)(mpr121_return.released >> 3) & 0x01, (unsigned char)(mpr121_return.released >> 4) & 0x01, (unsigned char)(mpr121_return.released >> 5) & 0x01, (unsigned char)(mpr121_return.released >> 6) & 0x01, (unsigned char)(mpr121_return.released >> 7) & 0x01, (unsigned char)(mpr121_return.released >> 8) & 0x01, (unsigned char)(mpr121_return.released >> 9) & 0x01, (unsigned char)(mpr121_return.released >> 10) & 0x01, (unsigned char)(mpr121_return.released >> 11) & 0x01);
+					String.AppendF(SensorResultTextboxGlobal->Text, "MPR121: Released - K0=%u, K1=%u, K2=%u, K3=%u, K4=%u, K5=%u, K6=%u, K7=%u, K8=%u, K9=%u, K10=%u, K11=%u\n\r\n\r", (unsigned int)mpr121_return.released & 0x01, (unsigned int)(mpr121_return.released >> 1) & 0x01, (unsigned int)(mpr121_return.released >> 2) & 0x01, (unsigned int)(mpr121_return.released >> 3) & 0x01, (unsigned int)(mpr121_return.released >> 4) & 0x01, (unsigned int)(mpr121_return.released >> 5) & 0x01, (unsigned int)(mpr121_return.released >> 6) & 0x01, (unsigned int)(mpr121_return.released >> 7) & 0x01, (unsigned int)(mpr121_return.released >> 8) & 0x01, (unsigned int)(mpr121_return.released >> 9) & 0x01, (unsigned int)(mpr121_return.released >> 10) & 0x01, (unsigned int)(mpr121_return.released >> 11) & 0x01);
 			}
 #endif
 #if _USE_LEPTON_FLIR == 1
@@ -342,16 +343,6 @@ int main(void)
     timer_interval(&TimerReadBattery, 500);
     MainWindow = new_window(NULL, Screen);
     timer_interval(&TimerDisplayLight, 10000);
-#if _USE_MPU60x0_9150 == 1
-	mpu60x0_9150_init(MPU60x0_9150);
-#endif
-#if _USE_MHC5883 == 1
-	mhc5883_init(MHC5883);
-#endif
-#if _USE_SHT11 == 1
-	unsigned char sht11_status_reg = 0;
-	bool sht11_read_mode = false;
-#endif
 #if _USE_LEPTON_FLIR == 1
 	timer(TimerReadFlir);
     timer_interval(&TimerReadFlir, 300);

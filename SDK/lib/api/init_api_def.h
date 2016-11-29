@@ -188,7 +188,8 @@
 /*-----------------------------------------------------*/
 #define INIT_MPR121(name, TWI_INTERFACE) \
 		name = new_(new_mpr121);\
-		name->TWI = TWI[TWI_INTERFACE]
+		name->TWI = TWI[TWI_INTERFACE];\
+		mpr121_init(name);
 /*#####################################################*/
 #define NEW_SRF02(name) \
 		new_srf02 *name

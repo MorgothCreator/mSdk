@@ -237,7 +237,7 @@ bool board_init()
 	INIT_SHT11(SHT11, IOB, 12, IOB, 13);
 #endif
 /*-----------------------------------------------------*/
-#if (_USE_MPL3115A2 == true)
+#if (_USE_HIH613x == true)
 	INIT_HIH613x(HIH613x, DEFAULT_I2C_UNIT);
 #endif
 /*-----------------------------------------------------*/
