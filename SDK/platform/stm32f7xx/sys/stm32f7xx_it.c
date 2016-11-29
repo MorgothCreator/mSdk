@@ -70,15 +70,18 @@
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
+#ifndef USE_USB_DEV
 extern HCD_HandleTypeDef               hhcd;
+#else
 extern PCD_HandleTypeDef               _hpcd[];
-extern LTDC_HandleTypeDef              hltdc_disco;  
+#endif
+//extern LTDC_HandleTypeDef              hltdc_disco;
 extern SAI_HandleTypeDef               haudio_out_sai;
-extern JPEG_HandleTypeDef              JPEG_Handle;
+//extern JPEG_HandleTypeDef              JPEG_Handle;
 //extern K_ModuleItem_Typedef            audio_recorder_board;
 
-extern DFSDM_Filter_HandleTypeDef      haudio_in_top_leftfilter;
-extern DFSDM_Filter_HandleTypeDef      haudio_in_top_rightfilter;
+//extern DFSDM_Filter_HandleTypeDef      haudio_in_top_leftfilter;
+//extern DFSDM_Filter_HandleTypeDef      haudio_in_top_rightfilter;
 
 /* Private function prototypes -----------------------------------------------*/
 //extern void xPortSysTickHandler(void);
@@ -317,10 +320,10 @@ void DMA2_Stream1_IRQHandler(void)
   * @param  None
   * @retval None
   */
-void AUDIO_DFSDMx_DMAx_TOP_RIGHT_IRQHandler(void)
+/*void AUDIO_DFSDMx_DMAx_TOP_RIGHT_IRQHandler(void)
 {
   HAL_DMA_IRQHandler(haudio_in_top_rightfilter.hdmaReg); 
-}
+}*/
 
 /**
   * @brief  This function handles Ethernet interrupt request.

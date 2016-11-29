@@ -297,6 +297,40 @@ void read_and_display_all_sensors()
 					String.AppendF(SensorResultTextboxGlobal->Text, "MPR121: Released > K0=%c, K1=%c, K2=%c, K3=%c, K4=%c, K5=%c, K6=%c, K7=%c, K8=%c, K9=%c, K10=%c, K11=%c\n\r\n\r", (unsigned char)mpr121_return.released & 0x01, (unsigned char)(mpr121_return.released >> 1) & 0x01, (unsigned char)(mpr121_return.released >> 2) & 0x01, (unsigned char)(mpr121_return.released >> 3) & 0x01, (unsigned char)(mpr121_return.released >> 4) & 0x01, (unsigned char)(mpr121_return.released >> 5) & 0x01, (unsigned char)(mpr121_return.released >> 6) & 0x01, (unsigned char)(mpr121_return.released >> 7) & 0x01, (unsigned char)(mpr121_return.released >> 8) & 0x01, (unsigned char)(mpr121_return.released >> 9) & 0x01, (unsigned char)(mpr121_return.released >> 10) & 0x01, (unsigned char)(mpr121_return.released >> 11) & 0x01);
 			}
 #endif
+#if _USE_LEPTON_FLIR == 1
+		if(timer_tick(&TimerReadFlir))
+		{
+			memset(&flir_buff, 0, (LEPTON_FLIR_LINE_SIZE * LEPTON_FLIR_LINES_NR));
+			bool lepton_new_data = lepton_flir_get_image(LEPTON_FLIR, flir_buff);
+			if(lepton_new_data)
+			{
+				unsigned int y_cnt = 0;
+				for(; y_cnt < LEPTON_FLIR_LINES_NR; y_cnt++)
+				{
+					unsigned int x_cnt = 0;
+					for(; x_cnt < LEPTON_FLIR_LINE_SIZE; x_cnt++)
+					{
+						unsigned char tmp = flir_buff[(y_cnt * LEPTON_FLIR_LINE_SIZE) + x_cnt] >> 8;
+						flir_buff_translated[(y_cnt * LEPTON_FLIR_LINE_SIZE) + x_cnt] = (tmp | (tmp << 8) | (tmp << 16)) | 0xFF000000;
+					}
+				}
+
+
+				tRectangle _dest_rectangle;
+				_dest_rectangle.sXMin = 0;
+				_dest_rectangle.sXMax = LEPTON_FLIR_LINE_SIZE;
+				_dest_rectangle.sYMin = 0;
+				_dest_rectangle.sYMax = LEPTON_FLIR_LINES_NR;
+				tRectangle _src_rectangle;
+				_src_rectangle.sXMin = 0;
+				_src_rectangle.sXMax = LEPTON_FLIR_LINE_SIZE;
+				_src_rectangle.sYMin = 0;
+				_src_rectangle.sYMax = LEPTON_FLIR_LINES_NR;
+				FlirPictureBox->copy_rectangle(FlirPictureBox, flir_buff_translated, 0, &_dest_rectangle, &_src_rectangle, LEPTON_FLIR_LINE_SIZE , LEPTON_FLIR_LINES_NR);
+
+			}
+		}
+#endif
 }
 
 int main(void)
@@ -392,93 +426,64 @@ int main(void)
 			timer_disable(&TimerDisplayLight);
 			gpio.out(LCD_BACKLIGHT, 0);
 		}
-#if _USE_LEPTON_FLIR == 1
-		if(timer_tick(&TimerReadFlir))
-		{
-			memset(&flir_buff, 0, (LEPTON_FLIR_LINE_SIZE * LEPTON_FLIR_LINES_NR));
-			bool lepton_new_data = lepton_flir_get_image(LEPTON_FLIR, flir_buff);
-			if(lepton_new_data)
-			{
-				unsigned int y_cnt = 0;
-				for(; y_cnt < LEPTON_FLIR_LINES_NR; y_cnt++)
-				{
-					unsigned int x_cnt = 0;
-					for(; x_cnt < LEPTON_FLIR_LINE_SIZE; x_cnt++)
-					{
-						unsigned char tmp = flir_buff[(y_cnt * LEPTON_FLIR_LINE_SIZE) + x_cnt] >> 8;
-						flir_buff_translated[(y_cnt * LEPTON_FLIR_LINE_SIZE) + x_cnt] = (tmp | (tmp << 8) | (tmp << 16)) | 0xFF000000;
-					}
-				}
-
-
-				tRectangle _dest_rectangle;
-				_dest_rectangle.sXMin = 0;
-				_dest_rectangle.sXMax = LEPTON_FLIR_LINE_SIZE;
-				_dest_rectangle.sYMin = 0;
-				_dest_rectangle.sYMax = LEPTON_FLIR_LINES_NR;
-				tRectangle _src_rectangle;
-				_src_rectangle.sXMin = 0;
-				_src_rectangle.sXMax = LEPTON_FLIR_LINE_SIZE;
-				_src_rectangle.sYMin = 0;
-				_src_rectangle.sYMax = LEPTON_FLIR_LINES_NR;
-				FlirPictureBox->copy_rectangle(FlirPictureBox, flir_buff_translated, 0, &_dest_rectangle, &_src_rectangle, LEPTON_FLIR_LINE_SIZE , LEPTON_FLIR_LINES_NR);
-
-			}
-		}
-#endif
 		if(timer_tick(&TimerReadSensors))
 		{
 			//read_and_display_all_sensors();
+#if (USE_USB_HOST_MSC == true)
 			usb_msc_host_idle(0);
-			//if(microe_touch_service(RES_TOUCH))
-			{
-				memset(&control_comand, 0, sizeof(tControlCommandData));
-				ft5x06_TouchIdle(TOUCH);
-				control_comand.X = TOUCH->TouchResponse.x1;
-				control_comand.Y = TOUCH->TouchResponse.y1;
-				if(gpio.in(LCD_BACKLIGHT) != 0)
-					control_comand.Cursor = (CursorState)TOUCH->TouchResponse.touch_event1;
-				if(TOUCH->TouchResponse.touch_event1 == Cursor_Up)
-					display_light_enable();
-				MainWindow->idle(MainWindow, &control_comand);
-
-				if(control_comand.WindowRefresh == true)
-					display_light_enable();
-			}
+#endif
+			memset(&control_comand, 0, sizeof(tControlCommandData));
+			ft5x06_TouchIdle(TOUCH);
+			control_comand.X = TOUCH->TouchResponse.x1;
+			control_comand.Y = TOUCH->TouchResponse.y1;
+			if(gpio.in(LCD_BACKLIGHT) != 0)
+				control_comand.Cursor = (CursorState)TOUCH->TouchResponse.touch_event1;
+			if(TOUCH->TouchResponse.touch_event1 == Cursor_Up)
+				display_light_enable();
+			MainWindow->idle(MainWindow, &control_comand);
+			if(control_comand.WindowRefresh == true)
+				display_light_enable();
 
 			//HAL_ADC_Start_DMA(&AdcHandle, (uint32_t*)&_ADC[0]->ConvResult[0], 2);
 			//adc_start_conversion(_ADC[0]);
-			//usb_msc_host_idle(0);
-			//mmcsd_spi_idle(0);
-			/*if(MMCSD_SPI[0]->connected == true && old_connected == false)
+#if (USE_USB_DEV_MSC_BRIDGE_MMCSDSPI == true)
+			mmcsd_spi_idle(0);
+			if(MMCSD_SPI[0]->connected == true && old_connected == false)
 			{
 				old_connected = MMCSD_SPI[0]->connected;
-				//usb_msc_dev_media_change_state(0, true);
+				usb_msc_dev_media_change_state(0, true);
 			}
 			else if(MMCSD_SPI[0]->connected == false && old_connected == true)
 			{
 				old_connected = MMCSD_SPI[0]->connected;
-				//usb_msc_dev_media_change_state(0, false);
-			}*/
+				usb_msc_dev_media_change_state(0, false);
+			}
+#endif
 			/*if(old_dev_connection_status != usb_msc_dev_media_connected(0))
 			{
 				old_dev_connection_status = usb_msc_dev_media_connected(0);
 				//mmcsd_spi_idle(0);
 			}*/
+#if (USE_MMCSD == true || USE_USB_DEV_MSC_BRIDGE_MMCSD)
 			if(fs_mounted == false && IDLE_MMCSD(0) == true)
 			{
 				fs_mounted = true;
 				String.Set(card_status_str, ",Card inserted");
 				update_main_window_status_bar(MainWindow->Caption.Text);
+#if (USE_USB_DEV_MSC_BRIDGE_MMCSD == true)
 				usb_msc_dev_media_change_state(0, true);
+#endif
 			}
 			else if(fs_mounted == true && IDLE_MMCSD(0) == false)
 			{
 				fs_mounted = false;
 				String.Set(card_status_str, "");
 				update_main_window_status_bar(MainWindow->Caption.Text);
+#if (USE_USB_DEV_MSC_BRIDGE_MMCSD == true)
 				usb_msc_dev_media_change_state(0, false);
+#endif
 			}
+#endif //!USE_MMCSD
 #if _USE_ADXL345 == 1
 			signed int Xaccel = 0, Yaccel = 0, Zaccel = 0;
 			if(adxl345_x_read(ADXL345, &Xaccel) &&
@@ -525,8 +530,6 @@ int main(void)
 				terminal_receive_buff[0] = '\0';
 			}
 		}
-		//rand();
-			//UARTPutc(DebugCom, tmp_com_char);
 #if USE_NARRATOR
 		player_idle(VS10XX);
 #endif

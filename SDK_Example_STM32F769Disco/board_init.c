@@ -149,9 +149,32 @@ bool board_init()
 	SPI[DEFAULT_SPI_UNIT]->CsPort[3] = DEFAULT_SPI_CS_VS1053_DCS_PORT;
 	SPI[DEFAULT_SPI_UNIT]->CsPin[3] = DEFAULT_SPI_CS_VS1053_DCS_PIN;*/
 	INIT_SPI(SPI_EXTENSION_UNIT, 4, 8, SPI_EXTENSION_SCK_PORT, SPI_EXTENSION_SCK_PIN, SPI_EXTENSION_MOSI_PORT, SPI_EXTENSION_MOSI_PIN, SPI_EXTENSION_MISO_PORT, SPI_EXTENSION_MISO_PIN, SPI_EXTENSION_CS1_PORT, SPI_EXTENSION_CS1_PIN, 0);
-	//INIT_LEPTON_FLIR(LEPTON_FLIR, LEPTON_SPI_INTERFACE_NR, LEPTON_SPI_INSTANCE_NR, LEPTON_TWI_INSTANCE_NR);
 	//SPI[NRF24L01_SPI_UNIT] = new_(new_mcspi);
 	//INIT_SPI(NRF24L01_SPI_UNIT, 3, 8, NRF24L01_SPI_SCK_PORT, NRF24L01_SPI_SCK_PIN, NRF24L01_SPI_MOSI_PORT, NRF24L01_SPI_MOSI_PIN, NRF24L01_SPI_MISO_PORT, NRF24L01_SPI_MISO_PIN, NRF24L01_SPI_CS0_PORT, NRF24L01_SPI_CS0_PIN, 0);
+/*-----------------------------------------------------*/
+	LCD_BACKLIGHT = gpio.assign(LCD_BACKLIGHT_PORT, LCD_BACKLIGHT_PIN, GPIO_OUT_PUSH_PULL, false);
+	gpio.out(LCD_BACKLIGHT, 1);
+	LCD_DISPLAY_RST = gpio.assign(LCD_DISPLAY_RST_PORT, LCD_DISPLAY_RST_PIN, GPIO_OUT_PUSH_PULL, false);
+	LCD_TOUCH_INT = gpio.assign(LCD_TOUCH_INT_PORT, LCD_TOUCH_INT_PIN, GPIO_DIR_INPUT, false);
+/*-----------------------------------------------------*/
+	Screen = new_(new_screen);
+	Screen->LcdTimings = &lcd_OTM8009A_PORTRAIT;
+	Screen->BackLight = LCD_BACKLIGHT;
+	lcd_set_params((void *)Screen);
+
+	lcd_init(Screen);
+	TOUCH = new_(new_touchscreen);
+	TOUCH->pDisplay = Screen;
+	TOUCH->TwiStruct = TWI[AUDIO_LCD_I2C_UNIT];
+	if(!ft5x06_init(TOUCH, IOI, 13))
+	{
+		uart.puts(DebugCom, "Capacitive touch init failed.\n\r" , -1);
+	}
+	uart.printf(DebugCom, "LCD display initialize successful for %dx%d resolution, %d Bit bus.\n\r" , Screen->LcdTimings->X, Screen->LcdTimings->Y, Screen->LcdTimings->bus_size);
+/*-----------------------------------------------------*/
+/*-----------------------------------------------------*/
+/*-----------  Initialize QSPI devices  ---------------*/
+/*-----------------------------------------------------*/
 /*-----------------------------------------------------*/
 	//INIT_N25Qxxx(N25Qxxx, 0, &n25q128a);
 	//n25qxxx.erase_chip(N25Qxxx);
@@ -160,36 +183,86 @@ bool board_init()
 	//INIT_USB_DEV_MSC_TO_QSPI_N25Q_BRIDGE(0, QSPI_N25Q_PARAM, N25Qxxx);
 	//usb_msc_dev_media_change_state(0, true);
 /*-----------------------------------------------------*/
+/*-----------------------------------------------------*/
+/*-----------  Initialize SPI devices  ----------------*/
+/*-----------------------------------------------------*/
+/*-----------------------------------------------------*/
+#if (_USE_LEPTON_FLIR == true)
+	INIT_LEPTON_FLIR(LEPTON_FLIR, LEPTON_SPI_INTERFACE_NR, LEPTON_SPI_INSTANCE_NR, LEPTON_TWI_INSTANCE_NR);
+#endif
+/*-----------------------------------------------------*/
+#if (_USE_nRF25l01 == true)
+	NRF24L01->rx_addr0[0] = 0x00;
+	NRF24L01->rx_addr0[1] = 0x00;
+	NRF24L01->rx_addr0[2] = 0x00;
+	NRF24L01->rx_addr0[3] = 0x00;
+	NRF24L01->rx_addr0[4] = 0x00;
+
+	NRF24L01->rx_addr1[0] = 0x00;
+	NRF24L01->rx_addr1[1] = 0x00;
+	NRF24L01->rx_addr1[2] = 0x00;
+	NRF24L01->rx_addr1[3] = 0x00;
+	NRF24L01->rx_addr1[4] = 0x00;
+
+	NRF24L01->tx_addr[0] = 0x00;
+	NRF24L01->tx_addr[1] = 0x00;
+	NRF24L01->tx_addr[2] = 0x00;
+	NRF24L01->tx_addr[3] = 0x00;
+	NRF24L01->tx_addr[4] = 0x00;
+	INIT_NRF24L01(NRF24L01, SPI_EXTENSION_UNIT, 0, gpio.assign(NRF24L01_CE_PORT, NRF24L01_CE_PIN, GPIO_OUT_PUSH_PULL, false), gpio.assign(NRF24L01_IRQ_PORT, NRF24L01_IRQ_PIN, GPIO_IN_PULL_UP, false));
+#endif
+/*-----------------------------------------------------*/
+/*-----------------------------------------------------*/
+/*-----------  Initialize TWI devices  ----------------*/
+/*-----------------------------------------------------*/
+/*-----------------------------------------------------*/
+#if (_USE_MPU60x0_9150 == true)
 	INIT_MPU60x0_9150(MPU60x0_9150, DEFAULT_I2C_UNIT);
 	MPU60x0_9150->XG_Cal = 28;
+#endif
 /*-----------------------------------------------------*/
+#if (_USE_AK8975 == true)
 	INIT_AK8975(AK8975, DEFAULT_I2C_UNIT);
+#endif
 /*-----------------------------------------------------*/
+#if (_USE_BMP180 == true)
 	INIT_BMP180(BMP180, DEFAULT_I2C_UNIT);
+#endif
 /*-----------------------------------------------------*/
+#if (_USE_MS5611 == true)
 	INIT_MS5611(MS5611, DEFAULT_I2C_UNIT);
+#endif
 /*-----------------------------------------------------*/
-	//INIT_SHT11(SHT11, IOB, 12, IOB, 13);
+#if (_USE_SHT11 == true)
+	INIT_SHT11(SHT11, IOB, 12, IOB, 13);
+#endif
 /*-----------------------------------------------------*/
-	//INIT_ADXL345(ADXL345, DEFAULT_I2C_UNIT);
-/*-----------------------------------------------------*/
+#if (_USE_MPL3115A2 == true)
 	INIT_HIH613x(HIH613x, DEFAULT_I2C_UNIT);
+#endif
 /*-----------------------------------------------------*/
+#if (_USE_MPL3115A2 == true)
 	INIT_MPL3115A2(MPL3115A2, DEFAULT_I2C_UNIT);
+#endif
 /*-----------------------------------------------------*/
-	//INIT_SX150x(SX150x, DEFAULT_I2C_UNIT, SX1509_ADDR1);
+#if (_USE_SX150x == true)
+	INIT_SX150x(SX150x, DEFAULT_I2C_UNIT, SX1509_ADDR1);
+#endif
 /*-----------------------------------------------------*/
-	//INIT_MPR121(MPR121, DEFAULT_I2C_UNIT);
+#if (_USE_MPR121 == true)
+	INIT_MPR121(MPR121, DEFAULT_I2C_UNIT);
+#endif
 /*-----------------------------------------------------*/
+#if(_USE_MHC5883 == true)
 	INIT_MHC5883(MHC5883, DEFAULT_I2C_UNIT);
+#endif
+/*-----------------------------------------------------*/
+#if (_USE_ADXL345 == true)
+	INIT_ADXL345(ADXL345, DEFAULT_I2C_UNIT);
+#endif
 /*-----------------------------------------------------*/
 	//INIT_SST25VF(SST25VF, DEFAULT_SPI_UNIT, 1, NULL, NULL);
 
-	LCD_BACKLIGHT = gpio.assign(LCD_BACKLIGHT_PORT, LCD_BACKLIGHT_PIN, GPIO_OUT_PUSH_PULL, false);
-	gpio.out(LCD_BACKLIGHT, 1);
-	//LCD_DISPLAY_RST = gpio.assign(LCD_DISPLAY_RST_PORT, LCD_DISPLAY_RST_PIN, GPIO_OUT_PUSH_PULL, false);
-	LCD_TOUCH_INT = gpio.assign(LCD_TOUCH_INT_PORT, LCD_TOUCH_INT_PIN, GPIO_DIR_INPUT, false);
-/*-----------------------------------------------------*/
 	//BAT_STAT = gpio.assign(BAT_STAT_PORT, BAT_STAT_PIN, GPIO_DIR_INPUT, false);
 /* Set up the ADC 0 (VDD VOLT and INT TEMPERATURE)*/
 	/*uart.puts(DebugCom, "Setup ADC 0....." , -1);
@@ -240,25 +313,6 @@ bool board_init()
 	else  UARTPuts(DebugCom, "FAILED.\n\r" , -1);*/
 /*-----------------------------------------------------*/
 
-	Screen = new_(new_screen);
-	Screen->LcdTimings = &lcd_OTM8009A_PORTRAIT;
-	Screen->BackLight = LCD_BACKLIGHT;
-	lcd_set_params((void *)Screen);
-
-	lcd_init(Screen);
-	TOUCH = new_(new_touchscreen);
-	TOUCH->pDisplay = Screen;
-	TOUCH->TwiStruct = TWI[AUDIO_LCD_I2C_UNIT];
-	if(!ft5x06_init(TOUCH, IOI, 13))
-	{
-		uart.puts(DebugCom, "Capacitive touch init failed.\n\r" , -1);
-	}
-	//microe_touch_calibrate(RES_TOUCH, Screen);
-
-	uart.printf(DebugCom, "LCD display initialize successful for %dx%d resolution, %d Bit bus.\n\r" , Screen->LcdTimings->X, Screen->LcdTimings->Y, Screen->LcdTimings->bus_size);
-/*-----------------------------------------------------*/
-/*-----------------------------------------------------*/
-	//INIT_ADXL345(ADXL345, DEFAULT_I2C_UNIT);
 /*-----------------------------------------------------*/
 #if defined(HARDBTN1_PORT) && defined(HARDBTN1_PIN)
 	HARDBTN[0] = gpio.assign(HARDBTN1_PORT, HARDBTN1_PIN, GPIO_DIR_INPUT, false);
@@ -294,39 +348,24 @@ bool board_init()
 	LED[3]->inverse = LED4_INVERSE;
 #endif
 /*-----------------------------------------------------*/
-	/*NRF24L01->rx_addr0[0] = 0x00;
-	NRF24L01->rx_addr0[1] = 0x00;
-	NRF24L01->rx_addr0[2] = 0x00;
-	NRF24L01->rx_addr0[3] = 0x00;
-	NRF24L01->rx_addr0[4] = 0x00;
-
-	NRF24L01->rx_addr1[0] = 0x00;
-	NRF24L01->rx_addr1[1] = 0x00;
-	NRF24L01->rx_addr1[2] = 0x00;
-	NRF24L01->rx_addr1[3] = 0x00;
-	NRF24L01->rx_addr1[4] = 0x00;
-
-	NRF24L01->tx_addr[0] = 0x00;
-	NRF24L01->tx_addr[1] = 0x00;
-	NRF24L01->tx_addr[2] = 0x00;
-	NRF24L01->tx_addr[3] = 0x00;
-	NRF24L01->tx_addr[4] = 0x00;
-	INIT_NRF24L01(NRF24L01, SPI_EXTENSION_UNIT, 0, gpio.assign(NRF24L01_CE_PORT, NRF24L01_CE_PIN, GPIO_OUT_PUSH_PULL, false), gpio.assign(NRF24L01_IRQ_PORT, NRF24L01_IRQ_PIN, GPIO_IN_PULL_UP, false));*/
-/*-----------------------------------------------------*/
 #if USE_NARRATOR
 	VS10XX = new_(new_vs10xx);
 	vs10xx_init(VS10XX, SPI[DEFAULT_SPI_UNIT], DEFAULT_SPI_CS_VS1053_CS_INSTANCE, DEFAULT_SPI_CS_VS1053_DCS_INSTANCE, gpio_assign(VS11XX_RST_PORT, VS11XX_RST_PIN, GPIO_OUT_PUSH_PULL, false), gpio_assign(VS11XX_DREQ_PORT, VS11XX_DREQ_PIN, GPIO_IN_PULL_UP, false));
 #endif
 /*-----------------------------------------------------*/
+#if (USE_MMCSD == true && USE_USB_DEV_MSC_BRIDGE_MMCSD == false)
 	SD_CD = gpio.assign(SD_CD_PORT, SD_CD_PIN, GPIO_IN_PULL_UP, false);
 	SD_CD->LastState = true;
-
 	INIT_MMCSD(0, NULL, SD_CD, LED[1]);
-	//INIT_USB_DEV_MSC_TO_MMCSD_SPI_BRIDGE(0, 0);
+#endif
+#if (USE_USB_DEV_MSC_BRIDGE_MMCSDSPI == true)
+	INIT_USB_DEV_MSC_TO_MMCSD_SPI_BRIDGE(0, 0);
+#endif
 #if (USE_USB_DEV_MSC_BRIDGE_MMCSD == true)
+	SD_CD = gpio.assign(SD_CD_PORT, SD_CD_PIN, GPIO_IN_PULL_UP, false);
+	SD_CD->LastState = true;
 	INIT_USB_DEV_MSC_TO_MMCSD_BRIDGE(0, 0, MMCSD_SLAVE_CONTROLS, NULL, SD_CD, LED[1]);
 #endif
-	//usb_msc_dev_media_change_state(0, true);
 #if (USE_USB_HOST_MSC == true)
 	INIT_USB_MSC_HOST(0, LED[1]);
 #endif
