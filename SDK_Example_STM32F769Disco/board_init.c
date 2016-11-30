@@ -369,5 +369,8 @@ bool board_init()
 #if (USE_USB_HOST_MSC == true)
 	INIT_USB_MSC_HOST(0, LED[1]);
 #endif
+#if (USE_USB_HOST_MOUSE == true)
+	INIT_USB_HOST_MOUSE(0);
+#endif
 	return true;
 }

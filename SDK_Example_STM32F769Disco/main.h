@@ -45,12 +45,13 @@
 #define MMCSD_DEBUG_EN
 
 #define USE_USB_HS
-#define USE_USB_DEV
+//#define USE_USB_DEV
 
 #define USE_USB_HOST_MSC				false
+#define USE_USB_HOST_MOUSE				true
 #define USBH_MSC_DEBUG_EN
 
-#define USE_USB_DEV_CDC					true
+#define USE_USB_DEV_CDC					false
 #define USE_USB_DEV_MSC_BRIDGE_MMCSD	false
 #define USE_USB_DEV_MSC_BRIDGE_MMCSDSPI false
 /*#####################################################*/

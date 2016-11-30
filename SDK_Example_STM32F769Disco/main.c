@@ -196,9 +196,10 @@ void read_and_display_all_sensors()
 			}
 #endif
 #if _USE_MPL3115A2 == 1
+			float mpl3115a2_pression = 0.0;
 			float mpl3115a2_altitude = 0.0;
 			float mpl3115a2_temp = 0.0;
-			bool mpl3115a2_status = mpl3115a2_get_alt_temp(MPL3115A2, 2, &mpl3115a2_altitude, &mpl3115a2_temp);
+			bool mpl3115a2_status = mpl3115a2_get_alt_temp(MPL3115A2, 2, &mpl3115a2_pression, &mpl3115a2_altitude, &mpl3115a2_temp);
 #endif
 /*
  * Display results.
@@ -229,7 +230,7 @@ void read_and_display_all_sensors()
 #endif
 #if _USE_MPL3115A2 == 1
 			if(mpl3115a2_status) {
-				String.AppendF(SensorResultTextboxGlobal->Text, "MPL3115A1: T = %3.3f, P = %3.5f, Alt = %4.3f\n\r", mpl3115a2_temp, 0.0, mpl3115a2_altitude);
+				String.AppendF(SensorResultTextboxGlobal->Text, "MPL3115A1: T = %3.3f, P = %3.5f, Alt = %4.3f\n\r", mpl3115a2_temp, mpl3115a2_pression, mpl3115a2_altitude);
 			}
 #endif
 			#if _USE_HIH613x == 1
@@ -424,16 +425,21 @@ int main(void)
 			usb_msc_host_idle(0);
 #endif
 			memset(&control_comand, 0, sizeof(tControlCommandData));
+#if (USE_USB_HOST_MOUSE == false)
 			ft5x06_TouchIdle(TOUCH);
 			control_comand.X = TOUCH->TouchResponse.x1;
 			control_comand.Y = TOUCH->TouchResponse.y1;
-			if(gpio.in(LCD_BACKLIGHT) != 0)
-				control_comand.Cursor = (CursorState)TOUCH->TouchResponse.touch_event1;
-			if(TOUCH->TouchResponse.touch_event1 == Cursor_Up)
-				display_light_enable();
+#else
+			USB_HOST_MOUSE_IDLE(0, &control_comand);
+#endif
+			//if(gpio.in(LCD_BACKLIGHT) != 0)
+				//control_comand.Cursor = (CursorState)TOUCH->TouchResponse.touch_event1;
+			//if(TOUCH->TouchResponse.touch_event1 == Cursor_Up)
+				//display_light_enable();
 			MainWindow->idle(MainWindow, &control_comand);
-			if(control_comand.WindowRefresh == true)
-				display_light_enable();
+			//if(control_comand.WindowRefresh == true)
+				//display_light_enable();
+			Screen->lcd_func.put_rectangle(Screen, control_comand.X, control_comand.Y, 2, 2, true, 0x00000000);
 
 			//HAL_ADC_Start_DMA(&AdcHandle, (uint32_t*)&_ADC[0]->ConvResult[0], 2);
 			//adc_start_conversion(_ADC[0]);

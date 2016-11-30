@@ -328,6 +328,12 @@
 	mmcsd.init(MMCSD_NR, GPIO_SD_DETECT_STRUCT, ACTIVITY_LED_STRUCT); \
 	mmcsd.idle(MMCSD_NR);
 /*#####################################################*/
+#define INIT_USB_HOST_MOUSE(USB_DEVICE_NR)\
+		_usb_mouse_host_init(USB_DEVICE_NR)
+
+#define USB_HOST_MOUSE_IDLE(USB_DEVICE_NR, CONTROL)\
+		_usb_mouse_host_idle(USB_DEVICE_NR, CONTROL)
+/*#####################################################*/
 /*
  * This macro initialize the desired USB HOST MSC interface and MMCSD interface and bridge them together.
  *
