@@ -86,7 +86,7 @@ const unsigned int GET_PORT_CLK_ADDR[] = {RCC_AHB1Periph_GPIOA
 #endif
 };
 #endif
-void _gpio_init(unsigned int GpioModuleNr)
+void _gpio_init(gpio_port_enum GpioModuleNr)
 {
 	//unsigned int BaseAddr = 0;
 	switch (GpioModuleNr)
@@ -169,7 +169,7 @@ void _gpio_init(unsigned int GpioModuleNr)
 	//RCC_AHB1PeriphClockCmd(BaseAddr, ENABLE);
 }
 /*#####################################################*/
-new_gpio *_gpio_assign(unsigned int PortNr, unsigned int Pin, gpio_type_enum function, bool Multipin)
+Gpio_t *_gpio_assign(gpio_port_enum PortNr, unsigned char Pin, gpio_type_enum function, bool Multipin)
 {
 	new_gpio* GpioStruct = new_(new_gpio);
 	if(GpioStruct == NULL)
@@ -249,7 +249,7 @@ new_gpio *_gpio_assign(unsigned int PortNr, unsigned int Pin, gpio_type_enum fun
 	return GpioStruct;
 }
 /*#####################################################*/
-void _gpio_free(new_gpio *gpio_struct)
+void _gpio_free(Gpio_t *gpio_struct)
 {
 	if(!gpio_struct)
 		return;
@@ -257,7 +257,7 @@ void _gpio_free(new_gpio *gpio_struct)
 	free(gpio_struct);
 }
 /*#####################################################*/
-bool _gpio_out(new_gpio *gpio_struct, unsigned int State)
+bool _gpio_out(Gpio_t *gpio_struct, unsigned int State)
 {
 	if(!gpio_struct)
 		return false;
@@ -281,12 +281,12 @@ bool _gpio_out(new_gpio *gpio_struct, unsigned int State)
 	return true;
 }
 /*#####################################################*/
-bool _gpio_direction(new_gpio *gpio_struct, gpio_type_enum function)
+bool _gpio_direction(Gpio_t *gpio_struct, gpio_type_enum function)
 {
 	return _gpio_function_set(gpio_struct, function);
 }
 /*#####################################################*/
-signed int _gpio_in(new_gpio *gpio_struct)
+signed int _gpio_in(Gpio_t *gpio_struct)
 {
 	if(!gpio_struct)
 		return -1;
@@ -311,13 +311,13 @@ signed int _gpio_in(new_gpio *gpio_struct)
 	}
 }
 /*#####################################################*/
-bool _gpio_up_dn_enable(new_gpio *gpio_struct, bool enable)
+bool _gpio_up_dn_enable(Gpio_t *gpio_struct, bool enable)
 {
 	if(!gpio_struct) return false;
 	return true;//GPIOUpDnEnable(gpio_struct->BaseAddr, gpio_struct->PinNr, enable);
 }
 /*#####################################################*/
-bool _gpio_up_dn(new_gpio *gpio_struct, unsigned char value)
+bool _gpio_up_dn(Gpio_t *gpio_struct, unsigned char value)
 {
 	if(!gpio_struct) return false;
 	GPIO_TypeDef *BaseAddr = (GPIO_TypeDef *)gpio_struct->BaseAddr;
@@ -347,7 +347,7 @@ bool _gpio_up_dn(new_gpio *gpio_struct, unsigned char value)
 	return true;
 }
 /*#####################################################*/
-bool _gpio_function_set(new_gpio *gpio_struct, gpio_type_enum function)
+bool _gpio_function_set(Gpio_t *gpio_struct, gpio_type_enum function)
 {
 	if(!gpio_struct) return false;
 	GPIO_TypeDef *BaseAddr = (GPIO_TypeDef *)gpio_struct->BaseAddr;

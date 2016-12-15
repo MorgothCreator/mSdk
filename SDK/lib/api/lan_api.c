@@ -4,20 +4,21 @@
  *  Created on: Nov 7, 2012
  *      Author: XxXx
  */
-#include <api/lan_api.h>
+
+#include "main.h"
+#include "api/lan_def.h"
+#include "api/lan_api.h"
 #include "api/uart_api.h"
-//#include "interface/lan_interface.h"
 
 
 #ifdef USE_LWIP
+#include "interface/lan_interface.h"
 //extern new_uart* DebugCom;
 
-
-
-void lan_init(unsigned char instance, unsigned long ip)
-{
-	//_lan_interface_init(instance, ip);
-}
+lan_t lan = {
+		_lan_init,
+		_lan_idle,
+};
 
 #endif
 

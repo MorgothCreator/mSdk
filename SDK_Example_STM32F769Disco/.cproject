@@ -72,7 +72,7 @@
 					</folderInfo>
 					<fileInfo id="fr.ac6.managedbuild.config.gnu.cross.exe.debug.833865780.1453750053" name="lan_interface.h" rcbsApplicability="disable" resourcePath="stm32f7xx/interface/lan_interface.h" toolsToInvoke=""/>
 					<sourceEntries>
-						<entry excluding="stm32f7xx/driver/stm32f7xx_hal_timebase_rtc_wakeup_template.c|stm32f7xx/driver/stm32f7xx_hal_timebase_tim_template.c|stm32f7xx/driver/stm32f7xx_hal_timebase_rtc_alarm_template.c|stm32f7xx/interface/lan_interface.h|stm32f7xx/interface/lan_interface.c|stm32f7xx/sys/Include/cmsis_armcc.h|stm32f7xx/sys/Include/cmsis_armcc_V6.h|stm32f7xx/interface/lwip|stm32f7xx/sys/startup_stm32f779xx.s|stm32f7xx/sys/startup_stm32f777xx.s|stm32f7xx/sys/startup_stm32f767xx.s|stm32f7xx/sys/startup_stm32f765xx.s|stm32f7xx/sys/startup_stm32f756xx.s|stm32f7xx/sys/startup_stm32f746xx.s|stm32f7xx/sys/startup_stm32f745xx.s" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="stm32f7xx/sys/startup_stm32f777xx.s|stm32f7xx/sys/startup_stm32f765xx.s|stm32f7xx/interface/LwIp/src/apps/snmp|stm32f7xx/driver/stm32f7xx_hal_timebase_rtc_alarm_template.c|stm32f7xx/sys/startup_stm32f779xx.s|stm32f7xx/sys/startup_stm32f767xx.s|stm32f7xx/interface/LwIp/src/apps/httpd|stm32f7xx/sys/startup_stm32f745xx.s|stm32f7xx/sys/Include/cmsis_armcc.h|stm32f7xx/sys/Include/cmsis_armcc_V6.h|stm32f7xx/interface/LwIp/src/core/ipv6|stm32f7xx/driver/stm32f7xx_hal_timebase_rtc_wakeup_template.c|stm32f7xx/interface/lwip|stm32f7xx/interface/LwIp/httpd/fsdata.c|stm32f7xx/interface/LwIp/src/apps/lwiperf|stm32f7xx/driver/stm32f7xx_hal_timebase_tim_template.c|stm32f7xx/interface/LwIp/src/apps/sntp|stm32f7xx/interface/LwIp/src/apps/netbiosns|stm32f7xx/sys/startup_stm32f756xx.s|stm32f7xx/sys/startup_stm32f746xx.s" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -137,7 +137,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="stm32f7xx/driver/stm32f7xx_hal_timebase_tim_template.c|stm32f7xx/driver/stm32f7xx_hal_timebase_rtc_alarm_template.c|stm32f7xx/interface/lan_interface.c|stm32f7xx/interface/lwip|stm32f7xx/sys/startup_stm32f779xx.s|stm32f7xx/sys/startup_stm32f777xx.s|stm32f7xx/sys/startup_stm32f767xx.s|stm32f7xx/sys/startup_stm32f765xx.s|stm32f7xx/sys/startup_stm32f756xx.s|stm32f7xx/sys/startup_stm32f746xx.s|stm32f7xx/sys/startup_stm32f745xx.s" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="stm32f7xx/sys/startup_stm32f777xx.s|stm32f7xx/sys/startup_stm32f765xx.s|stm32f7xx/interface/LwIp/src/apps/snmp|stm32f7xx/driver/stm32f7xx_hal_timebase_rtc_alarm_template.c|stm32f7xx/sys/startup_stm32f779xx.s|stm32f7xx/sys/startup_stm32f767xx.s|stm32f7xx/interface/LwIp/src/apps/httpd|stm32f7xx/sys/startup_stm32f745xx.s|stm32f7xx/interface/lan_interface.c|stm32f7xx/interface/LwIp/src/core/ipv6|stm32f7xx/interface/lwip|stm32f7xx/interface/LwIp/httpd/fsdata.c|stm32f7xx/interface/LwIp/src/apps/lwiperf|stm32f7xx/driver/stm32f7xx_hal_timebase_tim_template.c|stm32f7xx/interface/LwIp/src/apps/sntp|stm32f7xx/interface/LwIp/src/apps/netbiosns|stm32f7xx/sys/startup_stm32f756xx.s|stm32f7xx/sys/startup_stm32f746xx.s" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

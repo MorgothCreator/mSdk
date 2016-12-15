@@ -1,37 +1,56 @@
 /**
   ******************************************************************************
-  * @file    LwIP/LwIP_TCP_Echo_Server/Src/ethernetif.c
+  * @file    LwIP/LwIP_HTTP_Server_Raw/Src/ethernetif.c
   * @author  MCD Application Team
-  * @version V1.0.1
-  * @date    09-October-2015
+  * @version V1.1.0
+  * @date    23-September-2016
   * @brief   This file implements Ethernet network interface drivers for lwIP
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; COPYRIGHT(c) 2015 STMicroelectronics</center></h2>
+  * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics International N.V. 
+  * All rights reserved.</center></h2>
   *
-  * Licensed under MCD-ST Liberty SW License Agreement V2, (the "License");
-  * You may not use this file except in compliance with the License.
-  * You may obtain a copy of the License at:
+  * Redistribution and use in source and binary forms, with or without 
+  * modification, are permitted, provided that the following conditions are met:
   *
-  *        http://www.st.com/software_license_agreement_liberty_v2
+  * 1. Redistribution of source code must retain the above copyright notice, 
+  *    this list of conditions and the following disclaimer.
+  * 2. Redistributions in binary form must reproduce the above copyright notice,
+  *    this list of conditions and the following disclaimer in the documentation
+  *    and/or other materials provided with the distribution.
+  * 3. Neither the name of STMicroelectronics nor the names of other 
+  *    contributors to this software may be used to endorse or promote products 
+  *    derived from this software without specific written permission.
+  * 4. This software, including modifications and/or derivative works of this 
+  *    software, must execute solely and exclusively on microcontroller or
+  *    microprocessor devices manufactured by or for STMicroelectronics.
+  * 5. Redistribution and use of this software other than as permitted under 
+  *    this license is void and will automatically terminate your rights under 
+  *    this license. 
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
-  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  * See the License for the specific language governing permissions and
-  * limitations under the License.
+  * THIS SOFTWARE IS PROVIDED BY STMICROELECTRONICS AND CONTRIBUTORS "AS IS" 
+  * AND ANY EXPRESS, IMPLIED OR STATUTORY WARRANTIES, INCLUDING, BUT NOT 
+  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
+  * PARTICULAR PURPOSE AND NON-INFRINGEMENT OF THIRD PARTY INTELLECTUAL PROPERTY
+  * RIGHTS ARE DISCLAIMED TO THE FULLEST EXTENT PERMITTED BY LAW. IN NO EVENT 
+  * SHALL STMICROELECTRONICS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, 
+  * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   *
   ******************************************************************************
   */
 
 /* Includes ------------------------------------------------------------------*/
-#include "driver/stm32f4xx_hal.h"
-#include "driver/stm32f4xx_hal_eth.h"
-#include "driver/stm32f4xx_hal_gpio_ex.h"
-#include "lwip/opt.h"
-//#include "lwip/lwip_timers.h"
-#include "netif/etharp.h"
+#include "main.h"
+#include "driver/stm32f7xx_hal.h"
+#include "interface/LwIp/src/include/lwip/opt.h"
+#include "interface/LwIp/src/include/lwip/lwip_timers.h"
+#include "interface/LwIp/src/include/netif/etharp.h"
 #include "ethernetif.h"
 #include <string.h>
 
@@ -43,27 +62,44 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-#if defined ( __ICCARM__ ) /*!< IAR Compiler */
-  #pragma data_alignment=4   
-#endif
-__ALIGN_BEGIN ETH_DMADescTypeDef  DMARxDscrTab[ETH_RXBUFNB] __ALIGN_END;/* Ethernet Rx MA Descriptor */
+#if defined ( __CC_ARM   )
+ETH_DMADescTypeDef  DMARxDscrTab[ETH_RXBUFNB] __attribute__((at(0x20002000)));/* Ethernet Rx MA Descriptor */
 
-#if defined ( __ICCARM__ ) /*!< IAR Compiler */
-  #pragma data_alignment=4   
-#endif
-__ALIGN_BEGIN ETH_DMADescTypeDef  DMATxDscrTab[ETH_TXBUFNB] __ALIGN_END;/* Ethernet Tx DMA Descriptor */
+ETH_DMADescTypeDef  DMATxDscrTab[ETH_TXBUFNB] __attribute__((at(0x200020A0)));/* Ethernet Tx DMA Descriptor */
 
-#if defined ( __ICCARM__ ) /*!< IAR Compiler */
-  #pragma data_alignment=4   
-#endif
-__ALIGN_BEGIN uint8_t Rx_Buff[ETH_RXBUFNB][ETH_RX_BUF_SIZE] __ALIGN_END; /* Ethernet Receive Buffer */
+uint8_t Rx_Buff[ETH_RXBUFNB][ETH_RX_BUF_SIZE] __attribute__((at(0x20002140))); /* Ethernet Receive Buffer */
 
-#if defined ( __ICCARM__ ) /*!< IAR Compiler */
-  #pragma data_alignment=4   
+uint8_t Tx_Buff[ETH_TXBUFNB][ETH_TX_BUF_SIZE] __attribute__((at(0x20004480))); /* Ethernet Transmit Buffer */
+
+#elif defined ( __ICCARM__ ) /*!< IAR Compiler */
+  #pragma data_alignment=4 
+
+#pragma location=0x20002000
+__no_init ETH_DMADescTypeDef  DMARxDscrTab[ETH_RXBUFNB];/* Ethernet Rx MA Descriptor */
+
+#pragma location=0x200020A0
+__no_init ETH_DMADescTypeDef  DMATxDscrTab[ETH_TXBUFNB];/* Ethernet Tx DMA Descriptor */
+
+#pragma location=0x20002140
+__no_init uint8_t Rx_Buff[ETH_RXBUFNB][ETH_RX_BUF_SIZE]; /* Ethernet Receive Buffer */
+
+#pragma location=0x20004480
+__no_init uint8_t Tx_Buff[ETH_TXBUFNB][ETH_TX_BUF_SIZE]; /* Ethernet Transmit Buffer */
+
+#elif defined ( __GNUC__ ) /*!< GNU Compiler */
+
+ETH_DMADescTypeDef  DMARxDscrTab[ETH_RXBUFNB] __attribute__((section(".RxDecripSection")));/* Ethernet Rx MA Descriptor */
+
+ETH_DMADescTypeDef  DMATxDscrTab[ETH_TXBUFNB] __attribute__((section(".TxDescripSection")));/* Ethernet Tx DMA Descriptor */
+
+uint8_t Rx_Buff[ETH_RXBUFNB][ETH_RX_BUF_SIZE] __attribute__((section(".RxarraySection"))); /* Ethernet Receive Buffer */
+
+uint8_t Tx_Buff[ETH_TXBUFNB][ETH_TX_BUF_SIZE] __attribute__((section(".TxarraySection"))); /* Ethernet Transmit Buffer */
+
 #endif
-__ALIGN_BEGIN uint8_t Tx_Buff[ETH_TXBUFNB][ETH_TX_BUF_SIZE] __ALIGN_END; /* Ethernet Transmit Buffer */
 
 ETH_HandleTypeDef EthHandle;
+u32_t sys_now(void);
 
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
@@ -78,7 +114,47 @@ ETH_HandleTypeDef EthHandle;
 void HAL_ETH_MspInit(ETH_HandleTypeDef *heth)
 { 
   GPIO_InitTypeDef GPIO_InitStructure;
-  
+#if defined (USE_RMII_INTERFACE)
+  /* Enable GPIOs clocks */
+  __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOC_CLK_ENABLE();
+  __HAL_RCC_GPIOG_CLK_ENABLE();
+
+/* Ethernet pins configuration ************************************************/
+/*
+        RMII_REF_CLK ----------------------> PA1
+        RMII_MDIO -------------------------> PA2
+        RMII_MDC --------------------------> PC1
+        RMII_MII_CRS_DV -------------------> PA7
+        RMII_MII_RXD0 ---------------------> PC4
+        RMII_MII_RXD1 ---------------------> PC5
+        RMII_MII_RXER ---------------------> PG2
+        RMII_MII_TX_EN --------------------> PG11
+        RMII_MII_TXD0 ---------------------> PG13
+        RMII_MII_TXD1 ---------------------> PG14
+  */
+
+  /* Configure PA1, PA2 and PA7 */
+  GPIO_InitStructure.Speed = GPIO_SPEED_HIGH;
+  GPIO_InitStructure.Mode = GPIO_MODE_AF_PP;
+  GPIO_InitStructure.Pull = GPIO_NOPULL;
+  GPIO_InitStructure.Alternate = GPIO_AF11_ETH;
+  GPIO_InitStructure.Pin = GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_7;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStructure);
+
+  /* Configure PC1, PC4 and PC5 */
+  GPIO_InitStructure.Pin = GPIO_PIN_1 | GPIO_PIN_4 | GPIO_PIN_5;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStructure);
+
+  /* Configure PG2, PG11, PG13 and PG14 */
+  GPIO_InitStructure.Pin =  GPIO_PIN_2 | GPIO_PIN_11 | GPIO_PIN_13 | GPIO_PIN_14;
+  HAL_GPIO_Init(GPIOG, &GPIO_InitStructure);
+
+  /* Enable the Ethernet global Interrupt */
+  HAL_NVIC_SetPriority(ETH_IRQn, 0x7, 0);
+  HAL_NVIC_EnableIRQ(ETH_IRQn);
+
+#else
   /* Enable GPIOs clocks */
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
@@ -112,14 +188,17 @@ void HAL_ETH_MspInit(ETH_HandleTypeDef *heth)
   */
 
   /* Configure PA1, PA2 and PA7 */
-  /* Note : on MB1165 ETH_MDIO is connected to PA2 by default (SB40 is closed) */
   GPIO_InitStructure.Speed = GPIO_SPEED_HIGH;
   GPIO_InitStructure.Mode = GPIO_MODE_AF_PP;
   GPIO_InitStructure.Pull = GPIO_NOPULL; 
   GPIO_InitStructure.Alternate = GPIO_AF11_ETH;
   GPIO_InitStructure.Pin = GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_7;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStructure);
-
+  
+  /* Note : ETH_MDIO is connected to PA2 which is shared with other signals like SAI2_SCKB.
+     By default on STM32F769I-EVAL board, PA2 is connected to SAI2_SCKB, so to connect PA2 to ETH_MDIO :
+    - unsolder bridge SB24 (SAI2_CKB)
+    - solder bridge SB5 (ETH_MDIO) */
   
   /* Configure PB5 */
   GPIO_InitStructure.Pin = GPIO_PIN_5;
@@ -130,11 +209,13 @@ void HAL_ETH_MspInit(ETH_HandleTypeDef *heth)
   HAL_GPIO_Init(GPIOE, &GPIO_InitStructure);
 
   /* Configure PC1, PC2, PC3, PC4 and PC5 */
-  /* Note : on MB1165 ETH pins PC1..5 are connected by default (bridges are closed): */
-  /* PC1 (sb31), PC2 (r233), PC3 (sb54) PC4 (sb53), PC5 (sb73) */
   GPIO_InitStructure.Pin = GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStructure);
 
+  /* Note : ETH_MDC is connected to PC1 which is shared with other signals like SAI1_SDA.
+     By default on STM32F769I-EVAL board, PC1 is connected to SAI1_SDA, so to connect PC1 to ETH_MDC :
+    - unsolder bridge SB22 (SAI1_SDA)
+    - solder bridge SB33 (ETH_MDC) */
                                 
   /* Configure PG11, PG14 and PG13 */
   GPIO_InitStructure.Pin =  GPIO_PIN_11 | GPIO_PIN_13 | GPIO_PIN_14;
@@ -149,10 +230,10 @@ void HAL_ETH_MspInit(ETH_HandleTypeDef *heth)
   HAL_GPIO_Init(GPIOA, &GPIO_InitStructure);
   
   Note: Ethernet Full duplex mode works properly in the default setting
-  (which MII_CRS is not connected to PA0 of STM32F469I) because PA0 is shared
+  (which MII_CRS is not connected to PA0 of STM32F7xx) because PA0 is shared
   with MC_ENA.
   If Half duplex mode is needed, uncomment PA0 configuration code source (above 
-  the note) and close the SB48 solder bridge of the STM32469I-EVAL board .
+  the note) and close the SB36 solder bridge of the STM32F769I-EVAL board .
   */
 
   /* Configure PH3 
@@ -160,10 +241,10 @@ void HAL_ETH_MspInit(ETH_HandleTypeDef *heth)
   HAL_GPIO_Init(GPIOH, &GPIO_InitStructure);
   
   Note: Ethernet Full duplex mode works properly in the default setting
-  (which MII_COL is not connected to PH3 of STM32F469I) because PH3 is shared
+  (which MII_COL is not connected to PH3 of STM32F7xx) because PH3 is shared
   with SDRAM chip select SDNE0. 
   If Half duplex mode is needed, uncomment PH3 configuration code source (above 
-  the note)  then remove R243 and close SB63 solder bridge of the STM32469I-EVAL board.
+  the note) and close SB47 solder bridge of the STM32F769I-EVAL board.
   */
 
   /* Configure PI10
@@ -171,12 +252,12 @@ void HAL_ETH_MspInit(ETH_HandleTypeDef *heth)
   HAL_GPIO_Init(GPIOI, &GPIO_InitStructure); 
   
   Note: Ethernet works properly in the default setting (which RX_ER is not 
-  connected to PI10 of STM32F469I) because PI10 is shared with data signal 
+  connected to PI10 of STM32F7xx) because PI10 is shared with data signal 
   of SDRAM. 
   If RX_ER signal is needed, uncomment PI10 configuration code source (above 
-  the note) then remove R244 and solder SB12 of the STM32469I-EVAL board.
+  the note) then remove R248 and solder SB9 of the STM32F769I-EVAL board.
   */
-  
+#endif
   /* Enable ETHERNET clock  */
   __HAL_RCC_ETH_CLK_ENABLE();
 }
@@ -195,16 +276,20 @@ static void low_level_init(struct netif *netif)
 { 
   uint32_t regvalue = 0;
   uint8_t macaddress[6]= { MAC_ADDR0, MAC_ADDR1, MAC_ADDR2, MAC_ADDR3, MAC_ADDR4, MAC_ADDR5 };
-
+  
   EthHandle.Instance = ETH;  
   EthHandle.Init.MACAddr = macaddress;
   EthHandle.Init.AutoNegotiation = ETH_AUTONEGOTIATION_ENABLE;
   EthHandle.Init.Speed = ETH_SPEED_100M;
   EthHandle.Init.DuplexMode = ETH_MODE_FULLDUPLEX;
+#if defined (USE_RMII_INTERFACE)
   EthHandle.Init.MediaInterface = ETH_MEDIA_INTERFACE_RMII;
-  EthHandle.Init.RxMode = ETH_RXPOLLING_MODE;
+#else
+  EthHandle.Init.MediaInterface = ETH_MEDIA_INTERFACE_MII;
+#endif
+  EthHandle.Init.RxMode = ETH_RXPOLLING_MODE;//ETH_RXINTERRUPT_MODE
   EthHandle.Init.ChecksumMode = ETH_CHECKSUM_BY_HARDWARE;
-  EthHandle.Init.PhyAddress = DP83848_PHY_ADDRESS;
+  EthHandle.Init.PhyAddress = LAN8742A_PHY_ADDRESS;
   
   /* configure ethernet peripheral (GPIOs, clocks, MAC, DMA) */
   if (HAL_ETH_Init(&EthHandle) == HAL_OK)
@@ -412,21 +497,20 @@ static struct pbuf * low_level_input(struct netif *netif)
       memcpy( (uint8_t*)((uint8_t*)q->payload + payloadoffset), (uint8_t*)((uint8_t*)buffer + bufferoffset), byteslefttocopy);
       bufferoffset = bufferoffset + byteslefttocopy;
     }
+  }    
     
-    
-    /* Release descriptors to DMA */
-    /* Point to first descriptor */
-    dmarxdesc = EthHandle.RxFrameInfos.FSRxDesc;
-    /* Set Own bit in Rx descriptors: gives the buffers back to DMA */
-    for (i=0; i< EthHandle.RxFrameInfos.SegCount; i++)
-    {  
-      dmarxdesc->Status |= ETH_DMARXDESC_OWN;
-      dmarxdesc = (ETH_DMADescTypeDef *)(dmarxdesc->Buffer2NextDescAddr);
-    }
-    
-    /* Clear Segment_Count */
-    EthHandle.RxFrameInfos.SegCount =0;
+  /* Release descriptors to DMA */
+  /* Point to first descriptor */
+  dmarxdesc = EthHandle.RxFrameInfos.FSRxDesc;
+  /* Set Own bit in Rx descriptors: gives the buffers back to DMA */
+  for (i=0; i< EthHandle.RxFrameInfos.SegCount; i++)
+  {  
+    dmarxdesc->Status |= ETH_DMARXDESC_OWN;
+    dmarxdesc = (ETH_DMADescTypeDef *)(dmarxdesc->Buffer2NextDescAddr);
   }
+    
+  /* Clear Segment_Count */
+  EthHandle.RxFrameInfos.SegCount =0;
   
   /* When Rx Buffer unavailable flag is set: clear it and resume reception */
   if ((EthHandle.Instance->DMASR & ETH_DMASR_RBUS) != (uint32_t)RESET)  
@@ -646,5 +730,15 @@ __weak void ethernetif_notify_conn_changed(struct netif *netif)
   /* NOTE : This is function clould be implemented in user file 
             when the callback is needed,
   */  
+}
+
+/**
+  * @brief  Ethernet IRQ Handler
+  * @param  None
+  * @retval None
+  */
+void ETH_IRQHandler(void)
+{
+  HAL_ETH_IRQHandler(&EthHandle);
 }
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

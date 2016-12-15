@@ -75,6 +75,7 @@
 
 #define __CORTEX_M                (0x04)                                   /*!< Cortex-M Core                    */
 
+#undef __SOFTFP__
 
 #if   defined ( __CC_ARM )
   #define __ASM            __asm                                      /*!< asm keyword for ARM Compiler          */

@@ -859,6 +859,8 @@ void _mmcsd_ioctl(unsigned int unit_nr, unsigned int  command,  unsigned int *bu
 
 unsigned int _mmcsd_read(void *SdStruct, void *ptr, unsigned long block, unsigned int nblks)
 {
+	//if(!card_detected)
+		//return 0;
 	//HAL_SD_CardInfoTypedef *_SDCardInfo = (HAL_SD_CardInfoTypedef *)SdStruct;
 	if(status_led)
 		gpio.out(status_led, 1);
@@ -878,6 +880,8 @@ unsigned int _mmcsd_read(void *SdStruct, void *ptr, unsigned long block, unsigne
 unsigned int _mmcsd_write(void *SdStruct, void *ptr, unsigned long block, unsigned int nblks)
 {
 	//HAL_SD_CardInfoTypedef *_SDCardInfo = (HAL_SD_CardInfoTypedef *)SdStruct;
+	//if(!card_detected)
+		//return 0;
 	if(status_led)
 		gpio.out(status_led, 1);
 	HAL_SD_ErrorTypedef status = MSD_OK;

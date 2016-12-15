@@ -9,9 +9,10 @@
 #define LWIP_API_H_
 
 #include "main.h"
+#include "api/lan_def.h"
 
 
-extern void lan_init(unsigned char instance, unsigned long ip);
+extern lan_t lan;
 
 #ifdef HEADER_INCLUDE_C_FILES
 #include "lwip_api.c"

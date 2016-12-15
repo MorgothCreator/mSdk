@@ -399,6 +399,7 @@ int main(void)
 
 	while(1)
 	{
+		lan.idle(0);
 		heart_beat_service();
 		if(timer_tick(&TimerReadBattery))
 		{
@@ -411,7 +412,7 @@ int main(void)
 			{
 				minimum_battery_level = percent_battery;
 			}
-			read_and_display_all_sensors();
+			//read_and_display_all_sensors();
 		}
 		if(timer_tick(&TimerDisplayLight))
 		{

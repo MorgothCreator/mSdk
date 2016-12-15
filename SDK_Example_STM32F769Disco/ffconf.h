@@ -134,7 +134,7 @@
 /  This option has no effect when _LFN_UNICODE == 0. */
 
 
-#define _FS_RPATH	0
+#define _FS_RPATH	2
 /* This option configures support of relative path.
 /
 /   0: Disable relative path and remove related functions.
@@ -147,7 +147,7 @@
 / Drive/Volume Configurations
 /---------------------------------------------------------------------------*/
 
-#define _VOLUMES	9
+#define _VOLUMES	7
 /* Number of volumes (logical drives) to be used. */
 
 
@@ -202,7 +202,7 @@
 / System Configurations
 /---------------------------------------------------------------------------*/
 
-#define	_FS_TINY	1
+#define	_FS_TINY	0
 /* This option switches tiny buffer configuration. (0:Normal or 1:Tiny)
 /  At the tiny configuration, size of file object (FIL) is reduced _MAX_SS bytes.
 /  Instead of private sector buffer eliminated from the file object, common sector

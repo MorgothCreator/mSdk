@@ -64,6 +64,12 @@
 
 #include "lib/fat_fs/inc/ff_util.h"
 
+#include "app/lwip/httpd/httpd.h"
+#include "app/lwip/ftpserver/ftpd.h"
+#include "app/lwip/sntp/sntp.h"
+#include "app/lwip/http_client/http_client.h"
+#include "app/lwip/tftpserver/tftpserver.h"
+
 
 /*#####################################################*/
 new_uart* Uart[6] = {NULL, NULL, NULL, NULL, NULL, NULL};
@@ -371,6 +377,15 @@ bool board_init()
 #endif
 #if (USE_USB_HOST_MOUSE == true)
 	INIT_USB_HOST_MOUSE(0);
+#endif
+#ifdef USE_LWIP
+	lan.init(0, 0);
+	while(lan.idle(0) != DHCP_ADDRESS_ASSIGNED);
+    httpd_init(80);
+    tftpd_init(8080);
+    sntp_init();
+    tcp_setup("google.com", "GET\n\r\n\r");
+    ftpd_init(21);
 #endif
 	return true;
 }

@@ -1,72 +1,53 @@
 /**
- * \file lwipopts.h - Configuration options for lwIP
- *
- * Copyright (c) 2010 Texas Instruments Incorporated
- */
-/*
- * Copyright (c) 2001-2004 Swedish Institute of Computer Science.
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- * 3. The name of the author may not be used to endorse or promote products
- *    derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
- * SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
- * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
- * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
- * OF SUCH DAMAGE.
- *
- * This file is part of the lwIP TCP/IP stack.
- *
- * Author: Adam Dunkels <adam@sics.se>
- *
- */
+  ******************************************************************************
+  * @file    LwIP/LwIP_HTTP_Server_Raw/Inc/lwipopts.h
+  * @author  MCD Application Team
+  * @version V1.1.0
+  * @date    23-September-2016
+  * @brief   lwIP Options Configuration.
+  ******************************************************************************
+  * @attention
+  *
+  * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics International N.V. 
+  * All rights reserved.</center></h2>
+  *
+  * Redistribution and use in source and binary forms, with or without 
+  * modification, are permitted, provided that the following conditions are met:
+  *
+  * 1. Redistribution of source code must retain the above copyright notice, 
+  *    this list of conditions and the following disclaimer.
+  * 2. Redistributions in binary form must reproduce the above copyright notice,
+  *    this list of conditions and the following disclaimer in the documentation
+  *    and/or other materials provided with the distribution.
+  * 3. Neither the name of STMicroelectronics nor the names of other 
+  *    contributors to this software may be used to endorse or promote products 
+  *    derived from this software without specific written permission.
+  * 4. This software, including modifications and/or derivative works of this 
+  *    software, must execute solely and exclusively on microcontroller or
+  *    microprocessor devices manufactured by or for STMicroelectronics.
+  * 5. Redistribution and use of this software other than as permitted under 
+  *    this license is void and will automatically terminate your rights under 
+  *    this license. 
+  *
+  * THIS SOFTWARE IS PROVIDED BY STMICROELECTRONICS AND CONTRIBUTORS "AS IS" 
+  * AND ANY EXPRESS, IMPLIED OR STATUTORY WARRANTIES, INCLUDING, BUT NOT 
+  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
+  * PARTICULAR PURPOSE AND NON-INFRINGEMENT OF THIRD PARTY INTELLECTUAL PROPERTY
+  * RIGHTS ARE DISCLAIMED TO THE FULLEST EXTENT PERMITTED BY LAW. IN NO EVENT 
+  * SHALL STMICROELECTRONICS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, 
+  * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  *
+  ******************************************************************************
+  */
 
 #ifndef __LWIPOPTS_H__
 #define __LWIPOPTS_H__
 
-
-#define DEST_IP_ADDR0   192
-#define DEST_IP_ADDR1   168
-#define DEST_IP_ADDR2   0
-#define DEST_IP_ADDR3   11
-
-#define DEST_PORT       7
-
-/*Static IP ADDRESS: IP_ADDR0.IP_ADDR1.IP_ADDR2.IP_ADDR3 */
-#define IP_ADDR0   192
-#define IP_ADDR1   168
-#define IP_ADDR2   137
-#define IP_ADDR3   10
-
-/*NETMASK*/
-#define NETMASK_ADDR0   255
-#define NETMASK_ADDR1   255
-#define NETMASK_ADDR2   255
-#define NETMASK_ADDR3   0
-
-/*Gateway Address*/
-#define GW_ADDR0   192
-#define GW_ADDR1   168
-#define GW_ADDR2   0
-#define GW_ADDR3   1
-
-/*****************************************************************************
-**                           CONFIGURATIONS
-*****************************************************************************/
 /**
  * SYS_LIGHTWEIGHT_PROT==1: if you want inter-task protection for certain
  * critical regions during buffer allocation, deallocation and memory
@@ -93,27 +74,27 @@ a lot of data that needs to be copied, this should be set high. */
 /* MEMP_NUM_PBUF: the number of memp struct pbufs. If the application
    sends a lot of data out of ROM (or other static memory), this
    should be set high. */
-#define MEMP_NUM_PBUF           10
+#define MEMP_NUM_PBUF           20
 /* MEMP_NUM_UDP_PCB: the number of UDP protocol control blocks. One
    per active UDP "connection". */
-#define MEMP_NUM_UDP_PCB        6
+#define MEMP_NUM_UDP_PCB        30
 /* MEMP_NUM_TCP_PCB: the number of simulatenously active TCP
    connections. */
-#define MEMP_NUM_TCP_PCB        10
+#define MEMP_NUM_TCP_PCB        30
 /* MEMP_NUM_TCP_PCB_LISTEN: the number of listening TCP
    connections. */
-#define MEMP_NUM_TCP_PCB_LISTEN 6
+#define MEMP_NUM_TCP_PCB_LISTEN 20
 /* MEMP_NUM_TCP_SEG: the number of simultaneously queued TCP
    segments. */
-#define MEMP_NUM_TCP_SEG        12
+#define MEMP_NUM_TCP_SEG        24
 /* MEMP_NUM_SYS_TIMEOUT: the number of simulateously active
    timeouts. */
-#define MEMP_NUM_SYS_TIMEOUT    10
+#define MEMP_NUM_SYS_TIMEOUT    20
 
 
 /* ---------- Pbuf options ---------- */
 /* PBUF_POOL_SIZE: the number of buffers in the pbuf pool. */
-#define PBUF_POOL_SIZE          10
+#define PBUF_POOL_SIZE          20
 
 /* PBUF_POOL_BUFSIZE: the size of each pbuf in the pbuf pool. */
 #define PBUF_POOL_BUFSIZE       1524
@@ -174,12 +155,12 @@ a lot of data that needs to be copied, this should be set high. */
    --------------------------------------
 */
 
-/*
-The STM32F4x7 allows computing and verifying the IP, UDP, TCP and ICMP checksums by hardware:
+/* 
+The STM32F7xxallows computing and verifying the IP, UDP, TCP and ICMP checksums by hardware:
  - To use this feature let the following define uncommented.
  - To disable it and process by CPU comment the  the checksum.
 */
-#define CHECKSUM_BY_HARDWARE
+#define CHECKSUM_BY_HARDWARE 
 
 
 #ifdef CHECKSUM_BY_HARDWARE
@@ -188,7 +169,7 @@ The STM32F4x7 allows computing and verifying the IP, UDP, TCP and ICMP checksums
   /* CHECKSUM_GEN_UDP==0: Generate checksums by hardware for outgoing UDP packets.*/
   #define CHECKSUM_GEN_UDP                0
   /* CHECKSUM_GEN_TCP==0: Generate checksums by hardware for outgoing TCP packets.*/
-  #define CHECKSUM_GEN_TCP                0
+  #define CHECKSUM_GEN_TCP                0 
   /* CHECKSUM_CHECK_IP==0: Check checksums by hardware for incoming IP packets.*/
   #define CHECKSUM_CHECK_IP               0
   /* CHECKSUM_CHECK_UDP==0: Check checksums by hardware for incoming UDP packets.*/
@@ -235,25 +216,29 @@ The STM32F4x7 allows computing and verifying the IP, UDP, TCP and ICMP checksums
  */
 #define LWIP_SOCKET                     0
 
+/*
+   ------------------------------------
+   ---------- httpd options ----------
+   ------------------------------------
+*/
+
+/** Set this to 1 to support CGI */
+#define LWIP_HTTPD_CGI            1
+
+/** Set this to 1 to support SSI (Server-Side-Includes) */
+#define LWIP_HTTPD_SSI            0
+
+/** Set this to 1 to include "fsdata_custom.c" instead of "fsdata.c" for the
+ * file system (to prevent changing the file included in CVS) */
+#define HTTPD_USE_CUSTOM_FSDATA   0
 
 /*
    ----------------------------------------
    ---------- Lwip Debug options ----------
    ----------------------------------------
 */
-#define LWIP_DEBUG                      0
-
-/**
-  * @brief MFX_IRQOUt pin
-  */
-#define MFX_IRQOUT_PIN                    GPIO_PIN_8
-#define MFX_IRQOUT_GPIO_PORT              GPIOI
-#define MFX_IRQOUT_GPIO_CLK_ENABLE()      __HAL_RCC_GPIOI_CLK_ENABLE()
-#define MFX_IRQOUT_GPIO_CLK_DISABLE()     __HAL_RCC_GPIOI_CLK_DISABLE()
-#define MFX_IRQOUT_EXTI_IRQn              EXTI9_5_IRQn
-#define MFX_IRQOUT_EXTI_IRQnHandler       EXTI9_5_IRQHandler
-
-
-
+//#define LWIP_DEBUG                      0
 
 #endif /* __LWIPOPTS_H__ */
+
+/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -24,15 +24,15 @@ extern const unsigned int GET_PORT_CLK_ADDR[];
 		((GPIO_TypeDef*)base_addr)->ODR = (((GPIO_TypeDef*)base_addr)->ODR & ~mask) | ((pin_mask) & mask)
 
 /*#####################################################*/
-void _gpio_init(unsigned int GpioModuleNr);
-new_gpio *_gpio_assign(unsigned int PortNr, unsigned int Pin, gpio_type_enum function, bool Multipin);
-void _gpio_free(new_gpio *gpio_struct);
-bool _gpio_out(new_gpio *gpio_struct, unsigned int State);
-bool _gpio_direction(new_gpio *gpio_struct, gpio_type_enum function);
-signed int _gpio_in(new_gpio *gpio_struct);
-bool _gpio_up_dn_enable(new_gpio *gpio_struct, bool value);
-bool _gpio_up_dn(new_gpio *gpio_struct, unsigned char value);
-bool _gpio_function_set(new_gpio *gpio_struct, gpio_type_enum function);
+void _gpio_init(gpio_port_enum GpioModuleNr);
+new_gpio *_gpio_assign(gpio_port_enum PortNr, unsigned char Pin, gpio_type_enum function, bool Multipin);
+void _gpio_free(Gpio_t *gpio_struct);
+bool _gpio_out(Gpio_t *gpio_struct, unsigned int State);
+bool _gpio_direction(Gpio_t *gpio_struct, gpio_type_enum function);
+signed int _gpio_in(Gpio_t *gpio_struct);
+bool _gpio_up_dn_enable(Gpio_t *gpio_struct, bool value);
+bool _gpio_up_dn(Gpio_t *gpio_struct, unsigned char value);
+bool _gpio_function_set(Gpio_t *gpio_struct, gpio_type_enum function);
 /*#####################################################*/
 #ifdef HEADER_INCLUDE_C_FILES
 #include "gpio_interface.c"

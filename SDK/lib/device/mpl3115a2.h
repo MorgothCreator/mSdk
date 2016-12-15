@@ -82,7 +82,7 @@ typedef struct MPL3115A2_s{
 	Twi_t* TWI;
 }MPL3115A2_t;
 /*#####################################################*/
-bool mpl3115a2_get_alt_temp(MPL3115A2_t *structure, unsigned char oversample, float *altitude, float *temperature);
+bool mpl3115a2_get_alt_temp(MPL3115A2_t *structure, unsigned char oversample, float *pression, float *altitude, float *temperature);
 bool mpl3115a2_init(MPL3115A2_t *structure);
 /*#####################################################*/
 #define new_mpl3115a2 MPL3115A2_t

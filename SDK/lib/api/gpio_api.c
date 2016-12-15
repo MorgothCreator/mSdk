@@ -38,6 +38,7 @@ const gpio_t gpio = {
 		gpio_get_state,
 		_gpio_function_set,
 		gpio_idle,
+
 };
 /*#####################################################*/
 bool gpio_get_state(new_gpio *gpio_struct)

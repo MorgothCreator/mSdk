@@ -16,6 +16,8 @@
 #include "api/gpio_def.h"
 #include "api/lcd_def.h"
 #include "api/lcd_api.h"
+#include "api/lan_def.h"
+#include "api/lan_api.h"
 #include "api/touchscreen_def.h"
 #include "api/mmcsd_api.h"
 #include "api/qspi_api.h"
@@ -42,6 +44,7 @@
 
 #include "lib/fat_fs/inc/diskio.h"
 #include "interface/usb_dev_msc_interface.h"
+#include "interface/usb_host_mouse_interface.h"
 
 /*#####################################################*/
 /*#####################################################*/

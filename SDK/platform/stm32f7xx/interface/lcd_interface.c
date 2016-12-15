@@ -966,7 +966,7 @@ bool _screen_copy(void *_pDisplayTo, void *_pDisplayFrom, bool put_cursor, signe
 //#######################################################################################
 void _box_cache_clean(void *_pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len)
 {
-	tDisplay *pDisplay = (tDisplay *)_pDisplay;
+	//tDisplay *pDisplay = (tDisplay *)_pDisplay;
 
 }
 //#######################################################################################
@@ -1014,12 +1014,12 @@ void _put_pixel(void *_pDisplay, signed int X, signed int Y, unsigned int color)
 //#######################################################################################
 void _screen_put_rgb_array_16(void *_pDisplay, unsigned short *rgb_buffer, unsigned int x1, unsigned int y1,unsigned int width, unsigned int height)
 {
-	tDisplay *pDisplay = (tDisplay *)_pDisplay;
+	//tDisplay *pDisplay = (tDisplay *)_pDisplay;
 }
 //#######################################################################################
 void _screen_put_rgb_array_24(void *_pDisplay, unsigned char *rgb_buffer, unsigned long x1, unsigned long y1,unsigned long width, unsigned long height)
 {
-	tDisplay *pDisplay = (tDisplay *)_pDisplay;
+	//tDisplay *pDisplay = (tDisplay *)_pDisplay;
 }
 //#######################################################################################
 void _screen_put_rgb_array_32(void *_pDisplay, unsigned char *rgb_buffer, unsigned int x1, unsigned int y1,unsigned int width, unsigned int height)

@@ -19,8 +19,8 @@ typedef enum
 /*#####################################################*/
 typedef enum
 {
-	ADC_MODE_INDEPENDENT = 0,
-	ADC_MODE_DUAL
+	ADC_MOD_INDEPENDENT = 0,
+	ADC_MOD_DUAL
 }ADC_MODE_en;
 /*#####################################################*/
 typedef enum
