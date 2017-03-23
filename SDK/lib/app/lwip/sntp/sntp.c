@@ -46,6 +46,7 @@
  */
 #include "sntp.h"
 
+#if LWIP_UDP
 #include "interface/LwIp/src/include/lwip/apps/sntp.h"
 
 #include "interface/LwIp/src/include/lwip/opt.h"
@@ -60,7 +61,6 @@
 #include <string.h>
 #include <time.h>
 
-#if LWIP_UDP
 
 /* Handle support for more than one server via SNTP_MAX_SERVERS */
 #if SNTP_MAX_SERVERS > 1

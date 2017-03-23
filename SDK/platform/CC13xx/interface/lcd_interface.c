@@ -39,7 +39,7 @@ void _lcd_disable()
 //#######################################################################################
 void _screen_backlight_on(void *pDisplay)
 {
-	tDisplay* LcdStruct = (tDisplay *) pDisplay;
+	/*tDisplay* LcdStruct = (tDisplay *) pDisplay;
 	if(LcdStruct->pmic_back_light)
 	{
 #ifdef pmic_backlight_enable
@@ -53,12 +53,12 @@ void _screen_backlight_on(void *pDisplay)
 	{
 		if(LcdStruct->invert_backlight) gpio_out(LcdStruct->BackLight, 0);
 		else gpio_out(LcdStruct->BackLight, 1);
-	}
+	}*/
 }
 //#######################################################################################
 void _screen_backlight_off(void *pDisplay)
 {
-	tDisplay* LcdStruct = (tDisplay *) pDisplay;
+	/*tDisplay* LcdStruct = (tDisplay *) pDisplay;
 	if(LcdStruct->pmic_back_light)
 	{
 #ifdef pmic_backlight_enable
@@ -72,7 +72,7 @@ void _screen_backlight_off(void *pDisplay)
 	{
 		if(LcdStruct->invert_backlight) gpio_out(LcdStruct->BackLight, 1);
 		else gpio_out(LcdStruct->BackLight, 0);
-	}
+	}*/
 }
 //#######################################################################################
 void _box_cache_clean(void *pDisplay, signed int x_start, signed int y_start, signed int x_len, signed int y_len)
@@ -82,7 +82,7 @@ void _box_cache_clean(void *pDisplay, signed int x_start, signed int y_start, si
 //#######################################################################################
 bool _screen_copy(void *pDisplayTo, void *pDisplayFrom, bool put_cursor, signed int X, signed int Y, unsigned int color)
 {
-	tDisplay* LcdStructTo = (tDisplay *) pDisplayTo;
+	/*tDisplay* LcdStructTo = (tDisplay *) pDisplayTo;
 	tDisplay* LcdStructFrom = (tDisplay *) pDisplayFrom;
 	if(LcdStructTo->raster_timings->X != LcdStructFrom->raster_timings->X || LcdStructTo->raster_timings->Y != LcdStructFrom->raster_timings->Y)
 	return false;
@@ -100,7 +100,7 @@ bool _screen_copy(void *pDisplayTo, void *pDisplayFrom, bool put_cursor, signed 
 			for(;cnt_x < X + 2; cnt_x++)
 			_put_pixel(pDisplayTo, cnt_x, LineCnt, color);
 		}
-	}
+	}*/
 	return true;
 }
 //#######################################################################################
@@ -203,5 +203,5 @@ void _screen_put_rgb_array_32(void *pDisplay, unsigned char *rgb_buffer, unsigne
 void _screen_clear(void *pDisplay, unsigned int color)
 {
 	tDisplay* LcdStruct = (tDisplay *) pDisplay;
-	_put_rectangle(pDisplay, 0, 0, LcdStruct->raster_timings->X, LcdStruct->raster_timings->Y, true, color);
+	//_put_rectangle(pDisplay, 0, 0, LcdStruct->raster_timings->X, LcdStruct->raster_timings->Y, true, color);
 }

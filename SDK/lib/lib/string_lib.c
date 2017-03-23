@@ -20,6 +20,7 @@
  */
 
 #include <string.h>
+#include <sys/cdefs.h>
 #include <ctype.h>
 #include <stdlib.h>
 #include <stdio.h>

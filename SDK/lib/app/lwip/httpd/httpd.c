@@ -81,6 +81,7 @@
  */
 
 #include "httpd.h"
+#if LWIP_TCP
 #include "interface/LwIp/src/include/lwip/apps/httpd.h"
 #include "interface/LwIp/src/include/lwip/debug.h"
 #include "interface/LwIp/src/include/lwip/stats.h"
@@ -91,7 +92,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-#if LWIP_TCP
 
 /** Minimum length for a valid HTTP/0.9 request: "GET /\r\n" -> 7 bytes */
 #define MIN_REQ_LEN   7

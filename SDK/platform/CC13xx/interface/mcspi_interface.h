@@ -10,7 +10,7 @@
 #define MCSPI_INTERFACE_H_
 
 #include <stdbool.h>
-#include "api/mcspi_def.h"
+#include "api/spi_def.h"
 
 bool _mcspi_open(new_mcspi *McspiStruct);
 void _mcspi_close(new_mcspi *McspiStruct);

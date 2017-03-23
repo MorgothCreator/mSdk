@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include "inc/hw_types.h"
 #include "mcspi_interface.h"
-#include "api/mcspi_def.h"
+#include "api/spi_def.h"
 #include "driver/ssi.h"
 #include "sys/core_init.h"
 #include "driver/ioc.h"

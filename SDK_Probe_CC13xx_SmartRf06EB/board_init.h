@@ -11,7 +11,7 @@
 #include "board_init.h"
 #include "api/gpio_def.h"
 #include "api/uart_def.h"
-#include "api/mcspi_def.h"
+#include "api/spi_def.h"
 
 extern new_uart* Uart[];
 extern new_uart* DebugCom;

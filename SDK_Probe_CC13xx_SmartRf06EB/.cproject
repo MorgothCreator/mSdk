@@ -89,7 +89,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="lib/api/lan_api.c|lib/app/lan|CC13xx/sys/ccfg.c|CC13xx/driver/bin|driver/bin|driverlib/bin" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="lib/app/lwip|lib/api/lan_api.c|lib/app/lan|CC13xx/sys/ccfg.c|CC13xx/driver/bin|driver/bin|driverlib/bin" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -160,6 +160,9 @@
 							<tool id="com.ti.ccstudio.buildDefinitions.TMS470_GNU_4.0.hex.896381438" name="GNU Objcopy Utility" superClass="com.ti.ccstudio.buildDefinitions.TMS470_GNU_4.0.hex"/>
 						</toolChain>
 					</folderInfo>
+					<sourceEntries>
+						<entry excluding="lib/app/lwip" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+					</sourceEntries>
 				</configuration>
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>

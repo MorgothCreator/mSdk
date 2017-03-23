@@ -2,6 +2,7 @@
 #ifndef __TFTPSERVER_H_
 #define __TFTPSERVER_H_
 
+#if LWIP_UDP
 #include "interface/LwIp/src/include/lwip/mem.h"
 #include "interface/LwIp/src/include/lwip/udp.h"
 #include "interface/LwIp/src/include/lwip/ip_addr.h"
@@ -43,6 +44,6 @@ typedef enum {
 void tftpd_init(unsigned short port);
 int tftp_process_write(struct udp_pcb *upcb2, const ip_addr_t *to, unsigned short to_port, char* FileName);
 int tftp_process_read(struct udp_pcb *upcb2, const ip_addr_t *to, unsigned short to_port, char* FileName);
-
+#endif
 #endif
 

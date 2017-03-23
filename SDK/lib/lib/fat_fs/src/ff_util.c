@@ -5,6 +5,7 @@
  *      Author: John Smith
  */
 
+#include <sys/cdefs.h>
 #include "../inc/ff_util.h"
 //#include "../inc/ff.h"			/* FatFs configurations and declarations */
 #include "lib/util/hex_string.h"

@@ -15,8 +15,8 @@
 #include "api/gpio_def.h"
 #include "api/uart_api.h"
 #include "api/uart_def.h"
-#include "api/mcspi_api.h"
-#include "api/mcspi_def.h"
+#include "api/spi_api.h"
+#include "api/spi_def.h"
 
 #include "device/mmcsd_spi.h"
 
@@ -58,8 +58,8 @@ bool board_init()
 	gpio_init(0);
 	LED[0] = gpio_assign(0, 25, GPIO_OUT_PUSH_PULL, false);
 	LED[1] = gpio_assign(0, 27, GPIO_OUT_PUSH_PULL, false);
-	LED[2] = gpio_assign(0, 7, GPIO_OUT_PUSH_PULL, false);
-	LED[3] = gpio_assign(0, 6, GPIO_OUT_PUSH_PULL, false);
+	LED[2] = gpio_assign(0,  7, GPIO_OUT_PUSH_PULL, false);
+	LED[3] = gpio_assign(0,  6, GPIO_OUT_PUSH_PULL, false);
 
 	PUSHBTN[0] = gpio_assign(0, 19, GPIO_IN_PULL_UP, false);
 	PUSHBTN[1] = gpio_assign(0, 12, GPIO_IN_PULL_UP, false);
