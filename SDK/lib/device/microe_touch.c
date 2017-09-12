@@ -155,6 +155,11 @@ bool microe_touch_idle(LcdTouch_t* Touch)
 					Touch->TouchResponse.x1 = Touch->pDisplay->LcdTimings->X - Touch->TouchResponse.x1;
 					Touch->TouchResponse.y1 = Touch->pDisplay->LcdTimings->Y - Touch->TouchResponse.y1;
 				}
+				if(Touch->pDisplay->LcdTimings->orientation == LCD_ORIENTATION_LANDSCAPE || Touch->pDisplay->LcdTimings->orientation == LCD_ORIENTATION_LANDSCAPE_FLIP)
+				{
+					Touch->TouchResponse.x1 = Touch->pDisplay->LcdTimings->X - Touch->TouchResponse.x1;
+					Touch->TouchResponse.y1 = Touch->pDisplay->LcdTimings->Y - Touch->TouchResponse.y1;
+				}
 				if(Touch->flip_x)
 					Touch->TouchResponse.x1 = Touch->pDisplay->LcdTimings->X - Touch->TouchResponse.x1;
 				if(Touch->flip_y)
