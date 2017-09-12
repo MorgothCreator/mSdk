@@ -36,6 +36,9 @@
 
 #define GPIO_FAST_WRITE_MULTI_PIN(base_addr, mask, pin_mask)\
 		_GPIO_FAST_WRITE_MULTI_PIN(base_addr, mask, pin_mask)
+
+#define GPIO_FAST_READ_MULTI_PIN(base_addr, mask)\
+		_GPIO_FAST_READ_MULTI_PIN(base_addr, mask)
 /*#####################################################*/
 bool gpio_get_state(new_gpio *gpio_struct);
 void gpio_idle(new_gpio *gpio_struct);

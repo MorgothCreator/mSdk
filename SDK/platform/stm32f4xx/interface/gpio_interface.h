@@ -23,6 +23,8 @@ extern const unsigned int GET_PORT_CLK_ADDR[];
 #define _GPIO_FAST_WRITE_MULTI_PIN(base_addr, mask, pin_mask)\
 		((GPIO_TypeDef*)base_addr)->ODR = (((GPIO_TypeDef*)base_addr)->ODR & ~mask) | ((pin_mask) & mask)
 
+#define _GPIO_FAST_READ_MULTI_PIN(base_addr, mask)\
+		(((GPIO_TypeDef*)base_addr)->IDR & ~mask)
 /*#####################################################*/
 void _gpio_init(unsigned int GpioModuleNr);
 new_gpio *_gpio_assign(unsigned int PortNr, unsigned int Pin, gpio_type_enum function, bool Multipin);
