@@ -472,15 +472,15 @@ bool mi0283_set_orientation(tDisplay* LcdStruct)
 				break;
 
 			case LCD_ORIENTATION_LANDSCAPE:
-	 		      write(LcdStruct, 0x20);
+	 		      write(LcdStruct, 0xB8);
 				break;
 
 			case LCD_ORIENTATION_PORTRAIT_FLIP:
-	 		      write(LcdStruct, 0x80);
+	 		      write(LcdStruct, 0xC8);
 				break;
 
 			case LCD_ORIENTATION_LANDSCAPE_FLIP:
-	 		      write(LcdStruct, 0xA8);
+	 		      write(LcdStruct, 0x78);
 				break;
 		}
  	}
