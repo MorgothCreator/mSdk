@@ -226,7 +226,7 @@ void _screen_backlight_on(tDisplay *pDisplay)
 	}
 	else
 	{
-		gpio_out(pDisplay->BackLight, 1);
+		gpio.out(pDisplay->BackLight, 1);
 	}
 }
 //#######################################################################################
@@ -239,7 +239,7 @@ void _screen_backlight_off(tDisplay *pDisplay)
 	}
 	else
 	{
-		gpio_out(pDisplay->BackLight, 0);
+		gpio.out(pDisplay->BackLight, 0);
 	}
 }
 //#######################################################################################

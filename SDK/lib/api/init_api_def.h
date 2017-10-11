@@ -208,8 +208,8 @@
 /*-----------------------------------------------------*/
 #define INIT_SHT11(name, _SclPort, _SclPin, _SdaPort, _SdaPin) \
 		name = new_(new_sht11);\
-		name->Scl = gpio_assign(_SclPort, _SclPin, GPIO_OUT_PUSH_PULL, false); \
-		name->Sda = gpio_assign(_SdaPort, _SdaPin, GPIO_OUT_PUSH_PULL, false); \
+		name->Scl = gpio.assign(_SclPort, _SclPin, GPIO_OUT_PUSH_PULL, false); \
+		name->Sda = gpio.assign(_SdaPort, _SdaPin, GPIO_OUT_PUSH_PULL, false); \
 		name->state_delay = 200;\
 		name->vdd_comp = SH11_VDD_3_5V
 /*#####################################################*/

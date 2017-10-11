@@ -17,7 +17,7 @@
 #include "api/core_init_api.h"
 #include "api/uart_api.h"
 #include "api/twi_api.h"
-#include "api/mcspi_api.h"
+#include "api/spi_api.h"
 #include "api/lcd_def.h"
 #include "api/lcd_api.h"
 #include "api/touchscreen_def.h"

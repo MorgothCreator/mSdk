@@ -8,7 +8,7 @@
 #ifndef AINTC_MCSPI_H_
 #define AINTC_MCSPI_H_
 /*#####################################################*/
-#include "api/mcspi_def.h"
+#include "api/spi_def.h"
 //#include "include/mcspi.h"
 /*#####################################################*/
 typedef struct

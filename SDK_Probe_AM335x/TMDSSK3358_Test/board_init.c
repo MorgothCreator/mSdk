@@ -8,6 +8,7 @@
 
 
 
+#include <interface/mmcsd_interface.h>
 #include "board_init.h"
 #include "main.h"
 
@@ -15,7 +16,7 @@
 #include "api/core_init_api.h"
 #include "api/uart_api.h"
 #include "api/twi_api.h"
-#include "api/mcspi_api.h"
+#include "api/spi_api.h"
 #include "api/lcd_def.h"
 #include "api/lcd_api.h"
 #include "api/touchscreen_def.h"
@@ -32,8 +33,6 @@
 
 #include "interface/int_touchscreen_interface.h"
 #include "interface/rtc_interface.h"
-#include "interface/hs_mmcsd_interface.h"
-
 #include "lib/fs/fat.h"
 
 #include "interface/mmcsdlib/mmcsd_proto.h"
@@ -96,33 +95,33 @@ inline bool board_init()
 #endif
 /*-----------------------------------------------------*/
 #if defined(HARDBTN1_PORT) && defined(HARDBTN1_PIN)
-	HARDBTN[0] = gpio_assign(HARDBTN1_PORT, HARDBTN1_PIN, GPIO_IN_PULL_DOWN, false);
-	gpio_up_dn(HARDBTN[0], 0);
+	HARDBTN[0] = gpio.assign(HARDBTN1_PORT, HARDBTN1_PIN, GPIO_IN_PULL_DOWN, false);
+	gpio.up_dn(HARDBTN[0], 0);
 #endif
 #if defined(HARDBTN2_PORT) && defined(HARDBTN2_PIN)
-	HARDBTN[1] = gpio_assign(HARDBTN2_PORT, HARDBTN2_PIN, GPIO_IN_PULL_DOWN, false);
-	gpio_up_dn(HARDBTN[1], 0);
+	HARDBTN[1] = gpio.assign(HARDBTN2_PORT, HARDBTN2_PIN, GPIO_IN_PULL_DOWN, false);
+	gpio.up_dn(HARDBTN[1], 0);
 #endif
 #if defined(HARDBTN3_PORT) && defined(HARDBTN3_PIN)
-	HARDBTN[2] = gpio_assign(HARDBTN3_PORT, HARDBTN3_PIN, GPIO_IN_PULL_DOWN, false);
-	gpio_up_dn(HARDBTN[2], 0);
+	HARDBTN[2] = gpio.assign(HARDBTN3_PORT, HARDBTN3_PIN, GPIO_IN_PULL_DOWN, false);
+	gpio.up_dn(HARDBTN[2], 0);
 #endif
 #if defined(HARDBTN4_PORT) && defined(HARDBTN4_PIN)
-	HARDBTN[3] = gpio_assign(HARDBTN4_PORT, HARDBTN4_PIN, GPIO_IN_PULL_DOWN, false);
-	gpio_up_dn(HARDBTN[3], 0);
+	HARDBTN[3] = gpio.assign(HARDBTN4_PORT, HARDBTN4_PIN, GPIO_IN_PULL_DOWN, false);
+	gpio.up_dn(HARDBTN[3], 0);
 #endif
 /*-----------------------------------------------------*/
 #if defined(LED1_PORT) && defined(LED1_PIN)
-	LED[0] = gpio_assign(LED1_PORT, LED1_PIN, GPIO_OUT_PUSH_PULL, false);
+	LED[0] = gpio.assign(LED1_PORT, LED1_PIN, GPIO_OUT_PUSH_PULL, false);
 #endif
 #if defined(LED2_PORT) && defined(LED2_PIN)
-	LED[1] = gpio_assign(LED2_PORT, LED2_PIN, GPIO_OUT_PUSH_PULL, false);
+	LED[1] = gpio.assign(LED2_PORT, LED2_PIN, GPIO_OUT_PUSH_PULL, false);
 #endif
 #if defined(LED3_PORT) && defined(LED3_PIN)
-	LED[2] = gpio_assign(LED3_PORT, LED3_PIN, GPIO_OUT_PUSH_PULL, false);
+	LED[2] = gpio.assign(LED3_PORT, LED3_PIN, GPIO_OUT_PUSH_PULL, false);
 #endif
 #if defined(LED4_PORT) && defined(LED4_PIN)
-	LED[3] = gpio_assign(LED4_PORT, LED4_PIN, GPIO_OUT_PUSH_PULL, false);
+	LED[3] = gpio.assign(LED4_PORT, LED4_PIN, GPIO_OUT_PUSH_PULL, false);
 #endif
 /*-----------------------------------------------------*/
 	INIT_TWI(0, 400000, IOC, 17, IOC, 16, 256, 256);
@@ -151,10 +150,10 @@ inline bool board_init()
 	INIT_LEPTON_FLIR(LEPTON_FLIR, 1, 0, 0);
 /*-----------------------------------------------------*/
 	/* Init uSD */
-	//INIT_MMCSD(0, NULL, gpio_assign(0, 6, GPIO_IN_PULL_UP, false), LED[2]);
+	INIT_MMCSD(0, NULL, gpio.assign(0, 6, GPIO_IN_PULL_UP, false), LED[2]);
 /*-----------------------------------------------------*/
 	/* Init eMMC */
-	//INIT_MMCSD(1, gpio_assign(1, 20, GPIO_OUT_PUSH_PULL, false), NULL, LED[2]);
+	INIT_MMCSD(1, gpio.assign(1, 20, GPIO_OUT_PUSH_PULL, false), NULL, LED[2]);
 /*-----------------------------------------------------*/
 #ifdef usb_1_msc
 	INIT_USB_MSC_HOST(1, LED[2]);
@@ -165,7 +164,7 @@ inline bool board_init()
 /*-----------------------------------------------------*/
 #if defined( usb_0_dev_msc ) && defined ( BridgeUsbDev0ToMmcSd0)
 	/* Bridge USB0 client to uSD*/
-	INIT_USB_DEV_MSC_TO_MMCSD_BRIDGE(0, 0, USB_MMCSD_DRV_STRUCT, NULL, gpio_assign(0, 6, GPIO_IN_PULL_UP, false), LED[2])
+//	INIT_USB_DEV_MSC_TO_MMCSD_BRIDGE(0, 0, USB_MMCSD_DRV_STRUCT, NULL, gpio_assign(0, 6, GPIO_IN_PULL_UP, false), LED[2])
 /*-----------------------------------------------------*/
 #elif  defined( usb_0_dev_msc ) && defined ( BridgeUsbDev0ToMmcSd1)
 	/* Bridge USB0 client to eMMC*/
@@ -180,9 +179,9 @@ inline bool board_init()
 	ScreenBuff->LcdTimings = &lcd_TFT43_TMDSSK3358;
 	//ScreenBuff->BackLightLevel = 60;
 	//ScreenBuff->PmicTwiModuleStruct = TWI[0];
-	ScreenBuff->BackLight = gpio_assign(IOD, 17, GPIO_OUT_PUSH_PULL, false);
+	ScreenBuff->BackLight = gpio.assign(IOD, 17, GPIO_OUT_PUSH_PULL, false);
 	lcd_init(ScreenBuff);
-	UARTprintf(DebugCom, "LCD display initialize successful for %dx%d resolution, %d Bit bus.\n\r" , ScreenBuff->LcdTimings->X, ScreenBuff->LcdTimings->Y, ScreenBuff->LcdTimings->bus_size);
+	uart.printf(DebugCom, "LCD display initialize successful for %dx%d resolution, %d Bit bus.\n\r" , ScreenBuff->LcdTimings->X, ScreenBuff->LcdTimings->Y, ScreenBuff->LcdTimings->bus_size);
 
 	TouchScreen = new_(new_touchscreen);
 	//TouchScreen->TwiStruct = TWI[1];
@@ -190,9 +189,9 @@ inline bool board_init()
 	//TouchScreen->screen_max_y = (double)ScreenBuff->LcdTimings->Y;
 	TouchScreen->pDisplay = ScreenBuff;
 	InitTouchScreen(TouchScreen);
-	UARTPuts(DebugCom, "Init calibration of LCD resistive touch screen....." , -1);
+	uart.puts(DebugCom, "Init calibration of LCD resistive touch screen....." , -1);
 	TouchCalibrate(TouchScreen, ScreenBuff);
-	UARTPuts(DebugCom, "OK.\n\r" , -1);
+	uart.puts(DebugCom, "OK.\n\r" , -1);
 	ScreenBuff->lcd_func.put_rectangle(ScreenBuff, 0, 0, ScreenBuff->LcdTimings->X, ScreenBuff->LcdTimings->Y, true, controls_color.Scren);
 	ScreenBuff->lcd_func.box_cache_clean(ScreenBuff, 0, 0, ScreenBuff->LcdTimings->X, ScreenBuff->LcdTimings->Y);
 	return true;

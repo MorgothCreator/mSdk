@@ -115,9 +115,7 @@
 #define HTTP_IS_DATA_VOLATILE(hs)   ((hs)->ssi ? TCP_WRITE_FLAG_COPY : 0)
 #else /* LWIP_HTTPD_SSI */
 /** Default: don't copy if the data is sent from file-system directly */
-//#define HTTP_IS_DATA_VOLATILE(hs) (((hs->file != NULL) && (hs->handle != NULL) && (hs->file == \
-//                                   (const char*)hs->handle->data + f_size(hs->handle) - hs->left)) \
-//                                   ? 0 : TCP_WRITE_FLAG_COPY)
+//#define HTTP_IS_DATA_VOLATILE(hs) (((hs->file != NULL) && (hs->handle != NULL) && (hs->file == (const char*)hs->handle->data + f_size(hs->handle) - hs->left)) ? 0 : TCP_WRITE_FLAG_COPY)
 #define HTTP_IS_DATA_VOLATILE(hs) (0)
 #endif /* LWIP_HTTPD_SSI */
 #endif

@@ -2,6 +2,7 @@
  * main.c
  */
 
+#include <interface/mmcsd_interface.h>
 #include <stdlib.h>
 #include "main.h"
 #include "board_init.h"
@@ -20,9 +21,6 @@
 #include "device/mpl3115a2.h"
 #include "device/mpr121.h"
 #include "device/lepton_flir.h"
-
-
-#include "interface/hs_mmcsd_interface.h"
 
 
 #include "lib/gfx/controls_definition.h"
@@ -133,22 +131,22 @@ void heart_beat_service(void) {
 		switch(led_state) {
 			case 0:
 				led_state = 1;
-				gpio_out(LED[0], 1);
+				gpio.out(LED[0], 1);
 				timer_interval(&timer_led, 10);
 				break;
 			case 1:
 				led_state = 2;
-				gpio_out(LED[0], 0);
+				gpio.out(LED[0], 0);
 				timer_interval(&timer_led, 200);
 				break;
 			case 2:
 				led_state = 3;
-				gpio_out(LED[0], 1);
+				gpio.out(LED[0], 1);
 				timer_interval(&timer_led, 10);
 				break;
 			case 3:
 				led_state = 0;
-				gpio_out(LED[0], 0);
+				gpio.out(LED[0], 0);
 				timer_interval(&timer_led, 780);
 				break;
 		}
@@ -326,7 +324,7 @@ int main(void)
         if(timer_tick(&TimerScanTouch))
         {
 			if(PwrLoadCount) PwrLoadCount--;
-   		//UARTprintf(DebugCom, "X= %d, Y= %d, But= %d, Whel= %d.\n\r" , MouseXPosition, MouseYPosition, g_ulButtons, MouseWheel);
+   		//uart.printf(DebugCom, "X= %d, Y= %d, But= %d, Whel= %d.\n\r" , MouseXPosition, MouseYPosition, g_ulButtons, MouseWheel);
 #ifdef lcd
 #ifdef USE_BACK_SCREEN
             if(BackScreen)
@@ -368,7 +366,7 @@ int main(void)
 #endif
         }
 #ifdef BridgeUsbDev0ToMmcSd0
-        mmcsd_idle(0);
+        mmcsd.idle(0);
         if(old_connected == false && ctrlInfo[0].connected == true)
         {
         	old_connected = true;
@@ -467,7 +465,7 @@ int main(void)
 			if(adxl345_x_read(ADXL345, &Xaccel) &&
 					adxl345_y_read(ADXL345, &Yaccel) &&
 						adxl345_z_read(ADXL345, &Zaccel))
-				UARTprintf(DebugCom, "ADXL345: X = %d, Y = %d, Z = %d\n\r", Xaccel, Yaccel, Zaccel);
+				uart.printf(DebugCom, "ADXL345: X = %d, Y = %d, Z = %d\n\r", Xaccel, Yaccel, Zaccel);
 #endif
 #if _USE_BMP180 == 1
 			//bmp180_display_result(BMP180, BMP180_CTRL_MEAS_OSS_1);
@@ -520,55 +518,55 @@ int main(void)
  * Display results.
  */
 #if _USE_INT_ADC == 1
-			UARTprintf(DebugCom, "ADC1: CH0 = %d, CH1 = %d, TempSensor = %2.2f\n\r\n\r", ADC[0]->ConvResult[0], ADC[0]->ConvResult[1], (float)(((float)1775 - (float)ADC[0]->ConvResult[2]) / 5.337) + (float)25);
+			uart.printf(DebugCom, "ADC1: CH0 = %d, CH1 = %d, TempSensor = %2.2f\n\r\n\r", ADC[0]->ConvResult[0], ADC[0]->ConvResult[1], (float)(((float)1775 - (float)ADC[0]->ConvResult[2]) / 5.337) + (float)25);
 #endif
 #if _USE_BMP180 == 1
 			if(bmp180_stat) {
-				UARTprintf(DebugCom, "BMP180: T = %2.1f, P = %4.2f, Alt = %4.2f\n\r", bmp180_temperature, bmp180_pressure, bmp180_altitude);
+				uart.printf(DebugCom, "BMP180: T = %2.1f, P = %4.2f, Alt = %4.2f\n\r", bmp180_temperature, bmp180_pressure, bmp180_altitude);
 			}
 #endif
 #if _USE_MPL3115A2 == 1
 			if(mpl3115a2_status) {
-				UARTprintf(DebugCom, "MPL3115A1: T = %3.2f, P = %3.2f, Alt = %4.2f\n\r", mpl3115a2_temp, 0.0, mpl3115a2_altitude);
+				uart.printf(DebugCom, "MPL3115A1: T = %3.2f, P = %3.2f, Alt = %4.2f\n\r", mpl3115a2_temp, 0.0, mpl3115a2_altitude);
 			}
 #endif
 #if _USE_HIH613x == 1
 			switch(hih613x_status)
 			{
 			case 0:
-				UARTprintf(DebugCom, "HIH613x: T = %2.2f, H = %2.1f\n\r", hih613x_temp, hih613x_hum);
+				uart.printf(DebugCom, "HIH613x: T = %2.2f, H = %2.1f\n\r", hih613x_temp, hih613x_hum);
 				break;
 			case 1:
-				UARTprintf(DebugCom, "Stale Data\n\r");
+				uart.printf(DebugCom, "Stale Data\n\r");
 				break;
 			case 2:
-				UARTprintf(DebugCom, "In command mode\n\r");
+				uart.printf(DebugCom, "In command mode\n\r");
 				break;
 			case 3:
-				UARTprintf(DebugCom, "Diagnostic\n\r");
+				uart.printf(DebugCom, "Diagnostic\n\r");
 				break;
 			}
 #endif
 #if _USE_MPU60x0_9150 == 1
 			if(mpu60x0_9150_temp_stat) {
 #ifndef _TINY_PRINT_
-				UARTprintf(DebugCom, "MPU60x0: Temperature: %2.2f Gr Celsius\n\r", mpu60x0_9150_temp);
+				uart.printf(DebugCom, "MPU60x0: Temperature: %2.2f Gr Celsius\n\r", mpu60x0_9150_temp);
 #else
 				float GrCelsius = 0;
 				float GrCelsiusMod = modff(mpu60x0_9150_temp, &GrCelsius);
-				UARTprintf(DebugCom, "MPU60x0: Temperature: %d.%u Gr Celsius\n\r", (unsigned int)GrCelsius, (unsigned int)(GrCelsiusMod*1000));
+				uart.printf(DebugCom, "MPU60x0: Temperature: %d.%u Gr Celsius\n\r", (unsigned int)GrCelsius, (unsigned int)(GrCelsiusMod*1000));
 #endif
 			}
 			if(mpu60x0_9150_gyro_stat) {
-				UARTprintf(DebugCom, "MPU60x0: Giroscope: Xg = %d, Yg = %d, Zg = %d\n\r", mpu60x0_9150_gyro_Xg, mpu60x0_9150_gyro_Yg, mpu60x0_9150_gyro_Zg);
+				uart.printf(DebugCom, "MPU60x0: Giroscope: Xg = %d, Yg = %d, Zg = %d\n\r", mpu60x0_9150_gyro_Xg, mpu60x0_9150_gyro_Yg, mpu60x0_9150_gyro_Zg);
 			}
 			if(mpu60x0_9150_accel_stat) {
-				UARTprintf(DebugCom, "MPU60x0: Accelerometer: Xa = %d, Ya = %d, Za = %d\n\r", mpu60x0_9150_accel_Xa, mpu60x0_9150_accel_Ya, mpu60x0_9150_accel_Za);
+				uart.printf(DebugCom, "MPU60x0: Accelerometer: Xa = %d, Ya = %d, Za = %d\n\r", mpu60x0_9150_accel_Xa, mpu60x0_9150_accel_Ya, mpu60x0_9150_accel_Za);
 			}
 #endif
 #if _USE_AK8975 == 1
 			if(ak8975_stat) {
-				UARTprintf(DebugCom, "AK8975: Magnetometer: Xg = %d, Yg = %d, Zg = %d\n\r", AK8975_X_Axis, AK8975_Y_Axis, AK8975_Z_Axis);
+				uart.printf(DebugCom, "AK8975: Magnetometer: Xg = %d, Yg = %d, Zg = %d\n\r", AK8975_X_Axis, AK8975_Y_Axis, AK8975_Z_Axis);
 			}
 #endif
 #if _USE_MPR121 == 1
@@ -576,9 +574,9 @@ int main(void)
 			if(mpr121_idle(MPR121, &mpr121_return))
 			{
 				if(mpr121_return.pushed)
-					UARTprintf(DebugCom, "MPR121: Pushed   > K0=%c, K1=%c, K2=%c, K3=%c, K4=%c, K5=%c, K6=%c, K7=%c, K8=%c, K9=%c, K10=%c, K11=%c\n\r",     (unsigned char)mpr121_return.pushed & 0x01,   (unsigned char)(mpr121_return.pushed >> 1) & 0x01,   (unsigned char)(mpr121_return.pushed >> 2) & 0x01,   (unsigned char)(mpr121_return.pushed >> 3) & 0x01,   (unsigned char)(mpr121_return.pushed >> 4) & 0x01,   (unsigned char)(mpr121_return.pushed >> 5) & 0x01,   (unsigned char)(mpr121_return.pushed >> 6) & 0x01,   (unsigned char)(mpr121_return.pushed >> 7) & 0x01,   (unsigned char)(mpr121_return.pushed >> 8) & 0x01,   (unsigned char)(mpr121_return.pushed >> 9) & 0x01,   (unsigned char)(mpr121_return.pushed >> 10) & 0x01,   (unsigned char)(mpr121_return.pushed >> 11) & 0x01);
+					uart.printf(DebugCom, "MPR121: Pushed   > K0=%c, K1=%c, K2=%c, K3=%c, K4=%c, K5=%c, K6=%c, K7=%c, K8=%c, K9=%c, K10=%c, K11=%c\n\r",     (unsigned char)mpr121_return.pushed & 0x01,   (unsigned char)(mpr121_return.pushed >> 1) & 0x01,   (unsigned char)(mpr121_return.pushed >> 2) & 0x01,   (unsigned char)(mpr121_return.pushed >> 3) & 0x01,   (unsigned char)(mpr121_return.pushed >> 4) & 0x01,   (unsigned char)(mpr121_return.pushed >> 5) & 0x01,   (unsigned char)(mpr121_return.pushed >> 6) & 0x01,   (unsigned char)(mpr121_return.pushed >> 7) & 0x01,   (unsigned char)(mpr121_return.pushed >> 8) & 0x01,   (unsigned char)(mpr121_return.pushed >> 9) & 0x01,   (unsigned char)(mpr121_return.pushed >> 10) & 0x01,   (unsigned char)(mpr121_return.pushed >> 11) & 0x01);
 				if(mpr121_return.released)
-					UARTprintf(DebugCom, "MPR121: Released > K0=%c, K1=%c, K2=%c, K3=%c, K4=%c, K5=%c, K6=%c, K7=%c, K8=%c, K9=%c, K10=%c, K11=%c\n\r\n\r", (unsigned char)mpr121_return.released & 0x01, (unsigned char)(mpr121_return.released >> 1) & 0x01, (unsigned char)(mpr121_return.released >> 2) & 0x01, (unsigned char)(mpr121_return.released >> 3) & 0x01, (unsigned char)(mpr121_return.released >> 4) & 0x01, (unsigned char)(mpr121_return.released >> 5) & 0x01, (unsigned char)(mpr121_return.released >> 6) & 0x01, (unsigned char)(mpr121_return.released >> 7) & 0x01, (unsigned char)(mpr121_return.released >> 8) & 0x01, (unsigned char)(mpr121_return.released >> 9) & 0x01, (unsigned char)(mpr121_return.released >> 10) & 0x01, (unsigned char)(mpr121_return.released >> 11) & 0x01);
+					uart.printf(DebugCom, "MPR121: Released > K0=%c, K1=%c, K2=%c, K3=%c, K4=%c, K5=%c, K6=%c, K7=%c, K8=%c, K9=%c, K10=%c, K11=%c\n\r\n\r", (unsigned char)mpr121_return.released & 0x01, (unsigned char)(mpr121_return.released >> 1) & 0x01, (unsigned char)(mpr121_return.released >> 2) & 0x01, (unsigned char)(mpr121_return.released >> 3) & 0x01, (unsigned char)(mpr121_return.released >> 4) & 0x01, (unsigned char)(mpr121_return.released >> 5) & 0x01, (unsigned char)(mpr121_return.released >> 6) & 0x01, (unsigned char)(mpr121_return.released >> 7) & 0x01, (unsigned char)(mpr121_return.released >> 8) & 0x01, (unsigned char)(mpr121_return.released >> 9) & 0x01, (unsigned char)(mpr121_return.released >> 10) & 0x01, (unsigned char)(mpr121_return.released >> 11) & 0x01);
 			}
 #endif
 #if _USE_LEPTON_FLIR == 1

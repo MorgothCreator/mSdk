@@ -52,9 +52,9 @@ inline void _core_init(void)
     IntAINTCInit();
     //STimer_Init();
 
-    gpio_init(0);
-    gpio_init(1);
-    gpio_init(2);
-    gpio_init(3);
+    gpio.init(0);
+    gpio.init(1);
+    gpio.init(2);
+    gpio.init(3);
 }
 

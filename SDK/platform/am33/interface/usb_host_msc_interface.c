@@ -449,16 +449,16 @@ unsigned int USBMSCReadBlock(void *_ctrl, void *ptr, unsigned long block,
 {
 	unsigned int status = CPUIntStatus();
 	CPUirqe();
-	if(LedStatusUsb0) gpio_out(LedStatusUsb0, 1);
+	if(LedStatusUsb0) gpio.out(LedStatusUsb0, 1);
 	if(USBHMSCBlockRead((unsigned int)_ctrl, block, ptr, nblks) == 0)
 	{
-		if(LedStatusUsb0) gpio_out(LedStatusUsb0, 0);
+		if(LedStatusUsb0) gpio.out(LedStatusUsb0, 0);
 		if(status & 0x80) CPUirqd();
 		return 1;
 	}
 	else
 	{
-		if(LedStatusUsb0) gpio_out(LedStatusUsb0, 0);
+		if(LedStatusUsb0) gpio.out(LedStatusUsb0, 0);
 		if(status & 0x80) CPUirqd();
 		return 0;
 	}
@@ -469,16 +469,16 @@ unsigned int USBMSCWriteBlock(void *_ctrl, void *ptr, unsigned long block,
 {
 	unsigned int status = CPUIntStatus();
 	CPUirqe();
-	if(LedStatusUsb0) gpio_out(LedStatusUsb0, 1);
+	if(LedStatusUsb0) gpio.out(LedStatusUsb0, 1);
 	if(USBHMSCBlockWrite((unsigned int)_ctrl, block, ptr, nblks) == 0)
 	{
-		if(LedStatusUsb0) gpio_out(LedStatusUsb0, 0);
+		if(LedStatusUsb0) gpio.out(LedStatusUsb0, 0);
 		if(status & 0x80) CPUirqd();
 		return 1;
 	}
 	else
 	{
-		if(LedStatusUsb0) gpio_out(LedStatusUsb0, 0);
+		if(LedStatusUsb0) gpio.out(LedStatusUsb0, 0);
 		if(status & 0x80) CPUirqd();
 		return 0;
 	}
@@ -595,7 +595,7 @@ void _usb_msc_host_idle(unsigned int instance)
     	//
     	if(g_eState1 == STATE_DEVICE_ENUM)
     	{
-    		//UARTprintf(DebugCom, "\nDevice enumerate.\n");
+    		//uart.printf(DebugCom, "\nDevice enumerate.\n");
     	    //
     	    // Take it easy on the Mass storage device if it is slow to
     	    // start up after connecting.
@@ -633,27 +633,27 @@ void _usb_msc_host_idle(unsigned int instance)
                 {
 					if(DebugCom)
 					{
-																			UARTPuts(DebugCom,   "USB1 drive 4 mounted\n\r" , -1);
-																			UARTPuts(DebugCom,   "USB1 Fat fs detected\n\r" , -1);
-																			UARTprintf(DebugCom, "USB1 Fs type:                 ");
-						if(g_sFatFs2.fs_type == FS_FAT12)	{ 				UARTprintf(DebugCom, "Fat12");}
-						else if(g_sFatFs2.fs_type == FS_FAT16){ 				UARTprintf(DebugCom, "Fat16");}
-						else if(g_sFatFs2.fs_type == FS_FAT32){ 				UARTprintf(DebugCom, "Fat32");}
-						else								{ 				UARTprintf(DebugCom, "None");}
-																			UARTprintf(DebugCom, "\n\r");
-																			//UARTprintf(DebugCom, "MMCSD0 BootSectorAddress:       %u \n\r",(unsigned int)g_sFatFs.);
-																			UARTprintf(DebugCom, "USB1 BytesPerSector:             %d \n\r",/*(int)g_sFatFs.s_size*/512);
-																			UARTprintf(DebugCom, "USB1 SectorsPerCluster:          %d \n\r",(int)g_sFatFs2.csize);
-																			//UARTprintf(DebugCom, "MMCSD0 AllocTable1Begin:        %u \n\r",(unsigned int)g_sFatFs.fatbase);
-																			//UARTprintf(DebugCom, "USB1 NumberOfFats:            %d \n\r",(int)g_sFatFs2.n_fats);
-																			//UARTprintf(DebugCom, "MMCSD0 MediaType:               %d \n\r",Drives_Table[0]->DiskInfo_MediaType);
-																			//UARTprintf(DebugCom, "MMCSD0 AllocTableSize:          %u \n\r",Drives_Table[0]->DiskInfo_AllocTableSize);
-																			//UARTprintf(DebugCom, "USB1 DataSectionBegin:        %d \n\r",(int)g_sFatFs2.fatbase);
-																			UARTprintf(DebugCom, "MMCSD%d uSD DiskCapacity:        %uMB\n\r",0, (unsigned long)((unsigned long long)((unsigned long long)g_sFatFs2.n_fatent * (unsigned long long)/*g_sFatFs.s_size*/512 *(unsigned long long)g_sFatFs2.csize) / 1000000));
+																			uart.puts(DebugCom,   "USB1 drive 4 mounted\n\r" , -1);
+																			uart.puts(DebugCom,   "USB1 Fat fs detected\n\r" , -1);
+																			uart.printf(DebugCom, "USB1 Fs type:                 ");
+						if(g_sFatFs2.fs_type == FS_FAT12)	{ 				uart.printf(DebugCom, "Fat12");}
+						else if(g_sFatFs2.fs_type == FS_FAT16){ 				uart.printf(DebugCom, "Fat16");}
+						else if(g_sFatFs2.fs_type == FS_FAT32){ 				uart.printf(DebugCom, "Fat32");}
+						else								{ 				uart.printf(DebugCom, "None");}
+																			uart.printf(DebugCom, "\n\r");
+																			//uart.printf(DebugCom, "MMCSD0 BootSectorAddress:       %u \n\r",(unsigned int)g_sFatFs.);
+																			uart.printf(DebugCom, "USB1 BytesPerSector:             %d \n\r",/*(int)g_sFatFs.s_size*/512);
+																			uart.printf(DebugCom, "USB1 SectorsPerCluster:          %d \n\r",(int)g_sFatFs2.csize);
+																			//uart.printf(DebugCom, "MMCSD0 AllocTable1Begin:        %u \n\r",(unsigned int)g_sFatFs.fatbase);
+																			//uart.printf(DebugCom, "USB1 NumberOfFats:            %d \n\r",(int)g_sFatFs2.n_fats);
+																			//uart.printf(DebugCom, "MMCSD0 MediaType:               %d \n\r",Drives_Table[0]->DiskInfo_MediaType);
+																			//uart.printf(DebugCom, "MMCSD0 AllocTableSize:          %u \n\r",Drives_Table[0]->DiskInfo_AllocTableSize);
+																			//uart.printf(DebugCom, "USB1 DataSectionBegin:        %d \n\r",(int)g_sFatFs2.fatbase);
+																			uart.printf(DebugCom, "MMCSD%d uSD DiskCapacity:        %uMB\n\r",0, (unsigned long)((unsigned long long)((unsigned long long)g_sFatFs2.n_fatent * (unsigned long long)/*g_sFatFs.s_size*/512 *(unsigned long long)g_sFatFs2.csize) / 1000000));
 					}
-                } else  if(DebugCom)										UARTPuts(DebugCom,   "USB1 ERROR oppening path\n\r" , -1);
+                } else  if(DebugCom)										uart.puts(DebugCom,   "USB1 ERROR oppening path\n\r" , -1);
 #endif
-            }else if(DebugCom)												UARTPuts(DebugCom,   "USB1 ERROR mounting disk\n\r" , -1);
+            }else if(DebugCom)												uart.puts(DebugCom,   "USB1 ERROR mounting disk\n\r" , -1);
     	    g_eState1 = STATE_DEVICE_READY;
     	    //}
     	}
@@ -693,17 +693,17 @@ void _usb_msc_host_idle(unsigned int instance)
     	        {
     	            if(g_eUIState1 == STATE_UNKNOWN_DEVICE)
     	            {
-    	                UARTprintf(DebugCom, "\nUnknown device disconnected.\n");
+    	                uart.printf(DebugCom, "\nUnknown device disconnected.\n");
     	            }
     	            else
     	            {
 #ifdef usb_host_msc_debug
 #ifndef thirdpartyfatfs
-    					UARTPuts(DebugCom, "USB1 Fat dismount\n\r" , -1);
+    					uart.puts(DebugCom, "USB1 Fat dismount\n\r" , -1);
     					_Fat_Unmount(8);
-    					UARTPuts(DebugCom, "USB1 Fat dismount OK\n\r" , -1);
+    					uart.puts(DebugCom, "USB1 Fat dismount OK\n\r" , -1);
 #endif
-    	            	UARTprintf(DebugCom, "\nMass storage device disconnected.\n");
+    	            	uart.printf(DebugCom, "\nMass storage device disconnected.\n");
 #endif
     	            }
     	         //ulPrompt = 1;
@@ -715,7 +715,7 @@ void _usb_msc_host_idle(unsigned int instance)
     	         //
     	         case STATE_DEVICE_ENUM:
     	         {
-    	        	 UARTprintf(DebugCom, "\nDevice enumerate.\n");
+    	        	 uart.printf(DebugCom, "\nDevice enumerate.\n");
     	        	 break;
     	         }
 
@@ -724,7 +724,7 @@ void _usb_msc_host_idle(unsigned int instance)
     	         //
     	         case STATE_DEVICE_READY:
     	         {
-    	             UARTprintf(DebugCom, "\nMass storage device connected.\n");
+    	             uart.printf(DebugCom, "\nMass storage device connected.\n");
     	             //ulPrompt = 1;
     	             break;
     	         }
@@ -734,7 +734,7 @@ void _usb_msc_host_idle(unsigned int instance)
     	         //
     	         case STATE_UNKNOWN_DEVICE:
     	         {
-    	             UARTprintf(DebugCom, "\nUnknown device connected.\n");
+    	             uart.printf(DebugCom, "\nUnknown device connected.\n");
     	             //ulPrompt = 1;
     	             break;
     	         }
@@ -744,7 +744,7 @@ void _usb_msc_host_idle(unsigned int instance)
     	         //
     	         case STATE_POWER_FAULT:
     	         {
-    	             UARTprintf(DebugCom, "\nPower fault.\n");
+    	             uart.printf(DebugCom, "\nPower fault.\n");
     	             //ulPrompt = 1;
     	             break;
     	          }
@@ -801,27 +801,27 @@ void _usb_msc_host_idle(unsigned int instance)
                 {
 					if(DebugCom)
 					{
-																			UARTPuts(DebugCom,   "USB0 drive 3 mounted\n\r" , -1);
-																			UARTPuts(DebugCom,   "USB0 Fat fs detected\n\r" , -1);
-																			UARTprintf(DebugCom, "USB0 Fs type:                 ");
-						if(g_sFatFs1.fs_type == FS_FAT12)	{ 				UARTprintf(DebugCom, "Fat12");}
-						else if(g_sFatFs1.fs_type == FS_FAT16){ 			UARTprintf(DebugCom, "Fat16");}
-						else if(g_sFatFs1.fs_type == FS_FAT32){ 			UARTprintf(DebugCom, "Fat32");}
-						else								{ 				UARTprintf(DebugCom, "None");}
-																			UARTprintf(DebugCom, "\n\r");
-																			//UARTprintf(DebugCom, "MMCSD0 BootSectorAddress:       %u \n\r",(unsigned int)g_sFatFs.);
-																			UARTprintf(DebugCom, "USB0 BytesPerSector:          %d \n\r",/*(int)g_sFatFs.s_size*/512);
-																			UARTprintf(DebugCom, "USB0 SectorsPerCluster:       %d \n\r",(int)g_sFatFs1.csize);
-																			//UARTprintf(DebugCom, "MMCSD0 AllocTable1Begin:        %u \n\r",(unsigned int)g_sFatFs.fatbase);
-																			//UARTprintf(DebugCom, "USB0 NumberOfFats:            %d \n\r",(int)g_sFatFs1.n_fats);
-																			//UARTprintf(DebugCom, "MMCSD0 MediaType:               %d \n\r",Drives_Table[0]->DiskInfo_MediaType);
-																			//UARTprintf(DebugCom, "MMCSD0 AllocTableSize:          %u \n\r",Drives_Table[0]->DiskInfo_AllocTableSize);
-																			//UARTprintf(DebugCom, "USB0 DataSectionBegin:        %d \n\r",(int)g_sFatFs1.fatbase);
-																			UARTprintf(DebugCom, "USBH MSC%d uSD DiskCapacity:        %uMB\n\r",0, (unsigned long)((unsigned long long)((unsigned long long)g_sFatFs1.n_fatent * (unsigned long long)/*g_sFatFs.s_size*/512 * (unsigned long long)g_sFatFs1.csize) / 1000000));
+																			uart.puts(DebugCom,   "USB0 drive 3 mounted\n\r" , -1);
+																			uart.puts(DebugCom,   "USB0 Fat fs detected\n\r" , -1);
+																			uart.printf(DebugCom, "USB0 Fs type:                 ");
+						if(g_sFatFs1.fs_type == FS_FAT12)	{ 				uart.printf(DebugCom, "Fat12");}
+						else if(g_sFatFs1.fs_type == FS_FAT16){ 			uart.printf(DebugCom, "Fat16");}
+						else if(g_sFatFs1.fs_type == FS_FAT32){ 			uart.printf(DebugCom, "Fat32");}
+						else								{ 				uart.printf(DebugCom, "None");}
+																			uart.printf(DebugCom, "\n\r");
+																			//uart.printf(DebugCom, "MMCSD0 BootSectorAddress:       %u \n\r",(unsigned int)g_sFatFs.);
+																			uart.printf(DebugCom, "USB0 BytesPerSector:          %d \n\r",/*(int)g_sFatFs.s_size*/512);
+																			uart.printf(DebugCom, "USB0 SectorsPerCluster:       %d \n\r",(int)g_sFatFs1.csize);
+																			//uart.printf(DebugCom, "MMCSD0 AllocTable1Begin:        %u \n\r",(unsigned int)g_sFatFs.fatbase);
+																			//uart.printf(DebugCom, "USB0 NumberOfFats:            %d \n\r",(int)g_sFatFs1.n_fats);
+																			//uart.printf(DebugCom, "MMCSD0 MediaType:               %d \n\r",Drives_Table[0]->DiskInfo_MediaType);
+																			//uart.printf(DebugCom, "MMCSD0 AllocTableSize:          %u \n\r",Drives_Table[0]->DiskInfo_AllocTableSize);
+																			//uart.printf(DebugCom, "USB0 DataSectionBegin:        %d \n\r",(int)g_sFatFs1.fatbase);
+																			uart.printf(DebugCom, "USBH MSC%d uSD DiskCapacity:        %uMB\n\r",0, (unsigned long)((unsigned long long)((unsigned long long)g_sFatFs1.n_fatent * (unsigned long long)/*g_sFatFs.s_size*/512 * (unsigned long long)g_sFatFs1.csize) / 1000000));
 					}
-                } else  if(DebugCom)										UARTPuts(DebugCom,   "USB0 ERROR oppening path\n\r" , -1);
+                } else  if(DebugCom)										uart.puts(DebugCom,   "USB0 ERROR oppening path\n\r" , -1);
 #endif
-            }else if(DebugCom)												UARTPuts(DebugCom,   "USB0 ERROR mounting disk\n\r" , -1);
+            }else if(DebugCom)												uart.puts(DebugCom,   "USB0 ERROR mounting disk\n\r" , -1);
 			g_eState0 = STATE_DEVICE_READY;
 			//}
 		}
@@ -861,17 +861,17 @@ void _usb_msc_host_idle(unsigned int instance)
 		        {
 		            if(g_eUIState0 == STATE_UNKNOWN_DEVICE)
 		            {
-		                UARTprintf(DebugCom, "\nUnknown device disconnected.\n");
+		                uart.printf(DebugCom, "\nUnknown device disconnected.\n");
 		            }
 		            else
 		            {
 #ifdef usb_host_msc_debug
 #ifndef thirdpartyfatfs
-						UARTPuts(DebugCom, "USB0 Fat dismount\n\r" , -1);
+						uart.puts(DebugCom, "USB0 Fat dismount\n\r" , -1);
 						_Fat_Unmount(4);
-						UARTPuts(DebugCom, "USB0 Fat dismount OK\n\r" , -1);
+						uart.puts(DebugCom, "USB0 Fat dismount OK\n\r" , -1);
 #endif
-		            	UARTprintf(DebugCom, "\nMass storage device disconnected.\n");
+		            	uart.printf(DebugCom, "\nMass storage device disconnected.\n");
 #endif
 		            }
 		         //ulPrompt = 1;
@@ -883,7 +883,7 @@ void _usb_msc_host_idle(unsigned int instance)
 		         //
 		         case STATE_DEVICE_ENUM:
 		         {
-		        	 UARTprintf(DebugCom, "\nDevice enumerate.\n");
+		        	 uart.printf(DebugCom, "\nDevice enumerate.\n");
 		        	 break;
 		         }
 
@@ -892,7 +892,7 @@ void _usb_msc_host_idle(unsigned int instance)
 		         //
 		         case STATE_DEVICE_READY:
 		         {
-		             UARTprintf(DebugCom, "\nMass storage device connected.\n");
+		             uart.printf(DebugCom, "\nMass storage device connected.\n");
 		             //ulPrompt = 1;
 		             break;
 		         }
@@ -902,7 +902,7 @@ void _usb_msc_host_idle(unsigned int instance)
 		         //
 		         case STATE_UNKNOWN_DEVICE:
 		         {
-		             UARTprintf(DebugCom, "\nUnknown device connected.\n");
+		             uart.printf(DebugCom, "\nUnknown device connected.\n");
 		             //ulPrompt = 1;
 		             break;
 		         }
@@ -912,7 +912,7 @@ void _usb_msc_host_idle(unsigned int instance)
 		         //
 		         case STATE_POWER_FAULT:
 		         {
-		             UARTprintf(DebugCom, "\nPower fault.\n");
+		             uart.printf(DebugCom, "\nPower fault.\n");
 		             //ulPrompt = 1;
 		             break;
 		          }

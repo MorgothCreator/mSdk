@@ -343,6 +343,45 @@ bool _SetupI2CReception(new_twi* TwiStruct, unsigned int TransmitBytes, unsigned
 		return true;
     }
 }
+
+
+bool _I2C_trx(struct Twi_s* param, unsigned char addr, unsigned char *buff_send, unsigned int bytes_send, unsigned char *buff_receive, unsigned int bytes_receive)
+{
+    if(!param)
+        return false;
+#if (USE_DRIVER_SEMAPHORE == true)
+    while(twi_semaphore[param->TwiNr]);
+    twi_semaphore[param->TwiNr] = true;
+#endif
+    param->MasterSlaveAddr = addr << 1;
+    param->TxBuff = buff_send;
+    param->RxBuff = buff_receive;
+    bool result = _SetupI2CReception(param, bytes_send, bytes_receive);
+
+#if (USE_DRIVER_SEMAPHORE == true)
+    twi_semaphore[param->TwiNr] = false;
+#endif
+     return result;
+}
+/*#####################################################*/
+bool _I2C_tx(struct Twi_s* param, unsigned char addr, unsigned char *buff_send, unsigned int bytes_send)
+{
+    if(!param)
+        return false;
+#if (USE_DRIVER_SEMAPHORE == true)
+    while(twi_semaphore[param->TwiNr]);
+    twi_semaphore[param->TwiNr] = true;
+#endif
+    param->MasterSlaveAddr = addr << 1;
+    param->TxBuff = buff_send;
+    bool result = _SetupI2CReception(param, bytes_send, 0);
+#if (USE_DRIVER_SEMAPHORE == true)
+    twi_semaphore[param->TwiNr] = false;
+#endif
+    return result;
+}
+
+
 /*#####################################################*/
 bool _twi_open(new_twi* TwiStruct)
 {

@@ -8,7 +8,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include "../include/mcspi.h"
-#include "api/mcspi_def.h"
+#include "api/spi_def.h"
 #include "mcspi_interface.h"
 #include "../pinmux/pin_mux_spi.h"
 #include "../clk/clk_mcspi.h"
@@ -30,9 +30,11 @@ void _mcspi_deassert(Mcspi_t *McspiStruct)
 ** This function will activate/deactivate CS line and also enable Tx and Rx
 ** interrupts of McSPI peripheral.
 */
-void _mcspi_transfer(Mcspi_t *McspiStruct)
+void _mcspi_transfer(Mcspi_t *McspiStruct, unsigned char *buff_send, unsigned char *buff_receive, unsigned int size)
 {
-	McspiStruct->BuffTmp = McspiStruct->Buff;
+#if 0
+    McspiStruct->BuffTmp = buff_send;
+	McspiStruct->BytesCnt = size;
 	/* SPIEN line is forced to low state.*/
     if(!McspiStruct->DisableCsHandle)
     	McSPICSAssert(McspiStruct->BaseAddr, McspiStruct->CsSelect);
@@ -55,6 +57,7 @@ void _mcspi_transfer(Mcspi_t *McspiStruct)
 
     /* Disable the McSPI channel.*/
     McSPIChannelDisable(McspiStruct->BaseAddr, McspiStruct->CsSelect);
+#endif
 }
 /*#####################################################*/
 unsigned char _mcspi_SendByte(Mcspi_t *McspiStruct, unsigned char byte) {
@@ -124,7 +127,7 @@ static void McSPISetUp(Mcspi_t *McspiStruct)
 /*#####################################################*/
 bool _mcspi_open(Mcspi_t *McspiStruct)
 {
-	if(McspiStruct->BuffSize)
+	/*if(McspiStruct->BuffSize)
 	{
 	    switch(McspiStruct->McspiNr)
 	    {
@@ -145,7 +148,7 @@ bool _mcspi_open(Mcspi_t *McspiStruct)
 		McSPISetUp(McspiStruct);
 		McSPIAintcConfigure(McspiStruct->McspiNr);
 		return true;
-	}
+	}*/
 	return false;
 }
 /*#####################################################*/
@@ -171,3 +174,14 @@ bool _mcspi_set_baud(Mcspi_t *McspiStruct, unsigned long baud)
 	McSPIClkConfig(McspiStruct->BaseAddr, MCSPI_IN_CLK, McspiStruct->ClkDiv[McspiStruct->CsSelect], McspiStruct->CsSelect, MCSPI_CLK_MODE_0);
 	return true;
 }
+
+bool _mcspi_receive(Mcspi_t *McspiStruct, unsigned char *buff_receive, unsigned int bytes_receive)
+{
+    return false;
+}
+
+bool _mcspi_transmit(Mcspi_t *McspiStruct, unsigned char *buff_send, unsigned int bytes_send)
+{
+    return false;
+}
+

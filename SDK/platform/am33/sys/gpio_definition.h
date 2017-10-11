@@ -83,7 +83,7 @@ typedef enum gpio_pins_bm_s
 	GPIO_31_bm = 1<<GPIO_31_bp
 }gpio_pins_bm_t;
 
-typedef struct gpio_s
+typedef struct _gpio_s
 {
 	GPIO_REGISTER REVISION;			/* 0x00  Module Revision Register */
 	GPIO_REGISTER RESERVED_0x4_TO_0x0C[(0x10 - 0x4) / sizeof(GPIO_REGISTER)];
@@ -115,7 +115,7 @@ typedef struct gpio_s
 	GPIO_REGISTER RESERVED_0x158_TO_0x18C[(0x190 - 0x158) / sizeof(GPIO_REGISTER)];
 	GPIO_REGISTER CLEARDATAOUT;		/* 0x190 */
 	GPIO_REGISTER SETDATAOUT;		/* 0x194 */
-}gpio_t;
+}_gpio_t;
 
 #define GPIO0_addr (0x44E07000)
 #define GPIO0 (*(gpio_t *) 0x44E07000)

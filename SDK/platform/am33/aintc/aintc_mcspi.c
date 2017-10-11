@@ -5,7 +5,7 @@
  *      Author: XxXx
  */
 /*#####################################################*/
-#include "api/mcspi_def.h"
+#include "api/spi_def.h"
 #include "aintc_mcspi.h"
 #include "../include/mcspi.h"
 #include "../include/interrupt.h"
@@ -29,7 +29,7 @@ static void McSPIIsr(Mcspi_t *McspiStruct)
 
     intCode = McSPIIntStatusGet(McspiStruct->BaseAddr);
 
-    while(intCode)
+    /*while(intCode)
     {
         if(MCSPI_INT_TX_EMPTY(McspiStruct->CsSelect) == (intCode & MCSPI_INT_TX_EMPTY(McspiStruct->CsSelect)))
         {
@@ -62,7 +62,7 @@ static void McSPIIsr(Mcspi_t *McspiStruct)
         }
 
         intCode = McSPIIntStatusGet(McspiStruct->BaseAddr);
-    }
+    }*/
 }
 /*#####################################################*/
 static void McSPI0Isr(void)

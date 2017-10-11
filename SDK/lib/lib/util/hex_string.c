@@ -6,6 +6,7 @@
  */
 
 #include <stdbool.h>
+#include <ctype.h>
 #include "hex_string.h"
 
 void GetHexChar(char *hex_str, unsigned char data)
@@ -37,7 +38,7 @@ void GetHexBuff(char *hex_str, unsigned char *data, unsigned int data_len)
 
 bool GetBinFromHexChar(unsigned char *dest, char src)
 {
-	int tmp = tolower(src);
+	int tmp = tolower((int)src);
 	if((tmp < '0' || tmp > '9') && (tmp < 'a' || tmp > 'f'))
 		return false;
 	if(tmp <= '9')

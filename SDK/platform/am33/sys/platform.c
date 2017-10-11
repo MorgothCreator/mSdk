@@ -1583,7 +1583,7 @@ void BlPlatformSPISetup(void)
 #ifdef evmskAM335x
 void DDRVTTEnable(void)
 {
-	gpio_init(0);//GPIO0ModuleClkConfig();
+	gpio.init(0);//GPIO0ModuleClkConfig();
 
     GPIO_PMUX_OFFADDR_VALUE(0, 7, PAD_FS_RXE_PD_PUPDE(7));
 

@@ -60,7 +60,7 @@
 unsigned int rtcSetFlag = false;
 volatile unsigned int rtcSecUpdate = 0;
 extern new_uart* DebugCom;
-volatile unsigned int time = 0;
+volatile unsigned int __time = 0;
 volatile unsigned int cal = 0;
 /*******************************************************************************
 **                       INTERNAL MACRO DEFINITIONS
@@ -385,107 +385,107 @@ void RtcInit(void)
 */
 void RtcTimeCalSet(void)
 {
-    unsigned int _time = 0;
-    unsigned int _cal = 0;
-    unsigned int temp = 0; 
+    //unsigned int _time = 0;
+    //unsigned int _cal = 0;
+    //unsigned int temp = 0;
  
-    UARTPuts(DebugCom, "\n\rEnter Hours (0 to 23):", -1);
+    /*uart.puts(DebugCom, "\n\rEnter Hours (0 to 23):", -1);
     temp = UARTGetNum(DebugCom);
 
     while(temp > 23)
     {
-        UARTPuts(DebugCom, "\n\rValue entered is invalid. Enter value:", -1);
+        uart.puts(DebugCom, "\n\rValue entered is invalid. Enter value:", -1);
         temp = UARTGetNum(DebugCom);
     }
 
     _time = (((temp / 10) << 4) << SHIFT_HOUR)
             | ((temp % 10) << SHIFT_HOUR);
 
-    UARTPuts(DebugCom, "\n\rEnter Minutes (0 to 59):", -1);
+    uart.puts(DebugCom, "\n\rEnter Minutes (0 to 59):", -1);
     temp = UARTGetNum(DebugCom);
 
     while(temp > 59)
     {
-        UARTPuts(DebugCom, "\n\rValue entered is invalid. Enter value:", -1);
+        uart.puts(DebugCom, "\n\rValue entered is invalid. Enter value:", -1);
         temp = UARTGetNum(DebugCom);
     }
 
     _time |= (((temp / 10) << 4) << SHIFT_MIN)
             | ((temp % 10) << SHIFT_MIN);
  
-    UARTPuts(DebugCom, "\n\rEnter Seconds (0 to 59):", -1);
+    uart.puts(DebugCom, "\n\rEnter Seconds (0 to 59):", -1);
     temp = UARTGetNum(DebugCom);
 
     while(temp > 59)
     {
-        UARTPuts(DebugCom, "\n\rValue entered is invalid. Enter value:", -1);
+        uart.puts(DebugCom, "\n\rValue entered is invalid. Enter value:", -1);
         temp = UARTGetNum(DebugCom);
     }
 
     _time |= (((temp / 10) << 4) << SHIFT_SEC)
              | ((temp % 10) << SHIFT_SEC);
 
-    UARTPuts(DebugCom, "\n\rEnter Date (1 to 31):", -1);
+    uart.puts(DebugCom, "\n\rEnter Date (1 to 31):", -1);
     temp = UARTGetNum(DebugCom);
 
     while((temp > 31) || (0 == temp))
     {
-        UARTPuts(DebugCom, "\n\rValue entered is invalid. Enter value:", -1);
+        uart.puts(DebugCom, "\n\rValue entered is invalid. Enter value:", -1);
         temp = UARTGetNum(DebugCom);
     }
 
     _cal = (((temp / 10) << 4) << SHIFT_DAY)
            | ((temp % 10) << SHIFT_DAY);
 
-    UARTPuts(DebugCom, "\n\rEnter Month (1 to 12):", -1);
+    uart.puts(DebugCom, "\n\rEnter Month (1 to 12):", -1);
     temp = UARTGetNum(DebugCom);
 
     while((temp > 12) || (0 == temp))
     {
-        UARTPuts(DebugCom, "\n\rValue entered is invalid. Enter value:", -1);
+        uart.puts(DebugCom, "\n\rValue entered is invalid. Enter value:", -1);
         temp = UARTGetNum(DebugCom);
     }
 
     _cal |= (((temp / 10) << 4) << SHIFT_MON)
             | ((temp % 10) << SHIFT_MON);
 
-    UARTPuts(DebugCom, "\n\rEnter Year (0 to 99):", -1);
+    uart.puts(DebugCom, "\n\rEnter Year (0 to 99):", -1);
     temp = UARTGetNum(DebugCom);
     while(temp > 99)
     {
-        UARTPuts(DebugCom, "\n\rValue entered is invalid. Enter value:", -1);
+        uart.puts(DebugCom, "\n\rValue entered is invalid. Enter value:", -1);
         temp = UARTGetNum(DebugCom);
     }
 
     _cal |= (((temp / 10) << 4) << SHIFT_YEAR)
             | ((temp % 10) << SHIFT_YEAR);
 
-    UARTPuts(DebugCom, "\n\rEnter Day Of the week (0 for Sunday...6 for Saturday):", -1);
+    uart.puts(DebugCom, "\n\rEnter Day Of the week (0 for Sunday...6 for Saturday):", -1);
     temp = UARTGetNum(DebugCom);
 
     while(temp > 6)
     {
-        UARTPuts(DebugCom, "\n\rValue entered is invalid. Enter value:", -1);
+        uart.puts(DebugCom, "\n\rValue entered is invalid. Enter value:", -1);
         temp = UARTGetNum(DebugCom);
     }
 
     _cal |= (((temp / 10) << 4)) | ((temp % 10));
- 
+ */
 	/* Disabling Write Protection for RTC registers.*/
-    RTCWriteProtectDisable(SOC_RTC_0_REGS);
+    //RTCWriteProtectDisable(SOC_RTC_0_REGS);
 
     /* Set the calendar registers of RTC with received calendar information.*/
-    RTCCalendarSet(SOC_RTC_0_REGS, _cal);
+    //RTCCalendarSet(SOC_RTC_0_REGS, _cal);
 
     /* Set the _time registers of RTC with the received _time information.*/
-    RTCTimeSet(SOC_RTC_0_REGS, _time);
+    //RTCTimeSet(SOC_RTC_0_REGS, _time);
 
     /* Disabling Write Protection for RTC registers.*/
-    RTCWriteProtectEnable(SOC_RTC_0_REGS);
+    //RTCWriteProtectEnable(SOC_RTC_0_REGS);
  
-    UARTPuts(DebugCom, "\n\rThe Time and Date are set successfully! \n\n\r", -1);
+    //uart.puts(DebugCom, "\n\rThe Time and Date are set successfully! \n\n\r", -1);
 
-    rtcSetFlag = true;
+    //rtcSetFlag = true;
 }
 
 /*
@@ -493,85 +493,85 @@ void RtcTimeCalSet(void)
 */
 void RtcTimeCalDisplay(void)
 {
-	unsigned int _time = time;
+	unsigned int _time = __time;
 	unsigned int _cal = cal;
     unsigned int temp;
  
-    //UARTPuts(DebugCom, "\r", -1);
+    //uart.puts(DebugCom, "\r", -1);
 
-    UARTPuts(DebugCom, "Current Time And Date: ", -1);
+    uart.puts(DebugCom, "Current Time And Date: ", -1);
  
     temp = (_time & MASK_HOUR) >> SHIFT_HOUR;
-    UARTPutc(DebugCom, ((temp >> 4) & 0x0F) + 48);
-    UARTPutc(DebugCom, (temp & 0x0F) + 48);
+    uart.putc(DebugCom, ((temp >> 4) & 0x0F) + 48);
+    uart.putc(DebugCom, (temp & 0x0F) + 48);
   
-    UARTPutc(DebugCom, ':');
+    uart.putc(DebugCom, ':');
  
     temp = (_time & MASK_MIN) >> SHIFT_MIN;
-    UARTPutc(DebugCom, ((temp >> 4) & 0x0F) + 48);
-    UARTPutc(DebugCom, (temp & 0x0F) + 48);
+    uart.putc(DebugCom, ((temp >> 4) & 0x0F) + 48);
+    uart.putc(DebugCom, (temp & 0x0F) + 48);
 
-    UARTPutc(DebugCom, ':');
+    uart.putc(DebugCom, ':');
 
     temp = (_time & MASK_SEC) >> SHIFT_SEC;
-    UARTPutc(DebugCom, ((temp >> 4) & 0x0F) + 48);
-    UARTPutc(DebugCom, (temp & 0x0F) + 48);
+    uart.putc(DebugCom, ((temp >> 4) & 0x0F) + 48);
+    uart.putc(DebugCom, (temp & 0x0F) + 48);
 
-    UARTPuts(DebugCom, ", ", -1);
+    uart.puts(DebugCom, ", ", -1);
 
 
     temp = (_cal & MASK_DAY) >> SHIFT_DAY;
-    UARTPutc(DebugCom, ((temp >> 4) & 0x0F) + 48);
-    UARTPutc(DebugCom, (temp & 0x0F) + 48);
+    uart.putc(DebugCom, ((temp >> 4) & 0x0F) + 48);
+    uart.putc(DebugCom, (temp & 0x0F) + 48);
 
-    UARTPutc(DebugCom, '-');
+    uart.putc(DebugCom, '-');
 
     temp = (_cal & MASK_MON) >> SHIFT_MON;
-    UARTPutc(DebugCom, ((temp >> 4) & 0x0F) + 48);
-    UARTPutc(DebugCom, (temp & 0x0F) + 48);
+    uart.putc(DebugCom, ((temp >> 4) & 0x0F) + 48);
+    uart.putc(DebugCom, (temp & 0x0F) + 48);
 
-    UARTPutc(DebugCom, '-');
+    uart.putc(DebugCom, '-');
 
     temp = (_cal & MASK_YEAR) >> SHIFT_YEAR;
-    UARTPutc(DebugCom, ((temp >> 4) & 0x0F) + 48);
-    UARTPutc(DebugCom, (temp & 0x0F) + 48);
+    uart.putc(DebugCom, ((temp >> 4) & 0x0F) + 48);
+    uart.putc(DebugCom, (temp & 0x0F) + 48);
 
-    UARTPuts(DebugCom, ", ", -1);
+    uart.puts(DebugCom, ", ", -1);
 
     switch(_cal & MASK_DOTW)
     {
         case 0x00:
-             UARTPuts(DebugCom, "Sunday", -1);
+             uart.puts(DebugCom, "Sunday", -1);
         break;
 
         case 0x01:
-             UARTPuts(DebugCom, "Monday", -1);
+             uart.puts(DebugCom, "Monday", -1);
         break;
 
         case 0x02:
-             UARTPuts(DebugCom, "Tuesday", -1);
+             uart.puts(DebugCom, "Tuesday", -1);
         break;
 
         case 0x03:
-             UARTPuts(DebugCom, "Wednesday", -1);
+             uart.puts(DebugCom, "Wednesday", -1);
         break;
 
         case 0x04:
-             UARTPuts(DebugCom, "Thursday", -1);
+             uart.puts(DebugCom, "Thursday", -1);
         break;
 
         case 0x05:
-             UARTPuts(DebugCom, "Friday", -1);
+             uart.puts(DebugCom, "Friday", -1);
         break;
 
         case 0x06:
-             UARTPuts(DebugCom, "Saturday", -1);
+             uart.puts(DebugCom, "Saturday", -1);
 
         default:
         break;
 
     }
-    UARTPuts(DebugCom, "\n\r", -1);
+    uart.puts(DebugCom, "\n\r", -1);
 }
 
 /*
@@ -582,7 +582,7 @@ static void RTCIsr(void)
 //	RTCIntTimerDisable(SOC_RTC_0_REGS);
 	//unsigned int CntTimeout = 1000;
 	//while(RTCBusyStatusGet(SOC_RTC_0_REGS) == RTC_BUSY || CntTimeout--);
-	time = RTCTimeGet(SOC_RTC_0_REGS);
+	__time = RTCTimeGet(SOC_RTC_0_REGS);
 	//CntTimeout = 1000;
 	//while(RTCBusyStatusGet(SOC_RTC_0_REGS) == RTC_BUSY || CntTimeout--);
     cal = RTCCalendarGet(SOC_RTC_0_REGS);
