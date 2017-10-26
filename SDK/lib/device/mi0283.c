@@ -64,11 +64,11 @@ static unsigned int read(tDisplay* LcdStruct) {
 	unsigned int *dataPort;
 
 	MI0283_t *Struct = (MI0283_t *)LcdStruct->UserData;
-	dataPort = (unsigned int*)gpio.in(Struct->LCD_DATA);
 	gpio.out(Struct->LCD_DISPLAY_RS, 1);
 	gpio.out(Struct->LCD_DISPLAY_PMRD, 0);
 	volatile unsigned long cnt = 5;
 	while(cnt--);
+	dataPort = (unsigned int*)gpio.in(Struct->LCD_DATA);
 	gpio.out(Struct->LCD_DISPLAY_PMRD, 1);
 	return *dataPort;
 }
@@ -102,7 +102,7 @@ void mi0283_reset(void* LcdStruct)
 	id |= (unsigned long)(read(LcdStruct) & 0x00FF) << 24;
  	gpio.out(Struct->LCD_DISPLAY_CS, 1);
 	gpio.function_set(Struct->LCD_DATA, GPIO_OUT_PUSH_PULL);
-	if(id == 0xc1c10800)
+	if(id == 0x1c4c400)
 		mi0283_ctl_type = MI0283_ST7789V_CTRL;
 	else
 		mi0283_ctl_type = MI0283_ILI9341_CTRL;
