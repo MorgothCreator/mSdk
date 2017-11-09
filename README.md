@@ -1,4 +1,7 @@
-mSdk
+#mSdk
+
+# The project has been moved here https://morgothdisk.com:30001/explore/projects
+
 ====
 
 Multiplatform SDK for standalone applications
